@@ -1,0 +1,24 @@
+dependency_overrides:
+  stack:
+    path: ../stack/stack
+
+  stack_ui:
+    path: ../stack/stack_ui
+
+  stack_theme:
+    path: ../stack/stack_theme
+
+  stack_assets:
+    path: ../stack/stack_assets
+
+  stack_ffi:
+    path: ../stack/stack_ffi
+
+  stack_mouse_cursor:
+    path: ../stack/utils/stack_mouse_cursor
+
+  stack_multi_pane_container: 
+    path: ../stack/utils/stack_multi_pane_container
+
+  stack_window_manager:
+    path: ../stack/utils/stack_window_manager

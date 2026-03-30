@@ -1,0 +1,30 @@
+name: ui
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+  
+dependencies:
+  flutter:
+    sdk: flutter
+
+  stack:
+  stack_ui:
+  stack_mouse_cursor:
+  stack_window_manager:
+  stack_multi_pane_container:
+
+  expressions: ^0.2.5+3
+  material_symbols_icons: ^4.2906.0
+  vector_graphics: ^1.1.20
+  vector_math: ^2.2.0
+
+dev_dependencies:
+  stack_assets:
+  stack_theme:
+
+flutter:
+  assets:
+    - assets/gen/cursors/
+    - assets/gen/icons/

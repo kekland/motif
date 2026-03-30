@@ -1,0 +1,21 @@
+name: design
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  canvas:
+  commander:
+  css:
+  shared:
+  tool:
+  tree:
+  ui:
+
+  stack_mouse_cursor:
+  vector_math: ^2.2.0

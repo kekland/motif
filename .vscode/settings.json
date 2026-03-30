@@ -1,0 +1,27 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/flutter/ephemeral": true,
+    "**/Flutter/ephemeral": true,
+    "**/.symlinks": true,
+    "**/.plugin_symlinks": true,
+    ".fvm": true,
+    ".fvmrc": true,
+    "**/.dart_tool": true,
+    "**/.idea": true,
+    "**/*.iml": true,
+    "**/.metadata": true,
+    "**/pubspec.lock": true,
+    "build": true,
+    "**/__pycache__": true,
+    "**/.flutter-plugins-dependencies": true,
+  },
+  "dart.flutterSdkPath": ".fvm/versions/master",
+  "editor.rulers": [
+    120
+  ]
+}

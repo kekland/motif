@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "app",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--enable-impeller",
+        "--enable-flutter-gpu",
+      ]
+    },
+    {
+      "name": "app (profile)",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "app (release)",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    }
+  ]
+}
