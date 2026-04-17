@@ -2,7 +2,7 @@ part of '../selection_activities.dart';
 
 class CornerRotateNodesActivity extends NodeDragActivity
     with ExclusiveCursorDragActivity, KeyboardListenerDragActivity {
-  CornerRotateNodesActivity({required super.root, required super.nodes, required this.corner});
+  CornerRotateNodesActivity({required super.controller, required super.nodes, required this.corner});
 
   final Corner corner;
 

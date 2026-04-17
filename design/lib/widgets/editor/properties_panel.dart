@@ -87,7 +87,7 @@ class TransformSection extends HookWidget {
     final controller = DesignController.of(context);
     final renderNode = controller.renderRootNode.getRenderNode(selectedNode)!;
     final parentRenderNode = renderNode.parentNode;
-    final isTranslationIgnored = selectedNode.parent?.layout.childLayout.isChildrenTranslationIgnored ?? false;
+    final isTranslationIgnored = selectedNode.parent?.layout.childLayout.isTranslationIgnored ?? false;
 
     final isMutable = selectedNode is MutableNode;
     final transform = useComputedValue(() => selectedNode.transform);
@@ -99,7 +99,7 @@ class TransformSection extends HookWidget {
       (selectedNode as MutableNode).transform = newTransform;
     }
 
-    final renderTransform = renderNode.getTransformTo(parentRenderNode);
+    final renderTransform = renderNode.getLayoutTransformTo(parentRenderNode);
     final offset = renderTransform.getTranslation().xy;
 
     Offset getCenterPivot() {

@@ -4,6 +4,7 @@ analyzer:
   errors:
     curly_braces_in_flow_control_structures: ignore
     no_leading_underscores_for_local_identifiers: ignore
+    unused_element_parameter: ignore
 
 formatter:
   page_width: 120

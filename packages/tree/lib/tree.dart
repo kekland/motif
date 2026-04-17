@@ -5,7 +5,7 @@ const kDebugTreeLogEnabled = false;
 
 abstract interface class Node {
   Node? get parent;
-  Iterable<Node> get children;
+  List<Node> get children;
   int get depth;
   bool get isLeaf;
 

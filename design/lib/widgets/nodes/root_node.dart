@@ -26,7 +26,7 @@ class _RootNodeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    final renderRootNode = _RenderRootNode(node: node);
+    final renderRootNode = RenderRootNode(node: node);
 
     final controller = DesignController.of(context);
     controller.onRootNodeCreated(renderRootNode);
@@ -35,11 +35,11 @@ class _RootNodeWidget extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, _RenderRootNode renderObject) {
+  void updateRenderObject(BuildContext context, RenderRootNode renderObject) {
     renderObject.node = node;
   }
 }
 
-class _RenderRootNode extends tree.RenderRootNode<Node> {
-  _RenderRootNode({required super.node});
+class RenderRootNode extends RenderNode with tree.RenderRootNodeBase<Node, RenderNode, RenderRootNode> {
+  RenderRootNode({required super.node});
 }

@@ -20,7 +20,7 @@ List<MutableNode> _nodeListToMutable(List<ImmutableNode> nodes) => nodes.map((n)
 /// All nodes have a [transform] and [layout] properties.
 abstract interface class Node with NodeWithLayout, NodeWithTransform implements tree.Node {
   @override
-  Iterable<Node> get children;
+  List<Node> get children;
 
   @override
   Node? get parent;

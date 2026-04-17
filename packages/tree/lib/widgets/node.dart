@@ -4,20 +4,6 @@ import 'package:flutter/widgets.dart';
 import '../tree.dart';
 import '../widgets.dart';
 
-class NodeHitTestEntry<T extends Node> extends HitTestEntry<RenderNodeBase<T>> {
-  NodeHitTestEntry(super.target, this.localPosition);
-
-  final Offset localPosition;
-}
-
-class NodeHitTestResult<T extends Node> extends HitTestResult {
-  NodeHitTestResult() : super();
-  NodeHitTestResult.wrap(super.result) : super.wrap();
-
-  @override
-  Iterable<NodeHitTestEntry<T>> get path => super.path.cast();
-}
-
 abstract class NodeWidgetBase<T extends Node> extends SingleChildRenderObjectWidget {
   const NodeWidgetBase({
     super.key,
@@ -34,28 +20,24 @@ abstract class NodeWidgetBase<T extends Node> extends SingleChildRenderObjectWid
   void updateRenderObject(BuildContext context, RenderNodeBase renderObject);
 }
 
-enum NodeHitTestRectMode {
-  /// Only allow nodes that intersect, but don't require to be contanied
-  intersect,
-
-  /// Only allow nodes that are fully contained
-  contain,
-
-  /// Regular (intersect for leaf nodes, contain for non-leaf nodes)
-  normal,
-}
-
-mixin RenderNodeBase<T extends Node> on RenderBox {
+/// A base mixin for render objects for nodes.
+mixin RenderNodeBase<
+  T extends Node,
+  TRenderNode extends RenderNodeBase<T, TRenderNode, TRenderRoot>,
+  TRenderRoot extends RenderRootNodeBase<T, TRenderNode, TRenderRoot>
+>
+    on RenderBox {
   T get node;
   Clip get clipBehavior => Clip.none;
 
-  RenderNodeBase<T>? _parentNode;
-  final _childrenNodes = <RenderNodeBase<T>>[];
+  TRenderNode? _parentNode;
+  final _childrenNodes = <TRenderNode>[];
 
-  RenderRootNodeBase<T>? _root;
+  TRenderRoot? _root;
 
-  RenderNodeBase<T>? get parentNode => _parentNode;
-  RenderRootNodeBase<T>? get rootNode => _root;
+  TRenderNode? get parentNode => _parentNode;
+  TRenderRoot? get rootNode => _root;
+  List<TRenderNode> get childrenNodes => _childrenNodes;
 
   @override
   void attach(PipelineOwner owner) {
@@ -63,11 +45,11 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
 
     RenderObject? current = parent;
     while (current != null) {
-      if (_parentNode == null && current is RenderNodeBase<T>) {
+      if (_parentNode == null && current is TRenderNode) {
         _parentNode = current;
       }
 
-      if (_root == null && current is RenderRootNodeBase<T>) {
+      if (_root == null && current is TRenderRoot) {
         _root = current;
         break;
       }
@@ -75,16 +57,24 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
       current = current.parent;
     }
 
-    _parentNode?._childrenNodes.add(this);
-    _root?.registerDescendant(this);
+    _parentNode?._childrenNodes.add(this as TRenderNode);
+    _root?.registerDescendant(this as TRenderNode);
+    
+    if (node is ChangeNotifier) {
+      (node as ChangeNotifier).addListener(_onNodeChildrenChanged);
+    }
   }
 
   @override
   void detach() {
-    _root?.unregisterDescendant(this);
+    _root?.unregisterDescendant(this as TRenderNode);
 
-    _parentNode?._childrenNodes.remove(this);
+    _parentNode?._childrenNodes.remove(this as TRenderNode);
     _parentNode = null;
+
+    if (node is ChangeNotifier) {
+      (node as ChangeNotifier).removeListener(_onNodeChildrenChanged);
+    }
 
     super.detach();
   }
@@ -99,17 +89,26 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
     return false;
   }
 
+  void _onNodeChildrenChanged() {
+    // TODO: make this more efficient.
+    markNeedsLayout();
+  }
+
   // --
   // Node hit testing
   // --
 
-  bool nodeHitTest(NodeHitTestResult result, {required Offset position, List<RenderNodeBase<T>> ignoring = const []}) {
+  bool nodeHitTest(
+    NodeHitTestResult<TRenderNode> result, {
+    required Offset position,
+    Iterable<TRenderNode> ignoring = const [],
+  }) {
     final canHaveVisualOverflow = clipBehavior == Clip.none;
     if (!canHaveVisualOverflow && !size.contains(position)) return false;
     if (ignoring.contains(this)) return false;
 
     if (nodeHitTestChildren(result, position: position, ignoring: ignoring) || nodeHitTestSelf(position)) {
-      result.add(NodeHitTestEntry<T>(this, position));
+      result.add(NodeHitTestEntry<TRenderNode>(this as TRenderNode, position));
       return true;
     }
 
@@ -121,9 +120,9 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
   }
 
   bool nodeHitTestChildren(
-    NodeHitTestResult result, {
+    NodeHitTestResult<TRenderNode> result, {
     required Offset position,
-    List<RenderNodeBase<T>> ignoring = const [],
+    Iterable<TRenderNode> ignoring = const [],
   }) {
     if (node.isLeaf) return false;
 
@@ -141,11 +140,27 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
 
   Rect get _nodeBounds => Offset.zero & size;
 
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    // Sort the children by their order in the node tree.
+    _childrenNodes.sort((a, b) {
+      final aIndex = node.children.indexOf(a.node);
+      final bIndex = node.children.indexOf(b.node);
+      return aIndex.compareTo(bIndex);
+    });
+  }
+
   // --
   // Node rect hit testing (e.g. for marquee selection)
   // --
 
-  bool nodeHitTestRect(NodeHitTestResult result, {required Rect rect, NodeHitTestRectMode mode = .normal}) {
+  bool nodeHitTestRect(
+    NodeHitTestResult<TRenderNode> result, {
+    required Rect rect,
+    NodeHitTestRectMode mode = .normal,
+  }) {
     final canHaveVisualOverflow = clipBehavior == Clip.none;
     if (!canHaveVisualOverflow && !_nodeBounds.overlaps(rect)) return false;
 
@@ -153,7 +168,7 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
     final isContained = rect.contains(_nodeBounds.topLeft) && rect.contains(_nodeBounds.bottomRight);
 
     bool _addSelf() {
-      result.add(NodeHitTestEntry<T>(this, _nodeBounds.center));
+      result.add(NodeHitTestEntry<TRenderNode>(this as TRenderNode, _nodeBounds.center));
       return true;
     }
 
@@ -168,7 +183,7 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
     }
   }
 
-  bool nodeHitTestRectChildren(NodeHitTestResult result, {required Rect rect}) {
+  bool nodeHitTestRectChildren(NodeHitTestResult<TRenderNode> result, {required Rect rect}) {
     if (node.isLeaf) return false;
     var _result = false;
 
@@ -185,7 +200,13 @@ mixin RenderNodeBase<T extends Node> on RenderBox {
   }
 }
 
-class RenderNode<T extends Node> extends RenderProxyBox with RenderNodeBase<T> {
+class RenderNode<
+  T extends Node,
+  TRenderNode extends RenderNodeBase<T, TRenderNode, TRenderRoot>,
+  TRenderRoot extends RenderRootNodeBase<T, TRenderNode, TRenderRoot>
+>
+    extends RenderProxyBox
+    with RenderNodeBase<T, TRenderNode, TRenderRoot> {
   RenderNode({required T node}) : _node = node;
 
   late T _node;
@@ -196,4 +217,33 @@ class RenderNode<T extends Node> extends RenderProxyBox with RenderNodeBase<T> {
     if (_node == value) return;
     _node = value;
   }
+}
+
+// -
+// Hit testing
+// -
+
+class NodeHitTestEntry<TRenderNode extends RenderObject> extends HitTestEntry<TRenderNode> {
+  NodeHitTestEntry(super.target, this.localPosition);
+
+  final Offset localPosition;
+}
+
+class NodeHitTestResult<TRenderNode extends RenderObject> extends HitTestResult {
+  NodeHitTestResult() : super();
+  NodeHitTestResult.wrap(super.result) : super.wrap();
+
+  @override
+  Iterable<NodeHitTestEntry<TRenderNode>> get path => super.path.cast();
+}
+
+enum NodeHitTestRectMode {
+  /// Only allow nodes that intersect, but don't require to be contanied
+  intersect,
+
+  /// Only allow nodes that are fully contained
+  contain,
+
+  /// Regular (intersect for leaf nodes, contain for non-leaf nodes)
+  normal,
 }

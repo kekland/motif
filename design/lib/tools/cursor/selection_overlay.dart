@@ -18,7 +18,7 @@ class SelectionOverlayBuilder extends StatelessWidget {
     required this.child,
   });
 
-  final SelectionController controller;
+  final DesignController controller;
   final List<Set<Node>> selectionGroups;
   final Widget child;
 
@@ -43,13 +43,13 @@ class SelectionOverlay extends StatelessWidget {
     required this.childPaintTransform,
   });
 
-  final SelectionController controller;
+  final DesignController controller;
   final List<Set<Node>> selectionGroups;
   final Matrix4 childPaintTransform;
 
   @override
   Widget build(BuildContext context) {
-    final root = controller.root;
+    final root = controller.renderRootNode;
 
     return Stack(
       children: [
@@ -57,8 +57,8 @@ class SelectionOverlay extends StatelessWidget {
           DeferredLayoutBuilder(
             targets: group.map((n) => root.getRenderNode(n)!).toList(),
             builder: (context, _) => SelectionGroupOverlay(
-              controller: controller,
               nodes: group,
+              controller: controller,
               childPaintTransform: childPaintTransform,
             ),
           ),
@@ -76,22 +76,24 @@ class SelectionGroupOverlay extends StatelessWidget {
   });
 
   final Iterable<Node> nodes;
-  final SelectionController controller;
+  final DesignController controller;
   final Matrix4 childPaintTransform;
 
   @override
   Widget build(BuildContext context) {
     const gesturePadding = 16.0;
-    final root = controller.root;
+    final root = controller.renderRootNode;
 
     // Gesture callbacks
     final isMutable = nodes.every((n) => n is MutableNode);
     final mn = isMutable ? nodes.toList().cast<MutableNode>() : null;
 
-    final onMove = isMutable ? () => MoveNodesActivity(root: root, nodes: mn!) : null;
-    final onEdgeResize = isMutable ? (e) => ResizeNodesActivity.edge(root: root, nodes: mn!, edge: e) : null;
-    final onCornerResize = isMutable ? (c) => ResizeNodesActivity.corner(root: root, nodes: mn!, corner: c) : null;
-    final onRotate = isMutable ? (c) => CornerRotateNodesActivity(root: root, nodes: mn!, corner: c) : null;
+    // dart format off
+    final onMove = isMutable ? () => MoveNodesActivity(controller: controller, nodes: mn!) : null;
+    final onEdgeResize = isMutable ? (e) => ResizeNodesActivity.edge(controller: controller, nodes: mn!, edge: e) : null;
+    final onCornerResize = isMutable ? (c) => ResizeNodesActivity.corner(controller: controller, nodes: mn!, corner: c) : null;
+    final onRotate = isMutable ? (c) => CornerRotateNodesActivity(controller: controller, nodes: mn!, corner: c) : null;
+    // dart format on
 
     Widget _buildSelectionControls({required Matrix4 transform, required Size layoutSize, required Size childSize}) {
       return SelectionControls(

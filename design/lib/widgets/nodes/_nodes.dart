@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:design/imports.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tree/widgets.dart' as tree;
@@ -8,11 +10,9 @@ part 'core/node_builder.dart';
 part 'root_node.dart';
 part 'container_node.dart';
 
-typedef RenderNode = tree.RenderNodeBase<Node>;
-typedef RenderRootNode = tree.RenderRootNodeBase<Node>;
 typedef SelectionController = tree.SelectionController<Node>;
-typedef NodeHitTestResult = tree.NodeHitTestResult<Node>;
-typedef NodeHitTestEntry = tree.NodeHitTestEntry<Node>;
+typedef NodeHitTestResult = tree.NodeHitTestResult<RenderNode>;
+typedef NodeHitTestEntry = tree.NodeHitTestEntry<RenderNode>;
 
 class NodeWidget extends StatelessWidget {
   const NodeWidget({super.key, required this.node});

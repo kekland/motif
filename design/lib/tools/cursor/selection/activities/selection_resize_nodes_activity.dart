@@ -2,7 +2,7 @@ part of '../selection_activities.dart';
 
 abstract class _BaseResizeNodesActivity extends NodeDragActivity
     with ExclusiveCursorDragActivity, KeyboardListenerDragActivity {
-  _BaseResizeNodesActivity({required super.root, required super.nodes});
+  _BaseResizeNodesActivity({required super.controller, required super.nodes});
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight, .altLeft, .altRight};
@@ -97,7 +97,7 @@ mixin _MultiNodeResize on _BaseResizeNodesActivity {
 }
 
 abstract class _BaseEdgeResizeNodesActivity extends _BaseResizeNodesActivity {
-  _BaseEdgeResizeNodesActivity({required super.root, required super.nodes, required this.edge});
+  _BaseEdgeResizeNodesActivity({required super.controller, required super.nodes, required this.edge});
 
   final Edge edge;
 
@@ -110,7 +110,7 @@ abstract class _BaseEdgeResizeNodesActivity extends _BaseResizeNodesActivity {
 }
 
 abstract class _BaseCornerResizeNodesActivity extends _BaseResizeNodesActivity {
-  _BaseCornerResizeNodesActivity({required super.root, required super.nodes, required this.corner});
+  _BaseCornerResizeNodesActivity({required super.controller, required super.nodes, required this.corner});
 
   final Corner corner;
 
@@ -123,37 +123,43 @@ abstract class _BaseCornerResizeNodesActivity extends _BaseResizeNodesActivity {
 }
 
 class _EdgeResizeSingleNodeActivity extends _BaseEdgeResizeNodesActivity with _SingleNodeResize {
-  _EdgeResizeSingleNodeActivity({required super.root, required super.nodes, required super.edge});
+  _EdgeResizeSingleNodeActivity({required super.controller, required super.nodes, required super.edge});
 }
 
 class _CornerResizeSingleNodeActivity extends _BaseCornerResizeNodesActivity with _SingleNodeResize {
-  _CornerResizeSingleNodeActivity({required super.root, required super.nodes, required super.corner});
+  _CornerResizeSingleNodeActivity({required super.controller, required super.nodes, required super.corner});
 }
 
 class _EdgeResizeMultiNodesActivity extends _BaseEdgeResizeNodesActivity with _MultiNodeResize {
-  _EdgeResizeMultiNodesActivity({required super.root, required super.nodes, required super.edge});
+  _EdgeResizeMultiNodesActivity({required super.controller, required super.nodes, required super.edge});
 }
 
 class _CornerResizeMultiNodesActivity extends _BaseCornerResizeNodesActivity with _MultiNodeResize {
-  _CornerResizeMultiNodesActivity({required super.root, required super.nodes, required super.corner});
+  _CornerResizeMultiNodesActivity({required super.controller, required super.nodes, required super.corner});
 }
 
 class ResizeNodesActivity {
   static NodeDragActivity edge({
-    required RenderRootNode root,
+    required DesignController controller,
     required List<MutableNode> nodes,
     required Edge edge,
   }) {
-    if (nodes.length == 1) return _EdgeResizeSingleNodeActivity(root: root, nodes: nodes, edge: edge);
-    return _EdgeResizeMultiNodesActivity(root: root, nodes: nodes, edge: edge);
+    if (nodes.length == 1) {
+      return _EdgeResizeSingleNodeActivity(controller: controller, nodes: nodes, edge: edge);
+    }
+
+    return _EdgeResizeMultiNodesActivity(controller: controller, nodes: nodes, edge: edge);
   }
 
   static NodeDragActivity corner({
-    required RenderRootNode root,
+    required DesignController controller,
     required List<MutableNode> nodes,
     required Corner corner,
   }) {
-    if (nodes.length == 1) return _CornerResizeSingleNodeActivity(root: root, nodes: nodes, corner: corner);
-    return _CornerResizeMultiNodesActivity(root: root, nodes: nodes, corner: corner);
+    if (nodes.length == 1) {
+      return _CornerResizeSingleNodeActivity(controller: controller, nodes: nodes, corner: corner);
+    }
+
+    return _CornerResizeMultiNodesActivity(controller: controller, nodes: nodes, corner: corner);
   }
 }

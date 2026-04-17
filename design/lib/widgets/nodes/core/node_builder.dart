@@ -8,8 +8,12 @@ class NodeBuilder extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = DesignController.of(context);
+
     return _NodeLayoutTransform(
       node: node,
+      localTransientTransformStream: controller.localTransientTransforms.streamFor(node),
+      globalTransientTransformStream: controller.globalTransientTransforms.streamFor(node),
       child: _NodeBuilderWidget(
         node: node,
         child: HookBuilder(
@@ -53,7 +57,7 @@ class _StackNodeChildLayoutWidget extends StatelessWidget {
 
     return HookBuilder(
       builder: (context) {
-        final key = controller.keyForNode(c);
+        final key = controller.globalKeyCache.getKeyForNode(c);
         return NodeWidget(key: key, node: c);
       },
     );
@@ -80,7 +84,7 @@ class _FlexNodeChildLayoutWidget extends StatelessWidget {
 
     return HookBuilder(
       builder: (context) {
-        final key = controller.keyForNode(c);
+        final key = controller.globalKeyCache.getKeyForNode(c);
         final layoutSize = useComputedValue(() => c.layout.size);
         final dimension = switch (layout.direction) {
           .row => layoutSize.width,
@@ -120,16 +124,114 @@ class _NodeBuilderWidget extends SingleChildRenderObjectWidget {
   final Node node;
 
   @override
-  RenderObject createRenderObject(BuildContext context) => _RenderNode(node: node);
+  RenderObject createRenderObject(BuildContext context) => RenderNode(node: node);
 
   @override
-  void updateRenderObject(BuildContext context, _RenderNode renderObject) {
+  void updateRenderObject(BuildContext context, RenderNode renderObject) {
     renderObject.node = node;
   }
 }
 
-class _RenderNode extends tree.RenderNode<Node> {
-  _RenderNode({required super.node});
+class RenderNode extends tree.RenderNode<Node, RenderNode, RenderRootNode> {
+  RenderNode({required super.node});
 
-  bool get isChildrenTranslationIgnored => node.layout.childLayout.isChildrenTranslationIgnored;
+  @override
+  void performLayout() {
+    super.performLayout();
+    _cachedChildrenLayoutRects = null;
+  }
+
+  bool get isChildrenTranslationIgnored => node.layout.childLayout.isTranslationIgnored;
+
+  /// Returns a layout-only transform from this render object to the [target]. This means that any transient transforms
+  /// (e.g. from dragging in a flex/grid layout) are not included in the resulting transform.
+  ///
+  /// The implementation is a copy of [RenderObject.getTransformTo] with the difference being that any transient
+  /// transforms (coming from `_RenderNodeLayoutTransform`) are not included in the resulting transform.
+  Matrix4 getLayoutTransformTo(RenderObject? target) {
+    assert(attached);
+    List<RenderObject>? fromPath;
+    List<RenderObject>? toPath;
+
+    RenderObject from = this;
+    RenderObject to = target ?? owner!.rootNode!;
+
+    while (!identical(from, to)) {
+      final int fromDepth = from.depth;
+      final int toDepth = to.depth;
+
+      if (fromDepth >= toDepth) {
+        final fromParent = from.parent ?? (throw FlutterError('$target and $this are not in the same render tree.'));
+        (fromPath ??= <RenderObject>[this]).add(fromParent);
+        from = fromParent;
+      }
+      if (fromDepth <= toDepth) {
+        final toParent = to.parent ?? (throw FlutterError('$target and $this are not in the same render tree.'));
+        assert(
+          target != null,
+          '$this has a depth that is less than or equal to ${owner?.rootNode}',
+        );
+        (toPath ??= <RenderObject>[target!]).add(toParent);
+        to = toParent;
+      }
+    }
+
+    // Addition: to ignore transient transforms from `_RenderNodeLayoutTransform`.
+    void _applyTransform(RenderObject a, RenderObject child, Matrix4 transform) {
+      if (a is _RenderNodeLayoutTransform) {
+        a.applyLayoutTransform(child, transform);
+      } else {
+        a.applyPaintTransform(child, transform);
+      }
+    }
+
+    Matrix4? fromTransform;
+    if (fromPath != null) {
+      assert(fromPath.length > 1);
+      fromTransform = Matrix4.identity();
+      final int lastIndex = target == null ? fromPath.length - 2 : fromPath.length - 1;
+      for (var index = lastIndex; index > 0; index -= 1) {
+        _applyTransform(fromPath[index], fromPath[index - 1], fromTransform);
+      }
+    }
+    if (toPath == null) {
+      return fromTransform ?? Matrix4.identity();
+    }
+
+    assert(toPath.length > 1);
+    final toTransform = Matrix4.identity();
+    for (int index = toPath.length - 1; index > 0; index -= 1) {
+      _applyTransform(toPath[index], toPath[index - 1], toTransform);
+    }
+    if (toTransform.invert() == 0) {
+      // If the matrix is singular then `invert()` doesn't do anything.
+      return Matrix4.zero();
+    }
+    return (fromTransform?..multiply(toTransform)) ?? toTransform;
+  }
+
+  List<Rect>? _cachedChildrenLayoutRects;
+
+  /// Computes a list of layout rects (i.e. without transient transforms) for the children of this render node.
+  List<Rect> computeChildrenLayoutRects() {
+    if (_cachedChildrenLayoutRects != null) return _cachedChildrenLayoutRects!;
+
+    final result = <Rect>[];
+
+    for (final node in childrenNodes) {
+      final rect = MatrixUtils.transformRect(
+        node.getLayoutTransformTo(this),
+        Offset.zero & node.size,
+      );
+
+      result.add(rect);
+    }
+
+    _cachedChildrenLayoutRects = result;
+    return result;
+  }
+}
+
+extension GetRenderNodeExtension on Node {
+  RenderNode? getRenderNode(RenderRootNode root) => root.getRenderNode(this);
 }

@@ -1,5 +1,6 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_page.dart';
+import 'package:design/design.dart';
 import 'package:stack_window_manager/stack_window_manager.dart';
 
 class App extends StatelessWidget {
@@ -7,11 +8,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.lightBlueAccent;
+    final seedColor = Colors.blue;
+    final brightness = Brightness.dark;
 
     final colorScheme = ColorScheme.fromSeed(
       seedColor: seedColor,
-      brightness: .dark,
+      brightness: brightness,
       dynamicSchemeVariant: .fidelity,
       contrastLevel: 0.0,
     );
@@ -32,11 +34,13 @@ class App extends StatelessWidget {
       theme: theme,
       child: Surface(
         color: theme.colors.surface.primary,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          showPerformanceOverlay: false,
-          theme: themeData,
-          home: WindowRoot(child: RootPage()),
+        child: TransientTransformsTickerProvider(
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            showPerformanceOverlay: false,
+            theme: themeData,
+            home: WindowRoot(child: RootPage()),
+          ),
         ),
       ),
     );

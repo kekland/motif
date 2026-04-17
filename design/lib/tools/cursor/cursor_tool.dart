@@ -34,7 +34,7 @@ class _CursorToolOverlay extends HookWidget {
       create: () => DragActivityGestureRecognizer(
         onStart: () => shouldUpdateSelectionOnUp.value = false,
         activityFactory: () => MoveNodesActivity(
-          root: controller.renderRootNode,
+          controller: controller,
           nodes: controller.selection.selectedNodes.toList().cast(),
         ),
       ),
@@ -125,7 +125,7 @@ class _CursorToolOverlay extends HookWidget {
                   return Transform(
                     transform: info.childPaintTransform,
                     child: SelectionOverlayBuilder(
-                      controller: controller.selection,
+                      controller: controller,
                       selectionGroups: selectionGroups,
                       child: const SizedBox.expand(),
                     ),

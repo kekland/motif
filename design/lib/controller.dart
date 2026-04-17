@@ -1,5 +1,8 @@
 import 'package:design/imports.dart';
 
+part 'controller/global_key_cache.dart';
+part 'controller/transient_transforms.dart';
+
 class DesignController extends Controller {
   DesignController() : super(logger: Logger('DesignController'));
 
@@ -15,7 +18,6 @@ class DesignController extends Controller {
 
   void onRootNodeCreated(RenderRootNode renderRootNode) {
     _renderRootNode = renderRootNode;
-    selection.root = renderRootNode;
   }
 
   late final root = $disposable(
@@ -32,17 +34,51 @@ class DesignController extends Controller {
         ),
         MutableContainerNode(
           transform: .new(translation: Offset(300, 300)),
-          layout: .fixed(200.0, 200.0),
+          layout: .fixed(400.0, 100.0, childLayout: NodeChildLayout.flex(direction: .row)),
           name: 'container 1',
           children: [
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
-              name: 'green rectangle',
+              name: 'node 1',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
-              transform: .new(translation: Offset(100, 100)),
-              name: 'yellow ellipse',
+              name: 'node 2',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 3',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 4',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 5',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 6',
+            ),
+          ],
+        ),
+        MutableContainerNode(
+          transform: .new(translation: Offset(300, 400)),
+          layout: .fixed(400.0, 100.0, childLayout: NodeChildLayout.flex(direction: .row)),
+          name: 'container 1',
+          children: [
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 1',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 2',
+            ),
+            MutableContainerNode(
+              layout: .fixed(50.0, 50.0),
+              name: 'node 3',
             ),
           ],
         ),
@@ -51,9 +87,7 @@ class DesignController extends Controller {
   );
 
   late final tool = $disposable(ToolController(initialToolset: toolset));
-
-  final _globalKeyCache = <Node, GlobalKey>{};
-  GlobalKey keyForNode(Node node) {
-    return _globalKeyCache[node] ??= GlobalKey();
-  }
+  late final globalKeyCache = $disposable(GlobalKeyCache());
+  late final localTransientTransforms = $disposable(TransientTransforms());
+  late final globalTransientTransforms = $disposable(TransientTransforms());
 }

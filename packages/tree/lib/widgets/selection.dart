@@ -2,14 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:stack/stack.dart';
 
 import '../tree.dart';
-import '../widgets.dart';
 
 class SelectionController<T extends Node> with ChangeNotifier, ChangeNotifierDisposable {
   SelectionController();
-
-  RenderRootNodeBase<T>? _root;
-  RenderRootNodeBase<T> get root => _root!;
-  set root(RenderRootNodeBase<T> value) => _root = value;
 
   late final _selectedNodes = $setSignal<T>({});
   Set<T> get selectedNodes => _selectedNodes.value;

@@ -7,9 +7,11 @@ export 'move/move_nodes_activity.dart';
 export 'marquee/select_nodes_activity.dart';
 
 abstract class NodeDragActivity extends DragActivity {
-  NodeDragActivity({required this.root, required this.nodes});
+  NodeDragActivity({required this.controller, required this.nodes});
 
-  final RenderRootNode root;
+  final DesignController controller;
+  RenderRootNode get root => controller.renderRootNode;
+
   final List<MutableNode> nodes;
   late final List<ImmutableNode> initialNodes;
   late final List<RenderNode> renderNodes;

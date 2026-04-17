@@ -97,7 +97,7 @@ sealed class NodeChildLayout with EquatableMixin {
   const factory NodeChildLayout.flex({required FlexDirection direction, double gap}) = FlexNodeChildLayout;
 
   NodeChildLayoutType get type;
-  bool get isChildrenTranslationIgnored;
+  bool get isTranslationIgnored;
 }
 
 final class StackNodeChildLayout extends NodeChildLayout {
@@ -107,7 +107,7 @@ final class StackNodeChildLayout extends NodeChildLayout {
   NodeChildLayoutType get type => .stack;
 
   @override
-  bool get isChildrenTranslationIgnored => false;
+  bool get isTranslationIgnored => false;
 
   @override
   List<Object?> get props => [type];
@@ -123,7 +123,7 @@ final class FlexNodeChildLayout extends NodeChildLayout {
   NodeChildLayoutType get type => .flex;
 
   @override
-  bool get isChildrenTranslationIgnored => true;
+  bool get isTranslationIgnored => true;
 
   @override
   List<Object?> get props => [type, direction, gap];
