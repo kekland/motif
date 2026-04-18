@@ -1,6 +1,9 @@
 import 'package:design/imports.dart';
 import 'package:vector_math/vector_math_64.dart';
 
+part 'properties/shape_section.dart';
+part 'properties/widgets.dart';
+
 final xd = GlobalKey();
 
 class PropertiesPanel extends HookWidget {
@@ -25,6 +28,10 @@ class PropertiesPanel extends HookWidget {
                 TransformSection(selectedNode: selectedNodes.first),
                 Divider(height: 1.0),
                 LayoutSection(selectedNode: selectedNodes.first),
+                if (selectedNodes.first is NodeWithShape) ...[
+                  Divider(height: 1.0),
+                  ShapeSection(node: selectedNodes.first as NodeWithShape),
+                ],
                 if (selectedNodes.first is NodeWithFill) ...[
                   Divider(height: 1.0),
                   FillSection(selectedNode: selectedNodes.first as NodeWithFill),

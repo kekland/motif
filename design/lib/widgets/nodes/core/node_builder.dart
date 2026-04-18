@@ -1,9 +1,15 @@
 part of '../_nodes.dart';
 
 class NodeBuilder extends HookWidget {
-  const NodeBuilder({super.key, required this.node, required this.builder});
+  const NodeBuilder({
+    super.key,
+    required this.node,
+    required this.builder,
+    this.shape,
+  });
 
   final Node node;
+  final ShapeBorder? shape;
   final Widget Function(BuildContext context, Widget? child) builder;
 
   @override
@@ -16,6 +22,7 @@ class NodeBuilder extends HookWidget {
       globalTransientTransformStream: controller.globalTransientTransforms.streamFor(node),
       child: _NodeBuilderWidget(
         node: node,
+        shape: shape,
         child: HookBuilder(
           builder: (context) => builder(
             context,
@@ -119,21 +126,34 @@ class _FlexNodeChildLayoutWidget extends StatelessWidget {
 }
 
 class _NodeBuilderWidget extends SingleChildRenderObjectWidget {
-  const _NodeBuilderWidget({required super.child, required this.node});
+  const _NodeBuilderWidget({required super.child, required this.node, this.shape});
 
+  final ShapeBorder? shape;
   final Node node;
 
   @override
-  RenderObject createRenderObject(BuildContext context) => RenderNode(node: node);
+  RenderObject createRenderObject(BuildContext context) => RenderNode(
+    node: node,
+    shape: shape,
+  );
 
   @override
   void updateRenderObject(BuildContext context, RenderNode renderObject) {
     renderObject.node = node;
+    renderObject.shape = shape;
   }
 }
 
 class RenderNode extends tree.RenderNode<Node, RenderNode, RenderRootNode> {
-  RenderNode({required super.node});
+  RenderNode({required super.node, ShapeBorder? shape}) : _shape = shape;
+
+  ShapeBorder? _shape;
+  ShapeBorder? get shape => _shape;
+  set shape(ShapeBorder? value) {
+    if (_shape == value) return;
+    _shape = value;
+    markNeedsPaint();
+  }
 
   @override
   void performLayout() {

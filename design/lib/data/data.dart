@@ -5,6 +5,7 @@ import 'package:tree/tree.dart' as tree;
 
 part 'properties/fill.dart';
 part 'properties/layout.dart';
+part 'properties/shape.dart';
 part 'properties/transform.dart';
 
 part 'nodes/container.dart';

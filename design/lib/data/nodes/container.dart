@@ -1,6 +1,6 @@
 part of '../data.dart';
 
-mixin ContainerNode implements Node, NodeWithFill {
+mixin ContainerNode implements Node, NodeWithShape, NodeWithFill {
   @override
   bool get isLeaf => false;
 }
@@ -13,6 +13,7 @@ final class ImmutableContainerNode extends ImmutableNode with ContainerNode {
     super.layout,
     super.transform,
     this.fill = .transparent,
+    this.shape = .defaultShape,
   });
 
   ImmutableContainerNode.fromMutable(MutableContainerNode node)
@@ -21,11 +22,14 @@ final class ImmutableContainerNode extends ImmutableNode with ContainerNode {
         layout: node.layout,
         transform: node.transform,
         fill: node.fill,
+        shape: node.shape,
         children: _nodeListToImmutable(node.children),
       );
 
-  @override
-  final NodeFillData fill;
+  // dart format off 
+  @override final NodeFillData fill;
+  @override final NodeShapeData shape;
+  // dart format on
 
   @override
   MutableContainerNode copyAsMutable() => .fromImmutable(this);
@@ -38,6 +42,7 @@ final class ImmutableContainerNode extends ImmutableNode with ContainerNode {
     NodeTransformData? transform,
     NodeLayoutData? layout,
     NodeFillData? fill,
+    NodeShapeData? shape,
   }) => .new(
     parent: parent ?? this.parent,
     children: children ?? this.children.toList(),
@@ -45,19 +50,22 @@ final class ImmutableContainerNode extends ImmutableNode with ContainerNode {
     transform: transform ?? this.transform,
     layout: layout ?? this.layout,
     fill: fill ?? this.fill,
+    shape: shape ?? this.shape,
   );
 }
 
-final class MutableContainerNode extends MutableNode with ContainerNode, MutableNodeWithFill {
+final class MutableContainerNode extends MutableNode with ContainerNode, MutableNodeWithShape, MutableNodeWithFill {
   MutableContainerNode({
     super.children,
     super.name,
     super.layout,
     super.transform,
     NodeFillData fill = .transparent,
+    NodeShapeData shape = .defaultShape,
   }) {
     _fillSignal = $signal(fill);
-    notifyListenersOn([_fillSignal]);
+    _shapeSignal = $signal(shape);
+    notifyListenersOn([_fillSignal, _shapeSignal]);
   }
 
   MutableContainerNode.fromImmutable(ImmutableContainerNode node)
@@ -66,6 +74,7 @@ final class MutableContainerNode extends MutableNode with ContainerNode, Mutable
         layout: node.layout,
         transform: node.transform,
         fill: node.fill,
+        shape: node.shape,
         children: _nodeListToMutable(node.children),
       );
 

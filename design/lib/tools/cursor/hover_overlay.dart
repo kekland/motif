@@ -47,6 +47,7 @@ class HoverOverlay extends StatelessWidget {
     final size = Size(node!.size.width * sx, node!.size.height * sy);
 
     final transform = totalTransform.getWithNormalizedScale();
+    final shape = (node?.shape ?? RoundedRectangleBorder()).scale(sx);
 
     return UnconstrainedOverflowBox(
       alignment: Alignment.topLeft,
@@ -57,14 +58,7 @@ class HoverOverlay extends StatelessWidget {
             width: size.width,
             height: size.height,
             decoration: ShapeDecoration(
-              // shape: node.shape.copyWithBorderSide(
-              //   BorderSide(
-              //     color: context.colors.accent.primary,
-              //     width: 2.0,
-              //     strokeAlign: BorderSide.strokeAlignCenter,
-              //   ),
-              // ),
-              shape: RoundedRectangleBorder(),
+              shape: shape,
               color: isFilled ? context.colors.accent.primary.withScaledAlpha(0.1) : null,
             ),
           ),
