@@ -1,5 +1,6 @@
 import 'package:design/imports.dart';
 import 'package:flutter/gestures.dart';
+import 'package:stack_ffi/stack_ffi.dart';
 
 /// Moving nodes usually involves just projecting the global position into the parent's coordinate space and applying
 /// that transformation to the node. Additionally, if the node (excluding dragged nodes) under the cursor changes during
@@ -73,6 +74,7 @@ class MoveNodesActivity extends NodeDragActivity with ExclusiveCursorDragActivit
   }
 
   void _performReparenting(MutableNode newParent) {
+    Haptics.click();
     _cachedReorderingOffsets = null;
 
     for (final node in nodes) {

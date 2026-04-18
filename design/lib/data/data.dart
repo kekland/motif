@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:design/imports.dart';
 import 'package:tree/tree.dart' as tree;
 
+part 'common/color.dart';
+
 part 'properties/fill.dart';
 part 'properties/layout.dart';
 part 'properties/shape.dart';
