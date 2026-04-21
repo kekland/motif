@@ -42,6 +42,7 @@ class ShapeSection extends HookWidget {
         switch (shape) {
           RectangleNodeShapeData s => _RectangleShapeProperties(shape: s, onChanged: apply),
           EllipseNodeShapeData s => _EllipseShapeProperties(shape: s, onChanged: apply),
+          // _ => SizedBox(),
         },
       ],
     );
@@ -61,6 +62,7 @@ class _RectangleShapeProperties extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DoubleExpressionInputField(
+      options: .new(leading: Icons.borderRadius()),
       value: shape.borderRadius.topLeft.x,
       onChanged: (v) {
         final newShape = shape.copyWith(borderRadius: .circular(v.clamp(0.0, double.infinity)));

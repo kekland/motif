@@ -3,8 +3,6 @@ import 'dart:math' as math;
 import 'package:design/imports.dart';
 import 'package:tree/tree.dart' as tree;
 
-part 'common/color.dart';
-
 part 'properties/fill.dart';
 part 'properties/layout.dart';
 part 'properties/shape.dart';
@@ -12,6 +10,8 @@ part 'properties/transform.dart';
 
 part 'nodes/container.dart';
 part 'nodes/root.dart';
+part 'nodes/text.dart';
+part 'nodes/vector.dart';
 
 List<ImmutableNode> _nodeListToImmutable(List<MutableNode> nodes) => nodes.map((n) => n.copyAsImmutable()).toList();
 List<MutableNode> _nodeListToMutable(List<ImmutableNode> nodes) => nodes.map((n) => n.copyAsMutable()).toList();

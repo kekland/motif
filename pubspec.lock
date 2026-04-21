@@ -89,6 +89,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  dawn_dart:
+    dependency: "direct overridden"
+    description:
+      path: "../skia_dart/packages/dawn_dart"
+      relative: true
+    source: path
+    version: "0.1.0"
+  dawn_dart_api:
+    dependency: "direct overridden"
+    description:
+      path: "../skia_dart/packages/dawn_dart_api"
+      relative: true
+    source: path
+    version: "0.1.0"
   email_validator:
     dependency: transitive
     description:
@@ -226,10 +240,10 @@ packages:
     dependency: transitive
     description:
       name: material_symbols_icons
-      sha256: c62b15f2b3de98d72cbff0148812f5ef5159f05e61fc9f9a089ec2bb234df082
+      sha256: "10a74aaa9e566c92f8aa14809d2dd78156fb93743348ebffec0345c38eb35706"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2906.0"
+    version: "4.2928.1"
   meta:
     dependency: transitive
     description:
@@ -374,6 +388,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
+  skia_dart:
+    dependency: "direct overridden"
+    description:
+      path: "../skia_dart/packages/skia_dart"
+      relative: true
+    source: path
+    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

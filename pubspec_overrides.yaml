@@ -22,3 +22,12 @@ dependency_overrides:
 
   stack_window_manager:
     path: ../stack/utils/stack_window_manager
+
+  skia_dart:
+    path: ../skia_dart/packages/skia_dart
+
+  dawn_dart:
+    path: ../skia_dart/packages/dawn_dart
+
+  dawn_dart_api:
+    path: ../skia_dart/packages/dawn_dart_api

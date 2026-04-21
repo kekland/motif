@@ -17,8 +17,14 @@ class ContainerNodeWidget extends HookWidget {
       node: node,
       shape: shape,
       builder: (context, child) {
+        final fill = useComputedValue(() => node.fill);
+        final color = fill.color;
+
         return DecoratedBox(
-          decoration: ShapeDecoration(shape: shape),
+          decoration: ShapeDecoration(
+            shape: shape,
+            color: _colorDataToColor(color),
+          ),
           child: child,
         );
       },
@@ -29,7 +35,7 @@ class ContainerNodeWidget extends HookWidget {
 ShapeBorder _nodeShapeToShape(BuildContext context, NodeShapeData shape) {
   final side = BorderSide(
     color: context.colors.divider,
-    strokeAlign: BorderSide.strokeAlignInside,
+    width: 1.0,
   );
 
   return switch (shape) {
@@ -43,3 +49,6 @@ ShapeBorder _nodeShapeToShape(BuildContext context, NodeShapeData shape) {
     ),
   };
 }
+
+Color _colorDataToColor(ColorData colorData) =>
+    colorData.cssColor.convertTo(.srgb).reinterpretAs(.displayP3).toUiColor(colorSpace: .displayP3);

@@ -49,10 +49,17 @@ class MoveNodesActivity extends NodeDragActivity with ExclusiveCursorDragActivit
     super.onStart(details);
     _cachedReorderingOffsets = null;
 
+    // Find the target node under the cursor.
     final hitTestResult = NodeHitTestResult();
     root.nodeHitTest(hitTestResult, position: root.globalToLocal(details.globalPosition));
-    targetNode = hitTestResult.path.first.target.node as MutableNode;
-
+    for (final entry in hitTestResult.path) {
+      final node = entry.target.node;
+      if (nodes.contains(node)) {
+        targetNode = node as MutableNode;
+        break;
+      }
+    }
+    
     initialNodeRootTransform = renderNodes.map((n) => n.getTransformTo(root)).toList();
   }
 
@@ -179,6 +186,7 @@ class MoveNodesActivity extends NodeDragActivity with ExclusiveCursorDragActivit
   }
 
   void _performReordering(int insertionIndex) {
+    Haptics.click();
     _collapseSelection();
     _cachedReorderingOffsets = null;
 

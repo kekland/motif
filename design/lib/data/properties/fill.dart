@@ -2,11 +2,23 @@ part of '../data.dart';
 
 /// Represents node's fill properties, like colors, gradients, patterns, etc.
 final class NodeFillData with EquatableMixin {
-  const NodeFillData();
-  static const transparent = NodeFillData();
+  const NodeFillData({required this.color});
+
+  static const transparent = NodeFillData(color: .transparent);
+  static const red = NodeFillData(color: .red);
+  static const green = NodeFillData(color: .green);
+  static const blue = NodeFillData(color: .blue);
+
+  final ColorData color;
+
+  NodeFillData copyWith({ColorData? color}) {
+    return NodeFillData(
+      color: color ?? this.color,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [color];
 }
 
 // Convenience mixin for nodes with fill properties.

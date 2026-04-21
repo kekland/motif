@@ -141,9 +141,7 @@ class NodeTile extends HookWidget {
         Draggable(
           hitTestBehavior: .translucent,
           data: node,
-          onDragStarted: () {
-            print('drag started');
-          },
+          onDragStarted: () {},
           axis: .vertical,
           affinity: .vertical,
           feedback: SizedBox(),

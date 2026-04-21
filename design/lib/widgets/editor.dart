@@ -5,6 +5,7 @@ import 'package:design/widgets/editor/canvas.dart';
 import 'package:design/widgets/editor/nodes_panel.dart';
 import 'package:design/widgets/editor/properties_panel.dart';
 import 'package:design/widgets/editor/toolbar.dart';
+import 'package:text/text.dart';
 
 class DesignEditorPage extends HookWidget {
   const DesignEditorPage({super.key});
@@ -12,6 +13,8 @@ class DesignEditorPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useDisposable(() => DesignController());
+
+    ttt();
 
     return Scaffold(
       child: Provider.value(

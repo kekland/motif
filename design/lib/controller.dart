@@ -39,26 +39,32 @@ class DesignController extends Controller {
           children: [
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .red,
               name: 'node 1',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .green,
               name: 'node 2',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .blue,
               name: 'node 3',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .red,
               name: 'node 4',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .green,
               name: 'node 5',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .blue,
               name: 'node 6',
             ),
           ],
@@ -70,15 +76,25 @@ class DesignController extends Controller {
           children: [
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .red,
               name: 'node 1',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .green,
               name: 'node 2',
             ),
             MutableContainerNode(
               layout: .fixed(50.0, 50.0),
+              fill: .blue,
               name: 'node 3',
+            ),
+            MutableTextNode(
+              layout: .new(size: .contain()),
+              spans: [
+                .new('Hello, '),
+                .new('world!', style: .new(color: .blue)),
+              ],
             ),
           ],
         ),

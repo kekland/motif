@@ -1,4 +1,9 @@
 import 'package:ui/ui.dart';
+import 'package:stack_window_manager/stack_window_manager.dart' as window_manager;
+
+class WindowEntry extends window_manager.WindowEntry {
+  WindowEntry({required super.builder, required super.onRemoved});
+}
 
 class WindowScaffold extends StatelessWidget {
   const WindowScaffold({super.key, required this.child});

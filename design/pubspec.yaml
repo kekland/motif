@@ -12,7 +12,9 @@ dependencies:
   canvas:
   commander:
   css:
+  color:
   shared:
+  text:
   tool:
   tree:
   ui:

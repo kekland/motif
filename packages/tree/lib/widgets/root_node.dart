@@ -31,5 +31,8 @@ mixin RenderRootNodeBase<
   }
 
   @override
+  bool hitTestSelf(Offset position) => true;
+
+  @override
   bool nodeHitTestSelf(Offset position) => true;
 }

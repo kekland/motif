@@ -59,7 +59,7 @@ mixin RenderNodeBase<
 
     _parentNode?._childrenNodes.add(this as TRenderNode);
     _root?.registerDescendant(this as TRenderNode);
-    
+
     if (node is ChangeNotifier) {
       (node as ChangeNotifier).addListener(_onNodeChildrenChanged);
     }
@@ -89,9 +89,24 @@ mixin RenderNodeBase<
     return false;
   }
 
+  @override
+  bool hitTestSelf(Offset position) => size.contains(position);
+
   void _onNodeChildrenChanged() {
     // TODO: make this more efficient.
     markNeedsLayout();
+  }
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    // Sort the children by their order in the node tree.
+    _childrenNodes.sort((a, b) {
+      final aIndex = node.children.indexOf(a.node);
+      final bIndex = node.children.indexOf(b.node);
+      return aIndex.compareTo(bIndex);
+    });
   }
 
   // --
@@ -139,18 +154,6 @@ mixin RenderNodeBase<
   }
 
   Rect get _nodeBounds => Offset.zero & size;
-
-  @override
-  void performLayout() {
-    super.performLayout();
-
-    // Sort the children by their order in the node tree.
-    _childrenNodes.sort((a, b) {
-      final aIndex = node.children.indexOf(a.node);
-      final bIndex = node.children.indexOf(b.node);
-      return aIndex.compareTo(bIndex);
-    });
-  }
 
   // --
   // Node rect hit testing (e.g. for marquee selection)

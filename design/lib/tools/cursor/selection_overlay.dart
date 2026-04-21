@@ -55,7 +55,7 @@ class SelectionOverlay extends StatelessWidget {
       children: [
         for (final group in selectionGroups)
           DeferredLayoutBuilder(
-            targets: group.map((n) => root.getRenderNode(n)!).toList(),
+            targets: group.map((n) => root.getRenderNode(n)).nonNulls.toList(),
             builder: (context, _) => SelectionGroupOverlay(
               nodes: group,
               controller: controller,

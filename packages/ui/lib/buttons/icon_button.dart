@@ -1,14 +1,7 @@
 import 'package:ui/ui.dart';
 
 class IconButton extends StatelessWidget {
-  const IconButton({
-    super.key,
-    required this.child,
-    this.onTap,
-    this.size = 32.0,
-    this.color,
-    this.foregroundColor
-  });
+  const IconButton({super.key, required this.child, this.onTap, this.size = 32.0, this.color, this.foregroundColor});
 
   final VoidCallback? onTap;
   final Color? color;
@@ -28,7 +21,10 @@ class IconButton extends StatelessWidget {
       builder: (context, states) {
         return DefaultGestureReaction(
           states: states,
-          child: Center(child: child),
+          child: DefaultForegroundStyle(
+            iconSize: 20.0,
+            child: Center(child: child),
+          ),
         );
       },
     );

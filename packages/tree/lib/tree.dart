@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:stack/stack.dart';
 
-const kDebugTreeLogEnabled = false;
+const kDebugTreeLogEnabled = true;
 
 abstract interface class Node {
   Node? get parent;
@@ -87,6 +87,17 @@ abstract class MutableNodeBase<T extends MutableNodeBase<T, TI>, TI extends Immu
   T? get parent => _parent;
   set parent(T? parent) {
     if (_parent == parent) return;
+
+    // Check for circular dependency.
+    assert(() {
+      T? current = parent;
+      while (current != null) {
+        if (current == this) return false;
+        current = current.parent;
+      }
+      return true;
+    }());
+
     _parent?.removeChild(this as T);
     parent?.addChild(this as T);
 
@@ -102,6 +113,17 @@ abstract class MutableNodeBase<T extends MutableNodeBase<T, TI>, TI extends Immu
 
   void insertChild(int index, T child) {
     if (_children.contains(child)) throw ArgumentError('Child is already added to this node');
+
+    // Check for circular dependency.
+    assert(() {
+      T? current = this as T?;
+      while (current != null) {
+        if (current == child) return false;
+        current = current.parent;
+      }
+      return true;
+    }());
+
     _children.insert(index, child);
     child._parent = this as T;
     notifyListeners();

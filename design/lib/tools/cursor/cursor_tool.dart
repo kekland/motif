@@ -46,7 +46,7 @@ class _CursorToolOverlay extends HookWidget {
         onStart: () => shouldUpdateSelectionOnUp.value = false,
         activityFactory: () => SelectNodesActivity(
           root: controller.renderRootNode,
-          localRenderObject: context.findRenderObject()!,
+        localRenderObject: context.findRenderObject()!,
           onMarqueeRectChanged: marqueeRectSignal.$set,
           onSelectedNodesChanged: controller.selection.setMultiple,
         ),

@@ -128,7 +128,7 @@ class _RenderNodeLayoutTransform extends RenderProxyBox {
       final rootToThis = Matrix4.inverted(transformToRoot);
       transform.multiply(_globalTransientTransform! * rootToThis);
     }
-    
+
     if (_localTransientTransform != null) {
       transform.multiply(_localTransientTransform!);
     }
@@ -204,5 +204,31 @@ class _RenderNodeLayoutTransform extends RenderProxyBox {
       final rect = MatrixUtils.transformRect(_effectiveTransform, Offset.zero & child!.size);
       context.canvas.drawRect(rect.shift(offset), paint);
     }
+  }
+
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    final rect = MatrixUtils.transformRect(_effectiveTransform, Offset.zero & size);
+    if (!rect.contains(position)) return false;
+
+    if (hitTestChildren(result, position: position) || hitTestSelf(position)) {
+      result.add(BoxHitTestEntry(this, position));
+      return true;
+    }
+
+    return false;
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    // print('hitTestChildren at $position for node $node');
+    final transform = Matrix4.identity();
+    _applyPaintTransform(transform);
+
+    return result.addWithPaintTransform(
+      transform: transform,
+      position: position,
+      hitTest: (result, position) => child!.hitTest(result, position: position),
+    );
   }
 }

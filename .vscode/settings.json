@@ -10,7 +10,7 @@
     "**/.symlinks": true,
     "**/.plugin_symlinks": true,
     ".fvm": true,
-    ".fvmrc": true,
+    // ".fvmrc": true,
     "**/.dart_tool": true,
     "**/.idea": true,
     "**/*.iml": true,

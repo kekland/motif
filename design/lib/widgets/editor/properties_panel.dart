@@ -1,6 +1,7 @@
 import 'package:design/imports.dart';
 import 'package:vector_math/vector_math_64.dart';
 
+part 'properties/fill_section.dart';
 part 'properties/shape_section.dart';
 part 'properties/widgets.dart';
 
@@ -343,38 +344,6 @@ class LayoutSection extends HookWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class FillSection extends HookWidget {
-  const FillSection({super.key, required this.selectedNode});
-
-  final NodeWithFill selectedNode;
-
-  @override
-  Widget build(BuildContext context) {
-    // final isMutable = selectedNode is MutableNode;
-    // final fill = useComputedValue(() => selectedNode.fill);
-
-    // void apply(NodeFillData newFill) {
-    //   (selectedNode as MutableNodeWithFill).fill = newFill;
-    // }
-
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Text('fill', style: context.typography.caption3.tertiary),
-          const SizedBox(height: 8.0),
-          // ColorInputField(
-          //   value: fill.color,
-          //   valueListenable: useComputed(() => selectedNode.fill.color),
-          //   onChanged: isMutable ? (c) => apply(fill.copyWith(color: c)) : null,
-          // ),
-        ],
-      ),
     );
   }
 }

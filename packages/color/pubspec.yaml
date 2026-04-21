@@ -1,0 +1,16 @@
+name: color
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+  
+dependencies:
+  flutter:
+    sdk: flutter
+
+  css:
+  shared:
+  ui:
+
+  vector_math: ^2.2.0

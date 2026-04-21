@@ -16,7 +16,7 @@ dependencies:
   stack_multi_pane_container:
 
   expressions: ^0.2.5+3
-  material_symbols_icons: ^4.2906.0
+  material_symbols_icons: ^4.2928.1
   vector_graphics: ^1.1.20
   vector_math: ^2.2.0
 
@@ -28,3 +28,11 @@ flutter:
   assets:
     - assets/gen/cursors/
     - assets/gen/icons/
+    - assets/fonts/RobotoMono/
+
+  fonts:
+    - family: Roboto Mono
+      fonts:
+        - asset: assets/fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf
+        - asset: assets/fonts/RobotoMono/RobotoMono-Italic-VariableFont_wght.ttf
+          style: italic

@@ -1,5 +1,4 @@
 part of '../data.dart';
 
-class ColorData {
-  
-}
+
+class PathData {}

@@ -11,6 +11,8 @@ Future<void> main() async {
     .new('container', 'Symbols.border_all_rounded'),
     .new('chevronLeft', 'Symbols.chevron_left_rounded'),
     .new('chevronRight', 'Symbols.chevron_right_rounded'),
+    .new('chevronUp', 'Symbols.keyboard_arrow_up_rounded'),
+    .new('chevronDown', 'Symbols.keyboard_arrow_down_rounded'),
     .new('rotateCw', 'Symbols.rotate_90_degrees_cw_rounded'),
     .new('rotateCcw', 'Symbols.rotate_90_degrees_ccw_rounded'),
     .new('move', 'Symbols.drag_pan_rounded'),
@@ -20,6 +22,11 @@ Future<void> main() async {
     .new('layoutSizeNonFixed', 'Symbols.lock_open_rounded'),
     .new('layoutSizeContain', 'Symbols.compress_rounded'),
     .new('layoutSizeExpand', 'Symbols.expand_rounded'),
+    .new('borderRadius', 'Symbols.rounded_corner_rounded'),
+    .new('star', 'Symbols.star_rounded'),
+    .new('polygon', 'Symbols.pentagon_rounded'),
+    .new('check', 'Symbols.check_rounded'),
+    .new('eyedropper', 'Symbols.dropper_eye_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

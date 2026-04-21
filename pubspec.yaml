@@ -10,9 +10,11 @@ workspace:
   - design
 
   - packages/canvas
+  - packages/color
   - packages/commander
   - packages/css
   - packages/shared
+  - packages/text
   - packages/tool
   - packages/tree
   - packages/ui
