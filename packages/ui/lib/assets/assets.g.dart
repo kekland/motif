@@ -367,6 +367,8 @@ class Icons extends _BaseIcon {
   const Icons.polygon({super.key, super.size, super.color}): super.iconData(icon: Symbols.pentagon_rounded);
   const Icons.check({super.key, super.size, super.color}): super.iconData(icon: Symbols.check_rounded);
   const Icons.eyedropper({super.key, super.size, super.color}): super.iconData(icon: Symbols.dropper_eye_rounded);
+  const Icons.pen({super.key, super.size, super.color}): super.iconData(icon: Symbols.stylus_fountain_pen_rounded);
+  const Icons.pencil({super.key, super.size, super.color}): super.iconData(icon: Symbols.draw_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

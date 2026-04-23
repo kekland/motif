@@ -1,0 +1,19 @@
+name: vgc
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  vector_math: ^2.2.0
+  uuid: ^4.5.3
+
+  geometry:
+
+dev_dependencies:
+  flutter_test: 
+    sdk: flutter

@@ -24,9 +24,4 @@ class ToolController with ChangeNotifier, ChangeNotifierDisposable {
   late final _activeTool = $signal<Tool?>(null);
   Tool? get activeTool => _activeTool.value;
   set activeTool(Tool? value) => _activeTool.value = value;
-
-  Widget wrapViewport(BuildContext context, OverlayChildLayoutInfo info) {
-    if (activeTool == null) return const SizedBox.expand();
-    return activeTool!.buildViewportOverlay(context, info);
-  }
 }

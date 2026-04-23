@@ -13,11 +13,13 @@ class InteractiveCanvas extends StatefulWidget {
     super.key,
     this.transformationController,
     this.overlayBuilders = const [],
+    this.centerOrigin = true,
     required this.child,
   });
 
   final TransformationController? transformationController;
   final List<Widget Function(BuildContext context, Widget child)> overlayBuilders;
+  final bool centerOrigin;
   final Widget child;
 
   @override
@@ -48,7 +50,11 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
           scaleFactor: 200.0,
           builder: (context, _) {
             final rawTransform = controller.value;
-            final translate = Matrix4.translationValues(size.width / 2, size.height / 2, 0.0);
+
+            final translate = widget.centerOrigin
+                ? Matrix4.translationValues(size.width / 2, size.height / 2, 0.0)
+                : Matrix4.identity();
+
             final transform = rawTransform * translate;
 
             Widget child = SizedBox.fromSize(

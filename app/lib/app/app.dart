@@ -2,6 +2,7 @@ import 'package:app/imports.dart';
 import 'package:app/app/root_page.dart';
 import 'package:design/design.dart';
 import 'package:stack_window_manager/stack_window_manager.dart';
+import 'package:vector/playground.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -22,7 +23,7 @@ class App extends StatelessWidget {
       seedColor: seedColor,
       brightness: colorScheme.brightness,
       dynamicSchemeVariant: .fidelity,
-      contrastLevel: 0.0
+      contrastLevel: 0.0,
     );
 
     final themeData = ThemeData.from(colorScheme: colorScheme).copyWith(

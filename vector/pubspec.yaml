@@ -1,0 +1,19 @@
+name: vector
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  canvas:
+  geometry:
+  shared:
+  tool:
+  vgc:
+  ui:
+
+  vector_math: ^2.2.0

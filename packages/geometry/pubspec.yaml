@@ -1,0 +1,9 @@
+name: geometry
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  vector_math: ^2.2.0

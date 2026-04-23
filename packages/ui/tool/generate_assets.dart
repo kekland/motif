@@ -27,6 +27,8 @@ Future<void> main() async {
     .new('polygon', 'Symbols.pentagon_rounded'),
     .new('check', 'Symbols.check_rounded'),
     .new('eyedropper', 'Symbols.dropper_eye_rounded'),
+    .new('pen', 'Symbols.stylus_fountain_pen_rounded'),
+    .new('pencil', 'Symbols.draw_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

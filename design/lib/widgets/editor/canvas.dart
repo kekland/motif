@@ -24,6 +24,8 @@ class DesignCanvas extends HookWidget {
       return () => FocusManager.instance.removeListener(_onPrimaryFocusChanged);
     });
 
+    final tool = useComputedValue(() => controller.tool.activeTool);
+
     return FocusScope(
       autofocus: true,
       canRequestFocus: true,
@@ -38,7 +40,7 @@ class DesignCanvas extends HookWidget {
                 key: canvasKey,
                 transformationController: viewportController,
                 overlayBuilders: [
-                  (context, child) => _ToolOverlay(child: child),
+                  (context, child) => ToolOverlay(tool: tool, child: child),
                 ],
                 child: RootNodeWidget(node: root),
               ),
@@ -46,29 +48,6 @@ class DesignCanvas extends HookWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ToolOverlay extends HookWidget {
-  const _ToolOverlay({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = DesignController.of(context);
-    final tool = useListenable(controller.tool);
-
-    final overlayController = useOverlayPortalController();
-    useCallOncePostFrame(() => overlayController.show());
-
-    return OverlayPortal.overlayChildLayoutBuilder(
-      controller: overlayController,
-      overlayChildBuilder: (context, info) {
-        return tool.wrapViewport(context, info);
-      },
-      child: child,
     );
   }
 }

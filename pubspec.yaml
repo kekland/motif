@@ -8,16 +8,19 @@ workspace:
   - app
 
   - design
+  - vector
 
   - packages/canvas
   - packages/color
   - packages/commander
   - packages/css
+  - packages/geometry
   - packages/shared
   - packages/text
   - packages/tool
   - packages/tree
   - packages/ui
+  - packages/vgc
 
 dev_dependencies:
   flutter_lints: ^6.0.0

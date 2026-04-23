@@ -13,5 +13,7 @@ dependencies:
   stack_window_manager:
 
   design:
+  vector:
+
   shared:
   ui:

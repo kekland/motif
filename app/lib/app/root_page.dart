@@ -1,6 +1,6 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_navigation_bar.dart';
-import 'package:design/widgets/editor.dart';
+import 'package:vector/vector.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});
@@ -16,8 +16,8 @@ class RootPage extends StatelessWidget {
           ),
           Divider(height: 1.0),
           Expanded(
-            // child: VectorEditorPage(),
-            child: DesignEditorPage(),
+            child: VectorEditorPage(),
+            // child: DesignEditorPage(),
           ),
         ],
       ),
