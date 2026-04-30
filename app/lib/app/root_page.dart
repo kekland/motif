@@ -1,6 +1,7 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_navigation_bar.dart';
 import 'package:vector/vector.dart';
+import 'package:design/design.dart';
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});

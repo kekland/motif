@@ -3,11 +3,21 @@ part of '../../vector_complex.dart';
 extension CutEdge on VectorComplex {
   EdgeCutResult cutEdge(Edge edge, double t) {
     if (!contains(edge)) throw ArgumentError('Edge is not part of this complex');
-    if (t < 0 || t > 1) throw ArgumentError.value(t, 't', 'must be between 0 and 1');
+    if (t <= 0 || t >= 1) throw ArgumentError.value(t, 't', 'must be between 0 and 1');
 
     return switch (edge) {
       OpenEdge e => _cutOpenEdge(e, t),
       ClosedEdge e => _cutClosedEdge(e, t),
+    };
+  }
+
+  MultiEdgeCutResult cutEdgeMulti(Edge edge, List<double> ts) {
+    if (!contains(edge)) throw ArgumentError('Edge is not part of this complex');
+    if (ts.any((t) => t <= 0 || t >= 1)) throw ArgumentError.value(ts, 'ts', 'all values must be between 0 and 1');
+
+    return switch (edge) {
+      OpenEdge e => _multiCutOpenEdge(e, ts),
+      ClosedEdge e => _multiCutClosedEdge(e, ts),
     };
   }
 
@@ -27,14 +37,26 @@ extension CutEdge on VectorComplex {
     _cells.add(edge1);
     _cells.add(edge2);
 
-    // TODO: Faces
-    // final affectedFaces = edge.directStar.whereType<Face>();
-    // for (final face in affectedFaces) {
-    //   face.cycles = [
-    //     for (final cycle in face.cycles)
-
-    //   ];
-    // }
+    for (final face in edge.directStar.whereType<Face>().toList()) {
+      face.cycles = [
+        for (final cycle in face.cycles)
+          if (cycle is RegularCycle)
+            RegularCycle([
+              for (final he in cycle.halfEdges)
+                if (he.edge != edge)
+                  he
+                else if (he.direction) ...[
+                  .new(edge1, true),
+                  .new(edge2, true),
+                ] else ...[
+                  .new(edge2, false),
+                  .new(edge1, false),
+                ],
+            ])
+          else
+            cycle,
+      ];
+    }
 
     hardDelete(edge);
     return .new(vertex: vertex, edge1: edge1, edge2: edge2);
@@ -70,10 +92,42 @@ extension CutEdge on VectorComplex {
     _cells.add(vertex);
     _cells.add(newEdge);
 
-    // TODO: Faces
+    for (final face in edge.directStar.whereType<Face>()) {
+      face.cycles = [
+        for (final cycle in face.cycles)
+          if (cycle is RegularCycle)
+            RegularCycle([
+              for (final he in cycle.halfEdges)
+                if (he.edge == edge) .new(newEdge, he.direction) else he,
+            ])
+          else
+            cycle,
+      ];
+    }
 
     hardDelete(edge);
     return .new(vertex: vertex, edge: newEdge);
+  }
+
+  MultiEdgeCutResult _multiCutOpenEdge(OpenEdge edge, List<double> ts) {
+    final vertices = <Vertex>[];
+    final edges = parametricSplit(edge, ts, (e, t) {
+      final result = _cutOpenEdge(e, t);
+      vertices.add(result.vertex);
+      return (result.edge1, result.edge2);
+    });
+
+    return .new(vertices: vertices, edges: edges);
+  }
+
+  MultiEdgeCutResult _multiCutClosedEdge(ClosedEdge edge, List<double> ts) {
+    // Cut closed edge first, and then defer to _multiCutOpenEdge for the remaining cuts.
+    final _ts = List<double>.from(ts)..sort();
+
+    final firstT = _ts.first;
+    final firstCutResult = _cutClosedEdge(edge, firstT);
+    final remainingTs = _ts.skip(1).map((t) => t - firstT).toList();
+    return _multiCutOpenEdge(firstCutResult.edge, remainingTs);
   }
 }
 
@@ -101,4 +155,11 @@ final class ClosedEdgeCutResult extends EdgeCutResult {
 
   /// Closed edge transforms into an open edge with start == end.
   final OpenEdge edge;
+}
+
+final class MultiEdgeCutResult {
+  const MultiEdgeCutResult({required this.vertices, required this.edges});
+
+  final List<Vertex> vertices;
+  final List<OpenEdge> edges;
 }

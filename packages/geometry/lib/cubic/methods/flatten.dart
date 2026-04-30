@@ -28,7 +28,7 @@ void _cubicFlatten(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, double? toler
     }
 
     final tm = (t0 + t1) / 2;
-    final (l, r) = _deCasteljauSplit(p0, p1, p2, p3, 0.5);
+    final (l, r) = _deCasteljauSplit(a, b, c, d, 0.5);
     recurse(l.p0, l.p1, l.p2, l.p3, t0, tm, depth + 1);
     recurse(r.p0, r.p1, r.p2, r.p3, tm, t1, depth + 1);
   }

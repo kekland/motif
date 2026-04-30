@@ -28,6 +28,10 @@ class VectorController extends Controller {
     return artworkRender!.hitTestCell(localPosition, tolerance: tolerance);
   }
 
+  CellHitTestEntry? hitTestCellLocal(Offset localPosition, {CellHitTestTolerance tolerance = .defaultTolerance}) {
+    return artworkRender!.hitTestCell(localPosition, tolerance: tolerance);
+  }
+
   late final transientEdges = $disposable(TransientEdges());
   late final transientStrokes = $disposable(TransientStrokes());
   late final tool = $disposable(ToolController(initialToolset: toolset));

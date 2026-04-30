@@ -56,41 +56,14 @@ void _validateT(double t) {
 // Split multiple
 // --
 
-List<T> _splitMultiple<T>(T arg, (T, T) Function(T, double) splitFn, List<double> ts) {
-  final sorted = ts.toList(growable: false)..sort();
-  for (final t in sorted) _validateT(t);
-
-  for (var i = 1; i < sorted.length; i++) {
-    if ((sorted[i] - sorted[i - 1]).abs() < 1e-9) {
-      throw ArgumentError.value(ts, 'ts', 'values must be unique (also not near-coincident)');
-    }
-  }
-
-  final pieces = <T>[];
-  var current = arg;
-  var remaining = sorted;
-
-  while (remaining.isNotEmpty) {
-    final u = remaining.first;
-    final (left, right) = splitFn(current, u);
-    pieces.add(left);
-    current = right;
-    final scale = 1.0 - u;
-    remaining = [for (final t in remaining.skip(1)) (t - u) / scale];
-  }
-
-  pieces.add(current);
-  return pieces;
-}
-
 List<Cubic2> _cubicSplitMultiple(Cubic2 cubic, List<double> ts) {
   if (ts.isEmpty) return [cubic.copy()];
-  return _splitMultiple(cubic, _cubicSplit, ts);
+  return parametricSplit(cubic, ts, _cubicSplit);
 }
 
 List<CubicSpline2> _splineSplitMultiple(CubicSpline2 spline, List<double> ts) {
   if (ts.isEmpty) return [spline.copy()];
   if (spline.segmentCount == 0) throw StateError('Cannot split an empty spline');
 
-  return _splitMultiple(spline, _splineSplit, ts);
+  return parametricSplit(spline, ts, _splineSplit);
 }

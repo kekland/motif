@@ -41,7 +41,10 @@ class _VectorCanvas extends HookWidget {
             centerOrigin: false,
             transformationController: viewportController,
             overlayBuilders: [
-              (context, child) => HandlesOverlayBuilder(controller: controller),
+              (context, child) => HandlesOverlayBuilder(
+                controller: controller,
+                areGesturesEnabled: tool is! PenTool,
+              ),
               (context, child) => ToolOverlay(tool: tool, child: child),
             ],
             child: Stack(

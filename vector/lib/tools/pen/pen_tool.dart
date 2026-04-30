@@ -45,18 +45,32 @@ class _PenToolOverlay extends HookWidget {
         existingTransientEdge: transientEdge.value,
         onTransientEdgeCreated: (v) => transientEdge.value = v,
         onTransientEdgeCompleted: (v) {
-          final v2 = controller.complex.createVertex(v.endPosition!.asVector2());
+          final hitTest = controller.hitTestCellLocal(v.endPosition!);
+          late final Vertex vtx;
+
+          if (hitTest is VertexHitTestEntry) {
+            vtx = hitTest.vertex;
+          } else if (hitTest is EdgeHitTestEntry) {
+            final edge = hitTest.edge;
+            final t = hitTest.t;
+            final cutResult = controller.complex.cutEdge(edge, t);
+            vtx = cutResult.vertex;
+          } else {
+            vtx = controller.complex.createVertex(v.endPosition!.asVector2());
+          }
+
           controller.complex.createOpenEdge(
             v.start,
-            v2,
+            vtx,
             cStart: v.cStartPosition?.asVector2(),
             cEnd: v.cEndPosition?.asVector2(),
           );
+
           controller.transientEdges.remove(v);
 
           final cEnd = v.cEndPosition?.asVector2();
-          final newCEnd = cEnd != null ? v2.position + (v2.position - cEnd) : null;
-          transientEdge.value = controller.transientEdges.create(v2, cStartPosition: newCEnd?.asOffset());
+          final newCEnd = cEnd != null ? vtx.position + (vtx.position - cEnd) : null;
+          transientEdge.value = controller.transientEdges.create(vtx, cStartPosition: newCEnd?.asOffset());
         },
       ),
     );
@@ -80,73 +94,69 @@ class _PenToolOverlay extends HookWidget {
           }
         },
         onPointerDown: (e) {
-          final hitTest = controller.hitTestCell(e.position);
-
-          if (hitTest == null) {
-            createVertexRecognizer.addPointer(e);
-          }
+          createVertexRecognizer.addPointer(e);
         },
         child: GestureDetector(
           behavior: .translucent,
-          onTapUp: (details) {
-            final position = controller.globalToArtworkLocal(details.globalPosition);
-            final hitTest = controller.hitTestCell(details.globalPosition);
+          // onTapUp: (details) {
+          //   final position = controller.globalToArtworkLocal(details.globalPosition);
+          //   final hitTest = controller.hitTestCell(details.globalPosition);
 
-            if (hitTest == null) {
-              final vertex = controller.complex.createVertex(position.asVector2());
+          //   if (hitTest == null) {
+          //     final vertex = controller.complex.createVertex(position.asVector2());
 
-              final edge = transientEdge.value;
-              if (edge != null) {
-                // Commit a new edge
-                controller.complex.createOpenEdge(
-                  edge.start,
-                  vertex,
-                  cStart: edge.cStartPosition?.asVector2(),
-                  cEnd: edge.cEndPosition?.asVector2(),
-                );
+          //     final edge = transientEdge.value;
+          //     if (edge != null) {
+          //       // Commit a new edge
+          //       controller.complex.createOpenEdge(
+          //         edge.start,
+          //         vertex,
+          //         cStart: edge.cStartPosition?.asVector2(),
+          //         cEnd: edge.cEndPosition?.asVector2(),
+          //       );
 
-                controller.transientEdges.remove(edge);
-              }
+          //       controller.transientEdges.remove(edge);
+          //     }
 
-              transientEdge.value = controller.transientEdges.create(vertex);
-            } else if (hitTest.cell is Vertex) {
-              final vertex = hitTest.cell as Vertex;
+          //     transientEdge.value = controller.transientEdges.create(vertex);
+          //   } else if (hitTest.cell is Vertex) {
+          //     final vertex = hitTest.cell as Vertex;
 
-              final edge = transientEdge.value;
-              if (edge != null) {
-                // Commit a new edge
-                controller.complex.createOpenEdge(
-                  edge.start,
-                  vertex,
-                  cStart: edge.cStartPosition?.asVector2(),
-                  cEnd: edge.cEndPosition?.asVector2(),
-                );
+          //     final edge = transientEdge.value;
+          //     if (edge != null) {
+          //       // Commit a new edge
+          //       controller.complex.createOpenEdge(
+          //         edge.start,
+          //         vertex,
+          //         cStart: edge.cStartPosition?.asVector2(),
+          //         cEnd: edge.cEndPosition?.asVector2(),
+          //       );
 
-                controller.transientEdges.remove(edge);
-              }
+          //       controller.transientEdges.remove(edge);
+          //     }
 
-              transientEdge.value = controller.transientEdges.create(vertex);
-            } else if (hitTest.cell is Edge) {
-              final hitEdge = hitTest.cell as Edge;
-              final t = (hitTest as EdgeHitTestEntry).t;
+          //     transientEdge.value = controller.transientEdges.create(vertex);
+          //   } else if (hitTest.cell is Edge) {
+          //     final hitEdge = hitTest.cell as Edge;
+          //     final t = (hitTest as EdgeHitTestEntry).t;
 
-              final cutResult = controller.complex.cutEdge(hitEdge, t);
-              final edge = transientEdge.value;
+          //     final cutResult = controller.complex.cutEdge(hitEdge, t);
+          //     final edge = transientEdge.value;
 
-              if (edge != null) {
-                controller.complex.createOpenEdge(
-                  edge.start,
-                  cutResult.vertex,
-                  cStart: edge.cStartPosition?.asVector2(),
-                  cEnd: edge.cEndPosition?.asVector2(),
-                );
+          //     if (edge != null) {
+          //       controller.complex.createOpenEdge(
+          //         edge.start,
+          //         cutResult.vertex,
+          //         cStart: edge.cStartPosition?.asVector2(),
+          //         cEnd: edge.cEndPosition?.asVector2(),
+          //       );
 
-                controller.transientEdges.remove(edge);
-              } else {
-                transientEdge.value = controller.transientEdges.create(cutResult.vertex);
-              }
-            }
-          },
+          //       controller.transientEdges.remove(edge);
+          //     }
+
+          //     transientEdge.value = controller.transientEdges.create(cutResult.vertex);
+          //   }
+          // },
           child: Stack(
             children: [
               // if (hoveredCell.value != null)

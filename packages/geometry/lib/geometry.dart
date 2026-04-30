@@ -5,4 +5,5 @@ export 'cubic/cubic.dart';
 export 'polyline/polyline.dart';
 
 export 'utils/vector_utils.dart';
+export 'utils/parametric_split.dart';
 export 'utils/fit_points_to_spline.dart';

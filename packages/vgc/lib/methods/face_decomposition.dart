@@ -108,7 +108,7 @@ _FaceDecomposition _computeDecomposition(VectorComplex complex) {
         holes: holes,
         outerPolyline: outerPoly,
         holePolylines: holes.map((h) => holePolylines[h]!).toList(),
-        outerAreaAbsolute: outerArea,
+        outerAreaAbsolute: outerArea.abs(),
         outerBbox: outerPoly.bbox,
       ),
     );
@@ -176,6 +176,8 @@ HalfEdge _nextInCycle(Vertex v, HalfEdge incoming) {
 }
 
 _CycleKind _classifyCycle(RegularCycle cycle, double signedArea) {
+  return _classifyByArea(signedArea);
+
   final first = cycle.halfEdges.first;
   if (cycle.halfEdges.length == 1 && first.edge is ClosedEdge) return _classifyByArea(signedArea);
 

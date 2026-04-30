@@ -15,9 +15,9 @@ Aabb2 _polylineBbox(Polyline2 p) {
 
   final min = p.first.clone(), max = p.first.clone();
 
-  for (final p in p.points) {
-    Vector2.min(min, p, min);
-    Vector2.max(max, p, max);
+  for (final pt in p.points) {
+    Vector2.min(min, pt, min);
+    Vector2.max(max, pt, max);
   }
 
   return Aabb2.minMax(min, max);
@@ -42,7 +42,7 @@ bool _polylineContains(Polyline2 p, Vector2 target) {
     final yi = p[i].y, yj = p[j].y;
     if ((yi > target.y) != (yj > target.y)) {
       final xi = p[i].x, xj = p[j].x;
-      final x = xj + (target.y - yj) * (xi - xi) / (yi - yj);
+      final x = xj + (target.y - yj) * (xi - xj) / (yi - yj);
       if (target.x < x) inside = !inside;
     }
   }
@@ -91,9 +91,9 @@ Vector2 _polylineLeftmost(Polyline2 p) {
   if (p.isEmpty) throw StateError('cannot find leftmost point of an empty polyline');
 
   var leftmost = p.first;
-  for (final p in p.points) {
-    if (p.x < leftmost.x || (p.x == leftmost.x && p.y < leftmost.y)) {
-      leftmost = p;
+  for (final pt in p.points) {
+    if (pt.x < leftmost.x || (pt.x == leftmost.x && pt.y < leftmost.y)) {
+      leftmost = pt;
     }
   }
 

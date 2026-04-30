@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
@@ -17,9 +18,11 @@ class HandlesOverlayBuilder extends HookWidget {
     super.key,
     required this.controller,
     this.hoveredCell,
+    this.areGesturesEnabled = true,
   });
 
   final VectorController controller;
+  final bool areGesturesEnabled;
   final Cell? hoveredCell;
 
   @override
@@ -28,6 +31,7 @@ class HandlesOverlayBuilder extends HookWidget {
       builder: (context, info) => HandlesOverlay(
         controller: controller,
         childPaintTransform: info.childPaintTransform,
+        areGesturesEnabled: areGesturesEnabled,
         hoveredCell: hoveredCell,
       ),
       child: const SizedBox.expand(),
@@ -40,11 +44,13 @@ class HandlesOverlay extends HookWidget {
     super.key,
     required this.controller,
     required this.childPaintTransform,
+    this.areGesturesEnabled = true,
     this.hoveredCell,
   });
 
   final VectorController controller;
   final Matrix4 childPaintTransform;
+  final bool areGesturesEnabled;
   final Cell? hoveredCell;
 
   @override
@@ -68,6 +74,21 @@ class HandlesOverlay extends HookWidget {
     final moveOpenEdgeControlPointActivity = useDragActivityWithArgumentRecognizer<(OpenEdge, bool)>(
       (arg) => MoveOpenEdgeControlPointActivity(controller: controller, edge: arg.$1, isC1: arg.$2),
     );
+
+    if (areGesturesEnabled) {
+      final _value = PointerDeviceKind.values.toSet();
+      moveVertexActivityRecognizer.supportedDevices = _value;
+      moveKnotActivityRecognizer.supportedDevices = _value;
+      moveKnotControlPointsActivity.supportedDevices = _value;
+      moveOpenEdgeControlPointActivity.supportedDevices = _value;
+    }
+    else {
+      final _value = <PointerDeviceKind>{.touch};
+      moveVertexActivityRecognizer.supportedDevices = _value;
+      moveKnotActivityRecognizer.supportedDevices = _value;
+      moveKnotControlPointsActivity.supportedDevices = _value;
+      moveOpenEdgeControlPointActivity.supportedDevices = _value;
+    }
 
     final children = <Widget>[];
     for (var cell = complex.bottom; cell != null; cell = cell.next) {

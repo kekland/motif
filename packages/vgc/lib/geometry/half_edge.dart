@@ -13,8 +13,7 @@ extension HalfEdgeGeometry on HalfEdge {
 
   Vector2 get outwardTangent {
     final e = edge;
-    if (e is! OpenEdge) throw UnsupportedError('outwardTangent is only supported for OpenEdge');
-    return direction ? e.spline.tangentAtStart : e.spline.tangentAtEnd;
+    return direction ? e.spline.tangentAtStart : -e.spline.tangentAtEnd;
   }
 
   CubicSpline2 get spline {
@@ -29,6 +28,6 @@ extension HalfEdgeGeometry on HalfEdge {
   }
 
   void forEachSegment(FlattenSegmentsCallback callback, {double? tolerance}) {
-    edge.forEachSegment(callback, tolerance: tolerance);
+    spline.forEachSegment(callback, tolerance: tolerance);
   }
 }

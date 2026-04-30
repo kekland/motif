@@ -1,3 +1,3 @@
 part of '../cubic.dart';
 
-const double _kCubicFlatnessTolerance = 0.5;
+const double _kCubicFlatnessTolerance = 0.1;

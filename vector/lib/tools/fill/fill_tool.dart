@@ -26,12 +26,14 @@ class _FillToolOverlay extends HookWidget {
     final controller = VectorController.watch(context);
     final face = useState<List<RegularCycle>?>(null);
 
+
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: Cursors.toolFill,
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
+          print(e);
           final globalPosition = e.position;
           final localPosition = controller.globalToArtworkLocal(globalPosition);
           face.value = controller.complex.traceFaceAt(localPosition.asVector2());

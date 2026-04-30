@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
 import 'package:vector/tools/cursor/activities/cursor_activities.dart';
@@ -30,6 +31,8 @@ class _CursorToolOverlay extends HookWidget {
     final controller = VectorController.watch(context);
     final hoveredCell = useState<Cell?>(null);
 
+    debugPrintGestureArenaDiagnostics = true;
+
     List<CellHitTestEntry> _hitTest(Offset globalPosition) {
       final scale = info.childPaintTransform.getMaxScaleOnAxis();
       return controller.hitTestCells(globalPosition, tolerance: .defaultTolerance.scaled(1.0 / scale));
@@ -59,20 +62,6 @@ class _CursorToolOverlay extends HookWidget {
         },
         child: GestureDetector(
           behavior: .translucent,
-          onTapUp: (details) {
-            // final globalPosition = details.globalPosition;
-            // final localPosition = controller.globalToArtworkLocal(globalPosition);
-
-            // final scale = info.childPaintTransform.getMaxScaleOnAxis();
-            // final tolerance = HitTestTolerance.defaultTolerance.scaled((1.0 / scale) * 2.0);
-            // final hits = controller.complex.hitTest(localPosition.asVector2(), tolerance: tolerance);
-
-            // if (hits.isEmpty) {
-            //   controller.selection.clear();
-            // } else {
-            //   controller.selection.select(hits.first.cell);
-            // }
-          },
           child: Stack(
             children: [
               Transform(
