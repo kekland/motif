@@ -1,48 +1,36 @@
-part of '../vector_complex.dart';
+part of 'render.dart';
 
-sealed class HitTestEntry {
-  const HitTestEntry({required this.distance});
+final class VectorComplexHitTestResult extends BoxHitTestResult {}
 
-  /// Distance in canvas-space units, from the point to the closest point in the cell's geometry.
+sealed class CellHitTestEntry extends HitTestEntry<RenderCell> {
+  CellHitTestEntry(super.target, {required this.distance});
+
+  Cell get cell => target.cell;
   final double distance;
-
-  /// The cell that was hit.
-  Cell get cell;
 }
 
-final class VertexHitTestEntry extends HitTestEntry {
-  const VertexHitTestEntry({required this.vertex, required super.distance});
+final class VertexHitTestEntry extends CellHitTestEntry {
+  VertexHitTestEntry(RenderVertex super.target, {required super.distance});
 
-  final Vertex vertex;
-
-  @override
-  Cell get cell => vertex;
+  Vertex get vertex => cell as Vertex;
 }
 
-final class EdgeHitTestEntry extends HitTestEntry {
-  const EdgeHitTestEntry({required this.edge, required this.t, required super.distance});
+final class EdgeHitTestEntry extends CellHitTestEntry {
+  EdgeHitTestEntry(RenderEdge super.target, {required this.t, required super.distance});
 
-  final Edge edge;
-
-  /// Parameter in range (0, 1) for the spline.
+  Edge get edge => cell as Edge;
   final double t;
-
-  @override
-  Cell get cell => edge;
 }
 
-final class FaceHitTestEntry extends HitTestEntry {
-  const FaceHitTestEntry({required this.face, required super.distance});
+final class FaceHitTestEntry extends CellHitTestEntry {
+  FaceHitTestEntry(RenderFace super.target, {required super.distance});
 
-  final Face face;
-
-  @override
-  Cell get cell => face;
+  Face get face => cell as Face;
 }
 
-final class HitTestTolerance {
-  const HitTestTolerance({required this.vertex, required this.edge});
-  static const defaultTolerance = HitTestTolerance(vertex: 8.0, edge: 5.0);
+final class CellHitTestTolerance {
+  const CellHitTestTolerance({required this.vertex, required this.edge});
+  static const defaultTolerance = CellHitTestTolerance(vertex: 8.0, edge: 5.0);
 
   /// Tolerance for hitting vertices, in canvas-space units.
   final double vertex;
@@ -50,21 +38,25 @@ final class HitTestTolerance {
   /// Tolerance for hitting edges, in canvas-space units.
   final double edge;
 
-  HitTestTolerance scaled(double f) => HitTestTolerance(vertex: vertex * f, edge: edge * f);
+  CellHitTestTolerance scaled(double f) => CellHitTestTolerance(vertex: vertex * f, edge: edge * f);
 }
 
-List<HitTestEntry> _hitTestComplex(
-  VectorComplex complex,
-  Vector2 point, {
-  HitTestTolerance tolerance = .defaultTolerance,
-}) {
-  final indexed = <(HitTestEntry, int)>[];
+List<CellHitTestEntry> _hitTestRenderComplex(
+  RenderVectorComplex renderComplex,
+  Offset position,
+  CellHitTestTolerance tolerance,
+) {
+  final complex = renderComplex.complex;
+  final indexed = <(CellHitTestEntry, int)>[];
   var depth = 0;
 
   for (var c = complex.top; c != null; c = c.prev) {
+    final child = renderComplex._children[c];
+    if (child == null) continue;
+
     final result = switch (c) {
-      Vertex v => _hitTestVertex(v, point, tolerance.vertex),
-      Edge e => _hitTestEdge(e, point, tolerance.edge),
+      Vertex _ => _hitTestRenderVertex(child as RenderVertex, position, tolerance.vertex),
+      Edge _ => _hitTestRenderEdge(child as RenderEdge, position, tolerance.edge),
       Face _ => null,
     };
 
@@ -72,7 +64,7 @@ List<HitTestEntry> _hitTestComplex(
     depth++;
   }
 
-  int _priority(HitTestEntry r) => switch (r) {
+  int _priority(CellHitTestEntry r) => switch (r) {
     VertexHitTestEntry _ => 0,
     EdgeHitTestEntry _ => 1,
     FaceHitTestEntry _ => 2,
@@ -95,17 +87,28 @@ List<HitTestEntry> _hitTestComplex(
 // Vertex
 // --
 
-VertexHitTestEntry? _hitTestVertex(Vertex v, Vector2 point, double tolerance) {
-  final d = v.position.distanceTo(point);
-  if (d > tolerance) return null;
-  return .new(vertex: v, distance: d);
+VertexHitTestEntry? _hitTestRenderVertex(RenderVertex render, Offset position, double tolerance) {
+  final result = _hitTestVertexRaw(render.vertex, Vector2(position.dx, position.dy), tolerance);
+  return result != null ? VertexHitTestEntry(render, distance: result) : null;
+}
+
+double? _hitTestVertexRaw(Vertex v, Vector2 point, double tolerance) {
+  final diff = (v.position - point)..absolute();
+  final max = math.max(diff.x, diff.y);
+  if (max > tolerance) return null;
+  return max;
 }
 
 // --
 // Edge
 // --
 
-EdgeHitTestEntry? _hitTestEdge(Edge e, Vector2 point, double tolerance) {
+EdgeHitTestEntry? _hitTestRenderEdge(RenderEdge render, Offset position, double tolerance) {
+  final result = _hitTestEdgeRaw(render.edge, Vector2(position.dx, position.dy), tolerance);
+  return result != null ? EdgeHitTestEntry(render, distance: result.$1, t: result.$2) : null;
+}
+
+(double distance, double t)? _hitTestEdgeRaw(Edge e, Vector2 point, double tolerance) {
   const double flatnessTolerance = 0.5;
 
   final spline = e.spline;
@@ -150,7 +153,7 @@ EdgeHitTestEntry? _hitTestEdge(Edge e, Vector2 point, double tolerance) {
   }
 
   if (bestDistance > tolerance) return null;
-  return .new(edge: e, t: bestLocal / n, distance: bestDistance);
+  return (bestDistance, bestLocal / n);
 }
 
 (double, double) _closestOnSegment(Vector2 a, Vector2 b, Vector2 point) {

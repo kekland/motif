@@ -1,7 +1,5 @@
 import 'package:vector/imports.dart';
 import 'package:vector/widgets/transient_strokes.dart';
-import 'package:vgc/debug/debug_draw.dart';
-import 'package:vgc/vgc.dart';
 
 class ArtworkWidget extends StatelessWidget {
   const ArtworkWidget({super.key, required this.controller});
@@ -19,31 +17,25 @@ class ArtworkWidget extends StatelessWidget {
             transientStrokes: controller.transientStrokes,
           ),
         ),
-        CustomPaint(
+        _Artwork(
           key: controller.artworkKey,
-          painter: _VectorComplexPainter(
-            complex: complex,
-            repaint: complex,
-          ),
+          complex: complex,
         ),
       ],
     );
   }
 }
 
-class _VectorComplexPainter extends CustomPainter {
-  const _VectorComplexPainter({
-    required this.complex,
-    super.repaint,
-  });
+class _Artwork extends LeafRenderObjectWidget {
+  const _Artwork({super.key, required this.complex});
 
   final VectorComplex complex;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    drawDebugVectorComplex(canvas, complex);
-  }
+  RenderObject createRenderObject(BuildContext context) => RenderVectorComplex(complex: complex);
 
   @override
-  bool shouldRepaint(_VectorComplexPainter oldDelegate) => true;
+  void updateRenderObject(BuildContext context, RenderVectorComplex renderObject) {
+    renderObject.complex = complex;
+  }
 }

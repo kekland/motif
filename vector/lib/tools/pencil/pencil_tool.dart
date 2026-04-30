@@ -8,6 +8,9 @@ class PencilTool extends Tool {
   String get key => 'pencil';
 
   @override
+  LogicalKeySet get shortcut => LogicalKeySet(.keyN);
+
+  @override
   Widget buildIcon(BuildContext context) => Icons.pencil();
 
   @override

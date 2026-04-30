@@ -2,14 +2,13 @@ import 'package:app/imports.dart';
 import 'package:app/app/root_page.dart';
 import 'package:design/design.dart';
 import 'package:stack_window_manager/stack_window_manager.dart';
-import 'package:vector/playground.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.green;
+    final seedColor = Colors.blue;
     final brightness = Brightness.dark;
 
     final colorScheme = ColorScheme.fromSeed(

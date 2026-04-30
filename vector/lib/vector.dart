@@ -1,6 +1,7 @@
 import 'package:canvas/canvas.dart';
 import 'package:vector/imports.dart';
 import 'package:vector/widgets/artwork.dart';
+import 'package:vector/widgets/handles_overlay.dart';
 import 'package:vector/widgets/toolbar.dart';
 
 class VectorEditorPage extends HookWidget {
@@ -28,27 +29,34 @@ class _VectorCanvas extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = VectorController.watch(context);
-    final complex = controller.complex;
     final viewportController = useTransformationController();
     final tool = useComputedValue(() => controller.tool.activeTool);
 
-    return Overlay.wrap(
-      child: InteractiveCanvas(
-        key: controller.canvasKey,
-        centerOrigin: false,
-        transformationController: viewportController,
-        overlayBuilders: [
-          (context, child) => ToolOverlay(tool: tool, child: child),
-        ],
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: GridPaper(
-                color: context.colors.surface.tertiary,
-              ),
+    return ToolShortcuts(
+      controller: controller.tool,
+      child: Overlay.wrap(
+        child: InteractiveCanvasFocus(
+          child: InteractiveCanvas(
+            key: controller.canvasKey,
+            centerOrigin: false,
+            transformationController: viewportController,
+            overlayBuilders: [
+              (context, child) => HandlesOverlayBuilder(controller: controller),
+              (context, child) => ToolOverlay(tool: tool, child: child),
+            ],
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: GridPaper(
+                    color: context.colors.surface.tertiary,
+                  ),
+                ),
+                ArtworkWidget(
+                  controller: controller,
+                ),
+              ],
             ),
-            ArtworkWidget(controller: controller),
-          ],
+          ),
         ),
       ),
     );

@@ -769,6 +769,7 @@ class AppTypographyGenerator {
 
 typedef AppShadows = ({
   List<BoxShadow> window,
+  List<BoxShadow> medium,
   List<BoxShadow> small,
 });
 

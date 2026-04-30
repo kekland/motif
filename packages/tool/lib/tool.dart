@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:stack/stack.dart';
 
+export 'tool_shortcuts.dart';
+
 abstract class Tool {
   const Tool();
 
   String get key;
+  LogicalKeySet? get shortcut => null;
+
   Widget buildIcon(BuildContext context);
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => const SizedBox.expand();
 }

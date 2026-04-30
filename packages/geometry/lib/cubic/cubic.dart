@@ -10,6 +10,23 @@ final class CubicKnot2 {
   Vector2? c2;
 
   CubicKnot2 copy() => .new(p.clone(), c1: c1?.clone(), c2: c2?.clone());
+
+  /// Returns the "cheap" bounding box of this cubic.
+  Aabb2 aabbCheap() {
+    Vector2 min = p.clone(), max = p.clone();
+
+    if (c1 != null) {
+      Vector2.min(min, c1!, min);
+      Vector2.max(max, c1!, max);
+    }
+
+    if (c2 != null) {
+      Vector2.min(min, c2!, min);
+      Vector2.max(max, c2!, max);
+    }
+
+    return Aabb2.minMax(min, max);
+  }
 }
 
 final class Cubic2 {
@@ -75,6 +92,33 @@ final class Cubic2 {
       .new(a, m0123, c1: q1IsNull ? null : m01, c2: q1IsNull && q2IsNull ? null : m012),
       .new(m0123.clone(), b, c1: q1IsNull && q2IsNull ? null : m123, c2: q2IsNull ? null : m23),
     );
+  }
+
+  /// Returns the "cheap" bounding box of this cubic.
+  Aabb2 aabbCheap() {
+    Vector2 min = a.clone(), max = a.clone();
+    Vector2.min(min, b, min);
+    Vector2.max(max, b, max);
+
+    if (c1 != null) {
+      Vector2.min(min, c1!, min);
+      Vector2.max(max, c1!, max);
+    }
+
+    if (c2 != null) {
+      Vector2.min(min, c2!, min);
+      Vector2.max(max, c2!, max);
+    }
+
+    return Aabb2.minMax(min, max);
+  }
+
+  /// Returns the tangent direction at given parameter [t] in (0, 1).
+  Vector2 tangent(double t) {
+    final q1 = c1 ?? a;
+    final q2 = c2 ?? b;
+    final u = 1 - t;
+    return ((q1 - a) * (3 * u * u) + (q2 - q1) * (6 * u * t) + (b - q2) * (3 * t * t)).normalized();
   }
 }
 
@@ -196,5 +240,32 @@ final class CubicSpline2 {
     rightKnots.addAll(knots.skip(i + 2).map((k) => k.copy()));
 
     return (.new(leftKnots), .new(rightKnots));
+  }
+
+  /// Returns the "cheap" bounding box of this cubic spline.
+  Aabb2 aabbCheap() {
+    if (isEmpty) return Aabb2();
+    var min = knots.first.p.clone(), max = knots.first.p.clone();
+
+    for (final knot in knots) {
+      final aabb = knot.aabbCheap();
+      Vector2.min(min, aabb.min, min);
+      Vector2.max(max, aabb.max, max);
+    }
+
+    return Aabb2.minMax(min, max);
+  }
+
+  /// Returns the tangent direction at given parameter [t] in (0, 1).
+  Vector2 tangent(double t) {
+    if (isEmpty) throw StateError('Cannot compute tangent of an empty spline');
+    if (length == 1) return Vector2(0, -1);
+
+    final n = segmentCount;
+    final clamped = t.clamp(0.0, 1.0) * n;
+    if (clamped >= n) return segment(n - 1).tangent(1.0);
+
+    final i = clamped.floor();
+    return segment(i).tangent(clamped - i);
   }
 }

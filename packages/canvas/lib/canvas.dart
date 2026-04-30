@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'interactive_viewer/interactive_viewer.dart' as iv;
 
+export 'canvas_focus.dart';
+
 /// An infinitely scrollable canvas widget.
 ///
 /// Children of the viewport must be [CanvasPositioned] widgets, which are positioned using absolute coordinates.

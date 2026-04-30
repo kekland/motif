@@ -1,14 +1,25 @@
-import 'dart:math' as math;
 import 'dart:collection';
+import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:uuid/v4.dart';
 import 'package:geometry/geometry.dart';
 
-part 'topology.dart';
-part 'utils/hit_testing.dart';
+// Topology
+part 'topology/cell.dart';
+part 'topology/vertex.dart';
+part 'topology/edge.dart';
+part 'topology/half_edge.dart';
+part 'topology/cycle.dart';
+part 'topology/face.dart';
+
+// Methods on the complex
+part 'methods/face_decomposition.dart';
+part 'methods/split_edge.dart';
+
+// Other utilities
+part 'utils/path.dart';
 
 class VectorComplex extends ChangeNotifier {
   Cell? _bottom, _top;
@@ -18,6 +29,29 @@ class VectorComplex extends ChangeNotifier {
   final _cells = <Cell>{};
   bool contains(Cell c) => _cells.contains(c);
   int get length => _cells.length;
+
+  Iterable<Cell> get cells sync* {
+    for (var c = _bottom; c != null; c = c._next) yield c;
+  }
+
+  Iterable<Cell> get cellsReversed sync* {
+    for (var c = _top; c != null; c = c._prev) yield c;
+  }
+
+  Aabb2 get boundingBoxApproximate {
+    if (length == 0) return Aabb2();
+
+    var min = Vector2(.infinity, .infinity);
+    var max = Vector2(.negativeInfinity, .negativeInfinity);
+
+    for (final c in cells) {
+      final aabb = c.boundingBoxApproximate;
+      Vector2.min(min, aabb.min, min);
+      Vector2.max(max, aabb.max, max);
+    }
+
+    return Aabb2.minMax(min, max);
+  }
 
   // Depth-list operations
   void _linkAtTop(Cell c) {
@@ -99,6 +133,13 @@ class VectorComplex extends ChangeNotifier {
     return e;
   }
 
+  OpenEdge createOpenEdgeFromSpline(Vertex v1, Vertex v2, CubicSpline2 spline, {String? id}) {
+    assert(contains(v1) && contains(v2));
+    final e = OpenEdge.fromSpline(v1, v2, spline, id: id);
+    _insertWithDefaultDepth(e);
+    return e;
+  }
+
   ClosedEdge createClosedEdge(CubicSpline2 spline, {String? id}) {
     final e = ClosedEdge(spline, id: id);
     _insertWithDefaultDepth(e);
@@ -122,6 +163,10 @@ class VectorComplex extends ChangeNotifier {
     return f;
   }
 
+  // Vertex splitEdge(Edge edge, double t) {
+  //   assert(contains(edge));
+  // }
+
   void hardDelete(Cell c) {
     assert(contains(c));
 
@@ -140,13 +185,5 @@ class VectorComplex extends ChangeNotifier {
     for (final b in c.directBoundary) b._directStar.remove(c);
     _unlink(c);
     _cells.remove(c);
-  }
-
-  // --
-  // Hit testing
-  // --
-
-  List<HitTestEntry> hitTest(Vector2 point, {HitTestTolerance tolerance = .defaultTolerance}) {
-    return _hitTestComplex(this, point, tolerance: tolerance);
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-// ignore_for_file: non_constant_identifier_names, unused_import, unused_element, unused_element_parameter
+// ignore_for_file: non_constant_identifier_names, unused_import, unused_element, unused_element_parameter, unnecessary_import
 
 import 'package:ui/ui.dart';
 
@@ -157,26 +157,44 @@ class CursorsAssets {
   const CursorsAssets();
 
   static const rotate = AssetBytesLoader('assets/gen/cursors/rotate.vec', packageName: 'ui');
+  static const toolCursorEdge = AssetBytesLoader('assets/gen/cursors/tool-cursor-edge.vec', packageName: 'ui');
+  static const precise = AssetBytesLoader('assets/gen/cursors/precise.vec', packageName: 'ui');
   static const toolTriangle = AssetBytesLoader('assets/gen/cursors/tool-triangle.vec', packageName: 'ui');
+  static const toolFill = AssetBytesLoader('assets/gen/cursors/tool-fill.vec', packageName: 'ui');
+  static const toolCursorFace = AssetBytesLoader('assets/gen/cursors/tool-cursor-face.vec', packageName: 'ui');
+  static const toolCursorKnot = AssetBytesLoader('assets/gen/cursors/tool-cursor-knot.vec', packageName: 'ui');
   static const toolCursor = AssetBytesLoader('assets/gen/cursors/tool-cursor.vec', packageName: 'ui');
+  static const toolCursorVertex = AssetBytesLoader('assets/gen/cursors/tool-cursor-vertex.vec', packageName: 'ui');
+  static const toolPenVertex = AssetBytesLoader('assets/gen/cursors/tool-pen-vertex.vec', packageName: 'ui');
+  static const toolCursorControlPoint = AssetBytesLoader('assets/gen/cursors/tool-cursor-control-point.vec', packageName: 'ui');
   static const toolMove = AssetBytesLoader('assets/gen/cursors/tool-move.vec', packageName: 'ui');
   static const toolEllipse = AssetBytesLoader('assets/gen/cursors/tool-ellipse.vec', packageName: 'ui');
   static const toolRectangle = AssetBytesLoader('assets/gen/cursors/tool-rectangle.vec', packageName: 'ui');
   static const resize = AssetBytesLoader('assets/gen/cursors/resize.vec', packageName: 'ui');
   static const toolContainer = AssetBytesLoader('assets/gen/cursors/tool-container.vec', packageName: 'ui');
   static const toolMarquee = AssetBytesLoader('assets/gen/cursors/tool-marquee.vec', packageName: 'ui');
+  static const toolPenEdge = AssetBytesLoader('assets/gen/cursors/tool-pen-edge.vec', packageName: 'ui');
 }
 
 const cursorsAssets = (
   rotate: CursorsAssets.rotate,
+  toolCursorEdge: CursorsAssets.toolCursorEdge,
+  precise: CursorsAssets.precise,
   toolTriangle: CursorsAssets.toolTriangle,
+  toolFill: CursorsAssets.toolFill,
+  toolCursorFace: CursorsAssets.toolCursorFace,
+  toolCursorKnot: CursorsAssets.toolCursorKnot,
   toolCursor: CursorsAssets.toolCursor,
+  toolCursorVertex: CursorsAssets.toolCursorVertex,
+  toolPenVertex: CursorsAssets.toolPenVertex,
+  toolCursorControlPoint: CursorsAssets.toolCursorControlPoint,
   toolMove: CursorsAssets.toolMove,
   toolEllipse: CursorsAssets.toolEllipse,
   toolRectangle: CursorsAssets.toolRectangle,
   resize: CursorsAssets.resize,
   toolContainer: CursorsAssets.toolContainer,
   toolMarquee: CursorsAssets.toolMarquee,
+  toolPenEdge: CursorsAssets.toolPenEdge,
 );
 
 enum _BaseIconMode {
@@ -369,16 +387,26 @@ class Icons extends _BaseIcon {
   const Icons.eyedropper({super.key, super.size, super.color}): super.iconData(icon: Symbols.dropper_eye_rounded);
   const Icons.pen({super.key, super.size, super.color}): super.iconData(icon: Symbols.stylus_fountain_pen_rounded);
   const Icons.pencil({super.key, super.size, super.color}): super.iconData(icon: Symbols.draw_rounded);
+  const Icons.fill({super.key, super.size, super.color}): super.iconData(icon: Symbols.colors_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {
   const CursorsIcons.rotate({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.rotate, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorEdge({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorEdge, filledLoader: null, autocolor: false);
+  const CursorsIcons.precise({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.precise, filledLoader: null, autocolor: false);
   const CursorsIcons.toolTriangle({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolTriangle, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolFill({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolFill, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorFace({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorFace, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorKnot({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorKnot, filledLoader: null, autocolor: false);
   const CursorsIcons.toolCursor({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursor, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorVertex({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorVertex, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolPenVertex({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolPenVertex, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorControlPoint({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorControlPoint, filledLoader: null, autocolor: false);
   const CursorsIcons.toolMove({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolMove, filledLoader: null, autocolor: false);
   const CursorsIcons.toolEllipse({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolEllipse, filledLoader: null, autocolor: false);
   const CursorsIcons.toolRectangle({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolRectangle, filledLoader: null, autocolor: false);
   const CursorsIcons.resize({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.resize, filledLoader: null, autocolor: false);
   const CursorsIcons.toolContainer({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolContainer, filledLoader: null, autocolor: false);
   const CursorsIcons.toolMarquee({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolMarquee, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolPenEdge({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolPenEdge, filledLoader: null, autocolor: false);
 }

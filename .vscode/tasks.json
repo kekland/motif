@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "packages/ui/generate_assets",
+      "type": "shell",
+      "command": "./packages/ui/tool/generate_assets.dart",
+      "problemMatcher": [],
+    },
+    {
+      "label": "packages/ui/generate_theme",
+      "type": "shell",
+      "command": "./packages/ui/tool/generate_theme.dart",
+      "problemMatcher": [],
+    },
+  ],
+}

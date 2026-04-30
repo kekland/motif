@@ -1,10 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:design/imports.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:stack_mouse_cursor/stack_mouse_cursor.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 part 'selection/selection_controls.dart';
 part 'selection/selection_handles.dart';

@@ -7,10 +7,14 @@ class RootNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Surface(
-      child: WindowTitlebar(
-        preferredHeight: 48.0,
-        trafficLightsHorizontalOffset: 12.0,
-        child: Container(),
+      child: SafeArea(
+        top: true,
+        bottom: false,
+        child: WindowTitlebar(
+          preferredHeight: 48.0,
+          trafficLightsHorizontalOffset: 12.0,
+          child: Container(),
+        ),
       ),
     );
   }

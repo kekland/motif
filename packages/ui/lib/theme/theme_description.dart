@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:stack_theme/stack_theme.dart';
 
 const _typographyColors = <TextColorDescription>[
@@ -45,6 +46,7 @@ const themeDescription = ThemeDescription(
   ],
   shadows: [
     .new('window'),
+    .new('medium'),
     .new('small'),
   ],
 );

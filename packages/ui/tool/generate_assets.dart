@@ -29,6 +29,7 @@ Future<void> main() async {
     .new('eyedropper', 'Symbols.dropper_eye_rounded'),
     .new('pen', 'Symbols.stylus_fountain_pen_rounded'),
     .new('pencil', 'Symbols.draw_rounded'),
+    .new('fill', 'Symbols.colors_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

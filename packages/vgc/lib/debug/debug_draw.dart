@@ -30,7 +30,9 @@ void drawDebugCell(Canvas canvas, Cell cell, {Color? color}) {
   }
 }
 
+const _kDebugDrawVertex = false;
 void _drawDebugVertex(Canvas canvas, Vertex v, {Color? color}) {
+  if (!_kDebugDrawVertex) return;
   canvas.drawCircle(Offset(v.position.x, v.position.y), 4, Paint()..color = color ?? Colors.deepPurple);
 }
 
@@ -39,7 +41,7 @@ void _drawDebugEdge(Canvas canvas, Edge e, {Color? color}) {
   _appendEdgeToPath(path, e, forward: true, moveToStart: true);
 
   final paint = Paint()
-    ..color = color ?? Colors.orange
+    ..color = color ?? Colors.white
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
 
@@ -54,7 +56,7 @@ void _drawDebugEdge(Canvas canvas, Edge e, {Color? color}) {
   // }
 }
 
-const _kDrawDebugEdgeControlPoints = true;
+const _kDrawDebugEdgeControlPoints = false;
 void _drawDebugEdgeBezierParams(Canvas canvas, Edge e) {
   if (!_kDrawDebugEdgeControlPoints) return;
 

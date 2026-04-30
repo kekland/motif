@@ -528,6 +528,13 @@ AppTheme generateAppTheme({
           blurRadius: 12.0,
         ),
       ],
+      medium: [
+        .new(
+          color: colors.shadow.withScaledAlpha(0.1),
+          offset: .new(0.0, 4.0),
+          blurRadius: 8.0,
+        ),
+      ],
       small: [
         .new(
           color: colors.shadow.withScaledAlpha(0.1),
