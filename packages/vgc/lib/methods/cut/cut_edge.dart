@@ -1,43 +1,17 @@
-part of '../vector_complex.dart';
+part of '../../vector_complex.dart';
 
-sealed class EdgeSplitResult {
-  const EdgeSplitResult({required this.vertex});
-  final Vertex vertex;
-}
-
-final class OpenEdgeSplitResult extends EdgeSplitResult {
-  const OpenEdgeSplitResult({
-    required super.vertex,
-    required this.edge1,
-    required this.edge2,
-  });
-
-  final OpenEdge edge1;
-  final OpenEdge edge2;
-}
-
-final class ClosedEdgeSplitResult extends EdgeSplitResult {
-  const ClosedEdgeSplitResult({
-    required super.vertex,
-    required this.edge,
-  });
-
-  /// Closed edge transforms into an open edge with start == end.
-  final OpenEdge edge;
-}
-
-extension SplitEdgeExtension on VectorComplex {
-  EdgeSplitResult splitEdge(Edge edge, double t) {
+extension CutEdge on VectorComplex {
+  EdgeCutResult cutEdge(Edge edge, double t) {
     if (!contains(edge)) throw ArgumentError('Edge is not part of this complex');
     if (t < 0 || t > 1) throw ArgumentError.value(t, 't', 'must be between 0 and 1');
 
     return switch (edge) {
-      OpenEdge e => _splitOpenEdge(e, t),
-      ClosedEdge e => _splitClosedEdge(e, t),
+      OpenEdge e => _cutOpenEdge(e, t),
+      ClosedEdge e => _cutClosedEdge(e, t),
     };
   }
 
-  OpenEdgeSplitResult _splitOpenEdge(OpenEdge edge, double t) {
+  OpenEdgeCutResult _cutOpenEdge(OpenEdge edge, double t) {
     final (leftSpline, rightSpline) = edge.spline.split(t);
     final splitPosition = leftSpline.knots.last.p.clone();
 
@@ -66,14 +40,14 @@ extension SplitEdgeExtension on VectorComplex {
     return .new(vertex: vertex, edge1: edge1, edge2: edge2);
   }
 
-  ClosedEdgeSplitResult _splitClosedEdge(ClosedEdge edge, double t) {
+  ClosedEdgeCutResult _cutClosedEdge(ClosedEdge edge, double t) {
     final (leftSpline, rightSpline) = edge.spline.split(t);
     final splitPosition = leftSpline.knots.last.p.clone();
 
     final seam = CubicKnot2(
       splitPosition,
-      c1: rightSpline.knots.last.c1?.clone(),
-      c2: leftSpline.knots.first.c2?.clone(),
+      cIn: rightSpline.knots.last.cIn?.clone(),
+      cOut: leftSpline.knots.first.cOut?.clone(),
     );
 
     final interior = [
@@ -86,8 +60,8 @@ extension SplitEdgeExtension on VectorComplex {
     final newEdge = OpenEdge(
       vertex,
       vertex,
-      c1: rightSpline.knots.last.c2?.clone(),
-      c2: leftSpline.knots.first.c1?.clone(),
+      cStart: rightSpline.knots.last.cOut?.clone(),
+      cEnd: leftSpline.knots.first.cIn?.clone(),
       interior: interior,
     );
 
@@ -101,4 +75,30 @@ extension SplitEdgeExtension on VectorComplex {
     hardDelete(edge);
     return .new(vertex: vertex, edge: newEdge);
   }
+}
+
+sealed class EdgeCutResult {
+  const EdgeCutResult({required this.vertex});
+  final Vertex vertex;
+}
+
+final class OpenEdgeCutResult extends EdgeCutResult {
+  const OpenEdgeCutResult({
+    required super.vertex,
+    required this.edge1,
+    required this.edge2,
+  });
+
+  final OpenEdge edge1;
+  final OpenEdge edge2;
+}
+
+final class ClosedEdgeCutResult extends EdgeCutResult {
+  const ClosedEdgeCutResult({
+    required super.vertex,
+    required this.edge,
+  });
+
+  /// Closed edge transforms into an open edge with start == end.
+  final OpenEdge edge;
 }

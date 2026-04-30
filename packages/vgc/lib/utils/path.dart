@@ -56,7 +56,7 @@ void _appendEdgeToPath(
     for (var i = 0; i < knots.length - 1; i++) {
       final a = knots[i];
       final b = knots[i + 1];
-      _cubicTo(path, a.p, a.c2, b.c1, b.p);
+      _cubicTo(path, a.p, a.cOut, b.cIn, b.p);
     }
   } else {
     if (moveToStart) {
@@ -67,7 +67,7 @@ void _appendEdgeToPath(
     for (var i = knots.length - 2; i >= 0; i--) {
       final a = knots[i];
       final b = knots[i + 1];
-      _cubicTo(path, b.p, b.c1, a.c2, a.p);
+      _cubicTo(path, b.p, b.cIn, a.cOut, a.p);
     }
   }
 }

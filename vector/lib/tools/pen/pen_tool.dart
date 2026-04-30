@@ -49,14 +49,14 @@ class _PenToolOverlay extends HookWidget {
           controller.complex.createOpenEdge(
             v.start,
             v2,
-            c1: v.c1Position?.asVector2(),
-            c2: v.c2Position?.asVector2(),
+            cStart: v.cStartPosition?.asVector2(),
+            cEnd: v.cEndPosition?.asVector2(),
           );
           controller.transientEdges.remove(v);
 
-          final c2 = v.c2Position?.asVector2();
-          final newC2 = c2 != null ? v2.position + (v2.position - c2) : null;
-          transientEdge.value = controller.transientEdges.create(v2, c1Position: newC2?.asOffset());
+          final cEnd = v.cEndPosition?.asVector2();
+          final newCEnd = cEnd != null ? v2.position + (v2.position - cEnd) : null;
+          transientEdge.value = controller.transientEdges.create(v2, cStartPosition: newCEnd?.asOffset());
         },
       ),
     );
@@ -101,8 +101,8 @@ class _PenToolOverlay extends HookWidget {
                 controller.complex.createOpenEdge(
                   edge.start,
                   vertex,
-                  c1: edge.c1Position?.asVector2(),
-                  c2: edge.c2Position?.asVector2(),
+                  cStart: edge.cStartPosition?.asVector2(),
+                  cEnd: edge.cEndPosition?.asVector2(),
                 );
 
                 controller.transientEdges.remove(edge);
@@ -118,8 +118,8 @@ class _PenToolOverlay extends HookWidget {
                 controller.complex.createOpenEdge(
                   edge.start,
                   vertex,
-                  c1: edge.c1Position?.asVector2(),
-                  c2: edge.c2Position?.asVector2(),
+                  cStart: edge.cStartPosition?.asVector2(),
+                  cEnd: edge.cEndPosition?.asVector2(),
                 );
 
                 controller.transientEdges.remove(edge);
@@ -130,20 +130,20 @@ class _PenToolOverlay extends HookWidget {
               final hitEdge = hitTest.cell as Edge;
               final t = (hitTest as EdgeHitTestEntry).t;
 
-              final splitResult = controller.complex.splitEdge(hitEdge, t);
+              final cutResult = controller.complex.cutEdge(hitEdge, t);
               final edge = transientEdge.value;
 
               if (edge != null) {
                 controller.complex.createOpenEdge(
                   edge.start,
-                  splitResult.vertex,
-                  c1: edge.c1Position?.asVector2(),
-                  c2: edge.c2Position?.asVector2(),
+                  cutResult.vertex,
+                  cStart: edge.cStartPosition?.asVector2(),
+                  cEnd: edge.cEndPosition?.asVector2(),
                 );
 
                 controller.transientEdges.remove(edge);
               } else {
-                transientEdge.value = controller.transientEdges.create(splitResult.vertex);
+                transientEdge.value = controller.transientEdges.create(cutResult.vertex);
               }
             }
           },

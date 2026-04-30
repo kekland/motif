@@ -73,15 +73,15 @@ void _drawDebugEdgeBezierParams(Canvas canvas, Edge e) {
     final p = knot.p;
     canvas.drawCircle(Offset(p.x, p.y), 3, controlPointDotPaint);
 
-    final c1 = knot.c1;
-    if (c1 != null) {
-      canvas.drawLine(Offset(knot.p.x, knot.p.y), Offset(c1.x, c1.y), controlPointLinePaint);
-      canvas.drawCircle(Offset(c1.x, c1.y), 2, controlPointDotPaint);
+    final cIn = knot.cIn;
+    if (cIn != null) {
+      canvas.drawLine(Offset(knot.p.x, knot.p.y), Offset(cIn.x, cIn.y), controlPointLinePaint);
+      canvas.drawCircle(Offset(cIn.x, cIn.y), 2, controlPointDotPaint);
     }
-    final c2 = knot.c2;
-    if (c2 != null) {
-      canvas.drawLine(Offset(knot.p.x, knot.p.y), Offset(c2.x, c2.y), controlPointLinePaint);
-      canvas.drawCircle(Offset(c2.x, c2.y), 2, controlPointDotPaint);
+    final cOut = knot.cOut;
+    if (cOut != null) {
+      canvas.drawLine(Offset(knot.p.x, knot.p.y), Offset(cOut.x, cOut.y), controlPointLinePaint);
+      canvas.drawCircle(Offset(cOut.x, cOut.y), 2, controlPointDotPaint);
     }
   }
 }
@@ -130,7 +130,7 @@ void _appendEdgeToPath(
     for (var i = 0; i < knots.length - 1; i++) {
       final a = knots[i];
       final b = knots[i + 1];
-      _cubicTo(path, a.p, a.c2, b.c1, b.p);
+      _cubicTo(path, a.p, a.cOut, b.cIn, b.p);
     }
   } else {
     if (moveToStart) {
@@ -141,7 +141,7 @@ void _appendEdgeToPath(
     for (var i = knots.length - 2; i >= 0; i--) {
       final a = knots[i];
       final b = knots[i + 1];
-      _cubicTo(path, b.p, b.c1, a.c2, a.p);
+      _cubicTo(path, b.p, b.cIn, a.cOut, a.p);
     }
   }
 }

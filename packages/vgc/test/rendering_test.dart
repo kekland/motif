@@ -77,12 +77,12 @@ void main() {
       c.createOpenEdge(
         v,
         v,
-        c1: Vector2(140, 60), // outgoing from start: toward upper-right
-        c2: Vector2(60, 60), // incoming to end: from upper-left
+        cStart: Vector2(140, 60), // outgoing from start: toward upper-right
+        cEnd: Vector2(60, 60), // incoming to end: from upper-left
         interior: [
-          CubicKnot2(Vector2(170, 130), c1: Vector2(170, 90), c2: Vector2(170, 170)),
-          CubicKnot2(Vector2(100, 170), c1: Vector2(150, 180), c2: Vector2(50, 180)),
-          CubicKnot2(Vector2(30, 130), c1: Vector2(30, 170), c2: Vector2(30, 90)),
+          CubicKnot2(Vector2(170, 130), cIn: Vector2(170, 90), cOut: Vector2(170, 170)),
+          CubicKnot2(Vector2(100, 170), cIn: Vector2(150, 180), cOut: Vector2(50, 180)),
+          CubicKnot2(Vector2(30, 130), cIn: Vector2(30, 170), cOut: Vector2(30, 90)),
         ],
       );
       await tester.pumpWidget(_harness(c));
@@ -99,12 +99,12 @@ void main() {
       const cx = 100.0, cy = 100.0, r = 50.0;
       c.createClosedEdge(
         CubicSpline2([
-          CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
-          CubicKnot2(Vector2(cx, cy - r), c1: Vector2(cx + r * k, cy - r), c2: Vector2(cx - r * k, cy - r)),
-          CubicKnot2(Vector2(cx - r, cy), c1: Vector2(cx - r, cy - r * k), c2: Vector2(cx - r, cy + r * k)),
-          CubicKnot2(Vector2(cx, cy + r), c1: Vector2(cx - r * k, cy + r), c2: Vector2(cx + r * k, cy + r)),
+          CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
+          CubicKnot2(Vector2(cx, cy - r), cIn: Vector2(cx + r * k, cy - r), cOut: Vector2(cx - r * k, cy - r)),
+          CubicKnot2(Vector2(cx - r, cy), cIn: Vector2(cx - r, cy - r * k), cOut: Vector2(cx - r, cy + r * k)),
+          CubicKnot2(Vector2(cx, cy + r), cIn: Vector2(cx - r * k, cy + r), cOut: Vector2(cx + r * k, cy + r)),
           // Seam: matches first knot position
-          CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
+          CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
         ]),
       );
       await tester.pumpWidget(_harness(c));
@@ -135,9 +135,9 @@ void main() {
       final v1 = c.createVertex(Vector2(50, 100));
       final v2 = c.createVertex(Vector2(150, 100));
       // Upper arc
-      c.createOpenEdge(v1, v2, c1: Vector2(50, 40), c2: Vector2(150, 40));
+      c.createOpenEdge(v1, v2, cStart: Vector2(50, 40), cEnd: Vector2(150, 40));
       // Lower arc
-      c.createOpenEdge(v1, v2, c1: Vector2(50, 160), c2: Vector2(150, 160));
+      c.createOpenEdge(v1, v2, cStart: Vector2(50, 160), cEnd: Vector2(150, 160));
       await tester.pumpWidget(_harness(c));
       await expectLater(
         find.byType(CustomPaint),
@@ -149,7 +149,7 @@ void main() {
       final c = VectorComplex();
       final v1 = c.createVertex(Vector2(30, 100));
       final v2 = c.createVertex(Vector2(170, 100));
-      c.createOpenEdge(v1, v2); // c1, c2 null; interior empty
+      c.createOpenEdge(v1, v2); // cIn, cOut null; interior empty
       await tester.pumpWidget(_harness(c));
       await expectLater(
         find.byType(CustomPaint),
@@ -210,11 +210,11 @@ void main() {
       const cx = 100.0, cy = 100.0, r = 60.0;
       final disc = c.createClosedEdge(
         CubicSpline2([
-          CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
-          CubicKnot2(Vector2(cx, cy - r), c1: Vector2(cx + r * k, cy - r), c2: Vector2(cx - r * k, cy - r)),
-          CubicKnot2(Vector2(cx - r, cy), c1: Vector2(cx - r, cy - r * k), c2: Vector2(cx - r, cy + r * k)),
-          CubicKnot2(Vector2(cx, cy + r), c1: Vector2(cx - r * k, cy + r), c2: Vector2(cx + r * k, cy + r)),
-          CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
+          CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
+          CubicKnot2(Vector2(cx, cy - r), cIn: Vector2(cx + r * k, cy - r), cOut: Vector2(cx - r * k, cy - r)),
+          CubicKnot2(Vector2(cx - r, cy), cIn: Vector2(cx - r, cy - r * k), cOut: Vector2(cx - r, cy + r * k)),
+          CubicKnot2(Vector2(cx, cy + r), cIn: Vector2(cx - r * k, cy + r), cOut: Vector2(cx + r * k, cy + r)),
+          CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
         ]),
       );
       c.createFace([
@@ -372,7 +372,7 @@ void main() {
       final c = VectorComplex();
       final v1 = c.createVertex(Vector2(50, 100));
       final v2 = c.createVertex(Vector2(150, 100));
-      final e = c.createOpenEdge(v1, v2, c1: Vector2(80, 40), c2: Vector2(120, 40)); // arched up
+      final e = c.createOpenEdge(v1, v2, cStart: Vector2(80, 40), cEnd: Vector2(120, 40)); // arched up
       c.createFace([
         RegularCycle([HalfEdge(e, true), HalfEdge(e, false)]),
       ]);
@@ -392,11 +392,11 @@ void main() {
         const cx = 60.0, cy = 100.0, r = 45.0;
         final disc = c.createClosedEdge(
           CubicSpline2([
-            CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
-            CubicKnot2(Vector2(cx, cy - r), c1: Vector2(cx + r * k, cy - r), c2: Vector2(cx - r * k, cy - r)),
-            CubicKnot2(Vector2(cx - r, cy), c1: Vector2(cx - r, cy - r * k), c2: Vector2(cx - r, cy + r * k)),
-            CubicKnot2(Vector2(cx, cy + r), c1: Vector2(cx - r * k, cy + r), c2: Vector2(cx + r * k, cy + r)),
-            CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
+            CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
+            CubicKnot2(Vector2(cx, cy - r), cIn: Vector2(cx + r * k, cy - r), cOut: Vector2(cx - r * k, cy - r)),
+            CubicKnot2(Vector2(cx - r, cy), cIn: Vector2(cx - r, cy - r * k), cOut: Vector2(cx - r, cy + r * k)),
+            CubicKnot2(Vector2(cx, cy + r), cIn: Vector2(cx - r * k, cy + r), cOut: Vector2(cx + r * k, cy + r)),
+            CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
           ]),
         );
         final steiner = c.createVertex(Vector2(cx, cy));
@@ -410,21 +410,21 @@ void main() {
         const cx = 140.0, cy = 100.0, r = 45.0;
         final outer = c.createClosedEdge(
           CubicSpline2([
-            CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
-            CubicKnot2(Vector2(cx, cy - r), c1: Vector2(cx + r * k, cy - r), c2: Vector2(cx - r * k, cy - r)),
-            CubicKnot2(Vector2(cx - r, cy), c1: Vector2(cx - r, cy - r * k), c2: Vector2(cx - r, cy + r * k)),
-            CubicKnot2(Vector2(cx, cy + r), c1: Vector2(cx - r * k, cy + r), c2: Vector2(cx + r * k, cy + r)),
-            CubicKnot2(Vector2(cx + r, cy), c1: Vector2(cx + r, cy + r * k), c2: Vector2(cx + r, cy - r * k)),
+            CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
+            CubicKnot2(Vector2(cx, cy - r), cIn: Vector2(cx + r * k, cy - r), cOut: Vector2(cx - r * k, cy - r)),
+            CubicKnot2(Vector2(cx - r, cy), cIn: Vector2(cx - r, cy - r * k), cOut: Vector2(cx - r, cy + r * k)),
+            CubicKnot2(Vector2(cx, cy + r), cIn: Vector2(cx - r * k, cy + r), cOut: Vector2(cx + r * k, cy + r)),
+            CubicKnot2(Vector2(cx + r, cy), cIn: Vector2(cx + r, cy + r * k), cOut: Vector2(cx + r, cy - r * k)),
           ]),
         );
         const ir = 15.0;
         final inner = c.createClosedEdge(
           CubicSpline2([
-            CubicKnot2(Vector2(cx + ir, cy), c1: Vector2(cx + ir, cy + ir * k), c2: Vector2(cx + ir, cy - ir * k)),
-            CubicKnot2(Vector2(cx, cy - ir), c1: Vector2(cx + ir * k, cy - ir), c2: Vector2(cx - ir * k, cy - ir)),
-            CubicKnot2(Vector2(cx - ir, cy), c1: Vector2(cx - ir, cy - ir * k), c2: Vector2(cx - ir, cy + ir * k)),
-            CubicKnot2(Vector2(cx, cy + ir), c1: Vector2(cx - ir * k, cy + ir), c2: Vector2(cx + ir * k, cy + ir)),
-            CubicKnot2(Vector2(cx + ir, cy), c1: Vector2(cx + ir, cy + ir * k), c2: Vector2(cx + ir, cy - ir * k)),
+            CubicKnot2(Vector2(cx + ir, cy), cIn: Vector2(cx + ir, cy + ir * k), cOut: Vector2(cx + ir, cy - ir * k)),
+            CubicKnot2(Vector2(cx, cy - ir), cIn: Vector2(cx + ir * k, cy - ir), cOut: Vector2(cx - ir * k, cy - ir)),
+            CubicKnot2(Vector2(cx - ir, cy), cIn: Vector2(cx - ir, cy - ir * k), cOut: Vector2(cx - ir, cy + ir * k)),
+            CubicKnot2(Vector2(cx, cy + ir), cIn: Vector2(cx - ir * k, cy + ir), cOut: Vector2(cx + ir * k, cy + ir)),
+            CubicKnot2(Vector2(cx + ir, cy), cIn: Vector2(cx + ir, cy + ir * k), cOut: Vector2(cx + ir, cy - ir * k)),
           ]),
         );
         c.createFace([
@@ -474,11 +474,11 @@ void main() {
       final c = VectorComplex();
       final loop = c.createClosedEdge(
         CubicSpline2([
-          CubicKnot2(Vector2(100, 100), c2: Vector2(140, 50)),
-          CubicKnot2(Vector2(180, 100), c1: Vector2(180, 50), c2: Vector2(180, 150)),
-          CubicKnot2(Vector2(100, 100), c1: Vector2(140, 150), c2: Vector2(60, 50)),
-          CubicKnot2(Vector2(20, 100), c1: Vector2(20, 50), c2: Vector2(20, 150)),
-          CubicKnot2(Vector2(100, 100), c1: Vector2(60, 150)),
+          CubicKnot2(Vector2(100, 100), cOut: Vector2(140, 50)),
+          CubicKnot2(Vector2(180, 100), cIn: Vector2(180, 50), cOut: Vector2(180, 150)),
+          CubicKnot2(Vector2(100, 100), cIn: Vector2(140, 150), cOut: Vector2(60, 50)),
+          CubicKnot2(Vector2(20, 100), cIn: Vector2(20, 50), cOut: Vector2(20, 150)),
+          CubicKnot2(Vector2(100, 100), cIn: Vector2(60, 150)),
         ]),
       );
       c.createFace([

@@ -90,7 +90,7 @@ class PencilFreehandDrawActivity extends DragActivity {
     final rawPoints = List.generate(stroke.length, (i) => stroke.getRawPoint(i).asVector2(), growable: false);
     final timestamps = List.generate(stroke.length, (i) => stroke.getTimestamp(i), growable: false);
 
-    final spline = pointsToSpline(
+    final spline = fitPointsToSpline(
       points,
       rawPoints: rawPoints,
       timestamps: timestamps,
@@ -109,12 +109,7 @@ class PencilFreehandDrawActivity extends DragActivity {
     } else {
       final v1 = controller.complex.createVertex(spline.knots.first.p);
       final v2 = controller.complex.createVertex(spline.knots.last.p);
-
-      final c1 = spline.knots.first.c2;
-      final c2 = spline.knots.last.c1;
-      final interior = spline.knots.sublist(1, spline.knots.length - 1);
-
-      controller.complex.createOpenEdge(v1, v2, interior: interior, c1: c1, c2: c2);
+      controller.complex.createOpenEdgeFromSpline(v1, v2, spline);
     }
   }
 }

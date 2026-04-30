@@ -39,9 +39,9 @@ class CreateVertexActivity extends DragActivity {
     final position = controller.globalToArtworkLocal(details.globalPosition);
     if (!isNewEdge) {
       final point = transientEdge.endPosition!;
-      transientEdge.c2Position = point + (point - position);
+      transientEdge.cEndPosition = point + (point - position);
     } else {
-      transientEdge.c1Position = position;
+      transientEdge.cStartPosition = position;
     }
   }
 

@@ -20,7 +20,7 @@ class MoveVertexActivity extends MoveDragActivity with ExclusiveCursorDragActivi
     connectedEdges = vertex.directStar.whereType<OpenEdge>().toList();
     connectedEdgesInitialC1C2 = [];
     for (final e in connectedEdges) {
-      connectedEdgesInitialC1C2.add((e.c1, e.c2));
+      connectedEdgesInitialC1C2.add((e.cStart, e.cEnd));
     }
   }
 
@@ -29,12 +29,12 @@ class MoveVertexActivity extends MoveDragActivity with ExclusiveCursorDragActivi
     vertex.position = startPosition + delta.asVector2();
 
     for (final (i, e) in connectedEdges.indexed) {
-      if (e.start == vertex && e.c1 != null) {
+      if (e.start == vertex && e.cStart != null) {
         final initial = connectedEdgesInitialC1C2[i].$1!;
-        e.c1 = initial + delta.asVector2();
-      } else if (e.end == vertex && e.c2 != null) {
+        e.cStart = initial + delta.asVector2();
+      } else if (e.end == vertex && e.cEnd != null) {
         final initial = connectedEdgesInitialC1C2[i].$2!;
-        e.c2 = initial + delta.asVector2();
+        e.cEnd = initial + delta.asVector2();
       }
     }
 

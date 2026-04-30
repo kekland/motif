@@ -21,8 +21,8 @@ final class OpenEdge extends Edge {
   OpenEdge(
     this._start,
     this._end, {
-    this.c1,
-    this.c2,
+    this.cStart,
+    this.cEnd,
     List<CubicKnot2>? interior,
     super.id,
   }) : interior = interior ?? [] {
@@ -35,11 +35,11 @@ final class OpenEdge extends Edge {
       throw ArgumentError('Spline start and end positions must match the given vertices');
     }
 
-    final c1 = spline.knots.first.c2;
-    final c2 = spline.knots.last.c1;
+    final cStart = spline.knots.first.cOut;
+    final cEnd = spline.knots.last.cIn;
     final interior = spline.knots.sublist(1, spline.knots.length - 1).map((k) => k.copy()).toList();
 
-    return OpenEdge(start, end, c1: c1, c2: c2, interior: interior, id: id);
+    return OpenEdge(start, end, cStart: cStart, cEnd: cEnd, interior: interior, id: id);
   }
 
   Vertex _start;
@@ -58,22 +58,22 @@ final class OpenEdge extends Edge {
     _end._directStar.add(this);
   }
 
-  Vector2? c1;
-  Vector2? c2;
+  Vector2? cStart;
+  Vector2? cEnd;
   List<CubicKnot2> interior;
 
   @override
   CubicSpline2 get spline => .new([
-    .new(start.position, c2: c1),
+    .new(start.position, cOut: cStart),
     ...interior,
-    .new(end.position, c1: c2),
+    .new(end.position, cIn: cEnd),
   ]);
 
   @override
   Set<Cell> get directBoundary => {start, end};
 
   @override
-  Aabb2 get boundingBoxApproximate => spline.aabbCheap();
+  Aabb2 get boundingBoxApproximate => spline.bboxCheap;
 }
 
 /// A closed edge represents a loop curve with no connections.
@@ -89,5 +89,5 @@ final class ClosedEdge extends Edge {
   Set<Cell> get directBoundary => <Cell>{};
 
   @override
-  Aabb2 get boundingBoxApproximate => spline.aabbCheap();
+  Aabb2 get boundingBoxApproximate => spline.bboxCheap;
 }

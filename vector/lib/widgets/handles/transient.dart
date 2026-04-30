@@ -19,18 +19,18 @@ class TransientEdgeHandles extends StatelessWidget {
 
         final startPosition = transientEdge.start.position.asOffset();
         final endPosition = transientEdge.endPosition;
-        final c1Position = transientEdge.c1Position;
-        final c2Position = transientEdge.c2Position;
+        final cStartPosition = transientEdge.cStartPosition;
+        final cEndPosition = transientEdge.cEndPosition;
 
         // C1 handle
-        if (c1Position != null) {
+        if (cStartPosition != null) {
           children.add(
             HandleWidget(
-              position: c1Position,
+              position: cStartPosition,
               child: ControlPointHandle(
                 deltaToOrigin:
                     MatrixUtils.transformPoint(childPaintTransform, startPosition) -
-                    MatrixUtils.transformPoint(childPaintTransform, c1Position),
+                    MatrixUtils.transformPoint(childPaintTransform, cStartPosition),
               ),
             ),
           );
@@ -44,8 +44,8 @@ class TransientEdgeHandles extends StatelessWidget {
               painter: _TransientEdgePainter(
                 start: startPosition,
                 end: endPosition,
-                c1: c1Position,
-                c2: c2Position,
+                c1: cStartPosition,
+                c2: cEndPosition,
                 color: context.colors.accent.primary,
                 transform: childPaintTransform,
               ),
@@ -54,20 +54,20 @@ class TransientEdgeHandles extends StatelessWidget {
           );
 
           // C2 handles
-          if (c2Position != null) {
+          if (cEndPosition != null) {
             final origin = MatrixUtils.transformPoint(childPaintTransform, endPosition);
-            final c2Transformed = MatrixUtils.transformPoint(childPaintTransform, c2Position);
+            final c2Transformed = MatrixUtils.transformPoint(childPaintTransform, cEndPosition);
 
             children.add(
               HandleWidget(
-                position: c2Position,
+                position: cEndPosition,
                 child: ControlPointHandle(
                   deltaToOrigin: origin - c2Transformed,
                 ),
               ),
             );
 
-            final mirrorC2Position = endPosition + (endPosition - c2Position);
+            final mirrorC2Position = endPosition + (endPosition - cEndPosition);
             final mirrorC2Transformed = MatrixUtils.transformPoint(childPaintTransform, mirrorC2Position);
 
             children.add(

@@ -9,15 +9,15 @@ class MoveKnotControlPointsActivity extends MoveDragActivity with ExclusiveCurso
   @override
   MouseCursor get cursor => Cursors.toolMove;
 
-  late final Vector2? c1StartPosition;
-  late final Vector2? c2StartPosition;
+  late final Vector2? cInStartPosition;
+  late final Vector2? cOutStartPosition;
 
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
-    c1StartPosition = knot.c1?.clone();
-    c2StartPosition = knot.c2?.clone();
+    cInStartPosition = knot.cIn?.clone();
+    cOutStartPosition = knot.cOut?.clone();
   }
 
   @override
@@ -26,15 +26,15 @@ class MoveKnotControlPointsActivity extends MoveDragActivity with ExclusiveCurso
 
     // Symmetric by default
     if (isC1) {
-      final newC1 = (c1StartPosition ?? knot.p) + deltaVec;
-      final newC2 = c2StartPosition != null ? knot.p + (knot.p - newC1) : null;
-      knot.c1 = newC1;
-      knot.c2 = newC2;
+      final newCIn = (cInStartPosition ?? knot.p) + deltaVec;
+      final newCOut = cOutStartPosition != null ? knot.p + (knot.p - newCIn) : null;
+      knot.cIn = newCIn;
+      knot.cOut = newCOut;
     } else {
-      final newC2 = (c2StartPosition ?? knot.p) + deltaVec;
-      final newC1 = c1StartPosition != null ? knot.p + (knot.p - newC2) : null;
-      knot.c2 = newC2;
-      knot.c1 = newC1;
+      final newCOut = (cOutStartPosition ?? knot.p) + deltaVec;
+      final newCIn = cInStartPosition != null ? knot.p + (knot.p - newCOut) : null;
+      knot.cOut = newCOut;
+      knot.cIn = newCIn;
     }
 
     controller.complex.notifyListeners();

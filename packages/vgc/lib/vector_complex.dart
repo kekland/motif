@@ -14,9 +14,17 @@ part 'topology/half_edge.dart';
 part 'topology/cycle.dart';
 part 'topology/face.dart';
 
+// Geometry utils on topological units
+part 'geometry/cycle.dart';
+part 'geometry/edge.dart';
+part 'geometry/half_edge.dart';
+part 'geometry/vertex.dart';
+
 // Methods on the complex
+part 'methods/creation.dart';
+part 'methods/deletion.dart';
 part 'methods/face_decomposition.dart';
-part 'methods/split_edge.dart';
+part 'methods/cut/cut_edge.dart';
 
 // Other utilities
 part 'utils/path.dart';
@@ -120,65 +128,6 @@ class VectorComplex extends ChangeNotifier {
     notifyListeners();
   }
 
-  Vertex createVertex(Vector2 position, {String? id}) {
-    final v = Vertex(position, id: id);
-    _insertWithDefaultDepth(v);
-    return v;
-  }
-
-  OpenEdge createOpenEdge(Vertex v1, Vertex v2, {List<CubicKnot2>? interior, Vector2? c1, Vector2? c2, String? id}) {
-    assert(contains(v1) && contains(v2));
-    final e = OpenEdge(v1, v2, interior: interior, c1: c1, c2: c2, id: id);
-    _insertWithDefaultDepth(e);
-    return e;
-  }
-
-  OpenEdge createOpenEdgeFromSpline(Vertex v1, Vertex v2, CubicSpline2 spline, {String? id}) {
-    assert(contains(v1) && contains(v2));
-    final e = OpenEdge.fromSpline(v1, v2, spline, id: id);
-    _insertWithDefaultDepth(e);
-    return e;
-  }
-
-  ClosedEdge createClosedEdge(CubicSpline2 spline, {String? id}) {
-    final e = ClosedEdge(spline, id: id);
-    _insertWithDefaultDepth(e);
-    return e;
-  }
-
-  Face createFace(List<Cycle> cycles, {String? id}) {
-    assert(() {
-      for (final cycle in cycles) {
-        final cells = cycle._cells;
-        for (final cell in cells) {
-          if (!contains(cell)) return false;
-        }
-      }
-
-      return true;
-    }());
-
-    final f = Face(cycles, id: id);
-    _insertWithDefaultDepth(f);
-    return f;
-  }
-
-  // Vertex splitEdge(Edge edge, double t) {
-  //   assert(contains(edge));
-  // }
-
-  void hardDelete(Cell c) {
-    assert(contains(c));
-
-    final toDelete = <Cell>{c, ...c.star};
-
-    for (final f in toDelete.whereType<Face>()) _detach(f);
-    for (final e in toDelete.whereType<Edge>()) _detach(e);
-    for (final v in toDelete.whereType<Vertex>()) _detach(v);
-
-    notifyListeners();
-  }
-
   void _detach(Cell c) {
     assert(contains(c));
 
@@ -186,4 +135,13 @@ class VectorComplex extends ChangeNotifier {
     _unlink(c);
     _cells.remove(c);
   }
+
+  void _internalNotify() {
+    notifyListeners();
+  }
+
+  // Vertex splitEdge(Edge edge, double t) {
+  //   assert(contains(edge));
+  // }
+
 }

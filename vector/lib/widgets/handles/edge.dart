@@ -45,15 +45,15 @@ class EdgeHandles extends StatelessWidget {
 
     for (final knot in knots) {
       final p = knot.p.asOffset();
-      final c1 = knot.c1?.asOffset();
-      final c2 = knot.c2?.asOffset();
+      final cIn = knot.cIn?.asOffset();
+      final cOut = knot.cOut?.asOffset();
 
-      if (c1 != null) {
-        _addControlPointHandle(p, c1, (e) => onKnotControlPointPointerDown?.call(e, (knot, true)));
+      if (cIn != null) {
+        _addControlPointHandle(p, cIn, (e) => onKnotControlPointPointerDown?.call(e, (knot, true)));
       }
 
-      if (c2 != null) {
-        _addControlPointHandle(p, c2, (e) => onKnotControlPointPointerDown?.call(e, (knot, false)));
+      if (cOut != null) {
+        _addControlPointHandle(p, cOut, (e) => onKnotControlPointPointerDown?.call(e, (knot, false)));
       }
 
       children.add(
@@ -71,15 +71,15 @@ class EdgeHandles extends StatelessWidget {
       final edge = this.edge as OpenEdge;
       final start = edge.start.position.asOffset();
       final end = edge.end.position.asOffset();
-      final c1 = edge.c1?.asOffset();
-      final c2 = edge.c2?.asOffset();
+      final cStart = edge.cStart?.asOffset();
+      final cEnd = edge.cEnd?.asOffset();
 
-      if (c1 != null) {
-        _addControlPointHandle(start, c1, (e) => onOpenEdgeControlPointPointerDown?.call(e, (edge, true)));
+      if (cStart != null) {
+        _addControlPointHandle(start, cStart, (e) => onOpenEdgeControlPointPointerDown?.call(e, (edge, true)));
       }
 
-      if (c2 != null) {
-        _addControlPointHandle(end, c2, (e) => onOpenEdgeControlPointPointerDown?.call(e, (edge, false)));
+      if (cEnd != null) {
+        _addControlPointHandle(end, cEnd, (e) => onOpenEdgeControlPointPointerDown?.call(e, (edge, false)));
       }
     }
 

@@ -1,6 +1,4 @@
-import 'dart:math' as math;
-import 'package:vector_math/vector_math_64.dart';
-import 'package:geometry/geometry.dart';
+part of '../cubic.dart';
 
 /// Implementation of Schneider's smoothing algorithm to turn a polyline into a bezier spline.
 CubicSpline2 schneider(List<Vector2> points, {double errorThreshold = 4.0}) {
@@ -35,7 +33,7 @@ List<Cubic2> _fitCubic(
 
   if (points.length == 2) {
     final dist = points[0].distanceTo(points[1]) / 3.0;
-    return [.new(points[0], points[1], c1: points[0] + st * dist, c2: points[1] + et * dist)];
+    return [.new(points[0], points[1], p1: points[0] + st * dist, p2: points[1] + et * dist)];
   }
 
   final u = _chordLengthParameterize(points);
@@ -112,7 +110,7 @@ Cubic2 _generateBezierSegment(
     alpha1 = alpha2 = length / 3.0;
   }
 
-  return .new(a, b, c1: a + (startTangent * alpha1), c2: b + (endTangent * alpha2));
+  return .new(a, b, p1: a + (startTangent * alpha1), p2: b + (endTangent * alpha2));
 }
 
 (double, int) _computeMaxError(List<Vector2> points, List<double> uList, Cubic2 bezier) {
@@ -126,7 +124,7 @@ Cubic2 _generateBezierSegment(
     final b2 = 3 * math.pow(u, 2) * (1 - u).toDouble();
     final b3 = math.pow(u, 3).toDouble();
 
-    final point = (bezier.a * b0) + (bezier.c1! * b1) + (bezier.c2! * b2) + (bezier.b * b3);
+    final point = (bezier.p0 * b0) + (bezier.p1 * b1) + (bezier.p2 * b2) + (bezier.p3 * b3);
     final dist = points[i].distanceTo(point);
 
     if (dist > maxDist) {

@@ -20,14 +20,4 @@ final class HalfEdge {
     final edge = this.edge as OpenEdge;
     return direction ? edge.end : edge.start;
   }
-
-  Vector2 get startPosition {
-    final spline = edge.spline;
-    return direction ? spline.knots.first.p : spline.knots.last.p;
-  }
-
-  Vector2 get endPosition {
-    final spline = edge.spline;
-    return direction ? spline.knots.last.p : spline.knots.first.p;
-  }
 }

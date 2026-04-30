@@ -9,15 +9,15 @@ class MoveKnotActivity extends MoveDragActivity with ExclusiveCursorDragActivity
   MouseCursor get cursor => Cursors.toolMove;
 
   late final Vector2 startPosition;
-  late final Vector2? startC1;
-  late final Vector2? startC2;
+  late final Vector2? startCIn;
+  late final Vector2? startCOut;
 
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
     startPosition = knot.p.clone();
-    startC1 = knot.c1?.clone();
-    startC2 = knot.c2?.clone();
+    startCIn = knot.cIn?.clone();
+    startCOut = knot.cOut?.clone();
   }
 
   @override
@@ -25,8 +25,8 @@ class MoveKnotActivity extends MoveDragActivity with ExclusiveCursorDragActivity
     final deltaVector = delta.asVector2();
 
     knot.p = startPosition + deltaVector;
-    if (startC1 != null) knot.c1 = startC1! + deltaVector;
-    if (startC2 != null) knot.c2 = startC2! + deltaVector;
+    if (startCIn != null) knot.cIn = startCIn! + deltaVector;
+    if (startCOut != null) knot.cOut = startCOut! + deltaVector;
 
     controller.complex.notifyListeners();
   }

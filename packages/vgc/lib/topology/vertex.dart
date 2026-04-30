@@ -12,4 +12,13 @@ final class Vertex extends Cell {
 
   @override
   Aabb2 get boundingBoxApproximate => .minMax(position, position);
+
+  Iterable<HalfEdge> get outgoingHalfEdges sync* {
+    for (final cell in directStar) {
+      if (cell is OpenEdge) {
+        if (cell.start == this) yield .new(cell, true);
+        if (cell.end == this) yield .new(cell, false);
+      }
+    }
+  }
 }

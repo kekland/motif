@@ -4,7 +4,7 @@ import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 /// A function that converts a list of points into a cubic spline.
-CubicSpline2 pointsToSpline(
+CubicSpline2 fitPointsToSpline(
   List<Vector2> points, {
   List<Vector2>? rawPoints,
   List<double>? timestamps,

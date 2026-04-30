@@ -17,8 +17,8 @@ class MoveOpenEdgeControlPointActivity extends MoveDragActivity with ExclusiveCu
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
-    c1StartPosition = edge.c1 ?? edge.start.position;
-    c2StartPosition = edge.c2 ?? edge.end.position;
+    c1StartPosition = edge.cStart ?? edge.start.position;
+    c2StartPosition = edge.cEnd ?? edge.end.position;
 
     final vtx = isC1 ? edge.start : edge.end;
     final degree = vtx.directStar.length;
@@ -39,19 +39,19 @@ class MoveOpenEdgeControlPointActivity extends MoveDragActivity with ExclusiveCu
 
     if (isC1) {
       final newC1 = c1StartPosition + deltaVec;
-      edge.c1 = c1StartPosition + deltaVec;
+      edge.cStart = c1StartPosition + deltaVec;
 
       if (nextEdge != null) {
         final pos = nextEdge!.end.position;
-        nextEdge!.c2 = pos + (pos - newC1);
+        nextEdge!.cEnd = pos + (pos - newC1);
       }
     } else {
       final newC2 = c2StartPosition + deltaVec;
-      edge.c2 = c2StartPosition + deltaVec;
+      edge.cEnd = c2StartPosition + deltaVec;
 
       if (nextEdge != null) {
         final pos = nextEdge!.start.position;
-        nextEdge!.c1 = pos + (pos - newC2);
+        nextEdge!.cStart = pos + (pos - newC2);
       }
     }
 

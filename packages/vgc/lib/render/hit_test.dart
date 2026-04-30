@@ -120,50 +120,22 @@ EdgeHitTestEntry? _hitTestRenderEdge(RenderEdge render, Offset position, double 
 
   for (var i = 0; i < n; i++) {
     final cubic = spline.segment(i);
-    final a = cubic.a;
-    final b = cubic.b;
-    final c1 = cubic.c1 ?? a;
-    final c2 = cubic.c2 ?? b;
-
-    final minX = math.min(math.min(a.x, b.x), math.min(c1.x, c2.x));
-    final maxX = math.max(math.max(a.x, b.x), math.max(c1.x, c2.x));
-    final minY = math.min(math.min(a.y, b.y), math.min(c1.y, c2.y));
-    final maxY = math.max(math.max(a.y, b.y), math.max(c1.y, c2.y));
-
-    final dx = math.max(0.0, math.max(minX - point.x, point.x - maxX));
-    final dy = math.max(0.0, math.max(minY - point.y, point.y - maxY));
-    final bboxDistance = math.sqrt(dx * dx + dy * dy);
+    final bbox = cubic.bboxCheap;
+    final bboxDistance = bbox.distanceTo(point);
     if (bboxDistance > tolerance || bboxDistance >= bestDistance) continue;
 
-    Vector2? previousPoint;
-    double previousT = 0.0;
-
-    Cubic2.flattenCubic(a, c1, c2, b, flatnessTolerance, (s, t) {
-      if (previousPoint != null) {
-        final (segmentDistance, segmentT) = _closestOnSegment(previousPoint!, s, point);
-        if (segmentDistance < bestDistance) {
-          bestDistance = segmentDistance;
-          bestLocal = i + (previousT + segmentT * (t - previousT));
+    cubic.forEachSegment(
+      (segment, at, bt) {
+        final result = segment.closestTo(point);
+        if (result.distance < bestDistance) {
+          bestDistance = result.distance;
+          bestLocal = i + (at + result.t * (bt - at));
         }
-      }
-
-      previousPoint = s;
-      previousT = t;
-    });
+      },
+      tolerance: flatnessTolerance,
+    );
   }
 
   if (bestDistance > tolerance) return null;
   return (bestDistance, bestLocal / n);
-}
-
-(double, double) _closestOnSegment(Vector2 a, Vector2 b, Vector2 point) {
-  final ab = b - a;
-  final lengthSquared = ab.length2;
-  if (lengthSquared < 1e-18) return (point.distanceTo(a), 0.0);
-
-  var t = (point - a).dot(ab) / lengthSquared;
-  t = t.clamp(0.0, 1.0);
-
-  final closest = a + (ab * t);
-  return (closest.distanceTo(point), t);
 }
