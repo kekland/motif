@@ -6,6 +6,10 @@ analyzer:
     no_leading_underscores_for_local_identifiers: ignore
     unused_element_parameter: ignore
 
+  exclude:
+    - packages/skia/build/**
+    - packages/dawn/build/**
+
 formatter:
   page_width: 120
   trailing_commas: preserve

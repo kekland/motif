@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 part 'controller/transient_edges.dart';
 part 'controller/transient_strokes.dart';
@@ -32,7 +34,7 @@ class VectorController extends Controller {
     return artworkRender!.hitTestCell(localPosition, tolerance: tolerance);
   }
 
-  late final transientEdges = $disposable(TransientEdges());
+  late final transientEdges = $disposable(TransientEdges(this));
   late final transientStrokes = $disposable(TransientStrokes());
   late final tool = $disposable(ToolController(initialToolset: toolset));
   late final complex = $customDisposable(VectorComplex(), (v) => v.dispose());

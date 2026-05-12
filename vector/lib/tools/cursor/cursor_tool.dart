@@ -31,7 +31,7 @@ class _CursorToolOverlay extends HookWidget {
     final controller = VectorController.watch(context);
     final hoveredCell = useState<Cell?>(null);
 
-    debugPrintGestureArenaDiagnostics = true;
+    debugPrintGestureArenaDiagnostics = false;
 
     List<CellHitTestEntry> _hitTest(Offset globalPosition) {
       final scale = info.childPaintTransform.getMaxScaleOnAxis();

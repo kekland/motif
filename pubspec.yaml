@@ -14,13 +14,16 @@ workspace:
   - packages/color
   - packages/commander
   - packages/css
+  - packages/dawn
   - packages/geometry
   - packages/shared
+  - packages/skia
   - packages/text
   - packages/tool
   - packages/tree
   - packages/ui
   - packages/vgc
+  - packages/wgpu
 
 dev_dependencies:
   flutter_lints: ^6.0.0

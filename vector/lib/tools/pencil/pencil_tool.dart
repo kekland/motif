@@ -41,6 +41,9 @@ class _PencilToolOverlay extends HookWidget {
         onPointerDown: (e) {
           freehandDragRecognizer.addPointer(e);
         },
+        onPointerMove: (e) {
+          freehandDragRecognizer.currentActivity?.moveEvent = e;
+        },
         child: GestureDetector(
           behavior: .translucent,
           onTapUp: (details) {

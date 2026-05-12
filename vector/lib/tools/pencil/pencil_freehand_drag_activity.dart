@@ -5,23 +5,27 @@ import 'package:vector/imports.dart';
 class PencilFreehandDrawActivity extends DragActivity {
   PencilFreehandDrawActivity({required this.controller});
 
-  static const double _kMinAcceptDistance = 0.5;
-  static const int _kSmoothingWindowSize = 5;
+  static const double _kMinAcceptDistance = 1.0;
+  static const int _kSmoothingWindowSize = 3;
   static const double _kSmoothingSpeedThreshold = 10.0;
 
   static const double _vwEpsilon = 2.0;
-  static const double _schneiderErrorThreshold = 1.0;
+  static const double _schneiderErrorThreshold = 4.0;
   static const double _cornerWindowArcLength = 10.0;
-  static const double _cornerStrictAngle = 1.0;
-  static const double _cornerRelaxedAngle = 0.5;
+  static const double _cornerStrictAngle = 1.2;
+  static const double _cornerRelaxedAngle = 0.7;
   static const double _cornerSpeedRadius = 15.0;
-  static const double _cornerSuppressionRadius = 12.0;
+  static const double _cornerSuppressionRadius = 18.0;
+
+  static const double _kLoopDistanceThreshold = 12.0;
 
   final VectorController controller;
   late TransientStroke stroke;
   late Offset _lastAcceptedPosition;
 
   Offset _toLocal(Offset position) => controller.globalToArtworkLocal(position);
+
+  late final Vertex _startVertex;
 
   @override
   void onStart(PositionedGestureDetails details) {
@@ -34,7 +38,14 @@ class PencilFreehandDrawActivity extends DragActivity {
     );
 
     _lastAcceptedPosition = details.globalPosition;
+
+    final hitTest = controller.hitTestCell(details.globalPosition);
+    _startVertex = hitTest != null
+        ? controller.complex.createVertexAtHitTest(hitTest)
+        : controller.complex.createVertex(_toLocal(details.globalPosition).asVector2());
   }
+
+  PointerMoveEvent? moveEvent;
 
   @override
   void onUpdate(DragUpdateDetails details) {
@@ -105,11 +116,25 @@ class PencilFreehandDrawActivity extends DragActivity {
 
     if (spline.isEmpty) return;
     if (spline.length == 1) {
-      controller.complex.createVertex(spline.knots.first.p);
+      return;
     } else {
-      final v1 = controller.complex.createVertex(spline.knots.first.p);
-      final v2 = controller.complex.createVertex(spline.knots.last.p);
-      controller.complex.createOpenEdgeFromSpline(v1, v2, spline);
+      late final Vertex endVertex;
+
+      final startPosition = _startVertex.position;
+      final finalPosition = _lastAcceptedPosition.asVector2();
+      final distance = startPosition.distanceTo(finalPosition);
+      if (distance <= _kLoopDistanceThreshold) {
+        endVertex = _startVertex;
+      } else {
+        final hitTest = controller.hitTestCell(_lastAcceptedPosition);
+        endVertex = hitTest != null
+            ? controller.complex.createVertexAtHitTest(hitTest)
+            : controller.complex.createVertex(_toLocal(_lastAcceptedPosition).asVector2());
+      }
+
+      spline.knots.first.p = _startVertex.position;
+      spline.knots.last.p = endVertex.position;
+      controller.complex.commitSpline(spline, startVertex: _startVertex, endVertex: endVertex);
     }
   }
 }

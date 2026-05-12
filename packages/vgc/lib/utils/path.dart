@@ -1,5 +1,14 @@
 part of '../vector_complex.dart';
 
+extension CubicGetPathExtension on Cubic2 {
+  Path getPath() {
+    final path = Path();
+    path.moveTo(p0.x, p0.y);
+    _cubicTo(path, p0, p1, p2, p3);
+    return path;
+  }
+}
+
 extension EdgeGetPathExtension on Edge {
   Path getPath() {
     final path = Path();

@@ -9,10 +9,23 @@ double perpendicularDistance(Vector2 p, Vector2 a, Vector2 b) {
   return ((p.x - a.x) * (-d.y) + (p.y - a.y) * d.x).abs() / len;
 }
 
-extension DistanceToAabb2 on Aabb2 {
+extension Aabb2Utils on Aabb2 {
   double distanceTo(Vector2 p) {
     final dx = math.max(0.0, math.max(min.x - p.x, p.x - max.x));
     final dy = math.max(0.0, math.max(min.y - p.y, p.y - max.y));
     return math.sqrt(dx * dx + dy * dy);
+  }
+
+  bool intersectsWithAabb2Tolerance(Aabb2 other, double tolerance) {
+    final a = this, b = other;
+    if (a.max.x + tolerance < b.min.x || b.max.x + tolerance < a.min.x) return false;
+    if (a.max.y + tolerance < b.min.y || b.max.y + tolerance < a.min.y) return false;
+    return true;
+  }
+}
+
+extension Vector2Utils on Vector2 {
+  Vector2 pointReflect(Vector2 p) {
+    return p * 2 - this;
   }
 }

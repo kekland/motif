@@ -6,3 +6,5 @@
 **/.dart_tool/
 **/build
 **/.idea
+**/__pycache__
+**/.build

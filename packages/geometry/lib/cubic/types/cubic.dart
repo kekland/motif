@@ -14,27 +14,57 @@ final class Cubic2 {
 
   bool get isP1Collapsed => p0 == p1;
   bool get isP2Collapsed => p2 == p3;
-  bool get isStraightLine => isP1Collapsed && isP2Collapsed;
+  bool get isStraightLine {
+    if (isP1Collapsed && isP2Collapsed) return true;
+    final chord = p3 - p0;
+    final scale = chord.length;
+    if (scale < 1e-12) return false;
 
-  CubicKnot2 get startKnot => .new(p0, cOut: p1);
-  CubicKnot2 get endKnot => .new(p3, cIn: p2);
+    final eps = 1e-9 * scale;
+    return chord.cross(p1 - p0).abs() < eps && chord.cross(p2 - p0).abs() < eps;
+  }
 
-  Aabb2 get bboxCheap => _cubicBboxCheap(this);
+  CubicKnot2 get startKnot => .new(p0, cOut: isP1Collapsed ? null : p1);
+  CubicKnot2 get endKnot => .new(p3, cIn: isP2Collapsed ? null : p2);
 
-  Vector2 evaluate(double t) => _cubicEvaluate(this, t);
+  Aabb2 get bbox => _cubicBbox(this);
+  Aabb2 get bboxTight => _ffiCubicBboxTight(this);
+
+  double? _arcLengthCache;
+  double get _arcLength {
+    // if (_arcLengthCache != null) return _arcLengthCache!;
+    _arcLengthCache = _cubicArcLength(this);
+    return _arcLengthCache!;
+  }
+
+  Vector2 point(double t) => _cubicEvaluate(this, t);
   Vector2 velocity(double t) => _cubicVelocity(this, t);
   Vector2 tangent(double t) => _cubicTangent(this, t);
 
-  double arcLength({double? tolerance}) => _cubicArcLength(this, tolerance: tolerance);
+  Vector2 pointAtDistance(double distance) => _cubicPointAtDistance(this, distance);
+  Vector2 velocityAtDistance(double distance) => _cubicVelocityAtDistance(this, distance);
+  Vector2 tangentAtDistance(double distance) => _cubicTangentAtDistance(this, distance);
+
+  double tAtDistance(double distance) => _cubicTAtDistance(this, distance);
+  double distanceAtT(double t) => _cubicDistanceAtT(this, t);
+
+  double get arcLength => _arcLength;
   (Cubic2, Cubic2) split(double t) => _cubicSplit(this, t);
   List<Cubic2> splitMultiple(List<double> ts) => _cubicSplitMultiple(this, ts);
 
+  // dart format off
   FlattenResult flatten({double? tolerance}) => _cubicFlattenWithResult(p0, p1, p2, p3, tolerance);
+  void forEachSample(FlattenCallback callback, {double? tolerance}) => _cubicFlatten(p0, p1, p2, p3, tolerance, callback);
+  void forEachSegment(FlattenSegmentsCallback callback, {double? tolerance}) => _cubicFlattenToSegments(p0, p1, p2, p3, tolerance, callback);
 
-  void forEachSample(FlattenCallback callback, {double? tolerance}) =>
-      _cubicFlatten(p0, p1, p2, p3, tolerance, callback);
-  void forEachSegment(FlattenSegmentsCallback callback, {double? tolerance}) =>
-      _cubicFlattenToSegments(p0, p1, p2, p3, tolerance, callback);
+  Intersection? selfIntersect() => _cubicSelfIntersect(this);
+  List<Intersection> intersectWith(Cubic2 other) => _cubicIntersect(this, other);
+  List<Intersection> intersectWithSpline(CubicSpline2 other) => _splineCubicIntersect(other, this);
+  // dart format on
+
+  ClosestPointResult closestTo(Vector2 q) => _cubicClosestPoint(this, q);
+  List<double> findInflections() => _cubicFindInflections(this);
+  List<CubicToQuadResult> toQuads({double tolerance = 1.0}) => _cubicToQuads(this, tolerance: tolerance);
 
   @override
   bool operator ==(Object other) {

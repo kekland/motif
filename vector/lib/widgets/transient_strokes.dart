@@ -29,18 +29,13 @@ class TransientStrokePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 4.0
+    final paint2 = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1.0
       ..strokeCap = .round
       ..strokeJoin = .round;
 
-    final paint2 = Paint()
-      ..color = Colors.blue
-      ..strokeWidth = 2.0;
-
-    canvas.drawRawPoints(.polygon, stroke.points, paint);
-    canvas.drawRawPoints(.points, stroke.points, paint2);
+    canvas.drawRawPoints(.polygon, stroke.points, paint2);
   }
 
   @override

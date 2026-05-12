@@ -45,7 +45,7 @@ class KnotHandle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseHandleWidget(
       size: size,
-      borderRadius: .circular(size / 2),
+      borderRadius: .circular(2.0),
       isSelected: isSelected,
       isHovered: isHovered,
       rotation: math.pi / 4,

@@ -6,6 +6,9 @@ import 'package:vector_math/vector_math_64.dart';
 import 'package:uuid/v4.dart';
 import 'package:geometry/geometry.dart';
 
+import 'package:vgc/renderer/render.dart';
+
+
 // Topology
 part 'topology/cell.dart';
 part 'topology/vertex.dart';
@@ -14,6 +17,9 @@ part 'topology/half_edge.dart';
 part 'topology/cycle.dart';
 part 'topology/face.dart';
 
+// Decoration
+part 'decoration/stroke_weight.dart';
+
 // Geometry utils on topological units
 part 'geometry/cycle.dart';
 part 'geometry/edge.dart';
@@ -21,13 +27,16 @@ part 'geometry/half_edge.dart';
 part 'geometry/vertex.dart';
 
 // Methods on the complex
+part 'methods/commit_spiline.dart';
 part 'methods/creation.dart';
 part 'methods/deletion.dart';
 part 'methods/face_decomposition.dart';
+part 'methods/intersections.dart';
 part 'methods/cut/cut_edge.dart';
 
 // Other utilities
 part 'utils/path.dart';
+part 'utils/vertex_at_hit_test.dart';
 
 class VectorComplex extends ChangeNotifier {
   Cell? _bottom, _top;
@@ -46,7 +55,11 @@ class VectorComplex extends ChangeNotifier {
     for (var c = _top; c != null; c = c._prev) yield c;
   }
 
-  Aabb2 get boundingBoxApproximate {
+  Iterable<Vertex> get vertices => cells.whereType<Vertex>();
+  Iterable<Edge> get edges => cells.whereType<Edge>();
+  Iterable<Face> get faces => cells.whereType<Face>();
+
+  Aabb2 get bbox {
     if (length == 0) return Aabb2();
 
     var min = Vector2(.infinity, .infinity);
@@ -143,5 +156,4 @@ class VectorComplex extends ChangeNotifier {
   // Vertex splitEdge(Edge edge, double t) {
   //   assert(contains(edge));
   // }
-
 }

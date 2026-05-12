@@ -8,6 +8,3 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  skia_dart:
-    path: ../../../skia_dart/packages/skia_dart

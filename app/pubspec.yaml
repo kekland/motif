@@ -15,5 +15,9 @@ dependencies:
   design:
   vector:
 
+  skia:
   shared:
   ui:
+
+  metal_capture_util:
+    path: ../../metal_capture_util

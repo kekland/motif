@@ -12,8 +12,13 @@ dependencies:
   vector_math: ^2.2.0
   uuid: ^4.5.3
 
+  dawn:
   geometry:
 
 dev_dependencies:
   flutter_test: 
     sdk: flutter
+
+flutter:
+  shaders:
+    - shaders/tile_quad2.frag

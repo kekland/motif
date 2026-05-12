@@ -81,8 +81,7 @@ class HandlesOverlay extends HookWidget {
       moveKnotActivityRecognizer.supportedDevices = _value;
       moveKnotControlPointsActivity.supportedDevices = _value;
       moveOpenEdgeControlPointActivity.supportedDevices = _value;
-    }
-    else {
+    } else {
       final _value = <PointerDeviceKind>{.touch};
       moveVertexActivityRecognizer.supportedDevices = _value;
       moveKnotActivityRecognizer.supportedDevices = _value;

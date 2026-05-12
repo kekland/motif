@@ -1,0 +1,414 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+###################################
+# Configurations
+###################################
+
+ROOT = Path(__file__).resolve().parent.parent
+BUILD = ROOT / 'build'
+DEPOT_TOOLS = BUILD / 'depot_tools'
+SKIA_SRC = BUILD / 'skia'
+INCLUDE_DIR = ROOT / 'include'
+PUBLIC_INCLUDE_DIR = INCLUDE_DIR
+PRIVATE_INCLUDE_DIR = INCLUDE_DIR / 'src'
+SHARE_DIR = BUILD / 'share'
+
+# repo urls
+DEPOT_TOOLS_URL = "https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+SKIA_GIT_URL = "https://github.com/google/skia.git"
+
+COMMON_GN_ARGS = '''
+is_official_build = {is_official}
+is_debug = {is_debug}
+
+skia_enable_skshaper = true
+skia_enable_skparagraph = true
+skia_use_icu = true
+skia_use_harfbuzz = true
+skia_use_freetype = true
+
+skia_use_gl = false
+skia_use_metal = false
+skia_use_vulkan = false
+skia_use_dawn = false
+skia_use_direct3d = false
+skia_enable_ganesh = false
+skia_enable_graphite = false
+
+skia_use_system_zlib = false
+skia_use_system_expat = false
+skia_use_system_icu = false
+skia_use_system_harfbuzz = false
+skia_use_system_freetype2 = false
+skia_use_system_libpng = false
+
+skia_use_expat = true
+skia_enable_pdf = false
+skia_enable_skottie = false
+skia_enable_svg = false
+skia_enable_tools = false
+skia_use_xps = false
+skia_use_dng_sdk = false
+skia_use_libpng_decode = true
+skia_use_libpng_encode = false
+skia_use_libwebp_decode = false
+skia_use_libwebp_encode = false
+skia_use_libjpeg_turbo_decode = false
+skia_use_libjpeg_turbo_encode = false
+skia_use_no_jpeg_encode = true
+skia_use_no_webp_encode = true
+skia_use_libheif = false
+skia_use_wuffs = false
+skia_use_lua = false
+skia_use_piex = false
+skia_use_freetype_woff2 = false
+
+extra_cflags_cc = ["-frtti"]
+'''
+
+MACOS_GN_ARGS = '''
+cc = "clang"
+cxx = "clang++"
+target_os = "mac"
+target_cpu = "arm64"
+'''
+
+IOS_DEVICE_GN_ARGS = '''
+target_os = "ios"
+target_cpu = "arm64"
+ios_use_simulator = false
+ios_min_target = "12.0"
+'''
+
+IOS_SIMULATOR_GN_ARGS = '''
+target_os = "ios"
+target_cpu = "arm64"
+ios_use_simulator = true
+ios_min_target = "12.0"
+'''
+
+WASM_GN_ARGS = '''
+target_os = "wasm"
+target_cpu = "wasm"
+is_component_build = false
+is_trivial_abi = true
+
+skia_use_fontconfig = false
+skia_enable_fontmgr_custom_directory = false
+skia_enable_fontmgr_custom_embedded = true
+skia_enable_fontmgr_custom_empty = true
+'''
+
+PLATFORMS = {
+  'macos': {
+    'out_name': 'macos-arm64',
+    'gn_args': MACOS_GN_ARGS,
+  },
+  'iphoneos': {
+    'out_name': 'iphoneos-arm64',
+    'gn_args': IOS_DEVICE_GN_ARGS,
+  },
+  'iphonesimulator': {
+    'out_name': 'iphonesimulator-arm64',
+    'gn_args': IOS_SIMULATOR_GN_ARGS,
+  },
+  'wasm': {
+    'out_name': 'wasm',
+    'gn_args': WASM_GN_ARGS,
+  },
+}
+
+NINJA_TARGETS = [
+  'skia',
+  'skshaper',
+  'skparagraph',
+  'skunicode_core',
+  'skunicode_icu',
+]
+
+SKIA_LIBS = [
+  'libskia.a',
+  'libskshaper.a',
+  'libskparagraph.a',
+  'libskunicode_core.a',
+  'libskunicode_icu.a',
+]
+
+PUBLIC_HEADER_DIRS = [
+  'include',
+  'modules/skshaper/include',
+  'modules/skparagraph/include',
+  'modules/skunicode/include',
+]
+
+PRIVATE_HEADER_DIRS = [
+  ('src/base', 'base'),
+  ('src/core', 'core'),
+  ('src/pathops', 'pathops'),
+]
+
+
+###################################
+# Build process
+###################################
+
+def tmp_dir(platform: str, config: str) -> Path: return BUILD / 'tmp' / f'{PLATFORMS[platform]["out_name"]}-{config}'
+def lib_dir(platform: str, config: str) -> Path: return BUILD / PLATFORMS[platform]['out_name'] / config
+
+
+def _file_human_size(p: Path) -> str:
+  size = p.stat().st_size
+  for u in ['B', 'KB', 'MB', 'GB']:
+    if size < 1024: return f'{size:.1f}{u}'
+    size /= 1024
+  return f'{size:.1f}TB'
+
+
+def setup_depot_tools():
+  if DEPOT_TOOLS.exists():
+    print('depot_tools already exists, checking for updates...')
+    subprocess.run(['git', '-C', str(DEPOT_TOOLS), 'pull'], check=False)
+  else:
+    print('cloning depot_tools...')
+    BUILD.mkdir(parents=True, exist_ok=True)
+    subprocess.run(['git', 'clone', DEPOT_TOOLS_URL, str(DEPOT_TOOLS)], check=True)
+
+  os.environ['PATH'] = str(DEPOT_TOOLS) + os.pathsep + os.environ['PATH']
+
+
+def setup_skia(branch: str, shallow: bool):
+  if SKIA_SRC.exists():
+    print(f'skia source ({branch}) already exists, checking for updates...')
+    subprocess.run(['git', '-C', str(SKIA_SRC), 'fetch', 'origin', branch], check=True)
+    subprocess.run(['git', '-C', str(SKIA_SRC), 'checkout', branch], check=True)
+    subprocess.run(['git', '-C', str(SKIA_SRC), 'reset', '--hard', f'origin/{branch}'], check=True)
+  else:
+    print(f'cloning skia ({branch})...')
+    cmd = ['git', 'clone']
+    if shallow: cmd += ['--depth', '1']
+    cmd += ['--branch', branch, SKIA_GIT_URL, str(SKIA_SRC)]
+    subprocess.run(cmd, check=True)
+
+
+def sync_deps(max_retries=8, base_backoff=20):
+  print('syncing skia deps...')
+
+  for attempt in range(1, max_retries + 1):
+    print(f'  attempt {attempt} of {max_retries}...')
+    result = subprocess.run([sys.executable, 'tools/git-sync-deps'], cwd=SKIA_SRC)
+    if result.returncode == 0: return
+
+    if attempt == max_retries:
+      print('Error: failed to sync deps after maximum retries')
+      sys.exit(1)
+
+    wait = base_backoff * attempt
+    print(f'  sync failed, retrying in {wait} seconds...')
+    time.sleep(wait)
+
+
+def get_emsdk_version() -> str:
+  emsdk_dir = SKIA_SRC / 'third_party' / 'externals' / 'emsdk'
+  version_file = emsdk_dir / '.emscripten_releases'
+  upstream_version = emsdk_dir / 'upstream' / 'emscripten' / 'emscripten-version.txt'
+  if upstream_version.exists(): return upstream_version.read_text().strip().strip('"')
+  if version_file.exists(): return version_file.read_text().strip()
+  return 'unknown'
+
+
+def render_gn_args(platform: str, config: str) -> str:
+  is_debug = config == 'Debug'
+  common = COMMON_GN_ARGS.format(
+    is_official='false' if is_debug else 'true',
+    is_debug='true' if is_debug else 'false',
+  )
+
+  return common + '\n' + PLATFORMS[platform]['gn_args']
+
+
+def gn_gen(platform: str, config: str):
+  out = tmp_dir(platform, config)
+  args = render_gn_args(platform, config)
+  print(f'generating gn files for {platform}/{config}')
+  out.parent.mkdir(parents=True, exist_ok=True)
+
+  subprocess.run(
+    ['./bin/gn', 'gen', str(out), f'--args={args}'],
+    cwd=SKIA_SRC,
+    check=True,
+  )
+
+
+def ninja_build(platform: str, config: str):
+  out = tmp_dir(platform, config)
+  print(f'building skia for {platform}/{config}')
+  subprocess.run(
+    ['ninja', '-C', str(out), *NINJA_TARGETS],
+    check=True,
+  )
+  print(f'skia build for {platform}/{config} completed')
+
+
+def collect_libs(platform: str, config: str):
+  out = tmp_dir(platform, config)
+  dst_dir = lib_dir(platform, config)
+  dst_dir.mkdir(parents=True, exist_ok=True)
+
+  print(f'copying static libraries to {dst_dir.relative_to(ROOT)}...')
+  missing = []
+
+  for name in SKIA_LIBS:
+    src = out / name
+    if not src.exists():
+      missing.append(name)
+      continue
+
+    dst = dst_dir / name
+    if dst.exists(): dst.unlink()
+    shutil.copy2(src, dst)
+    print(f'  {name} ({_file_human_size(dst)})')
+
+  if missing:
+    print(f'Warning: missing libraries for {platform}/{config}: {", ".join(missing)}')
+
+
+def collect_public_headers():
+  dst_root = PUBLIC_INCLUDE_DIR
+  if dst_root.exists(): shutil.rmtree(dst_root)
+  dst_root.mkdir(parents=True)
+
+  print(f'collecting public headers to {dst_root.relative_to(ROOT)}...')
+
+  for d in PUBLIC_HEADER_DIRS:
+    src = SKIA_SRC / d
+    if not src.exists():
+      print(f'Warning: public header directory not found: {d}')
+      continue
+
+    for root, _, files in os.walk(src):
+      for f in files:
+        if not f.endswith('.h'): continue
+        p = Path(root) / f
+        rel = p.relative_to(src)
+        dst = dst_root / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(p, dst)
+        print(f'  {rel}')
+
+
+def collect_private_headers():
+  dst_root = PRIVATE_INCLUDE_DIR
+  dst_root.mkdir(parents=True, exist_ok=True)
+
+  print(f'collecting private headers to {dst_root.relative_to(ROOT)}...')
+
+  for src_rel, dst_rel in PRIVATE_HEADER_DIRS:
+    src = SKIA_SRC / src_rel
+    if not src.exists():
+      print(f'Warning: private header directory not found: {src_rel}')
+      continue
+
+    dst_dir = dst_root / dst_rel
+    for root, _, files in os.walk(src):
+      for f in files:
+        if not f.endswith('.h'): continue
+        p = Path(root) / f
+        rel = p.relative_to(src)
+        dst = dst_dir / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(p, dst)
+
+    print(f'  {src_rel} -> private/{dst_rel}')
+
+
+def collect_icu_data():
+  src = SKIA_SRC / 'third_party' / 'externals' / 'icu' / 'common' / 'icudtl.dat'
+  if not src.exists():
+    print('Warning: icudtl.dat not found, skipping...')
+    return
+
+  dst = SHARE_DIR / 'icudtl.dat'
+  dst.parent.mkdir(parents=True, exist_ok=True)
+  shutil.copy2(src, dst)
+  print(f'copied icudtl.dat ({_file_human_size(dst)})')
+
+
+def clean():
+  paths = [
+    BUILD / 'tmp',
+    INCLUDE_DIR,
+    SHARE_DIR,
+  ]
+
+  for platform in PLATFORMS:
+    for config in ['Debug', 'Release']:
+      paths.append(lib_dir(platform, config))
+
+  for p in paths:
+    if p.exists():
+      print(f'removing {p.relative_to(ROOT)}...')
+      shutil.rmtree(p)
+
+
+def main():
+  ap = argparse.ArgumentParser()
+  ap.add_argument('platform', nargs='?', choices=list(PLATFORMS.keys()))
+  ap.add_argument('--branch', default='chrome/m129')
+  ap.add_argument('--debug', action='store_true')
+  ap.add_argument('--shallow', action='store_true')
+  ap.add_argument('--clean', action='store_true')
+  ap.add_argument('--skip-sync', action='store_true')
+
+  args = ap.parse_args()
+  if args.clean:
+    clean()
+    return
+
+  if not args.platform:
+    ap.print_help()
+    return
+  
+  macos_platforms = ('macos', 'iphoneos', 'iphonesimulator')
+  if args.platform in macos_platforms and sys.platform != 'darwin':
+    print('Error: macos/ios platform can only be built on macOS')
+    return
+
+  config = 'Debug' if args.debug else 'Release'
+  start_time = time.time()
+
+  setup_depot_tools()
+  setup_skia(args.branch, args.shallow)
+  if not args.skip_sync: sync_deps()
+
+  gn_gen(args.platform, config)
+  ninja_build(args.platform, config)
+
+  collect_libs(args.platform, config)
+  collect_public_headers()
+  collect_private_headers()
+  collect_icu_data()
+
+  out_name = PLATFORMS[args.platform]['out_name']
+
+  end_time = time.time()
+  duration = end_time - start_time
+  print(f'====')
+  print(f'Build completed in {duration:.1f} seconds')
+  print(f'output: {BUILD.relative_to(ROOT)}/')
+  print(f'  static libs:     build/{out_name}/{config}/lib*.a')
+  print(f'  public headers:  include/')
+  print(f'  private headers: include/private')
+  print(f'  icu data:        build/share/icudtl.dat')
+  if args.platform == 'wasm':
+    print(f'  emsdk version:   {get_emsdk_version()}')
+
+
+if __name__ == '__main__': main()

@@ -11,7 +11,7 @@ final class CubicKnot2 {
   Vector2? cIn;
   Vector2? cOut;
 
-  Aabb2 get bboxCheap => _knotBboxCheap(this);
+  Aabb2 get bbox => _knotBbox(this);
 
   @override
   bool operator ==(Object other) {

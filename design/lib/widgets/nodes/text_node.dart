@@ -7,7 +7,7 @@ class TextNodeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrintGestureArenaDiagnostics = true;
+    debugPrintGestureArenaDiagnostics = false;
     return NodeBuilder(
       node: node,
       builder: (context, child) {

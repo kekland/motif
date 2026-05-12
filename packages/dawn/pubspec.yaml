@@ -1,0 +1,16 @@
+name: dawn
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  hooks: ^1.0.3
+  code_assets: ^1.0.0
+  native_toolchain_c: ^0.17.4
+  ffi: ^2.2.0
+  ffigen: ^20.1.1

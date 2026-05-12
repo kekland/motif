@@ -13,7 +13,8 @@ class CreateVertexActivity extends DragActivity {
   final ValueChanged<TransientEdge> onTransientEdgeCreated;
   final ValueChanged<TransientEdge> onTransientEdgeCompleted;
 
-  late bool isNewEdge;
+  bool get isNewEdge => existingTransientEdge == null;
+
   late TransientEdge transientEdge;
   var didPassThreshold = false;
 
@@ -23,26 +24,13 @@ class CreateVertexActivity extends DragActivity {
     final position = controller.globalToArtworkLocal(details.globalPosition);
     final startHitEntry = controller.hitTestCell(details.globalPosition);
 
+    // If we're on an existing edge, we modify the end point.
+    // Otherwise, start a new edge.
     if (existingTransientEdge != null) {
       transientEdge = existingTransientEdge!;
-      transientEdge.endPosition = position;
-      isNewEdge = false;
+      transientEdge.end = startHitEntry?.localPosition ?? position.asVector2();
     } else {
-      late final Vertex vtx;
-
-      if (startHitEntry is VertexHitTestEntry) {
-        vtx = startHitEntry.vertex;
-      } else if (startHitEntry is EdgeHitTestEntry) {
-        final edge = startHitEntry.edge;
-        final t = startHitEntry.t;
-        final result = controller.complex.cutEdge(edge, t);
-        vtx = result.vertex;
-      } else {
-        vtx = controller.complex.createVertex(position.asVector2());
-      }
-
-      transientEdge = controller.transientEdges.create(vtx);
-      isNewEdge = true;
+      transientEdge = controller.transientEdges.createWithHitTest(position.asVector2(), startHitEntry);
       onTransientEdgeCreated(transientEdge);
     }
   }
@@ -56,11 +44,13 @@ class CreateVertexActivity extends DragActivity {
     }
 
     final position = controller.globalToArtworkLocal(details.globalPosition);
+    final localPosition = position.asVector2();
+
     if (!isNewEdge) {
-      final point = transientEdge.endPosition!;
-      transientEdge.cEndPosition = point + (point - position);
+      final end = transientEdge.end!;
+      transientEdge.cEnd = localPosition.pointReflect(end);
     } else {
-      transientEdge.cStartPosition = position;
+      transientEdge.cStart = localPosition;
     }
   }
 
@@ -70,12 +60,18 @@ class CreateVertexActivity extends DragActivity {
 
     if (!didPassThreshold) {
       if (!isNewEdge) {
-        transientEdge.cEndPosition = null;
+        transientEdge.cEnd = null;
       } else {
-        transientEdge.cStartPosition = null;
+        transientEdge.cStart = null;
       }
     }
 
-    if (!isNewEdge) onTransientEdgeCompleted(transientEdge);
+    if (!isNewEdge) {
+      // Commit the transient edge.
+      final endHitTest = controller.hitTestCellLocal(transientEdge.end!.asOffset());
+      final newTransient = controller.transientEdges.commit(transientEdge, endHitTest: endHitTest, startNewEdge: true);
+      onTransientEdgeCompleted(transientEdge);
+      if (newTransient != null) onTransientEdgeCreated(newTransient);
+    }
   }
 }

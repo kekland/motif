@@ -17,35 +17,32 @@ class TransientEdgeHandles extends StatelessWidget {
       builder: (context, _) {
         final children = <Widget>[];
 
-        final startPosition = transientEdge.start.position.asOffset();
-        final endPosition = transientEdge.endPosition;
-        final cStartPosition = transientEdge.cStartPosition;
-        final cEndPosition = transientEdge.cEndPosition;
+        final start = transientEdge.startVertex.position.asOffset();
+        final end = transientEdge.end?.asOffset();
+        final cStart = transientEdge.cStart?.asOffset();
+        final cEnd = transientEdge.cEnd?.asOffset();
 
         // C1 handle
-        if (cStartPosition != null) {
+        if (cStart != null) {
           children.add(
             HandleWidget(
-              position: cStartPosition,
+              position: cStart,
               child: ControlPointHandle(
                 deltaToOrigin:
-                    MatrixUtils.transformPoint(childPaintTransform, startPosition) -
-                    MatrixUtils.transformPoint(childPaintTransform, cStartPosition),
+                    MatrixUtils.transformPoint(childPaintTransform, start) -
+                    MatrixUtils.transformPoint(childPaintTransform, cStart),
               ),
             ),
           );
         }
 
         // End vertex
-        if (endPosition != null) {
+        if (end != null) {
           // Edge
           children.add(
             CustomPaint(
               painter: _TransientEdgePainter(
-                start: startPosition,
-                end: endPosition,
-                c1: cStartPosition,
-                c2: cEndPosition,
+                cubic: transientEdge.cubic,
                 color: context.colors.accent.primary,
                 transform: childPaintTransform,
               ),
@@ -54,27 +51,27 @@ class TransientEdgeHandles extends StatelessWidget {
           );
 
           // C2 handles
-          if (cEndPosition != null) {
-            final origin = MatrixUtils.transformPoint(childPaintTransform, endPosition);
-            final c2Transformed = MatrixUtils.transformPoint(childPaintTransform, cEndPosition);
+          if (cEnd != null) {
+            final origin = MatrixUtils.transformPoint(childPaintTransform, end);
+            final cEndTransformed = MatrixUtils.transformPoint(childPaintTransform, cEnd);
 
             children.add(
               HandleWidget(
-                position: cEndPosition,
+                position: cEnd,
                 child: ControlPointHandle(
-                  deltaToOrigin: origin - c2Transformed,
+                  deltaToOrigin: origin - cEndTransformed,
                 ),
               ),
             );
 
-            final mirrorC2Position = endPosition + (endPosition - cEndPosition);
-            final mirrorC2Transformed = MatrixUtils.transformPoint(childPaintTransform, mirrorC2Position);
+            final mirrorCEndPosition = end * 2 - cEnd;
+            final mirrorCEndTransformed = MatrixUtils.transformPoint(childPaintTransform, mirrorCEndPosition);
 
             children.add(
               HandleWidget(
-                position: mirrorC2Position,
+                position: mirrorCEndPosition,
                 child: ControlPointHandle(
-                  deltaToOrigin: origin - mirrorC2Transformed,
+                  deltaToOrigin: origin - mirrorCEndTransformed,
                 ),
               ),
             );
@@ -82,8 +79,21 @@ class TransientEdgeHandles extends StatelessWidget {
 
           children.add(
             HandleWidget(
-              position: endPosition,
+              position: end,
               child: VertexHandle(),
+            ),
+          );
+        }
+
+        // Intersections
+        final intersections = transientEdge.intersections.map((i) => i.asOffset()).toList();
+        for (final intersection in intersections) {
+          children.add(
+            HandleWidget(
+              position: intersection,
+
+              // TODO: handle for intersections
+              child: ControlPointHandle(),
             ),
           );
         }
@@ -101,18 +111,12 @@ class TransientEdgeHandles extends StatelessWidget {
 
 class _TransientEdgePainter extends CustomPainter {
   const _TransientEdgePainter({
-    required this.start,
-    required this.end,
-    this.c1,
-    this.c2,
+    required this.cubic,
     required this.color,
     required this.transform,
   });
 
-  final Offset start;
-  final Offset end;
-  final Offset? c1;
-  final Offset? c2;
+  final Cubic2 cubic;
   final Color color;
   final Matrix4 transform;
 
@@ -123,12 +127,11 @@ class _TransientEdgePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
-    final path = Path()..moveTo(start.dx, start.dy);
-    path.cubicTo(c1?.dx ?? start.dx, c1?.dy ?? start.dy, c2?.dx ?? end.dx, c2?.dy ?? end.dy, end.dx, end.dy);
+    final path = cubic.getPath();
     canvas.drawPath(path.transform(transform.storage), paint);
   }
 
   @override
   bool shouldRepaint(covariant _TransientEdgePainter oldDelegate) =>
-      oldDelegate.start != start || oldDelegate.end != end || oldDelegate.color != color;
+      oldDelegate.cubic != cubic || oldDelegate.color != color || oldDelegate.transform != transform;
 }

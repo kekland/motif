@@ -67,9 +67,9 @@ SegmentClosestPointResult _segmentClosestTo(Vector2 a, Vector2 b, Vector2 target
   return (point: proj, distance: dist, t: t);
 }
 
-typedef ClosestPointResult = ({Vector2 point, double distance, int segmentIndex, double t});
+typedef PolylineClosestPointResult = ({Vector2 point, double distance, int segmentIndex, double t});
 
-ClosestPointResult _polylineClosestTo(Polyline2 p, Vector2 target) {
+PolylineClosestPointResult _polylineClosestTo(Polyline2 p, Vector2 target) {
   if (p.isEmpty) throw StateError('cannot find closest point on an empty polyline');
   if (p.length == 1) return (point: p.first.clone(), distance: target.distanceTo(p.first), segmentIndex: 0, t: 0.0);
 

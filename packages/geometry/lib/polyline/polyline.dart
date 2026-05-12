@@ -29,7 +29,7 @@ class Polyline2 {
 
   bool contains(Vector2 point) => _polylineContains(this, point);
   double get totalLength => _polylineLength(this);
-  ClosestPointResult closestTo(Vector2 point) => _polylineClosestTo(this, point);
+  PolylineClosestPointResult closestTo(Vector2 point) => _polylineClosestTo(this, point);
 
   Vector2 get leftmostPoint => _polylineLeftmost(this);
 
