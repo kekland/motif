@@ -121,20 +121,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.9"
-  dawn_dart:
-    dependency: "direct overridden"
-    description:
-      path: "../skia_dart/packages/dawn_dart"
-      relative: true
-    source: path
-    version: "0.1.0"
-  dawn_dart_api:
-    dependency: "direct overridden"
-    description:
-      path: "../skia_dart/packages/dawn_dart_api"
-      relative: true
-    source: path
-    version: "0.1.0"
   email_validator:
     dependency: transitive
     description:
@@ -504,13 +490,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
-  skia_dart:
-    dependency: "direct overridden"
-    description:
-      path: "../skia_dart/packages/skia_dart"
-      relative: true
-    source: path
-    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

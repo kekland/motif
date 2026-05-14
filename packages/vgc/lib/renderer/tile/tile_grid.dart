@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart';
-import 'package:dawn/dawn.dart' as dawn;
 
 part 'tile_bucket.dart';
 

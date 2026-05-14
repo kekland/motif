@@ -14,7 +14,6 @@ workspace:
   - packages/color
   - packages/commander
   - packages/css
-  - packages/dawn
   - packages/geometry
   - packages/shared
   - packages/skia
