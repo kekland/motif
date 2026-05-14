@@ -1950,9 +1950,17 @@ def generate(
     f'',
     f'import \'bindings.g.dart\' as bindings;',
     f'import \'../utils/chained_struct.dart\';',
+  ]
+
+  if not external:
+    code.extend([
+      f'import \'platform/native.dart\' if (dart.library.js_interop) \'platform/web.dart\';',
+    ])
+
+  code.extend([
     '',
     f'// dart format off',
-  ]
+  ])
 
   if preludes:
     code.extend(preludes)

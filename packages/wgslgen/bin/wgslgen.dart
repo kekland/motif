@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:wgslgen/wgslgen.dart';
 
@@ -10,12 +11,12 @@ Never printUsageAndExit() {
   exit(1);
 }
 
-void main(List<String> args) {
+Future<void> main(List<String> args) async {
   final outputIndex = args.indexOf('-o');
   if (outputIndex == -1 || outputIndex == args.length - 1) printUsageAndExit();
 
-  final wgslgenRoot = Platform.script.resolve('../');
-  final reflectScript = wgslgenRoot.resolve('tool/reflect.js');
+  final reflectUri = Uri.parse('package:wgslgen/src/wgsl_reflect/reflect.js');
+  final reflectScript = (await Isolate.resolvePackageUri(reflectUri))!;
 
   final inputFilePath = args[0];
   final inputFile = File(inputFilePath);

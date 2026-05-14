@@ -18,7 +18,3 @@ dependencies:
 dev_dependencies:
   flutter_test: 
     sdk: flutter
-
-flutter:
-  shaders:
-    - shaders/tile_quad2.frag

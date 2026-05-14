@@ -437,7 +437,7 @@ class TransformDataBuffer {
   void clear() => _view.clear();
 }
 
-@wgsl.StorageBufferView('b_materials')
+@wgsl.StorageBufferView(['b_materials'])
 extension type MaterialArrayBufferView(ByteData data) {
   void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int offset = 0}) {
     queue.writeBuffer(buffer, offset, data);
@@ -454,7 +454,7 @@ extension type MaterialArrayBufferView(ByteData data) {
     wgpu.BufferUsage? usage,
     bool mappedAtCreation = false,
   }) => .new(
-    label: label ?? '(test.wgsl) bmaterials buffer',
+    label: label ?? '(b_materials) bmaterials buffer',
     size: length * stride,
     usage: usage ?? .of([.storage, .copyDst]),
     mappedAtCreation: mappedAtCreation,
@@ -481,7 +481,7 @@ extension type MaterialArrayBufferView(ByteData data) {
   }
 }
 
-@wgsl.StorageBuffer('b_materials')
+@wgsl.StorageBuffer(['b_materials'])
 class MaterialArrayBuffer {
   MaterialArrayBuffer(wgpu.Device device, this.length, {String? label, wgpu.BufferUsage? usage}):
     buffer = MaterialArrayBufferView.createBuffer(device, length, label: label, usage: usage),
@@ -517,7 +517,7 @@ class MaterialArrayBuffer {
   void clear() => _view.clear();
 }
 
-@wgsl.StorageBufferView('b_particles')
+@wgsl.StorageBufferView(['b_particles'])
 extension type ParticleArrayBufferView(ByteData data) {
   void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int offset = 0}) {
     queue.writeBuffer(buffer, offset, data);
@@ -534,7 +534,7 @@ extension type ParticleArrayBufferView(ByteData data) {
     wgpu.BufferUsage? usage,
     bool mappedAtCreation = false,
   }) => .new(
-    label: label ?? '(test.wgsl) bparticles buffer',
+    label: label ?? '(b_particles) bparticles buffer',
     size: length * stride,
     usage: usage ?? .of([.storage, .copyDst]),
     mappedAtCreation: mappedAtCreation,
@@ -561,7 +561,7 @@ extension type ParticleArrayBufferView(ByteData data) {
   }
 }
 
-@wgsl.StorageBuffer('b_particles')
+@wgsl.StorageBuffer(['b_particles'])
 class ParticleArrayBuffer {
   ParticleArrayBuffer(wgpu.Device device, this.length, {String? label, wgpu.BufferUsage? usage}):
     buffer = ParticleArrayBufferView.createBuffer(device, length, label: label, usage: usage),
@@ -597,7 +597,7 @@ class ParticleArrayBuffer {
   void clear() => _view.clear();
 }
 
-@wgsl.StorageBufferView('b_counters')
+@wgsl.StorageBufferView(['b_counters'])
 extension type CountersBufferView(ByteData data) {
   void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int offset = 0}) {
     queue.writeBuffer(buffer, offset, data);
@@ -612,7 +612,7 @@ extension type CountersBufferView(ByteData data) {
     wgpu.BufferUsage? usage,
     bool mappedAtCreation = false,
   }) => .new(
-    label: label ?? '(test.wgsl) bcounters buffer',
+    label: label ?? '(b_counters) bcounters buffer',
     size: sizeInBytes,
     usage: usage ?? .of([.storage, .copyDst]),
     mappedAtCreation: mappedAtCreation,
@@ -637,7 +637,7 @@ extension type CountersBufferView(ByteData data) {
   }
 }
 
-@wgsl.StorageBuffer('b_counters')
+@wgsl.StorageBuffer(['b_counters'])
 class CountersBuffer {
   CountersBuffer(wgpu.Device device, {String? label, wgpu.BufferUsage? usage}):
     buffer = CountersBufferView.createBuffer(device, label: label, usage: usage),

@@ -1,10 +1,8 @@
 import 'package:example/cases/render_to_bytes.dart';
 import 'package:example/cases/render_to_mtl_texture.dart';
 import 'package:flutter/material.dart';
-import 'package:wgpu/wgpu_native.dart' as wgpu;
 
 void main() {
-  wgpu.WGPUNative.init();
   runApp(App());
 }
 

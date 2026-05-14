@@ -71,12 +71,19 @@ for i in range(len(VEC_TYPES)):
 
     tuple = ', '.join([dart_type] * vec_len)
     type_name = f'Vec{vec_len}{type_short}'
-    output.append(f'extension type const {type_name}(({tuple}) _) {{')
+    output.append(f'extension type const {type_name}._(({tuple}) _) {{')
+
+    # constructor
+    constructor_args = ', '.join([f'{dart_type} {VEC_ACCESSORS[j]}' for j in range(vec_len)])
+    constructor_call = ', '.join([VEC_ACCESSORS[j] for j in range(vec_len)])
+    output.append(f'  {_prefer_inline}')
+    output.append(f'  const {type_name}({constructor_args}): this._(({constructor_call}));')
+    output.append('')
 
     zero_tuple = ', '.join(['0'] * vec_len)
 
     # zero
-    output.append(f'  static const {type_name} zero = {type_name}(({zero_tuple}));')
+    output.append(f'  static const {type_name} zero = {type_name}({zero_tuple});')
     output.append('')
 
     # accessor
@@ -86,18 +93,18 @@ for i in range(len(VEC_TYPES)):
 
     # from vector_math
     output.append(f'  {_prefer_inline}')
-    output.append(f'  {type_name}.fromVector32(vm32.{vm_type} v): this((')
+    output.append(f'  {type_name}.fromVector32(vm32.{vm_type} v): this(')
     for j in range(vec_len):
       cast = '.toInt()' if type in ['i32', 'u32'] else ''
       output.append(f'    v.{VEC_ACCESSORS[j]}{cast},')
-    output.append(f'  ));')
+    output.append(f'  );')
     output.append(f'')
     output.append(f'  {_prefer_inline}')
-    output.append(f'  {type_name}.fromVector64(vm64.{vm_type} v): this((')
+    output.append(f'  {type_name}.fromVector64(vm64.{vm_type} v): this(')
     for j in range(vec_len):
       cast = '.toInt()' if type in ['i32', 'u32'] else ''
       output.append(f'    v.{VEC_ACCESSORS[j]}{cast},')
-    output.append(f'  ));')
+    output.append(f'  );')
     output.append(f'')
 
     # to vector_math
@@ -118,10 +125,10 @@ for i in range(len(VEC_TYPES)):
 
     # read
     output.append(f'  {_prefer_inline}')
-    output.append(f'  {type_name}.read(ByteData data, int offset): this((')
+    output.append(f'  {type_name}.read(ByteData data, int offset): this(')
     for j in range(vec_len):
       output.append(f'    data.get{byte_data_type}(offset + {j * 4}, .little),')
-    output.append(f'  ));')
+    output.append(f'  );')
     output.append(f'')
 
     # write
@@ -152,7 +159,14 @@ for i in range(len(MAT_TYPES)):
       mat_len = w * h
       tuple = ', '.join([dart_type] * mat_len)
       type_name = f'Mat{w}x{h}{type_short}'
-      output.append(f'extension type const {type_name}(({tuple}) _) {{')
+      output.append(f'extension type const {type_name}._(({tuple}) _) {{')
+
+      # constructor
+      constructor_args = ', '.join([f'{dart_type} m{x}{y}' for x in range(w) for y in range(h)])
+      constructor_call = ', '.join([f'm{x}{y}' for x in range(w) for y in range(h)])
+      output.append(f'  {_prefer_inline}')
+      output.append(f'  const {type_name}({constructor_args}): this._(({constructor_call}));')
+      output.append('')
 
       # identity
       identity_tuple = []
@@ -160,7 +174,7 @@ for i in range(len(MAT_TYPES)):
         for y in range(h):
           identity_tuple.append('1' if x == y else '0')
       identity_tuple_str = ', '.join(identity_tuple)
-      output.append(f'  static const {type_name} identity = {type_name}(({identity_tuple_str}));')
+      output.append(f'  static const {type_name} identity = {type_name}({identity_tuple_str});')
       output.append('')
 
       # accessor
@@ -181,18 +195,18 @@ for i in range(len(MAT_TYPES)):
       if vm_type is not None:
         # from vector_math
         output.append(f'  {_prefer_inline}')
-        output.append(f'  {type_name}.fromMatrix32(vm32.{vm_type} v): this((')
+        output.append(f'  {type_name}.fromMatrix32(vm32.{vm_type} v): this(')
         for j in range(mat_len):
           cast = '.toInt()' if type in ['i32', 'u32'] else ''
           output.append(f'    v[{j}]{cast},')
-        output.append(f'  ));')
+        output.append(f'  );')
         output.append(f'')
         output.append(f'  {_prefer_inline}')
-        output.append(f'  {type_name}.fromMatrix64(vm64.{vm_type} v): this((')
+        output.append(f'  {type_name}.fromMatrix64(vm64.{vm_type} v): this(')
         for j in range(mat_len):
           cast = '.toInt()' if type in ['i32', 'u32'] else ''
           output.append(f'    v[{j}]{cast},')
-        output.append(f'  ));')
+        output.append(f'  );')
         output.append(f'')
 
         # to vector_math
@@ -213,10 +227,10 @@ for i in range(len(MAT_TYPES)):
 
       # read
       output.append(f'  {_prefer_inline}')
-      output.append(f'  {type_name}.read(ByteData data, int offset): this((')
+      output.append(f'  {type_name}.read(ByteData data, int offset): this(')
       for i in range(mat_len):
         output.append(f'    data.get{byte_data_type}(offset + {i * 4}, .little),')
-      output.append(f'  ));')
+      output.append(f'  );')
       output.append(f'')
 
       # write

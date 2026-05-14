@@ -54,13 +54,13 @@ List<String> _dynamicSizeBufferClass(
   '}',
 ];
 
-List<String> generateStorage(String _name, VariableInfo info) {
+List<String> generateStorage(List<String> _names, VariableInfo info) {
   final lines = <String>[];
   final type = info.type;
 
   final name = info.type.dartName;
 
-  lines.add('@wgsl.StorageBufferView(\'${info.name}\')');
+  lines.add('@wgsl.StorageBufferView([\'${_names.join(', ')}\'])');
   lines.add('extension type ${name}BufferView(ByteData data) {');
   lines.add('  void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int offset = 0}) {');
   lines.add('    queue.writeBuffer(buffer, offset, data);');
@@ -79,7 +79,7 @@ List<String> generateStorage(String _name, VariableInfo info) {
     lines.add('');
     lines.add('  ${name}BufferView.create(int length): this(ByteData(length * stride));');
     lines.add('');
-    lines.addAll(_dynamicSizeBufferHelpers(_name, info.dartName).indent());
+    lines.addAll(_dynamicSizeBufferHelpers(_names.join(', '), info.dartName).indent());
     lines.add('');
 
     bufferFns.add(('void operator []=(int index, $dartType value)', 'view[index] = value'));
@@ -97,7 +97,9 @@ List<String> generateStorage(String _name, VariableInfo info) {
     lines.add('');
     lines.add('  ${name}BufferView.create(): this(ByteData(sizeInBytes));');
     lines.add('');
-    lines.addAll(_staticSizeBufferHelpers(_name, info.dartName, usage: '.of([.storage, .copyDst])').indent());
+    lines.addAll(
+      _staticSizeBufferHelpers(_names.join(', '), info.dartName, usage: '.of([.storage, .copyDst])').indent(),
+    );
     lines.add('');
 
     bufferFns.add(('void write(${type.dartType} value)', 'view.write(value)'));
@@ -120,7 +122,7 @@ List<String> generateStorage(String _name, VariableInfo info) {
   lines.add('}');
   lines.add('');
 
-  lines.add('@wgsl.StorageBuffer(\'${info.name}\')');
+  lines.add('@wgsl.StorageBuffer([\'${_names.join(', ')}\'])');
   if (type.isArray) {
     lines.addAll(_dynamicSizeBufferClass('${name}BufferView', info.type.dartName, bufferFns));
   } else {

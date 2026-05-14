@@ -10,6 +10,15 @@ List<String> generateOverrides(List<OverrideInfo> infos) {
 
   lines.add('@wgsl.Overrides()');
   lines.add('extension type const Overrides._((${members.join(', ')}) _) {');
+
+  if (infos.isEmpty) {
+    lines.add('  const Overrides(): this._(());');
+    lines.add('');
+    lines.add('  List<wgpu.ConstantEntry> get entries => const [];');
+    lines.add('}');
+    return lines;
+  }
+
   lines.add('  const Overrides({${members.join(', ')}}): this._((${infos.map((e) => e.dartName).join(', ')}));');
   lines.add('');
 

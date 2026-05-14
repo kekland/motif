@@ -18,6 +18,8 @@ class Instance extends _InstanceBase with _InstanceImpl {
   static final _devices = <WeakReference<Device>>[];
 
   factory Instance.create([InstanceDescriptor? descriptor]) {
+    wgpuInit();
+
     final instance = _createInstance(descriptor);
     _instances.add(WeakReference(instance));
     return instance;

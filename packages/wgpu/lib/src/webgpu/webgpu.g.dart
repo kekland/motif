@@ -13,6 +13,7 @@ import 'package:ffi/ffi.dart';
 
 import 'bindings.g.dart' as bindings;
 import '../utils/chained_struct.dart';
+import 'platform/native.dart' if (dart.library.js_interop) 'platform/web.dart';
 
 // dart format off
 part 'types/adapter.dart';
@@ -9314,6 +9315,10 @@ class PipelineLayout extends _PipelineLayoutBase with _PipelineLayoutImpl {
   PipelineLayout._(super.ptr): super._();
   PipelineLayout._borrowed(super.ptr): super._borrowed();
 }
+
+ffi.Pointer<bindings.WGPUPipelineLayoutImpl> internalPipelineLayoutGetPtr(PipelineLayout obj) => obj._ptr;
+PipelineLayout internalPipelineLayoutFromPtr(ffi.Pointer<bindings.WGPUPipelineLayoutImpl> ptr) => ._(ptr);
+PipelineLayout internalPipelineLayoutFromBorrowedPtr(ffi.Pointer<bindings.WGPUPipelineLayoutImpl> ptr) => ._borrowed(ptr);
 
 class _QuerySetBase extends _Opaque<bindings.WGPUQuerySetImpl> {
   _QuerySetBase._(super.ptr): super._();

@@ -29,9 +29,9 @@ List<String> generateBindGroup(String name, int group, EntryFunctions entries, M
     return '.none';
   }
 
-  // Bind group layout
+  // Bind group layout descriptor
   lines.add('@wgsl.BindGroupLayoutDescriptor($group)');
-  lines.add('wgpu.BindGroupLayoutDescriptor get bindGroup${group}Layout => .new(');
+  lines.add('wgpu.BindGroupLayoutDescriptor get bindGroup${group}LayoutDescriptor => .new(');
   lines.add('  label: \'($name) bind group $group layout\',');
   lines.add('  entries: [');
   for (final MapEntry(key: binding, value: info) in sortedEntries) {
@@ -60,7 +60,7 @@ List<String> generateBindGroup(String name, int group, EntryFunctions entries, M
   lines.add(');');
   lines.add('');
   lines.add('@wgsl.BindGroupLayout($group)');
-  lines.add('wgpu.BindGroupLayout createBindGroup${group}Layout(wgpu.Device device) => device.createBindGroupLayout(bindGroup${group}Layout);');
+  lines.add('wgpu.BindGroupLayout createBindGroup${group}Layout(wgpu.Device device) => device.createBindGroupLayout(bindGroup${group}LayoutDescriptor);');
   lines.add('');
 
   // Bind group (raw)

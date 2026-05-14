@@ -6,7 +6,10 @@ List<String> generateVertexState(FunctionInfo funcInfo) {
   final funcName = funcInfo.dartName;
   final capFuncName = funcName[0].toUpperCase() + funcName.substring(1);
 
-  final vertexBufferFunc = 'create${capFuncName}VertexBufferLayout';
+  String? vertexBufferFunc = 'create${capFuncName}VertexBufferLayout';
+
+  final locationInputs = funcInfo.inputs.where((i) => i.locationType == 'location').toList();
+  if (locationInputs.isEmpty) vertexBufferFunc = null;
 
   lines.add('@wgsl.VertexState(\'${funcInfo.name}\')');
   lines.add('wgpu.VertexState create${capFuncName}VertexState(');
@@ -17,7 +20,12 @@ List<String> generateVertexState(FunctionInfo funcInfo) {
   lines.add('  module: module,');
   lines.add('  entryPoint: \'${funcInfo.name}\',');
   lines.add('  constants: overrides?.entries ?? const [],');
-  lines.add('  buffers: vertexBuffers ?? [$vertexBufferFunc()],');
+  if (vertexBufferFunc != null) {
+    lines.add('  buffers: vertexBuffers ?? [$vertexBufferFunc()],');
+  }
+  else {
+    lines.add('  buffers: vertexBuffers ?? const [],');
+  }
   lines.add(');');
 
   return lines;

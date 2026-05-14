@@ -60,6 +60,7 @@ List<String> generateUniform(String _name, VariableInfo info) {
   final lines = <String>[];
 
   final name = '${info.type.dartName}BufferView';
+  final List<(String, String)> bufferFns = [];
 
   lines.add('@wgsl.UniformBufferView(\'${info.name}\')');
   lines.add('extension type $name(ByteData data) {');
@@ -81,6 +82,7 @@ List<String> generateUniform(String _name, VariableInfo info) {
   lines.addAll(_staticSizeBufferHelpers(_name, info.type.dartName, usage: '.of([.uniform, .copyDst])').indent());
   lines.add('');
 
+  bufferFns.add(('void write(${info.type.dartType} value)', 'view.write(value)'));
   lines.add('  void write(${info.type.dartType} value) {');
   lines.addAll(info.type.write('value', offset: '0').indent(2));
   lines.add('  }');
@@ -89,8 +91,6 @@ List<String> generateUniform(String _name, VariableInfo info) {
   lines.addAll(info.type.read(offset: '0', ret: true).indent(2));
   lines.add('  }');
   lines.add('');
-
-  final List<(String, String)> bufferFns = [];
 
   if (info.isStruct) {
     final struct = info.type.asStruct;

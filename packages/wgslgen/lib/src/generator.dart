@@ -57,13 +57,21 @@ List<String> generate(String name, String source, WgslReflectionInfo info) {
     lines.add('');
   }
 
+  final _uniqueStorages = <String, List<VariableInfo>>{};
+
   for (final storage in info.storages) {
     _checkGroup(storage);
 
     if (storage.resourceType == .storage) {
-      lines.addAll(generateStorage(name, storage));
-      lines.add('');
+      _uniqueStorages[storage.type.dartName] ??= [];
+      _uniqueStorages[storage.type.dartName]!.add(storage);
     }
+  }
+
+  for (final uniqueStorage in _uniqueStorages.entries) {
+    final names = uniqueStorage.value.map((v) => v.name).toList();
+    lines.addAll(generateStorage(names, uniqueStorage.value.first));
+    lines.add('');
   }
 
   for (final sampler in info.samplers) {
@@ -79,11 +87,6 @@ List<String> generate(String name, String source, WgslReflectionInfo info) {
     final bindings = group.value;
 
     lines.addAll(generateBindGroup(name, groupId, info.entry, bindings));
-    lines.add('');
-  }
-
-  if (groups.isNotEmpty) {
-    lines.addAll(generatePipelineLayout(name, groups));
     lines.add('');
   }
 
@@ -111,13 +114,13 @@ List<String> generate(String name, String source, WgslReflectionInfo info) {
   }
 
   for (final computeEntry in info.entry.compute) {
-    lines.addAll(generateComputePipeline(name, computeEntry));
+    lines.addAll(generateComputePipeline(name, computeEntry, groups));
     lines.add('');
   }
 
   for (final vertexEntry in info.entry.vertex) {
     for (final fragmentEntry in info.entry.fragment) {
-      lines.addAll(generateRenderPipeline(name, vertexEntry, fragmentEntry));
+      lines.addAll(generateRenderPipeline(name, vertexEntry, fragmentEntry, groups));
       lines.add('');
     }
   }

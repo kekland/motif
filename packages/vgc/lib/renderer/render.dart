@@ -1,16 +1,15 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:vgc/renderer/new/cubic_renderer.dart';
 import 'package:wgpu/darwin.dart' as darwin;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
-import 'package:vgc/renderer/new/renderer.dart';
 import 'package:vgc/vgc.dart';
 
-import 'async_program.dart';
 import 'tile/tile_grid.dart';
 
 part 'hit_test.dart';
@@ -18,19 +17,15 @@ part 'render_vertex.dart';
 part 'render_edge.dart';
 part 'render_face.dart';
 
-AsyncFragmentProgram _tileQuad2Program = AsyncFragmentProgram('packages/vgc/shaders/tile_quad2.frag');
-
 class RenderVectorComplex extends RenderBox {
   RenderVectorComplex({required VectorComplex complex}) : _complex = complex {
     _complex.addListener(_onComplexChanged);
     _onComplexChanged();
-
-    if (!_tileQuad2Program.isLoaded) _tileQuad2Program.load().then((_) => markNeedsPaint());
     _mtlTexture.register();
   }
 
   final _children = <Cell, RenderCell>{};
-  final _renderer = Renderer();
+  final _renderer = CubicRenderer();
   final _mtlTexture = darwin.MTLFlutterTexture.create();
 
   late VectorComplex _complex;
@@ -107,15 +102,13 @@ class RenderVectorComplex extends RenderBox {
 
     final mtlTexture = _renderer.render(
       splines,
-      screenWidth: viewportSize.width.ceil() * 3,
-      screenHeight: viewportSize.height.ceil() * 3,
+      width: viewportSize.width.ceil() * 3,
+      height: viewportSize.height.ceil() * 3,
       tolerance: tolerance,
       transform: Matrix4.diagonal3Values(3.0, 3.0, 1.0) * localToGlobal,
     );
 
     _mtlTexture.updateBuffer(mtlTexture);
-
-    // context.canvas.drawRect(offset & viewportSize, Paint()..color = Colors.red);
 
     context.addLayer(
       TextureLayer(

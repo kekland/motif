@@ -280,6 +280,8 @@ String wgslTypeDartName(TypeInfo type) {
     return _toPascalCase(struct.name);
   } else if (type.isTemplate) {
     final template = type.asTemplate;
+    if (type.name == 'atomic') return wgslTypeDartName(template.format!);
+
     final parts = [template.name];
     if (template.format != null) parts.add(template.format!.name);
     return parts.map((p) => _toPascalCase(p)).join();
