@@ -77,7 +77,9 @@ public func MTLFlutterTexture_updateBuffer(texturePtr: UnsafeRawPointer, mtlText
       return
     }
 
-    ciContext.render(ciImage, to: buffer)
+    let transform = CGAffineTransform(translationX: 0, y: ciImage.extent.height).scaledBy(x: 1, y: -1)
+    let flippedImage = ciImage.transformed(by: transform)
+    ciContext.render(flippedImage, to: buffer)
     self.buffer = buffer
   }
 

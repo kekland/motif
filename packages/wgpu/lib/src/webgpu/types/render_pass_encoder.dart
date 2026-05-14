@@ -19,7 +19,7 @@ mixin _RenderPassEncoderImpl on _RenderPassEncoderBase {
   void insertDebugMarker(String markerLabel) => _insertDebugMarkerImpl(markerLabel);
   set label(String label) => _setLabelImpl(label);
 
-  void setBindGroup(int groupIndex, BindGroup? bindGroup, List<int> dynamicOffsets) => _setBindGroupImpl(groupIndex, bindGroup, dynamicOffsets);
+  void setBindGroup(int groupIndex, BindGroup? bindGroup, {List<int> dynamicOffsets = const []}) => _setBindGroupImpl(groupIndex, bindGroup, dynamicOffsets);
   void setBlendConstant(Color color) => _setBlendConstantImpl(color);
   void setIndexBuffer(Buffer buffer, IndexFormat format, int offset, int size) => _setIndexBufferImpl(buffer, format, offset, size);
   void setPipeline(RenderPipeline pipeline) => _setPipelineImpl( pipeline);

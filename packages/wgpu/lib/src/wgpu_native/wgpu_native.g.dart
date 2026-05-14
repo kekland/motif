@@ -14,6 +14,7 @@ import 'package:ffi/ffi.dart';
 import 'bindings.g.dart' as bindings;
 import '../utils/chained_struct.dart';
 
+// dart format off
 // ignore_for_file: invalid_use_of_protected_member, unreachable_switch_case, unused_import
 
 import '../webgpu/webgpu.g.dart';
@@ -114,27 +115,27 @@ ffi.Pointer<ffi.Void> _textureGetNativeMetalTexture(Texture texture) => using((a
   return result;
 });
 
-void _renderPassEncoderSetImmediates(RenderPassEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) => using((allocator) {
+void _renderPassEncoderSetImmediates(RenderPassEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) => using((allocator) {
   final _encoder = internalRenderPassEncoderGetPtr(encoder).cast();
   final _offset = offset;
   final _sizeBytes = sizeBytes;
-  final _data = data ?? ffi.nullptr;
+  final _data = data;
   bindings.wgpuRenderPassEncoderSetImmediates(_encoder.cast(), _offset, _sizeBytes, _data);
 });
 
-void _computePassEncoderSetImmediates(ComputePassEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) => using((allocator) {
+void _computePassEncoderSetImmediates(ComputePassEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) => using((allocator) {
   final _encoder = internalComputePassEncoderGetPtr(encoder).cast();
   final _offset = offset;
   final _sizeBytes = sizeBytes;
-  final _data = data ?? ffi.nullptr;
+  final _data = data;
   bindings.wgpuComputePassEncoderSetImmediates(_encoder.cast(), _offset, _sizeBytes, _data);
 });
 
-void _renderBundleEncoderSetImmediates(RenderBundleEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) => using((allocator) {
+void _renderBundleEncoderSetImmediates(RenderBundleEncoder encoder, int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) => using((allocator) {
   final _encoder = internalRenderBundleEncoderGetPtr(encoder).cast();
   final _offset = offset;
   final _sizeBytes = sizeBytes;
-  final _data = data ?? ffi.nullptr;
+  final _data = data;
   bindings.wgpuRenderBundleEncoderSetImmediates(_encoder.cast(), _offset, _sizeBytes, _data);
 });
 
@@ -976,7 +977,7 @@ extension type const InstanceFlag(int value) {
 
 class XlibDisplayHandle {
   const XlibDisplayHandle({
-    required ffi.Pointer<ffi.Void> this.display,
+    required this.display,
     required this.screen,
   });
 
@@ -995,7 +996,7 @@ class XlibDisplayHandle {
 
   ffi.Pointer<bindings.WGPUXlibDisplayHandle> toNative(ffi.Allocator allocator) {
     final ptr = allocator<bindings.WGPUXlibDisplayHandle>();
-    ptr.ref.display = display ?? ffi.nullptr;
+    if (display != null) ptr.ref.display = display!;
     ptr.ref.screen = screen;
     return ptr;
   }
@@ -1012,7 +1013,7 @@ class XlibDisplayHandle {
 
 class XcbDisplayHandle {
   const XcbDisplayHandle({
-    required ffi.Pointer<ffi.Void> this.connection,
+    required this.connection,
     required this.screen,
   });
 
@@ -1031,7 +1032,7 @@ class XcbDisplayHandle {
 
   ffi.Pointer<bindings.WGPUXcbDisplayHandle> toNative(ffi.Allocator allocator) {
     final ptr = allocator<bindings.WGPUXcbDisplayHandle>();
-    ptr.ref.connection = connection ?? ffi.nullptr;
+    if (connection != null) ptr.ref.connection = connection!;
     ptr.ref.screen = screen;
     return ptr;
   }
@@ -1048,7 +1049,7 @@ class XcbDisplayHandle {
 
 class WaylandDisplayHandle {
   const WaylandDisplayHandle({
-    required ffi.Pointer<ffi.Void> this.display,
+    required this.display,
   });
 
   const WaylandDisplayHandle._({
@@ -1063,7 +1064,7 @@ class WaylandDisplayHandle {
 
   ffi.Pointer<bindings.WGPUWaylandDisplayHandle> toNative(ffi.Allocator allocator) {
     final ptr = allocator<bindings.WGPUWaylandDisplayHandle>();
-    ptr.ref.display = display ?? ffi.nullptr;
+    if (display != null) ptr.ref.display = display!;
     return ptr;
   }
 
@@ -1437,7 +1438,7 @@ class ShaderModuleDescriptorSpirV {
   const ShaderModuleDescriptorSpirV({
     this.label = '',
     required this.sourceSize,
-    required Uint32List this.source,
+    required this.source,
   });
 
   const ShaderModuleDescriptorSpirV._({
@@ -1979,7 +1980,7 @@ class SurfaceConfigurationExtras extends ChainedStruct {
 
 class SurfaceSourceSwapChainPanel extends ChainedStruct {
   const SurfaceSourceSwapChainPanel({
-    required ffi.Pointer<ffi.Void> this.panelNative,
+    required this.panelNative,
     super.next,
   });
 
@@ -2004,7 +2005,7 @@ class SurfaceSourceSwapChainPanel extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.panelNative = panelNative ?? ffi.nullptr;
+    if (panelNative != null) ptr.ref.panelNative = panelNative!;
     return ptr;
   }
 
@@ -2254,3 +2255,5 @@ class _SyncResult<T> {
     return result as dynamic;
   }
 }
+
+// dart format on

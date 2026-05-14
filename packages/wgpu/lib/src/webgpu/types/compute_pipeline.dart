@@ -3,4 +3,5 @@ part of '../webgpu.g.dart';
 
 mixin _ComputePipelineImpl on _ComputePipelineBase {
   set label(String label) => _setLabelImpl(label);
+  BindGroupLayout getBindGroupLayout(int index) => _getBindGroupLayoutImpl(index);
 }

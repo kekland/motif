@@ -91,10 +91,6 @@ class TileGrid {
           shader.setFloat(floatIndex++, bbox.max.y);
         }
 
-        ui.ImageDescriptor.raw(buffer, width: width, height: height, pixelFormat: pixelFormat).
-
-        shader.setImageSampler(index, image)
-
         canvas.drawRect(bucket.canvasBounds, ui.Paint()..shader = shader);
         drawCalls++;
       }

@@ -16,7 +16,7 @@ mixin _BufferImpl on _BufferBase {
   ({int offset, int size})? _mappedRange;
   var _mapPending = false;
 
-  Future<void> mapAsync(MapMode mode, int offset, int size) async {
+  Future<void> mapAsync({int offset = 0, int? size, MapMode mode = .read}) async {
     assert(!_mapPending, 'Buffer is already pending mapping.');
     assert(
       _mappedRange == null,
@@ -24,8 +24,9 @@ mixin _BufferImpl on _BufferBase {
     );
 
     try {
-      await _mapAsyncImpl(mode, offset, size);
-      _mappedRange = (offset: offset, size: size);
+      final _size = size ?? (this.size - offset);
+      await _mapAsyncImpl(mode, offset, _size);
+      _mappedRange = (offset: offset, size: _size);
     } catch (e) {
       rethrow;
     } finally {
@@ -33,7 +34,7 @@ mixin _BufferImpl on _BufferBase {
     }
   }
 
-  void mapSync(MapMode mode, int offset, int size) {
+  void mapSync({int offset = 0, int? size, MapMode mode = .read}) {
     assert(!_mapPending, 'Buffer is already pending mapping.');
     assert(
       _mappedRange == null,
@@ -41,8 +42,9 @@ mixin _BufferImpl on _BufferBase {
     );
 
     try {
-      _mapSyncImpl(mode, offset, size);
-      _mappedRange = (offset: offset, size: size);
+      final _size = size ?? (this.size - offset);
+      _mapSyncImpl(mode, offset, _size);
+      _mappedRange = (offset: offset, size: _size);
     } catch (e) {
       rethrow;
     } finally {
@@ -64,7 +66,7 @@ mixin _BufferImpl on _BufferBase {
     return true;
   }
 
-  Uint8List getMappedRange(int offset, int size, {bool readOnly = false}) {
+  TypedDataList<int> getMappedRange(int offset, int size, {bool readOnly = false}) {
     _ensureRangeMapped(offset, size);
     final ptr = readOnly
         ? bindings.wgpuBufferGetConstMappedRange(_ptr, offset, size)
@@ -78,6 +80,7 @@ mixin _BufferImpl on _BufferBase {
     return view;
   }
 
+  // not supported in wgpu_native!
   // Uint8List readMappedRange(int offset, int size) {
   //   _ensureRangeMapped(offset, size);
 
@@ -89,7 +92,7 @@ mixin _BufferImpl on _BufferBase {
   //   });
   // }
 
-  void writeMappedRange(int offset, Uint8List data) {
+  void writeMappedRange(TypedDataList<int> data, {int offset = 0}) {
     _ensureRangeMapped(offset, data.length);
     using((allocator) {
       final tmp = allocator<ffi.Uint8>(data.length);

@@ -101,6 +101,102 @@ void _renderTriangle(
   darwin.MTLFlutterTexture texture,
   double t,
 ) {
+  const _crt = r'''
+struct Uniforms {
+  t: f32
+};
+
+@group(0) @binding(0) var<uniform> u: Uniforms;
+
+struct VertexOutput {
+    @builtin(position) position: vec4f,
+    @location(0) uv: vec2f,
+};
+
+@vertex
+fn vs_main(@builtin(vertex_index) idx: u32) -> VertexOutput {
+    let pos = array<vec2f, 3>(
+        vec2f(-1.0, -1.0),
+        vec2f( 3.0, -1.0),
+        vec2f(-1.0,  3.0)
+    );
+    var out: VertexOutput;
+    out.position = vec4f(pos[idx], 0.0, 1.0);
+    out.uv = pos[idx] * 0.5 + 0.5;
+    return out;
+}
+
+// 1. Simulates the curvature of a heavy glass tube
+fn curve(uv: vec2f) -> vec2f {
+    var coords = uv * 2.0 - 1.0;
+    let offset = abs(coords.yx) / vec2f(2.0, 4.0); // Adjust curvature strength here
+    coords = coords + coords * offset * offset;
+    return coords * 0.5 + 0.5;
+}
+
+fn palette(t: f32) -> vec3f {
+    let a = vec3f(0.5, 0.5, 0.5);
+    let b = vec3f(0.5, 0.5, 0.5);
+    let c = vec3f(1.0, 1.0, 1.0);
+    let d = vec3f(0.263, 0.416, 0.557);
+    return a + b * cos(6.2831853 * (c * t + d));
+}
+
+@fragment
+fn fs_main(in: VertexOutput) -> @location(0) vec4f {
+    // Apply curvature to UVs first
+    let uv_curved = curve(in.uv);
+    
+    // Check if we are outside the "glass" bounds (creates the black border)
+    if (uv_curved.x < 0.0 || uv_curved.x > 1.0 || uv_curved.y < 0.0 || uv_curved.y > 1.0) {
+        return vec4f(0.0, 0.0, 0.0, 1.0);
+    }
+
+    // --- Start Procedural Fractal (Our "Input Signal") ---
+    var uv = uv_curved * 2.0 - 1.0;
+    let uv0 = uv;
+    var signalColor = vec3f(0.0);
+    let time = u.t;
+
+    for (var i = 0.0; i < 3.0; i += 1.0) {
+        uv = fract(uv * 1.5) - 0.5;
+        var d = length(uv) * exp(-length(uv0));
+        let col = palette(length(uv0) + i * 0.4 + time / 6.28);
+        d = sin(d * 8.0 + time) / 8.0;
+        d = abs(d);
+        d = pow(0.01 / d, 1.2);
+        signalColor += col * d;
+    }
+    // --- End Procedural Fractal ---
+
+    // 2. Scanlines
+    // We use the screen-space position (builtin position) for pixel-perfect lines
+    let scanline = sin(uv_curved.y * 800.0) * 0.08;
+    var finalColor = signalColor - scanline;
+
+    // 3. RGB Shadow Mask (Sub-pixel simulation)
+    // This creates that grainy "grid" look
+    let grid_size = 300.0;
+    let mask = vec3f(
+        sin(uv_curved.x * grid_size * 3.0 + 0.0) * 0.5 + 0.5,
+        sin(uv_curved.x * grid_size * 3.0 + 2.0) * 0.5 + 0.5,
+        sin(uv_curved.x * grid_size * 3.0 + 4.0) * 0.5 + 0.5
+    );
+    finalColor *= (mask * 0.5 + 0.7);
+
+    // 4. Vignette (Darkens the corners)
+    var vignette = uv_curved.x * uv_curved.y * (1.0 - uv_curved.x) * (1.0 - uv_curved.y);
+    vignette = pow(vignette * 15.0, 0.25);
+    finalColor *= vignette;
+
+    // 5. Brightness Boost (CRT phosphor glow)
+    finalColor *= 1.4;
+
+    return vec4f(finalColor, 1.0);
+}
+''';
+
+  // ignore: unused_local_variable
   const _shader = r'''
 struct Uniforms {
   t: f32
@@ -198,7 +294,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
   final shader = device.createShaderModule(
     .new(
       label: 'triangle shader',
-      next: wgpu.ShaderSourceWGSL(code: _shader),
+      next: wgpu.ShaderSourceWGSL(code: _crt),
     ),
   );
 
@@ -264,7 +360,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
   );
 
   renderPass.setPipeline(pipeline);
-  renderPass.setBindGroup(0, bindGroup, []);
+  renderPass.setBindGroup(0, bindGroup, dynamicOffsets: []);
   renderPass.draw(3, 1, 0, 0);
   renderPass.end();
 

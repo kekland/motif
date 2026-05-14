@@ -67,7 +67,7 @@ extension TextureNativeExtension on Texture {
 }
 
 extension RenderPassEncoderNativeExtension on RenderPassEncoder {
-  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) =>
+  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) =>
       _renderPassEncoderSetImmediates(this, offset, sizeBytes, data);
 
   void multiDrawIndirect(Buffer buffer, int offset, int count) =>
@@ -92,7 +92,7 @@ extension RenderPassEncoderNativeExtension on RenderPassEncoder {
 }
 
 extension ComputePassEncoderNativeExtension on ComputePassEncoder {
-  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) =>
+  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) =>
       _computePassEncoderSetImmediates(this, offset, sizeBytes, data);
 
   void beginPipelineStatisticsQuery(QuerySet querySet, int queryIndex) =>
@@ -103,6 +103,6 @@ extension ComputePassEncoderNativeExtension on ComputePassEncoder {
 }
 
 extension RenderBundleEncoderNativeExtension on RenderBundleEncoder {
-  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void>? data) =>
+  void setImmediates(int offset, int sizeBytes, ffi.Pointer<ffi.Void> data) =>
       _renderBundleEncoderSetImmediates(this, offset, sizeBytes, data);
 }

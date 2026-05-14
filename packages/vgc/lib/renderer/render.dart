@@ -1,10 +1,13 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:wgpu/darwin.dart' as darwin;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
+import 'package:vgc/renderer/new/renderer.dart';
 import 'package:vgc/vgc.dart';
 
 import 'async_program.dart';
@@ -23,9 +26,12 @@ class RenderVectorComplex extends RenderBox {
     _onComplexChanged();
 
     if (!_tileQuad2Program.isLoaded) _tileQuad2Program.load().then((_) => markNeedsPaint());
+    _mtlTexture.register();
   }
 
   final _children = <Cell, RenderCell>{};
+  final _renderer = Renderer();
+  final _mtlTexture = darwin.MTLFlutterTexture.create();
 
   late VectorComplex _complex;
   VectorComplex get complex => _complex;
@@ -66,50 +72,93 @@ class RenderVectorComplex extends RenderBox {
   void dispose() {
     for (final child in _children.values) child.dispose();
     _complex.removeListener(_onComplexChanged);
+    _mtlTexture.dispose();
     super.dispose();
   }
+
+  late Size viewportSize;
 
   @override
   void performLayout() {
     const childConstraints = BoxConstraints();
     for (final child in _children.values) child.layout(childConstraints);
 
+    viewportSize = constraints.biggest;
+
     final bbox = complex.bbox;
     size = constraints.constrain(Size(bbox.max.x - bbox.min.x, bbox.max.y - bbox.min.y));
   }
 
   @override
+  bool get needsCompositing => false;
+
+  @override
   void paint(PaintingContext context, Offset offset) {
     final localToGlobal = getTransformTo(null);
+    final localViewport = context.canvas.getLocalClipBounds();
+
+    final transform = localToGlobal.leftTranslateByDouble(-offset.dx, -offset.dy, 0.0, 1.0);
     final tolerance = 1.0 / localToGlobal.getMaxScaleOnAxis();
-    final scale = localToGlobal.getMaxScaleOnAxis();
+
+    final splines = <CubicSpline2>[];
+    for (final cell in complex.cells) {
+      if (cell is Edge) splines.add(cell.spline);
+    }
+
+    final mtlTexture = _renderer.render(
+      splines,
+      screenWidth: viewportSize.width.ceil() * 3,
+      screenHeight: viewportSize.height.ceil() * 3,
+      tolerance: tolerance,
+      transform: Matrix4.diagonal3Values(3.0, 3.0, 1.0) * localToGlobal,
+    );
+
+    _mtlTexture.updateBuffer(mtlTexture);
+
+    // context.canvas.drawRect(offset & viewportSize, Paint()..color = Colors.red);
+
+    context.addLayer(
+      TextureLayer(
+        rect: offset & (viewportSize),
+        textureId: _mtlTexture.textureId!,
+        filterQuality: .high,
+        freeze: false,
+      ),
+    );
 
     // Set the tile size based on the current scale to maintain a consistent screen-space size.
-    final tileSize = 128.0 / math.pow(2, (math.log(scale) / math.ln2).floorToDouble());
 
-    layer = context.pushTransform(
-      false,
-      offset,
-      Matrix4.identity(),
-      (context, offset) {
-        final localViewport = context.canvas.getLocalClipBounds().translate(-offset.dx, -offset.dy);
+    // layer = context.pushTransform(
+    //   false,
+    //   offset,
+    //   Matrix4.identity(),
+    //   (context, offset) {
+    //     final localViewport = context.canvas.getLocalClipBounds().translate(-offset.dx, -offset.dy);
 
-        context.canvas.save();
-        context.canvas.translate(offset.dx, offset.dy);
+    //     context.canvas.save();
+    //     context.canvas.translate(offset.dx, offset.dy);
 
-        // Tile-based workflow
-        final grid = TileGrid(tileSize: tileSize);
-        for (final cell in complex.cells) {
-          final child = _children[cell]!;
-          child.submitGeometry(grid, tolerance);
-        }
+    //     // Tile-based workflow
+    //     final grid = TileGrid(tileSize: tileSize);
+    //     for (final cell in complex.cells) {
+    //       if (cell is Edge) {
+    //         final spline = cell.spline;
+    //         final cubics = spline.segments.toList();
+    //         final quadratics = _renderer.cubicToQuadratics(cubics, tolerance);
+    //         print('cubic ${cell.id} -> ${quadratics.length} quadratics');
 
-        if (!_tileQuad2Program.isLoaded) return;
-        grid.paint(context.canvas, localViewport, localToGlobal, _tileQuad2Program.program, 4.0);
-        context.canvas.restore();
-      },
-      oldLayer: layer as TransformLayer?,
-    );
+    //         for (final quad in quadratics) {
+    //           grid.addQuad(quad, 4.0);
+    //         }
+    //       }
+    //     }
+
+    //     if (!_tileQuad2Program.isLoaded) return;
+    //     grid.paint(context.canvas, localViewport, localToGlobal, _tileQuad2Program.program, 4.0);
+    //     context.canvas.restore();
+    //   },
+    //   oldLayer: layer as TransformLayer?,
+    // );
   }
 
   @override

@@ -14,6 +14,7 @@ import 'package:ffi/ffi.dart';
 import 'bindings.g.dart' as bindings;
 import '../utils/chained_struct.dart';
 
+// dart format off
 part 'types/adapter.dart';
 part 'types/bind_group.dart';
 part 'types/bind_group_layout.dart';
@@ -3443,6 +3444,8 @@ extension type const BufferUsage(int value) {
   /// The buffer can store the result of a timestamp or occlusion query.
   static const queryResolve = BufferUsage(512);
 
+  static const all = BufferUsage(0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512);
+
   static BufferUsage of(List<BufferUsage> flags) => BufferUsage(flags.fold(0, (v, f) => v | f.value));
 
   bool contains(BufferUsage flag) => (value & flag.value) == flag.value;
@@ -3493,6 +3496,8 @@ extension type const MapMode(int value) {
   static const read = MapMode(1);
   static const write = MapMode(2);
 
+  static const all = MapMode(0 | 1 | 2);
+
   static MapMode of(List<MapMode> flags) => MapMode(flags.fold(0, (v, f) => v | f.value));
 
   bool contains(MapMode flag) => (value & flag.value) == flag.value;
@@ -3511,6 +3516,8 @@ extension type const ShaderStage(int value) {
   static const vertex = ShaderStage(1);
   static const fragment = ShaderStage(2);
   static const compute = ShaderStage(4);
+
+  static const all = ShaderStage(0 | 1 | 2 | 4);
 
   static ShaderStage of(List<ShaderStage> flags) => ShaderStage(flags.fold(0, (v, f) => v | f.value));
 
@@ -3534,6 +3541,8 @@ extension type const TextureUsage(int value) {
   static const storageBinding = TextureUsage(8);
   static const renderAttachment = TextureUsage(16);
   static const transientAttachment = TextureUsage(32);
+
+  static const all = TextureUsage(0 | 1 | 2 | 4 | 8 | 16 | 32);
 
   static TextureUsage of(List<TextureUsage> flags) => TextureUsage(flags.fold(0, (v, f) => v | f.value));
 
@@ -3721,7 +3730,7 @@ class BindGroupEntry {
   const BindGroupEntry({
     required this.binding,
     this.buffer,
-    required this.offset,
+    this.offset = 0,
     this.size = WHOLE_SIZE,
     this.sampler,
     this.textureView,
@@ -3851,7 +3860,7 @@ class BindGroupLayoutEntry {
   const BindGroupLayoutEntry({
     required this.binding,
     this.visibility = .none,
-    required this.bindingArraySize,
+    this.bindingArraySize = 0,
     this.buffer = ._zero,
     this.sampler = ._zero,
     this.texture = ._zero,
@@ -6620,7 +6629,7 @@ class ShaderModuleDescriptor {
 class ShaderSourceSPIRV extends ChainedStruct {
   const ShaderSourceSPIRV({
     this.codeSize = 0,
-    required Uint32List this.code,
+    required this.code,
     super.next,
   });
 
@@ -7245,7 +7254,7 @@ class SurfaceDescriptor {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping an Android [`ANativeWindow`](https://developer.android.com/ndk/reference/group/a-native-window).
 class SurfaceSourceAndroidNativeWindow extends ChainedStruct {
   const SurfaceSourceAndroidNativeWindow({
-    required ffi.Pointer<ffi.Void> this.window,
+    required this.window,
     super.next,
   });
 
@@ -7270,7 +7279,7 @@ class SurfaceSourceAndroidNativeWindow extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.window = window ?? ffi.nullptr;
+    if (window != null) ptr.ref.window = window!;
     return ptr;
   }
 
@@ -7286,7 +7295,7 @@ class SurfaceSourceAndroidNativeWindow extends ChainedStruct {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping a [`CAMetalLayer`](https://developer.apple.com/documentation/quartzcore/cametallayer?language=objc).
 class SurfaceSourceMetalLayer extends ChainedStruct {
   const SurfaceSourceMetalLayer({
-    required ffi.Pointer<ffi.Void> this.layer,
+    required this.layer,
     super.next,
   });
 
@@ -7311,7 +7320,7 @@ class SurfaceSourceMetalLayer extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.layer = layer ?? ffi.nullptr;
+    if (layer != null) ptr.ref.layer = layer!;
     return ptr;
   }
 
@@ -7327,8 +7336,8 @@ class SurfaceSourceMetalLayer extends ChainedStruct {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping a [Wayland](https://wayland.freedesktop.org/) [`wl_surface`](https://wayland.freedesktop.org/docs/html/apa.html#protocol-spec-wl_surface).
 class SurfaceSourceWaylandSurface extends ChainedStruct {
   const SurfaceSourceWaylandSurface({
-    required ffi.Pointer<ffi.Void> this.display,
-    required ffi.Pointer<ffi.Void> this.surface,
+    required this.display,
+    required this.surface,
     super.next,
   });
 
@@ -7356,8 +7365,8 @@ class SurfaceSourceWaylandSurface extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.display = display ?? ffi.nullptr;
-    ptr.ref.surface = surface ?? ffi.nullptr;
+    if (display != null) ptr.ref.display = display!;
+    if (surface != null) ptr.ref.surface = surface!;
     return ptr;
   }
 
@@ -7375,8 +7384,8 @@ class SurfaceSourceWaylandSurface extends ChainedStruct {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping a Windows [`HWND`](https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd).
 class SurfaceSourceWindowsHWND extends ChainedStruct {
   const SurfaceSourceWindowsHWND({
-    required ffi.Pointer<ffi.Void> this.hinstance,
-    required ffi.Pointer<ffi.Void> this.hwnd,
+    required this.hinstance,
+    required this.hwnd,
     super.next,
   });
 
@@ -7404,8 +7413,8 @@ class SurfaceSourceWindowsHWND extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.hinstance = hinstance ?? ffi.nullptr;
-    ptr.ref.hwnd = hwnd ?? ffi.nullptr;
+    if (hinstance != null) ptr.ref.hinstance = hinstance!;
+    if (hwnd != null) ptr.ref.hwnd = hwnd!;
     return ptr;
   }
 
@@ -7423,7 +7432,7 @@ class SurfaceSourceWindowsHWND extends ChainedStruct {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping an [XCB](https://xcb.freedesktop.org/) `xcb_window_t`.
 class SurfaceSourceXCBWindow extends ChainedStruct {
   const SurfaceSourceXCBWindow({
-    required ffi.Pointer<ffi.Void> this.connection,
+    required this.connection,
     required this.window,
     super.next,
   });
@@ -7452,7 +7461,7 @@ class SurfaceSourceXCBWindow extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.connection = connection ?? ffi.nullptr;
+    if (connection != null) ptr.ref.connection = connection!;
     ptr.ref.window = window;
     return ptr;
   }
@@ -7471,7 +7480,7 @@ class SurfaceSourceXCBWindow extends ChainedStruct {
 /// Chained in @ref WGPUSurfaceDescriptor to make an @ref WGPUSurface wrapping an [Xlib](https://www.x.org/releases/current/doc/libX11/libX11/libX11.html) `Window`.
 class SurfaceSourceXlibWindow extends ChainedStruct {
   const SurfaceSourceXlibWindow({
-    required ffi.Pointer<ffi.Void> this.display,
+    required this.display,
     required this.window,
     super.next,
   });
@@ -7500,7 +7509,7 @@ class SurfaceSourceXlibWindow extends ChainedStruct {
     ptr.ref.chain.sTypeAsInt = sType;
     ptr.ref.chain.next = next?.toNative(allocator).cast() ?? ffi.nullptr;
 
-    ptr.ref.display = display ?? ffi.nullptr;
+    if (display != null) ptr.ref.display = display!;
     ptr.ref.window = window;
     return ptr;
   }
@@ -8538,9 +8547,9 @@ class _BufferBase extends _Opaque<bindings.WGPUBufferImpl> {
   /// This function is safe to call inside spontaneous callbacks (see @ref CallbackReentrancy).
   /// 
   /// In Wasm, this is more efficient than copying from a mapped range into a `malloc`'d range.
-  Status _readMappedRangeImpl(int offset, ffi.Pointer<ffi.Void>? data, int size) => using((allocator) {
+  Status _readMappedRangeImpl(int offset, ffi.Pointer<ffi.Void> data, int size) => using((allocator) {
     final _offset = offset;
-    final _data = data ?? ffi.nullptr;
+    final _data = data;
     final _size = size;
     final result = bindings.wgpuBufferReadMappedRange(_ptr, _offset, _data, _size);
     return Status.fromNative(result);
@@ -8551,9 +8560,9 @@ class _BufferBase extends _Opaque<bindings.WGPUBufferImpl> {
   /// This function is safe to call inside spontaneous callbacks (see @ref CallbackReentrancy).
   /// 
   /// In Wasm, this is more efficient than copying from a `malloc`'d range into a mapped range.
-  Status _writeMappedRangeImpl(int offset, ffi.Pointer<ffi.Void>? data, int size) => using((allocator) {
+  Status _writeMappedRangeImpl(int offset, ffi.Pointer<ffi.Void> data, int size) => using((allocator) {
     final _offset = offset;
-    final _data = data ?? ffi.nullptr;
+    final _data = data;
     final _size = size;
     final result = bindings.wgpuBufferWriteMappedRange(_ptr, _offset, _data, _size);
     return Status.fromNative(result);
@@ -9306,10 +9315,6 @@ class PipelineLayout extends _PipelineLayoutBase with _PipelineLayoutImpl {
   PipelineLayout._borrowed(super.ptr): super._borrowed();
 }
 
-ffi.Pointer<bindings.WGPUPipelineLayoutImpl> internalPipelineLayoutGetPtr(PipelineLayout obj) => obj._ptr;
-PipelineLayout internalPipelineLayoutFromPtr(ffi.Pointer<bindings.WGPUPipelineLayoutImpl> ptr) => ._(ptr);
-PipelineLayout internalPipelineLayoutFromBorrowedPtr(ffi.Pointer<bindings.WGPUPipelineLayoutImpl> ptr) => ._borrowed(ptr);
-
 class _QuerySetBase extends _Opaque<bindings.WGPUQuerySetImpl> {
   _QuerySetBase._(super.ptr): super._();
   _QuerySetBase._borrowed(super.ptr): super._borrowed();
@@ -9429,17 +9434,17 @@ class _QueueBase extends _Opaque<bindings.WGPUQueueImpl> {
 
   /// Produces a @ref DeviceError both content-timeline (`size` alignment) and device-timeline
   /// errors defined by the WebGPU specification.
-  void _writeBufferImpl(Buffer buffer, int bufferOffset, ffi.Pointer<ffi.Void>? data, int size) => using((allocator) {
+  void _writeBufferImpl(Buffer buffer, int bufferOffset, ffi.Pointer<ffi.Void> data, int size) => using((allocator) {
     final _buffer = buffer._ptr;
     final _bufferOffset = bufferOffset;
-    final _data = data ?? ffi.nullptr;
+    final _data = data;
     final _size = size;
     bindings.wgpuQueueWriteBuffer(_ptr, _buffer, _bufferOffset, _data, _size);
   });
 
-  void _writeTextureImpl(TexelCopyTextureInfo destination, ffi.Pointer<ffi.Void>? data, int dataSize, TexelCopyBufferLayout dataLayout, Extent3D writeSize) => using((allocator) {
+  void _writeTextureImpl(TexelCopyTextureInfo destination, ffi.Pointer<ffi.Void> data, int dataSize, TexelCopyBufferLayout dataLayout, Extent3D writeSize) => using((allocator) {
     final _destination = destination.toNative(allocator);
-    final _data = data ?? ffi.nullptr;
+    final _data = data;
     final _dataSize = dataSize;
     final _dataLayout = dataLayout.toNative(allocator);
     final _writeSize = writeSize.toNative(allocator);
@@ -10439,3 +10444,5 @@ class _SyncResult<T> {
     return result as dynamic;
   }
 }
+
+// dart format on

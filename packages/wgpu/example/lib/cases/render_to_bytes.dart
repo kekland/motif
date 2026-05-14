@@ -175,7 +175,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
   queue.onSubmittedWorkDone();
   
 
-  await readback.mapAsync(.read, 0, bufferSize);
+  await readback.mapAsync(mode: .read);
   print('readback mapped');
 
   final padded = readback.getMappedRange(0, bufferSize, readOnly: true);

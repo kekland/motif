@@ -11,6 +11,6 @@ mixin _ComputePassEncoderImpl on _ComputePassEncoderBase {
   void popDebugGroup() => _popDebugGroupImpl();
 
   set label(String label) => _setLabelImpl(label);
-  void setBindGroup(int groupIndex, BindGroup? bindGroup, List<int> dynamicOffsets) => _setBindGroupImpl(groupIndex, bindGroup, dynamicOffsets);
+  void setBindGroup(int groupIndex, BindGroup? bindGroup, {List<int> dynamicOffsets = const []}) => _setBindGroupImpl(groupIndex, bindGroup, dynamicOffsets);
   void setPipeline(ComputePipeline pipeline) => _setPipelineImpl(pipeline);
 }

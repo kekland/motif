@@ -12,7 +12,7 @@ dependencies:
   vector_math: ^2.2.0
   uuid: ^4.5.3
 
-  dawn:
+  wgpu:
   geometry:
 
 dev_dependencies:

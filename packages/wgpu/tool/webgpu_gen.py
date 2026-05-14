@@ -5,12 +5,11 @@ from _common import ROOT, to_upper_camel_case, to_lower_camel_case, indent
 import yaml
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Optional
+from typing import Optional, Any
 
 SPEC_PATH = ROOT / 'build' / 'webgpu.yml'
 OUT_PATH = ROOT / 'lib' / 'src' / 'webgpu' / 'webgpu.g.dart'
 UTILS_TEMPLATE = ROOT / 'tool' / 'utils.dart.template'
-
 
 # region Globals
 
@@ -30,8 +29,12 @@ SKIP_OBJECT_CLASS_GEN: set[str] = {
   'instance'
 }
 
-# endregion
+STRUCT_DEFAULTS_OVERRIDES: dict[str, Any] = {
+  'bind_group_layout_entry.binding_array_size': 0,
+  'bind_group_entry.offset': 0,
+}
 
+# endregion
 
 # region Utilities
 
@@ -270,7 +273,7 @@ def type_to_dart_type(type: WGPUType, pointer: Optional[WGPUPointerKind] = None,
     if kind == WGPUTypeKind.FLOAT64_NULLABLE: _type = 'Float64List'
     if kind == WGPUTypeKind.FLOAT64_SUPERTYPE: _type = 'Float64List'
 
-    if not force_nonnull: _type = f'{_type}?'
+    if optional: _type = f'{_type}?'
   else:
     if kind == WGPUTypeKind.VOID: _type = 'void'
     if kind in _INT_TYPES: _type = 'int'
@@ -428,7 +431,8 @@ def type_to_native(expr: str, type: WGPUType, pointer: Optional[WGPUPointerKind]
     return f'{expr}.toStringView(allocator)'
 
   if pointer:
-    if kind == WGPUTypeKind.VOID: return f'{expr} ?? ffi.nullptr'
+    if type.is_primitive and optional: return f'{expr} ?? ffi.nullptr'
+    if kind == WGPUTypeKind.VOID: return f'{expr}'
 
   if kind == WGPUTypeKind.OBJECT:
     _ptr = '_ptr'
@@ -886,6 +890,11 @@ def generate_flag_code(flag: WGPUFlag) -> list[str]:
     lines.append(f'  static const {entry.dart_name} = {dart_name}({entry.value});')
 
   lines.append('')
+  if flag.entry('all') is None:
+    all_values = ' | '.join(f'{entry.value}' for entry in flag.entries)
+    lines.append(f'  static const all = {dart_name}({all_values});')
+    lines.append('')
+  
   lines.append(f'  static {dart_name} of(List<{dart_name}> flags) => {dart_name}(flags.fold(0, (v, f) => v | f.value));')
   lines.append('')
   lines.append(f'  bool contains({dart_name} flag) => (value & flag.value) == flag.value;')
@@ -1329,6 +1338,7 @@ class WGPUStructMember:
   pointer: Optional[WGPUPointerKind] = None
   optional: Optional[bool] = None
   default: Optional[str] = None
+  struct: 'WGPUStruct' = None
 
   @property
   def dart_name(self) -> str:
@@ -1357,6 +1367,8 @@ class WGPUStructMember:
 
   @property
   def resolve_default(self) -> Optional[str]:
+    full_name = f'{self.struct.name}.{self.name}'
+    if full_name in STRUCT_DEFAULTS_OVERRIDES: return STRUCT_DEFAULTS_OVERRIDES[full_name]
     if self.type.kind == WGPUTypeKind.STR_WITH_DEFAULT_EMPTY: return '\'\''
     if self.type.kind == WGPUTypeKind.ARRAY: return 'const []'
     if self.type.kind == WGPUTypeKind.BOOL:
@@ -1379,7 +1391,6 @@ class WGPUStructMember:
       struct = self.type.struct_def
       if struct.all_members_initialized: return f'const {struct.dart_name}()'
 
-    if self.default is None: return None
     if isinstance(self.default, str) and self.default.startswith('constant.'):
       constant_name = self.default[len('constant.'):]
       if constant_name in CONSTANTS: return f'{CONSTANTS[constant_name].dart_name}'
@@ -1393,7 +1404,9 @@ class WGPUStructMember:
     return self.type.from_native(expr, self.pointer, self.optional)
 
   def set_native(self, dest: str, expr: str) -> str:
-    return self.type.set_native(dest, expr, self.pointer, self.optional, enum_as_int=True)
+    optional = self.optional
+    if self.type.is_primitive and self.pointer: optional = True
+    return self.type.set_native(dest, expr, self.pointer, optional, enum_as_int=True)
 
   def set_dart(self, dest: str, expr: str) -> str:
     return self.type.set_dart(dest, expr, self.pointer, self.optional)
@@ -1414,6 +1427,9 @@ class WGPUStruct:
   extends: list[str] = field(default_factory=list)
   free_members: Optional[bool] = None
   members: list[WGPUStructMember] = field(default_factory=list)
+
+  def __post_init__(self):
+    for member in self.members: member.struct = self
 
   @property
   def dart_name(self) -> str:
@@ -1544,7 +1560,7 @@ def generate_struct_code(struct: WGPUStruct) -> list[str]:
     dart_type = member.dart_type
     dart_name = member.dart_name
 
-    if member.type.is_object and not member.optional:
+    if (member.type.is_object and not member.optional) or (member.type.is_primitive and member.pointer):
       field_lines.append(f'final {dart_type}? {dart_name};')
     else:
       field_lines.append(f'final {dart_type} {dart_name};')
@@ -1842,7 +1858,6 @@ def generate_callback_code(callback: WGPUCallback) -> list[str]:
 
 # endregion
 
-
 # region Main
 
 
@@ -1936,6 +1951,7 @@ def generate(
     f'import \'bindings.g.dart\' as bindings;',
     f'import \'../utils/chained_struct.dart\';',
     '',
+    f'// dart format off',
   ]
 
   if preludes:
@@ -1980,6 +1996,8 @@ def generate(
 
   with open(UTILS_TEMPLATE, 'r') as f: utils_template = f.read()
   code.append(utils_template)
+
+  code.append(f'// dart format on')
 
   out_path.write_text('\n'.join(code))
 

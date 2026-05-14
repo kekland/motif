@@ -16,4 +16,13 @@ mixin _QueueImpl on _QueueBase {
       _writeBufferImpl(buffer, bufferOffset, dataPtr.cast(), data.lengthInBytes);
     });
   }
+
+  void writeTexture(TexelCopyTextureInfo dest, TypedData data, TexelCopyBufferLayout layout, Extent3D copySize) {
+    using((allocator) {
+      final dataPtr = allocator.allocate<ffi.Uint8>(data.lengthInBytes);
+      final dataList = data.buffer.asUint8List();
+      dataPtr.asTypedList(data.lengthInBytes).setAll(0, dataList);
+      _writeTextureImpl(dest, dataPtr.cast(), data.lengthInBytes, layout, copySize);
+    });
+  }
 }
