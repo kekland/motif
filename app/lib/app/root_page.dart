@@ -1,7 +1,8 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_navigation_bar.dart';
+import 'package:design/widgets/editor.dart';
 import 'package:vector/vector.dart';
-import 'package:design/design.dart';
+// import 'package:design/design.dart';
 import 'package:metal_capture_util/metal_capture_util.dart' as mtl_capture;
 
 class RootPage extends StatelessWidget {
@@ -22,16 +23,16 @@ class RootPage extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                mtl_capture.MetalCapture.captureNextFrame(reassemble: true, openFile: true);
-              },
-              label: Text('Capture')
-            ),
-          ),
+          // Positioned(
+          //   bottom: 16.0,
+          //   right: 16.0,
+          //   child: FloatingActionButton.extended(
+          //     onPressed: () {
+          //       mtl_capture.MetalCapture.captureNextFrame(reassemble: true, openFile: true);
+          //     },
+          //     label: Text('Capture')
+          //   ),
+          // ),
         ],
       ),
     );

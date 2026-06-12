@@ -22,6 +22,11 @@ extension Aabb2Utils on Aabb2 {
     if (a.max.y + tolerance < b.min.y || b.max.y + tolerance < a.min.y) return false;
     return true;
   }
+
+  Aabb2 inflate(double amount) {
+    final inflated = Aabb2.minMax(min - Vector2.all(amount), max + Vector2.all(amount));
+    return inflated;
+  }
 }
 
 extension Vector2Utils on Vector2 {

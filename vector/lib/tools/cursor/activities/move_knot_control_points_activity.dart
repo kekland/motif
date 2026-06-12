@@ -16,6 +16,8 @@ class MoveKnotControlPointsActivity extends MoveDragActivity with ExclusiveCurso
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
+    controller.selection.select(knot);
+
     cInStartPosition = knot.cIn?.clone();
     cOutStartPosition = knot.cOut?.clone();
   }

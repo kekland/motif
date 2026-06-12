@@ -8,7 +8,6 @@
       "type": "dart",
       "toolArgs": [
         "--enable-impeller",
-        "--enable-flutter-gpu",
       ]
     },
     {
@@ -26,7 +25,10 @@
       "program": "app/lib/main.dart",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "toolArgs": [
+        "--enable-impeller",
+      ]
     },
     {
       "name": "app (release)",

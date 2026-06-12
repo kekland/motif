@@ -36,11 +36,23 @@ List<Cubic2> _fitCubic(
     return [.new(points[0], points[1], p1: points[0] + st * dist, p2: points[1] + et * dist)];
   }
 
-  final u = _chordLengthParameterize(points);
-  final curve = _generateBezierSegment(points, u, st, et);
+  var u = _chordLengthParameterize(points);
+  var curve = _generateBezierSegment(points, u, st, et);
 
-  final (maxError, splitIndex) = _computeMaxError(points, u, curve);
+  var (maxError, splitIndex) = _computeMaxError(points, u, curve);
   if (maxError < errorThreshold) return [curve];
+
+  final maxIterations = 4;
+
+  for (var i = 0; i < maxIterations; i++) {
+    u = _reparameterize(points, u, curve);
+    curve = _generateBezierSegment(points, u, st, et);
+    final errorData = _computeMaxError(points, u, curve);
+    maxError = errorData.$1;
+    splitIndex = errorData.$2;
+
+    if (maxError < errorThreshold) return [curve];
+  }
 
   final centerTangent = _computeCenterTangent(points, splitIndex);
 
@@ -59,6 +71,44 @@ List<double> _chordLengthParameterize(List<Vector2> points) {
   for (var i = 1; i < points.length; i++) u[i] /= last;
 
   return u;
+}
+
+List<double> _reparameterize(List<Vector2> points, List<double> uList, Cubic2 bezier) {
+  final newU = List<double>.filled(points.length, 0.0, growable: false);
+
+  for (var i = 0; i < points.length; i++) {
+    final p = points[i];
+    var u = uList[i];
+
+    final b0 = math.pow(1 - u, 3).toDouble();
+    final b1 = 3 * u * math.pow(1 - u, 2).toDouble();
+    final b2 = 3 * math.pow(u, 2) * (1 - u).toDouble();
+    final b3 = math.pow(u, 3).toDouble();
+    final q = (bezier.p0 * b0) + (bezier.p1 * b1) + (bezier.p2 * b2) + (bezier.p3 * b3);
+
+    final q1 = (bezier.p1 - bezier.p0) * 3.0;
+    final q2 = (bezier.p2 - bezier.p1) * 3.0;
+    final q3 = (bezier.p3 - bezier.p2) * 3.0;
+    final bPrime0 = math.pow(1 - u, 2).toDouble();
+    final bPrime1 = 2.0 * u * (1 - u);
+    final bPrime2 = math.pow(u, 2).toDouble();
+    final qPrime = (q1 * bPrime0) + (q2 * bPrime1) + (q3 * bPrime2);
+
+    final qPrime1 = (q2 - q1) * 2.0;
+    final qPrime2 = (q3 - q2) * 2.0;
+    final qPrimePrime = (qPrime1 * (1 - u)) + (qPrime2 * u);
+
+    final diff = q - p;
+    final numerator = diff.dot(qPrime);
+    final denominator = qPrime.dot(qPrime) + diff.dot(qPrimePrime);
+    if (denominator == 0.0) {
+      newU[i] = u;
+    } else {
+      newU[i] = (u - (numerator / denominator)).clamp(0.0, 1.0);
+    }
+  }
+
+  return newU;
 }
 
 Cubic2 _generateBezierSegment(
@@ -137,8 +187,10 @@ Cubic2 _generateBezierSegment(
 }
 
 Vector2 _computeCenterTangent(List<Vector2> points, int centerIndex) {
-  final v1 = points[centerIndex - 1] - points[centerIndex];
-  final v2 = points[centerIndex] - points[centerIndex + 1];
+  final v1 = (points[centerIndex - 1] - points[centerIndex]).normalized();
+  final v2 = (points[centerIndex] - points[centerIndex + 1]).normalized();
   final t = (v1 + v2) / 2.0;
+  if (t.length2 < 1e-6) return v1;
+
   return t..normalize();
 }

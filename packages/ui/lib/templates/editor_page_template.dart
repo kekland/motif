@@ -8,12 +8,14 @@ class EditorPageTemplate extends StatelessWidget {
     required this.sideBar,
     required this.toolBar,
     required this.canvas,
+    this.mainBarConstraints,
   });
 
   final Widget? mainBar;
   final Widget? sideBar;
   final Widget? toolBar;
   final Widget? canvas;
+  final PanelConstraints? mainBarConstraints;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class EditorPageTemplate extends StatelessWidget {
       panels: [
         if (mainBar != null)
           Panel(
-            constraints: .pixels(196.0, 384.0),
+            constraints: mainBarConstraints ?? .pixels(196.0, 384.0),
             child: mainBar!,
           ),
         Panel(

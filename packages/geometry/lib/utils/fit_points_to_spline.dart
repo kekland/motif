@@ -2,6 +2,15 @@ import 'dart:math' as math;
 
 import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart';
+import 'package:geometry/ffi/ffi.dart' as ffi;
+
+CubicSpline2 fitPointsToSplineFfi(
+  List<StrokePoint> points, {
+  double spatialTolerance = 1.0,
+  double velocityThreshold = 0.5,
+}) {
+  return ffi.strokeToSpline(points, spatialTolerance, velocityThreshold);
+}
 
 /// A function that converts a list of points into a cubic spline.
 CubicSpline2 fitPointsToSpline(
@@ -61,7 +70,8 @@ CubicSpline2 fitPointsToSpline(
     final startTangent = _windowedEdgeTangent(rawChunk, fromStart: true, window: tangentWindow);
     final endTangent = _windowedEdgeTangent(rawChunk, fromStart: false, window: tangentWindow);
 
-    final simplified = visvalingamWhyatt(chunk, epsilon: vwEpsilon);
+    final smoothed = _smoothPolyline(chunk, iterations: 2);
+    final simplified = visvalingamWhyatt(smoothed, epsilon: vwEpsilon);
     if (simplified.length < 2) continue;
 
     final fitted = schneiderRaw(
@@ -75,6 +85,28 @@ CubicSpline2 fitPointsToSpline(
   }
 
   return .cubics(cubics);
+}
+
+List<Vector2> _smoothPolyline(List<Vector2> points, {int iterations = 1}) {
+  if (points.length < 3) return List.from(points);
+
+  var current = List<Vector2>.from(points);
+  var next = List<Vector2>.filled(points.length, .zero());
+
+  for (var iter = 0; iter < iterations; iter++) {
+    next[0] = current[0];
+    next[points.length - 1] = current[points.length - 1];
+
+    for (var i = 1; i < points.length - 1; i++) {
+      next[i] = (current[i - 1] * 0.25) + (current[i] * 0.5) + (current[i + 1] * 0.25);
+    }
+
+    final temp = current;
+    current = next;
+    next = temp;
+  }
+
+  return current;
 }
 
 /// Detects potential corners in the raw point list and returns their indices.

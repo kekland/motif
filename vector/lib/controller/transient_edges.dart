@@ -4,12 +4,10 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
   TransientEdge({
     required this.complex,
     required this.startVertex,
-    Vector2? cStart,
-    Vector2? cEnd,
-    Vector2? end,
-  }) : _cStart = cStart,
-       _cEnd = cEnd,
-       _end = end;
+    this._cStart,
+    this._cEnd,
+    this._end,
+  });
 
   final VectorComplex complex;
   final Vertex startVertex;
@@ -62,7 +60,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     notifyListeners();
   }
 
-  List<OpenEdge> _commit({CellHitTestEntry? endHitTest}) {
+  List<OpenEdge> _commit({CellHitTestEntry? endHitTest, CellHitTestTolerance? tolerance}) {
     if (end == null) return [];
 
     final endVertex = endHitTest != null ? complex.createVertexAtHitTest(endHitTest) : complex.createVertex(end!);
@@ -70,7 +68,12 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
 
     final cubic = this.cubic;
     final spline = CubicSpline2.cubics([cubic]);
-    return complex.commitSpline(spline, startVertex: startVertex, endVertex: endVertex);
+    return complex.commitSpline(
+      spline,
+      startVertex: startVertex,
+      endVertex: endVertex,
+      vertexHitTestTolerance: tolerance?.vertex,
+    );
   }
 }
 
@@ -98,7 +101,7 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
   TransientEdge? commit(TransientEdge edge, {CellHitTestEntry? endHitTest, bool startNewEdge = false}) {
     if (!edges.contains(edge)) return null;
 
-    final newEdges = edge._commit(endHitTest: endHitTest);
+    final newEdges = edge._commit(endHitTest: endHitTest, tolerance: controller.computeHitTestTolerance());
     remove(edge);
 
     if (startNewEdge && newEdges.isNotEmpty) {

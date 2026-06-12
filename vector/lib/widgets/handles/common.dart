@@ -11,6 +11,8 @@ class BaseHandleWidget extends StatelessWidget {
     this.rotation = 0.0,
     this.onPointerDown,
     this.cursor,
+    this.accentColor,
+    this.onLongPress,
   });
 
   final double size;
@@ -20,12 +22,15 @@ class BaseHandleWidget extends StatelessWidget {
   final BorderRadius borderRadius;
   final double rotation;
   final PointerDownEventListener? onPointerDown;
+  final VoidCallback? onLongPress;
   final MouseCursor? cursor;
+  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {
-    final fillColor = isSelected ? context.colors.accent.primary : Colors.white;
-    final borderColor = isSelected ? Colors.white : context.colors.accent.primary;
+    final accentColor = this.accentColor ?? context.colors.accent.primary;
+    final fillColor = isSelected ? accentColor : Colors.white;
+    final borderColor = isSelected ? Colors.white : accentColor;
     final borderSize = isSelected || isHovered ? 2.0 : 1.0;
     final shadow = isSelected || isHovered ? context.shadows.medium : context.shadows.small;
 
@@ -44,6 +49,13 @@ class BaseHandleWidget extends StatelessWidget {
       height: touchSize,
       child: Center(child: child),
     );
+
+    if (onLongPress != null) {
+      child = GestureDetector(
+        onLongPress: onLongPress,
+        child: child,
+      );
+    }
 
     if (onPointerDown != null) {
       child = Listener(

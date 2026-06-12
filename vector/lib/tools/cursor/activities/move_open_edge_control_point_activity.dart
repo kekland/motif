@@ -11,11 +11,13 @@ class MoveOpenEdgeControlPointActivity extends MoveDragActivity with ExclusiveCu
 
   late final Vector2 c1StartPosition;
   late final Vector2 c2StartPosition;
-  late final OpenEdge? nextEdge;
+  OpenEdge? nextEdge; // TODO: fix for non-collinear cases
 
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
+
+    controller.selection.select(edge);
 
     c1StartPosition = edge.cStart ?? edge.start.position;
     c2StartPosition = edge.cEnd ?? edge.end.position;

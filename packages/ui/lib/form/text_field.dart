@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:ui/ui.dart';
 import 'package:flutter/material.dart' as material;
@@ -33,6 +34,7 @@ class TextField extends HookWidget {
     this.onEditingComplete,
     this.onSubmitted,
     this.onChanged,
+    this.supportedDevices,
     this.options = const .new(),
   });
 
@@ -42,6 +44,7 @@ class TextField extends HookWidget {
   final VoidCallback? onSubmitted;
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
+  final Set<PointerDeviceKind>? supportedDevices;
   final TextFieldOptions options;
 
   @override
@@ -76,6 +79,7 @@ class TextField extends HookWidget {
       child: GestureSurface(
         onTap: () => focusNode.requestFocus(),
         width: double.infinity,
+        supportedDevices: supportedDevices,
         color: context.colors.surface.secondary,
         borderSide: BorderSide(
           color: hasFocus

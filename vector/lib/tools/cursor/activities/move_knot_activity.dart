@@ -15,6 +15,9 @@ class MoveKnotActivity extends MoveDragActivity with ExclusiveCursorDragActivity
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
+
+    controller.selection.select(knot);
+
     startPosition = knot.p.clone();
     startCIn = knot.cIn?.clone();
     startCOut = knot.cOut?.clone();

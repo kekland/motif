@@ -2,7 +2,7 @@ name: motif
 publish_to: none
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.12.0
 
 workspace:
   - app
@@ -14,7 +14,9 @@ workspace:
   - packages/color
   - packages/commander
   - packages/css
+  - packages/genie
   - packages/geometry
+  - packages/ink_stroke_modeler
   - packages/shared
   - packages/skia
   - packages/text
@@ -22,6 +24,7 @@ workspace:
   - packages/tree
   - packages/ui
   - packages/vgc
+  - packages/vgc_renderer
   - packages/wgpu
   - packages/wgslgen
 

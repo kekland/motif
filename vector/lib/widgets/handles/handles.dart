@@ -51,6 +51,7 @@ class KnotHandle extends StatelessWidget {
       rotation: math.pi / 4,
       onPointerDown: onPointerDown,
       cursor: onPointerDown != null ? Cursors.toolCursorKnot : null,
+      onLongPress: () {},
     );
   }
 }

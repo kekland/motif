@@ -499,7 +499,7 @@ class _InteractiveViewerState extends State<InteractiveViewer> with TickerProvid
   // TODO(justinmc): Add rotateEnabled parameter to the widget and remove this
   // hardcoded value when the rotation feature is implemented.
   // https://github.com/flutter/flutter/issues/57698
-  final bool _rotateEnabled = false;
+  final bool _rotateEnabled = true;
 
   // The _boundaryRect is calculated by adding the boundaryMargin to the size of
   // the child.

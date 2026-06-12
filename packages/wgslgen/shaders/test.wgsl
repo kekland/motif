@@ -60,6 +60,10 @@ struct Counters {
 @group(1) @binding(2) var t_albedo: texture_2d<f32>;
 // Notice we skipped binding 3! Your groups map should handle sparse indices.
 @group(1) @binding(4) var t_data_1d: texture_1d<u32>; // Uint texture!
+@group(1) @binding(5) var<uniform> u_float: f32;
+@group(1) @binding(6) var<uniform> u_vec3: vec3f;
+@group(1) @binding(7) var<uniform> u_arr: array<mat4x4f, 4>;
+@group(1) @binding(8) var<uniform> u_arr_mat: array<Material, 4>;
 
 // ==========================================
 // GROUP 2: COMPUTE & STORAGE TEXTURES

@@ -7,10 +7,41 @@ part of '../vector_complex.dart';
 ///
 /// Geometrically, an edge is a curve in the plane. The curve is represented by a [CubicSpline2] (a sequence of cubics).
 sealed class Edge extends Cell {
-  Edge({super.id, this.strokeWeight});
+  Edge({
+    super.id,
+    super.complex,
+    StrokeWeightParameterProfile? strokeWeight,
+    ColorData? color,
+    double? strokeWidth,
+  }) : _strokeWeight = strokeWeight ?? StrokeWeightParameterProfile.from([(x: 0.0, v: 1.0), (x: 1.0, v: 1.0)]),
+       _color = color ?? .white,
+       _strokeWidth = strokeWidth ?? 1.0;
+
   CubicSpline2 get spline;
 
-  final StrokeWeightArcLengthProfile? strokeWeight;
+  StrokeWeightParameterProfile _strokeWeight;
+  StrokeWeightParameterProfile get strokeWeight => _strokeWeight;
+  set strokeWeight(StrokeWeightParameterProfile p) {
+    if (_strokeWeight == p) return;
+    _strokeWeight = p;
+    complex?.notifyFor(this);
+  }
+
+  ColorData _color;
+  ColorData get color => _color;
+  set color(ColorData c) {
+    if (_color == c) return;
+    _color = c;
+    complex?.notifyFor(this);
+  }
+
+  double _strokeWidth;
+  double get strokeWidth => _strokeWidth;
+  set strokeWidth(double w) {
+    if (_strokeWidth == w) return;
+    _strokeWidth = w;
+    complex?.notifyFor(this);
+  }
 }
 
 /// An open edge is a curve connecting two vertices.
@@ -27,13 +58,25 @@ final class OpenEdge extends Edge {
     this.cEnd,
     List<CubicKnot2>? interior,
     super.id,
+    super.complex,
     super.strokeWeight,
+    super.strokeWidth,
+    super.color,
   }) : interior = interior ?? [] {
     _start._directStar.add(this);
     _end._directStar.add(this);
   }
 
-  factory OpenEdge.fromSpline(Vertex start, Vertex end, CubicSpline2 spline, {String? id}) {
+  factory OpenEdge.fromSpline(
+    Vertex start,
+    Vertex end,
+    CubicSpline2 spline, {
+    String? id,
+    VectorComplex? complex,
+    StrokeWeightParameterProfile? strokeWeight,
+    double? strokeWidth,
+    ColorData? color,
+  }) {
     final firstKnotPosition = spline.knots.first.p;
     final lastKnotPosition = spline.knots.last.p;
 
@@ -57,7 +100,18 @@ final class OpenEdge extends Edge {
       }
     }
 
-    return OpenEdge(start, end, cStart: cStart, cEnd: cEnd, interior: interior, id: id);
+    return OpenEdge(
+      start,
+      end,
+      cStart: cStart,
+      cEnd: cEnd,
+      interior: interior,
+      id: id,
+      complex: complex,
+      strokeWeight: strokeWeight,
+      strokeWidth: strokeWidth,
+      color: color,
+    );
   }
 
   Vertex _start;
@@ -82,9 +136,9 @@ final class OpenEdge extends Edge {
 
   @override
   CubicSpline2 get spline => .new([
-    .new(start.position, cOut: cStart),
+    _EdgeVertexKnot(this, true, start.position, cOut: cStart),
     ...interior,
-    .new(end.position, cIn: cEnd),
+    _EdgeVertexKnot(this, false, end.position, cIn: cEnd),
   ]);
 
   @override
@@ -98,7 +152,14 @@ final class OpenEdge extends Edge {
 ///
 /// Geometrically, it's represented by a cubic spline that forms a closed loop.
 final class ClosedEdge extends Edge {
-  ClosedEdge(this.spline, {super.id, super.strokeWeight});
+  ClosedEdge(
+    this.spline, {
+    super.id,
+    super.complex,
+    super.strokeWeight,
+    super.strokeWidth,
+    super.color,
+  });
 
   @override
   CubicSpline2 spline;
@@ -108,4 +169,25 @@ final class ClosedEdge extends Edge {
 
   @override
   Aabb2 get boundingBoxApproximate => spline.bbox;
+}
+
+class _EdgeVertexKnot extends CubicKnot2 {
+  _EdgeVertexKnot(this._edge, this.isStart, super.p, {super.cIn, super.cOut});
+
+  final OpenEdge _edge;
+  final bool isStart;
+
+  @override
+  set cOut(Vector2? c) {
+    if (!isStart) return;
+    super.cOut = c;
+    _edge.cStart = c;
+  }
+
+  @override
+  set cIn(Vector2? c) {
+    if (isStart) return;
+    super.cIn = c;
+    _edge.cEnd = c;
+  }
 }

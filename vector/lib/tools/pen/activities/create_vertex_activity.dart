@@ -68,7 +68,9 @@ class CreateVertexActivity extends DragActivity {
 
     if (!isNewEdge) {
       // Commit the transient edge.
-      final endHitTest = controller.hitTestCellLocal(transientEdge.end!.asOffset());
+      final endPosition = transientEdge.end!.asOffset();
+      final endGlobalPosition = controller.artworkLocalToGlobal(endPosition);
+      final endHitTest = controller.hitTestCell(endGlobalPosition);
       final newTransient = controller.transientEdges.commit(transientEdge, endHitTest: endHitTest, startNewEdge: true);
       onTransientEdgeCompleted(transientEdge);
       if (newTransient != null) onTransientEdgeCreated(newTransient);

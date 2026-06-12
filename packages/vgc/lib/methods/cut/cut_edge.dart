@@ -59,11 +59,29 @@ extension CutEdge on VectorComplex {
 
   OpenEdgeCutResult _cutOpenEdge(OpenEdge edge, double t) {
     final (leftSpline, rightSpline) = edge.spline.split(t);
+    final weights = edge.strokeWeight?.split(t);
+
     final splitPosition = leftSpline.knots.last.p.clone();
 
     final vertex = Vertex(splitPosition);
-    final edge1 = OpenEdge.fromSpline(edge.start, vertex, leftSpline);
-    final edge2 = OpenEdge.fromSpline(vertex, edge.end, rightSpline);
+    final edge1 = OpenEdge.fromSpline(
+      edge.start,
+      vertex,
+      leftSpline,
+      strokeWeight: weights?.$1,
+      color: edge.color,
+      strokeWidth: edge.strokeWidth,
+      complex: this,
+    );
+    final edge2 = OpenEdge.fromSpline(
+      vertex,
+      edge.end,
+      rightSpline,
+      strokeWeight: weights?.$2,
+      color: edge.color,
+      strokeWidth: edge.strokeWidth,
+      complex: this,
+    );
     _onCutEdge(edge, [vertex], [edge1, edge2]);
 
     return .new(vertex: vertex, edge1: edge1, edge2: edge2);
@@ -91,7 +109,11 @@ extension CutEdge on VectorComplex {
       vertex,
       cStart: rightSpline.knots.last.cOut?.clone(),
       cEnd: leftSpline.knots.first.cIn?.clone(),
+      strokeWeight: edge.strokeWeight,
+      color: edge.color,
+      strokeWidth: edge.strokeWidth,
       interior: interior,
+      complex: this,
     );
 
     _onCutEdge(edge, [vertex], [newEdge]);
@@ -100,6 +122,8 @@ extension CutEdge on VectorComplex {
 
   MultiEdgeCutResult _multiCutOpenEdge(OpenEdge edge, List<double> ts) {
     final splines = edge.spline.splitMultiple(ts);
+    final weights = edge.strokeWeight?.splitMultiple(ts);
+
     final vertices = <Vertex>[];
     final newEdges = <OpenEdge>[];
 
@@ -110,7 +134,15 @@ extension CutEdge on VectorComplex {
       final endVertex = i == splines.length - 1 ? edge.end : Vertex(spline.knots.last.p.clone());
       if (i != splines.length - 1) vertices.add(endVertex);
 
-      final newEdge = OpenEdge.fromSpline(startVertex, endVertex, spline);
+      final newEdge = OpenEdge.fromSpline(
+        startVertex,
+        endVertex,
+        spline,
+        strokeWeight: weights?[i],
+        color: edge.color,
+        strokeWidth: edge.strokeWidth,
+        complex: this,
+      );
       newEdges.add(newEdge);
     }
 

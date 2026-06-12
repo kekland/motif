@@ -1,71 +1,137 @@
 part of '../generator.dart';
 
-final _preferInline = '@pragma(\'vm:prefer-inline\')';
-
-List<String> generateStruct(StructInfo info) {
+List<String> generateStruct(StructInfo struct) {
   final lines = <String>[];
 
-  final visibleMembers = info.visibleMembers;
+  final typedefName = struct.dartTypedefName;
+  final internalTypedefName = struct.internalTypedefName;
 
-  final internalDartMembers = <String>[];
-  for (final member in visibleMembers) {
-    internalDartMembers.add('${member.type.internalType} ${member.dartName}');
-  }
-
-  final dartMembers = <String>[];
-  for (final member in visibleMembers) {
-    dartMembers.add('${member.type.dartType} ${member.dartName}');
-  }
-
-  final tuple = '(${dartMembers.join(', ')})';
-  
-  lines.add('@wgsl.Struct(\'${info.name}\')');
-  lines.add('extension type const ${info.dartName}._($tuple _) {');
-
-  // Zero-init default
-  lines.add('  static const ${info.dartName} zero = ${info.dartName}._((');
-  for (final member in visibleMembers) {
-    lines.add('    ${member.type.defaultValue},');
-  }
-  lines.add('  ));');
+  // Typedef
+  lines.add('typedef $typedefName = ${struct.dartType};');
+  lines.add('typedef $internalTypedefName = ${struct.internalType};');
   lines.add('');
 
-  // Member accessors
-  for (final (i, member) in visibleMembers.indexed) {
-    lines.add('  ${member.type.dartType} get ${member.dartName} => _.\$${i + 1};');
-  }
+  // Dart extension
+  lines.add('extension ${typedefName}Ext on $typedefName {');
+  for (final (i, m) in struct.visibleMembers.indexed)
+    lines.add('  ${m.dartType} get ${m.dartName} => this.\$${i + 1};');
   lines.add('');
-
-  // From Dart types
-  final fromCallArgs = info.dartSetterArgs.join(', ');
-
   lines.add('  $_preferInline');
-  lines.add('  ${info.dartName}({$fromCallArgs}): this._((');
-  for (final member in visibleMembers) {
-    lines.add('    ${member.dartName},');
-  }
-  lines.add('  ));');
+  lines.add('  $internalTypedefName get asInternal => (');
+  for (final m in struct.visibleMembers) lines.add('    ${m.type.dartToInternal(m.dartName)},');
+  lines.add('  );');
+  lines.add('}');
   lines.add('');
 
-  // Read
+  // Internal extension
+  lines.add('extension ${internalTypedefName}Ext on $internalTypedefName {');
+  for (final (i, m) in struct.visibleMembers.indexed)
+    lines.add('  ${m.internalType} get ${m.dartName} => this.\$${i + 1};');
+  lines.add('');
   lines.add('  $_preferInline');
-  lines.add('  ${info.dartName}.read(ByteData data, int offset): this._((');
-  for (final member in visibleMembers) {
-    final getter = member.type.read(offset: 'offset + ${member.offset}');
-    lines.addAll(getter.indent(2));
-    lines.last += ',';
-  }
-  lines.add('  ));');
+  lines.add('  $typedefName get asDart => (');
+  for (final (i, m) in struct.visibleMembers.indexed) lines.add('    ${m.type.internalToDart('this.\$${i + 1}')},');
+  lines.add('  );');
   lines.add('');
-
-  // Write
   lines.add('  $_preferInline');
   lines.add('  void write(ByteData data, int offset) {');
-  for (final (i, member) in visibleMembers.indexed) {
-    final setter = member.type.write('_.\$${i + 1}', offset: 'offset + ${member.offset}');
-    lines.addAll(setter.indent(2));
+  for (final (i, m) in struct.visibleMembers.indexed) {
+    final write = m.type.writeFn('this.\$${i + 1}', offset: 'offset + ${m.offset}');
+    lines.addAll(write.indent(2));
   }
   lines.add('  }');
   lines.add('}');
+  lines.add('');
+
+  lines.add('extension ${struct.dartStructName} on $typedefName {');
+  lines.add('  $_preferInline');
+  lines.add('  static $internalTypedefName read(ByteData data, int offset) => (');
+  for (final m in struct.visibleMembers) {
+    late final String length;
+    if (m.isArray) {
+      final array = m.type.asArray;
+      length = '(data.lengthInBytes - offset - ${m.offset}) ~/ ${array.format.size}';
+    } else {
+      length = '';
+    }
+
+    final getter = m.type.readFn(offset: 'offset + ${m.offset}', length: length);
+    lines.addAll(getter.indent(2));
+    lines.last += ',';
+  }
+  lines.add('  );');
+  lines.add('');
+  lines.add('}');
+
+  // Extensions
+
+  // final structName = struct.dartStructName;
+  // final fromCtorName = struct.dartStructFromCtor;
+  // final members = struct.visibleMembers;
+
+  // // Declaration
+  // lines.add(_metaStructView([struct.name]));
+  // lines.add('extension type const $structName._($internalTypedefName _) {');
+
+  // // Constructor (regular)
+  // lines.add('  $_preferInline');
+  // lines.add('  $structName({${members.dartNamedCtorArgs}}): this._((');
+  // for (final m in members) lines.add('    ${m.type.dartToInternal(m.dartName)},');
+  // lines.add('  ));');
+  // lines.add('');
+
+  // // Constructor (from)
+  // lines.add('  $_preferInline');
+  // lines.add('  $fromCtorName((${members.dartCtorArgs}) t): this._((');
+  // for (final (i, m) in members.indexed) lines.add('    ${m.type.dartToInternal('t.\$${i + 1}')},');
+  // lines.add('  ));');
+  // lines.add('');
+
+  // // Member accessors
+  // for (final (i, m) in members.indexed) {
+  //   lines.add('  ${m.dartType} get ${m.dartName} => ${m.type.internalToDart('_.\$${i + 1}')};');
+  // }
+  // lines.add('');
+
+  // // Read
+  // lines.add('  $_preferInline');
+  // lines.add('  $structName.read(ByteData data, int offset): this._((');
+  // for (final m in members) {
+  //   late final String length;
+
+  //   if (m.isArray) {
+  //     final array = m.type.asArray;
+  //     length = '(data.lengthInBytes - offset - ${m.offset}) ~/ ${array.format.size}';
+  //   } else {
+  //     length = '';
+  //   }
+
+  //   final getter = m.type.readFn(offset: 'offset + ${m.offset}', length: length);
+  //   lines.addAll(getter.indent(2));
+  //   lines.last += ',';
+  // }
+  // lines.add('  ));');
+  // lines.add('');
+
+  // // Write
+  // lines.add('  $_preferInline');
+  // lines.add('  void write(ByteData data, int offset) {');
+  // for (final (i, m) in members.indexed) {
+  //   final write = m.type.writeFn('_.\$${i + 1}', offset: 'offset + ${m.offset}');
+  //   lines.addAll(write.indent(2));
+  // }
+  // lines.add('  }');
+  // lines.add('');
+
+  // // as dart
+  // lines.add('  $_preferInline');
+  // lines.add('  ${struct.dartType} get asDart => (');
+  // for (final m in members) {
+  //   lines.add('    ${m.type.internalToDart('_.\$${members.indexOf(m) + 1}')},');
+  // }
+  // lines.add('  );');
+
+  // lines.add('}');
+
   return lines;
 }

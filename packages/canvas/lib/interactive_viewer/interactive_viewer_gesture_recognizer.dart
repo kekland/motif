@@ -1,0 +1,238 @@
+import 'dart:math' as math;
+
+import 'package:flutter/gestures.dart';
+
+/// The minimum distance travelled by a pointer for the gesture to be
+/// considered a transform gesture.
+const _kTransformSlop = 6.0;
+
+/// Minimum angle (in radians) that must be traversed for a rotation to be recognized.
+const _kTransformRotateSlop = math.pi / 180.0 * 15.0;
+
+enum _TransformState { ready, possible, started }
+
+extension type _PointersState(List<Offset> pointers) {
+  Offset difference(_PointersState other) {
+    final a = pointers[0];
+    final b = other.pointers[0];
+    return b - a;
+  }
+
+  Offset get focalPoint {
+    final sum = pointers.reduce((a, b) => a + b);
+    return sum / pointers.length.toDouble();
+  }
+}
+
+class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
+  InteractiveViewerGestureRecognizer({
+    required this.minAllowedPointerCount,
+    super.debugOwner,
+    super.supportedDevices,
+    super.allowedButtonsFilter,
+    this.onStart,
+    this.onUpdate,
+    this.onEnd,
+  });
+
+  final int minAllowedPointerCount;
+  GestureTransformStartCallback? onStart;
+  GestureTransformUpdateCallback? onUpdate;
+  GestureTransformEndCallback? onEnd;
+
+  @override
+  String get debugDescription => 'InteractiveViewerGestureRecognizer';
+
+  var _state = _TransformState.ready;
+  var _transform = Matrix4.identity();
+
+  _PointersState? _initialPointersState;
+  _PointersState? _currentPointersState;
+
+  final _pointerQueue = <int>[];
+  final _pointerLocalPositions = <int, Offset>{};
+  final _velocityTrackers = <int, VelocityTracker>{};
+
+  int get _pointerCount => _pointerQueue.length;
+  bool get _hasMinPointerCount => _pointerCount >= minAllowedPointerCount;
+  Iterable<Offset> get _queuedLocalPositions => _pointerQueue.map((i) => _pointerLocalPositions[i]!);
+
+  @override
+  void handleEvent(PointerEvent event) {
+    // print(event);
+    final pointerId = event.pointer;
+    var didChangeConfiguration = false;
+
+    if (event is PointerDownEvent) {
+      _pointerQueue.add(pointerId);
+      _pointerLocalPositions[pointerId] = event.localPosition;
+      _velocityTrackers[pointerId] = VelocityTracker.withKind(event.kind);
+
+      didChangeConfiguration = true;
+    } else if (event is PointerMoveEvent) {
+      _pointerLocalPositions[pointerId] = event.localPosition;
+      _velocityTrackers[pointerId]?.addPosition(event.timeStamp, event.position);
+    } else if (event is PointerUpEvent || event is PointerCancelEvent) {
+      _pointerQueue.remove(pointerId);
+      _pointerLocalPositions.remove(pointerId);
+      _velocityTrackers.remove(pointerId);
+
+      didChangeConfiguration = true;
+    }
+
+    if (didChangeConfiguration) _reconfigure();
+
+    _update();
+    _advanceStateMachine();
+
+    stopTrackingIfPointerNoLongerDown(event);
+  }
+
+  _PointersState? _createPointersState() {
+    if (_pointerCount == 0) return null;
+    return _PointersState(_queuedLocalPositions.toList(growable: false));
+  }
+
+  void _reconfigure() {
+    _initialPointersState = _createPointersState();
+    if (_state == .started) {
+      _state = .ready;
+      _currentPointersState = null;
+      _transform = .identity();
+      _rotationBaseAngle = null;
+      _onEnd();
+    }
+  }
+
+  void _update() {
+    if (_initialPointersState == null) return;
+    _currentPointersState = _createPointersState();
+    print('hi');
+
+    if (_state != .started) return;
+    if (_currentPointersState == null) return;
+
+    final startPointers = _initialPointersState!.pointers;
+    final currentPointers = _currentPointersState!.pointers;
+
+    if (startPointers.length >= 2 && currentPointers.length >= 2) {
+      final a1 = startPointers[0];
+      final a2 = startPointers[1];
+      final a = a2 - a1;
+
+      final b1 = currentPointers[0];
+      final b2 = currentPointers[1];
+      final b = b2 - b1;
+
+      final scale = b.distance / a.distance;
+      var angle = math.atan2(
+        b.dx * a.dy - b.dy * a.dx,
+        b.dx * a.dx + b.dy * a.dy,
+      );
+
+      angle = _applyRotationSnap(angle);
+
+      _transform = Matrix4.identity()
+        ..translateByDouble(b1.dx, b1.dy, 0.0, 1.0)
+        ..rotateZ(-angle)
+        ..scaleByDouble(scale, scale, 1.0, 1.0)
+        ..translateByDouble(-a1.dx, -a1.dy, 0.0, 1.0);
+    } else {
+      final a = startPointers[0];
+      final b = currentPointers[0];
+      _transform = Matrix4.identity()..translateByDouble(b.dx - a.dx, b.dy - a.dy, 0.0, 1.0);
+    }
+  }
+
+  double? _rotationBaseAngle;
+  double _applyRotationSnap(double rawAngle) {
+    if (_rotationBaseAngle == null && rawAngle.abs() > _kTransformRotateSlop) {
+      _rotationBaseAngle = rawAngle;
+    }
+
+    if (_rotationBaseAngle != null) {
+      return (rawAngle - _rotationBaseAngle!);
+    }
+
+    return 0.0;
+  }
+
+  void _advanceStateMachine() {
+    if (_state == .ready && _initialPointersState != null) {
+      _state = .possible;
+    }
+
+    if (_state == .possible) {
+      if (_initialPointersState == null) return;
+
+      final offset = _initialPointersState!.difference(_currentPointersState!);
+      final delta = offset.distance;
+
+      if (delta > _kTransformSlop && _hasMinPointerCount) {
+        _state = .started;
+        _onStart();
+        resolve(.accepted);
+      }
+    } else if (_state.index >= _TransformState.possible.index) {
+      resolve(.accepted);
+    }
+
+    if (_state == .started) _onUpdate();
+  }
+
+  void _onStart() {
+    if (onStart != null) {
+      invokeCallback<void>(
+        'onStart',
+        () => onStart!(.new(pointerCount: _pointerCount, transform: _transform)),
+      );
+    }
+  }
+
+  void _onUpdate() {
+    if (onUpdate != null) {
+      invokeCallback<void>(
+        'onUpdate',
+        () => onUpdate!(.new(pointerCount: _pointerCount, transform: _transform)),
+      );
+    }
+  }
+
+  void _onEnd() {
+    if (onEnd != null) {
+      invokeCallback<void>(
+        'onEnd',
+        () => onEnd!(.new(transform: _transform)),
+      );
+    }
+  }
+
+  @override
+  void didStopTrackingLastPointer(int pointer) {
+    if (_state == .ready) resolve(.rejected);
+    _state == .ready;
+  }
+}
+
+typedef GestureTransformStartCallback = void Function(TransformStartDetails details);
+typedef GestureTransformUpdateCallback = void Function(TransformUpdateDetails details);
+typedef GestureTransformEndCallback = void Function(TransformEndDetails details);
+
+class TransformStartDetails {
+  const TransformStartDetails({required this.pointerCount, required this.transform});
+
+  final int pointerCount;
+  final Matrix4 transform;
+}
+
+class TransformUpdateDetails {
+  const TransformUpdateDetails({required this.pointerCount, required this.transform});
+
+  final int pointerCount;
+  final Matrix4 transform;
+}
+
+class TransformEndDetails {
+  const TransformEndDetails({required this.transform});
+  final Matrix4 transform;
+}

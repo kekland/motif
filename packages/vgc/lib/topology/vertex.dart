@@ -4,7 +4,7 @@ part of '../vector_complex.dart';
 ///
 /// Geometrically a vertex is also a single point on a plane.
 final class Vertex extends Cell {
-  Vertex(this.position, {super.id});
+  Vertex(this.position, {super.id, super.complex});
   Vector2 position;
 
   @override

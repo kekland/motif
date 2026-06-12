@@ -30,6 +30,13 @@ Future<void> main() async {
     .new('pen', 'Symbols.stylus_fountain_pen_rounded'),
     .new('pencil', 'Symbols.draw_rounded'),
     .new('fill', 'Symbols.colors_rounded'),
+    .new('weight', 'Symbols.line_weight_rounded'),
+    .new('eraser', 'Symbols.ink_eraser_rounded'),
+    .new('delete', 'Symbols.delete_rounded'),
+    .new('dragHandle', 'Symbols.drag_indicator_rounded'),
+    .new('topology', 'Symbols.hub_rounded'),
+    .new('squiggly', 'Symbols.gesture_rounded'),
+    .new('tune', 'Symbols.tune_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

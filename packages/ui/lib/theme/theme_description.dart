@@ -13,6 +13,7 @@ const _typographyWeights = <FontWeight>[.regular, .bold];
 
 const themeDescription = ThemeDescription(
   platforms: ['material', 'cupertino'],
+  variants: ['desktop', 'mobile'],
   colors: [
     .group('surface', children: [.actionable('primary'), .actionable('secondary'), .actionable('tertiary')]),
     .group('accent', children: [.actionable('primary'), .actionable('secondary'), .actionable('tertiary')]),
@@ -37,6 +38,7 @@ const themeDescription = ThemeDescription(
     .new('footnote', colors: _typographyColors, weights: _typographyWeights),
   ],
   animations: [
+    .new('window'),
     .new('spatialFast'),
     .new('spatialDefault'),
     .new('spatialSlow'),
@@ -48,5 +50,8 @@ const themeDescription = ThemeDescription(
     .new('window'),
     .new('medium'),
     .new('small'),
+  ],
+  sizes: [
+    .new('panel'),
   ],
 );

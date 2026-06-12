@@ -41,3 +41,41 @@ double _perpendicularDistanceSquared(Vector2 point, Vector2 lineStart, Vector2 l
   final proj = lineStart + (line * t);
   return point.distanceToSquared(proj);
 }
+
+/// Implementation of the Ramer-Douglas-Peucker algorithm in 1D.
+List<(double, double)> ramerDouglasPeucker1D(List<(double, double)> points, {double epsilon = 2.0}) {
+  if (points.length < 3) return points;
+
+  var maxError = 0.0;
+  var index = 0;
+
+  final start = points.first;
+  final end = points.last;
+  final range = end.$1 - start.$1;
+
+  for (var i = 1; i < points.length - 1; i++) {
+    final pt = points[i];
+
+    late final double expectedY;
+    if (range == 0) {
+      expectedY = start.$2;
+    } else {
+      final t = (pt.$1 - start.$1) / range;
+      expectedY = start.$2 + t * (end.$2 - start.$2);
+    }
+
+    final error = (pt.$2 - expectedY).abs();
+    if (error > maxError) {
+      maxError = error;
+      index = i;
+    }
+  }
+
+  if (maxError > epsilon) {
+    final left = ramerDouglasPeucker1D(points.sublist(0, index + 1), epsilon: epsilon);
+    final right = ramerDouglasPeucker1D(points.sublist(index), epsilon: epsilon);
+    return [...left.sublist(0, left.length - 1), ...right];
+  } else {
+    return [start, end];
+  }
+}

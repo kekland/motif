@@ -7,10 +7,12 @@ import 'package:stack_ui/stack_ui.dart';
 typedef AppTheme = ({
   Brightness brightness,
   ThemePlatform platform,
+  ThemeVariant variant,
   AppColors colors,
   AppTypography typography,
   AppShadows shadows,
   AppAnimations animations,
+  AppSizes sizes,
 });
 
 class _InheritedAppTheme extends InheritedWidget {
@@ -49,16 +51,42 @@ class InheritedAppTheme extends StatelessWidget {
 extension AppThemeContext on BuildContext {
   AppTheme get theme => _InheritedAppTheme.of(this);
   ThemePlatform get themePlatform => theme.platform;
+  ThemeVariant get themeVariant => theme.variant;
   AppColors get colors => theme.colors;
   AppTypography get typography => theme.typography;
   AppShadows get shadows => theme.shadows;
   AppAnimations get animations => theme.animations;
+  AppSizes get sizes => theme.sizes;
 }
 
+class VariantBuilder extends StatelessWidget {
+  const VariantBuilder({
+    super.key,
+    required this.desktop,
+    required this.mobile,
+  });
+
+  final WidgetBuilder desktop;
+  final WidgetBuilder mobile;
+
+  @override
+  Widget build(BuildContext context) {
+    final variant = context.themeVariant;
+    return switch(variant) {
+      .desktop => desktop(context),
+      .mobile => mobile(context),
+    };
+  }
+}
 
 enum ThemePlatform {
   material,
   cupertino,
+}
+
+enum ThemeVariant {
+  desktop,
+  mobile,
 }
 
 typedef SurfaceColors = ({
@@ -774,10 +802,15 @@ typedef AppShadows = ({
 });
 
 typedef AppAnimations = ({
+  AnimationStyle window,
   AnimationStyle spatialFast,
   AnimationStyle spatialDefault,
   AnimationStyle spatialSlow,
   AnimationStyle effectFast,
   AnimationStyle effectDefault,
   AnimationStyle effectSlow,
+});
+
+typedef AppSizes = ({
+  double panel,
 });

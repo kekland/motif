@@ -33,7 +33,6 @@ class _FillToolOverlay extends HookWidget {
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
-          print(e);
           final globalPosition = e.position;
           final localPosition = controller.globalToArtworkLocal(globalPosition);
           face.value = controller.complex.traceFaceAt(localPosition.asVector2());

@@ -1,3 +1,4 @@
+import 'package:canvas/interactive_viewer/interactive_viewer2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -44,12 +45,12 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
       builder: (context, constraints) {
         final size = constraints.biggest;
 
-        return iv.InteractiveViewer.builder(
-          transformationController: widget.transformationController,
+        return InteractiveViewer2(
+          // transformationController: widget.transformationController,
           minScale: 0.1,
-          maxScale: 10.0,
-          boundaryMargin: const EdgeInsets.all(double.infinity),
-          scaleFactor: 200.0,
+          maxScale: 100.0,
+          // boundaryMargin: const EdgeInsets.all(double.infinity),
+          // scaleFactor: 200.0,
           builder: (context, _) {
             final rawTransform = controller.value;
 

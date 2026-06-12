@@ -30,6 +30,7 @@ ENUMS = {
   # ),
   'native_feature': WGPUEnum(
     name='native_feature',
+    extends='feature_name',
     entries=[
       WGPUEnumEntry('immediates', 0x00030001),
       WGPUEnumEntry('texture_adapter_specific_format_features', 0x00030002),

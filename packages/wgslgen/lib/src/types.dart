@@ -148,7 +148,7 @@ class ArrayInfo extends TypeInfo {
   bool get isArray => true;
 
   @override
-  String get typeName => 'array<${format.typeName}, $count>';
+  String get typeName => count > 0 ? 'array<${format.typeName}, $count>' : 'array<${format.typeName}>';
 
   @override
   List<Object?> get props => [...super.props, format, count, stride];

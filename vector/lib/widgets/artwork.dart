@@ -1,7 +1,6 @@
 import 'package:vector/imports.dart';
-import 'package:vector/widgets/transient_strokes.dart';
 
-class ArtworkWidget extends StatelessWidget {
+class ArtworkWidget extends HookWidget {
   const ArtworkWidget({super.key, required this.controller});
 
   final VectorController controller;
@@ -9,17 +8,14 @@ class ArtworkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final complex = controller.complex;
+    final transientStrokes = useListenable(controller.transientStrokes).strokes;
 
     return Stack(
       children: [
-        Positioned.fill(
-          child: TransientStrokesWidget(
-            transientStrokes: controller.transientStrokes,
-          ),
-        ),
         _Artwork(
           key: controller.artworkKey,
           complex: complex,
+          transientStrokes: transientStrokes.toList(),
         ),
       ],
     );
@@ -27,15 +23,24 @@ class ArtworkWidget extends StatelessWidget {
 }
 
 class _Artwork extends LeafRenderObjectWidget {
-  const _Artwork({super.key, required this.complex});
+  const _Artwork({
+    super.key,
+    required this.complex,
+    this.transientStrokes = const [],
+  });
 
   final VectorComplex complex;
+  final List<TransientStroke> transientStrokes;
 
   @override
-  RenderObject createRenderObject(BuildContext context) => RenderVectorComplex(complex: complex);
+  RenderObject createRenderObject(BuildContext context) => RenderVectorComplex(
+    complex: complex,
+    transientStrokes: transientStrokes,
+  );
 
   @override
   void updateRenderObject(BuildContext context, RenderVectorComplex renderObject) {
     renderObject.complex = complex;
+    renderObject.transientStrokes = transientStrokes;
   }
 }

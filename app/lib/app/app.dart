@@ -8,7 +8,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.blue;
+    final seedColor = Colors.indigo;
     final brightness = Brightness.dark;
 
     final colorScheme = ColorScheme.fromSeed(
@@ -28,6 +28,10 @@ class App extends StatelessWidget {
     final themeData = ThemeData.from(colorScheme: colorScheme).copyWith(
       dividerColor: theme.colors.divider,
       dividerTheme: .new(color: theme.colors.divider, space: 1.0),
+      iconTheme: .new(
+        weight: 200.0,
+        grade: 0.0,
+      ),
     );
 
     return InheritedAppTheme(
@@ -37,6 +41,7 @@ class App extends StatelessWidget {
         child: TransientTransformsTickerProvider(
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
+            // showPerformanceOverlay: false,
             showPerformanceOverlay: false,
             theme: themeData,
             home: WindowRoot(child: RootPage()),

@@ -3,7 +3,7 @@ publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.12.0
   
 dependencies:
   flutter:
@@ -14,6 +14,8 @@ dependencies:
   stack_mouse_cursor:
   stack_window_manager:
   stack_multi_pane_container:
+
+  genie:
 
   expressions: ^0.2.5+3
   material_symbols_icons: ^4.2928.1

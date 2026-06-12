@@ -19,6 +19,8 @@ final class CubicSpline2 {
   Aabb2 get bboxTight => _splineBboxTight(this);
 
   CubicKnot2 knot(int i) => knots[i];
+  (CubicKnot2, CubicKnot2) knotsAt(double t) => _splineKnotsAtParameter(this, t);
+
   Cubic2 segment(int i) => _splineSegment(this, i);
   (Cubic2, double) segmentAt(double t) => _splineSegmentAtParameter(this, t);
   (Cubic2, double) segmentAtDistance(double distance) => _splineSegmentAtDistance(this, distance);
@@ -57,6 +59,7 @@ final class CubicSpline2 {
   List<Intersection> selfIntersect() => _splineSelfIntersect(this);
   List<Intersection> intersectWith(CubicSpline2 other) => _splineIntersect(this, other);
   List<Intersection> intersectWithCubic(Cubic2 other) => _splineCubicIntersect(this, other);
+  List<Intersection> intersectWithCircle(Circle2 circle) => _splineCircleIntersect(this, circle);
   // dart format on
 
   ClosestPointResult closestTo(Vector2 q) => _splineClosestPoint(this, q);

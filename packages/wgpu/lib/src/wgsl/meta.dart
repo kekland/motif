@@ -1,22 +1,20 @@
-part of 'wgsl.dart';
-
 class Overrides {
   const Overrides();
 }
 
-class Struct {
-  const Struct(this.name);
+class StructView {
+  const StructView(this.name);
   final String name;
 }
 
 class UniformBufferView {
-  const UniformBufferView(this.name);
-  final String name;
+  const UniformBufferView(this.names);
+  final List<String> names;
 }
 
 class UniformBuffer {
-  const UniformBuffer(this.name);
-  final String name;
+  const UniformBuffer(this.names);
+  final List<String> names;
 }
 
 class StorageBufferView {
@@ -42,6 +40,11 @@ class BindGroupLayout {
 class BindGroup {
   const BindGroup(this.id);
   final int id;
+}
+
+class PipelineBindings {
+  const PipelineBindings(this.name);
+  final String name;
 }
 
 class PipelineLayout {

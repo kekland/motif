@@ -1,6 +1,6 @@
 part of '../cubic.dart';
 
-final class CubicKnot2 {
+class CubicKnot2 {
   CubicKnot2(this.p, {this.cIn, this.cOut});
   CubicKnot2.point(this.p) : cIn = null, cOut = null;
 
@@ -13,13 +13,13 @@ final class CubicKnot2 {
 
   Aabb2 get bbox => _knotBbox(this);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! CubicKnot2) return false;
-    return p == other.p && cIn == other.cIn && cOut == other.cOut;
-  }
+  // @override
+  // bool operator ==(Object other) {
+  //   if (identical(this, other)) return true;
+  //   if (other is! CubicKnot2) return false;
+  //   return p == other.p && cIn == other.cIn && cOut == other.cOut;
+  // }
 
-  @override
-  int get hashCode => Object.hash(p, cIn, cOut);
+  // @override
+  // int get hashCode => Object.hash(p, cIn, cOut);
 }

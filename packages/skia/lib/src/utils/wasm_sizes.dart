@@ -11,8 +11,11 @@ int sizeOf<T extends jsgen.NativeType>() {
     const (geometry.Cubic2) => 64,
     const (geometry.Vector2) => 16,
     const (geometry.Intersection) => 32,
+    const (geometry.Circle2) => 24,
     const (geometry.Aabb2) => 32,
     const (geometry.Quadratic2) => 48,
+    const (geometry.InputPoint) => 32,
+    const (geometry.CubicSpline2) => 8,
     _ => jsgen.sizeOf<T>(),
   };
 }

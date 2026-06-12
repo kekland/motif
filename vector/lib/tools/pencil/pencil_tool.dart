@@ -29,6 +29,7 @@ class _PencilToolOverlay extends HookWidget {
     final freehandDragRecognizer = useManagedResource(
       create: () => DragActivityGestureRecognizer(
         activityFactory: () => PencilFreehandDrawActivity(controller: controller),
+        devicesToAcceptImmediately: {.stylus},
       ),
       dispose: (v) => v.dispose(),
     );
@@ -40,9 +41,6 @@ class _PencilToolOverlay extends HookWidget {
         behavior: .translucent,
         onPointerDown: (e) {
           freehandDragRecognizer.addPointer(e);
-        },
-        onPointerMove: (e) {
-          freehandDragRecognizer.currentActivity?.moveEvent = e;
         },
         child: GestureDetector(
           behavior: .translucent,

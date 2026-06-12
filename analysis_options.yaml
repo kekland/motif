@@ -9,6 +9,7 @@ analyzer:
   exclude:
     - packages/skia/build/**
     - packages/dawn/build/**
+    - packages/ink_stroke_modeler/build/**
 
 formatter:
   page_width: 120

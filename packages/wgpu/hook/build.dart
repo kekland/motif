@@ -66,7 +66,7 @@ void main(List<String> args) async {
     }
 
     final builder = CBuilder.library(
-      name: 'wgpu',
+      name: 'wgpu_native',
       assetName: 'src/asset.dart',
       language: .cpp,
       cppLinkStdLib: 'c++',

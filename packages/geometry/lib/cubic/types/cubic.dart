@@ -45,6 +45,13 @@ final class Cubic2 {
   Vector2 velocityAtDistance(double distance) => _cubicVelocityAtDistance(this, distance);
   Vector2 tangentAtDistance(double distance) => _cubicTangentAtDistance(this, distance);
 
+  _CubicArcLengthIndex? _arcLengthIndexCache;
+  _CubicArcLengthIndex get _arcLengthIndex {
+    // if (_arcLengthIndexCache != null) return _arcLengthIndexCache!;
+    _arcLengthIndexCache = .compute(this);
+    return _arcLengthIndexCache!;
+  }
+
   double tAtDistance(double distance) => _cubicTAtDistance(this, distance);
   double distanceAtT(double t) => _cubicDistanceAtT(this, t);
 
@@ -60,6 +67,7 @@ final class Cubic2 {
   Intersection? selfIntersect() => _cubicSelfIntersect(this);
   List<Intersection> intersectWith(Cubic2 other) => _cubicIntersect(this, other);
   List<Intersection> intersectWithSpline(CubicSpline2 other) => _splineCubicIntersect(other, this);
+  List<Intersection> intersectWithCircle(Circle2 circle) => _cubicCircleIntersect(this, circle);
   // dart format on
 
   ClosestPointResult closestTo(Vector2 q) => _cubicClosestPoint(this, q);

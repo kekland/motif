@@ -1,28 +1,28 @@
 part of '../controller.dart';
 
 class SelectionController with ChangeNotifier, ChangeNotifierDisposable {
-  late final _selectedCells = $setSignal<Cell>({});
-  Set<Cell> get selectedCells => _selectedCells.value;
-  bool isCellSelected(Cell cell) => _selectedCells.contains(cell);
+  late final _selectedObjects = $setSignal<Object>({});
+  Set<Object> get selectedObjects => _selectedObjects.value;
+  bool isObjectSelected(Object object) => _selectedObjects.contains(object);
 
-  void select(Cell cell) {
-    _selectedCells.clear();
-    _selectedCells.add(cell);
+  void select(Object object) {
+    _selectedObjects.clear();
+    _selectedObjects.add(object);
     notifyListeners();
   }
 
-  void add(Cell cell) {
-    _selectedCells.add(cell);
+  void add(Object object) {
+    _selectedObjects.add(object);
     notifyListeners();
   }
 
-  void deselect(Cell cell) {
-    _selectedCells.remove(cell);
+  void deselect(Object object) {
+    _selectedObjects.remove(object);
     notifyListeners();
   }
 
   void clear() {
-    _selectedCells.clear();
+    _selectedObjects.clear();
     notifyListeners();
   }
 }

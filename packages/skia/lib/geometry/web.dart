@@ -25,6 +25,11 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
     Pointer<Cubic2> b,
     Pointer<Intersection> out_hits,
   );
+  external int _cubic_circle_intersect(
+    Pointer<Cubic2> a,
+    Pointer<Circle2> b,
+    Pointer<Intersection> out_hits,
+  );
   external int _cubic_self_intersect(
     Pointer<Cubic2> a,
     Pointer<Intersection> out_hit,
@@ -53,6 +58,18 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
     Pointer<Float64> out_t,
     bool chop_at_inflections,
   );
+  external int _cull_noisy_points(
+    Pointer<InputPoint> points,
+    int count,
+    double spatial_tolerance,
+  );
+  external void _stroke_to_spline(
+    Pointer<CubicSpline2> CubicSpline2_out,
+    Pointer<InputPoint> points,
+    int count,
+    double spatial_tolerance,
+    double velocity_threshold,
+  );
 }
 
 int cubic_intersect(
@@ -61,6 +78,15 @@ int cubic_intersect(
   Pointer<Intersection> out_hits,
 ) {
   final result = GeneratedBindings.instance._cubic_intersect(a.cast(), b.cast(), out_hits.cast());
+  return result;
+}
+
+int cubic_circle_intersect(
+  Pointer<Cubic2> a,
+  Pointer<Circle2> b,
+  Pointer<Intersection> out_hits,
+) {
+  final result = GeneratedBindings.instance._cubic_circle_intersect(a.cast(), b.cast(), out_hits.cast());
   return result;
 }
 
@@ -125,6 +151,32 @@ int cubic_to_quads(
     chop_at_inflections,
   );
   return result;
+}
+
+int cull_noisy_points(
+  Pointer<InputPoint> points,
+  int count,
+  double spatial_tolerance,
+) {
+  final result = GeneratedBindings.instance._cull_noisy_points(points.cast(), count, spatial_tolerance);
+  return result;
+}
+
+CubicSpline2 stroke_to_spline(
+  Pointer<InputPoint> points,
+  int count,
+  double spatial_tolerance,
+  double velocity_threshold,
+) {
+  final CubicSpline2_out = CubicSpline2.stackAlloc();
+  final result = GeneratedBindings.instance._stroke_to_spline(
+    CubicSpline2_out.cast(),
+    points.cast(),
+    count,
+    spatial_tolerance,
+    velocity_threshold,
+  );
+  return CubicSpline2_out.toDart();
 }
 
 extension Cubic2Ext on Pointer<Cubic2> {
@@ -274,6 +326,45 @@ final class Intersection extends Struct {
   }
 }
 
+extension Circle2Ext on Pointer<Circle2> {
+  Circle2 toDart() {
+    return Circle2(this);
+  }
+  Circle2 get ref => toDart();
+  Circle2 operator [](int index) => Pointer<Circle2>(this.address + sizeOf * index).toDart();
+  operator []=(int index, Circle2 value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 24;
+}
+
+final class Circle2 extends Struct {
+  Pointer<Circle2> get address => super.address.cast();
+  Vector2 get center {
+    final addr = Pointer<Circle2>(this.address.addr + 0);
+    final value = NativeLibrary.instance.getValue(addr, '*');
+    return Vector2(Pointer<Vector2>(addr));
+  }
+
+  set center(Vector2 val) {
+    NativeLibrary.instance.setValue(Pointer<Circle2>(this.address.addr + 0), val.address.toJS, '*');
+  }
+
+  double get radius {
+    final addr = Pointer<Circle2>(this.address.addr + 16);
+    final value = NativeLibrary.instance.getValue(addr, 'double').toDartDouble;
+    return value;
+  }
+
+  set radius(double val) {
+    NativeLibrary.instance.setValue(Pointer<Circle2>(this.address.addr + 16), val.toJS, 'double');
+  }
+
+  Circle2(super.address);
+
+  static Pointer<Circle2> stackAlloc() {
+    return Pointer<Circle2>(NativeLibrary.instance.stackAlloc<Circle2>(24));
+  }
+}
+
 extension Aabb2Ext on Pointer<Aabb2> {
   Aabb2 toDart() {
     return Aabb2(this);
@@ -362,6 +453,94 @@ final class Quadratic2 extends Struct {
   }
 }
 
+extension InputPointExt on Pointer<InputPoint> {
+  InputPoint toDart() {
+    return InputPoint(this);
+  }
+  InputPoint get ref => toDart();
+  InputPoint operator [](int index) => Pointer<InputPoint>(this.address + sizeOf * index).toDart();
+  operator []=(int index, InputPoint value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 32;
+}
+
+final class InputPoint extends Struct {
+  Pointer<InputPoint> get address => super.address.cast();
+  Vector2 get position {
+    final addr = Pointer<InputPoint>(this.address.addr + 0);
+    final value = NativeLibrary.instance.getValue(addr, '*');
+    return Vector2(Pointer<Vector2>(addr));
+  }
+
+  set position(Vector2 val) {
+    NativeLibrary.instance.setValue(Pointer<InputPoint>(this.address.addr + 0), val.address.toJS, '*');
+  }
+
+  double get timestamp_ms {
+    final addr = Pointer<InputPoint>(this.address.addr + 16);
+    final value = NativeLibrary.instance.getValue(addr, 'double').toDartDouble;
+    return value;
+  }
+
+  set timestamp_ms(double val) {
+    NativeLibrary.instance.setValue(Pointer<InputPoint>(this.address.addr + 16), val.toJS, 'double');
+  }
+
+  double get pressure {
+    final addr = Pointer<InputPoint>(this.address.addr + 24);
+    final value = NativeLibrary.instance.getValue(addr, 'double').toDartDouble;
+    return value;
+  }
+
+  set pressure(double val) {
+    NativeLibrary.instance.setValue(Pointer<InputPoint>(this.address.addr + 24), val.toJS, 'double');
+  }
+
+  InputPoint(super.address);
+
+  static Pointer<InputPoint> stackAlloc() {
+    return Pointer<InputPoint>(NativeLibrary.instance.stackAlloc<InputPoint>(32));
+  }
+}
+
+extension CubicSpline2Ext on Pointer<CubicSpline2> {
+  CubicSpline2 toDart() {
+    return CubicSpline2(this);
+  }
+  CubicSpline2 get ref => toDart();
+  CubicSpline2 operator [](int index) => Pointer<CubicSpline2>(this.address + sizeOf * index).toDart();
+  operator []=(int index, CubicSpline2 value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 8;
+}
+
+final class CubicSpline2 extends Struct {
+  Pointer<CubicSpline2> get address => super.address.cast();
+  Pointer<Cubic2> get cubics {
+    final addr = Pointer<CubicSpline2>(this.address.addr + 0);
+    final value = NativeLibrary.instance.getValue(addr, '*');
+    return Pointer<Cubic2>(value.toDartInt);
+  }
+
+  set cubics(Pointer<Cubic2> val) {
+    NativeLibrary.instance.setValue(Pointer<CubicSpline2>(this.address.addr + 0), val.toJS, '*');
+  }
+
+  int get count {
+    final addr = Pointer<CubicSpline2>(this.address.addr + 4);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set count(int val) {
+    NativeLibrary.instance.setValue(Pointer<CubicSpline2>(this.address.addr + 4), val.toJS, 'i32');
+  }
+
+  CubicSpline2(super.address);
+
+  static Pointer<CubicSpline2> stackAlloc() {
+    return Pointer<CubicSpline2>(NativeLibrary.instance.stackAlloc<CubicSpline2>(8));
+  }
+}
+
 extension StructAllocator on Struct {
   static T create<T>() {
     switch (T) {
@@ -374,11 +553,20 @@ extension StructAllocator on Struct {
       case Intersection:
         final ptr = Intersection.stackAlloc();
         return ptr.toDart() as T;
+      case Circle2:
+        final ptr = Circle2.stackAlloc();
+        return ptr.toDart() as T;
       case Aabb2:
         final ptr = Aabb2.stackAlloc();
         return ptr.toDart() as T;
       case Quadratic2:
         final ptr = Quadratic2.stackAlloc();
+        return ptr.toDart() as T;
+      case InputPoint:
+        final ptr = InputPoint.stackAlloc();
+        return ptr.toDart() as T;
+      case CubicSpline2:
+        final ptr = CubicSpline2.stackAlloc();
         return ptr.toDart() as T;
     }
     throw Exception("Unsupported type $T");

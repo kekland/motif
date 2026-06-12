@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/packages/skia/",
                 "${workspaceFolder}/packages/skia/include/",
-                "${workspaceFolder}/packages/skia/include/src/"
+                "${workspaceFolder}/packages/skia/include/src/",
+                "${workspaceFolder}/packages/ink_stroke_modeler/include/",
+                "${workspaceFolder}/packages/geometry/third_party/eigen/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

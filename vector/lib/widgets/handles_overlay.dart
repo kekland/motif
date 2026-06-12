@@ -18,12 +18,14 @@ class HandlesOverlayBuilder extends HookWidget {
     super.key,
     required this.controller,
     this.hoveredCell,
+    this.isVisible = true,
     this.areGesturesEnabled = true,
   });
 
   final VectorController controller;
   final bool areGesturesEnabled;
   final Cell? hoveredCell;
+  final bool isVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class HandlesOverlayBuilder extends HookWidget {
         childPaintTransform: info.childPaintTransform,
         areGesturesEnabled: areGesturesEnabled,
         hoveredCell: hoveredCell,
+        isVisible: isVisible,
       ),
       child: const SizedBox.expand(),
     );
@@ -46,33 +49,39 @@ class HandlesOverlay extends HookWidget {
     required this.childPaintTransform,
     this.areGesturesEnabled = true,
     this.hoveredCell,
+    this.isVisible = true,
   });
 
   final VectorController controller;
   final Matrix4 childPaintTransform;
   final bool areGesturesEnabled;
   final Cell? hoveredCell;
+  final bool isVisible;
 
   @override
   Widget build(BuildContext context) {
     final complex = useListenable(controller.complex);
-    final selection = useComputedValue(() => {...controller.selection.selectedCells});
+    final selection = useComputedValue(() => {...controller.selection.selectedObjects});
     final transientEdges = useListenable(controller.transientEdges).edges;
 
     final moveVertexActivityRecognizer = useDragActivityWithArgumentRecognizer<Vertex>(
       (v) => MoveVertexActivity(controller: controller, vertex: v),
+      supportedDevices: {.stylus},
     );
 
     final moveKnotActivityRecognizer = useDragActivityWithArgumentRecognizer<CubicKnot2>(
       (k) => MoveKnotActivity(controller: controller, knot: k),
+      supportedDevices: {.stylus},
     );
 
     final moveKnotControlPointsActivity = useDragActivityWithArgumentRecognizer<(CubicKnot2, bool)>(
       (arg) => MoveKnotControlPointsActivity(controller: controller, knot: arg.$1, isC1: arg.$2),
+      supportedDevices: {.stylus},
     );
 
     final moveOpenEdgeControlPointActivity = useDragActivityWithArgumentRecognizer<(OpenEdge, bool)>(
       (arg) => MoveOpenEdgeControlPointActivity(controller: controller, edge: arg.$1, isC1: arg.$2),
+      supportedDevices: {.stylus},
     );
 
     if (areGesturesEnabled) {
@@ -96,6 +105,7 @@ class HandlesOverlay extends HookWidget {
           HandleWidget(
             position: cell.position.asOffset(),
             child: VertexHandle(
+              isSelected: selection.contains(cell),
               onPointerDown: (e) => moveVertexActivityRecognizer.addPointer(e, argument: cell as Vertex),
             ),
           ),
@@ -104,6 +114,7 @@ class HandlesOverlay extends HookWidget {
         children.add(
           EdgeHandles(
             edge: cell,
+            selection: selection,
             childPaintTransform: childPaintTransform,
             hoveredCell: hoveredCell,
             onKnotPointerDown: (e, knot) => moveKnotActivityRecognizer.addPointer(e, argument: knot),
@@ -124,9 +135,14 @@ class HandlesOverlay extends HookWidget {
       );
     }
 
-    return HandlesLayout(
-      childPaintTransform: childPaintTransform,
-      children: children,
+    return Visibility(
+      visible: isVisible,
+      child: ClipRect(
+        child: HandlesLayout(
+          childPaintTransform: childPaintTransform,
+          children: children,
+        ),
+      ),
     );
   }
 }

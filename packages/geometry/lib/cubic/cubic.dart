@@ -27,7 +27,7 @@ part 'methods/split.dart';
 
 part 'methods_ffi/methods_ffi.dart';
 
-part 'utils/arc_length_profile.dart';
-part 'utils/parameter_profile.dart';
-part 'utils/profile.dart';
+// part 'utils/arc_length_profile.dart';
+// part 'utils/parameter_profile.dart';
+// part 'utils/profile.dart';
 part 'utils/utils.dart';

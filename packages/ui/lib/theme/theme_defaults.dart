@@ -276,6 +276,10 @@ const AppAnimations materialAnimations = (
     duration: Duration(milliseconds: 300),
     curve: Cubic(0.34, 0.88, 0.34, 1.00),
   ),
+  window: AnimationStyle(
+    duration: Duration(milliseconds: 400),
+    curve: Curves.linear,
+  ),
 );
 
 const AppAnimations cupertinoAnimations = (
@@ -302,6 +306,10 @@ const AppAnimations cupertinoAnimations = (
   effectSlow: AnimationStyle(
     duration: Duration(milliseconds: 300),
     curve: Cubic(0.34, 0.88, 0.34, 1.00),
+  ),
+  window: AnimationStyle(
+    duration: Duration(milliseconds: 400),
+    curve: Curves.linear,
   ),
 );
 
@@ -485,6 +493,14 @@ AppColors generateAppColors({
   );
 }
 
+const AppSizes _mobileSizes = (
+  panel: 48.0,
+);
+
+const AppSizes _desktopSizes = (
+  panel: 36.0,
+);
+
 /* Final */
 
 AppTheme generateAppTheme({
@@ -504,11 +520,17 @@ AppTheme generateAppTheme({
   final _platform =
       platform ??
       switch (defaultTargetPlatform) {
-        TargetPlatform.iOS || TargetPlatform.macOS => ThemePlatform.cupertino,
+        .iOS || .macOS => ThemePlatform.cupertino,
         _ => ThemePlatform.material,
       };
 
+  final _variant = switch (defaultTargetPlatform) {
+    .iOS || .android || .fuchsia => ThemeVariant.mobile,
+    _ => ThemeVariant.desktop,
+  };
+
   return (
+    variant: _variant,
     colors: colors,
     brightness: brightness,
     platform: _platform,
@@ -543,5 +565,9 @@ AppTheme generateAppTheme({
         ),
       ],
     ),
+    sizes: switch (_variant) {
+      .mobile => _mobileSizes,
+      .desktop => _desktopSizes,
+    },
   );
 }

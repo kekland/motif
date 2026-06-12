@@ -103,6 +103,34 @@ inline void approximate_cubic_to_quads(const SkPoint cubic[4], float tolerance, 
   }
 }
 
+inline void approximate_circle_to_cubics(const Circle2* circle, SkDCubic* out_cubics) {
+  const double k = 0.55228474983079339840;
+  const double r = circle->radius;
+  const double cx = circle->center.x;
+  const double cy = circle->center.y;
+  const double kr = k * r;
+
+  out_cubics[0][0] = {cx, cy - r};
+  out_cubics[0][1] = {cx + kr, cy - r};
+  out_cubics[0][2] = {cx + r, cy - kr};
+  out_cubics[0][3] = {cx + r, cy};
+
+  out_cubics[1][0] = {cx + r, cy};
+  out_cubics[1][1] = {cx + r, cy + kr};
+  out_cubics[1][2] = {cx + kr, cy + r};
+  out_cubics[1][3] = {cx, cy + r};
+
+  out_cubics[2][0] = {cx, cy + r};
+  out_cubics[2][1] = {cx - kr, cy + r};
+  out_cubics[2][2] = {cx - r, cy + kr};
+  out_cubics[2][3] = {cx - r, cy};
+
+  out_cubics[3][0] = {cx - r, cy};
+  out_cubics[3][1] = {cx - r, cy - kr};
+  out_cubics[3][2] = {cx - kr, cy - r};
+  out_cubics[3][3] = {cx, cy - r};
+}
+
 }  // namespace
 
 int cubic_intersect(const Cubic2* a, const Cubic2* b, Intersection* out_hits) {
@@ -122,6 +150,41 @@ int cubic_intersect(const Cubic2* a, const Cubic2* b, Intersection* out_hits) {
   }
 
   return n;
+}
+
+int cubic_circle_intersect(const Cubic2* a, const Circle2* b, Intersection* out_hits) {
+  SkDCubic cubic;
+  read_d_cubic(cubic, a);
+  
+  SkDCubic circle_cubics[4];
+  approximate_circle_to_cubics(b, circle_cubics);
+
+  int total_hits = 0;
+
+  for (int c = 0; c < 4; c++) {
+    SkIntersections result;
+    result.intersect(cubic, circle_cubics[c]);
+
+    const int n = result.used();
+    for (int i = 0; i < n; i++) {
+      bool duplicate = false;
+      for (int j = 0; j < total_hits; j++) {
+        if (std::abs(out_hits[j].tA - result[0][i]) < 1e-6) {
+          duplicate = true;
+          break;
+        }
+      }
+      if (duplicate) continue;
+
+      const SkDPoint& p = result.pt(i);
+      write_d_point(&out_hits[total_hits].pt, p);
+      out_hits[total_hits].tA = result[0][i];
+      out_hits[total_hits].tB = (c + result[1][i]) / 4.0;
+      total_hits++;
+    }
+  }
+
+  return total_hits;
 }
 
 int cubic_self_intersect(const Cubic2* a, Intersection* out_hit) {

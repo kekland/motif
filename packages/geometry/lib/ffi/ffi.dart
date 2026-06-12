@@ -28,6 +28,16 @@ Pointer<bindings.Cubic2> _cubic2(Cubic2? c, {Arena? arena}) {
   return ptr;
 }
 
+Pointer<bindings.Circle2> _circle2(Circle2? c, {Arena? arena}) {
+  final ptr = (arena ?? malloc)<bindings.Circle2>();
+  if (c != null) {
+    ptr.ref.center.x = c.center.x;
+    ptr.ref.center.y = c.center.y;
+    ptr.ref.radius = c.radius;
+  }
+  return ptr;
+}
+
 Pointer<bindings.Vector2> _vector2(Vector2? v, {Arena? arena}) {
   final ptr = (arena ?? malloc)<bindings.Vector2>();
   if (v != null) {
@@ -90,16 +100,32 @@ Quadratic2 _quadratic2ToDart(bindings.Quadratic2 q) {
   return Quadratic2(_vector2ToDart(q.p0), _vector2ToDart(q.p2), p1: _vector2ToDart(q.p1));
 }
 
+final _intersectionScratch = malloc<bindings.Intersection>(256);
+
 List<Intersection> cubicIntersect(Cubic2 a, Cubic2 b) {
   return using((arena) {
-    final intersection = _intersection(null, arena: arena, count: 16);
     final ca = _cubic2(a, arena: arena);
     final cb = _cubic2(b, arena: arena);
 
-    final count = bindings.cubic_intersect(ca, cb, intersection);
+    final count = bindings.cubic_intersect(ca, cb, _intersectionScratch);
     final result = <Intersection>[];
     for (var i = 0; i < count; i++) {
-      result.add(_intersectionToDart(intersection[i]));
+      result.add(_intersectionToDart(_intersectionScratch[i]));
+    }
+
+    return result;
+  });
+}
+
+List<Intersection> cubicCircleIntersect(Cubic2 a, Circle2 b) {
+  return using((arena) {
+    final ca = _cubic2(a, arena: arena);
+    final cb = _circle2(b, arena: arena);
+
+    final count = bindings.cubic_circle_intersect(ca, cb, _intersectionScratch);
+    final result = <Intersection>[];
+    for (var i = 0; i < count; i++) {
+      result.add(_intersectionToDart(_intersectionScratch[i]));
     }
 
     return result;
@@ -171,5 +197,49 @@ final _cubicToQuadraticScratch2 = malloc<Double>(1000);
     for (var i = 0; i < count - 1; i++) resultT.add(outT[i]);
 
     return (result, resultT);
+  });
+}
+
+CubicSpline2 strokeToSpline(List<StrokePoint> points, double spatialTolerance, double velocityThreshold) {
+  return using((arena) {
+    final inputPoints = arena<bindings.InputPoint>(points.length);
+    for (var i = 0; i < points.length; i++) {
+      inputPoints[i].position.x = points[i].position.x;
+      inputPoints[i].position.y = points[i].position.y;
+      inputPoints[i].pressure = points[i].pressure;
+      inputPoints[i].timestamp_ms = points[i].timestamp.inMilliseconds.toDouble();
+    }
+
+    final cleanPointCount = bindings.cull_noisy_points(inputPoints, points.length, spatialTolerance);
+    final result = bindings.stroke_to_spline(inputPoints, cleanPointCount, spatialTolerance, velocityThreshold);
+    arena.using(result.cubics, (_) => malloc.free(result.cubics));
+
+    final cubics = List.generate(result.count, (i) => _cubic2ToDart(result.cubics[i]), growable: false);
+    return CubicSpline2.cubics(cubics);
+  });
+}
+
+List<StrokePoint> cullNoisyPoints(List<StrokePoint> points, double spatialTolerance) {
+  return using((arena) {
+    final inputPoints = arena<bindings.InputPoint>(points.length);
+    for (var i = 0; i < points.length; i++) {
+      inputPoints[i].position.x = points[i].position.x;
+      inputPoints[i].position.y = points[i].position.y;
+      inputPoints[i].pressure = points[i].pressure;
+      inputPoints[i].timestamp_ms = points[i].timestamp.inMilliseconds.toDouble();
+    }
+
+    final cleanPointCount = bindings.cull_noisy_points(inputPoints, points.length, spatialTolerance);
+
+    final result = List<StrokePoint>.generate(cleanPointCount, (i) {
+      final p = inputPoints[i];
+      return StrokePoint(
+        position: Vector2(p.position.x, p.position.y),
+        pressure: p.pressure,
+        timestamp: Duration(milliseconds: p.timestamp_ms.toInt()),
+      );
+    }, growable: false);
+
+    return result;
   });
 }

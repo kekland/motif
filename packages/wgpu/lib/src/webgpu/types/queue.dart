@@ -12,7 +12,10 @@ mixin _QueueImpl on _QueueBase {
     using((allocator) {
       final dataPtr = allocator.allocate<ffi.Uint8>(data.lengthInBytes);
       final dataList = data.buffer.asUint8List();
-      dataPtr.asTypedList(data.lengthInBytes).setAll(0, dataList);
+      dataPtr
+          .asTypedList(data.lengthInBytes)
+          .setAll(0, dataList.getRange(data.offsetInBytes, data.offsetInBytes + data.lengthInBytes));
+
       _writeBufferImpl(buffer, bufferOffset, dataPtr.cast(), data.lengthInBytes);
     });
   }

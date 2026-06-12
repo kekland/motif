@@ -12,11 +12,19 @@ const _uuid = UuidV4();
 ///
 /// The cells are also doubly-linked in order to allow for an efficient traversal of the graph in the depth order.
 sealed class Cell {
-  Cell({String? id}) : id = id ?? _uuid.generate();
+  Cell({String? id, VectorComplex? complex})
+    : id = id ?? _uuid.generate(),
+      _complex = complex != null ? .new(complex) : null;
 
   /// Unique identifier of a cell.
   final String id;
   Cell? _prev, _next;
+
+  /// The complex that this cell belongs to.
+  final WeakReference<VectorComplex>? _complex;
+  VectorComplex? get complex => _complex?.target;
+
+  Stream<void> get updateStream => _complex!.target!.streamFor(this);
 
   /// Set of cells whose direct boundary contains this cell.
   UnmodifiableSetView<Cell> get directStar => UnmodifiableSetView(_directStar);

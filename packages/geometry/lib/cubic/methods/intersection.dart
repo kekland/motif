@@ -8,6 +8,10 @@ Intersection? _cubicSelfIntersect(Cubic2 c) {
   return _ffiCubicSelfIntersect(c);
 }
 
+List<Intersection> _cubicCircleIntersect(Cubic2 c, Circle2 circle) {
+  return _ffiCubicCircleIntersect(c, circle);
+}
+
 List<Intersection> _splineIntersect(CubicSpline2 a, CubicSpline2 b) {
   return _cubicListIntersect(
     a.segments.toList(),
@@ -17,6 +21,22 @@ List<Intersection> _splineIntersect(CubicSpline2 a, CubicSpline2 b) {
 
 List<Intersection> _splineCubicIntersect(CubicSpline2 a, Cubic2 b) {
   return _cubicListIntersect(a.segments.toList(), [b]);
+}
+
+List<Intersection> _splineCircleIntersect(CubicSpline2 a, Circle2 circle) {
+  final segments = a.segments.toList();
+  final n = a.segmentCount;
+  final out = <Intersection>[];
+
+  for (var i = 0; i < n; i++) {
+    final inters = _cubicCircleIntersect(segments[i], circle);
+    for (final inter in inters) {
+      final ta = (i + inter.tA) / n;
+      out.add(Intersection(inter.point, ta, 0.0));
+    }
+  }
+
+  return _splineIntersectDedupe(out);
 }
 
 List<Intersection> _splineSelfIntersect(CubicSpline2 a) {

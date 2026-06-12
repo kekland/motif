@@ -3,7 +3,6 @@ import 'package:vector_math/vector_math_64.dart';
 
 part 'properties/fill_section.dart';
 part 'properties/shape_section.dart';
-part 'properties/widgets.dart';
 
 final xd = GlobalKey();
 

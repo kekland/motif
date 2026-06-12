@@ -19,6 +19,7 @@ void main(List<String> args) async {
     final code = input.config.code;
     final os = code.targetOS;
     final arch = code.targetArchitecture;
+    print('Building Skia for $os-$arch with packages: ${packages.keys.join(', ')}');
 
     final platformDir = switch ((os, arch)) {
       (.macOS, _) => 'macos-${arch.name}',
@@ -34,7 +35,9 @@ void main(List<String> args) async {
     final icuData = root.resolve('build/share/icudtl.dat');
 
     if (!Directory.fromUri(libDir).existsSync()) {
-      throw Exception('Library directory not found: $libDir. Is it built?');
+      // throw Exception('Library directory not found: $libDir. Is it built?');
+      print('Library directory not found: $libDir. Is it built? Skipping build.');
+      return;
     }
 
     final skiaLibs = <String>[
@@ -72,6 +75,11 @@ void main(List<String> args) async {
       if (!Directory.fromUri(srcDir).existsSync()) {
         print('Source directory not found for package ${package.key}: $srcDir. Skipping.');
         continue;
+      }
+
+      final thirdParties = package.value.resolve('third_party/');
+      for (final entry in Directory.fromUri(thirdParties).listSync().whereType<Directory>()) {
+        packageIncludes.add(entry.uri);
       }
 
       packageIncludes.add(srcDir);

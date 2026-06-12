@@ -15,6 +15,9 @@ class MoveVertexActivity extends MoveDragActivity with ExclusiveCursorDragActivi
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
+
+    controller.selection.select(vertex);
+
     startPosition = vertex.position;
 
     connectedEdges = vertex.directStar.whereType<OpenEdge>().toList();

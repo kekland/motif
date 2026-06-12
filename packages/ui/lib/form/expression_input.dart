@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:ui/ui.dart';
 
 final _logger = Logger('ExpressionInputField');
@@ -10,6 +11,7 @@ class ExpressionInputField<T> extends HookWidget {
     required this.evaluateExpression,
     this.value,
     this.onChanged,
+    this.supportedDevices,
     this.options = const .new(),
   });
 
@@ -18,6 +20,7 @@ class ExpressionInputField<T> extends HookWidget {
   final String Function(T?) valueToString;
   final T Function(String) evaluateExpression;
   final TextFieldOptions options;
+  final Set<PointerDeviceKind>? supportedDevices;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,7 @@ class ExpressionInputField<T> extends HookWidget {
       focusNode: focusNode,
       onChanged: (_) => didChange.value = true,
       onEditingComplete: onEditingComplete,
+      supportedDevices: supportedDevices,
       options: options,
     );
   }
@@ -67,12 +71,14 @@ class DoubleExpressionInputField extends StatelessWidget {
     this.value,
     this.onChanged,
     this.fractionDigits = 3,
+    this.supportedDevices,
     this.options = const .new(),
   });
 
   final double? value;
   final ValueChanged<double>? onChanged;
   final int fractionDigits;
+  final Set<PointerDeviceKind>? supportedDevices;
   final TextFieldOptions options;
 
   String _valueToString(double? value) {
@@ -91,6 +97,7 @@ class DoubleExpressionInputField extends StatelessWidget {
       value: value,
       onChanged: onChanged,
       valueToString: _valueToString,
+      supportedDevices: supportedDevices,
       evaluateExpression: (s) => evaluateExpression<num>(s).toDouble(),
       options: options,
     );

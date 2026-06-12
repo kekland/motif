@@ -14,6 +14,13 @@ external int cubic_intersect(
   ffi.Pointer<Intersection> out_hits,
 );
 
+@ffi.Native<ffi.Int Function(ffi.Pointer<Cubic2>, ffi.Pointer<Circle2>, ffi.Pointer<Intersection>)>()
+external int cubic_circle_intersect(
+  ffi.Pointer<Cubic2> a,
+  ffi.Pointer<Circle2> b,
+  ffi.Pointer<Intersection> out_hits,
+);
+
 @ffi.Native<ffi.Int Function(ffi.Pointer<Cubic2>, ffi.Pointer<Intersection>)>()
 external int cubic_self_intersect(
   ffi.Pointer<Cubic2> a,
@@ -54,6 +61,21 @@ external int cubic_to_quads(
   ffi.Pointer<Quadratic2> out_quads,
   ffi.Pointer<ffi.Double> out_t,
   bool chop_at_inflections,
+);
+
+@ffi.Native<ffi.Size Function(ffi.Pointer<InputPoint>, ffi.Size, ffi.Double)>()
+external int cull_noisy_points(
+  ffi.Pointer<InputPoint> points,
+  int count,
+  double spatial_tolerance,
+);
+
+@ffi.Native<CubicSpline2 Function(ffi.Pointer<InputPoint>, ffi.Size, ffi.Double, ffi.Double)>()
+external CubicSpline2 stroke_to_spline(
+  ffi.Pointer<InputPoint> points,
+  int count,
+  double spatial_tolerance,
+  double velocity_threshold,
 );
 
 final class __mbstate_t extends ffi.Union {
@@ -170,6 +192,20 @@ final class Cubic2 extends ffi.Struct {
   external Vector2 p3;
 }
 
+final class Polyline2 extends ffi.Struct {
+  external ffi.Pointer<Vector2> points;
+
+  @ffi.Size()
+  external int count;
+}
+
+final class Circle2 extends ffi.Struct {
+  external Vector2 center;
+
+  @ffi.Double()
+  external double radius;
+}
+
 final class Quadratic2 extends ffi.Struct {
   external Vector2 p0;
 
@@ -186,4 +222,36 @@ final class Intersection extends ffi.Struct {
 
   @ffi.Double()
   external double tB;
+}
+
+final class InputPoint extends ffi.Struct {
+  external Vector2 position;
+
+  @ffi.Double()
+  external double timestamp_ms;
+
+  @ffi.Double()
+  external double pressure;
+}
+
+final class CubicSpline2 extends ffi.Struct {
+  external ffi.Pointer<Cubic2> cubics;
+
+  @ffi.Size()
+  external int count;
+}
+
+final class WeightSample extends ffi.Struct {
+  @ffi.Double()
+  external double arc_length;
+
+  @ffi.Double()
+  external double weight;
+}
+
+final class SplineWeightProfile extends ffi.Struct {
+  external ffi.Pointer<WeightSample> samples;
+
+  @ffi.Size()
+  external int count;
 }

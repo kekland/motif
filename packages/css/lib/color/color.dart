@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:petitparser/petitparser.dart';
 
 part 'models/srgb.dart';
@@ -67,10 +66,7 @@ enum ColorComponent {
 /// In accordance with CSS Color 4, any values can be missing or powerless. Those are represented by NaN values. Alpha
 /// is always 1.0 by default.
 sealed class ColorData {
-  const ColorData({double v1 = .nan, double v2 = .nan, double v3 = .nan, this.alpha = 1.0})
-    : _v1 = v1,
-      _v2 = v2,
-      _v3 = v3;
+  const ColorData({this._v1 = .nan, this._v2 = .nan, this._v3 = .nan, this.alpha = 1.0});
 
   /// Parses a color from a CSS-like color string.
   factory ColorData.parse(String str) => _colorParser.parse(str).value;
@@ -123,7 +119,6 @@ sealed class ColorData {
   final double _v3;
   final double alpha;
 
-  @visibleForTesting
   (double, double, double, double) get storage => (_v1, _v2, _v3, alpha);
 
   /// The color model of this color.

@@ -1,13 +1,12 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 
+import 'package:color/color.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:uuid/v4.dart';
 import 'package:geometry/geometry.dart';
-
-import 'package:vgc/renderer/render.dart';
-
 
 // Topology
 part 'topology/cell.dart';
@@ -17,9 +16,6 @@ part 'topology/half_edge.dart';
 part 'topology/cycle.dart';
 part 'topology/face.dart';
 
-// Decoration
-part 'decoration/stroke_weight.dart';
-
 // Geometry utils on topological units
 part 'geometry/cycle.dart';
 part 'geometry/edge.dart';
@@ -27,7 +23,7 @@ part 'geometry/half_edge.dart';
 part 'geometry/vertex.dart';
 
 // Methods on the complex
-part 'methods/commit_spiline.dart';
+part 'methods/commit_spline.dart';
 part 'methods/creation.dart';
 part 'methods/deletion.dart';
 part 'methods/face_decomposition.dart';
@@ -36,7 +32,6 @@ part 'methods/cut/cut_edge.dart';
 
 // Other utilities
 part 'utils/path.dart';
-part 'utils/vertex_at_hit_test.dart';
 
 class VectorComplex extends ChangeNotifier {
   Cell? _bottom, _top;
@@ -149,8 +144,22 @@ class VectorComplex extends ChangeNotifier {
     _cells.remove(c);
   }
 
+  final _streamController = StreamController<String>.broadcast();
+  Stream<void> streamFor(Cell c) => _streamController.stream.where((id) => id == c.id);
+
+  void notifyFor(Cell c) {
+    _streamController.add(c.id);
+    notifyListeners();
+  }
+
   void _internalNotify() {
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
   }
 
   // Vertex splitEdge(Edge edge, double t) {

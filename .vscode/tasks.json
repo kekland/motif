@@ -13,5 +13,11 @@
       "command": "./packages/ui/tool/generate_theme.dart",
       "problemMatcher": [],
     },
+    {
+      "label": "packages/vgc_renderer/generate_shaders",
+      "type": "shell",
+      "command": "./packages/vgc_renderer/tool/generate_shaders.py",
+      "problemMatcher": [],
+    }
   ],
 }

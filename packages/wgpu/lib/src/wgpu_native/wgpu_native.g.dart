@@ -298,7 +298,7 @@ extension type const _SType._(int value) {
   };
 }
 
-extension type const NativeFeature._(int value) {
+extension type const NativeFeature._(int value) implements FeatureName {
   static const immediates = NativeFeature._(196609);
   static const textureAdapterSpecificFormatFeatures = NativeFeature._(196610);
   static const multiDrawIndirectCount = NativeFeature._(196612);
@@ -952,6 +952,8 @@ extension type const InstanceFlag(int value) {
   static const debugging = InstanceFlag(33554432);
   static const advancedDebugging = InstanceFlag(67108864);
   static const withEnv = InstanceFlag(134217728);
+
+  static const all = InstanceFlag(0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 16777216 | 33554432 | 67108864 | 134217728);
 
   static InstanceFlag of(List<InstanceFlag> flags) => InstanceFlag(flags.fold(0, (v, f) => v | f.value));
 

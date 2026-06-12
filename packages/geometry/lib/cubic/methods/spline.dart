@@ -34,6 +34,18 @@ Cubic2 _splineSegment(CubicSpline2 spline, int i) {
   return (_splineSegment(spline, i), clamped - i);
 }
 
+(CubicKnot2, CubicKnot2) _splineKnotsAtParameter(CubicSpline2 spline, double t) {
+  if (spline.isEmpty) throw StateError('Cannot get knots of an empty spline');
+  if (spline.length == 1) return (spline.knots.first, spline.knots.first);
+
+  final n = spline.segmentCount;
+  final clamped = t.clamp(0.0, 1.0) * n;
+  if (clamped >= n) return (spline.knots[n], spline.knots[n]);
+
+  final i = clamped.floor();
+  return (spline.knots[i], spline.knots[i + 1]);
+}
+
 Iterable<Cubic2> _splineSegments(CubicSpline2 spline) sync* {
   for (var i = 0; i < spline.segmentCount; i++) yield _splineSegment(spline, i);
 }

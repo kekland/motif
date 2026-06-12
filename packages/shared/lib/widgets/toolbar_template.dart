@@ -7,22 +7,28 @@ class ToolbarTemplate extends StatelessWidget {
     required this.tools,
     this.activeTool,
     this.onToolSelected,
+    this.direction = .horizontal,
   });
 
   final List<Tool> tools;
   final Tool? activeTool;
   final ValueChanged<Tool?>? onToolSelected;
+  final Axis direction;
 
   @override
   Widget build(BuildContext context) {
+    final divider = direction == .vertical ? Divider(height: 0.0) : VerticalDivider(width: 0.0);
+
     return ListView.builder(
-      scrollDirection: Axis.horizontal,
+      padding: .zero,
+      scrollDirection: direction,
       itemCount: tools.length,
       itemBuilder: (context, index) {
         final tool = tools[index];
 
-        return Row(
+        return Flex(
           key: ValueKey(tool.key),
+          direction: direction,
           mainAxisSize: MainAxisSize.min,
           children: [
             ToolbarButton(
@@ -31,7 +37,7 @@ class ToolbarTemplate extends StatelessWidget {
               isActive: tool == activeTool,
               onTap: onToolSelected != null ? () => onToolSelected!(tool) : null,
             ),
-            VerticalDivider(width: 1.0),
+            divider,
           ],
         );
       },

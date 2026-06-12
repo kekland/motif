@@ -1,7 +1,7 @@
 import 'package:design/imports.dart';
 import 'package:design/tools/cursor/hover_overlay.dart';
 import 'package:design/tools/cursor/selection_overlay.dart';
-import 'package:design/tools/marquee/marquee_overlay.dart';
+import 'package:shared/widgets/marquee_overlay.dart';
 
 import 'utils.dart';
 
@@ -46,7 +46,7 @@ class _CursorToolOverlay extends HookWidget {
         onStart: () => shouldUpdateSelectionOnUp.value = false,
         activityFactory: () => SelectNodesActivity(
           root: controller.renderRootNode,
-        localRenderObject: context.findRenderObject()!,
+          localRenderObject: context.findRenderObject()!,
           onMarqueeRectChanged: marqueeRectSignal.$set,
           onSelectedNodesChanged: controller.selection.setMultiple,
         ),

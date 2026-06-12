@@ -1,12 +1,15 @@
 part of '../vector_complex.dart';
 
-
 /// A face is a topological unit that represents a region bounded by cycles with holes (i.e. a face can have multiple
 /// cycles, one of which is the outer boundary and the others are holes, determined by the orientation of the cycles).
 ///
 /// Geometrically, a face is a region in the plane bounded by the curves of the cycles.
 final class Face extends Cell {
-  Face(this._cycles, {super.id}) {
+  Face(
+    this._cycles, {
+    super.id,
+    super.complex,
+  }) {
     for (final c in directBoundary) c._directStar.add(this);
   }
 
