@@ -1,6 +1,3 @@
-import 'dart:math' as math;
-
-import 'package:flutter/gestures.dart';
 import 'package:genie/genie.dart';
 import 'package:ui/ui.dart';
 import 'package:stack_window_manager/stack_window_manager.dart' as window_manager;

@@ -47,7 +47,7 @@ class RenderHandles extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, HandlesParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, HandlesParentData> {
-  RenderHandles({required Matrix4 childPaintTransform}) : _childPaintTransform = childPaintTransform;
+  RenderHandles({required this._childPaintTransform});
 
   late Matrix4 _childPaintTransform;
   Matrix4 get childPaintTransform => _childPaintTransform;

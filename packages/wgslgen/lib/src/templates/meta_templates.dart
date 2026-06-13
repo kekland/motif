@@ -3,14 +3,14 @@ part of '../generator.dart';
 const _preferInline = '@pragma(\'vm:prefer-inline\')';
 
 String _labelStr(String label) => '\'$label\'';
-String _labelsStr(List<String> labels) => labels.isEmpty ? '\'\'' : '\'${labels.join(', ')}\'';
+// String _labelsStr(List<String> labels) => labels.isEmpty ? '\'\'' : '\'${labels.join(', ')}\'';
 String _labelsArr(List<String> labels) => '[${labels.map((l) => '\'$l\'').join(', ')}]';
 
 String _wgpuLabel(String label) => '\'($_module) $label\'';
 
 const _metaOverrides = '@meta.Overrides()';
 
-String _metaStructView(List<String> labels) => '@meta.StructView(${_labelsStr(labels)})';
+// String _metaStructView(List<String> labels) => '@meta.StructView(${_labelsStr(labels)})';
 
 String _metaUniformBufferView(List<String> labels) => '@meta.UniformBufferView(${_labelsArr(labels)})';
 String _metaUniformBuffer(List<String> labels) => '@meta.UniformBuffer(${_labelsArr(labels)})';

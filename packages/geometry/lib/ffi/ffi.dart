@@ -69,6 +69,7 @@ Pointer<bindings.Aabb2> _aabb2(Aabb2? a, {Arena? arena}) {
   return ptr;
 }
 
+// ignore: unused_element
 Pointer<bindings.Quadratic2> _quadratic2(Quadratic2? q, {Arena? arena, int? count}) {
   final ptr = (arena ?? malloc)<bindings.Quadratic2>(count ?? 1);
   if (q != null) {

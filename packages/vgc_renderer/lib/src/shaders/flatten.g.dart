@@ -38,8 +38,8 @@ typedef Cubic2Array3Internal = ((wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wg
 typedef F32Array3 = (double, double, double);
 typedef F32Array3Internal = (wgsl.F32, wgsl.F32, wgsl.F32);
 
-typedef EdgeDataArray = List<(int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color)>;
-typedef EdgeDataArrayInternal = List<(wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color)>;
+typedef EdgeDataArray = List<(int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color, int brushIdx)>;
+typedef EdgeDataArrayInternal = List<(wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color, wgsl.U32 brushIdx)>;
 
 typedef CubicDataArray = List<(Cubic2 cubic, int edgeIdx, int edgeSegmentIdx, int edgeSegmentCount, double edgeStartArcLength, double opacity)>;
 typedef CubicDataArrayInternal = List<(Cubic2Internal cubic, wgsl.U32 edgeIdx, wgsl.U32 edgeSegmentIdx, wgsl.U32 edgeSegmentCount, wgsl.F32 edgeStartArcLength, wgsl.F32 opacity)>;
@@ -47,8 +47,8 @@ typedef CubicDataArrayInternal = List<(Cubic2Internal cubic, wgsl.U32 edgeIdx, w
 typedef Vec3fArray = List<wgsl.Vec3f>;
 typedef Vec3fArrayInternal = List<wgsl.Vec3f>;
 
-typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, int kind)>;
-typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.U32 kind)>;
+typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind)>;
+typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind)>;
 
 typedef Cubic2 = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
 typedef Cubic2Internal = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
@@ -442,8 +442,8 @@ extension VertexDataStruct on VertexData {
 
 }
 
-typedef EdgeData = (int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color);
-typedef EdgeDataInternal = (wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color);
+typedef EdgeData = (int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color, int brushIdx);
+typedef EdgeDataInternal = (wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color, wgsl.U32 brushIdx);
 
 extension EdgeDataExt on EdgeData {
   int get startVertexIdx => this.$1;
@@ -453,6 +453,7 @@ extension EdgeDataExt on EdgeData {
   double get width => this.$5;
   double get arcLength => this.$6;
   wgsl.Vec4f get color => this.$7;
+  int get brushIdx => this.$8;
 
   @pragma('vm:prefer-inline')
   EdgeDataInternal get asInternal => (
@@ -463,6 +464,7 @@ extension EdgeDataExt on EdgeData {
     .new(width),
     .new(arcLength),
     color,
+    .new(brushIdx),
   );
 }
 
@@ -474,6 +476,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
   wgsl.F32 get width => this.$5;
   wgsl.F32 get arcLength => this.$6;
   wgsl.Vec4f get color => this.$7;
+  wgsl.U32 get brushIdx => this.$8;
 
   @pragma('vm:prefer-inline')
   EdgeData get asDart => (
@@ -484,6 +487,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
     this.$5,
     this.$6,
     this.$7,
+    this.$8,
   );
 
   @pragma('vm:prefer-inline')
@@ -495,6 +499,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
     wgsl.F32(this.$5).write(data, offset + 24);
     wgsl.F32(this.$6).write(data, offset + 28);
     this.$7.write(data, offset + 32);
+    wgsl.U32(this.$8).write(data, offset + 48);
   }
 }
 
@@ -508,6 +513,7 @@ extension EdgeDataStruct on EdgeData {
     wgsl.F32.read(data, offset + 24),
     wgsl.F32.read(data, offset + 28),
     wgsl.Vec4f.read(data, offset + 32),
+    wgsl.U32.read(data, offset + 48),
   );
 
 }
@@ -576,8 +582,54 @@ extension CubicDataStruct on CubicData {
 
 }
 
-typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, int kind);
-typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.U32 kind);
+typedef BrushData = (double length, double spacing, int textureIdx);
+typedef BrushDataInternal = (wgsl.F32 length, wgsl.F32 spacing, wgsl.U32 textureIdx);
+
+extension BrushDataExt on BrushData {
+  double get length => this.$1;
+  double get spacing => this.$2;
+  int get textureIdx => this.$3;
+
+  @pragma('vm:prefer-inline')
+  BrushDataInternal get asInternal => (
+    .new(length),
+    .new(spacing),
+    .new(textureIdx),
+  );
+}
+
+extension BrushDataInternalExt on BrushDataInternal {
+  wgsl.F32 get length => this.$1;
+  wgsl.F32 get spacing => this.$2;
+  wgsl.U32 get textureIdx => this.$3;
+
+  @pragma('vm:prefer-inline')
+  BrushData get asDart => (
+    this.$1,
+    this.$2,
+    this.$3,
+  );
+
+  @pragma('vm:prefer-inline')
+  void write(ByteData data, int offset) {
+    wgsl.F32(this.$1).write(data, offset + 0);
+    wgsl.F32(this.$2).write(data, offset + 4);
+    wgsl.U32(this.$3).write(data, offset + 8);
+  }
+}
+
+extension BrushDataStruct on BrushData {
+  @pragma('vm:prefer-inline')
+  static BrushDataInternal read(ByteData data, int offset) => (
+    wgsl.F32.read(data, offset + 0),
+    wgsl.F32.read(data, offset + 4),
+    wgsl.U32.read(data, offset + 8),
+  );
+
+}
+
+typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind);
+typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind);
 
 extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v0 => this.$1;
@@ -586,7 +638,9 @@ extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v3 => this.$4;
   wgsl.Vec4f get color => this.$5;
   int get zIndex => this.$6;
-  int get kind => this.$7;
+  wgsl.Vec2f get arcDistance => this.$7;
+  int get brushIdx => this.$8;
+  int get kind => this.$9;
 
   @pragma('vm:prefer-inline')
   RenderGeometryInternal get asInternal => (
@@ -596,6 +650,8 @@ extension RenderGeometryExt on RenderGeometry {
     v3,
     color,
     .new(zIndex),
+    arcDistance,
+    .new(brushIdx),
     .new(kind),
   );
 }
@@ -607,7 +663,9 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
   wgsl.Vec2f get v3 => this.$4;
   wgsl.Vec4f get color => this.$5;
   wgsl.U32 get zIndex => this.$6;
-  wgsl.U32 get kind => this.$7;
+  wgsl.Vec2f get arcDistance => this.$7;
+  wgsl.U32 get brushIdx => this.$8;
+  wgsl.U32 get kind => this.$9;
 
   @pragma('vm:prefer-inline')
   RenderGeometry get asDart => (
@@ -618,6 +676,8 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$5,
     this.$6,
     this.$7,
+    this.$8,
+    this.$9,
   );
 
   @pragma('vm:prefer-inline')
@@ -628,7 +688,9 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$4.write(data, offset + 24);
     this.$5.write(data, offset + 32);
     wgsl.U32(this.$6).write(data, offset + 48);
-    wgsl.U32(this.$7).write(data, offset + 52);
+    this.$7.write(data, offset + 56);
+    wgsl.U32(this.$8).write(data, offset + 64);
+    wgsl.U32(this.$9).write(data, offset + 68);
   }
 }
 
@@ -641,7 +703,9 @@ extension RenderGeometryStruct on RenderGeometry {
     wgsl.Vec2f.read(data, offset + 24),
     wgsl.Vec4f.read(data, offset + 32),
     wgsl.U32.read(data, offset + 48),
-    wgsl.U32.read(data, offset + 52),
+    wgsl.Vec2f.read(data, offset + 56),
+    wgsl.U32.read(data, offset + 64),
+    wgsl.U32.read(data, offset + 68),
   );
 
 }
@@ -922,7 +986,7 @@ extension type EdgeDataArrayStorageBufferView(ByteData data) {
   }
   void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
 
-  static const int strideInBytes = 48;
+  static const int strideInBytes = 64;
   int get sizeInBytes => data.lengthInBytes;
   int get length => sizeInBytes ~/ strideInBytes;
 
@@ -956,14 +1020,14 @@ extension type EdgeDataArrayStorageBufferView(ByteData data) {
   @pragma('vm:prefer-inline')
   void write(EdgeDataArray value) {
     for (var i = 0; i < value.length; i++) {
-      value[i].asInternal.write(data, 0 + i * 48);
+      value[i].asInternal.write(data, 0 + i * 64);
     }
   }
 
   @pragma('vm:prefer-inline')
   EdgeDataArray read() {
     return List.generate(length, (i) {
-      return EdgeDataStruct.read(data, 0 + i * 48);
+      return EdgeDataStruct.read(data, 0 + i * 64);
     });
   }
 
@@ -978,7 +1042,7 @@ extension type EdgeDataArrayStorageBufferView(ByteData data) {
   }
 
   @pragma('vm:prefer-inline')
-  void set(int index, {int startVertexIdx = 0, int endVertexIdx = 0, wgsl.Vec2u cubicsSpan = .zero, wgsl.Vec2u weightSpan = .zero, double width = 0, double arcLength = 0, wgsl.Vec4f color = .zero}) {
+  void set(int index, {int startVertexIdx = 0, int endVertexIdx = 0, wgsl.Vec2u cubicsSpan = .zero, wgsl.Vec2u weightSpan = .zero, double width = 0, double arcLength = 0, wgsl.Vec4f color = .zero, int brushIdx = 0}) {
     wgsl.U32(startVertexIdx).write(data, index * strideInBytes + 0);
     wgsl.U32(endVertexIdx).write(data, index * strideInBytes + 4);
     cubicsSpan.write(data, index * strideInBytes + 8);
@@ -986,6 +1050,7 @@ extension type EdgeDataArrayStorageBufferView(ByteData data) {
     wgsl.F32(width).write(data, index * strideInBytes + 24);
     wgsl.F32(arcLength).write(data, index * strideInBytes + 28);
     color.write(data, index * strideInBytes + 32);
+    wgsl.U32(brushIdx).write(data, index * strideInBytes + 48);
   }
 }
 
@@ -996,7 +1061,7 @@ class EdgeDataArrayStorageBuffer extends wgsl.ArrayStorageBuffer<EdgeDataInterna
     super(length, EdgeDataArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
 
 
-  static const int strideInBytes = 48;
+  static const int strideInBytes = 64;
   int get sizeInBytes => _view.sizeInBytes;
 
   final EdgeDataArrayStorageBufferView _view;
@@ -1024,7 +1089,7 @@ class EdgeDataArrayStorageBuffer extends wgsl.ArrayStorageBuffer<EdgeDataInterna
   void operator []=(int index, EdgeData value) => _view[index] = value;
 
   @pragma('vm:prefer-inline')
-  void set(int index, {int startVertexIdx = 0, int endVertexIdx = 0, wgsl.Vec2u cubicsSpan = .zero, wgsl.Vec2u weightSpan = .zero, double width = 0, double arcLength = 0, wgsl.Vec4f color = .zero}) => _view.set(index, startVertexIdx: startVertexIdx, endVertexIdx: endVertexIdx, cubicsSpan: cubicsSpan, weightSpan: weightSpan, width: width, arcLength: arcLength, color: color);
+  void set(int index, {int startVertexIdx = 0, int endVertexIdx = 0, wgsl.Vec2u cubicsSpan = .zero, wgsl.Vec2u weightSpan = .zero, double width = 0, double arcLength = 0, wgsl.Vec4f color = .zero, int brushIdx = 0}) => _view.set(index, startVertexIdx: startVertexIdx, endVertexIdx: endVertexIdx, cubicsSpan: cubicsSpan, weightSpan: weightSpan, width: width, arcLength: arcLength, color: color, brushIdx: brushIdx);
 }
 
 @meta.StorageBufferView(['in_cubic_data'])
@@ -1404,7 +1469,7 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
   void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
 
-  static const int strideInBytes = 64;
+  static const int strideInBytes = 80;
   int get sizeInBytes => data.lengthInBytes;
   int get length => sizeInBytes ~/ strideInBytes;
 
@@ -1438,14 +1503,14 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   @pragma('vm:prefer-inline')
   void write(RenderGeometryArray value) {
     for (var i = 0; i < value.length; i++) {
-      value[i].asInternal.write(data, 0 + i * 64);
+      value[i].asInternal.write(data, 0 + i * 80);
     }
   }
 
   @pragma('vm:prefer-inline')
   RenderGeometryArray read() {
     return List.generate(length, (i) {
-      return RenderGeometryStruct.read(data, 0 + i * 64);
+      return RenderGeometryStruct.read(data, 0 + i * 80);
     });
   }
 
@@ -1460,14 +1525,16 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, int kind = 0}) {
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) {
     v0.write(data, index * strideInBytes + 0);
     v1.write(data, index * strideInBytes + 8);
     v2.write(data, index * strideInBytes + 16);
     v3.write(data, index * strideInBytes + 24);
     color.write(data, index * strideInBytes + 32);
     wgsl.U32(zIndex).write(data, index * strideInBytes + 48);
-    wgsl.U32(kind).write(data, index * strideInBytes + 52);
+    arcDistance.write(data, index * strideInBytes + 56);
+    wgsl.U32(brushIdx).write(data, index * strideInBytes + 64);
+    wgsl.U32(kind).write(data, index * strideInBytes + 68);
   }
 }
 
@@ -1478,7 +1545,7 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
     super(length, RenderGeometryArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
 
 
-  static const int strideInBytes = 64;
+  static const int strideInBytes = 80;
   int get sizeInBytes => _view.sizeInBytes;
 
   final RenderGeometryArrayStorageBufferView _view;
@@ -1506,7 +1573,7 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
   void operator []=(int index, RenderGeometry value) => _view[index] = value;
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, kind: kind);
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, arcDistance: arcDistance, brushIdx: brushIdx, kind: kind);
 }
 
 @meta.BindGroupLayoutDescriptor(0)
@@ -1527,7 +1594,7 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
       visibility: .compute,
       buffer: .new(
         type: .readOnlyStorage,
-        minBindingSize: 48,
+        minBindingSize: 64,
         hasDynamicOffset: false,
       ),
     ),
@@ -1563,7 +1630,7 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
       visibility: .compute,
       buffer: .new(
         type: .storage,
-        minBindingSize: 64,
+        minBindingSize: 80,
         hasDynamicOffset: false,
       ),
     ),
@@ -2240,6 +2307,7 @@ struct EdgeData {
   width: f32,
   arc_length: f32,
   color: vec4f,
+  brush_idx: u32,
 }
 
 struct CubicData {
@@ -2249,6 +2317,12 @@ struct CubicData {
   edge_segment_count: u32,
   edge_start_arc_length: f32,
   opacity: f32,
+}
+
+struct BrushData {
+  length: f32,
+  spacing: f32,
+  texture_idx: u32,
 }
 // end import "structs.wgsl"
 
@@ -2269,11 +2343,13 @@ struct RenderGeometry {
   v3: vec2f,
   color: vec4f,
   z_index: u32,
+  arc_distance: vec2f,
+  brush_idx: u32,
   kind: u32,
 }
 
-fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
-  return RenderGeometry(v0, v1, v2, v3, color, z_index, RENDER_GEOMETRY_KIND_QUAD);
+fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32, arc_distance: vec2f, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, color, z_index, arc_distance, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
 }
 
 // fn render_geometry_create_ellipse(c: vec2f, r: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
@@ -2310,8 +2386,9 @@ var<private> edge_width: f32;
 var<private> edge_idx: u32;
 var<private> edge_z_index: u32;
 var<private> color: vec4f;
+var<private> brush_idx: u32;
 
-fn _emit_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
+fn _emit_quad(arc_distance: vec2f, v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let idx = atomicAdd(&out_draw_args.instance_count, 1u);
   if (idx >= arrayLength(&out_render_geometry)) { return; }
 
@@ -2320,76 +2397,76 @@ fn _emit_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let _v2 = vec2_transform(v2, u.transform);
   let _v3 = vec2_transform(v3, u.transform);
 
-  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, color, edge_z_index);
+  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, color, edge_z_index, arc_distance, brush_idx);
 }
 
-fn _temp_emit_join(pos: vec2f, r: f32) {
-  let pivot_pos = pos;
-  let scale = length(u.transform[0].xy);
-  let screen_r = r * scale;
-  let steps = max(16u, u32(ceil(screen_r * 0.25)));
-  let da = TWO_PI / f32(steps);
+// fn _temp_emit_join(pos: vec2f, r: f32) {
+//   let pivot_pos = pos;
+//   let scale = length(u.transform[0].xy);
+//   let screen_r = r * scale;
+//   let steps = max(16u, u32(ceil(screen_r * 0.25)));
+//   let da = TWO_PI / f32(steps);
 
-  var prev_outer = pos + vec2f(r, 0.0);
-  for (var i = 1u; i <= steps; i++) {
-    let angle = f32(i) * da;
-    let outer = pos + vec2f(cos(angle), sin(angle)) * r;
+//   var prev_outer = pos + vec2f(r, 0.0);
+//   for (var i = 1u; i <= steps; i++) {
+//     let angle = f32(i) * da;
+//     let outer = pos + vec2f(cos(angle), sin(angle)) * r;
 
-    _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
-    prev_outer = outer;
-  }
-}
+//     _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
+//     prev_outer = outer;
+//   }
+// }
 
-fn _emit_join(pos: vec2f, r: f32) {
-  // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
-  // if (idx >= arrayLength(&out_render_geometry)) { return; }
+// fn _emit_join(pos: vec2f, r: f32) {
+//   // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
+//   // if (idx >= arrayLength(&out_render_geometry)) { return; }
 
-  // let _pos = vec2_transform(pos, u.transform);
-  // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
-  _temp_emit_join(pos, r);
-}
+//   // let _pos = vec2_transform(pos, u.transform);
+//   // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
+//   _temp_emit_join(pos, r);
+// }
 
-fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
-  let scale = length(u.transform[0].xy);
-  let screen_r = r * scale;
+// fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
+//   let scale = length(u.transform[0].xy);
+//   let screen_r = r * scale;
 
-  let err = min(u.tolerance, screen_r * 0.999);
-  let theta = 2.0 * acos(1.0 - err / screen_r);
-  let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
+//   let err = min(u.tolerance, screen_r * 0.999);
+//   let theta = 2.0 * acos(1.0 - err / screen_r);
+//   let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
 
-  let normal = vec2f(-tan.y, tan.x);
-  let safe_dr = clamp(dr_da, -0.99, 0.99);
+//   let normal = vec2f(-tan.y, tan.x);
+//   let safe_dr = clamp(dr_da, -0.99, 0.99);
 
-  let p0 = pos - normal * r;
-  let p3 = pos + normal * r;
+//   let p0 = pos - normal * r;
+//   let p3 = pos + normal * r;
 
-  let v0 = normalize(tan - safe_dr * normal);
-  let v3 = normalize(tan + safe_dr * normal);
+//   let v0 = normalize(tan - safe_dr * normal);
+//   let v3 = normalize(tan + safe_dr * normal);
 
-  let handle_len = 1.333333 * r;
-  let p1 = p0 + v0 * handle_len;
-  let p2 = p3 + v3 * handle_len;
+//   let handle_len = 1.333333 * r;
+//   let p1 = p0 + v0 * handle_len;
+//   let p2 = p3 + v3 * handle_len;
 
-  let cap_bezier = Cubic2(p0, p1, p2, p3);
-  let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
-  let max_idx = arrayLength(&out_render_geometry);
+//   let cap_bezier = Cubic2(p0, p1, p2, p3);
+//   let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
+//   let max_idx = arrayLength(&out_render_geometry);
 
-  var prev_outer = p0;
-  for (var i = 1u; i <= steps; i++) {
-    let global_idx = start_idx + i - 1u;
-    if (global_idx >= max_idx) { break; }
+//   var prev_outer = p0;
+//   for (var i = 1u; i <= steps; i++) {
+//     let global_idx = start_idx + i - 1u;
+//     if (global_idx >= max_idx) { break; }
 
-    let t = f32(i) / f32(steps);
-    let outer = cubic2_pos(cap_bezier, t);
+//     let t = f32(i) / f32(steps);
+//     let outer = cubic2_pos(cap_bezier, t);
 
-    let _v0 = vec2_transform(prev_outer, u.transform);
-    let _v1 = vec2_transform(outer, u.transform);
-    let _p = vec2_transform(pos, u.transform);
+//     let _v0 = vec2_transform(prev_outer, u.transform);
+//     let _v1 = vec2_transform(outer, u.transform);
+//     let _p = vec2_transform(pos, u.transform);
 
-    out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, color, edge_z_index);
-    prev_outer = outer;
-  }
-}
+//     out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, color, edge_z_index);
+//     prev_outer = outer;
+//   }
+// }
 
 // fn _emit_cusp_bridge(_t0: f32, _t1: f32, _a0: f32, _a1: f32) {
 //   // let snapped_bounds = _snap_to_weight_samples(edge_weight_span, _a0, _a1);
@@ -2595,6 +2672,8 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
   edge_z_index = cubic_data.edge_idx;
   color = vec4f(edge_data.color.rgb, edge_data.color.a * cubic_data.opacity);
 
+  brush_idx = edge_data.brush_idx;
+
   // Compute split points
   var splits: array<f32, MAX_SPLITS>;
   var splits_start_dist: array<f32, MAX_SPLITS>;
@@ -2771,34 +2850,10 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
         let pos = point[0];
         let left = point[1];
         let right = point[2];
-
-        // let base_tan = normalize(cubic2_tan(cubic, t1));
-        // let left_edge_vel = left - prev_left;
-        // let right_edge_vel = right - prev_right;
-
-        // let is_left_cusp = dot(base_tan, left_edge_vel) < 0.0;
-        // let is_right_cusp = dot(base_tan, right_edge_vel) < 0.0;
-        // let is_cusp = is_left_cusp || is_right_cusp;
-
-        // if (is_cusp) {
-        //   if (!in_cusp) {
-        //     in_cusp = true;
-        //     cusp_start_t = t0;
-        //     cusp_start_arc = arc_start;
-        //     cusp_prev_left = prev_left;
-        //     cusp_prev_right = prev_right;
-        //   }
-        // }
-        // else {
-        //   if (in_cusp) {
-        //     // _emit_cusp_bridge(cusp_start_t, t0, cusp_start_arc, arc_start);
-        //     in_cusp = false;
-        //   }
-        // }
         
         var color = vec4f(0.0, 1.0, 0.0, arc_end / cubic_end_dist);
 
-        _emit_quad(prev_left, left, right, prev_right);
+        _emit_quad(vec2f(arc_start, arc_end), prev_left, left, right, prev_right);
         prev_pos = pos;
         prev_left = left;
         prev_right = right;
@@ -2827,38 +2882,38 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
   let is_first_segment = edge_segment_idx == 0u;
   let is_last_segment = edge_segment_idx == edge_segment_count - 1u;
   
-  // Start cap
-  if (is_first_segment) {
-    let pos_tan = cubic2_pos_tan(cubic, 0.0);
-    let pos = pos_tan.xy;
-    let tan = normalize(pos_tan.zw);
+  // // Start cap
+  // if (is_first_segment) {
+  //   let pos_tan = cubic2_pos_tan(cubic, 0.0);
+  //   let pos = pos_tan.xy;
+  //   let tan = normalize(pos_tan.zw);
 
-    let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
-    _emit_cap(pos, -tan, w.x, w.y);
-  }
+  //   let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
+  //   _emit_cap(pos, -tan, w.x, w.y);
+  // }
 
-  // End cap
-  if (is_last_segment) {
-    let pos_tan = cubic2_pos_tan(cubic, 1.0);
-    let pos = pos_tan.xy;
-    let tan = normalize(pos_tan.zw);
-    let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
-    _emit_cap(pos, tan, w.x, w.y);
-  }
+  // // End cap
+  // if (is_last_segment) {
+  //   let pos_tan = cubic2_pos_tan(cubic, 1.0);
+  //   let pos = pos_tan.xy;
+  //   let tan = normalize(pos_tan.zw);
+  //   let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
+  //   _emit_cap(pos, tan, w.x, w.y);
+  // }
 
-  // Joins
-  if (!is_last_segment) {
-    let next_cubic = in_cubic_data[idx + 1u].cubic;
+  // // Joins
+  // if (!is_last_segment) {
+  //   let next_cubic = in_cubic_data[idx + 1u].cubic;
 
-    let pos = cubic2_pos(cubic, 1.0);
-    let tan_in = normalize(cubic2_tan(cubic, 1.0));
-    let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
+  //   let pos = cubic2_pos(cubic, 1.0);
+  //   let tan_in = normalize(cubic2_tan(cubic, 1.0));
+  //   let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
 
-    if (dot(tan_in, tan_out) < 0.99999) {
-      let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
-      _emit_join(pos, r);
-    }
-  }
+  //   if (dot(tan_in, tan_out) < 0.99999) {
+  //     let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
+  //     _emit_join(pos, r);
+  //   }
+  // }
 }
 ''';
 

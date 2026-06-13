@@ -1,9 +1,12 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_navigation_bar.dart';
-import 'package:design/widgets/editor.dart';
+
+// ignore: unused_import
+import 'package:design/design.dart';
 import 'package:vector/vector.dart';
+
 // import 'package:design/design.dart';
-import 'package:metal_capture_util/metal_capture_util.dart' as mtl_capture;
+// import 'package:metal_capture_util/metal_capture_util.dart' as mtl_capture;
 
 class RootPage extends StatelessWidget {
   const RootPage({super.key});

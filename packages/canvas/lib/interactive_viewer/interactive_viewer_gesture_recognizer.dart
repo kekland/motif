@@ -107,7 +107,6 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   void _update() {
     if (_initialPointersState == null) return;
     _currentPointersState = _createPointersState();
-    print('hi');
 
     if (_state != .started) return;
     if (_currentPointersState == null) return;

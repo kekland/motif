@@ -38,8 +38,11 @@ typedef Cubic2Array3Internal = ((wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wg
 typedef F32Array3 = (double, double, double);
 typedef F32Array3Internal = (wgsl.F32, wgsl.F32, wgsl.F32);
 
-typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, int kind)>;
-typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.U32 kind)>;
+typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind)>;
+typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind)>;
+
+typedef BrushDataArray = List<(double length, double spacing, int textureIdx)>;
+typedef BrushDataArrayInternal = List<(wgsl.F32 length, wgsl.F32 spacing, wgsl.U32 textureIdx)>;
 
 typedef Cubic2 = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
 typedef Cubic2Internal = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
@@ -433,8 +436,8 @@ extension VertexDataStruct on VertexData {
 
 }
 
-typedef EdgeData = (int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color);
-typedef EdgeDataInternal = (wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color);
+typedef EdgeData = (int startVertexIdx, int endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, double width, double arcLength, wgsl.Vec4f color, int brushIdx);
+typedef EdgeDataInternal = (wgsl.U32 startVertexIdx, wgsl.U32 endVertexIdx, wgsl.Vec2u cubicsSpan, wgsl.Vec2u weightSpan, wgsl.F32 width, wgsl.F32 arcLength, wgsl.Vec4f color, wgsl.U32 brushIdx);
 
 extension EdgeDataExt on EdgeData {
   int get startVertexIdx => this.$1;
@@ -444,6 +447,7 @@ extension EdgeDataExt on EdgeData {
   double get width => this.$5;
   double get arcLength => this.$6;
   wgsl.Vec4f get color => this.$7;
+  int get brushIdx => this.$8;
 
   @pragma('vm:prefer-inline')
   EdgeDataInternal get asInternal => (
@@ -454,6 +458,7 @@ extension EdgeDataExt on EdgeData {
     .new(width),
     .new(arcLength),
     color,
+    .new(brushIdx),
   );
 }
 
@@ -465,6 +470,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
   wgsl.F32 get width => this.$5;
   wgsl.F32 get arcLength => this.$6;
   wgsl.Vec4f get color => this.$7;
+  wgsl.U32 get brushIdx => this.$8;
 
   @pragma('vm:prefer-inline')
   EdgeData get asDart => (
@@ -475,6 +481,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
     this.$5,
     this.$6,
     this.$7,
+    this.$8,
   );
 
   @pragma('vm:prefer-inline')
@@ -486,6 +493,7 @@ extension EdgeDataInternalExt on EdgeDataInternal {
     wgsl.F32(this.$5).write(data, offset + 24);
     wgsl.F32(this.$6).write(data, offset + 28);
     this.$7.write(data, offset + 32);
+    wgsl.U32(this.$8).write(data, offset + 48);
   }
 }
 
@@ -499,6 +507,7 @@ extension EdgeDataStruct on EdgeData {
     wgsl.F32.read(data, offset + 24),
     wgsl.F32.read(data, offset + 28),
     wgsl.Vec4f.read(data, offset + 32),
+    wgsl.U32.read(data, offset + 48),
   );
 
 }
@@ -567,8 +576,54 @@ extension CubicDataStruct on CubicData {
 
 }
 
-typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, int kind);
-typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.U32 kind);
+typedef BrushData = (double length, double spacing, int textureIdx);
+typedef BrushDataInternal = (wgsl.F32 length, wgsl.F32 spacing, wgsl.U32 textureIdx);
+
+extension BrushDataExt on BrushData {
+  double get length => this.$1;
+  double get spacing => this.$2;
+  int get textureIdx => this.$3;
+
+  @pragma('vm:prefer-inline')
+  BrushDataInternal get asInternal => (
+    .new(length),
+    .new(spacing),
+    .new(textureIdx),
+  );
+}
+
+extension BrushDataInternalExt on BrushDataInternal {
+  wgsl.F32 get length => this.$1;
+  wgsl.F32 get spacing => this.$2;
+  wgsl.U32 get textureIdx => this.$3;
+
+  @pragma('vm:prefer-inline')
+  BrushData get asDart => (
+    this.$1,
+    this.$2,
+    this.$3,
+  );
+
+  @pragma('vm:prefer-inline')
+  void write(ByteData data, int offset) {
+    wgsl.F32(this.$1).write(data, offset + 0);
+    wgsl.F32(this.$2).write(data, offset + 4);
+    wgsl.U32(this.$3).write(data, offset + 8);
+  }
+}
+
+extension BrushDataStruct on BrushData {
+  @pragma('vm:prefer-inline')
+  static BrushDataInternal read(ByteData data, int offset) => (
+    wgsl.F32.read(data, offset + 0),
+    wgsl.F32.read(data, offset + 4),
+    wgsl.U32.read(data, offset + 8),
+  );
+
+}
+
+typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind);
+typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind);
 
 extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v0 => this.$1;
@@ -577,7 +632,9 @@ extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v3 => this.$4;
   wgsl.Vec4f get color => this.$5;
   int get zIndex => this.$6;
-  int get kind => this.$7;
+  wgsl.Vec2f get arcDistance => this.$7;
+  int get brushIdx => this.$8;
+  int get kind => this.$9;
 
   @pragma('vm:prefer-inline')
   RenderGeometryInternal get asInternal => (
@@ -587,6 +644,8 @@ extension RenderGeometryExt on RenderGeometry {
     v3,
     color,
     .new(zIndex),
+    arcDistance,
+    .new(brushIdx),
     .new(kind),
   );
 }
@@ -598,7 +657,9 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
   wgsl.Vec2f get v3 => this.$4;
   wgsl.Vec4f get color => this.$5;
   wgsl.U32 get zIndex => this.$6;
-  wgsl.U32 get kind => this.$7;
+  wgsl.Vec2f get arcDistance => this.$7;
+  wgsl.U32 get brushIdx => this.$8;
+  wgsl.U32 get kind => this.$9;
 
   @pragma('vm:prefer-inline')
   RenderGeometry get asDart => (
@@ -609,6 +670,8 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$5,
     this.$6,
     this.$7,
+    this.$8,
+    this.$9,
   );
 
   @pragma('vm:prefer-inline')
@@ -619,7 +682,9 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$4.write(data, offset + 24);
     this.$5.write(data, offset + 32);
     wgsl.U32(this.$6).write(data, offset + 48);
-    wgsl.U32(this.$7).write(data, offset + 52);
+    this.$7.write(data, offset + 56);
+    wgsl.U32(this.$8).write(data, offset + 64);
+    wgsl.U32(this.$9).write(data, offset + 68);
   }
 }
 
@@ -632,7 +697,9 @@ extension RenderGeometryStruct on RenderGeometry {
     wgsl.Vec2f.read(data, offset + 24),
     wgsl.Vec4f.read(data, offset + 32),
     wgsl.U32.read(data, offset + 48),
-    wgsl.U32.read(data, offset + 52),
+    wgsl.Vec2f.read(data, offset + 56),
+    wgsl.U32.read(data, offset + 64),
+    wgsl.U32.read(data, offset + 68),
   );
 
 }
@@ -815,7 +882,7 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
   void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
 
-  static const int strideInBytes = 64;
+  static const int strideInBytes = 80;
   int get sizeInBytes => data.lengthInBytes;
   int get length => sizeInBytes ~/ strideInBytes;
 
@@ -849,14 +916,14 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   @pragma('vm:prefer-inline')
   void write(RenderGeometryArray value) {
     for (var i = 0; i < value.length; i++) {
-      value[i].asInternal.write(data, 0 + i * 64);
+      value[i].asInternal.write(data, 0 + i * 80);
     }
   }
 
   @pragma('vm:prefer-inline')
   RenderGeometryArray read() {
     return List.generate(length, (i) {
-      return RenderGeometryStruct.read(data, 0 + i * 64);
+      return RenderGeometryStruct.read(data, 0 + i * 80);
     });
   }
 
@@ -871,14 +938,16 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, int kind = 0}) {
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) {
     v0.write(data, index * strideInBytes + 0);
     v1.write(data, index * strideInBytes + 8);
     v2.write(data, index * strideInBytes + 16);
     v3.write(data, index * strideInBytes + 24);
     color.write(data, index * strideInBytes + 32);
     wgsl.U32(zIndex).write(data, index * strideInBytes + 48);
-    wgsl.U32(kind).write(data, index * strideInBytes + 52);
+    arcDistance.write(data, index * strideInBytes + 56);
+    wgsl.U32(brushIdx).write(data, index * strideInBytes + 64);
+    wgsl.U32(kind).write(data, index * strideInBytes + 68);
   }
 }
 
@@ -889,7 +958,7 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
     super(length, RenderGeometryArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
 
 
-  static const int strideInBytes = 64;
+  static const int strideInBytes = 80;
   int get sizeInBytes => _view.sizeInBytes;
 
   final RenderGeometryArrayStorageBufferView _view;
@@ -917,7 +986,118 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
   void operator []=(int index, RenderGeometry value) => _view[index] = value;
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, kind: kind);
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, arcDistance: arcDistance, brushIdx: brushIdx, kind: kind);
+}
+
+@meta.StorageBufferView(['in_brush_data'])
+extension type BrushDataArrayStorageBufferView(ByteData data) {
+  BrushDataArrayStorageBufferView.create(int length): this(.new(length * strideInBytes));
+
+  void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int? count}) {
+    final length = count != null ? count * strideInBytes : data.lengthInBytes;
+    queue.writeBuffer(buffer, 0, ByteData.sublistView(data, 0, length));
+  }
+  void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
+
+  static const int strideInBytes = 12;
+  int get sizeInBytes => data.lengthInBytes;
+  int get length => sizeInBytes ~/ strideInBytes;
+
+  static wgpu.BufferDescriptor descriptor({
+    required int length,
+    String? label,
+    wgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) => .new(
+    label: label ?? '(render.wgsl) array<BrushData> buffer',
+    size: length * strideInBytes,
+    usage: usage ?? .of([.storage, .copyDst]),
+    mappedAtCreation: mappedAtCreation,
+  );
+
+  static wgpu.Buffer createBuffer(
+    wgpu.Device device, {
+    required int length,
+    String? label,
+    wgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) {
+    return device.createBuffer(descriptor(
+      length: length,
+      label: label,
+      usage: usage,
+      mappedAtCreation: mappedAtCreation,
+    ));
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(BrushDataArray value) {
+    for (var i = 0; i < value.length; i++) {
+      value[i].asInternal.write(data, 0 + i * 12);
+    }
+  }
+
+  @pragma('vm:prefer-inline')
+  BrushDataArray read() {
+    return List.generate(length, (i) {
+      return BrushDataStruct.read(data, 0 + i * 12);
+    });
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, BrushData value) {
+    value.asInternal.write(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  BrushData operator [](int index) {
+    return BrushDataStruct.read(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {double length = 0, double spacing = 0, int textureIdx = 0}) {
+    wgsl.F32(length).write(data, index * strideInBytes + 0);
+    wgsl.F32(spacing).write(data, index * strideInBytes + 4);
+    wgsl.U32(textureIdx).write(data, index * strideInBytes + 8);
+  }
+}
+
+@meta.StorageBuffer(['in_brush_data'])
+class BrushDataArrayStorageBuffer extends wgsl.ArrayStorageBuffer<BrushDataInternal> {
+  BrushDataArrayStorageBuffer(wgpu.Device device, {required int length, String? label, wgpu.BufferUsage? usage}):
+    _view = BrushDataArrayStorageBufferView.create(length),
+    super(length, BrushDataArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
+
+
+  static const int strideInBytes = 12;
+  int get sizeInBytes => _view.sizeInBytes;
+
+  final BrushDataArrayStorageBufferView _view;
+  BrushDataArrayStorageBufferView get view => _view;
+
+  @override
+  void writeToQueue(wgpu.Queue queue, {int? count}) => _view.writeToQueue(queue, buffer, count: count);
+
+  BrushDataArray readSync(wgpu.Device device) {
+    final mapped = _readbackSync(device, buffer, sizeInBytes);
+    _view.data.buffer.asUint8List(_view.data.offsetInBytes, _view.data.lengthInBytes).setAll(0, mapped);
+    return _view.read();
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(BrushDataArray value) => _view.write(value);
+
+  @pragma('vm:prefer-inline')
+  void clear([wgpu.Queue? queue]) {
+    _view.clear();
+    if (queue != null) writeToQueue(queue);
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, BrushData value) => _view[index] = value;
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {double length = 0, double spacing = 0, int textureIdx = 0}) => _view.set(index, length: length, spacing: spacing, textureIdx: textureIdx);
 }
 
 @meta.BindGroupLayoutDescriptor(0)
@@ -938,9 +1118,32 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
       visibility: .of([.vertex, .fragment]),
       buffer: .new(
         type: .readOnlyStorage,
-        minBindingSize: 64,
+        minBindingSize: 80,
         hasDynamicOffset: false,
       ),
+    ),
+    .new(
+      binding: 2,
+      visibility: .fragment,
+      buffer: .new(
+        type: .readOnlyStorage,
+        minBindingSize: 12,
+        hasDynamicOffset: false,
+      ),
+    ),
+    .new(
+      binding: 3,
+      visibility: .fragment,
+      texture: .new(
+        sampleType: .float,
+        multisampled: false,
+        viewDimension: .twoDArray,
+      ),
+    ),
+    .new(
+      binding: 4,
+      visibility: .fragment,
+      sampler: .new(type: .filtering),
     ),
   ],
 );
@@ -956,6 +1159,9 @@ wgpu.BindGroup createBindGroup0Raw(
   wgpu.BindGroupLayout? layout,
   required wgpu.BufferView u,
   required wgpu.BufferView inRenderGeometry,
+  required wgpu.BufferView inBrushData,
+  required wgpu.TextureView brushTextures,
+  required wgpu.Sampler brushSampler,
   String? label,
 }) => device.createBindGroup(.new(
   label: label ?? '(render.wgsl) bind group 0',
@@ -963,6 +1169,9 @@ wgpu.BindGroup createBindGroup0Raw(
   entries: [
     .new(binding: 0, buffer: u.buffer, offset: u.offset, size: u.size),
     .new(binding: 1, buffer: inRenderGeometry.buffer, offset: inRenderGeometry.offset, size: inRenderGeometry.size),
+    .new(binding: 2, buffer: inBrushData.buffer, offset: inBrushData.offset, size: inBrushData.size),
+    .new(binding: 3, textureView: brushTextures),
+    .new(binding: 4, sampler: brushSampler),
   ],
 ));
 
@@ -972,6 +1181,9 @@ wgpu.BindGroup createBindGroup0(
   wgpu.BindGroupLayout? layout,
   required wgsl.UniformBuffer<UniformsInternal> u,
   required wgsl.ArrayStorageBuffer<RenderGeometryInternal> inRenderGeometry,
+  required wgsl.ArrayStorageBuffer<BrushDataInternal> inBrushData,
+  required wgpu.TextureView brushTextures,
+  required wgpu.Sampler brushSampler,
   String? label,
 }) => createBindGroup0Raw(
   device,
@@ -979,6 +1191,9 @@ wgpu.BindGroup createBindGroup0(
   label: label,
   u: u.bufferView,
   inRenderGeometry: inRenderGeometry.bufferView,
+  inBrushData: inBrushData.bufferView,
+  brushTextures: brushTextures,
+  brushSampler: brushSampler,
 );
 
 @meta.VertexState('vs_main')
@@ -1586,6 +1801,7 @@ struct EdgeData {
   width: f32,
   arc_length: f32,
   color: vec4f,
+  brush_idx: u32,
 }
 
 struct CubicData {
@@ -1595,6 +1811,12 @@ struct CubicData {
   edge_segment_count: u32,
   edge_start_arc_length: f32,
   opacity: f32,
+}
+
+struct BrushData {
+  length: f32,
+  spacing: f32,
+  texture_idx: u32,
 }
 // end import "structs.wgsl"
 
@@ -1615,11 +1837,13 @@ struct RenderGeometry {
   v3: vec2f,
   color: vec4f,
   z_index: u32,
+  arc_distance: vec2f,
+  brush_idx: u32,
   kind: u32,
 }
 
-fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
-  return RenderGeometry(v0, v1, v2, v3, color, z_index, RENDER_GEOMETRY_KIND_QUAD);
+fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32, arc_distance: vec2f, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, color, z_index, arc_distance, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
 }
 
 // fn render_geometry_create_ellipse(c: vec2f, r: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
@@ -1634,11 +1858,15 @@ fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
 @group(0) @binding(1) var<storage, read> in_render_geometry: array<RenderGeometry>;
+@group(0) @binding(2) var<storage, read> in_brush_data: array<BrushData>;
+@group(0) @binding(3) var brush_textures: texture_2d_array<f32>;
+@group(0) @binding(4) var brush_sampler: sampler;
 
 struct VtxOut {
   @builtin(position) pos: vec4f,
   @location(0) frag_pos: vec2f,
-  @location(1) @interpolate(flat) instance_idx: u32,
+  @location(1) uv: vec2f, // arc distance, y
+  @location(2) @interpolate(flat) instance_idx: u32,
 }
 
 @vertex
@@ -1653,10 +1881,10 @@ fn vs_main(
 
   if (geom.kind == RENDER_GEOMETRY_KIND_QUAD) {
     switch(vtx_idx) {
-      case 0u, 3u: { pos_screen = geom.v0; }
-      case 1u: { pos_screen = geom.v1; }
-      case 2u, 4u: { pos_screen = geom.v2; }
-      case 5u: { pos_screen = geom.v3; }
+      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(geom.arc_distance.x, 0.0); }
+      case 1u: { pos_screen = geom.v1; uv = vec2f(geom.arc_distance.y, 0.0); }
+      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(geom.arc_distance.y, 1.0); }
+      case 5u: { pos_screen = geom.v3; uv = vec2f(geom.arc_distance.x, 1.0); }
       default: {}
     };
   }
@@ -1667,6 +1895,7 @@ fn vs_main(
   var out: VtxOut;
   out.pos = vec4f(clip_x, clip_y, 0.0, 1.0);
   out.frag_pos = pos_screen;
+  out.uv = uv;
   out.instance_idx = instance_idx;
   return out;
 }
@@ -1729,9 +1958,47 @@ fn fs_main(in: VtxOut) -> @location(0) vec4f {
     }
   }
 
+  let u_dist = in.uv.x;
+  let v_dist = in.uv.y;
+
+  let brush = in_brush_data[geom.brush_idx];
+  let brush_length = max(brush.length, 1.0f);
+  let brush_spacing = max(brush.spacing, 1.0f);
+  let brush_texture_idx = brush.texture_idx;
+
+  let base_uv_dx = dpdx(in.uv);
+  let base_uv_dy = dpdy(in.uv);
+
+  let grad_x = base_uv_dx * vec2f(1.0 / brush_length, 1.0);
+  let grad_y = base_uv_dy * vec2f(1.0 / brush_length, 1.0);
+
+  let pixel_aa = length(grad_x) + length(grad_y);
+
+  let center_stamp_idx = floor(u_dist / brush_spacing);
+  let overlap_radius = i32(min(ceil((brush_length * 0.5) / brush_spacing), 16.0));
+
+  var accum_alpha = 0.0;
+  for (var i = -overlap_radius; i <= overlap_radius; i++) {
+    let stamp_idx = center_stamp_idx + f32(i);
+    let stamp_center_u = stamp_idx * brush_spacing;
+
+    let dist_from_center = u_dist - stamp_center_u;
+    if (abs(dist_from_center) > brush_length * 0.5) { continue; }
+
+    let local_u = (dist_from_center / brush_length) + 0.5;
+    let local_v = v_dist;
+    let sample_uv = vec2f(local_u, local_v);
+
+    let sdf_dist = textureSampleGrad(brush_textures, brush_sampler, sample_uv, brush_texture_idx, grad_x, grad_y).r;
+
+    let alpha = smoothstep(0.5 - pixel_aa, 0.5 + pixel_aa, sdf_dist);
+    accum_alpha = accum_alpha + alpha - (accum_alpha * alpha);
+  }
+
+  if (accum_alpha < 0.005) { discard; }
+
   let color = geom.color;
-  return vec4f(color.rgb * color.a, color.a);
-  // return vec4f(1.0, 1.0, 1.0, 1.0);
+  return vec4f(color.rgb, color.a * accum_alpha);
 }
 
 ''';

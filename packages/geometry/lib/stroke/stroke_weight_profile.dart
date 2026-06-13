@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:geometry/geometry.dart';
-import 'package:vector_math/vector_math_64.dart';
 import 'package:geometry/ffi/ffi.dart' as ffi;
 
 double _hermiteEvaluate(List<RawProfileSample> k, List<double> m, double x) {

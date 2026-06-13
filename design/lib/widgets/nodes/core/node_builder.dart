@@ -145,7 +145,7 @@ class _NodeBuilderWidget extends SingleChildRenderObjectWidget {
 }
 
 class RenderNode extends tree.RenderNode<Node, RenderNode, RenderRootNode> {
-  RenderNode({required super.node, ShapeBorder? shape}) : _shape = shape;
+  RenderNode({required super.node, this._shape});
 
   ShapeBorder? _shape;
   ShapeBorder? get shape => _shape;

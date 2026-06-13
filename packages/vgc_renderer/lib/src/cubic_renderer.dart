@@ -2,6 +2,7 @@ import 'dart:ffi' as ffi;
 
 import 'package:vector_math/vector_math_64.dart';
 import 'package:vgc/vector_complex.dart';
+import 'package:vgc_renderer/src/test.dart';
 import 'package:vgc_renderer/vgc_renderer.dart';
 
 import 'package:wgpu/wgpu.dart' as wgpu;
@@ -38,6 +39,7 @@ class CubicRenderer {
   static const int _maxCubics = 1024 * 64;
   static const int _maxGeometry = 1024 * 256;
   static const int _maxWeightSamples = _maxCubics * 16;
+  static const int _maxBrushes = 64;
 
   late final wgpu.Instance _instance;
   late final wgpu.Adapter _adapter;
@@ -55,6 +57,11 @@ class CubicRenderer {
   late flatten.Vec3fArrayStorageBuffer _edgeWeightSamplesBuffer;
   late flatten.RenderGeometryArrayStorageBuffer _geometryBuffer;
   late flatten.DrawIndirectArgsStorageBuffer _drawIndirectArgsBuffer;
+  late render.BrushDataArrayStorageBuffer _brushDataBuffer;
+
+  late wgpu.Texture _brushTextures;
+  late wgpu.TextureView _brushTexturesView;
+  late wgpu.Sampler _brushSampler;
 
   void _setup() {
     _flattenPipeline = flatten.createComputePipeline(_device);
@@ -98,6 +105,37 @@ class CubicRenderer {
       _device,
       usage: .of([.storage, .indirect, .copyDst]),
     );
+    _brushDataBuffer = .new(_device, length: _maxBrushes);
+
+    _brushTextures = _device.createTexture(
+      .new(
+        label: 'brush textures',
+        size: .new(width: 128, height: 128, depthOrArrayLayers: _maxBrushes),
+        dimension: .twoD,
+        format: .R8Unorm,
+        usage: .of([.textureBinding, .copyDst]),
+      ),
+    );
+
+    _brushTexturesView = _brushTextures.createView(
+      .new(
+        dimension: .twoDArray,
+        baseArrayLayer: 0,
+        arrayLayerCount: _maxBrushes,
+      ),
+    );
+
+    _brushSampler = _device.createSampler(
+      .new(
+        label: 'brush sampler',
+        addressModeU: .repeat,
+        addressModeV: .repeat,
+        addressModeW: .repeat,
+        magFilter: .linear,
+        minFilter: .linear,
+        mipmapFilter: .nearest,
+      ),
+    );
 
     _flattenBindGroup = flatten.createBindGroup0(
       _device,
@@ -113,30 +151,10 @@ class CubicRenderer {
       _device,
       u: _ubo,
       inRenderGeometry: _geometryBuffer,
+      inBrushData: _brushDataBuffer,
+      brushTextures: _brushTexturesView,
+      brushSampler: _brushSampler,
     );
-
-    // const queryCount = 4;
-
-    // _querySet = _device.createQuerySet(
-    //   .new(
-    //     type: .timestamp,
-    //     count: queryCount,
-    //   ),
-    // );
-
-    // _resolveBuffer = _device.createBuffer(
-    //   .new(
-    //     size: queryCount * 8,
-    //     usage: .of([.queryResolve, .copySrc]),
-    //   ),
-    // );
-
-    // _readbackBuffer = _device.createBuffer(
-    //   .new(
-    //     size: queryCount * 8,
-    //     usage: .of([.copyDst, .mapRead]),
-    //   ),
-    // );
   }
 
   wgpu.Texture? _texture;
@@ -185,6 +203,21 @@ class CubicRenderer {
       _msaaTextureView = _msaaTexture!.createView();
     }
 
+    // Write brush data
+    {
+      var brushIdx = 0;
+      _brushDataBuffer.set(brushIdx, length: 128.0, spacing: 32.0, textureIdx: 0);
+      _brushDataBuffer.writeToQueue(queue, count: brushIdx + 1);
+
+      final data = halftoneSdfBrush(128, 128);
+      _device.queue.writeTexture(
+        .new(texture: _brushTextures, mipLevel: 0, origin: .new(x: 0, y: 0, z: 0)),
+        data,
+        .new(offset: 0, bytesPerRow: 128, rowsPerImage: 128),
+        .new(width: 128, height: 128, depthOrArrayLayers: 1),
+      );
+    }
+
     // Write cubics
     var edgeIdx = 0;
     var cubicIdx = 0;
@@ -201,6 +234,7 @@ class CubicRenderer {
         width: edge.strokeWidth,
         weightSpan: .new(weightIdx, weights.length),
         arcLength: spline.arcLength,
+        brushIdx: 0,
       );
 
       for (final sample in weights) {
@@ -292,6 +326,7 @@ class CubicRenderer {
           width: stroke.width,
           weightSpan: .new(weightSpanStartIdx, weightIdx - weightSpanStartIdx),
           arcLength: _arcLength,
+          brushIdx: 0,
         );
 
         edgeIdx++;
@@ -352,12 +387,9 @@ class CubicRenderer {
       // encoder.writeTimestamp(_querySet, 3);
     }
 
-    final submitTime = stopwatch.elapsedMicroseconds;
-
     _device.queue.submit([encoder.finish()]);
-    // _device.queue.onSubmittedWorkDoneSync();
-
     stopwatch.stop();
+
     // print('gpu: ${stopwatch.elapsedMilliseconds} ms (prepare: ${submitTime} µs)');
 
     return _texture!.nativeMetalTexture;

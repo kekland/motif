@@ -33,11 +33,10 @@ class _NodeLayoutTransform extends SingleChildRenderObjectWidget {
 
 class _RenderNodeLayoutTransform extends RenderProxyBox {
   _RenderNodeLayoutTransform({
-    required Node node,
+    required this._node,
     Stream<Matrix4?>? localTransientTransformStream,
     Stream<Matrix4?>? globalTransientTransformStream,
-  }) : _node = node,
-       _localTransientTransformStream = localTransientTransformStream,
+  }) : _localTransientTransformStream = localTransientTransformStream,
        _globalTransientTransformStream = globalTransientTransformStream {
     _setupEffect();
     _localTransientTransformSubscription = localTransientTransformStream?.listen(_onLocalTransientTransformChanged);

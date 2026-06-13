@@ -57,6 +57,6 @@ class MoveOpenEdgeControlPointActivity extends MoveDragActivity with ExclusiveCu
       }
     }
 
-    controller.complex.notifyListeners();
+    controller.complex.notifyFor(edge);
   }
 }

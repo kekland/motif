@@ -1,7 +1,6 @@
 import 'package:vector/imports.dart';
 import 'package:vector/tools/pen/activities/pen_activities.dart';
 import 'package:vgc/debug/debug_draw.dart';
-import 'package:vgc/vgc.dart';
 
 class PenTool extends Tool {
   const PenTool();

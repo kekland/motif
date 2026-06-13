@@ -210,7 +210,7 @@ class RenderNode<
 >
     extends RenderProxyBox
     with RenderNodeBase<T, TRenderNode, TRenderRoot> {
-  RenderNode({required T node}) : _node = node;
+  RenderNode({required this._node});
 
   late T _node;
 

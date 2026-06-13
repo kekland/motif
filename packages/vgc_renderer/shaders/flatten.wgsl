@@ -28,8 +28,9 @@ var<private> edge_width: f32;
 var<private> edge_idx: u32;
 var<private> edge_z_index: u32;
 var<private> color: vec4f;
+var<private> brush_idx: u32;
 
-fn _emit_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
+fn _emit_quad(arc_distance: vec2f, v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let idx = atomicAdd(&out_draw_args.instance_count, 1u);
   if (idx >= arrayLength(&out_render_geometry)) { return; }
 
@@ -38,76 +39,76 @@ fn _emit_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let _v2 = vec2_transform(v2, u.transform);
   let _v3 = vec2_transform(v3, u.transform);
 
-  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, color, edge_z_index);
+  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, color, edge_z_index, arc_distance, brush_idx);
 }
 
-fn _temp_emit_join(pos: vec2f, r: f32) {
-  let pivot_pos = pos;
-  let scale = length(u.transform[0].xy);
-  let screen_r = r * scale;
-  let steps = max(16u, u32(ceil(screen_r * 0.25)));
-  let da = TWO_PI / f32(steps);
+// fn _temp_emit_join(pos: vec2f, r: f32) {
+//   let pivot_pos = pos;
+//   let scale = length(u.transform[0].xy);
+//   let screen_r = r * scale;
+//   let steps = max(16u, u32(ceil(screen_r * 0.25)));
+//   let da = TWO_PI / f32(steps);
 
-  var prev_outer = pos + vec2f(r, 0.0);
-  for (var i = 1u; i <= steps; i++) {
-    let angle = f32(i) * da;
-    let outer = pos + vec2f(cos(angle), sin(angle)) * r;
+//   var prev_outer = pos + vec2f(r, 0.0);
+//   for (var i = 1u; i <= steps; i++) {
+//     let angle = f32(i) * da;
+//     let outer = pos + vec2f(cos(angle), sin(angle)) * r;
 
-    _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
-    prev_outer = outer;
-  }
-}
+//     _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
+//     prev_outer = outer;
+//   }
+// }
 
-fn _emit_join(pos: vec2f, r: f32) {
-  // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
-  // if (idx >= arrayLength(&out_render_geometry)) { return; }
+// fn _emit_join(pos: vec2f, r: f32) {
+//   // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
+//   // if (idx >= arrayLength(&out_render_geometry)) { return; }
 
-  // let _pos = vec2_transform(pos, u.transform);
-  // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
-  _temp_emit_join(pos, r);
-}
+//   // let _pos = vec2_transform(pos, u.transform);
+//   // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
+//   _temp_emit_join(pos, r);
+// }
 
-fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
-  let scale = length(u.transform[0].xy);
-  let screen_r = r * scale;
+// fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
+//   let scale = length(u.transform[0].xy);
+//   let screen_r = r * scale;
 
-  let err = min(u.tolerance, screen_r * 0.999);
-  let theta = 2.0 * acos(1.0 - err / screen_r);
-  let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
+//   let err = min(u.tolerance, screen_r * 0.999);
+//   let theta = 2.0 * acos(1.0 - err / screen_r);
+//   let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
 
-  let normal = vec2f(-tan.y, tan.x);
-  let safe_dr = clamp(dr_da, -0.99, 0.99);
+//   let normal = vec2f(-tan.y, tan.x);
+//   let safe_dr = clamp(dr_da, -0.99, 0.99);
 
-  let p0 = pos - normal * r;
-  let p3 = pos + normal * r;
+//   let p0 = pos - normal * r;
+//   let p3 = pos + normal * r;
 
-  let v0 = normalize(tan - safe_dr * normal);
-  let v3 = normalize(tan + safe_dr * normal);
+//   let v0 = normalize(tan - safe_dr * normal);
+//   let v3 = normalize(tan + safe_dr * normal);
 
-  let handle_len = 1.333333 * r;
-  let p1 = p0 + v0 * handle_len;
-  let p2 = p3 + v3 * handle_len;
+//   let handle_len = 1.333333 * r;
+//   let p1 = p0 + v0 * handle_len;
+//   let p2 = p3 + v3 * handle_len;
 
-  let cap_bezier = Cubic2(p0, p1, p2, p3);
-  let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
-  let max_idx = arrayLength(&out_render_geometry);
+//   let cap_bezier = Cubic2(p0, p1, p2, p3);
+//   let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
+//   let max_idx = arrayLength(&out_render_geometry);
 
-  var prev_outer = p0;
-  for (var i = 1u; i <= steps; i++) {
-    let global_idx = start_idx + i - 1u;
-    if (global_idx >= max_idx) { break; }
+//   var prev_outer = p0;
+//   for (var i = 1u; i <= steps; i++) {
+//     let global_idx = start_idx + i - 1u;
+//     if (global_idx >= max_idx) { break; }
 
-    let t = f32(i) / f32(steps);
-    let outer = cubic2_pos(cap_bezier, t);
+//     let t = f32(i) / f32(steps);
+//     let outer = cubic2_pos(cap_bezier, t);
 
-    let _v0 = vec2_transform(prev_outer, u.transform);
-    let _v1 = vec2_transform(outer, u.transform);
-    let _p = vec2_transform(pos, u.transform);
+//     let _v0 = vec2_transform(prev_outer, u.transform);
+//     let _v1 = vec2_transform(outer, u.transform);
+//     let _p = vec2_transform(pos, u.transform);
 
-    out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, color, edge_z_index);
-    prev_outer = outer;
-  }
-}
+//     out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, color, edge_z_index);
+//     prev_outer = outer;
+//   }
+// }
 
 // fn _emit_cusp_bridge(_t0: f32, _t1: f32, _a0: f32, _a1: f32) {
 //   // let snapped_bounds = _snap_to_weight_samples(edge_weight_span, _a0, _a1);
@@ -313,6 +314,8 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
   edge_z_index = cubic_data.edge_idx;
   color = vec4f(edge_data.color.rgb, edge_data.color.a * cubic_data.opacity);
 
+  brush_idx = edge_data.brush_idx;
+
   // Compute split points
   var splits: array<f32, MAX_SPLITS>;
   var splits_start_dist: array<f32, MAX_SPLITS>;
@@ -489,34 +492,10 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
         let pos = point[0];
         let left = point[1];
         let right = point[2];
-
-        // let base_tan = normalize(cubic2_tan(cubic, t1));
-        // let left_edge_vel = left - prev_left;
-        // let right_edge_vel = right - prev_right;
-
-        // let is_left_cusp = dot(base_tan, left_edge_vel) < 0.0;
-        // let is_right_cusp = dot(base_tan, right_edge_vel) < 0.0;
-        // let is_cusp = is_left_cusp || is_right_cusp;
-
-        // if (is_cusp) {
-        //   if (!in_cusp) {
-        //     in_cusp = true;
-        //     cusp_start_t = t0;
-        //     cusp_start_arc = arc_start;
-        //     cusp_prev_left = prev_left;
-        //     cusp_prev_right = prev_right;
-        //   }
-        // }
-        // else {
-        //   if (in_cusp) {
-        //     // _emit_cusp_bridge(cusp_start_t, t0, cusp_start_arc, arc_start);
-        //     in_cusp = false;
-        //   }
-        // }
         
         var color = vec4f(0.0, 1.0, 0.0, arc_end / cubic_end_dist);
 
-        _emit_quad(prev_left, left, right, prev_right);
+        _emit_quad(vec2f(arc_start, arc_end), prev_left, left, right, prev_right);
         prev_pos = pos;
         prev_left = left;
         prev_right = right;
@@ -545,36 +524,36 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
   let is_first_segment = edge_segment_idx == 0u;
   let is_last_segment = edge_segment_idx == edge_segment_count - 1u;
   
-  // Start cap
-  if (is_first_segment) {
-    let pos_tan = cubic2_pos_tan(cubic, 0.0);
-    let pos = pos_tan.xy;
-    let tan = normalize(pos_tan.zw);
+  // // Start cap
+  // if (is_first_segment) {
+  //   let pos_tan = cubic2_pos_tan(cubic, 0.0);
+  //   let pos = pos_tan.xy;
+  //   let tan = normalize(pos_tan.zw);
 
-    let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
-    _emit_cap(pos, -tan, w.x, w.y);
-  }
+  //   let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
+  //   _emit_cap(pos, -tan, w.x, w.y);
+  // }
 
-  // End cap
-  if (is_last_segment) {
-    let pos_tan = cubic2_pos_tan(cubic, 1.0);
-    let pos = pos_tan.xy;
-    let tan = normalize(pos_tan.zw);
-    let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
-    _emit_cap(pos, tan, w.x, w.y);
-  }
+  // // End cap
+  // if (is_last_segment) {
+  //   let pos_tan = cubic2_pos_tan(cubic, 1.0);
+  //   let pos = pos_tan.xy;
+  //   let tan = normalize(pos_tan.zw);
+  //   let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
+  //   _emit_cap(pos, tan, w.x, w.y);
+  // }
 
-  // Joins
-  if (!is_last_segment) {
-    let next_cubic = in_cubic_data[idx + 1u].cubic;
+  // // Joins
+  // if (!is_last_segment) {
+  //   let next_cubic = in_cubic_data[idx + 1u].cubic;
 
-    let pos = cubic2_pos(cubic, 1.0);
-    let tan_in = normalize(cubic2_tan(cubic, 1.0));
-    let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
+  //   let pos = cubic2_pos(cubic, 1.0);
+  //   let tan_in = normalize(cubic2_tan(cubic, 1.0));
+  //   let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
 
-    if (dot(tan_in, tan_out) < 0.99999) {
-      let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
-      _emit_join(pos, r);
-    }
-  }
+  //   if (dot(tan_in, tan_out) < 0.99999) {
+  //     let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
+  //     _emit_join(pos, r);
+  //   }
+  // }
 }

@@ -14,7 +14,7 @@ class StrokeWidthWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WindowScaffold(
-      child: Container(
+      child: SizedBox(
         width: 480.0,
         height: 480.0,
         child: CheckerboardWidget(

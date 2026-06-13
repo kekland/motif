@@ -11,7 +11,7 @@ part 'cell/render_edge.dart';
 part 'cell/render_face.dart';
 
 sealed class RenderCell<T extends Cell> extends RenderBox {
-  RenderCell({required T cell}) : _cell = cell;
+  RenderCell({required this._cell});
   static RenderCell create(Cell cell) {
     return switch (cell) {
       Vertex v => RenderVertex(vertex: v),

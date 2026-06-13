@@ -80,7 +80,6 @@ class EraserActivity extends DragActivity {
       final distanceSqr = (vertexPosition - position).length2;
       if (vertex.degree == 0 && distanceSqr < radiusSq) {
         complex.hardDelete(vertex);
-        print('delete');
       }
     }
 

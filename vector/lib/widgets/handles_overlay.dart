@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
 import 'package:vector/tools/cursor/activities/cursor_activities.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 part 'handles/common.dart';
 part 'handles/edge.dart';
@@ -69,13 +68,13 @@ class HandlesOverlay extends HookWidget {
       supportedDevices: {.stylus},
     );
 
-    final moveKnotActivityRecognizer = useDragActivityWithArgumentRecognizer<CubicKnot2>(
-      (k) => MoveKnotActivity(controller: controller, knot: k),
+    final moveKnotActivityRecognizer = useDragActivityWithArgumentRecognizer<(Edge, CubicKnot2)>(
+      (k) => MoveKnotActivity(controller: controller, edge: k.$1, knot: k.$2),
       supportedDevices: {.stylus},
     );
 
-    final moveKnotControlPointsActivity = useDragActivityWithArgumentRecognizer<(CubicKnot2, bool)>(
-      (arg) => MoveKnotControlPointsActivity(controller: controller, knot: arg.$1, isC1: arg.$2),
+    final moveKnotControlPointsActivity = useDragActivityWithArgumentRecognizer<(Edge, CubicKnot2, bool)>(
+      (arg) => MoveKnotControlPointsActivity(controller: controller, edge: arg.$1, knot: arg.$2, isC1: arg.$3),
       supportedDevices: {.stylus},
     );
 
@@ -111,14 +110,17 @@ class HandlesOverlay extends HookWidget {
           ),
         );
       } else if (cell is Edge) {
+        final edge = cell;
+
         children.add(
           EdgeHandles(
-            edge: cell,
+            edge: edge,
             selection: selection,
             childPaintTransform: childPaintTransform,
             hoveredCell: hoveredCell,
-            onKnotPointerDown: (e, knot) => moveKnotActivityRecognizer.addPointer(e, argument: knot),
-            onKnotControlPointPointerDown: (e, arg) => moveKnotControlPointsActivity.addPointer(e, argument: arg),
+            onKnotPointerDown: (e, knot) => moveKnotActivityRecognizer.addPointer(e, argument: (edge, knot)),
+            onKnotControlPointPointerDown: (e, arg) =>
+                moveKnotControlPointsActivity.addPointer(e, argument: (edge, arg.$1, arg.$2)),
             onOpenEdgeControlPointPointerDown: (e, arg) =>
                 moveOpenEdgeControlPointActivity.addPointer(e, argument: arg),
           ),

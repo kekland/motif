@@ -223,16 +223,23 @@ class _GenieTransitionRenderObject extends RenderProxyBox {
     markNeedsPaint();
   }
 
+  ui.FragmentShader? _shader;
+
+  @override
+  void dispose() {
+    _shader?.dispose();
+    super.dispose();
+  }
+
   @override
   void paint(PaintingContext context, ui.Offset offset) {
     final src = MatrixUtils.transformRect(overlay.getTransformTo(this), this.src);
     final dst = child!.paintBounds;
     final totalRect = src.expandToInclude(dst);
-
+    
     const shadowMargin = 16.0;
     final paddedTotalRect = totalRect.inflate(shadowMargin);
 
-    // 2. Shift everything relative to the new padded top-left origin.
     final shift = paddedTotalRect.topLeft;
 
     final srcNormalized = src.shift(-shift);
@@ -242,9 +249,10 @@ class _GenieTransitionRenderObject extends RenderProxyBox {
 
     // Shader
     if (_fragmentProgram == null) {
-      context.paintChild(child!, offset);
+      return;
     } else {
-      final shader = _fragmentProgram!.fragmentShader();
+      _shader ??= _fragmentProgram!.fragmentShader();
+      final shader = _shader!;
 
       final transform = Matrix4.fromFloat64List(context.canvas.getTransform());
       final localOrigin = shift + offset;

@@ -1,9 +1,5 @@
-import 'package:flutter/gestures.dart';
-import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
-import 'package:vector/tools/cursor/activities/cursor_activities.dart';
 import 'package:vector/tools/cursor/selection/hover_overlay.dart';
-import 'package:vector/widgets/floating_action_bar/floating_action_bar.dart';
 import 'package:vgc/debug/debug_draw.dart';
 
 class CursorTool extends Tool {
@@ -31,7 +27,7 @@ class _CursorToolOverlay extends HookWidget {
   Widget build(BuildContext context) {
     final controller = VectorController.watch(context);
     final hoveredCell = useState<Cell?>(null);
-    final shouldUpdateSelectionOnUp = useRef(true);
+    // final shouldUpdateSelectionOnUp = useRef(true);
 
     List<CellHitTestEntry> _hitTest(Offset globalPosition) {
       final scale = info.childPaintTransform.getMaxScaleOnAxis();

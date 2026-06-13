@@ -1,4 +1,4 @@
-import 'package:flutter/src/gestures/gesture_details.dart';
+import 'package:flutter/gestures.dart';
 import 'package:geometry/geometry.dart';
 import 'package:vector/imports.dart';
 import 'package:vector_math/vector_math_64.dart';

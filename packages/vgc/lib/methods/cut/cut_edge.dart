@@ -59,7 +59,7 @@ extension CutEdge on VectorComplex {
 
   OpenEdgeCutResult _cutOpenEdge(OpenEdge edge, double t) {
     final (leftSpline, rightSpline) = edge.spline.split(t);
-    final weights = edge.strokeWeight?.split(t);
+    final weights = edge.strokeWeight.split(t);
 
     final splitPosition = leftSpline.knots.last.p.clone();
 
@@ -68,7 +68,7 @@ extension CutEdge on VectorComplex {
       edge.start,
       vertex,
       leftSpline,
-      strokeWeight: weights?.$1,
+      strokeWeight: weights.$1,
       color: edge.color,
       strokeWidth: edge.strokeWidth,
       complex: this,
@@ -77,7 +77,7 @@ extension CutEdge on VectorComplex {
       vertex,
       edge.end,
       rightSpline,
-      strokeWeight: weights?.$2,
+      strokeWeight: weights.$2,
       color: edge.color,
       strokeWidth: edge.strokeWidth,
       complex: this,
@@ -122,7 +122,7 @@ extension CutEdge on VectorComplex {
 
   MultiEdgeCutResult _multiCutOpenEdge(OpenEdge edge, List<double> ts) {
     final splines = edge.spline.splitMultiple(ts);
-    final weights = edge.strokeWeight?.splitMultiple(ts);
+    final weights = edge.strokeWeight.splitMultiple(ts);
 
     final vertices = <Vertex>[];
     final newEdges = <OpenEdge>[];
@@ -138,7 +138,7 @@ extension CutEdge on VectorComplex {
         startVertex,
         endVertex,
         spline,
-        strokeWeight: weights?[i],
+        strokeWeight: weights[i],
         color: edge.color,
         strokeWidth: edge.strokeWidth,
         complex: this,

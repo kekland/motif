@@ -1,5 +1,3 @@
-#define_import_path cubic2
-
 // A cubic bezier curve.
 struct Cubic2 {
   p0: vec2f,

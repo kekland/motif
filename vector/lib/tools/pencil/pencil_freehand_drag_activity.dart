@@ -58,13 +58,13 @@ class PencilFreehandDrawActivity extends DragActivity {
   // static const int _kSmoothingWindowSize = 3;
   // static const double _kSmoothingSpeedThreshold = 10.0;
 
-  static const double _vwEpsilon = 1.75;
-  static const double _schneiderErrorThreshold = 1.75;
-  static const double _cornerWindowArcLength = 10.0;
-  static const double _cornerStrictAngle = 1.2;
-  static const double _cornerRelaxedAngle = 0.7;
-  static const double _cornerSpeedRadius = 15.0;
-  static const double _cornerSuppressionRadius = 18.0;
+  // static const double _vwEpsilon = 1.75;
+  // static const double _schneiderErrorThreshold = 1.75;
+  // static const double _cornerWindowArcLength = 10.0;
+  // static const double _cornerStrictAngle = 1.2;
+  // static const double _cornerRelaxedAngle = 0.7;
+  // static const double _cornerSpeedRadius = 15.0;
+  // static const double _cornerSuppressionRadius = 18.0;
 
   static const double _kLoopDistanceThreshold = 8.0;
 

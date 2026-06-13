@@ -1,8 +1,9 @@
 part of 'cursor_activities.dart';
 
 class MoveKnotActivity extends MoveDragActivity with ExclusiveCursorDragActivity {
-  MoveKnotActivity({required super.controller, required this.knot});
+  MoveKnotActivity({required super.controller, required this.edge, required this.knot});
 
+  final Edge edge;
   final CubicKnot2 knot;
 
   @override
@@ -31,6 +32,6 @@ class MoveKnotActivity extends MoveDragActivity with ExclusiveCursorDragActivity
     if (startCIn != null) knot.cIn = startCIn! + deltaVector;
     if (startCOut != null) knot.cOut = startCOut! + deltaVector;
 
-    controller.complex.notifyListeners();
+    controller.complex.notifyFor(edge);
   }
 }

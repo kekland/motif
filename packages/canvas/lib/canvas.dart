@@ -2,8 +2,6 @@ import 'package:canvas/interactive_viewer/interactive_viewer2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'interactive_viewer/interactive_viewer.dart' as iv;
-
 export 'canvas_focus.dart';
 
 /// An infinitely scrollable canvas widget.
@@ -204,7 +202,7 @@ class CanvasPositioned extends SingleChildRenderObjectWidget {
 }
 
 class RenderCanvasPositioned extends RenderProxyBox {
-  RenderCanvasPositioned({required Rect rect}) : _rect = rect;
+  RenderCanvasPositioned({required this._rect});
 
   late Rect _rect;
   Rect get rect => _rect;

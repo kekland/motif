@@ -12,6 +12,7 @@ extension type CanvasKit._(js.JSObject _) implements js.JSObject {
   static CanvasKit get instance => window.CanvasKitInstance;
 }
 
-void test_text() {
+void testText() {
+  // ignore: avoid_print
   print(CanvasKit.instance);
 }

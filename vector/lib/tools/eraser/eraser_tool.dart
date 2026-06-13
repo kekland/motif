@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:vector/imports.dart';
 import 'package:vector/tools/eraser/eraser_activity.dart';
 

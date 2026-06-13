@@ -7,7 +7,6 @@ part 'options/stroke_options_button.dart';
 part 'options/stroke_width_option.dart';
 part 'options/stroke_topological_option.dart';
 
-
 class FloatingActionBarPositioned extends StatelessWidget {
   const FloatingActionBarPositioned({super.key, required this.child});
 
@@ -34,8 +33,6 @@ class FloatingActionBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = VectorController.watch(context);
-    final tools = useComputedValue(() => controller.tool.toolset);
-    final activeTool = useComputedValue(() => controller.tool.activeTool);
 
     useListenable(controller.strokeProperties);
     final strokeProperties = controller.strokeProperties;

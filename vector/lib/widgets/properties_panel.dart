@@ -1,5 +1,3 @@
-import 'package:color/color.dart';
-import 'package:color/widgets/color_input.dart';
 import 'package:vector/imports.dart';
 
 part 'properties/edge_properties.dart';

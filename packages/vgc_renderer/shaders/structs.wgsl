@@ -1,3 +1,5 @@
+#import "shared/cubic2.wgsl"
+
 struct Uniforms {
   cubic_count: u32,
   weight_anchor_count: u32,
@@ -19,6 +21,7 @@ struct EdgeData {
   width: f32,
   arc_length: f32,
   color: vec4f,
+  brush_idx: u32,
 }
 
 struct CubicData {
@@ -28,4 +31,10 @@ struct CubicData {
   edge_segment_count: u32,
   edge_start_arc_length: f32,
   opacity: f32,
+}
+
+struct BrushData {
+  length: f32,
+  spacing: f32,
+  texture_idx: u32,
 }

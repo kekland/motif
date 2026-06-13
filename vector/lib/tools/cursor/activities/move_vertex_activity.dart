@@ -41,6 +41,6 @@ class MoveVertexActivity extends MoveDragActivity with ExclusiveCursorDragActivi
       }
     }
 
-    controller.complex.notifyListeners();
+    controller.complex.notifyFor(vertex);
   }
 }

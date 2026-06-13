@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 // ignore_for_file: avoid_print
 
 import 'dart:io';
@@ -34,6 +35,7 @@ void main() {
       output: .new(
         dartFile: outFfiFile,
         style: ffigen.NativeExternalBindings(assetId: 'package:skia/src/asset.dart'),
+        preamble: '// ignore_for_file: unused_import, unused_local_variable, unused_element, unused_field',
       ),
       headers: .new(
         entryPoints: headers.map((f) => f.uri).toList(),

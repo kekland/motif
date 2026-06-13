@@ -4,9 +4,9 @@ final _includeRegex = RegExp(r'#import\s+"([^"]+)"');
 final _defineImportPathRegex = RegExp(r'#define_import_path\s+(\w+)');
 
 /// Preprocesses #import "relative_path" directives in WGSL.
-///
-/// Note: this doesn't handle circular imports or anything fancy, just processes imports.
-String preprocessWgsl(File file, String content) {
+String preprocessWgsl(File file, String content, {Set<Uri>? includedFiles}) {
+  final _includedFiles = includedFiles ?? {};
+
   final baseDirUri = file.parent.uri;
 
   final lines = content.split('\n');
@@ -18,11 +18,19 @@ String preprocessWgsl(File file, String content) {
 
     if (includeMatch != null) {
       final includePath = includeMatch.group(1)!;
-      final includeFile = File.fromUri(baseDirUri.resolve(includePath));
+      final includeUri = baseDirUri.resolve(includePath);
+      if (_includedFiles.contains(includeUri)) continue;
+      _includedFiles.add(includeUri);
+
+      final includeFile = File.fromUri(includeUri);
       if (!includeFile.existsSync()) throw Exception('Included file "${includeFile.path}" does not exist.');
 
       final includeContent = includeFile.readAsStringSync();
-      var processedInclude = preprocessWgsl(includeFile, includeContent).split('\n');
+      var processedInclude = preprocessWgsl(
+        includeFile,
+        includeContent,
+        includedFiles: _includedFiles,
+      ).split('\n');
 
       while (processedInclude.isNotEmpty && processedInclude.first.trim().isEmpty) processedInclude.removeAt(0);
       while (processedInclude.isNotEmpty && processedInclude.last.trim().isEmpty) processedInclude.removeLast();

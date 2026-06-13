@@ -96,9 +96,6 @@ class RenderVectorComplex extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     final localToGlobal = getTransformTo(null);
-    final localViewport = context.canvas.getLocalClipBounds();
-
-    final transform = localToGlobal.leftTranslateByDouble(-offset.dx, -offset.dy, 0.0, 1.0);
 
     final mtlTexture = _renderer3.renderToTexture(
       complex.edges.toList(),

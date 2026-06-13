@@ -32,7 +32,6 @@ class ColorPickerWindow extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final color = useComputedValue(() => value.value);
-    print(color);
 
     Widget child = SizedBox(
       width: 192.0,
