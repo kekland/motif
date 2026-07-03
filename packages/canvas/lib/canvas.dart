@@ -1,8 +1,12 @@
 import 'package:canvas/interactive_viewer/interactive_viewer2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ui/ui.dart';
+
+import 'canvas_background.dart';
 
 export 'canvas_focus.dart';
+export 'canvas_background.dart';
 
 /// An infinitely scrollable canvas widget.
 ///
@@ -44,11 +48,9 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
         final size = constraints.biggest;
 
         return InteractiveViewer2(
-          // transformationController: widget.transformationController,
+          controller: controller,
           minScale: 0.1,
           maxScale: 100.0,
-          // boundaryMargin: const EdgeInsets.all(double.infinity),
-          // scaleFactor: 200.0,
           builder: (context, _) {
             final rawTransform = controller.value;
 
@@ -80,6 +82,13 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
 
             return Stack(
               children: [
+                Positioned.fill(
+                  child: CanvasBackground(
+                    transformationController: controller,
+                    dotColor: context.colors.display.tertiary.withScaledAlpha(0.5),
+                    baseSpacing: 64.0,
+                  ),
+                ),
                 child,
                 overlays,
               ],

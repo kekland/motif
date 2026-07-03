@@ -1,5 +1,4 @@
 import 'package:color/color.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:ui/ui.dart';
 
 class ColorPicker extends HookWidget {
@@ -18,7 +17,6 @@ class ColorPicker extends HookWidget {
   Widget build(BuildContext context) {
     final computedValue = useComputed(value);
     final (createEntry, isEntryActive) = useCreateWindowEntry(
-      context,
       (context) => ColorPickerWindow.createEntry(context, value: computedValue, onChanged: onChanged),
     );
 
@@ -26,7 +24,7 @@ class ColorPicker extends HookWidget {
     
     return GestureSurface(
       animationStyle: context.animations.effectFast,
-      onTap: createEntry,
+      onTap: () => createEntry(context),
       width: size,
       height: size,
       borderRadius: isEntryActive ? .circular(20.0) : .circular(8.0),

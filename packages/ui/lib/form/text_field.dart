@@ -72,7 +72,7 @@ class TextField extends HookWidget {
 
     final hasFocus = useFocusNodeHasFocus(focusNode);
 
-    var effectiveTextStyle = textStyle ?? context.typography.caption1.primary;
+    var effectiveTextStyle = textStyle ?? context.typography.body.primary;
     if (useTabularFigures) effectiveTextStyle = effectiveTextStyle.tabular;
 
     return TextFieldTapRegion(
@@ -101,7 +101,7 @@ class TextField extends HookWidget {
                     states: {...states, if (hasFocus) .selected},
                     child: DefaultForegroundStyle(
                       iconSize: 16.0,
-                      textStyle: context.typography.caption1.tertiary,
+                      textStyle: context.typography.body.tertiary,
                       child: leading,
                     ),
                   ),
@@ -121,7 +121,7 @@ class TextField extends HookWidget {
                     onChanged: onChanged,
                     decoration: InputDecoration.collapsed(
                       hintText: hintText,
-                      hintStyle: context.typography.caption1.tertiary,
+                      hintStyle: context.typography.body.tertiary,
                     ),
                   ),
                 ),
@@ -131,7 +131,7 @@ class TextField extends HookWidget {
                     states: {...states, if (hasFocus) .selected},
                     child: DefaultForegroundStyle(
                       iconSize: 16.0,
-                      textStyle: context.typography.caption1.tertiary,
+                      textStyle: context.typography.body.tertiary,
                       child: trailing,
                     ),
                   ),

@@ -18,7 +18,7 @@ class DropdownButton extends StatelessWidget {
           mainAxisSize: .min,
           children: [
             DefaultForegroundStyle(
-              textStyle: context.typography.caption2.secondary,
+              textStyle: context.typography.footnote.secondary,
               child: Text('HSV'),
             ),
             SizedBox(width: 4.0),

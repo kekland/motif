@@ -15,3 +15,5 @@ export 'stroke/stroke_weight_profile.dart';
 
 export 'utils/vector_utils.dart';
 export 'utils/fit_points_to_spline.dart';
+
+export 'package:vector_math/vector_math_64.dart' hide Colors;

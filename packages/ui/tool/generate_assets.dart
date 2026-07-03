@@ -37,6 +37,14 @@ Future<void> main() async {
     .new('topology', 'Symbols.hub_rounded'),
     .new('squiggly', 'Symbols.gesture_rounded'),
     .new('tune', 'Symbols.tune_rounded'),
+    .new('add', 'Symbols.add_rounded'),
+    .new('wrench', 'Symbols.build_rounded'),
+    .new('applyModifier', 'Symbols.shape_line_rounded'),
+    .new('visibility', 'Symbols.visibility_rounded'),
+    .new('visibilityOff', 'Symbols.visibility_off_rounded'),
+    .new('mirror', 'Symbols.flip_rounded'),
+    .new('generator', 'Symbols.graph_4_rounded'),
+    .new('symbols', 'Symbols.category_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

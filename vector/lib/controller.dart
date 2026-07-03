@@ -1,11 +1,10 @@
-import 'package:geometry/geometry.dart';
-import 'package:vector/imports.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:flutter/rendering.dart' hide Selectable;
 
-part 'controller/stroke_properties.dart';
+import 'imports.dart';
+
+part 'controller/selection.dart';
 part 'controller/transient_edges.dart';
 part 'controller/transient_strokes.dart';
-part 'controller/selection.dart';
 
 class VectorController extends Controller {
   VectorController() : super(logger: Logger('VectorController'));
@@ -14,37 +13,49 @@ class VectorController extends Controller {
   static VectorController watch(BuildContext context) => context.watch<VectorController>();
 
   final canvasKey = GlobalKey();
+  final renderKey = GlobalKey();
 
-  final artworkKey = GlobalKey();
-  RenderVectorComplex? get artworkRender => artworkKey.currentContext?.findRenderObject() as RenderVectorComplex?;
-  Offset globalToArtworkLocal(Offset point) => artworkRender!.globalToLocal(point);
-  Offset artworkLocalToGlobal(Offset point) => artworkRender!.localToGlobal(point);
+  RenderBox get canvas => canvasKey.currentContext!.findRenderObject() as RenderBox;
+  RenderVectorComplex get render => renderKey.currentContext!.findRenderObject() as RenderVectorComplex;
 
-  double computeScale() => artworkRender!.getTransformTo(null).getMaxScaleOnAxis();
-
+  double computeRenderScale() => render.getTransformTo(null).getMaxScaleOnAxis();
   CellHitTestTolerance computeHitTestTolerance() {
-    final transform = artworkRender!.getTransformTo(null);
+    final transform = render.getTransformTo(null);
     return .defaultTolerance.scaled(1 / transform.getMaxScaleOnAxis());
   }
 
-  List<CellHitTestEntry> hitTestCells(Offset globalPosition, {CellHitTestTolerance? tolerance}) {
-    final localPosition = globalToArtworkLocal(globalPosition);
-    return artworkRender!.hitTestCells(localPosition, tolerance: computeHitTestTolerance());
+  BoxHitTestEntry? hitTest(Offset globalPosition, {CellHitTestTolerance? tolerance}) {
+    final localPosition = render.globalToLocal(globalPosition);
+
+    final result = BoxHitTestResult();
+    if (render.hitTest(result, position: localPosition, tolerance: computeHitTestTolerance())) {
+      return result.path.last as BoxHitTestEntry;
+    }
+
+    return null;
   }
 
   CellHitTestEntry? hitTestCell(Offset globalPosition, {CellHitTestTolerance? tolerance}) {
-    final localPosition = globalToArtworkLocal(globalPosition);
-    return artworkRender!.hitTestCell(localPosition, tolerance: computeHitTestTolerance());
+    final localPosition = render.globalToLocal(globalPosition);
+    return render.hitTestCell(localPosition, tolerance: computeHitTestTolerance());
   }
 
-  CellHitTestEntry? hitTestCellLocal(Offset localPosition, {CellHitTestTolerance tolerance = .defaultTolerance}) {
-    return artworkRender!.hitTestCell(localPosition, tolerance: tolerance);
+  List<CellHitTestEntry> hitTestCells(Offset globalPosition, {CellHitTestTolerance? tolerance}) {
+    final localPosition = render.globalToLocal(globalPosition);
+    return render.hitTestCells(localPosition, tolerance: computeHitTestTolerance());
   }
 
-  late final strokeProperties = $disposable(StrokeProperties());
+  List<CellHitTestEntry> rectHitTestCells(Rect globalRect, {CellHitTestTolerance? tolerance}) {
+    final transform = render.getTransformTo(null);
+    final localRect = MatrixUtils.inverseTransformRect(transform, globalRect);
+    return render.rectHitTestCells(localRect);
+  }
+
+  late final complex = $disposable(VectorComplex(context: .new(generatorManager: generatorManager)));
+  // late final symbolManager = $disposable(SymbolManager({}));
+  late final generatorManager = $disposable(GeneratorManager());
   late final transientEdges = $disposable(TransientEdges(this));
   late final transientStrokes = $disposable(TransientStrokes(this));
   late final tool = $disposable(ToolController(initialToolset: toolset));
-  late final complex = $customDisposable(VectorComplex(), (v) => v.dispose());
-  late final selection = $customDisposable(SelectionController(), (v) => v.dispose());
+  late final selection = $disposable(SelectionController());
 }

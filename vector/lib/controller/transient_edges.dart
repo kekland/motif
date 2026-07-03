@@ -60,16 +60,15 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     notifyListeners();
   }
 
-  List<OpenEdge> _commit({CellHitTestEntry? endHitTest, CellHitTestTolerance? tolerance}) {
+  List<Edge> _commit({BoxHitTestEntry? endHitTest, CellHitTestTolerance? tolerance}) {
     if (end == null) return [];
 
-    final endVertex = endHitTest != null ? complex.createVertexAtHitTest(endHitTest) : complex.createVertex(end!);
-    end = endVertex.position;
+    final endVertex = endHitTest != null ? complex.embedVertexAtHitTest(endHitTest) : complex.addVertex(end!);
+    end = endVertex.position.clone();
 
     final cubic = this.cubic;
-    final spline = CubicSpline2.cubics([cubic]);
-    return complex.commitSpline(
-      spline,
+    return complex.commitStroke(
+      .new([cubic.startKnot, cubic.endKnot]),
       startVertex: startVertex,
       endVertex: endVertex,
       vertexHitTestTolerance: tolerance?.vertex,
@@ -90,15 +89,15 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     return edge;
   }
 
-  TransientEdge createWithHitTest(Vector2 startPosition, CellHitTestEntry? hitTest, {Vector2? cStart}) {
+  TransientEdge createWithHitTest(Vector2 startPosition, BoxHitTestEntry? hitTest, {Vector2? cStart}) {
     final startVertex = hitTest != null
-        ? controller.complex.createVertexAtHitTest(hitTest)
-        : controller.complex.createVertex(startPosition);
+        ? controller.complex.embedVertexAtHitTest(hitTest)
+        : controller.complex.addVertex(startPosition);
 
     return create(startVertex, cStart: cStart);
   }
 
-  TransientEdge? commit(TransientEdge edge, {CellHitTestEntry? endHitTest, bool startNewEdge = false}) {
+  TransientEdge? commit(TransientEdge edge, {BoxHitTestEntry? endHitTest, bool startNewEdge = false}) {
     if (!edges.contains(edge)) return null;
 
     final newEdges = edge._commit(endHitTest: endHitTest, tolerance: controller.computeHitTestTolerance());
@@ -106,7 +105,8 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
 
     if (startNewEdge && newEdges.isNotEmpty) {
       final last = newEdges.last;
-      final cStart = last.cEnd?.pointReflect(last.end.position);
+      final lastKnot = last.path.knots.last;
+      final cStart = lastKnot.cIn?.pointReflect(last.end.position);
       return create(last.end, cStart: cStart);
     }
 

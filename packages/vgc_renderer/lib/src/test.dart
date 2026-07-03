@@ -1,6 +1,16 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+Uint8List fullBrush(int width, int height) {
+  final r8Bytes = Uint8List(width * height);
+
+  for (var i = 0; i < r8Bytes.length; i++) {
+    r8Bytes[i] = 255;
+  }
+
+  return r8Bytes;
+}
+
 Uint8List halftoneSdfBrush(int width, int height) {
   final r8Bytes = Uint8List(width * height);
 

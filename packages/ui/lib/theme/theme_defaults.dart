@@ -5,7 +5,8 @@ import 'package:ui/ui.dart';
 
 AppTypography generateMaterialTypography(AppColors colors) {
   const base = TextStyle(
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto Mono',
+    fontWeight: .w300,
     leadingDistribution: TextLeadingDistribution.even,
   );
 
@@ -17,101 +18,25 @@ AppTypography generateMaterialTypography(AppColors colors) {
       height: 41.0 / 34.0,
       letterSpacing: 0.0,
     ),
-    title1Bold: base.copyWith(
-      fontWeight: FontWeight.bold,
-      fontSize: 28.0,
-      height: 34.0 / 28.0,
-      letterSpacing: 0.0,
-    ),
-    title1Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 28.0,
-      height: 34.0 / 28.0,
-      letterSpacing: 0.0,
-    ),
-    title2Bold: base.copyWith(
-      fontWeight: FontWeight.bold,
+    title: base.copyWith(
       fontSize: 22.0,
       height: 28.0 / 22.0,
       letterSpacing: 0.0,
     ),
-    title2Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 22.0,
-      height: 28.0 / 22.0,
+    subtitle: base.copyWith(
+      fontSize: 16.0,
+      height: 20.0 / 16.0,
       letterSpacing: 0.0,
     ),
-    subtitle1Bold: base.copyWith(
-      fontWeight: FontWeight.bold,
-      fontSize: 20.0,
-      height: 25.0 / 20.0,
-      letterSpacing: 0.0,
-    ),
-    subtitle1Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 20.0,
-      height: 25.0 / 20.0,
-      letterSpacing: 0.0,
-    ),
-    body1Bold: base.copyWith(
-      fontWeight: FontWeight.w600,
-      fontSize: 17.0,
-      height: 23.0 / 17.0,
-      letterSpacing: 0.0,
-    ),
-    body1Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 17.0,
-      height: 23.0 / 17.0,
-      letterSpacing: 0.0,
-    ),
-    caption1Bold: base.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 15.0,
-      height: 19.0 / 15.0,
-      letterSpacing: 0.0,
-    ),
-    caption1Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 15.0,
-      height: 19.0 / 15.0,
-      letterSpacing: 0.0,
-    ),
-    caption2Bold: base.copyWith(
-      fontWeight: FontWeight.w500,
+    body: base.copyWith(
       fontSize: 13.0,
       height: 17.0 / 13.0,
       letterSpacing: 0.0,
     ),
-    caption2Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 13.0,
-      height: 17.0 / 13.0,
-      letterSpacing: 0.0,
-    ),
-    caption3Bold: base.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 11.0,
-      height: 15.0 / 11.0,
-      letterSpacing: 0.0,
-    ),
-    caption3Regular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 11.0,
-      height: 15.0 / 11.0,
-      letterSpacing: 0.0,
-    ),
-    footnoteBold: base.copyWith(
-      fontWeight: FontWeight.w500,
+    footnote: base.copyWith(
       fontSize: 10.0,
-      height: 16.0 / 10.0,
-      letterSpacing: 0.2,
-    ),
-    footnoteRegular: base.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 10.0,
-      height: 16.0 / 10.0,
-      letterSpacing: 0.2,
+      height: 14.0 / 10.0,
+      letterSpacing: 0.0,
     ),
   );
 }
@@ -123,128 +48,39 @@ AppTypography generateCupertinoTypography(AppColors colors) {
   ];
 
   const base = TextStyle(
+    fontFamily: 'SF Mono',
+    fontWeight: .w300,
     leadingDistribution: TextLeadingDistribution.even,
-  );
-
-  final baseDisplay = base.copyWith(
-    fontFamily: 'CupertinoSystemDisplay',
-    fontFamilyFallback: [
-      'SF Pro Display',
-      ...fallback,
-    ],
-  );
-
-  final baseText = base.copyWith(
-    fontFamily: 'CupertinoSystemText',
-    fontFamilyFallback: [
-      'SF Pro Text',
-      ...fallback,
-    ],
+    fontFamilyFallback: fallback,
   );
 
   return AppTypographyGenerator.generate(
     colors,
-    largeTitle: baseDisplay.copyWith(
+    largeTitle: base.copyWith(
       fontWeight: FontWeight.bold,
       fontSize: 34.0,
       height: 41.0 / 34.0,
-      letterSpacing: 0.4,
+      letterSpacing: 0.0,
     ),
-    title1Bold: baseDisplay.copyWith(
-      fontWeight: FontWeight.bold,
-      fontSize: 28.0,
-      height: 34.0 / 28.0,
-      letterSpacing: 0.38,
-    ),
-    title1Regular: baseDisplay.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 28.0,
-      height: 34.0 / 28.0,
-      letterSpacing: 0.38,
-    ),
-    title2Bold: baseDisplay.copyWith(
-      fontWeight: FontWeight.bold,
+    title: base.copyWith(
       fontSize: 22.0,
       height: 28.0 / 22.0,
-      letterSpacing: 0.28,
+      letterSpacing: -0.2,
     ),
-    title2Regular: baseDisplay.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 22.0,
-      height: 28.0 / 22.0,
-      letterSpacing: 0.37,
-    ),
-    subtitle1Bold: baseDisplay.copyWith(
-      fontWeight: FontWeight.bold,
-      fontSize: 20.0,
-      height: 25.0 / 20.0,
-      letterSpacing: 0.36,
-    ),
-    subtitle1Regular: baseDisplay.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 20.0,
-      height: 25.0 / 20.0,
-      letterSpacing: 0.5,
-    ),
-    body1Bold: baseText.copyWith(
-      fontWeight: FontWeight.w600,
-      fontSize: 17.0,
-      height: 23.0 / 17.0,
-      letterSpacing: -0.43,
-    ),
-    body1Regular: baseText.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 17.0,
-      height: 23.0 / 17.0,
-      letterSpacing: -0.43,
-    ),
-    caption1Bold: baseText.copyWith(
-      fontWeight: FontWeight.w600,
-      fontSize: 15.0,
-      height: 19.0 / 15.0,
-      letterSpacing: -0.23,
-    ),
-    caption1Regular: baseText.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 15.0,
-      height: 19.0 / 15.0,
-      letterSpacing: -0.23,
-    ),
-    caption2Bold: baseText.copyWith(
-      fontWeight: FontWeight.w600,
+    subtitle: base.copyWith(
       fontSize: 13.0,
-      height: 17.0 / 13.0,
-      letterSpacing: -0.08,
+      height: 16.0 / 13.0,
+      letterSpacing: -0.2,
     ),
-    caption2Regular: baseText.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 13.0,
-      height: 17.0 / 13.0,
-      letterSpacing: -0.08,
+    body: base.copyWith(
+      fontSize: 12.0,
+      height: 14.0 / 12.0,
+      letterSpacing: -0.2,
     ),
-    caption3Bold: baseText.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 11.0,
-      height: 15.0 / 11.0,
-      letterSpacing: 0.06,
-    ),
-    caption3Regular: baseText.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 11.0,
-      height: 15.0 / 11.0,
-      letterSpacing: 0.06,
-    ),
-    footnoteBold: baseText.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 10.0,
-      height: 16.0 / 10.0,
-      letterSpacing: 0.12,
-    ),
-    footnoteRegular: baseText.copyWith(
-      fontWeight: FontWeight.normal,
-      fontSize: 10.0,
-      height: 16.0 / 10.0,
-      letterSpacing: 0.12,
+    footnote: base.copyWith(
+      fontSize: 8.0,
+      height: 12.0 / 8.0,
+      letterSpacing: -0.2,
     ),
   );
 }
@@ -337,7 +173,7 @@ AppColors generateAppColors({
 
   final isLight = brightness == Brightness.light;
   final background = scheme.surface;
-  final seed = seedColor;
+  final seed = scheme.primary;
   final SurfaceColors surfaceColors = (
     primary: .new(
       idle: .new(
@@ -355,15 +191,15 @@ AppColors generateAppColors({
     ),
     secondary: .new(
       idle: .new(
-        background: isLight ? scheme.surfaceContainer : scheme.surfaceContainerLow,
+        background: isLight ? scheme.surfaceContainer : scheme.surfaceContainer,
         foreground: scheme.onSurface,
       ),
       disabled: .new(
-        background: _mixColor(background, isLight ? scheme.surfaceContainer : scheme.surfaceContainerLow, 0.5),
+        background: _mixColor(background, isLight ? scheme.surfaceContainer : scheme.surfaceContainer, 0.5),
         foreground: _mixColor(background, scheme.onSurface, 0.75),
       ),
       hovered: .new(
-        background: getSurfaceHoverColor(isLight ? scheme.surfaceContainer : scheme.surfaceContainerLow),
+        background: getSurfaceHoverColor(isLight ? scheme.surfaceContainer : scheme.surfaceContainer),
         foreground: scheme.onSurface,
       ),
     ),
@@ -490,6 +326,37 @@ AppColors generateAppColors({
         : Colors.white.withScaledAlpha(0.12),
     scrim: brightness == Brightness.light ? Colors.black.withScaledAlpha(0.32) : Colors.white.withScaledAlpha(0.32),
     shadow: scheme.shadow,
+    blueprint: _generateBlueprintColors(seedColor, brightness),
+  );
+}
+
+BlueprintColors _generateBlueprintColors(Color seedColor, Brightness brightness) {
+  final _dataInt = Color(0xFF5E239D);
+  final _dataFloat = Color(0xFF1B998B);
+  final _dataVector = Color(0xFF5398BE);
+  final _dataGeometry = seedColor;
+
+  final _nodeMath = Color(0xFF5398BE);
+  final _nodePrimitive = seedColor;
+  final _nodeGeometry = seedColor;
+
+  Color _resolve(Color c) {
+    final scheme = ColorScheme.fromSeed(seedColor: c, brightness: brightness);
+    return scheme.primaryContainer;
+  }
+
+  return (
+    data: (
+      int: _resolve(_dataInt),
+      float: _resolve(_dataFloat),
+      vector: _resolve(_dataVector),
+      geometry: _resolve(_dataGeometry),
+    ),
+    node: (
+      math: _resolve(_nodeMath),
+      primitive: _resolve(_nodePrimitive),
+      geometry: _resolve(_nodeGeometry),
+    ),
   );
 }
 

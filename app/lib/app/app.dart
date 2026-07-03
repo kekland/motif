@@ -1,14 +1,13 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_page.dart';
 import 'package:design/design.dart';
-import 'package:stack_window_manager/stack_window_manager.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.indigo;
+    final seedColor = Colors.purple;
     final brightness = Brightness.dark;
 
     final colorScheme = ColorScheme.fromSeed(
@@ -41,10 +40,10 @@ class App extends StatelessWidget {
         child: TransientTransformsTickerProvider(
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            // showPerformanceOverlay: false,
+            // showPerformanceOverlay: true,
             showPerformanceOverlay: false,
             theme: themeData,
-            home: WindowRoot(child: RootPage()),
+            home: WindowNavigator(child: RootPage()),
           ),
         ),
       ),

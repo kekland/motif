@@ -22,20 +22,15 @@ class _MarqueeToolOverlay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = VectorController.of(context);
     final marqueeRect = useState<Rect?>(null);
 
-    final selectCellsRecognizer = useDragActivityRecognizer(
-      () => SelectCellsActivity(
-        controller: VectorController.of(context),
+    return DragActivityDetector(
+      behavior: .translucent,
+      activityFactory: () => SelectCellsActivity(
+        controller: controller,
         onMarqueeRectChanged: (rect) => marqueeRect.value = rect,
       ),
-    );
-
-    return Listener(
-      behavior: .translucent,
-      onPointerDown: (e) {
-        selectCellsRecognizer.addPointer(e);
-      },
       child: Stack(
         children: [
           if (marqueeRect.value != null) MarqueeOverlay(rect: marqueeRect.value!),

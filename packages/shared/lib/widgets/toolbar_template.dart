@@ -33,9 +33,9 @@ class ToolbarTemplate extends StatelessWidget {
           children: [
             ToolbarButton(
               key: ValueKey(tool.key),
-              tool: tool,
               isActive: tool == activeTool,
               onTap: onToolSelected != null ? () => onToolSelected!(tool) : null,
+              child: tool.buildIcon(context),
             ),
             divider,
           ],
@@ -48,12 +48,12 @@ class ToolbarTemplate extends StatelessWidget {
 class ToolbarButton extends StatelessWidget {
   const ToolbarButton({
     super.key,
-    required this.tool,
-    required this.isActive,
+    required this.child,
+    this.isActive = false,
     this.onTap,
   });
 
-  final Tool tool;
+  final Widget child;
   final bool isActive;
   final VoidCallback? onTap;
 
@@ -62,7 +62,7 @@ class ToolbarButton extends StatelessWidget {
     return ToggleableButton(
       onChanged: (v) => onTap?.call(),
       isActive: isActive,
-      child: tool.buildIcon(context),
+      child: child,
     );
   }
 }

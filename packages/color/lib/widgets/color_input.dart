@@ -17,7 +17,6 @@ class ColorInputField extends HookWidget {
   Widget build(BuildContext context) {
     final valueSignal = useComputed(() => value);
     final (createEntry, _) = useCreateWindowEntry(
-      context,
       (context) => ColorPickerWindow.createEntry(context, value: valueSignal, onChanged: onChanged),
     );
 
@@ -28,7 +27,7 @@ class ColorInputField extends HookWidget {
       builder: (context) {
         final iconTheme = IconTheme.of(context);
         return GestureSurface(
-          onTap: createEntry,
+          onTap: () => createEntry(context),
           borderRadius: BorderRadius.circular(4.0),
           borderSide: BorderSide(color: context.colors.inverse.withScaledAlpha(0.05)),
           width: iconTheme.size ?? 16.0,
@@ -39,7 +38,7 @@ class ColorInputField extends HookWidget {
     );
 
     return GestureSurface(
-      onTap: createEntry,
+      onTap: () => createEntry(context),
       supportedDevices: {.stylus, .touch},
       child: ExpressionInputField<ColorData>(
         value: value,

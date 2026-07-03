@@ -12,13 +12,16 @@ export 'package:flutter/material.dart'
         IconButton,
         Checkbox,
         DropdownMenu,
-        DropdownButton;
+        DropdownButton,
+        Slider;
 
 export 'assets/_.dart';
 export 'buttons/_.dart';
 export 'display/_.dart';
 export 'form/_.dart';
+export 'selection/_.dart';
 export 'templates/_.dart';
 export 'theme/_.dart';
 export 'utils/_.dart';
 export 'windows/_.dart';
+

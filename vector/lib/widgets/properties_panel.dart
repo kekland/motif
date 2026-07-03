@@ -1,35 +1,56 @@
 import 'package:vector/imports.dart';
+import 'package:vector/widgets/generators/select_generator_window.dart';
 
-part 'properties/edge_properties.dart';
+part 'properties_panel/add_modifier_window.dart';
+part 'properties_panel/modifiers.dart';
+part 'properties_panel/modifier.dart';
 
 class PropertiesPanel extends HookWidget {
   const PropertiesPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = VectorController.of(context);
-    useListenable(controller.strokeProperties);
+    final controller = VectorController.watch(context);
+    final selection = useListenable(controller.selection);
 
-    final selectionController = controller.selection;
-    final selectedCells = useComputedValue(() => [...selectionController.selectedObjects]);
+    if (selection.selected.isEmpty) {
+      return const Center(
+        child: Text('No selection'),
+      );
+    }
 
-    final strokeProperties = controller.strokeProperties;
+    final cells = selection.selected.whereType<Cell>().toList();
+    if (cells.isEmpty) {
+      return const Center(
+        child: Text('No cells selected'),
+      );
+    }
 
-    return Column(
-      key: ValueKey(selectedCells),
+    return ListView(
       children: [
-        Spacer(),
-        Checkbox(
-          value: strokeProperties.topological,
-          onChanged: (value) => controller.strokeProperties.topological = value,
-        ),
-        const SizedBox(height: 8.0),
-        ColorPicker(
-          value: () => strokeProperties.color,
-          onChanged: (c) => controller.strokeProperties.color = c,
-        ),
-        const SizedBox(height: 8.0),
+        _Header(cells: cells),
+        Divider(),
+        _Modifiers(cell: cells.first),
       ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({
+    super.key,
+    required this.cells,
+  });
+
+  final List<Cell> cells;
+
+  @override
+  Widget build(BuildContext context) {
+    final cell = cells.first;
+
+    return Subtitle(
+      leading: Icons.edge(),
+      child: Text('${cell.runtimeType} ${cell.id}'),
     );
   }
 }

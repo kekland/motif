@@ -3,6 +3,7 @@ part of 'profile.dart';
 abstract class ParameterProfile<P extends ParameterProfile<P>> extends ValueProfile<P> {
   ParameterProfile() : super(1.0);
   ParameterProfile.from(List<RawProfileSample> samples) : super.from(samples, 1.0);
+  ParameterProfile.empty() : super(1.0);
 
   @override
   P copy() => create(_samples.toList());

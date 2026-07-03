@@ -96,6 +96,7 @@ StrokeWeightArcLengthProfile _generateProfile(
 class StrokeWeightArcLengthProfile extends ArcLengthProfile<StrokeWeightArcLengthProfile> {
   StrokeWeightArcLengthProfile(super.totalLength) : super();
   StrokeWeightArcLengthProfile.from(super.samples, super.totalLength) : super.from();
+  StrokeWeightArcLengthProfile.empty() : super(0.0);
 
   factory StrokeWeightArcLengthProfile.fitFromFreehand(
     List<StrokePoint> input, {
@@ -114,6 +115,7 @@ class StrokeWeightArcLengthProfile extends ArcLengthProfile<StrokeWeightArcLengt
 class StrokeWeightParameterProfile extends ParameterProfile<StrokeWeightParameterProfile> {
   StrokeWeightParameterProfile() : super();
   StrokeWeightParameterProfile.from(super.samples) : super.from();
+  StrokeWeightParameterProfile.empty(): super.empty();
 
   @override
   StrokeWeightParameterProfile create(List<RawProfileSample> samples) => .from(samples);

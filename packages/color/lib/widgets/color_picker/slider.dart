@@ -72,7 +72,7 @@ class _Slider extends HookWidget {
           SizedBox.square(
             dimension: 16.0,
             child: DefaultForegroundStyle(
-              textStyle: context.typography.caption3.tertiary,
+              textStyle: context.typography.footnote.tertiary,
               iconSize: 16.0,
               child: leading!,
             ),

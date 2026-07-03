@@ -1,6 +1,6 @@
 import 'package:vector/imports.dart';
-import 'package:vector/tools/pen/activities/pen_activities.dart';
-import 'package:vgc/debug/debug_draw.dart';
+
+export 'activities/create_vertex_activity.dart';
 
 class PenTool extends Tool {
   const PenTool();
@@ -38,17 +38,6 @@ class _PenToolOverlay extends HookWidget {
       }
     });
 
-    final createVertexRecognizer = useDragActivityRecognizer(
-      () => CreateVertexActivity(
-        controller: controller,
-        existingTransientEdge: transientEdge.value,
-        onTransientEdgeCreated: (v) => transientEdge.value = v,
-        onTransientEdgeCompleted: (v) {
-          transientEdge.value = null;
-        },
-      ),
-    );
-
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: switch (hoveredCell.value) {
@@ -60,53 +49,25 @@ class _PenToolOverlay extends HookWidget {
         behavior: .translucent,
         onPointerHover: (e) {
           final globalPosition = e.position;
-          final localPosition = controller.globalToArtworkLocal(globalPosition);
-          hoveredCell.value = controller.hitTestCell(globalPosition)?.cell;
+          final localPosition = controller.render.globalToLocal(globalPosition);
+          final hitTest = controller.hitTestCell(globalPosition);
 
-          if (transientEdge.value != null) {
-            transientEdge.value!.end = localPosition.asVector2();
-          }
+          hoveredCell.value = hitTest?.cell;
+          transientEdge.value?.end = localPosition.vec2;
         },
-        onPointerDown: (e) {
-          createVertexRecognizer.addPointer(e);
-        },
-        child: GestureDetector(
+        child: DragActivityDetector(
           behavior: .translucent,
-          child: Stack(
-            children: [
-              // if (hoveredCell.value != null)
-              //   Positioned.fill(
-              //     child: Transform(
-              //       transform: info.childPaintTransform,
-              //       child: CustomPaint(
-              //         painter: _HoverPainter(
-              //           cell: hoveredCell.value!,
-              //           color: context.colors.accent.primary,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-            ],
+          activityFactory: () => CreateVertexActivity(
+            controller: controller,
+            existingTransientEdge: transientEdge.value,
+            onTransientEdgeCreated: (v) => transientEdge.value = v,
+            onTransientEdgeCompleted: (v) {
+              transientEdge.value = null;
+            },
           ),
+          child: const SizedBox.expand(),
         ),
       ),
     );
-  }
-}
-
-class _HoverPainter extends CustomPainter {
-  const _HoverPainter({required this.cell, required this.color});
-
-  final Color color;
-  final Cell cell;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    drawDebugCell(canvas, cell, color: color);
-  }
-
-  @override
-  bool shouldRepaint(covariant _HoverPainter oldDelegate) {
-    return oldDelegate.cell != cell;
   }
 }

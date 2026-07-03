@@ -4,7 +4,7 @@ import 'package:stack_window_manager/stack_window_manager.dart' as window_manage
 
 part 'window_transition.dart';
 
-class WindowEntry extends window_manager.WindowEntry {
+class WindowEntry<T> extends window_manager.WindowEntry<T> {
   WindowEntry._({
     required super.builder,
     super.anchor,
@@ -35,10 +35,12 @@ class WindowScaffold extends StatelessWidget {
   const WindowScaffold({
     super.key,
     required this.child,
+    this.leading,
     this.title,
   });
 
-  final String? title;
+  final Widget? leading;
+  final Widget? title;
   final Widget child;
 
   @override
@@ -52,25 +54,15 @@ class WindowScaffold extends StatelessWidget {
         child: Column(
           mainAxisSize: .min,
           children: [
-            SizedBox(
-              height: 40.0,
-              child: Row(
-                mainAxisSize: .min,
-                children: [
-                  const SizedBox(width: 4.0),
-                  if (title != null) ...[
-                    const SizedBox(width: 8.0),
-                    Expanded(child: Text(title!, style: context.typography.caption1.tertiary)),
-                    const SizedBox(width: 8.0),
-                  ] else
-                    Spacer(),
-                  IconButton(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    foregroundColor: context.colors.display.tertiary,
-                    child: Icons.close(),
-                  ),
-                  const SizedBox(width: 4.0),
-                ],
+            DefaultForegroundStyle(
+              color: context.colors.display.tertiary,
+              child: Subtitle(
+                leading: leading,
+                trailing: IconButton(
+                  onTap: () => Navigator.of(context).maybePop(),
+                  child: Icons.close(),
+                ),
+                child: title ?? const SizedBox.shrink(),
               ),
             ),
             Divider(height: 1.0, color: context.colors.divider),
@@ -82,7 +74,7 @@ class WindowScaffold extends StatelessWidget {
   }
 }
 
-(VoidCallback, bool) useCreateWindowEntry(BuildContext context, WindowEntry Function(BuildContext) createEntry) {
+(void Function(BuildContext), bool) useCreateWindowEntry(WindowEntry Function(BuildContext) createEntry) {
   final entry = useState<WindowEntry?>(null);
 
   useOnDispose(() {
@@ -90,7 +82,7 @@ class WindowScaffold extends StatelessWidget {
     entry.value?.dispose();
   });
 
-  void callback() {
+  void callback(BuildContext context) {
     if (entry.value != null && entry.value!.isActive) {
       entry.value!.remove();
       entry.value = null;

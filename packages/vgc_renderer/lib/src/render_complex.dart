@@ -96,13 +96,14 @@ class RenderVectorComplex extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     final localToGlobal = getTransformTo(null);
+    localToGlobal.leftTranslateByDouble(-offset.dx, -offset.dy, 0.0, 1.0);
 
     final mtlTexture = _renderer3.renderToTexture(
       complex.edges.toList(),
-      width: viewportSize.width.ceil() * 3,
-      height: viewportSize.height.ceil() * 3,
+      width: viewportSize.width.ceil() * 2,
+      height: viewportSize.height.ceil() * 2,
       tolerance: 1.0,
-      transform: Matrix4.diagonal3Values(3.0, 3.0, 1.0) * localToGlobal,
+      transform: Matrix4.diagonal3Values(2.0, 2.0, 1.0) * localToGlobal,
       transientStrokes: transientStrokes,
     );
 
@@ -113,7 +114,6 @@ class RenderVectorComplex extends RenderBox {
         rect: offset & (viewportSize),
         textureId: _mtlTexture.textureId!,
         filterQuality: .high,
-        freeze: false,
       ),
     );
   }

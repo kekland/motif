@@ -1,6 +1,6 @@
 import 'package:vector/imports.dart';
-import 'package:vector/tools/cursor/selection/hover_overlay.dart';
-import 'package:vgc/debug/debug_draw.dart';
+
+export 'activities/move_object_activity.dart';
 
 class CursorTool extends Tool {
   const CursorTool();
@@ -26,80 +26,68 @@ class _CursorToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = VectorController.watch(context);
-    final hoveredCell = useState<Cell?>(null);
-    // final shouldUpdateSelectionOnUp = useRef(true);
-
-    List<CellHitTestEntry> _hitTest(Offset globalPosition) {
-      final scale = info.childPaintTransform.getMaxScaleOnAxis();
-      return controller.hitTestCells(globalPosition, tolerance: .defaultTolerance.scaled(1.0 / scale));
-    }
+    final hoveredObject = useState<Object?>(null);
+    final shouldUpdateSelectionOnUp = useRef(true);
 
     return Stack(
       children: [
         MouseRegion(
           hitTestBehavior: .translucent,
-          cursor: .defer,
+          cursor: switch (hoveredObject.value) {
+            Vertex() => Cursors.toolCursorVertex,
+            Edge() => Cursors.toolCursorEdge,
+            EdgeKnot() => Cursors.toolCursorKnot,
+            EdgeKnotControlPoint() => Cursors.toolCursorControlPoint,
+            _ => .defer,
+          },
           child: Listener(
             behavior: .translucent,
             onPointerHover: (e) {
-              final hits = _hitTest(e.position);
+              final hits = controller.hitTestCells(e.position);
 
               if (hits.isNotEmpty) {
-                hoveredCell.value = hits.first.cell;
+                hoveredObject.value = hits.first.hitObject;
               } else {
-                hoveredCell.value = null;
+                hoveredObject.value = null;
               }
             },
-            // onPointerDown: (e) {
-            //   shouldUpdateSelectionOnUp.value = true;
-            //   // final hits = _hitTest(e.position);
+            onPointerDown: (e) {
+              shouldUpdateSelectionOnUp.value = true;
+              final hits = controller.hitTestCells(e.position);
 
-            //   // if (hits.isNotEmpty) {
-            //   //   controller.selection.select(hits.first.hitObject);
-            //   // }
-            // },
-            child: GestureDetector(
+              if (hits.isNotEmpty) {
+                controller.selection.select(hits.first.cell);
+              }
+            },
+            child: DragActivityDetector(
               behavior: .translucent,
-              onTapUp: (details) {
-                final hits = _hitTest(details.globalPosition);
-                if (hits.isEmpty) {
-                  controller.selection.clear();
-                } else {
-                  controller.selection.select(hits.first.hitObject);
-                }
-              },
-              child: Stack(
-                children: [
-                  Transform(
-                    transform: info.childPaintTransform,
-                    child: HoverOverlayBuilder(
-                      controller: controller,
-                      hoveredCell: hoveredCell.value,
-                    ),
-                  ),
-                ],
+              activityFactory: () => MoveObjectActivity(controller: controller),
+              child: GestureDetector(
+                behavior: .translucent,
+                onTapUp: (details) {
+                  final hits = controller.hitTestCells(details.globalPosition);
+                  if (hits.isEmpty) {
+                    controller.selection.clear();
+                  } else {
+                    controller.selection.select(hits.first.cell);
+                  }
+                },
+                // child: Stack(
+                //   children: [
+                //     Transform(
+                //       transform: info.childPaintTransform,
+                //       child: HoverOverlayBuilder(
+                //         controller: controller,
+                //         hoveredCell: hoveredCell.value,
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ),
             ),
           ),
         ),
       ],
     );
-  }
-}
-
-class _HoverPainter extends CustomPainter {
-  const _HoverPainter({required this.cell, required this.color});
-
-  final Color color;
-  final Cell cell;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    drawDebugCell(canvas, cell, color: color);
-  }
-
-  @override
-  bool shouldRepaint(covariant _HoverPainter oldDelegate) {
-    return oldDelegate.cell != cell;
   }
 }

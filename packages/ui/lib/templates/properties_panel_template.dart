@@ -19,7 +19,7 @@ class SectionTemplateWidget extends StatelessWidget {
         crossAxisAlignment: .start,
         children: [
           DefaultForegroundStyle(
-            textStyle: context.typography.caption3.tertiary,
+            textStyle: context.typography.body.tertiary,
             child: title,
           ),
           ...body,

@@ -31,7 +31,7 @@ class IconButton extends StatelessWidget {
         return DefaultGestureReaction(
           states: states,
           child: DefaultForegroundStyle(
-            iconSize: 24.0,
+            iconSize: 20.0,
             child: Center(child: child),
           ),
         );

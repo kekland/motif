@@ -47,8 +47,11 @@ typedef CubicDataArrayInternal = List<(Cubic2Internal cubic, wgsl.U32 edgeIdx, w
 typedef Vec3fArray = List<wgsl.Vec3f>;
 typedef Vec3fArrayInternal = List<wgsl.Vec3f>;
 
-typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind)>;
-typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind)>;
+typedef BrushDataArray = List<(double length, double spacing, int textureIdx)>;
+typedef BrushDataArrayInternal = List<(wgsl.F32 length, wgsl.F32 spacing, wgsl.U32 textureIdx)>;
+
+typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, double weight, int zIndex, int brushIdx, int kind)>;
+typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, wgsl.F32 weight, wgsl.U32 zIndex, wgsl.U32 brushIdx, wgsl.U32 kind)>;
 
 typedef Cubic2 = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
 typedef Cubic2Internal = (wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wgsl.Vec2f p3);
@@ -628,19 +631,20 @@ extension BrushDataStruct on BrushData {
 
 }
 
-typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind);
-typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind);
+typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, double weight, int zIndex, int brushIdx, int kind);
+typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, wgsl.F32 weight, wgsl.U32 zIndex, wgsl.U32 brushIdx, wgsl.U32 kind);
 
 extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v0 => this.$1;
   wgsl.Vec2f get v1 => this.$2;
   wgsl.Vec2f get v2 => this.$3;
   wgsl.Vec2f get v3 => this.$4;
-  wgsl.Vec4f get color => this.$5;
-  int get zIndex => this.$6;
-  wgsl.Vec2f get arcDistance => this.$7;
-  int get brushIdx => this.$8;
-  int get kind => this.$9;
+  wgsl.Vec2f get arcLength => this.$5;
+  wgsl.Vec4f get color => this.$6;
+  double get weight => this.$7;
+  int get zIndex => this.$8;
+  int get brushIdx => this.$9;
+  int get kind => this.$10;
 
   @pragma('vm:prefer-inline')
   RenderGeometryInternal get asInternal => (
@@ -648,9 +652,10 @@ extension RenderGeometryExt on RenderGeometry {
     v1,
     v2,
     v3,
+    arcLength,
     color,
+    .new(weight),
     .new(zIndex),
-    arcDistance,
     .new(brushIdx),
     .new(kind),
   );
@@ -661,11 +666,12 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
   wgsl.Vec2f get v1 => this.$2;
   wgsl.Vec2f get v2 => this.$3;
   wgsl.Vec2f get v3 => this.$4;
-  wgsl.Vec4f get color => this.$5;
-  wgsl.U32 get zIndex => this.$6;
-  wgsl.Vec2f get arcDistance => this.$7;
-  wgsl.U32 get brushIdx => this.$8;
-  wgsl.U32 get kind => this.$9;
+  wgsl.Vec2f get arcLength => this.$5;
+  wgsl.Vec4f get color => this.$6;
+  wgsl.F32 get weight => this.$7;
+  wgsl.U32 get zIndex => this.$8;
+  wgsl.U32 get brushIdx => this.$9;
+  wgsl.U32 get kind => this.$10;
 
   @pragma('vm:prefer-inline')
   RenderGeometry get asDart => (
@@ -678,6 +684,7 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$7,
     this.$8,
     this.$9,
+    this.$10,
   );
 
   @pragma('vm:prefer-inline')
@@ -687,10 +694,11 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$3.write(data, offset + 16);
     this.$4.write(data, offset + 24);
     this.$5.write(data, offset + 32);
-    wgsl.U32(this.$6).write(data, offset + 48);
-    this.$7.write(data, offset + 56);
-    wgsl.U32(this.$8).write(data, offset + 64);
-    wgsl.U32(this.$9).write(data, offset + 68);
+    this.$6.write(data, offset + 48);
+    wgsl.F32(this.$7).write(data, offset + 64);
+    wgsl.U32(this.$8).write(data, offset + 68);
+    wgsl.U32(this.$9).write(data, offset + 72);
+    wgsl.U32(this.$10).write(data, offset + 76);
   }
 }
 
@@ -701,11 +709,12 @@ extension RenderGeometryStruct on RenderGeometry {
     wgsl.Vec2f.read(data, offset + 8),
     wgsl.Vec2f.read(data, offset + 16),
     wgsl.Vec2f.read(data, offset + 24),
-    wgsl.Vec4f.read(data, offset + 32),
-    wgsl.U32.read(data, offset + 48),
-    wgsl.Vec2f.read(data, offset + 56),
-    wgsl.U32.read(data, offset + 64),
+    wgsl.Vec2f.read(data, offset + 32),
+    wgsl.Vec4f.read(data, offset + 48),
+    wgsl.F32.read(data, offset + 64),
     wgsl.U32.read(data, offset + 68),
+    wgsl.U32.read(data, offset + 72),
+    wgsl.U32.read(data, offset + 76),
   );
 
 }
@@ -1308,6 +1317,117 @@ class Vec3fArrayStorageBuffer extends wgsl.ArrayStorageBuffer<wgsl.Vec3f> {
   void operator []=(int index, wgsl.Vec3f value) => _view[index] = value;
 }
 
+@meta.StorageBufferView(['in_brush_data'])
+extension type BrushDataArrayStorageBufferView(ByteData data) {
+  BrushDataArrayStorageBufferView.create(int length): this(.new(length * strideInBytes));
+
+  void writeToQueue(wgpu.Queue queue, wgpu.Buffer buffer, {int? count}) {
+    final length = count != null ? count * strideInBytes : data.lengthInBytes;
+    queue.writeBuffer(buffer, 0, ByteData.sublistView(data, 0, length));
+  }
+  void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
+
+  static const int strideInBytes = 12;
+  int get sizeInBytes => data.lengthInBytes;
+  int get length => sizeInBytes ~/ strideInBytes;
+
+  static wgpu.BufferDescriptor descriptor({
+    required int length,
+    String? label,
+    wgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) => .new(
+    label: label ?? '(flatten.wgsl) array<BrushData> buffer',
+    size: length * strideInBytes,
+    usage: usage ?? .of([.storage, .copyDst]),
+    mappedAtCreation: mappedAtCreation,
+  );
+
+  static wgpu.Buffer createBuffer(
+    wgpu.Device device, {
+    required int length,
+    String? label,
+    wgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) {
+    return device.createBuffer(descriptor(
+      length: length,
+      label: label,
+      usage: usage,
+      mappedAtCreation: mappedAtCreation,
+    ));
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(BrushDataArray value) {
+    for (var i = 0; i < value.length; i++) {
+      value[i].asInternal.write(data, 0 + i * 12);
+    }
+  }
+
+  @pragma('vm:prefer-inline')
+  BrushDataArray read() {
+    return List.generate(length, (i) {
+      return BrushDataStruct.read(data, 0 + i * 12);
+    });
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, BrushData value) {
+    value.asInternal.write(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  BrushData operator [](int index) {
+    return BrushDataStruct.read(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {double length = 0, double spacing = 0, int textureIdx = 0}) {
+    wgsl.F32(length).write(data, index * strideInBytes + 0);
+    wgsl.F32(spacing).write(data, index * strideInBytes + 4);
+    wgsl.U32(textureIdx).write(data, index * strideInBytes + 8);
+  }
+}
+
+@meta.StorageBuffer(['in_brush_data'])
+class BrushDataArrayStorageBuffer extends wgsl.ArrayStorageBuffer<BrushDataInternal> {
+  BrushDataArrayStorageBuffer(wgpu.Device device, {required int length, String? label, wgpu.BufferUsage? usage}):
+    _view = BrushDataArrayStorageBufferView.create(length),
+    super(length, BrushDataArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
+
+
+  static const int strideInBytes = 12;
+  int get sizeInBytes => _view.sizeInBytes;
+
+  final BrushDataArrayStorageBufferView _view;
+  BrushDataArrayStorageBufferView get view => _view;
+
+  @override
+  void writeToQueue(wgpu.Queue queue, {int? count}) => _view.writeToQueue(queue, buffer, count: count);
+
+  BrushDataArray readSync(wgpu.Device device) {
+    final mapped = _readbackSync(device, buffer, sizeInBytes);
+    _view.data.buffer.asUint8List(_view.data.offsetInBytes, _view.data.lengthInBytes).setAll(0, mapped);
+    return _view.read();
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(BrushDataArray value) => _view.write(value);
+
+  @pragma('vm:prefer-inline')
+  void clear([wgpu.Queue? queue]) {
+    _view.clear();
+    if (queue != null) writeToQueue(queue);
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, BrushData value) => _view[index] = value;
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {double length = 0, double spacing = 0, int textureIdx = 0}) => _view.set(index, length: length, spacing: spacing, textureIdx: textureIdx);
+}
+
 @meta.StorageBufferView(['out_draw_args'])
 extension type DrawIndirectArgsStorageBufferView(ByteData data) {
   DrawIndirectArgsStorageBufferView.create(): this(.new(sizeInBytes));
@@ -1525,16 +1645,17 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) {
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec2f arcLength = .zero, wgsl.Vec4f color = .zero, double weight = 0, int zIndex = 0, int brushIdx = 0, int kind = 0}) {
     v0.write(data, index * strideInBytes + 0);
     v1.write(data, index * strideInBytes + 8);
     v2.write(data, index * strideInBytes + 16);
     v3.write(data, index * strideInBytes + 24);
-    color.write(data, index * strideInBytes + 32);
-    wgsl.U32(zIndex).write(data, index * strideInBytes + 48);
-    arcDistance.write(data, index * strideInBytes + 56);
-    wgsl.U32(brushIdx).write(data, index * strideInBytes + 64);
-    wgsl.U32(kind).write(data, index * strideInBytes + 68);
+    arcLength.write(data, index * strideInBytes + 32);
+    color.write(data, index * strideInBytes + 48);
+    wgsl.F32(weight).write(data, index * strideInBytes + 64);
+    wgsl.U32(zIndex).write(data, index * strideInBytes + 68);
+    wgsl.U32(brushIdx).write(data, index * strideInBytes + 72);
+    wgsl.U32(kind).write(data, index * strideInBytes + 76);
   }
 }
 
@@ -1573,7 +1694,7 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
   void operator []=(int index, RenderGeometry value) => _view[index] = value;
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, arcDistance: arcDistance, brushIdx: brushIdx, kind: kind);
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec2f arcLength = .zero, wgsl.Vec4f color = .zero, double weight = 0, int zIndex = 0, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, arcLength: arcLength, color: color, weight: weight, zIndex: zIndex, brushIdx: brushIdx, kind: kind);
 }
 
 @meta.BindGroupLayoutDescriptor(0)
@@ -1617,6 +1738,15 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
       ),
     ),
     .new(
+      binding: 4,
+      visibility: .compute,
+      buffer: .new(
+        type: .readOnlyStorage,
+        minBindingSize: 12,
+        hasDynamicOffset: false,
+      ),
+    ),
+    .new(
       binding: 5,
       visibility: .compute,
       buffer: .new(
@@ -1650,6 +1780,7 @@ wgpu.BindGroup createBindGroup0Raw(
   required wgpu.BufferView inEdgeData,
   required wgpu.BufferView inCubicData,
   required wgpu.BufferView inEdgeWeightSamples,
+  required wgpu.BufferView inBrushData,
   required wgpu.BufferView outDrawArgs,
   required wgpu.BufferView outRenderGeometry,
   String? label,
@@ -1661,6 +1792,7 @@ wgpu.BindGroup createBindGroup0Raw(
     .new(binding: 1, buffer: inEdgeData.buffer, offset: inEdgeData.offset, size: inEdgeData.size),
     .new(binding: 2, buffer: inCubicData.buffer, offset: inCubicData.offset, size: inCubicData.size),
     .new(binding: 3, buffer: inEdgeWeightSamples.buffer, offset: inEdgeWeightSamples.offset, size: inEdgeWeightSamples.size),
+    .new(binding: 4, buffer: inBrushData.buffer, offset: inBrushData.offset, size: inBrushData.size),
     .new(binding: 5, buffer: outDrawArgs.buffer, offset: outDrawArgs.offset, size: outDrawArgs.size),
     .new(binding: 6, buffer: outRenderGeometry.buffer, offset: outRenderGeometry.offset, size: outRenderGeometry.size),
   ],
@@ -1674,6 +1806,7 @@ wgpu.BindGroup createBindGroup0(
   required wgsl.ArrayStorageBuffer<EdgeDataInternal> inEdgeData,
   required wgsl.ArrayStorageBuffer<CubicDataInternal> inCubicData,
   required wgsl.ArrayStorageBuffer<wgsl.Vec3f> inEdgeWeightSamples,
+  required wgsl.ArrayStorageBuffer<BrushDataInternal> inBrushData,
   required wgsl.StorageBuffer<DrawIndirectArgsInternal> outDrawArgs,
   required wgsl.ArrayStorageBuffer<RenderGeometryInternal> outRenderGeometry,
   String? label,
@@ -1685,6 +1818,7 @@ wgpu.BindGroup createBindGroup0(
   inEdgeData: inEdgeData.bufferView,
   inCubicData: inCubicData.bufferView,
   inEdgeWeightSamples: inEdgeWeightSamples.bufferView,
+  inBrushData: inBrushData.bufferView,
   outDrawArgs: outDrawArgs.bufferView,
   outRenderGeometry: outRenderGeometry.bufferView,
 );
@@ -2331,6 +2465,11 @@ struct BrushData {
 // - v0-v3: four vertices
 const RENDER_GEOMETRY_KIND_QUAD = 0u;
 
+// A brush stamp.
+const RENDER_GEOMETRY_KIND_STAMP = 2u;
+
+const STAMP_PADDING = 1.5f;
+
 // // An ellipse.
 // // - v0: center
 // // - v1: radii
@@ -2341,15 +2480,20 @@ struct RenderGeometry {
   v1: vec2f,
   v2: vec2f,
   v3: vec2f,
+  arc_length: vec2f,
   color: vec4f,
+  weight: f32,
   z_index: u32,
-  arc_distance: vec2f,
   brush_idx: u32,
   kind: u32,
 }
 
-fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32, arc_distance: vec2f, brush_idx: u32) -> RenderGeometry {
-  return RenderGeometry(v0, v1, v2, v3, color, z_index, arc_distance, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, 0.0, z_index, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+}
+
+fn render_geometry_create_stamp(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, weight: f32, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, weight, z_index, brush_idx, RENDER_GEOMETRY_KIND_STAMP);
 }
 
 // fn render_geometry_create_ellipse(c: vec2f, r: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
@@ -2375,20 +2519,30 @@ struct DrawIndirectArgs {
 @group(0) @binding(1) var<storage, read> in_edge_data: array<EdgeData>;
 @group(0) @binding(2) var<storage, read> in_cubic_data: array<CubicData>;
 @group(0) @binding(3) var<storage, read> in_edge_weight_samples: array<vec3f>;
+@group(0) @binding(4) var<storage, read> in_brush_data: array<BrushData>;
 @group(0) @binding(5) var<storage, read_write> out_draw_args: DrawIndirectArgs;
 @group(0) @binding(6) var<storage, read_write> out_render_geometry: array<RenderGeometry>;
 
+var<private> cubic_idx: u32;
 var<private> cubic: Cubic2;
+var<private> scale: f32;
 var<private> cubic_start_dist: f32;
 var<private> cubic_end_dist: f32;
 var<private> edge_weight_span: vec2u;
 var<private> edge_width: f32;
 var<private> edge_idx: u32;
 var<private> edge_z_index: u32;
+var<private> edge_segment_idx: u32;
+var<private> edge_segment_count: u32;
 var<private> color: vec4f;
 var<private> brush_idx: u32;
 
-fn _emit_quad(arc_distance: vec2f, v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
+var<private> splits: array<f32, MAX_SPLITS>;
+var<private> splits_start_dist: array<f32, MAX_SPLITS>;
+var<private> n_splits: u32;
+var<private> max_weight: f32;
+
+fn _emit_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let idx = atomicAdd(&out_draw_args.instance_count, 1u);
   if (idx >= arrayLength(&out_render_geometry)) { return; }
 
@@ -2397,203 +2551,104 @@ fn _emit_quad(arc_distance: vec2f, v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f) {
   let _v2 = vec2_transform(v2, u.transform);
   let _v3 = vec2_transform(v3, u.transform);
 
-  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, color, edge_z_index, arc_distance, brush_idx);
+  out_render_geometry[idx] = render_geometry_create_quad(_v0, _v1, _v2, _v3, vec2f(0.0, 0.0), color, edge_z_index, brush_idx);
 }
 
-// fn _temp_emit_join(pos: vec2f, r: f32) {
-//   let pivot_pos = pos;
-//   let scale = length(u.transform[0].xy);
-//   let screen_r = r * scale;
-//   let steps = max(16u, u32(ceil(screen_r * 0.25)));
-//   let da = TWO_PI / f32(steps);
+fn _emit_stamp(center: vec2f, tan: vec2f, size: vec2f, weight: f32, arc_length: f32) {
+  let idx = atomicAdd(&out_draw_args.instance_count, 1u);
+  if (idx >= arrayLength(&out_render_geometry)) { return; }
 
-//   var prev_outer = pos + vec2f(r, 0.0);
-//   for (var i = 1u; i <= steps; i++) {
-//     let angle = f32(i) * da;
-//     let outer = pos + vec2f(cos(angle), sin(angle)) * r;
+  let padding = STAMP_PADDING;
+  let w = (size.x * 0.5) * padding;
+  let h = (size.y * 0.5) * padding;
 
-//     _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
-//     prev_outer = outer;
-//   }
-// }
+  let normal = vec2f(-tan.y, tan.x);
+  let forward = tan * w;
+  let right = normal * h;
 
-// fn _emit_join(pos: vec2f, r: f32) {
-//   // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
-//   // if (idx >= arrayLength(&out_render_geometry)) { return; }
+  let p0 = center - forward - right;
+  let p1 = center + forward - right;
+  let p2 = center + forward + right;
+  let p3 = center - forward + right;
 
-//   // let _pos = vec2_transform(pos, u.transform);
-//   // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
-//   _temp_emit_join(pos, r);
-// }
+  let v0 = vec2_transform(p0, u.transform);
+  let v1 = vec2_transform(p1, u.transform);
+  let v2 = vec2_transform(p2, u.transform);
+  let v3 = vec2_transform(p3, u.transform);
 
-// fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
-//   let scale = length(u.transform[0].xy);
-//   let screen_r = r * scale;
+  let arc_length0 = arc_length - w;
+  let arc_length1 = arc_length + w;
 
-//   let err = min(u.tolerance, screen_r * 0.999);
-//   let theta = 2.0 * acos(1.0 - err / screen_r);
-//   let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
+  out_render_geometry[idx] = render_geometry_create_stamp(v0, v1, v2, v3, vec2f(arc_length0, arc_length1), weight, color, edge_z_index, brush_idx);
+}
 
-//   let normal = vec2f(-tan.y, tan.x);
-//   let safe_dr = clamp(dr_da, -0.99, 0.99);
+fn _temp_emit_join(pos: vec2f, r: f32) {
+  let pivot_pos = pos;
+  let scale = length(u.transform[0].xy);
+  let screen_r = r * scale;
+  let steps = max(16u, u32(ceil(screen_r * 0.25)));
+  let da = TWO_PI / f32(steps);
 
-//   let p0 = pos - normal * r;
-//   let p3 = pos + normal * r;
+  var prev_outer = pos + vec2f(r, 0.0);
+  for (var i = 1u; i <= steps; i++) {
+    let angle = f32(i) * da;
+    let outer = pos + vec2f(cos(angle), sin(angle)) * r;
 
-//   let v0 = normalize(tan - safe_dr * normal);
-//   let v3 = normalize(tan + safe_dr * normal);
+    _emit_quad(prev_outer, outer, pivot_pos, pivot_pos);
+    prev_outer = outer;
+  }
+}
 
-//   let handle_len = 1.333333 * r;
-//   let p1 = p0 + v0 * handle_len;
-//   let p2 = p3 + v3 * handle_len;
+fn _emit_join(pos: vec2f, r: f32) {
+  // let idx = atomicAdd(&out_draw_args.instance_count, 1u);
+  // if (idx >= arrayLength(&out_render_geometry)) { return; }
 
-//   let cap_bezier = Cubic2(p0, p1, p2, p3);
-//   let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
-//   let max_idx = arrayLength(&out_render_geometry);
+  // let _pos = vec2_transform(pos, u.transform);
+  // out_render_geometry[idx] = render_geometry_create_circle(_pos, r, edge_color, edge_z_index);
+  _temp_emit_join(pos, r);
+}
 
-//   var prev_outer = p0;
-//   for (var i = 1u; i <= steps; i++) {
-//     let global_idx = start_idx + i - 1u;
-//     if (global_idx >= max_idx) { break; }
+fn _emit_cap(pos: vec2f, tan: vec2f, r: f32, dr_da: f32) {
+  let scale = length(u.transform[0].xy);
+  let screen_r = r * scale;
 
-//     let t = f32(i) / f32(steps);
-//     let outer = cubic2_pos(cap_bezier, t);
+  let err = min(u.tolerance, screen_r * 0.999);
+  let theta = 2.0 * acos(1.0 - err / screen_r);
+  let steps = clamp(u32(ceil(PI / theta)), 4u, 128u);
 
-//     let _v0 = vec2_transform(prev_outer, u.transform);
-//     let _v1 = vec2_transform(outer, u.transform);
-//     let _p = vec2_transform(pos, u.transform);
+  let normal = vec2f(-tan.y, tan.x);
+  let safe_dr = clamp(dr_da, -0.99, 0.99);
 
-//     out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, color, edge_z_index);
-//     prev_outer = outer;
-//   }
-// }
+  let p0 = pos - normal * r;
+  let p3 = pos + normal * r;
 
-// fn _emit_cusp_bridge(_t0: f32, _t1: f32, _a0: f32, _a1: f32) {
-//   // let snapped_bounds = _snap_to_weight_samples(edge_weight_span, _a0, _a1);
-//   let _a_mid = (_a0 + _a1) * 0.5;
+  let v0 = normalize(tan - safe_dr * normal);
+  let v3 = normalize(tan + safe_dr * normal);
 
-//   let _pt0 = cubic2_pos_tan(cubic, _t0);
-//   let _pt1 = cubic2_pos_tan(cubic, _t1);
-//   let _speed0 = length(_pt0.zw);
-//   let _speed1 = length(_pt1.zw);
-//   let _tan0 = normalize(_pt0.zw);
-//   let _tan1 = normalize(_pt1.zw);
-//   let _local_w = _eval_weight(edge_weight_span, _a_mid).x;
-//   let _r = _local_w * edge_width * 0.5;
-//   let bridge_radius = _r * 0.2;
-//   let cos_theta = clamp(dot(-_tan0, _tan1), -0.999, 0.999);
-//   let tan_half_angle = sqrt((1.0 - cos_theta) / (1.0 + cos_theta));
-//   var rollback = bridge_radius * tan_half_angle;
+  let handle_len = 1.333333 * r;
+  let p1 = p0 + v0 * handle_len;
+  let p2 = p3 + v3 * handle_len;
 
-//   let available_arc_before = cubic_start_dist + cubic2_distance_at_t(cubic, _t0);
-//   let available_arc_after = cubic_end_dist - (cubic_start_dist + cubic2_distance_at_t(cubic, _t1));
-//   let max_safe_rollback = min(available_arc_before, available_arc_after);
-//   rollback = min(rollback, max_safe_rollback);
+  let cap_bezier = Cubic2(p0, p1, p2, p3);
+  let start_idx = atomicAdd(&out_draw_args.instance_count, u32(steps));
+  let max_idx = arrayLength(&out_render_geometry);
 
-//   let dt0 = rollback / max(_speed0, 1.0e-5);
-//   let dt1 = rollback / max(_speed1, 1.0e-5);
-//   let t0 = max(0.0, _t0 - dt0);
-//   let t1 = min(1.0, _t1 + dt1);
-//   let dt = t1 - t0;
+  var prev_outer = p0;
+  for (var i = 1u; i <= steps; i++) {
+    let global_idx = start_idx + i - 1u;
+    if (global_idx >= max_idx) { break; }
 
-//   let a0 = cubic_start_dist + cubic2_distance_at_t(cubic, t0);
-//   let a1 = cubic_start_dist + cubic2_distance_at_t(cubic, t1);
+    let t = f32(i) / f32(steps);
+    let outer = cubic2_pos(cap_bezier, t);
 
-//   let local_a0 = a0 - cubic_start_dist;
-//   let local_a1 = a1 - cubic_start_dist;
+    let _v0 = vec2_transform(prev_outer, u.transform);
+    let _v1 = vec2_transform(outer, u.transform);
+    let _p = vec2_transform(pos, u.transform);
 
-//   let pos_tan0 = cubic2_pos_tan(cubic, t0);
-//   let pos_tan1 = cubic2_pos_tan(cubic, t1);
-//   let p0 = pos_tan0.xy;
-//   let p1 = pos_tan1.xy;
-
-//   let raw_tan0 = pos_tan0.zw;
-//   let raw_tan1 = pos_tan1.zw;
-//   let speed0 = length(raw_tan0);
-//   let speed1 = length(raw_tan1);
-
-//   let tan0 = normalize(raw_tan0);
-//   let tan1 = normalize(raw_tan1);
-
-//   let n0 = vec2f(-tan0.y, tan0.x);
-//   let n1 = vec2f(-tan1.y, tan1.x);
-
-//   let k0 = cubic2_signed_curvature(cubic, t0);
-//   let k1 = cubic2_signed_curvature(cubic, t1);
-
-//   let w0 = _eval_weight(edge_weight_span, a0);
-//   let w1 = _eval_weight(edge_weight_span, a1);
-
-//   let r0 = w0.x * edge_width * 0.5;
-//   let r1 = w1.x * edge_width * 0.5;
-
-//   let dr_dt0 = w0.y * edge_width * 0.5 * speed0;
-//   let dr_dt1 = w1.y * edge_width * 0.5 * speed1;
-
-//   let side = sign(k0);
-//   let inner_n0 = n0 * side;
-//   let inner_n1 = n1 * side;
-
-//   let env_vel0 = speed0 * (1.0 - r0 * abs(k0)) * tan0 + dr_dt0 * inner_n0;
-//   let env_vel1 = speed1 * (1.0 - r1 * abs(k1)) * tan1 + dr_dt1 * inner_n1;
-
-//   let inner_v0 = p0 + inner_n0 * r0;
-//   let inner_v3 = p1 + inner_n1 * r1;
-
-//   let dist = dt / 3.0;
-//   let h0 = env_vel0 * dist;
-//   let h1 = env_vel1 * dist;
-
-//   let gap_dist = length(inner_v3 - inner_v0);
-//   let max_handle = gap_dist / 3.0;
-
-//   let scale0 = min(1.0, max_handle / max(length(h0), 1.0e-5));
-//   let scale1 = min(1.0, max_handle / max(length(h1), 1.0e-5));
-
-//   let inner_v1 = inner_v0 + h0 * scale0;
-//   let inner_v2 = inner_v3 - h1 * scale1;
-
-//   // {
-//   //   _emit_join(inner_v0, 10.0);
-//   //   _emit_join(inner_v3, 10.0);
-//   //   _emit_join(inner_v1, 5.0);
-//   //   _emit_join(inner_v2, 5.0);
-//   // }
-
-//   let outer_piece = cubic2_piece_at(cubic, t0, t1);
-//   let outer_screen = cubic2_transform(outer_piece, u.transform);
-
-//   let inner_bridge = Cubic2(inner_v0, inner_v1, inner_v2, inner_v3);
-//   let inner_screen = cubic2_transform(inner_bridge, u.transform);
-
-//   let outer_steps = cubic2_wang(outer_screen, u.tolerance);
-//   let inner_steps = cubic2_wang(inner_screen, u.tolerance);
-
-//   let steps_f = max(outer_steps, inner_steps);
-//   let iterations = clamp(u32(ceil(steps_f)), 2u, 64u);
-
-//   var prev_p: vec2f;
-//   var prev_inner_v: vec2f;
-
-//   for (var j = 0u; j <= iterations; j++) {
-//     let f = f32(j) / f32(iterations);
-//     let t = mix(t0, t1, f);
-//     let p = cubic2_pos(cubic, t);
-//     let inner_v = cubic2_pos(inner_bridge, f);
-
-//     if (j > 0u) {
-//       let v0 = prev_p;
-//       let v1 = prev_inner_v;
-//       let v2 = inner_v;
-//       let v3 = p;
-
-//       _emit_quad(v0, v1, v2, v3, vec4f(1.0, 1.0, 0.0, 0.5));
-//     }
-
-//     prev_p = p;
-//     prev_inner_v = inner_v;
-//   }
-// }
+    out_render_geometry[global_idx] = render_geometry_create_quad(_v0, _v1, _p, _p, vec2f(0.0, 0.0), color, edge_z_index, brush_idx);
+    prev_outer = outer;
+  }
+}
 
 fn _eval_weight(span: vec2u, t: f32) -> vec2f {
   let offset = span.x; 
@@ -2619,10 +2674,7 @@ fn _eval_weight(span: vec2u, t: f32) -> vec2f {
 
   let s0 = in_edge_weight_samples[offset + l - 1u];
   let s1 = in_edge_weight_samples[offset + l];
-  // return vec2f(
-  //   mix(s0.y, s1.y, (t - s0.x) / (s1.x - s0.x)),
-  //   mix(s0.z, s1.z, (t - s0.x) / (s1.x - s0.x)),
-  // );
+
   return hermite_interpolate(s0, s1, t);
 }
 
@@ -2654,30 +2706,8 @@ struct StackEntry {
   weight_span: vec4f,
 }
 
-@compute @workgroup_size(64)
-fn main(@builtin(global_invocation_id) global_idx: vec3u) {
-  let idx = global_idx.x;
-  if (idx >= u.cubic_count) { return; }
-
-  let scale = length(u.transform[0].xy);
-
-  // Fill in the global variables
-  let cubic_data = in_cubic_data[idx];
-  cubic = cubic_data.cubic;
-
-  let edge_data = in_edge_data[cubic_data.edge_idx];
-  edge_weight_span = edge_data.weight_span;
-  edge_width = edge_data.width;
-  edge_idx = cubic_data.edge_idx;
-  edge_z_index = cubic_data.edge_idx;
-  color = vec4f(edge_data.color.rgb, edge_data.color.a * cubic_data.opacity);
-
-  brush_idx = edge_data.brush_idx;
-
+fn compute_splits() {
   // Compute split points
-  var splits: array<f32, MAX_SPLITS>;
-  var splits_start_dist: array<f32, MAX_SPLITS>;
-  var n_splits = 0u;
   splits[0] = 0.0; splits_start_dist[0] = 0.0; n_splits = 1u;
 
   // Split at inflections and extrema.
@@ -2712,11 +2742,10 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
     }
   }
 
-  cubic_start_dist = cubic_data.edge_start_arc_length;
   cubic_end_dist = cubic_start_dist + key_distances[key_distance_count - 1];
 
   // Split at weight anchors
-  var max_weight = max(
+  max_weight = max(
     _eval_weight(edge_weight_span, cubic_start_dist).x,
     _eval_weight(edge_weight_span, cubic_end_dist).x
   );
@@ -2757,12 +2786,6 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
 
   splits[n_splits] = 1.0; splits_start_dist[n_splits] = cubic_end_dist - cubic_start_dist; n_splits++;
 
-  // Cull if off-screen
-  let transformed_cubic = cubic2_transform(cubic, u.transform);
-  let transformed_padded_bbox = bbox_pad(cubic2_bbox(transformed_cubic), edge_width * scale * 0.5 * max_weight);
-  let screen_bbox = vec4f(0.0, 0.0, f32(u.screen_size.x), f32(u.screen_size.y));
-  if (!bbox_intersects(transformed_padded_bbox, screen_bbox)) { return; }
-
   // Sort splits
   {
     for (var i = 1u; i < n_splits; i++) {
@@ -2778,13 +2801,9 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
       splits_start_dist[j] = k_start_dist;
     }
   }
+}
 
-  // var in_cusp = false;
-  // var cusp_start_t = 0.0;
-  // var cusp_start_arc = 0.0;
-  // var cusp_prev_left = vec2f(0.0);
-  // var cusp_prev_right = vec2f(0.0);
-
+fn main_tessellate() {
   let initial_w = _eval_weight(edge_weight_span, cubic_start_dist);
   let first_point = _compute_point_radii(cubic, 0.0, initial_w);
   var prev_pos = first_point[0];
@@ -2853,7 +2872,7 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
         
         var color = vec4f(0.0, 1.0, 0.0, arc_end / cubic_end_dist);
 
-        _emit_quad(vec2f(arc_start, arc_end), prev_left, left, right, prev_right);
+        _emit_quad(prev_left, left, right, prev_right);
         prev_pos = pos;
         prev_left = left;
         prev_right = right;
@@ -2876,44 +2895,101 @@ fn main(@builtin(global_invocation_id) global_idx: vec3u) {
     }
   }
 
-  let edge_segment_idx = cubic_data.edge_segment_idx;
-  let edge_segment_count = cubic_data.edge_segment_count;
-  
   let is_first_segment = edge_segment_idx == 0u;
   let is_last_segment = edge_segment_idx == edge_segment_count - 1u;
   
-  // // Start cap
-  // if (is_first_segment) {
-  //   let pos_tan = cubic2_pos_tan(cubic, 0.0);
-  //   let pos = pos_tan.xy;
-  //   let tan = normalize(pos_tan.zw);
+  // Start cap
+  if (is_first_segment) {
+    let pos_tan = cubic2_pos_tan(cubic, 0.0);
+    let pos = pos_tan.xy;
+    let tan = normalize(pos_tan.zw);
 
-  //   let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
-  //   _emit_cap(pos, -tan, w.x, w.y);
-  // }
+    let w = _eval_weight(edge_weight_span, cubic_start_dist) * edge_width * 0.5;
+    _emit_cap(pos, -tan, w.x, w.y);
+  }
 
-  // // End cap
-  // if (is_last_segment) {
-  //   let pos_tan = cubic2_pos_tan(cubic, 1.0);
-  //   let pos = pos_tan.xy;
-  //   let tan = normalize(pos_tan.zw);
-  //   let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
-  //   _emit_cap(pos, tan, w.x, w.y);
-  // }
+  // End cap
+  if (is_last_segment) {
+    let pos_tan = cubic2_pos_tan(cubic, 1.0);
+    let pos = pos_tan.xy;
+    let tan = normalize(pos_tan.zw);
+    let w = _eval_weight(edge_weight_span, cubic_end_dist) * edge_width * 0.5;
+    _emit_cap(pos, tan, w.x, w.y);
+  }
 
-  // // Joins
-  // if (!is_last_segment) {
-  //   let next_cubic = in_cubic_data[idx + 1u].cubic;
+  // Joins
+  if (!is_last_segment) {
+    let next_cubic = in_cubic_data[cubic_idx + 1u].cubic;
 
-  //   let pos = cubic2_pos(cubic, 1.0);
-  //   let tan_in = normalize(cubic2_tan(cubic, 1.0));
-  //   let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
+    let pos = cubic2_pos(cubic, 1.0);
+    let tan_in = normalize(cubic2_tan(cubic, 1.0));
+    let tan_out = normalize(cubic2_tan(next_cubic, 0.0));
 
-  //   if (dot(tan_in, tan_out) < 0.99999) {
-  //     let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
-  //     _emit_join(pos, r);
-  //   }
-  // }
+    if (dot(tan_in, tan_out) < 0.99999) {
+      let r = _eval_weight(edge_weight_span, cubic_end_dist).x * edge_width * 0.5;
+      _emit_join(pos, r);
+    }
+  }
+}
+
+fn main_stamp() {
+  let brush_data = in_brush_data[brush_idx];
+  let spacing = brush_data.spacing;
+
+  var arc_dist = round(cubic_start_dist / spacing) * spacing;
+
+  while (arc_dist < cubic_end_dist) {
+    let local_t = cubic2_distance_to_t(cubic, arc_dist - cubic_start_dist);
+    let pos_tan = cubic2_pos_tan(cubic, local_t);
+    let pos = pos_tan.xy;
+    let tan = normalize(pos_tan.zw);
+
+    let w = _eval_weight(edge_weight_span, arc_dist).x;
+    _emit_stamp(pos, tan, vec2f(w * edge_width), w, arc_dist);
+
+    let spc = max(spacing, (w * edge_width) * 0.5);
+    arc_dist += spc;
+  }
+}
+
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) global_idx: vec3u) {
+  let idx = global_idx.x;
+  if (idx >= u.cubic_count) { return; }
+
+  cubic_idx = idx;
+  scale = length(u.transform[0].xy);
+
+  // Fill in the global variables
+  let cubic_data = in_cubic_data[idx];
+  cubic = cubic_data.cubic;
+
+  let edge_data = in_edge_data[cubic_data.edge_idx];
+  edge_weight_span = edge_data.weight_span;
+  edge_width = edge_data.width;
+  edge_idx = cubic_data.edge_idx;
+  edge_z_index = cubic_data.edge_idx;
+  edge_segment_idx = cubic_data.edge_segment_idx;
+  edge_segment_count = cubic_data.edge_segment_count;
+  color = vec4f(edge_data.color.rgb, edge_data.color.a * cubic_data.opacity);
+
+  brush_idx = edge_data.brush_idx;
+  cubic_start_dist = cubic_data.edge_start_arc_length;
+
+  compute_splits();
+
+  // Cull if off-screen
+  let transformed_cubic = cubic2_transform(cubic, u.transform);
+  let transformed_padded_bbox = bbox_pad(cubic2_bbox(transformed_cubic), edge_width * scale * 0.5 * max_weight);
+  let screen_bbox = vec4f(0.0, 0.0, f32(u.screen_size.x), f32(u.screen_size.y));
+  if (!bbox_intersects(transformed_padded_bbox, screen_bbox)) { return; }
+
+  if (brush_idx == 0u) {
+    main_tessellate();
+  }
+  else {
+    main_stamp();
+  }
 }
 ''';
 

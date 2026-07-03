@@ -9,6 +9,8 @@ const _kTransformSlop = 6.0;
 /// Minimum angle (in radians) that must be traversed for a rotation to be recognized.
 const _kTransformRotateSlop = math.pi / 180.0 * 15.0;
 
+const _kPanZoomScaleFactor = 1.6;
+
 enum _TransformState { ready, possible, started }
 
 extension type _PointersState(List<Offset> pointers) {
@@ -53,36 +55,72 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   final _pointerLocalPositions = <int, Offset>{};
   final _velocityTrackers = <int, VelocityTracker>{};
 
+  bool _isPanZoomEvent = false;
+  PointerPanZoomUpdateEvent? _panZoomUpdateEvent;
+
+  VelocityTracker? _scaleVelocityTracker;
+
+  Offset? _scaleFocalPoint;
+  Velocity? _finalTranslationVelocity;
+  double? _finalScaleVelocity;
+
   int get _pointerCount => _pointerQueue.length;
   bool get _hasMinPointerCount => _pointerCount >= minAllowedPointerCount;
   Iterable<Offset> get _queuedLocalPositions => _pointerQueue.map((i) => _pointerLocalPositions[i]!);
 
+  Velocity get _currentVelocity {
+    final velocities = _velocityTrackers.values.map((t) => t.getVelocity());
+
+    if (velocities.length == 1) {
+      return velocities.first;
+    } else if (velocities.length > 1) {
+      final sum = velocities.map((v) => v.pixelsPerSecond).reduce((a, b) => a + b);
+      return Velocity(pixelsPerSecond: sum / velocities.length.toDouble());
+    } else {
+      return Velocity.zero;
+    }
+  }
+
+  @override
+  void addAllowedPointerPanZoom(PointerPanZoomStartEvent event) {
+    startTrackingPointer(event.pointer, event.transform);
+  }
+
   @override
   void handleEvent(PointerEvent event) {
-    // print(event);
     final pointerId = event.pointer;
     var didChangeConfiguration = false;
 
-    if (event is PointerDownEvent) {
+    if (event is PointerDownEvent || event is PointerPanZoomStartEvent) {
       _pointerQueue.add(pointerId);
       _pointerLocalPositions[pointerId] = event.localPosition;
       _velocityTrackers[pointerId] = VelocityTracker.withKind(event.kind);
+      _scaleVelocityTracker = VelocityTracker.withKind(event.kind);
 
       didChangeConfiguration = true;
+      _isPanZoomEvent = true;
     } else if (event is PointerMoveEvent) {
       _pointerLocalPositions[pointerId] = event.localPosition;
       _velocityTrackers[pointerId]?.addPosition(event.timeStamp, event.position);
-    } else if (event is PointerUpEvent || event is PointerCancelEvent) {
+    } else if (event is PointerPanZoomUpdateEvent) {
+      _pointerLocalPositions[pointerId] = event.localPosition + event.localPan;
+      _velocityTrackers[pointerId]?.addPosition(event.timeStamp, event.position + event.pan);
+      _panZoomUpdateEvent = event;
+    } else if (event is PointerUpEvent || event is PointerCancelEvent || event is PointerPanZoomEndEvent) {
+      _finalTranslationVelocity = _currentVelocity;
+      _finalScaleVelocity = _scaleVelocityTracker?.getVelocity().pixelsPerSecond.dx;
       _pointerQueue.remove(pointerId);
       _pointerLocalPositions.remove(pointerId);
       _velocityTrackers.remove(pointerId);
-
+      _scaleVelocityTracker = null;
       didChangeConfiguration = true;
+      _panZoomUpdateEvent = null;
+      _isPanZoomEvent = false;
     }
 
     if (didChangeConfiguration) _reconfigure();
 
-    _update();
+    _update(event.timeStamp);
     _advanceStateMachine();
 
     stopTrackingIfPointerNoLongerDown(event);
@@ -96,21 +134,32 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   void _reconfigure() {
     _initialPointersState = _createPointersState();
     if (_state == .started) {
+      _onEnd();
       _state = .ready;
       _currentPointersState = null;
       _transform = .identity();
       _rotationBaseAngle = null;
-      _onEnd();
     }
   }
 
-  void _update() {
+  void _update(Duration timestamp) {
     if (_initialPointersState == null) return;
     _currentPointersState = _createPointersState();
 
     if (_state != .started) return;
     if (_currentPointersState == null) return;
 
+    if (_panZoomUpdateEvent != null) {
+      _updateWithPanZoom();
+    } else {
+      _updateWithPointersState();
+    }
+
+    final scale = _transform.getMaxScaleOnAxis();
+    _scaleVelocityTracker!.addPosition(timestamp, Offset(scale, 0.0));
+  }
+
+  void _updateWithPointersState() {
     final startPointers = _initialPointersState!.pointers;
     final currentPointers = _currentPointersState!.pointers;
 
@@ -143,6 +192,25 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     }
   }
 
+  void _updateWithPanZoom() {
+    final event = _panZoomUpdateEvent!;
+    final pan = event.localPan;
+    final origin = event.localPosition;
+
+    var angle = event.rotation;
+    angle = _applyRotationSnap(angle);
+
+    final scale = math.pow(event.scale, _kPanZoomScaleFactor).toDouble();
+
+    _scaleFocalPoint = origin;
+    _transform = Matrix4.identity()
+      ..translateByDouble(pan.dx, pan.dy, 0.0, 1.0)
+      ..translateByDouble(origin.dx, origin.dy, 0.0, 1.0)
+      ..rotateZ(angle)
+      ..scaleByDouble(scale, scale, scale, 1.0)
+      ..translateByDouble(-origin.dx, -origin.dy, 0.0, 1.0);
+  }
+
   double? _rotationBaseAngle;
   double _applyRotationSnap(double rawAngle) {
     if (_rotationBaseAngle == null && rawAngle.abs() > _kTransformRotateSlop) {
@@ -162,6 +230,13 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     }
 
     if (_state == .possible) {
+      if (_isPanZoomEvent) {
+        _state = .started;
+        _onStart();
+        resolve(.accepted);
+        return;
+      }
+
       if (_initialPointersState == null) return;
 
       final offset = _initialPointersState!.difference(_currentPointersState!);
@@ -201,7 +276,14 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     if (onEnd != null) {
       invokeCallback<void>(
         'onEnd',
-        () => onEnd!(.new(transform: _transform)),
+        () => onEnd!(
+          .new(
+            transform: _transform,
+            translationVelocity: _finalTranslationVelocity,
+            scaleFocalPoint: _scaleFocalPoint,
+            scaleVelocity: _finalScaleVelocity,
+          ),
+        ),
       );
     }
   }
@@ -209,7 +291,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   @override
   void didStopTrackingLastPointer(int pointer) {
     if (_state == .ready) resolve(.rejected);
-    _state == .ready;
+    _state = .ready;
   }
 }
 
@@ -232,6 +314,15 @@ class TransformUpdateDetails {
 }
 
 class TransformEndDetails {
-  const TransformEndDetails({required this.transform});
+  const TransformEndDetails({
+    required this.transform,
+    this.translationVelocity,
+    this.scaleFocalPoint,
+    this.scaleVelocity,
+  });
+
   final Matrix4 transform;
+  final Velocity? translationVelocity;
+  final Offset? scaleFocalPoint;
+  final double? scaleVelocity;
 }

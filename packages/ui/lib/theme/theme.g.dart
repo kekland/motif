@@ -112,6 +112,24 @@ typedef DisplayColors = ({
   Color tertiary,
 });
 
+typedef DataColors = ({
+  Color int,
+  Color float,
+  Color vector,
+  Color geometry,
+});
+
+typedef NodeColors = ({
+  Color math,
+  Color geometry,
+  Color primitive,
+});
+
+typedef BlueprintColors = ({
+  DataColors data,
+  NodeColors node,
+});
+
 typedef AppColors = ({
   SurfaceColors surface,
   AccentColors accent,
@@ -123,6 +141,7 @@ typedef AppColors = ({
   Color normal,
   Color inverse,
   Color shadow,
+  BlueprintColors blueprint,
 });
 
 class BaseTextStyle extends TextStyle {
@@ -211,8 +230,8 @@ class LargeTitleTextStyle extends LargeTitleTextStyleBase {
   }
 }
 
-class Title1TextStyleBase extends BaseTextStyle {
-  Title1TextStyleBase(
+class TitleTextStyleBase extends BaseTextStyle {
+  TitleTextStyleBase(
     super.base, {
     required this.primary,
     required this.secondary,
@@ -222,8 +241,8 @@ class Title1TextStyleBase extends BaseTextStyle {
     super.package,
   });
 
-  factory Title1TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Title1TextStyleBase(
+  factory TitleTextStyleBase.generate(TextStyle base, AppColors colors) {
+    return TitleTextStyleBase(
       base,
       primary: base.copyWith(color: colors.display.primary),
       secondary: base.copyWith(color: colors.display.secondary),
@@ -240,42 +259,34 @@ class Title1TextStyleBase extends BaseTextStyle {
   final TextStyle danger;
 }
 
-class Title1TextStyle extends Title1TextStyleBase {
-  Title1TextStyle(
+class TitleTextStyle extends TitleTextStyleBase {
+  TitleTextStyle(
     super.base, {
     required super.primary,
     required super.secondary,
     required super.tertiary,
     required super.accent,
     required super.danger,
-    required this.regular,
-    required this.bold,
     super.package,
   });
 
-  factory Title1TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
+  factory TitleTextStyle.generate({
+    required TextStyle base,
     required AppColors colors,
   }) {
-    return Title1TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Title1TextStyleBase.generate(regular, colors),
-      bold: Title1TextStyleBase.generate(bold, colors),
+    return TitleTextStyle(
+      base,
+      primary: base.copyWith(color: colors.display.primary),
+      secondary: base.copyWith(color: colors.display.secondary),
+      tertiary: base.copyWith(color: colors.display.tertiary),
+      accent: base.copyWith(color: colors.accent.primary),
+      danger: base.copyWith(color: colors.danger.primary),
     );
   }
-
-  final Title1TextStyleBase regular;
-  final Title1TextStyleBase bold;
 }
 
-class Title2TextStyleBase extends BaseTextStyle {
-  Title2TextStyleBase(
+class SubtitleTextStyleBase extends BaseTextStyle {
+  SubtitleTextStyleBase(
     super.base, {
     required this.primary,
     required this.secondary,
@@ -285,8 +296,8 @@ class Title2TextStyleBase extends BaseTextStyle {
     super.package,
   });
 
-  factory Title2TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Title2TextStyleBase(
+  factory SubtitleTextStyleBase.generate(TextStyle base, AppColors colors) {
+    return SubtitleTextStyleBase(
       base,
       primary: base.copyWith(color: colors.display.primary),
       secondary: base.copyWith(color: colors.display.secondary),
@@ -303,42 +314,34 @@ class Title2TextStyleBase extends BaseTextStyle {
   final TextStyle danger;
 }
 
-class Title2TextStyle extends Title2TextStyleBase {
-  Title2TextStyle(
+class SubtitleTextStyle extends SubtitleTextStyleBase {
+  SubtitleTextStyle(
     super.base, {
     required super.primary,
     required super.secondary,
     required super.tertiary,
     required super.accent,
     required super.danger,
-    required this.regular,
-    required this.bold,
     super.package,
   });
 
-  factory Title2TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
+  factory SubtitleTextStyle.generate({
+    required TextStyle base,
     required AppColors colors,
   }) {
-    return Title2TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Title2TextStyleBase.generate(regular, colors),
-      bold: Title2TextStyleBase.generate(bold, colors),
+    return SubtitleTextStyle(
+      base,
+      primary: base.copyWith(color: colors.display.primary),
+      secondary: base.copyWith(color: colors.display.secondary),
+      tertiary: base.copyWith(color: colors.display.tertiary),
+      accent: base.copyWith(color: colors.accent.primary),
+      danger: base.copyWith(color: colors.danger.primary),
     );
   }
-
-  final Title2TextStyleBase regular;
-  final Title2TextStyleBase bold;
 }
 
-class Subtitle1TextStyleBase extends BaseTextStyle {
-  Subtitle1TextStyleBase(
+class BodyTextStyleBase extends BaseTextStyle {
+  BodyTextStyleBase(
     super.base, {
     required this.primary,
     required this.secondary,
@@ -348,8 +351,8 @@ class Subtitle1TextStyleBase extends BaseTextStyle {
     super.package,
   });
 
-  factory Subtitle1TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Subtitle1TextStyleBase(
+  factory BodyTextStyleBase.generate(TextStyle base, AppColors colors) {
+    return BodyTextStyleBase(
       base,
       primary: base.copyWith(color: colors.display.primary),
       secondary: base.copyWith(color: colors.display.secondary),
@@ -366,53 +369,22 @@ class Subtitle1TextStyleBase extends BaseTextStyle {
   final TextStyle danger;
 }
 
-class Subtitle1TextStyle extends Subtitle1TextStyleBase {
-  Subtitle1TextStyle(
+class BodyTextStyle extends BodyTextStyleBase {
+  BodyTextStyle(
     super.base, {
     required super.primary,
     required super.secondary,
     required super.tertiary,
     required super.accent,
     required super.danger,
-    required this.regular,
-    required this.bold,
     super.package,
   });
 
-  factory Subtitle1TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
+  factory BodyTextStyle.generate({
+    required TextStyle base,
     required AppColors colors,
   }) {
-    return Subtitle1TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Subtitle1TextStyleBase.generate(regular, colors),
-      bold: Subtitle1TextStyleBase.generate(bold, colors),
-    );
-  }
-
-  final Subtitle1TextStyleBase regular;
-  final Subtitle1TextStyleBase bold;
-}
-
-class Body1TextStyleBase extends BaseTextStyle {
-  Body1TextStyleBase(
-    super.base, {
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
-    required this.accent,
-    required this.danger,
-    super.package,
-  });
-
-  factory Body1TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Body1TextStyleBase(
+    return BodyTextStyle(
       base,
       primary: base.copyWith(color: colors.display.primary),
       secondary: base.copyWith(color: colors.display.secondary),
@@ -421,235 +393,6 @@ class Body1TextStyleBase extends BaseTextStyle {
       danger: base.copyWith(color: colors.danger.primary),
     );
   }
-
-  final TextStyle primary;
-  final TextStyle secondary;
-  final TextStyle tertiary;
-  final TextStyle accent;
-  final TextStyle danger;
-}
-
-class Body1TextStyle extends Body1TextStyleBase {
-  Body1TextStyle(
-    super.base, {
-    required super.primary,
-    required super.secondary,
-    required super.tertiary,
-    required super.accent,
-    required super.danger,
-    required this.regular,
-    required this.bold,
-    super.package,
-  });
-
-  factory Body1TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
-    required AppColors colors,
-  }) {
-    return Body1TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Body1TextStyleBase.generate(regular, colors),
-      bold: Body1TextStyleBase.generate(bold, colors),
-    );
-  }
-
-  final Body1TextStyleBase regular;
-  final Body1TextStyleBase bold;
-}
-
-class Caption1TextStyleBase extends BaseTextStyle {
-  Caption1TextStyleBase(
-    super.base, {
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
-    required this.accent,
-    required this.danger,
-    super.package,
-  });
-
-  factory Caption1TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Caption1TextStyleBase(
-      base,
-      primary: base.copyWith(color: colors.display.primary),
-      secondary: base.copyWith(color: colors.display.secondary),
-      tertiary: base.copyWith(color: colors.display.tertiary),
-      accent: base.copyWith(color: colors.accent.primary),
-      danger: base.copyWith(color: colors.danger.primary),
-    );
-  }
-
-  final TextStyle primary;
-  final TextStyle secondary;
-  final TextStyle tertiary;
-  final TextStyle accent;
-  final TextStyle danger;
-}
-
-class Caption1TextStyle extends Caption1TextStyleBase {
-  Caption1TextStyle(
-    super.base, {
-    required super.primary,
-    required super.secondary,
-    required super.tertiary,
-    required super.accent,
-    required super.danger,
-    required this.regular,
-    required this.bold,
-    super.package,
-  });
-
-  factory Caption1TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
-    required AppColors colors,
-  }) {
-    return Caption1TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Caption1TextStyleBase.generate(regular, colors),
-      bold: Caption1TextStyleBase.generate(bold, colors),
-    );
-  }
-
-  final Caption1TextStyleBase regular;
-  final Caption1TextStyleBase bold;
-}
-
-class Caption2TextStyleBase extends BaseTextStyle {
-  Caption2TextStyleBase(
-    super.base, {
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
-    required this.accent,
-    required this.danger,
-    super.package,
-  });
-
-  factory Caption2TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Caption2TextStyleBase(
-      base,
-      primary: base.copyWith(color: colors.display.primary),
-      secondary: base.copyWith(color: colors.display.secondary),
-      tertiary: base.copyWith(color: colors.display.tertiary),
-      accent: base.copyWith(color: colors.accent.primary),
-      danger: base.copyWith(color: colors.danger.primary),
-    );
-  }
-
-  final TextStyle primary;
-  final TextStyle secondary;
-  final TextStyle tertiary;
-  final TextStyle accent;
-  final TextStyle danger;
-}
-
-class Caption2TextStyle extends Caption2TextStyleBase {
-  Caption2TextStyle(
-    super.base, {
-    required super.primary,
-    required super.secondary,
-    required super.tertiary,
-    required super.accent,
-    required super.danger,
-    required this.regular,
-    required this.bold,
-    super.package,
-  });
-
-  factory Caption2TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
-    required AppColors colors,
-  }) {
-    return Caption2TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Caption2TextStyleBase.generate(regular, colors),
-      bold: Caption2TextStyleBase.generate(bold, colors),
-    );
-  }
-
-  final Caption2TextStyleBase regular;
-  final Caption2TextStyleBase bold;
-}
-
-class Caption3TextStyleBase extends BaseTextStyle {
-  Caption3TextStyleBase(
-    super.base, {
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
-    required this.accent,
-    required this.danger,
-    super.package,
-  });
-
-  factory Caption3TextStyleBase.generate(TextStyle base, AppColors colors) {
-    return Caption3TextStyleBase(
-      base,
-      primary: base.copyWith(color: colors.display.primary),
-      secondary: base.copyWith(color: colors.display.secondary),
-      tertiary: base.copyWith(color: colors.display.tertiary),
-      accent: base.copyWith(color: colors.accent.primary),
-      danger: base.copyWith(color: colors.danger.primary),
-    );
-  }
-
-  final TextStyle primary;
-  final TextStyle secondary;
-  final TextStyle tertiary;
-  final TextStyle accent;
-  final TextStyle danger;
-}
-
-class Caption3TextStyle extends Caption3TextStyleBase {
-  Caption3TextStyle(
-    super.base, {
-    required super.primary,
-    required super.secondary,
-    required super.tertiary,
-    required super.accent,
-    required super.danger,
-    required this.regular,
-    required this.bold,
-    super.package,
-  });
-
-  factory Caption3TextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
-    required AppColors colors,
-  }) {
-    return Caption3TextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: Caption3TextStyleBase.generate(regular, colors),
-      bold: Caption3TextStyleBase.generate(bold, colors),
-    );
-  }
-
-  final Caption3TextStyleBase regular;
-  final Caption3TextStyleBase bold;
 }
 
 class FootnoteTextStyleBase extends BaseTextStyle {
@@ -689,41 +432,29 @@ class FootnoteTextStyle extends FootnoteTextStyleBase {
     required super.tertiary,
     required super.accent,
     required super.danger,
-    required this.regular,
-    required this.bold,
     super.package,
   });
 
   factory FootnoteTextStyle.generate({
-    required TextStyle regular,
-    required TextStyle bold,
+    required TextStyle base,
     required AppColors colors,
   }) {
     return FootnoteTextStyle(
-      regular,
-      primary: regular.copyWith(color: colors.display.primary),
-      secondary: regular.copyWith(color: colors.display.secondary),
-      tertiary: regular.copyWith(color: colors.display.tertiary),
-      accent: regular.copyWith(color: colors.accent.primary),
-      danger: regular.copyWith(color: colors.danger.primary),
-      regular: FootnoteTextStyleBase.generate(regular, colors),
-      bold: FootnoteTextStyleBase.generate(bold, colors),
+      base,
+      primary: base.copyWith(color: colors.display.primary),
+      secondary: base.copyWith(color: colors.display.secondary),
+      tertiary: base.copyWith(color: colors.display.tertiary),
+      accent: base.copyWith(color: colors.accent.primary),
+      danger: base.copyWith(color: colors.danger.primary),
     );
   }
-
-  final FootnoteTextStyleBase regular;
-  final FootnoteTextStyleBase bold;
 }
 
 typedef AppTypography = ({
   LargeTitleTextStyle largeTitle,
-  Title1TextStyle title1,
-  Title2TextStyle title2,
-  Subtitle1TextStyle subtitle1,
-  Body1TextStyle body1,
-  Caption1TextStyle caption1,
-  Caption2TextStyle caption2,
-  Caption3TextStyle caption3,
+  TitleTextStyle title,
+  SubtitleTextStyle subtitle,
+  BodyTextStyle body,
   FootnoteTextStyle footnote,
 });
 
@@ -731,66 +462,18 @@ class AppTypographyGenerator {
   static AppTypography generate(
     AppColors colors, {
     required TextStyle largeTitle,
-    required TextStyle title1Regular,
-    required TextStyle title1Bold,
-    required TextStyle title2Regular,
-    required TextStyle title2Bold,
-    required TextStyle subtitle1Regular,
-    required TextStyle subtitle1Bold,
-    required TextStyle body1Regular,
-    required TextStyle body1Bold,
-    required TextStyle caption1Regular,
-    required TextStyle caption1Bold,
-    required TextStyle caption2Regular,
-    required TextStyle caption2Bold,
-    required TextStyle caption3Regular,
-    required TextStyle caption3Bold,
-    required TextStyle footnoteRegular,
-    required TextStyle footnoteBold,
+    required TextStyle title,
+    required TextStyle subtitle,
+    required TextStyle body,
+    required TextStyle footnote,
     TextStyle? overrides,
   }) {
     return (
       largeTitle: LargeTitleTextStyle.generate(base: largeTitle.merge(overrides), colors: colors),
-      title1: Title1TextStyle.generate(
-        regular: title1Regular.merge(overrides),
-        bold: title1Bold.merge(overrides),
-        colors: colors,
-      ),
-      title2: Title2TextStyle.generate(
-        regular: title2Regular.merge(overrides),
-        bold: title2Bold.merge(overrides),
-        colors: colors,
-      ),
-      subtitle1: Subtitle1TextStyle.generate(
-        regular: subtitle1Regular.merge(overrides),
-        bold: subtitle1Bold.merge(overrides),
-        colors: colors,
-      ),
-      body1: Body1TextStyle.generate(
-        regular: body1Regular.merge(overrides),
-        bold: body1Bold.merge(overrides),
-        colors: colors,
-      ),
-      caption1: Caption1TextStyle.generate(
-        regular: caption1Regular.merge(overrides),
-        bold: caption1Bold.merge(overrides),
-        colors: colors,
-      ),
-      caption2: Caption2TextStyle.generate(
-        regular: caption2Regular.merge(overrides),
-        bold: caption2Bold.merge(overrides),
-        colors: colors,
-      ),
-      caption3: Caption3TextStyle.generate(
-        regular: caption3Regular.merge(overrides),
-        bold: caption3Bold.merge(overrides),
-        colors: colors,
-      ),
-      footnote: FootnoteTextStyle.generate(
-        regular: footnoteRegular.merge(overrides),
-        bold: footnoteBold.merge(overrides),
-        colors: colors,
-      ),
+      title: TitleTextStyle.generate(base: title.merge(overrides), colors: colors),
+      subtitle: SubtitleTextStyle.generate(base: subtitle.merge(overrides), colors: colors),
+      body: BodyTextStyle.generate(base: body.merge(overrides), colors: colors),
+      footnote: FootnoteTextStyle.generate(base: footnote.merge(overrides), colors: colors),
     );
   }
 }

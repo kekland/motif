@@ -38,8 +38,8 @@ typedef Cubic2Array3Internal = ((wgsl.Vec2f p0, wgsl.Vec2f p1, wgsl.Vec2f p2, wg
 typedef F32Array3 = (double, double, double);
 typedef F32Array3Internal = (wgsl.F32, wgsl.F32, wgsl.F32);
 
-typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind)>;
-typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind)>;
+typedef RenderGeometryArray = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, double weight, int zIndex, int brushIdx, int kind)>;
+typedef RenderGeometryArrayInternal = List<(wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, wgsl.F32 weight, wgsl.U32 zIndex, wgsl.U32 brushIdx, wgsl.U32 kind)>;
 
 typedef BrushDataArray = List<(double length, double spacing, int textureIdx)>;
 typedef BrushDataArrayInternal = List<(wgsl.F32 length, wgsl.F32 spacing, wgsl.U32 textureIdx)>;
@@ -622,19 +622,20 @@ extension BrushDataStruct on BrushData {
 
 }
 
-typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, int zIndex, wgsl.Vec2f arcDistance, int brushIdx, int kind);
-typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec4f color, wgsl.U32 zIndex, wgsl.Vec2f arcDistance, wgsl.U32 brushIdx, wgsl.U32 kind);
+typedef RenderGeometry = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, double weight, int zIndex, int brushIdx, int kind);
+typedef RenderGeometryInternal = (wgsl.Vec2f v0, wgsl.Vec2f v1, wgsl.Vec2f v2, wgsl.Vec2f v3, wgsl.Vec2f arcLength, wgsl.Vec4f color, wgsl.F32 weight, wgsl.U32 zIndex, wgsl.U32 brushIdx, wgsl.U32 kind);
 
 extension RenderGeometryExt on RenderGeometry {
   wgsl.Vec2f get v0 => this.$1;
   wgsl.Vec2f get v1 => this.$2;
   wgsl.Vec2f get v2 => this.$3;
   wgsl.Vec2f get v3 => this.$4;
-  wgsl.Vec4f get color => this.$5;
-  int get zIndex => this.$6;
-  wgsl.Vec2f get arcDistance => this.$7;
-  int get brushIdx => this.$8;
-  int get kind => this.$9;
+  wgsl.Vec2f get arcLength => this.$5;
+  wgsl.Vec4f get color => this.$6;
+  double get weight => this.$7;
+  int get zIndex => this.$8;
+  int get brushIdx => this.$9;
+  int get kind => this.$10;
 
   @pragma('vm:prefer-inline')
   RenderGeometryInternal get asInternal => (
@@ -642,9 +643,10 @@ extension RenderGeometryExt on RenderGeometry {
     v1,
     v2,
     v3,
+    arcLength,
     color,
+    .new(weight),
     .new(zIndex),
-    arcDistance,
     .new(brushIdx),
     .new(kind),
   );
@@ -655,11 +657,12 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
   wgsl.Vec2f get v1 => this.$2;
   wgsl.Vec2f get v2 => this.$3;
   wgsl.Vec2f get v3 => this.$4;
-  wgsl.Vec4f get color => this.$5;
-  wgsl.U32 get zIndex => this.$6;
-  wgsl.Vec2f get arcDistance => this.$7;
-  wgsl.U32 get brushIdx => this.$8;
-  wgsl.U32 get kind => this.$9;
+  wgsl.Vec2f get arcLength => this.$5;
+  wgsl.Vec4f get color => this.$6;
+  wgsl.F32 get weight => this.$7;
+  wgsl.U32 get zIndex => this.$8;
+  wgsl.U32 get brushIdx => this.$9;
+  wgsl.U32 get kind => this.$10;
 
   @pragma('vm:prefer-inline')
   RenderGeometry get asDart => (
@@ -672,6 +675,7 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$7,
     this.$8,
     this.$9,
+    this.$10,
   );
 
   @pragma('vm:prefer-inline')
@@ -681,10 +685,11 @@ extension RenderGeometryInternalExt on RenderGeometryInternal {
     this.$3.write(data, offset + 16);
     this.$4.write(data, offset + 24);
     this.$5.write(data, offset + 32);
-    wgsl.U32(this.$6).write(data, offset + 48);
-    this.$7.write(data, offset + 56);
-    wgsl.U32(this.$8).write(data, offset + 64);
-    wgsl.U32(this.$9).write(data, offset + 68);
+    this.$6.write(data, offset + 48);
+    wgsl.F32(this.$7).write(data, offset + 64);
+    wgsl.U32(this.$8).write(data, offset + 68);
+    wgsl.U32(this.$9).write(data, offset + 72);
+    wgsl.U32(this.$10).write(data, offset + 76);
   }
 }
 
@@ -695,11 +700,12 @@ extension RenderGeometryStruct on RenderGeometry {
     wgsl.Vec2f.read(data, offset + 8),
     wgsl.Vec2f.read(data, offset + 16),
     wgsl.Vec2f.read(data, offset + 24),
-    wgsl.Vec4f.read(data, offset + 32),
-    wgsl.U32.read(data, offset + 48),
-    wgsl.Vec2f.read(data, offset + 56),
-    wgsl.U32.read(data, offset + 64),
+    wgsl.Vec2f.read(data, offset + 32),
+    wgsl.Vec4f.read(data, offset + 48),
+    wgsl.F32.read(data, offset + 64),
     wgsl.U32.read(data, offset + 68),
+    wgsl.U32.read(data, offset + 72),
+    wgsl.U32.read(data, offset + 76),
   );
 
 }
@@ -938,16 +944,17 @@ extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   }
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) {
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec2f arcLength = .zero, wgsl.Vec4f color = .zero, double weight = 0, int zIndex = 0, int brushIdx = 0, int kind = 0}) {
     v0.write(data, index * strideInBytes + 0);
     v1.write(data, index * strideInBytes + 8);
     v2.write(data, index * strideInBytes + 16);
     v3.write(data, index * strideInBytes + 24);
-    color.write(data, index * strideInBytes + 32);
-    wgsl.U32(zIndex).write(data, index * strideInBytes + 48);
-    arcDistance.write(data, index * strideInBytes + 56);
-    wgsl.U32(brushIdx).write(data, index * strideInBytes + 64);
-    wgsl.U32(kind).write(data, index * strideInBytes + 68);
+    arcLength.write(data, index * strideInBytes + 32);
+    color.write(data, index * strideInBytes + 48);
+    wgsl.F32(weight).write(data, index * strideInBytes + 64);
+    wgsl.U32(zIndex).write(data, index * strideInBytes + 68);
+    wgsl.U32(brushIdx).write(data, index * strideInBytes + 72);
+    wgsl.U32(kind).write(data, index * strideInBytes + 76);
   }
 }
 
@@ -986,7 +993,7 @@ class RenderGeometryArrayStorageBuffer extends wgsl.ArrayStorageBuffer<RenderGeo
   void operator []=(int index, RenderGeometry value) => _view[index] = value;
 
   @pragma('vm:prefer-inline')
-  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec4f color = .zero, int zIndex = 0, wgsl.Vec2f arcDistance = .zero, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, color: color, zIndex: zIndex, arcDistance: arcDistance, brushIdx: brushIdx, kind: kind);
+  void set(int index, {wgsl.Vec2f v0 = .zero, wgsl.Vec2f v1 = .zero, wgsl.Vec2f v2 = .zero, wgsl.Vec2f v3 = .zero, wgsl.Vec2f arcLength = .zero, wgsl.Vec4f color = .zero, double weight = 0, int zIndex = 0, int brushIdx = 0, int kind = 0}) => _view.set(index, v0: v0, v1: v1, v2: v2, v3: v3, arcLength: arcLength, color: color, weight: weight, zIndex: zIndex, brushIdx: brushIdx, kind: kind);
 }
 
 @meta.StorageBufferView(['in_brush_data'])
@@ -1124,7 +1131,7 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
     ),
     .new(
       binding: 2,
-      visibility: .fragment,
+      visibility: .none,
       buffer: .new(
         type: .readOnlyStorage,
         minBindingSize: 12,
@@ -1133,7 +1140,7 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
     ),
     .new(
       binding: 3,
-      visibility: .fragment,
+      visibility: .none,
       texture: .new(
         sampleType: .float,
         multisampled: false,
@@ -1142,7 +1149,7 @@ wgpu.BindGroupLayoutDescriptor get bindGroup0LayoutDescriptor => .new(
     ),
     .new(
       binding: 4,
-      visibility: .fragment,
+      visibility: .none,
       sampler: .new(type: .filtering),
     ),
   ],
@@ -1825,6 +1832,11 @@ struct BrushData {
 // - v0-v3: four vertices
 const RENDER_GEOMETRY_KIND_QUAD = 0u;
 
+// A brush stamp.
+const RENDER_GEOMETRY_KIND_STAMP = 2u;
+
+const STAMP_PADDING = 1.5f;
+
 // // An ellipse.
 // // - v0: center
 // // - v1: radii
@@ -1835,15 +1847,20 @@ struct RenderGeometry {
   v1: vec2f,
   v2: vec2f,
   v3: vec2f,
+  arc_length: vec2f,
   color: vec4f,
+  weight: f32,
   z_index: u32,
-  arc_distance: vec2f,
   brush_idx: u32,
   kind: u32,
 }
 
-fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32, arc_distance: vec2f, brush_idx: u32) -> RenderGeometry {
-  return RenderGeometry(v0, v1, v2, v3, color, z_index, arc_distance, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, 0.0, z_index, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+}
+
+fn render_geometry_create_stamp(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, weight: f32, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, weight, z_index, brush_idx, RENDER_GEOMETRY_KIND_STAMP);
 }
 
 // fn render_geometry_create_ellipse(c: vec2f, r: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {
@@ -1855,6 +1872,270 @@ fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color
 // }
 // end import "geometry.wgsl"
 
+// import "brush/brush_circle.wgsl"
+fn brush_circle(uv: vec2f) -> f32 {
+  let dist = length(uv - vec2f(0.5, 0.5));
+  return smoothstep(0.5, 0.45, dist);
+}
+
+fn brush_chisel(uv: vec2f) -> f32 {
+  // 1. Remap UVs from [0.0, 1.0] to [-1.0, 1.0] with center at 0,0
+  let p = (uv - vec2f(0.5, 0.5)) * 2.0;
+
+  // 2. Rotate the coordinates by 45 degrees
+  let c = 0.707106; // cos(45)
+  let s = 0.707106; // sin(45)
+  let rotated_p = vec2f(p.x * c - p.y * s, p.x * s + p.y * c);
+
+  // 3. Mathematical Box SDF
+  let half_size = vec2f(0.8, 0.15); // Wide and thin
+  let corner_radius = 0.05;
+  
+  let d = abs(rotated_p) - half_size + vec2f(corner_radius);
+  let box_sdf = length(max(d, vec2f(0.0))) + min(max(d.x, d.y), 0.0) - corner_radius;
+
+  // 4. Convert to your fragment shader's format (0.5 is edge)
+  return 0.5 - box_sdf;
+}
+
+fn hash21(p: vec2f) -> f32 {
+  return fract(sin(dot(p, vec2f(12.9898, 78.233))) * 43758.5453123);
+}
+
+fn value_noise(p: vec2f) -> f32 {
+  let i = floor(p);
+  let f = fract(p);
+
+  // Smooth Hermite interpolation
+  let u = f * f * (3.0 - 2.0 * f);
+
+  let a = hash21(i + vec2f(0.0, 0.0));
+  let b = hash21(i + vec2f(1.0, 0.0));
+  let c = hash21(i + vec2f(0.0, 1.0));
+  let d = hash21(i + vec2f(1.0, 1.0));
+
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+fn brush_charcoal(local_uv: vec2f, stroke_uv: vec2f) -> f32 {
+  let circle_sdf = length(local_uv) - 0.8;
+
+  let smudge_scale = 0.9;
+  let n = value_noise(stroke_uv * smudge_scale);
+
+  let grain = (n - 0.5) * 0.6;
+
+  let streak_scale = 0.66;
+  let streaks = sin(stroke_uv.x * streak_scale) * 0.05;
+
+  let noisy_sdf = circle_sdf + grain + streaks;
+
+  return 0.5 - noisy_sdf;
+}
+
+fn brush_stiff_acrylic(uv: vec2f) -> f32 {
+  let p = (uv - vec2f(0.5, 0.5)) * 2.0;
+
+  // 1. Base flat brush shape
+  let half_size = vec2f(0.25, 0.85);
+  let d = abs(p) - half_size;
+  let box_dist = length(max(d, vec2f(0.0))) + min(max(d.x, d.y), 0.0);
+
+  // 2. Bristle Grooves
+  // We use high-frequency sine waves along the Y-axis.
+  // Because they are purely Y-based, they will drag seamlessly along the X-axis!
+  let bristles = sin(p.y * 35.0) * 0.04 + sin(p.y * 80.0) * 0.02;
+
+  // 3. Add some macro-clumping so the edges aren't perfectly straight
+  let clumping = sin(p.y * 5.0) * 0.05;
+
+  return 0.5 - (box_dist + bristles + clumping);
+}
+
+fn brush_crisp_inker(uv: vec2f, weight: f32) -> f32 {
+  // 1. Remap UVs to a centered [-1.0, 1.0] coordinate space
+  let p = uv * 2.0 - 1.0;
+
+  // 2. Map the pressure (weight) to a physical radius
+  let w = clamp(weight, 0.0, 1.0);
+  
+  // At lowest pressure, radius is 0.02 (hairline).
+  // At highest pressure, radius is 0.45 (massive overlap).
+  let r = mix(0.02, 0.45, w);
+
+  // 3. Stretch the shape slightly along the X-axis (tangent)
+  // This turns our dots into overlapping ovals, ensuring the stroke 
+  // doesn't look dotted if your spacing parameter is slightly wide.
+  let p_stretched = vec2f(p.x * 0.5, p.y);
+
+  // 4. Construct the Brush via SDF Union ( min() )
+  var d = 100.0;
+
+  // Center hair (Thickest)
+  d = min(d, length(p_stretched - vec2f(0.0, 0.0)) - r);
+
+  // Inner hairs (Slightly smaller to give the brush a rounded profile)
+  d = min(d, length(p_stretched - vec2f(0.0, -0.3)) - (r * 0.85));
+  d = min(d, length(p_stretched - vec2f(0.0, 0.3)) - (r * 0.85));
+
+  // Outer hairs (Thinnest)
+  d = min(d, length(p_stretched - vec2f(0.0, -0.6)) - (r * 0.55));
+  d = min(d, length(p_stretched - vec2f(0.0, 0.6)) - (r * 0.55));
+
+  // 5. Convert to your fragment shader's threshold format (0.5 is the edge)
+  return 0.5 - d;
+}
+
+fn brush_wet_acrylic(uv: vec2f, weight: f32) -> f32 {
+  // Remap to [-1, 1].
+  // Because of our tangent rotation: 
+  // +X is forward (leading edge), -X is backward (trailing edge).
+  let p = uv * 2.0 - 1.0;
+  let w = clamp(weight, 0.01, 1.0);
+
+  // 1. The Paint Drop (Leading Edge)
+  // A smooth circle shifted slightly forward to act as the heavy bead of wet paint.
+  let drop_dist = length(p - vec2f(0.2, 0.0));
+
+  // 2. The Clumped Bristles (Trailing Edge)
+  // Wet hairs stick together. We use low-frequency sine waves to create 
+  // thick, smooth groups of bristles rather than high-frequency noise.
+  let clumps = sin(p.y * 12.0) * 0.1 + sin(p.y * 28.0) * 0.05;
+  
+  // A V-shape that flares out and fades toward the back of the brush
+  let trail_dist = abs(p.y) - (p.x * 0.5) + clumps;
+
+  // 3. Directional Blending
+  // If we are at the front of the stamp, it's a smooth drop. 
+  // If we are at the back, it breaks into streaky trails.
+  let front_mask = smoothstep(-0.3, 0.3, p.x);
+  let shape_sdf = mix(trail_dist, drop_dist, front_mask);
+
+  // 4. Pressure Dynamics
+  // Pressing hard gives a massive solid radius, pressing light leaves thin streaks
+  let radius = mix(0.15, 0.7, w);
+
+  // 5. Convert to your Fragment Shader threshold (0.5 is the exact edge)
+  return 0.5 - (shape_sdf - radius);
+}
+
+fn brush_impressionist(local_uv: vec2f, stroke_uv: vec2f, pressure: f32) -> f32 {
+  // 1. Organic Shape Wobble (Destroys the perfect circle outline)
+  // We generate a slow, low-frequency noise purely to alter the brush's footprint.
+  let wobble_scale = vec2f(0.015, 0.015);
+  let shape_wobble = value_noise(stroke_uv * wobble_scale);
+  
+  // This smoothly expands and contracts the base radius by +/- 0.25 units
+  let radius_offset = (shape_wobble - 0.5) * 0.5; 
+  
+  let width_squish = mix(1.2, 0.9, pressure);
+  let p = vec2f(local_uv.x, local_uv.y * width_squish);
+  
+  // The base SDF now has an undulating, liquid boundary instead of a perfect curve.
+  let base_sdf = length(p) - (1.0 + radius_offset);
+
+  // 2. Domain Warping
+  let warp_scale = vec2f(0.02, 0.05);
+  let warp = value_noise(stroke_uv * warp_scale);
+  let warp_offset = (warp - 0.5) * 15.0; 
+  let warped_uv = vec2f(stroke_uv.x, stroke_uv.y + warp_offset);
+
+  // 3. Rounded Ribbon Bristles
+  // Lowered the Y-scale slightly to make the globs even wider/chunkier
+  let bristle_scale = vec2f(0.002, 1.0);
+  let raw_bristle = value_noise(warped_uv * bristle_scale);
+  
+  // THE SINE WAVE TRICK:
+  // Instead of using smoothstep (which creates flat plateaus and sharp drop-offs),
+  // we map the noise through a sine wave. This converts the linear noise into 
+  // perfectly rounded overlapping tubes (like macaroni or thick paint globs).
+  let paint_tubes = sin(raw_bristle * 3.1415); 
+  
+  // Invert it so the peaks of the tubes carve smooth, U-shaped valleys into the SDF
+  let soft_carve = 1.0 - paint_tubes;
+
+  // 4. Pressure Dampening
+  let pressure_curve = pow(pressure, 3.0); 
+  
+  // Lowered max depth to 0.8 so the U-shaped valleys don't slice too deep.
+  // We removed the sharp `max()` cutoff, so the transition is perfectly smooth.
+  let bristle_depth = (1.0 - pressure_curve) * 0.8; 
+  let dynamic_bristles = soft_carve * bristle_depth;
+
+  // 5. Combine
+  let noisy_sdf = base_sdf + dynamic_bristles;
+
+  return 0.5 - noisy_sdf;
+}
+
+fn brush_standard(local_uv: vec2f, stroke_uv: vec2f, pressure: f32) -> f32 {
+  // 1. Base Shape
+  let base_sdf = length(local_uv) - 1.75;
+
+  // 2. Domain Warping
+  // X is Length, Y is Width. We want slow variation along both.
+  let warp_scale = vec2f(0.02, 0.05);
+  let warp = value_noise(stroke_uv * warp_scale);
+  
+  // This pushes the bristles left and right across the WIDTH of the brush
+  let warp_offset = (warp - 0.5) * 10.0;
+  
+  // Apply warp to the Y coordinate (Width)
+  let warped_uv = vec2f(stroke_uv.x, stroke_uv.y + warp_offset);
+
+  // 3. Bristle Generation (Swapped Axes)
+  // X (Length) gets the extremely low scale to create continuous unbroken lines.
+  // Y (Width) gets the high scale to create dense, tight bristles.
+  let bristle_scale = vec2f(0.02, 0.4); 
+  var raw_bristle = value_noise(warped_uv * bristle_scale);
+  raw_bristle = pow(raw_bristle, 1.5);
+  
+  let ridge = 1.0 - abs((raw_bristle * 2.0) - 1.0);
+  let sharp_bristles = ridge * 1.5; 
+
+  // 4. Pressure Mechanic
+  let pressure_curve = pow(pressure, 2.0); 
+  let bristle_depth = (1.0 - pressure_curve) * 0.6; 
+  let dynamic_bristles = sharp_bristles * bristle_depth;
+
+  // 5. Combine
+  let noisy_sdf = base_sdf + dynamic_bristles;
+
+  return 0.5 - noisy_sdf;
+}
+
+fn brush_cartoony(local_uv: vec2f, stroke_uv: vec2f, pressure: f32) -> f32 {
+  // 1. The Wobbly Base
+  // Changes slowly along the arc length (stroke_uv.x) to make the brush pulse.
+  let outline_wobble = sin(stroke_uv.x * 0.02) * 0.1;
+  let base_sdf = length(local_uv) - (0.8 + outline_wobble);
+
+  // 2. The Ribbons
+  // Weave them slightly side-to-side as the stroke travels.
+  let weave = sin(stroke_uv.x * 0.1) * 0.5;
+  
+  // Evaluated STRICTLY on the width axis (local_uv.y). 
+  // Overlapping stamps share the exact same Y-axis, so the stripes merge perfectly.
+  let bands = cos((local_uv.y + weave) * 32.0); 
+  
+  // Slice the wave into thick ribbons (solid) and U-shaped gaps
+  let gaps = 1.0 - smoothstep(0.5, 0.9, bands);
+
+  // 3. Pressure Dampening
+  let pressure_curve = pow(pressure, 2.0);
+  
+  // Max carve is 0.8 so the gaps never slice completely through the core of the paint
+  let carve_amount = gaps;
+
+  // 4. Combine (NO EDGE MASK)
+  // We simply add the carve directly to the SDF. The gaps will cut clean through 
+  // the stamp, perfectly connecting to the stamp next to it.
+  let final_sdf = carve_amount;
+
+  return 0.5 - final_sdf;
+}
+// end import "brush/brush_circle.wgsl"
+
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
 @group(0) @binding(1) var<storage, read> in_render_geometry: array<RenderGeometry>;
@@ -1865,8 +2146,10 @@ fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color
 struct VtxOut {
   @builtin(position) pos: vec4f,
   @location(0) frag_pos: vec2f,
-  @location(1) uv: vec2f, // arc distance, y
-  @location(2) @interpolate(flat) instance_idx: u32,
+  @location(1) stroke_uv: vec2f,
+  @location(2) local_uv: vec2f,
+  @location(3) weight: f32,
+  @location(4) @interpolate(flat) instance_idx: u32,
 }
 
 @vertex
@@ -1877,14 +2160,28 @@ fn vs_main(
   let geom = in_render_geometry[instance_idx];
 
   var pos_screen = vec2f(0.0);
+  var stroke_uv = vec2f(0.0);
   var uv = vec2f(0.0);
 
   if (geom.kind == RENDER_GEOMETRY_KIND_QUAD) {
     switch(vtx_idx) {
-      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(geom.arc_distance.x, 0.0); }
-      case 1u: { pos_screen = geom.v1; uv = vec2f(geom.arc_distance.y, 0.0); }
-      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(geom.arc_distance.y, 1.0); }
-      case 5u: { pos_screen = geom.v3; uv = vec2f(geom.arc_distance.x, 1.0); }
+      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(0.0, 0.0); stroke_uv = vec2f(geom.arc_length.x, 0.0); }
+      case 1u:     { pos_screen = geom.v1; uv = vec2f(1.0, 0.0); stroke_uv = vec2f(geom.arc_length.y, 0.0); }
+      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(1.0, 1.0); stroke_uv = vec2f(geom.arc_length.y, 1.0); }
+      case 5u:     { pos_screen = geom.v3; uv = vec2f(0.0, 1.0); stroke_uv = vec2f(geom.arc_length.x, 1.0); }
+      default: {}
+    };
+  }
+  else if (geom.kind == RENDER_GEOMETRY_KIND_STAMP) {
+    let size = geom.arc_length.y - geom.arc_length.x;
+    let u = STAMP_PADDING;
+    let v = STAMP_PADDING;
+
+    switch(vtx_idx) {
+      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(-u, -v); stroke_uv = vec2f(geom.arc_length.x, 0.0); }
+      case 1u:     { pos_screen = geom.v1; uv = vec2f(u, -v); stroke_uv = vec2f(geom.arc_length.y, 0.0); }
+      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(u, v); stroke_uv = vec2f(geom.arc_length.y, size); }
+      case 5u:     { pos_screen = geom.v3; uv = vec2f(-u, v); stroke_uv = vec2f(geom.arc_length.x, size); }
       default: {}
     };
   }
@@ -1895,7 +2192,8 @@ fn vs_main(
   var out: VtxOut;
   out.pos = vec4f(clip_x, clip_y, 0.0, 1.0);
   out.frag_pos = pos_screen;
-  out.uv = uv;
+  out.stroke_uv = stroke_uv;
+  out.local_uv = uv;
   out.instance_idx = instance_idx;
   return out;
 }
@@ -1958,47 +2256,22 @@ fn fs_main(in: VtxOut) -> @location(0) vec4f {
     }
   }
 
-  let u_dist = in.uv.x;
-  let v_dist = in.uv.y;
-
-  let brush = in_brush_data[geom.brush_idx];
-  let brush_length = max(brush.length, 1.0f);
-  let brush_spacing = max(brush.spacing, 1.0f);
-  let brush_texture_idx = brush.texture_idx;
-
-  let base_uv_dx = dpdx(in.uv);
-  let base_uv_dy = dpdy(in.uv);
-
-  let grad_x = base_uv_dx * vec2f(1.0 / brush_length, 1.0);
-  let grad_y = base_uv_dy * vec2f(1.0 / brush_length, 1.0);
-
-  let pixel_aa = length(grad_x) + length(grad_y);
-
-  let center_stamp_idx = floor(u_dist / brush_spacing);
-  let overlap_radius = i32(min(ceil((brush_length * 0.5) / brush_spacing), 16.0));
-
-  var accum_alpha = 0.0;
-  for (var i = -overlap_radius; i <= overlap_radius; i++) {
-    let stamp_idx = center_stamp_idx + f32(i);
-    let stamp_center_u = stamp_idx * brush_spacing;
-
-    let dist_from_center = u_dist - stamp_center_u;
-    if (abs(dist_from_center) > brush_length * 0.5) { continue; }
-
-    let local_u = (dist_from_center / brush_length) + 0.5;
-    let local_v = v_dist;
-    let sample_uv = vec2f(local_u, local_v);
-
-    let sdf_dist = textureSampleGrad(brush_textures, brush_sampler, sample_uv, brush_texture_idx, grad_x, grad_y).r;
-
-    let alpha = smoothstep(0.5 - pixel_aa, 0.5 + pixel_aa, sdf_dist);
-    accum_alpha = accum_alpha + alpha - (accum_alpha * alpha);
+  if (geom.kind == RENDER_GEOMETRY_KIND_QUAD) {
+    return vec4f(geom.color.rgb, geom.color.a);
   }
+  else {
+    // return vec4f(1.0);
+    // let dist = brush_charcoal(in.local_uv, in.stroke_uv);
+    // let dist = brush_cartoony(in.local_uv, in.stroke_uv, in.weight);
+    // let dist = brush_standard(in.local_uv, in.stroke_uv, in.weight);
+    let dist = brush_circle(in.local_uv);
+    let pixel_aa = fwidth(dist);
 
-  if (accum_alpha < 0.005) { discard; }
+    let alpha = smoothstep(0.5 - pixel_aa, 0.5 + pixel_aa, dist);
+    if (alpha < 0.005) { discard; }
 
-  let color = geom.color;
-  return vec4f(color.rgb, color.a * accum_alpha);
+    return vec4f(geom.color.rgb, geom.color.a * alpha);
+  }
 }
 
 ''';

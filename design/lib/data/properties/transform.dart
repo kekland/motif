@@ -27,7 +27,7 @@ class NodeTransformData with EquatableMixin {
   // Translation
   // --
 
-  Offset get translation => value.getTranslation().xy.asOffset();
+  Offset get translation => value.getTranslation().xy.offset;
   NodeTransformData copyWithTranslation(Offset translation) => translated(translation - this.translation);
   NodeTransformData translated(Offset translation) {
     final translationMatrix = Matrix4.translationValues(translation.dx, translation.dy, 0.0);

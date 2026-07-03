@@ -9,4 +9,5 @@ dependencies:
   flutter:
     sdk: flutter
 
+  ui:
   vector_math: ^2.2.0

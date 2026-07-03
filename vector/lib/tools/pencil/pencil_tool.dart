@@ -1,5 +1,7 @@
 import 'package:vector/imports.dart';
-import 'package:vector/tools/pencil/pencil_freehand_drag_activity.dart';
+import 'package:vector/tools/pencil/activities/pencil_freehand_draw_activity.dart';
+
+export 'activities/pencil_freehand_draw_activity.dart';
 
 class PencilTool extends Tool {
   const PencilTool();
@@ -26,30 +28,21 @@ class _PencilToolOverlay extends HookWidget {
   Widget build(BuildContext context) {
     final controller = VectorController.watch(context);
 
-    final freehandDragRecognizer = useManagedResource(
-      create: () => DragActivityGestureRecognizer(
-        activityFactory: () => PencilFreehandDrawActivity(controller: controller),
-        devicesToAcceptImmediately: {.stylus},
-      ),
-      dispose: (v) => v.dispose(),
-    );
+    // final freehandDragRecognizer = useManagedResource(
+    //   create: () => DragActivityGestureRecognizer(
+    //     activityFactory: () => PencilFreehandDrawActivity(controller: controller),
+    //     devicesToAcceptImmediately: {.stylus},
+    //   ),
+    //   dispose: (v) => v.dispose(),
+    // );
 
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: SystemMouseCursors.precise,
-      child: Listener(
+      child: DragActivityDetector(
         behavior: .translucent,
-        onPointerDown: (e) {
-          freehandDragRecognizer.addPointer(e);
-        },
-        child: GestureDetector(
-          behavior: .translucent,
-          onTapUp: (details) {
-            final globalPosition = details.globalPosition;
-            final localPosition = controller.globalToArtworkLocal(globalPosition);
-            controller.complex.createVertex(localPosition.asVector2());
-          },
-        ),
+        activityFactory: () => PencilFreehandDrawActivity(controller: controller),
+        child: const SizedBox.expand(),
       ),
     );
   }

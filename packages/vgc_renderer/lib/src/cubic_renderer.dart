@@ -143,6 +143,7 @@ class CubicRenderer {
       inEdgeData: _edgeBuffer,
       inCubicData: _cubicBuffer,
       inEdgeWeightSamples: _edgeWeightSamplesBuffer,
+      inBrushData: _brushDataBuffer,
       outRenderGeometry: _geometryBuffer,
       outDrawArgs: _drawIndirectArgsBuffer,
     );
@@ -206,7 +207,7 @@ class CubicRenderer {
     // Write brush data
     {
       var brushIdx = 0;
-      _brushDataBuffer.set(brushIdx, length: 128.0, spacing: 32.0, textureIdx: 0);
+      _brushDataBuffer.set(brushIdx, length: 64.0, spacing: 2.0, textureIdx: 0);
       _brushDataBuffer.writeToQueue(queue, count: brushIdx + 1);
 
       final data = halftoneSdfBrush(128, 128);

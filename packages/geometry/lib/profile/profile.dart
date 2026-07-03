@@ -40,6 +40,8 @@ abstract class ValueProfile<P extends ValueProfile<P>> {
     }
   }
 
+  bool get isEmpty => _samples.isEmpty;
+  bool get isNotEmpty => _samples.isNotEmpty;
   double get min => _samples.map((s) => s.v).reduce(math.min);
   double get max => _samples.map((s) => s.v).reduce(math.max);
   double get dvMin => _dvs.reduce(math.min);
@@ -102,6 +104,7 @@ abstract class ValueProfile<P extends ValueProfile<P>> {
   }
 
   (List<RawProfileSample>, List<RawProfileSample>) _split(double x) {
+    if (isEmpty) return ([], []);
     if (x <= 0.0) return ([_samples.first], _samples);
     if (x >= totalLength) return (_samples, [_samples.last]);
 

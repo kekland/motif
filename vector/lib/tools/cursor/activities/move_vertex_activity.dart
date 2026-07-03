@@ -1,46 +1,39 @@
-part of 'cursor_activities.dart';
+part of 'move_object_activity.dart';
 
-class MoveVertexActivity extends MoveDragActivity with ExclusiveCursorDragActivity {
-  MoveVertexActivity({required super.controller, required this.vertex});
+final class MoveVertexActivity extends _MoveObjectActivity<Vertex> {
+  MoveVertexActivity(super.controller, super.object);
 
-  final Vertex vertex;
-
-  @override
-  MouseCursor get cursor => Cursors.toolMove;
+  Vertex get vertex => object;
 
   late final Vector2 startPosition;
-  late final List<OpenEdge> connectedEdges;
-  late final List<(Vector2?, Vector2?)> connectedEdgesInitialC1C2;
+  late final List<(Edge, CubicKnot2, bool)> connectedEdges;
 
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
-    controller.selection.select(vertex);
+    startPosition = vertex.position.clone();
+    connectedEdges = [];
 
-    startPosition = vertex.position;
-
-    connectedEdges = vertex.directStar.whereType<OpenEdge>().toList();
-    connectedEdgesInitialC1C2 = [];
-    for (final e in connectedEdges) {
-      connectedEdgesInitialC1C2.add((e.cStart, e.cEnd));
+    final edges = vertex.star.whereType<Edge>().toList();
+    for (final e in edges) {
+      final isStart = e.start == vertex;
+      final knot = isStart ? e.path.knots.first : e.path.knots.last;
+      connectedEdges.add((e, knot.copy(), isStart));
     }
   }
 
   @override
-  void applyDelta(Offset delta) {
-    vertex.position = startPosition + delta.asVector2();
+  void applyDelta(Vector2 delta) {
+    final position = startPosition + delta;
+    vertex.position = position;
 
-    for (final (i, e) in connectedEdges.indexed) {
-      if (e.start == vertex && e.cStart != null) {
-        final initial = connectedEdgesInitialC1C2[i].$1!;
-        e.cStart = initial + delta.asVector2();
-      } else if (e.end == vertex && e.cEnd != null) {
-        final initial = connectedEdgesInitialC1C2[i].$2!;
-        e.cEnd = initial + delta.asVector2();
+    for (final (edge, knot, isStart) in connectedEdges) {
+      if (isStart) {
+        edge.path.first.setFrom(knot.shifted(delta));
+      } else {
+        edge.path.last.setFrom(knot.shifted(delta));
       }
     }
-
-    controller.complex.notifyFor(vertex);
   }
 }

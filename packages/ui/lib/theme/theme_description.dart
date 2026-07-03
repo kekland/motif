@@ -9,8 +9,6 @@ const _typographyColors = <TextColorDescription>[
   .new('danger', getter: 'danger.primary'),
 ];
 
-const _typographyWeights = <FontWeight>[.regular, .bold];
-
 const themeDescription = ThemeDescription(
   platforms: ['material', 'cupertino'],
   variants: ['desktop', 'mobile'],
@@ -25,17 +23,26 @@ const themeDescription = ThemeDescription(
     .leaf('normal'),
     .leaf('inverse'),
     .leaf('shadow'),
+    .group(
+      'blueprint',
+      children: [
+        .group(
+          'data',
+          children: [.leaf('int'), .leaf('float'), .leaf('vector'), .leaf('geometry')],
+        ),
+        .group(
+          'node',
+          children: [.leaf('math'), .leaf('geometry'), .leaf('primitive')],
+        ),
+      ],
+    ),
   ],
   typography: [
     .new('largeTitle', colors: _typographyColors),
-    .new('title1', colors: _typographyColors, weights: _typographyWeights),
-    .new('title2', colors: _typographyColors, weights: _typographyWeights),
-    .new('subtitle1', colors: _typographyColors, weights: _typographyWeights),
-    .new('body1', colors: _typographyColors, weights: _typographyWeights),
-    .new('caption1', colors: _typographyColors, weights: _typographyWeights),
-    .new('caption2', colors: _typographyColors, weights: _typographyWeights),
-    .new('caption3', colors: _typographyColors, weights: _typographyWeights),
-    .new('footnote', colors: _typographyColors, weights: _typographyWeights),
+    .new('title', colors: _typographyColors),
+    .new('subtitle', colors: _typographyColors),
+    .new('body', colors: _typographyColors),
+    .new('footnote', colors: _typographyColors),
   ],
   animations: [
     .new('window'),

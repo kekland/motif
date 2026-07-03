@@ -82,7 +82,7 @@ class GenieTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     const _t0 = Interval(0.65, 1.0, curve: Curves.easeInOut);
     const _t1 = Interval(0.0, 0.7, curve: Curves.easeInOut);
-    const _tOpacity = Interval(0.0, 0.125, curve: Curves.easeInOut);
+    const _tOpacity = Interval(0.15, 0.3, curve: Curves.easeInOut);
 
     return AnimatedBuilder(
       animation: animation,
@@ -160,6 +160,8 @@ class _GenieTransitionWidget extends SingleChildRenderObjectWidget {
   }
 }
 
+const _kDebugShowGenieSplines = false;
+
 class _GenieTransitionRenderObject extends RenderProxyBox {
   _GenieTransitionRenderObject({
     required this._src,
@@ -231,12 +233,64 @@ class _GenieTransitionRenderObject extends RenderProxyBox {
     super.dispose();
   }
 
+  void _debugPaint(
+    PaintingContext context,
+    Rect src,
+    Rect dst,
+    (Cubic2, Cubic2) cubics,
+    (Vector2, Vector2) edgeCenters,
+  ) {
+    final (c1, c2) = cubics;
+    final canvas = context.canvas;
+
+    // draw src/dst
+    canvas.drawRect(
+      src,
+      Paint()
+        ..color = const Color(0xFF0000FF)
+        ..style = .stroke,
+    );
+    canvas.drawRect(
+      dst,
+      Paint()
+        ..color = const Color(0xFFFF0000)
+        ..style = .stroke,
+    );
+
+    // draw cubics
+    final paint = Paint()
+      ..color = const Color(0xFFFFFFFF)
+      ..style = .stroke;
+
+    final path1 = Path()
+      ..moveTo(c1.p0.x, c1.p0.y)
+      ..cubicTo(c1.p1.x, c1.p1.y, c1.p2.x, c1.p2.y, c1.p3.x, c1.p3.y);
+
+    final path2 = Path()
+      ..moveTo(c2.p0.x, c2.p0.y)
+      ..cubicTo(c2.p1.x, c2.p1.y, c2.p2.x, c2.p2.y, c2.p3.x, c2.p3.y);
+
+    canvas.drawPath(path1, paint);
+    canvas.drawPath(path2, paint);
+
+    // draw edge centers and line
+    final paint2 = Paint()
+      ..color = const Color(0xFFFFFF00)
+      ..style = .stroke;
+
+    final (srcEdgeCenter, dstEdgeCenter) = edgeCenters;
+    canvas.drawLine(.new(srcEdgeCenter.x, srcEdgeCenter.y), .new(dstEdgeCenter.x, dstEdgeCenter.y), paint2);
+
+    canvas.drawCircle(.new(srcEdgeCenter.x, srcEdgeCenter.y), 4.0, paint2);
+    canvas.drawCircle(.new(dstEdgeCenter.x, dstEdgeCenter.y), 4.0, paint2);
+  }
+
   @override
   void paint(PaintingContext context, ui.Offset offset) {
     final src = MatrixUtils.transformRect(overlay.getTransformTo(this), this.src);
     final dst = child!.paintBounds;
     final totalRect = src.expandToInclude(dst);
-    
+
     const shadowMargin = 16.0;
     final paddedTotalRect = totalRect.inflate(shadowMargin);
 
@@ -246,6 +300,24 @@ class _GenieTransitionRenderObject extends RenderProxyBox {
     final dstNormalized = dst.shift(-shift);
 
     final (c1, c2, srcEdgeCenter, dstEdgeCenter, direction) = _generateCubics(srcNormalized, dstNormalized);
+
+    if (_kDebugShowGenieSplines) {
+      context.canvas.save();
+      context.canvas.translate(offset.dx + shift.dx, offset.dy + shift.dy);
+      _debugPaint(
+        context,
+        srcNormalized,
+        dstNormalized,
+        (c1, c2),
+        (srcEdgeCenter, dstEdgeCenter),
+      );
+      context.canvas.restore();
+    }
+
+    if (t0 == 1.0 && t1 == 1.0 && tOpacity == 1.0) {
+      context.paintChild(child!, offset);
+      return;
+    }
 
     // Shader
     if (_fragmentProgram == null) {

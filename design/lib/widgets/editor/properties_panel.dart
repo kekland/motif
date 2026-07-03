@@ -68,7 +68,7 @@ class InfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text(nodeType, style: context.typography.caption3.tertiary),
+          Text(nodeType, style: context.typography.footnote.tertiary),
           const SizedBox(height: 8.0),
           TextFormField(
             // leading: selectedNode.icon,
@@ -121,7 +121,7 @@ class TransformSection extends HookWidget {
       child: Column(
         crossAxisAlignment: .start,
         children: [
-          Text('transform', style: context.typography.caption3.tertiary),
+          Text('transform', style: context.typography.footnote.tertiary),
           const SizedBox(height: 8.0),
           Row(
             children: [
@@ -133,7 +133,7 @@ class TransformSection extends HookWidget {
                       : null,
                   options: .new(
                     leading: _wrapIcon(Icons.x()),
-                    textStyle: isTranslationIgnored ? context.typography.caption1.tertiary : null,
+                    textStyle: isTranslationIgnored ? context.typography.body.tertiary : null,
                   ),
                 ),
               ),
@@ -146,7 +146,7 @@ class TransformSection extends HookWidget {
                       : null,
                   options: .new(
                     leading: _wrapIcon(Icons.y()),
-                    textStyle: isTranslationIgnored ? context.typography.caption1.tertiary : null,
+                    textStyle: isTranslationIgnored ? context.typography.body.tertiary : null,
                   ),
                 ),
               ),
@@ -224,7 +224,7 @@ class LayoutSection extends HookWidget {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              Text('layout', style: context.typography.caption3.tertiary),
+              Text('layout', style: context.typography.footnote.tertiary),
               const SizedBox(height: 8.0),
               Row(
                 children: [
@@ -234,7 +234,7 @@ class LayoutSection extends HookWidget {
                       onChanged: isMutable ? (v) => applySize(width: .fixed(v)) : null,
                       options: .new(
                         leading: _wrapIcon(Icons.w()),
-                        textStyle: isWidthOverridden ? context.typography.caption1.tertiary : null,
+                        textStyle: isWidthOverridden ? context.typography.body.tertiary : null,
                         padding: .zero,
                         builder: (context, child) => Column(
                           children: [
@@ -279,7 +279,7 @@ class LayoutSection extends HookWidget {
                       onChanged: isMutable ? (v) => applySize(height: .fixed(v)) : null,
                       options: .new(
                         leading: _wrapIcon(Icons.h()),
-                        textStyle: isWidthOverridden ? context.typography.caption1.tertiary : null,
+                        textStyle: isWidthOverridden ? context.typography.body.tertiary : null,
                         padding: .zero,
                         builder: (context, child) => Column(
                           children: [

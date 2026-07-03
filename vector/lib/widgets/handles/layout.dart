@@ -1,4 +1,4 @@
-part of '../handles_overlay.dart';
+part of 'handles.dart';
 
 class HandlesParentData extends ContainerBoxParentData<RenderBox> {
   HandlesParentData({required this.position});

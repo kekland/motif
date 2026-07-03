@@ -2,6 +2,11 @@
 // - v0-v3: four vertices
 const RENDER_GEOMETRY_KIND_QUAD = 0u;
 
+// A brush stamp.
+const RENDER_GEOMETRY_KIND_STAMP = 2u;
+
+const STAMP_PADDING = 1.5f;
+
 // // An ellipse.
 // // - v0: center
 // // - v1: radii
@@ -12,15 +17,20 @@ struct RenderGeometry {
   v1: vec2f,
   v2: vec2f,
   v3: vec2f,
+  arc_length: vec2f,
   color: vec4f,
+  weight: f32,
   z_index: u32,
-  arc_distance: vec2f,
   brush_idx: u32,
   kind: u32,
 }
 
-fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, color: vec4f, z_index: u32, arc_distance: vec2f, brush_idx: u32) -> RenderGeometry {
-  return RenderGeometry(v0, v1, v2, v3, color, z_index, arc_distance, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+fn render_geometry_create_quad(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, 0.0, z_index, brush_idx, RENDER_GEOMETRY_KIND_QUAD);
+}
+
+fn render_geometry_create_stamp(v0: vec2f, v1: vec2f, v2: vec2f, v3: vec2f, arc_length: vec2f, weight: f32, color: vec4f, z_index: u32, brush_idx: u32) -> RenderGeometry {
+  return RenderGeometry(v0, v1, v2, v3, arc_length, color, weight, z_index, brush_idx, RENDER_GEOMETRY_KIND_STAMP);
 }
 
 // fn render_geometry_create_ellipse(c: vec2f, r: vec2f, color: vec4f, z_index: u32) -> RenderGeometry {

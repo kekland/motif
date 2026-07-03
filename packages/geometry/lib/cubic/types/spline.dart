@@ -1,6 +1,6 @@
 part of '../cubic.dart';
 
-final class CubicSpline2 {
+class CubicSpline2 {
   CubicSpline2(this.knots);
   CubicSpline2.single(Vector2 p) : knots = [.new(p)];
   CubicSpline2.empty() : knots = [];
@@ -19,6 +19,8 @@ final class CubicSpline2 {
   Aabb2 get bboxTight => _splineBboxTight(this);
 
   CubicKnot2 knot(int i) => knots[i];
+  CubicKnot2 get first => knot(0);
+  CubicKnot2 get last => knot(length - 1);
   (CubicKnot2, CubicKnot2) knotsAt(double t) => _splineKnotsAtParameter(this, t);
 
   Cubic2 segment(int i) => _splineSegment(this, i);

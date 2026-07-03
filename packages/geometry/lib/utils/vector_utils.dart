@@ -10,6 +10,12 @@ double perpendicularDistance(Vector2 p, Vector2 a, Vector2 b) {
 }
 
 extension Aabb2Utils on Aabb2 {
+  // double signedDistanceTo(Vector2 p) {
+  //   final distance = distanceTo(p);
+  //   if (containsVector2(p)) return -distance;
+  //   return distance;
+  // }
+
   double distanceTo(Vector2 p) {
     final dx = math.max(0.0, math.max(min.x - p.x, p.x - max.x));
     final dy = math.max(0.0, math.max(min.y - p.y, p.y - max.y));
@@ -29,7 +35,7 @@ extension Aabb2Utils on Aabb2 {
   }
 }
 
-extension Vector2Utils on Vector2 {
+extension GeometryVector2Utils on Vector2 {
   Vector2 pointReflect(Vector2 p) {
     return p * 2 - this;
   }

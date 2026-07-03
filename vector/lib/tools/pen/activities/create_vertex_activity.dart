@@ -1,4 +1,5 @@
-part of 'pen_activities.dart';
+import 'package:flutter/gestures.dart';
+import 'package:vector/imports.dart';
 
 class CreateVertexActivity extends DragActivity {
   CreateVertexActivity({
@@ -21,16 +22,16 @@ class CreateVertexActivity extends DragActivity {
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
-    final position = controller.globalToArtworkLocal(details.globalPosition);
-    final startHitEntry = controller.hitTestCell(details.globalPosition);
+    final position = controller.render.globalToLocal(details.globalPosition);
+    final startHitEntry = controller.hitTest(details.globalPosition);
 
     // If we're on an existing edge, we modify the end point.
     // Otherwise, start a new edge.
     if (existingTransientEdge != null) {
       transientEdge = existingTransientEdge!;
-      transientEdge.end = startHitEntry?.localPosition ?? position.asVector2();
+      transientEdge.end = (startHitEntry?.localPosition ?? position).vec2;
     } else {
-      transientEdge = controller.transientEdges.createWithHitTest(position.asVector2(), startHitEntry);
+      transientEdge = controller.transientEdges.createWithHitTest(position.vec2, startHitEntry);
       onTransientEdgeCreated(transientEdge);
     }
   }
@@ -43,8 +44,8 @@ class CreateVertexActivity extends DragActivity {
       if (delta >= kTouchSlop) didPassThreshold = true;
     }
 
-    final position = controller.globalToArtworkLocal(details.globalPosition);
-    final localPosition = position.asVector2();
+    final position = controller.render.globalToLocal(details.globalPosition);
+    final localPosition = position.vec2;
 
     if (!isNewEdge) {
       final end = transientEdge.end!;
@@ -68,9 +69,9 @@ class CreateVertexActivity extends DragActivity {
 
     if (!isNewEdge) {
       // Commit the transient edge.
-      final endPosition = transientEdge.end!.asOffset();
-      final endGlobalPosition = controller.artworkLocalToGlobal(endPosition);
-      final endHitTest = controller.hitTestCell(endGlobalPosition);
+      final endPosition = transientEdge.end!.offset;
+      final endGlobalPosition = controller.render.localToGlobal(endPosition);
+      final endHitTest = controller.hitTest(endGlobalPosition);
       final newTransient = controller.transientEdges.commit(transientEdge, endHitTest: endHitTest, startNewEdge: true);
       onTransientEdgeCompleted(transientEdge);
       if (newTransient != null) onTransientEdgeCreated(newTransient);

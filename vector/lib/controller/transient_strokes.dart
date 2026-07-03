@@ -9,9 +9,9 @@ class TransientStrokes with ChangeNotifier, ChangeNotifierDisposable {
   Iterable<TransientStroke> get strokes => _strokes;
 
   TransientStroke create({Offset? point, Offset? rawGlobalPoint, Duration? timestamp, double? weight}) {
-    final strokeProperties = controller.strokeProperties;
+    // final strokeProperties = controller.strokeProperties;
 
-    final stroke = TransientStroke(width: strokeProperties.width, color: strokeProperties.color);
+    final stroke = TransientStroke(width: 1.0, color: ColorData.blue);
     if (point != null) {
       stroke.addPoint(
         point,

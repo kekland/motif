@@ -2,6 +2,7 @@
 #import "shared/utils.wgsl"
 #import "structs.wgsl"
 #import "geometry.wgsl"
+#import "brush/brush_circle.wgsl"
 
 @group(0) @binding(0) var<uniform> u: Uniforms;
 @group(0) @binding(1) var<storage, read> in_render_geometry: array<RenderGeometry>;
@@ -12,8 +13,10 @@
 struct VtxOut {
   @builtin(position) pos: vec4f,
   @location(0) frag_pos: vec2f,
-  @location(1) uv: vec2f, // arc distance, y
-  @location(2) @interpolate(flat) instance_idx: u32,
+  @location(1) stroke_uv: vec2f,
+  @location(2) local_uv: vec2f,
+  @location(3) weight: f32,
+  @location(4) @interpolate(flat) instance_idx: u32,
 }
 
 @vertex
@@ -24,14 +27,28 @@ fn vs_main(
   let geom = in_render_geometry[instance_idx];
 
   var pos_screen = vec2f(0.0);
+  var stroke_uv = vec2f(0.0);
   var uv = vec2f(0.0);
 
   if (geom.kind == RENDER_GEOMETRY_KIND_QUAD) {
     switch(vtx_idx) {
-      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(geom.arc_distance.x, 0.0); }
-      case 1u: { pos_screen = geom.v1; uv = vec2f(geom.arc_distance.y, 0.0); }
-      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(geom.arc_distance.y, 1.0); }
-      case 5u: { pos_screen = geom.v3; uv = vec2f(geom.arc_distance.x, 1.0); }
+      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(0.0, 0.0); stroke_uv = vec2f(geom.arc_length.x, 0.0); }
+      case 1u:     { pos_screen = geom.v1; uv = vec2f(1.0, 0.0); stroke_uv = vec2f(geom.arc_length.y, 0.0); }
+      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(1.0, 1.0); stroke_uv = vec2f(geom.arc_length.y, 1.0); }
+      case 5u:     { pos_screen = geom.v3; uv = vec2f(0.0, 1.0); stroke_uv = vec2f(geom.arc_length.x, 1.0); }
+      default: {}
+    };
+  }
+  else if (geom.kind == RENDER_GEOMETRY_KIND_STAMP) {
+    let size = geom.arc_length.y - geom.arc_length.x;
+    let u = STAMP_PADDING;
+    let v = STAMP_PADDING;
+
+    switch(vtx_idx) {
+      case 0u, 3u: { pos_screen = geom.v0; uv = vec2f(-u, -v); stroke_uv = vec2f(geom.arc_length.x, 0.0); }
+      case 1u:     { pos_screen = geom.v1; uv = vec2f(u, -v); stroke_uv = vec2f(geom.arc_length.y, 0.0); }
+      case 2u, 4u: { pos_screen = geom.v2; uv = vec2f(u, v); stroke_uv = vec2f(geom.arc_length.y, size); }
+      case 5u:     { pos_screen = geom.v3; uv = vec2f(-u, v); stroke_uv = vec2f(geom.arc_length.x, size); }
       default: {}
     };
   }
@@ -42,7 +59,8 @@ fn vs_main(
   var out: VtxOut;
   out.pos = vec4f(clip_x, clip_y, 0.0, 1.0);
   out.frag_pos = pos_screen;
-  out.uv = uv;
+  out.stroke_uv = stroke_uv;
+  out.local_uv = uv;
   out.instance_idx = instance_idx;
   return out;
 }
@@ -105,45 +123,20 @@ fn fs_main(in: VtxOut) -> @location(0) vec4f {
     }
   }
 
-  let u_dist = in.uv.x;
-  let v_dist = in.uv.y;
-
-  let brush = in_brush_data[geom.brush_idx];
-  let brush_length = max(brush.length, 1.0f);
-  let brush_spacing = max(brush.spacing, 1.0f);
-  let brush_texture_idx = brush.texture_idx;
-
-  let base_uv_dx = dpdx(in.uv);
-  let base_uv_dy = dpdy(in.uv);
-
-  let grad_x = base_uv_dx * vec2f(1.0 / brush_length, 1.0);
-  let grad_y = base_uv_dy * vec2f(1.0 / brush_length, 1.0);
-
-  let pixel_aa = length(grad_x) + length(grad_y);
-
-  let center_stamp_idx = floor(u_dist / brush_spacing);
-  let overlap_radius = i32(min(ceil((brush_length * 0.5) / brush_spacing), 16.0));
-
-  var accum_alpha = 0.0;
-  for (var i = -overlap_radius; i <= overlap_radius; i++) {
-    let stamp_idx = center_stamp_idx + f32(i);
-    let stamp_center_u = stamp_idx * brush_spacing;
-
-    let dist_from_center = u_dist - stamp_center_u;
-    if (abs(dist_from_center) > brush_length * 0.5) { continue; }
-
-    let local_u = (dist_from_center / brush_length) + 0.5;
-    let local_v = v_dist;
-    let sample_uv = vec2f(local_u, local_v);
-
-    let sdf_dist = textureSampleGrad(brush_textures, brush_sampler, sample_uv, brush_texture_idx, grad_x, grad_y).r;
-
-    let alpha = smoothstep(0.5 - pixel_aa, 0.5 + pixel_aa, sdf_dist);
-    accum_alpha = accum_alpha + alpha - (accum_alpha * alpha);
+  if (geom.kind == RENDER_GEOMETRY_KIND_QUAD) {
+    return vec4f(geom.color.rgb, geom.color.a);
   }
+  else {
+    // return vec4f(1.0);
+    // let dist = brush_charcoal(in.local_uv, in.stroke_uv);
+    // let dist = brush_cartoony(in.local_uv, in.stroke_uv, in.weight);
+    // let dist = brush_standard(in.local_uv, in.stroke_uv, in.weight);
+    let dist = brush_circle(in.local_uv);
+    let pixel_aa = fwidth(dist);
 
-  if (accum_alpha < 0.005) { discard; }
+    let alpha = smoothstep(0.5 - pixel_aa, 0.5 + pixel_aa, dist);
+    if (alpha < 0.005) { discard; }
 
-  let color = geom.color;
-  return vec4f(color.rgb, color.a * accum_alpha);
+    return vec4f(geom.color.rgb, geom.color.a * alpha);
+  }
 }

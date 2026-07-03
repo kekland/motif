@@ -24,6 +24,7 @@ const assets = (
 class IconsAssets {
   const IconsAssets();
 
+  static const edgeFill = AssetBytesLoader('assets/gen/icons/edge-fill.vec', packageName: 'ui');
   static const wFill = AssetBytesLoader('assets/gen/icons/w-fill.vec', packageName: 'ui');
   static const vFill = AssetBytesLoader('assets/gen/icons/v-fill.vec', packageName: 'ui');
   static const iFill = AssetBytesLoader('assets/gen/icons/i-fill.vec', packageName: 'ui');
@@ -35,8 +36,10 @@ class IconsAssets {
   static const o = AssetBytesLoader('assets/gen/icons/o.vec', packageName: 'ui');
   static const nFill = AssetBytesLoader('assets/gen/icons/n-fill.vec', packageName: 'ui');
   static const oFill = AssetBytesLoader('assets/gen/icons/o-fill.vec', packageName: 'ui');
+  static const vertex = AssetBytesLoader('assets/gen/icons/vertex.vec', packageName: 'ui');
   static const n = AssetBytesLoader('assets/gen/icons/n.vec', packageName: 'ui');
   static const y = AssetBytesLoader('assets/gen/icons/y.vec', packageName: 'ui');
+  static const edge = AssetBytesLoader('assets/gen/icons/edge.vec', packageName: 'ui');
   static const cursorFill = AssetBytesLoader('assets/gen/icons/cursor-fill.vec', packageName: 'ui');
   static const l = AssetBytesLoader('assets/gen/icons/l.vec', packageName: 'ui');
   static const dFill = AssetBytesLoader('assets/gen/icons/d-fill.vec', packageName: 'ui');
@@ -79,6 +82,7 @@ class IconsAssets {
   static const sFill = AssetBytesLoader('assets/gen/icons/s-fill.vec', packageName: 'ui');
   static const rFill = AssetBytesLoader('assets/gen/icons/r-fill.vec', packageName: 'ui');
   static const layoutRowFill = AssetBytesLoader('assets/gen/icons/layout-row-fill.vec', packageName: 'ui');
+  static const vertexFill = AssetBytesLoader('assets/gen/icons/vertex-fill.vec', packageName: 'ui');
   static const layoutStack = AssetBytesLoader('assets/gen/icons/layout-stack.vec', packageName: 'ui');
   static const yFill = AssetBytesLoader('assets/gen/icons/y-fill.vec', packageName: 'ui');
   static const xFill = AssetBytesLoader('assets/gen/icons/x-fill.vec', packageName: 'ui');
@@ -92,6 +96,7 @@ class IconsAssets {
 }
 
 const iconsAssets = (
+  edgeFill: IconsAssets.edgeFill,
   wFill: IconsAssets.wFill,
   vFill: IconsAssets.vFill,
   iFill: IconsAssets.iFill,
@@ -103,8 +108,10 @@ const iconsAssets = (
   o: IconsAssets.o,
   nFill: IconsAssets.nFill,
   oFill: IconsAssets.oFill,
+  vertex: IconsAssets.vertex,
   n: IconsAssets.n,
   y: IconsAssets.y,
+  edge: IconsAssets.edge,
   cursorFill: IconsAssets.cursorFill,
   l: IconsAssets.l,
   dFill: IconsAssets.dFill,
@@ -147,6 +154,7 @@ const iconsAssets = (
   sFill: IconsAssets.sFill,
   rFill: IconsAssets.rFill,
   layoutRowFill: IconsAssets.layoutRowFill,
+  vertexFill: IconsAssets.vertexFill,
   layoutStack: IconsAssets.layoutStack,
   yFill: IconsAssets.yFill,
   xFill: IconsAssets.xFill,
@@ -308,6 +316,7 @@ class _BaseIcon extends StatelessWidget {
 }
 
 class Icons extends _BaseIcon {
+  const Icons.edgeFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.edgeFill, filledLoader: null, autocolor: true);
   const Icons.wFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.wFill, filledLoader: null, autocolor: true);
   const Icons.vFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.vFill, filledLoader: null, autocolor: true);
   const Icons.iFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.iFill, filledLoader: null, autocolor: true);
@@ -319,8 +328,10 @@ class Icons extends _BaseIcon {
   const Icons.o({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.o, filledLoader: IconsAssets.oFill, autocolor: true);
   const Icons.nFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.nFill, filledLoader: null, autocolor: true);
   const Icons.oFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.oFill, filledLoader: null, autocolor: true);
+  const Icons.vertex({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.vertex, filledLoader: IconsAssets.vertexFill, autocolor: true);
   const Icons.n({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.n, filledLoader: IconsAssets.nFill, autocolor: true);
   const Icons.y({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.y, filledLoader: IconsAssets.yFill, autocolor: true);
+  const Icons.edge({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.edge, filledLoader: IconsAssets.edgeFill, autocolor: true);
   const Icons.cursorFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.cursorFill, filledLoader: null, autocolor: true);
   const Icons.l({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.l, filledLoader: IconsAssets.lFill, autocolor: true);
   const Icons.dFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.dFill, filledLoader: null, autocolor: true);
@@ -363,6 +374,7 @@ class Icons extends _BaseIcon {
   const Icons.sFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.sFill, filledLoader: null, autocolor: true);
   const Icons.rFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.rFill, filledLoader: null, autocolor: true);
   const Icons.layoutRowFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.layoutRowFill, filledLoader: null, autocolor: true);
+  const Icons.vertexFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.vertexFill, filledLoader: null, autocolor: true);
   const Icons.layoutStack({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.layoutStack, filledLoader: IconsAssets.layoutStackFill, autocolor: true);
   const Icons.yFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.yFill, filledLoader: null, autocolor: true);
   const Icons.xFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.xFill, filledLoader: null, autocolor: true);
@@ -404,6 +416,14 @@ class Icons extends _BaseIcon {
   const Icons.topology({super.key, super.size, super.color}): super.iconData(icon: Symbols.hub_rounded);
   const Icons.squiggly({super.key, super.size, super.color}): super.iconData(icon: Symbols.gesture_rounded);
   const Icons.tune({super.key, super.size, super.color}): super.iconData(icon: Symbols.tune_rounded);
+  const Icons.add({super.key, super.size, super.color}): super.iconData(icon: Symbols.add_rounded);
+  const Icons.wrench({super.key, super.size, super.color}): super.iconData(icon: Symbols.build_rounded);
+  const Icons.applyModifier({super.key, super.size, super.color}): super.iconData(icon: Symbols.shape_line_rounded);
+  const Icons.visibility({super.key, super.size, super.color}): super.iconData(icon: Symbols.visibility_rounded);
+  const Icons.visibilityOff({super.key, super.size, super.color}): super.iconData(icon: Symbols.visibility_off_rounded);
+  const Icons.mirror({super.key, super.size, super.color}): super.iconData(icon: Symbols.flip_rounded);
+  const Icons.generator({super.key, super.size, super.color}): super.iconData(icon: Symbols.graph_4_rounded);
+  const Icons.symbols({super.key, super.size, super.color}): super.iconData(icon: Symbols.category_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

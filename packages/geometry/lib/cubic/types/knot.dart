@@ -13,6 +13,12 @@ class CubicKnot2 {
 
   Aabb2 get bbox => _knotBbox(this);
 
+  CubicKnot2 shifted(Vector2 delta) => .new(
+    p + delta,
+    cIn: cIn != null ? cIn! + delta : null,
+    cOut: cOut != null ? cOut! + delta : null,
+  );
+
   // @override
   // bool operator ==(Object other) {
   //   if (identical(this, other)) return true;
@@ -22,4 +28,8 @@ class CubicKnot2 {
 
   // @override
   // int get hashCode => Object.hash(p, cIn, cOut);
+}
+
+extension CubicKnot2IterableExtension on Iterable<CubicKnot2> {
+  List<CubicKnot2> copy() => map((knot) => knot.copy()).toList();
 }

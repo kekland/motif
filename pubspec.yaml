@@ -10,6 +10,7 @@ workspace:
   - design
   - vector
 
+  - packages/blueprint
   - packages/canvas
   - packages/color
   - packages/commander
@@ -17,12 +18,14 @@ workspace:
   - packages/genie
   - packages/geometry
   - packages/ink_stroke_modeler
+  - packages/node
   - packages/shared
   - packages/skia
   - packages/text
   - packages/tool
   - packages/tree
   - packages/ui
+  - packages/vc
   - packages/vgc
   - packages/vgc_renderer
   - packages/wgpu

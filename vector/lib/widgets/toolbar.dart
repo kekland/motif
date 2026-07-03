@@ -1,4 +1,6 @@
-import 'package:vector/imports.dart';
+import 'package:vector/widgets/generators/select_generator_window.dart';
+
+import '../imports.dart';
 
 class VectorToolbar extends HookWidget {
   const VectorToolbar({super.key});
@@ -20,12 +22,28 @@ class VectorToolbar extends HookWidget {
           ),
         ),
         const SizedBox(height: 8.0),
-        // ColorPicker(
-        //   size: 36.0,
-        //   value: () => strokeProperties.color,
-        //   onChanged: (c) => controller.strokeProperties.color = c,
-        // ),
-        // const SizedBox(height: 8.0),
+        Divider(),
+        Builder(
+          builder: (context) => ToolbarButton(
+            isActive: false,
+            onTap: () => WindowNavigator.pushUnique(
+              context,
+              SymbolsWindow.createEntry(context, controller: controller),
+            ),
+            child: Icons.symbols(),
+          ),
+        ),
+        Divider(),
+        Builder(
+          builder: (context) => ToolbarButton(
+            isActive: false,
+            onTap: () => WindowNavigator.pushUnique(
+              context,
+              SelectGeneratorWindow.createEntry(context, manager: controller.generatorManager),
+            ),
+            child: Icons.generator(),
+          ),
+        ),
       ],
     );
   }

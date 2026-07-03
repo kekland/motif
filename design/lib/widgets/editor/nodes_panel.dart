@@ -13,7 +13,7 @@ class NodesPanel extends HookWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16.0, bottom: 4.0),
-          child: Text('nodes', style: context.typography.caption3.tertiary),
+          child: Text('nodes', style: context.typography.subtitle.tertiary),
         ),
         Flexible(
           child: ListView.custom(
@@ -267,7 +267,7 @@ class _NodeBody extends HookWidget {
         Expanded(
           child: Text(
             name,
-            style: context.typography.caption2,
+            style: context.typography.subtitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

@@ -9,15 +9,13 @@ dependencies:
   flutter:
     sdk: flutter
 
+  blueprint:
   canvas:
   color:
   geometry:
   ink_stroke_modeler:
   shared:
   tool:
-  vgc:
-  vgc_renderer:
+  vc:
   ui:
   stack_ffi:
-
-  vector_math: ^2.2.0
