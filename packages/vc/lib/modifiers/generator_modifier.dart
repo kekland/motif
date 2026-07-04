@@ -9,14 +9,14 @@ class GeneratorModifier extends Modifier<Cell> {
   (Cell, List<Cell>) apply(VectorComplexContext context, Cell cell) {
     if (generatorId == null) return (cell, []);
 
-    final generator = context.generatorManager[generatorId!];
+    final generator = context.generator[generatorId!];
     if (generator == null) {
       print('warning! generator with id $generatorId not found');
       return (cell, []);
     }
 
     try {
-      final primitiveBundle = generator.outputNode.execute();
+      final primitiveBundle = generator.execute(cell, context);
       final cellBundle = primitiveBundle.inflate();
 
       return (cell, cellBundle.cells);

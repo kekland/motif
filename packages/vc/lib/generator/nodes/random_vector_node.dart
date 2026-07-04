@@ -8,7 +8,7 @@ class RandomVectorNode extends RandomVectorNodeBase {
     vectorOutput.value = .dynamic((ctx) {
       final context = ctx as FilledEvaluationContext;
       final rng = Random(context.seed);
-      return Vector2.random(rng) * 20.0;
+      return Vector2.random(rng) * 10.0;
     });
   }
 }

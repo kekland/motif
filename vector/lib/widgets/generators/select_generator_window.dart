@@ -2,18 +2,19 @@ import 'package:vector/imports.dart';
 import 'package:vector/widgets/generators/generator_window.dart';
 
 class SelectGeneratorWindow extends HookWidget {
-  const SelectGeneratorWindow({super.key, required this.manager});
+  const SelectGeneratorWindow({super.key, required this.controller});
 
-  final GeneratorManager manager;
+  final VectorController controller;
 
-  static WindowEntry<Generator> createEntry(BuildContext context, {required GeneratorManager manager}) =>
+  static WindowEntry<Generator> createEntry(BuildContext context, {required VectorController controller}) =>
       .withContextAnchor(
         context,
-        builder: (_) => SelectGeneratorWindow(manager: manager),
+        builder: (_) => SelectGeneratorWindow(controller: controller),
       );
 
   @override
   Widget build(BuildContext context) {
+    final manager = controller.generatorManager;
     final generators = useListenable(manager).generators;
 
     return WindowScaffold(
@@ -28,7 +29,14 @@ class SelectGeneratorWindow extends HookWidget {
               Builder(
                 builder: (context) => Tile(
                   onTap: () {
-                    WindowNavigator.pushUnique(context, GeneratorWindow.createEntry(context, generator: g));
+                    WindowNavigator.pushUnique(
+                      context,
+                      GeneratorWindow.createEntry(
+                        context,
+                        controller: controller,
+                        generator: g,
+                      ),
+                    );
                     Navigator.pop(context, g);
                   },
                   leading: Icons.generator(),
@@ -43,7 +51,11 @@ class SelectGeneratorWindow extends HookWidget {
                     final g = manager.createGenerator();
                     WindowNavigator.pushUnique(
                       context,
-                      GeneratorWindow.createEntry(context, generator: g),
+                      GeneratorWindow.createEntry(
+                        context,
+                        controller: controller,
+                        generator: g,
+                      ),
                     );
                     Navigator.pop(context, g);
                   },

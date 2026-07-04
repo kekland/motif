@@ -334,10 +334,13 @@ BlueprintColors _generateBlueprintColors(Color seedColor, Brightness brightness)
   final _dataInt = Color(0xFF5E239D);
   final _dataFloat = Color(0xFF1B998B);
   final _dataVector = Color(0xFF5398BE);
+  final _dataSymbol = Color(0xFFB00020);
   final _dataGeometry = seedColor;
 
   final _nodeMath = Color(0xFF5398BE);
-  final _nodePrimitive = seedColor;
+  final _nodePrimitive = Color(0xFF5E239D);
+  final _nodeInstance = Color(0xFF1B998B);
+  final _nodeSymbol = Color(0xFFB00020);
   final _nodeGeometry = seedColor;
 
   Color _resolve(Color c) {
@@ -351,11 +354,14 @@ BlueprintColors _generateBlueprintColors(Color seedColor, Brightness brightness)
       float: _resolve(_dataFloat),
       vector: _resolve(_dataVector),
       geometry: _resolve(_dataGeometry),
+      symbol: _resolve(_dataSymbol),
     ),
     node: (
       math: _resolve(_nodeMath),
       primitive: _resolve(_nodePrimitive),
       geometry: _resolve(_nodeGeometry),
+      instance: _resolve(_nodeInstance),
+      symbol: _resolve(_nodeSymbol),
     ),
   );
 }

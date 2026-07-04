@@ -41,5 +41,5 @@ class EdgeWeights with EdgeProperty<EdgeWeights> {
     return _profile.splitMultiple(ts).map((p) => EdgeWeights(profile: p)).toList();
   }
 
-  EdgeWeightsPrimitive asPrimitive() => .new(profile: profile.copy());
+  EdgeWeightsPrimitive deflate() => .new(profile: profile.copy());
 }

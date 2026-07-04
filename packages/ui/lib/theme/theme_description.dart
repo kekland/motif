@@ -28,11 +28,11 @@ const themeDescription = ThemeDescription(
       children: [
         .group(
           'data',
-          children: [.leaf('int'), .leaf('float'), .leaf('vector'), .leaf('geometry')],
+          children: [.leaf('int'), .leaf('float'), .leaf('vector'), .leaf('geometry'), .leaf('symbol')],
         ),
         .group(
           'node',
-          children: [.leaf('math'), .leaf('geometry'), .leaf('primitive')],
+          children: [.leaf('math'), .leaf('geometry'), .leaf('primitive'), .leaf('instance'), .leaf('symbol')],
         ),
       ],
     ),

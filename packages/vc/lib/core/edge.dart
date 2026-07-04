@@ -4,7 +4,7 @@ final class EdgePrimitive extends CellPrimitive {
   EdgePrimitive({
     required this.startId,
     required this.endId,
-    this.path,
+    required this.path,
     this.decoration,
     this.weights,
     super.id,
@@ -12,7 +12,7 @@ final class EdgePrimitive extends CellPrimitive {
 
   final CellId startId;
   final CellId endId;
-  final CubicSpline2? path;
+  final CubicSpline2 path;
   final EdgeDecorationPrimitive? decoration;
   final EdgeWeightsPrimitive? weights;
 
@@ -23,19 +23,32 @@ final class EdgePrimitive extends CellPrimitive {
     CubicSpline2? path,
     EdgeDecorationPrimitive? decoration,
     EdgeWeightsPrimitive? weights,
+    CellId id = .keep,
   }) => .new(
     startId: startId ?? this.startId,
     endId: endId ?? this.endId,
-    path: path ?? this.path?.copy(),
+    path: path ?? this.path.copy(),
     decoration: decoration ?? this.decoration?.copyWith(),
     weights: weights ?? this.weights?.copyWith(),
-    id: id,
+    id: .resolve(this.id, id),
   );
+
+  @override
+  EdgePrimitive transform(Matrix4 transform, {CellId id = .keep}) {
+    return .new(
+      startId: startId,
+      endId: endId,
+      path: path.transform(transform),
+      decoration: decoration,
+      weights: weights,
+      id: .resolve(this.id, id),
+    );
+  }
 
   Edge inflate(Vertex start, Vertex end) => .new(
     start,
     end,
-    path: path != null ? .spline(path!) : null,
+    path: .spline(path),
     decoration: decoration?.inflate(),
     weights: weights?.inflate(),
     id: id,
@@ -107,12 +120,12 @@ final class Edge extends Cell {
   ReadonlySignal<Edge> call() => _complex!._signalFor(this);
 
   @override
-  EdgePrimitive asPrimitive() => .new(
+  EdgePrimitive deflate() => .new(
     startId: start.id,
     endId: end.id,
-    decoration: decoration.asPrimitive(),
-    path: path.asPrimitive(),
-    weights: weights.asPrimitive(),
+    decoration: decoration.deflate(),
+    path: path.deflate(),
+    weights: weights.deflate(),
     id: id,
   );
 }

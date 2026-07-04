@@ -214,7 +214,7 @@ class GeneratorModifierWidget extends StatelessWidget {
               context,
               SelectGeneratorWindow.createEntry(
                 context,
-                manager: VectorController.of(context).generatorManager,
+                controller: VectorController.of(context),
               ),
             );
 

@@ -18,7 +18,8 @@ sealed class CellPrimitive {
   CellPrimitive({CellId? id}) : id = id ?? .generate();
   final CellId id;
 
-  CellPrimitive copyWith();
+  CellPrimitive copyWith({CellId id = .keep});
+  CellPrimitive transform(Matrix4 transform, {CellId id = .keep});
 }
 
 sealed class Cell with LinkedListEntry<Cell>, Selectable {
@@ -51,7 +52,7 @@ sealed class Cell with LinkedListEntry<Cell>, Selectable {
   Aabb2 get bboxTight;
 
   Cell copyWith();
-  CellPrimitive asPrimitive();
+  CellPrimitive deflate();
 
   @override
   ReadonlySignal<Cell> call();

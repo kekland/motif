@@ -32,9 +32,13 @@ class Button extends StatelessWidget {
               ),
             ],
             const SizedBox(width: 4.0),
-            DefaultForegroundStyle(
-              textStyle: context.typography.body,
-              child: child,
+            Flexible(
+              child: DefaultForegroundStyle(
+                textStyle: context.typography.body,
+                maxLines: 1,
+                overflow: .ellipsis,
+                child: child,
+              ),
             ),
             const SizedBox(width: 12.0),
           ],

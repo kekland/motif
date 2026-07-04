@@ -47,5 +47,5 @@ class EdgeDecoration with EdgeProperty<EdgeDecoration> {
   @override
   List<EdgeDecoration> splitMultiple(List<double> ts) => List.generate(ts.length + 1, (_) => copyWith());
 
-  EdgeDecorationPrimitive asPrimitive() => .new(color: color, width: width);
+  EdgeDecorationPrimitive deflate() => .new(color: color, width: width);
 }

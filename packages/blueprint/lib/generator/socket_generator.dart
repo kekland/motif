@@ -30,6 +30,9 @@ List<String> generateSocket(SocketDescription description) {
   if (!isList) {
     code.add('$inputBase {');
     code.add('  $inputClassName({required super.name});');
+    code.add('');
+    code.add('  @override');
+    code.add('  $type get defaultValue => ${description.defaultValue};');
     code.add('}');
     code.add('');
   } else {

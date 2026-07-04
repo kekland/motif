@@ -117,12 +117,15 @@ typedef DataColors = ({
   Color float,
   Color vector,
   Color geometry,
+  Color symbol,
 });
 
 typedef NodeColors = ({
   Color math,
   Color geometry,
   Color primitive,
+  Color instance,
+  Color symbol,
 });
 
 typedef BlueprintColors = ({

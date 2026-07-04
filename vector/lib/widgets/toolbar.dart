@@ -39,7 +39,10 @@ class VectorToolbar extends HookWidget {
             isActive: false,
             onTap: () => WindowNavigator.pushUnique(
               context,
-              SelectGeneratorWindow.createEntry(context, manager: controller.generatorManager),
+              SelectGeneratorWindow.createEntry(
+                context,
+                controller: controller,
+              ),
             ),
             child: Icons.generator(),
           ),

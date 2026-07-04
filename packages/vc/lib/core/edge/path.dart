@@ -148,5 +148,5 @@ class EdgePath extends CubicSpline2 with EdgeProperty<EdgePath> {
   @override
   List<EdgePath> splitMultiple(List<double> ts) => super.splitMultiple(ts).map(EdgePath.spline).toList();
 
-  CubicSpline2 asPrimitive() => .new(knots.copy());
+  CubicSpline2 deflate() => .new(knots.copy());
 }

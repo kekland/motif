@@ -79,6 +79,10 @@ class Blueprint with ChangeNotifier, ChangeNotifierDisposable {
     _socketSignals[socket] ??= .new(socket);
     return _socketSignals[socket]!;
   }
+  
+  final _environment = <Type, Object>{};
+  void addEnvironment<T extends Object>(T value) => _environment[T] = value;
+  T getEnvironment<T extends Object>() => _environment[T] as T;
 
   @override
   void dispose() {
@@ -86,6 +90,7 @@ class Blueprint with ChangeNotifier, ChangeNotifierDisposable {
     for (final s in _socketSignals.values) s.dispose();
     _nodeSignals.clear();
     _socketSignals.clear();
+    _environment.clear();
 
     super.dispose();
   }

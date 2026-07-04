@@ -23,7 +23,12 @@ abstract class Node {
   bool get isStatic => _blueprint!.getNodeStatic(this);
   set isStatic(bool value) => _blueprint!.setNodeStatic(this, value);
 
+  @protected
+  void markAsDirty() => _blueprint?._markNodeAsDirty(this);
+
   Color? resolveColor(BuildContext context) => null;
+
+  T getEnvironment<T extends Object>() => _blueprint!.getEnvironment<T>();
 
   void execute();
 }

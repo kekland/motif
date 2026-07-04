@@ -108,11 +108,11 @@ abstract class RandomVectorNodeBase extends bp.Node {
   Color? resolveColor(BuildContext context) => context.colors.blueprint.node.math;
 }
 
-abstract class ShiftVerticesNodeBase extends bp.Node {
-  ShiftVerticesNodeBase(): super(
-    name: 'ShiftVertices',
+abstract class ShiftGeometryNodeBase extends bp.Node {
+  ShiftGeometryNodeBase(): super(
+    name: 'ShiftGeometry',
     inputs: [
-      GeometryConstantInputSocket(name: 'vertices'),
+      GeometryConstantInputSocket(name: 'geometry'),
       VectorDynamicInputSocket(name: 'shift'),
     ],
     outputs: [
@@ -121,8 +121,103 @@ abstract class ShiftVerticesNodeBase extends bp.Node {
   );
 
   late final i = (
-    vertices: inputs[0] as GeometryConstantInputSocket,
+    geometry: inputs[0] as GeometryConstantInputSocket,
     shift: inputs[1] as VectorDynamicInputSocket,
+  );
+
+  late final o = (
+    geometry: outputs[0] as GeometryConstantOutputSocket,
+  );
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.node.geometry;
+}
+
+abstract class InstanceOnVerticesNodeBase extends bp.Node {
+  InstanceOnVerticesNodeBase(): super(
+    name: 'InstanceOnVertices',
+    inputs: [
+      GeometryConstantInputSocket(name: 'geometry'),
+      GeometryConstantInputSocket(name: 'instance'),
+      RotationDynamicInputSocket(name: 'rotation'),
+      ScaleDynamicInputSocket(name: 'scale'),
+    ],
+    outputs: [
+      GeometryConstantOutputSocket(name: 'instances'),
+    ],
+  );
+
+  late final i = (
+    geometry: inputs[0] as GeometryConstantInputSocket,
+    instance: inputs[1] as GeometryConstantInputSocket,
+    rotation: inputs[2] as RotationDynamicInputSocket,
+    scale: inputs[3] as ScaleDynamicInputSocket,
+  );
+
+  late final o = (
+    instances: outputs[0] as GeometryConstantOutputSocket,
+  );
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.node.instance;
+}
+
+abstract class InstanceOnKnotsNodeBase extends bp.Node {
+  InstanceOnKnotsNodeBase(): super(
+    name: 'InstanceOnKnots',
+    inputs: [
+      GeometryConstantInputSocket(name: 'geometry'),
+      GeometryConstantInputSocket(name: 'instance'),
+      RotationDynamicInputSocket(name: 'rotation'),
+      ScaleDynamicInputSocket(name: 'scale'),
+    ],
+    outputs: [
+      GeometryConstantOutputSocket(name: 'instances'),
+    ],
+  );
+
+  late final i = (
+    geometry: inputs[0] as GeometryConstantInputSocket,
+    instance: inputs[1] as GeometryConstantInputSocket,
+    rotation: inputs[2] as RotationDynamicInputSocket,
+    scale: inputs[3] as ScaleDynamicInputSocket,
+  );
+
+  late final o = (
+    instances: outputs[0] as GeometryConstantOutputSocket,
+  );
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.node.instance;
+}
+
+abstract class SymbolNodeBase extends bp.Node {
+  SymbolNodeBase(): super(
+    name: 'Symbol',
+    inputs: [
+      SymbolIdConstantInputSocket(name: 'symbolId'),
+    ],
+    outputs: [
+      GeometryConstantOutputSocket(name: 'geometry'),
+    ],
+  );
+
+  late final i = (
+    symbolId: inputs[0] as SymbolIdConstantInputSocket,
+  );
+
+  late final o = (
+    geometry: outputs[0] as GeometryConstantOutputSocket,
+  );
+}
+
+abstract class GeometryInputNodeBase extends bp.Node {
+  GeometryInputNodeBase(): super(
+    name: 'GeometryInput',
+    inputs: const [],
+    outputs: [
+      GeometryConstantOutputSocket(name: 'geometry'),
+    ],
   );
 
   late final o = (
@@ -142,6 +237,9 @@ abstract class VectorSocket extends bp.Socket<Vector2> {
 
 abstract class VectorInputSocket extends VectorSocket with bp.InputSocket<Vector2> {
   VectorInputSocket({required super.name});
+
+  @override
+  Vector2 get defaultValue => Vector2.zero();
 }
 
 abstract class VectorOutputSocket extends VectorSocket with bp.OutputSocket<Vector2> {
@@ -173,6 +271,9 @@ abstract class IntegerSocket extends bp.Socket<int> {
 
 abstract class IntegerInputSocket extends IntegerSocket with bp.InputSocket<int> {
   IntegerInputSocket({required super.name});
+
+  @override
+  int get defaultValue => 0;
 }
 
 abstract class IntegerOutputSocket extends IntegerSocket with bp.OutputSocket<int> {
@@ -204,6 +305,9 @@ abstract class FloatSocket extends bp.Socket<double> {
 
 abstract class FloatInputSocket extends FloatSocket with bp.InputSocket<double> {
   FloatInputSocket({required super.name});
+
+  @override
+  double get defaultValue => 0.0;
 }
 
 abstract class FloatOutputSocket extends FloatSocket with bp.OutputSocket<double> {
@@ -235,6 +339,9 @@ abstract class GeometrySocket extends bp.Socket<PrimitiveBundle> {
 
 abstract class GeometryInputSocket extends GeometrySocket with bp.InputSocket<PrimitiveBundle> {
   GeometryInputSocket({required super.name});
+
+  @override
+  PrimitiveBundle get defaultValue => PrimitiveBundle.empty();
 }
 
 abstract class GeometryOutputSocket extends GeometrySocket with bp.OutputSocket<PrimitiveBundle> {
@@ -276,5 +383,107 @@ class GeometryListDynamicInputSocket extends GeometryListInputSocket with bp.Dyn
   GeometryListDynamicInputSocket({required super.name});
 }
 
+
+abstract class RotationSocket extends bp.Socket<Angle2> {
+  RotationSocket({required super.name});
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.data.float;
+}
+
+abstract class RotationInputSocket extends RotationSocket with bp.InputSocket<Angle2> {
+  RotationInputSocket({required super.name});
+
+  @override
+  Angle2 get defaultValue => Angle2.zero;
+}
+
+abstract class RotationOutputSocket extends RotationSocket with bp.OutputSocket<Angle2> {
+  RotationOutputSocket({required super.name});
+}
+
+class RotationConstantInputSocket extends RotationInputSocket with bp.ConstantSocket<Angle2> {
+  RotationConstantInputSocket({required super.name});
+}
+
+class RotationConstantOutputSocket extends RotationOutputSocket with bp.ConstantSocket<Angle2> {
+  RotationConstantOutputSocket({required super.name});
+}
+
+class RotationDynamicInputSocket extends RotationInputSocket with bp.DynamicSocket<Angle2> {
+  RotationDynamicInputSocket({required super.name});
+}
+
+class RotationDynamicOutputSocket extends RotationOutputSocket with bp.DynamicSocket<Angle2> {
+  RotationDynamicOutputSocket({required super.name});
+}
+
+abstract class ScaleSocket extends bp.Socket<Vector2> {
+  ScaleSocket({required super.name});
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.data.vector;
+}
+
+abstract class ScaleInputSocket extends ScaleSocket with bp.InputSocket<Vector2> {
+  ScaleInputSocket({required super.name});
+
+  @override
+  Vector2 get defaultValue => .new(1.0, 1.0);
+}
+
+abstract class ScaleOutputSocket extends ScaleSocket with bp.OutputSocket<Vector2> {
+  ScaleOutputSocket({required super.name});
+}
+
+class ScaleConstantInputSocket extends ScaleInputSocket with bp.ConstantSocket<Vector2> {
+  ScaleConstantInputSocket({required super.name});
+}
+
+class ScaleConstantOutputSocket extends ScaleOutputSocket with bp.ConstantSocket<Vector2> {
+  ScaleConstantOutputSocket({required super.name});
+}
+
+class ScaleDynamicInputSocket extends ScaleInputSocket with bp.DynamicSocket<Vector2> {
+  ScaleDynamicInputSocket({required super.name});
+}
+
+class ScaleDynamicOutputSocket extends ScaleOutputSocket with bp.DynamicSocket<Vector2> {
+  ScaleDynamicOutputSocket({required super.name});
+}
+
+abstract class SymbolIdSocket extends bp.Socket<SymbolId?> {
+  SymbolIdSocket({required super.name});
+
+  @override
+  Color? resolveColor(BuildContext context) => context.colors.blueprint.data.symbol;
+}
+
+abstract class SymbolIdInputSocket extends SymbolIdSocket with bp.InputSocket<SymbolId?> {
+  SymbolIdInputSocket({required super.name});
+
+  @override
+  SymbolId? get defaultValue => null;
+}
+
+abstract class SymbolIdOutputSocket extends SymbolIdSocket with bp.OutputSocket<SymbolId?> {
+  SymbolIdOutputSocket({required super.name});
+}
+
+class SymbolIdConstantInputSocket extends SymbolIdInputSocket with bp.ConstantSocket<SymbolId?> {
+  SymbolIdConstantInputSocket({required super.name});
+}
+
+class SymbolIdConstantOutputSocket extends SymbolIdOutputSocket with bp.ConstantSocket<SymbolId?> {
+  SymbolIdConstantOutputSocket({required super.name});
+}
+
+class SymbolIdDynamicInputSocket extends SymbolIdInputSocket with bp.DynamicSocket<SymbolId?> {
+  SymbolIdDynamicInputSocket({required super.name});
+}
+
+class SymbolIdDynamicOutputSocket extends SymbolIdOutputSocket with bp.DynamicSocket<SymbolId?> {
+  SymbolIdDynamicOutputSocket({required super.name});
+}
 
 // dart format on

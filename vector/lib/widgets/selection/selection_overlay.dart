@@ -63,10 +63,10 @@ class _SelectionOverlay extends HookWidget {
     if (!rect.size.isEmpty) {
       trailing = Button(
         onTap: () {
-          // final manager = controller.symbolManager;
-          // final cells = selection.whereType<Cell>().toList();
-          // final geometry = GeometrySymbol.fromCells(cells, manager: manager);
-          // manager.addSymbol(geometry);
+          final manager = controller.symbolManager;
+          final cells = selection.whereType<Cell>().toList();
+          final geometry = GeometrySymbol.from(cells: cells);
+          manager.addSymbol(geometry);
         },
         leading: Icons.add(),
         child: Text('Symbol'),

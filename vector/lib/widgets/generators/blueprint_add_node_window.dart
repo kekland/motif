@@ -11,6 +11,17 @@ class BlueprintAddNodeWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nodes = <String, Node>{
+      'Primitive/Vertex': PrimitiveVertexNode(),
+      'Shift Geometry': ShiftGeometryNode(),
+      'Connect Vertices': ConnectVerticesNode(),
+      'Join Geometry': JoinGeometryNode(),
+      'Random Vector': RandomVectorNode(),
+      'Instance on Vertices': InstanceOnVerticesNode(),
+      'Instance on Knots': InstanceOnKnotsNode(),
+      'Symbol': SymbolNode(),
+    };
+
     return WindowScaffold(
       title: Text('Add node'),
       child: SizedBox(
@@ -18,26 +29,13 @@ class BlueprintAddNodeWindow extends StatelessWidget {
         height: 240.0,
         child: ListView(
           children: [
-            Tile(
-              onTap: () => Navigator.of(context).pop(PrimitiveVertexNode()),
-              title: Text('Primitive/Vertex'),
-            ),
-            Tile(
-              onTap: () => Navigator.of(context).pop(ShiftVerticesNode()),
-              title: Text('Shift Vertices'),
-            ),
-            Tile(
-              onTap: () => Navigator.of(context).pop(ConnectVerticesNode()),
-              title: Text('Connect Vertices'),
-            ),
-            Tile(
-              onTap: () => Navigator.of(context).pop(JoinGeometryNode()),
-              title: Text('Join Geometry'),
-            ),
-            Tile(
-              onTap: () => Navigator.of(context).pop(RandomVectorNode()),
-              title: Text('Random Vector'),
-            ),
+            for (final entry in nodes.entries) ...[
+              Tile(
+                onTap: () => Navigator.pop(context, entry.value),
+                title: Text(entry.key),
+              ),
+              Divider(),
+            ],
           ],
         ),
       ),

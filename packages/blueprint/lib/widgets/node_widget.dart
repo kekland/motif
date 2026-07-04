@@ -15,7 +15,7 @@ class NodeWidget extends HookWidget {
     final panStartLocalPosition = useState<Offset?>(null);
 
     final child = Surface(
-      width: 128.0,
+      width: 160.0,
       color: context.colors.surface.primary,
       clipBehavior: .none,
       shadows: context.shadows.small,
@@ -73,25 +73,65 @@ class NodeWidget extends HookWidget {
   }
 }
 
-class NodeInputSocketWidget extends StatelessWidget {
+class NodeInputSocketWidget<T> extends StatelessWidget {
   const NodeInputSocketWidget({super.key, required this.socket});
 
-  final InputSocket socket;
+  final InputSocket<T> socket;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 24.0,
-      child: Row(
-        children: [
-          BaseSocketWidget(socket: socket, dx: -1.0),
-          const SizedBox(width: 12.0),
-          Text(
-            socket.name,
-            style: context.typography.body.secondary,
+    final valueBuilders = context.watch<BlueprintSocketValueBuilders>();
+    final valueBuilder = valueBuilders.builderFor<T>(socket.type);
+
+    late final Widget? trailing;
+
+    if (valueBuilder != null) {
+      final field = socket.resolve();
+      late final T? value;
+      if (field is ConstantField<T>) {
+        value = field.value;
+      } else {
+        value = null;
+      }
+
+      trailing = valueBuilder.build(
+        context,
+        socket,
+        value,
+        field is ConstantField<T>
+            ? (v) {
+                socket.inlineValue = v;
+              }
+            : null,
+      );
+    } else {
+      trailing = null;
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 24.0,
+          child: Row(
+            children: [
+              BaseSocketWidget(socket: socket, dx: -1.0),
+              const SizedBox(width: 12.0),
+              Text(
+                socket.name,
+                style: context.typography.body.secondary,
+              ),
+            ],
           ),
+        ),
+        if (trailing != null) ...[
+          const SizedBox(height: 4.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: trailing,
+          ),
+          const SizedBox(height: 8.0),
         ],
-      ),
+      ],
     );
   }
 }

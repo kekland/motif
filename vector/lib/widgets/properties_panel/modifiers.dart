@@ -43,6 +43,27 @@ class _Modifiers extends HookWidget {
             builder: (context) {
               return Button(
                 onTap: () async {
+                  // final modifier = await Dropdown.push(
+                  //   context,
+                  //   entries: [
+                  //     .new(
+                  //       onTap: () => GeneratorModifier(generatorId: null),
+                  //       leading: Icons.generator(),
+                  //       label: Text('Generator'),
+                  //     ),
+                  //     .new(
+                  //       onTap: () => SimplifyEdgeModifier(),
+                  //       leading: Icons.squiggly(),
+                  //       label: Text('Simplify'),
+                  //     ),
+                  //     .new(
+                  //       onTap: () => MirrorModifier(),
+                  //       leading: Icons.mirror(),
+                  //       label: Text('Mirror'),
+                  //     ),
+                  //   ],
+                  // );
+
                   final modifier = await WindowNavigator.pushUnique(
                     context,
                     AddModifierWindow.createEntry(

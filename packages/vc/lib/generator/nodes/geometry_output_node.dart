@@ -5,6 +5,8 @@ class GeometryOutputNode extends GeometryOutputNodeBase {
   PrimitiveBundle execute() {
     final geometryInput = i.geometry.resolve();
     final bundle = geometryInput.value;
+
+    assert(bundle.assertValid());
     return bundle;
   }
 }

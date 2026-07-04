@@ -1,35 +1,38 @@
-import 'package:vector/imports.dart';
+import 'package:ui/ui.dart';
+import 'package:vc/renderer.dart';
+import 'package:vc/vc.dart';
 
-class SymbolsWindow extends StatelessWidget {
-  const SymbolsWindow({super.key, required this.controller});
+class SymbolSelectWindow extends StatelessWidget {
+  const SymbolSelectWindow({
+    super.key,
+    required this.vectorComplexContext,
+  });
 
-  final VectorController controller;
+  final VectorComplexContext vectorComplexContext;
 
-  static WindowEntry createEntry(BuildContext context, {required VectorController controller}) => .withContextAnchor(
-    context,
-    builder: (_) => SymbolsWindow(controller: controller),
-  );
+  static WindowEntry createEntry(BuildContext context, {required VectorComplexContext vectorComplexContext}) =>
+      .withContextAnchor(
+        context,
+        builder: (_) => SymbolSelectWindow(vectorComplexContext: vectorComplexContext),
+      );
 
   @override
   Widget build(BuildContext context) {
-    final symbolManager = controller.symbolManager;
-    final vectorComplexContext = VectorComplexContext(
-      generator: controller.generatorManager,
-      symbol: controller.symbolManager,
-    );
+    final manager = vectorComplexContext.symbol;
 
     return WindowScaffold(
       leading: Icons.symbols(),
-      title: Text('Symbols'),
+      title: Text('Select symbol'),
       child: SizedBox(
         width: 240.0,
         height: 400.0,
         child: ListView.builder(
-          itemCount: symbolManager.symbols.length,
+          itemCount: manager.symbols.length,
           itemBuilder: (context, i) {
-            final symbol = symbolManager.symbols[i];
+            final symbol = manager.symbols[i];
 
             return Tile(
+              onTap: () => Navigator.pop(context, symbol),
               leading: Surface(
                 width: 64.0,
                 height: 64.0,

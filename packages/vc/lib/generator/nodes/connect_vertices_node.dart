@@ -13,7 +13,13 @@ class ConnectVerticesNode extends ConnectVerticesNodeBase {
       if (cell is! VertexPrimitive) continue;
 
       if (_lastVertex != null) {
-        final edge = EdgePrimitive(startId: _lastVertex.id, endId: cell.id);
+        final cubic = Cubic2.line(_lastVertex.position.clone(), cell.position.clone());
+
+        final edge = EdgePrimitive(
+          startId: _lastVertex.id,
+          endId: cell.id,
+          path: .cubics([cubic]),
+        );
         output.add(edge);
       }
 

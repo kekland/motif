@@ -84,7 +84,7 @@ class TextField extends HookWidget {
         borderSide: BorderSide(
           color: hasFocus
               ? context.colors.accent.primary.background
-              : context.colors.accent.secondary.foreground!.withScaledAlpha(0.0),
+              : context.colors.divider,
         ),
         foregroundColor: hasFocus ? context.colors.accent.primary.background : context.colors.display.tertiary,
         borderRadius: BorderRadius.circular(4.0),

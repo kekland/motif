@@ -66,6 +66,11 @@ class CubicSpline2 {
 
   ClosestPointResult closestTo(Vector2 q) => _splineClosestPoint(this, q);
 
+  CubicSpline2 transform(Matrix4 transform) {
+    final transformedKnots = knots.map((k) => k.transform(transform)).toList();
+    return .new(transformedKnots);
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

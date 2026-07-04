@@ -19,6 +19,12 @@ class CubicKnot2 {
     cOut: cOut != null ? cOut! + delta : null,
   );
 
+  CubicKnot2 transform(Matrix4 transform) => .new(
+    transform.transform2(p),
+    cIn: cIn != null ? transform.transform2(cIn!) : null,
+    cOut: cOut != null ? transform.transform2(cOut!) : null,
+  );
+
   // @override
   // bool operator ==(Object other) {
   //   if (identical(this, other)) return true;

@@ -9,6 +9,7 @@ abstract class Socket<T> {
   bool get isList => this is ListInputSocket;
   bool get isConstant => this is ConstantSocket<T>;
   bool get isDynamic => this is DynamicSocket<T>;
+  bool get isConnected;
   Color? resolveColor(BuildContext context) => null;
 
   Node? _node;
@@ -32,7 +33,23 @@ mixin InputSocket<T> on Socket<T> {
   // dart format on
 
   @override
+  bool get isConnected => incoming.isNotEmpty;
+
+  T get defaultValue;
+  late T _inlineValue = defaultValue;
+  T get inlineValue => _inlineValue;
+  set inlineValue(T value) {
+    if (_inlineValue == value) return;
+    _inlineValue = value;
+    _blueprint?._markSocketAsDirty(this);
+  }
+
+  @override
   Field<T> resolve() {
+    if (!isConnected) {
+      return .constant(inlineValue);
+    }
+
     final incoming = this.incoming.single;
     final result = incoming.resolve();
 
@@ -46,6 +63,9 @@ mixin InputSocket<T> on Socket<T> {
 
 mixin OutputSocket<T> on Socket<T> {
   Iterable<InputSocket> get outgoing => _blueprint?._connections.outgoingConnectionsFor(this) ?? const [];
+
+  @override
+  bool get isConnected => outgoing.isNotEmpty;
 
   // dart format off
   @override ReadonlySignal<OutputSocket<T>> call() => super.call() as ReadonlySignal<OutputSocket<T>>;
@@ -70,6 +90,9 @@ mixin OutputSocket<T> on Socket<T> {
 }
 
 mixin ListInputSocket<I, T extends List<I>> on InputSocket<T> {
+  @override
+  T get defaultValue => <I>[] as T;
+
   @override
   Field<T> resolve() {
     final incoming = this.incoming;

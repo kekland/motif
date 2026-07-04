@@ -10,6 +10,7 @@ class SocketDescription {
   const SocketDescription({
     required this.name,
     required this.type,
+    required this.defaultValue,
     this.color,
     this.isList = false,
   });
@@ -17,6 +18,7 @@ class SocketDescription {
   final String name;
   final String type;
   final String? color;
+  final String defaultValue;
   final bool isList;
 
   String get baseClassName => '${name}Socket';

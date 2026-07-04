@@ -20,6 +20,7 @@ part 'modifier/modifier.dart';
 part 'selectable/selectable.dart';
 
 part 'geometry/geometry.dart';
+part 'geometry/methods.dart';
 
 part 'edge/property.dart';
 part 'edge/decoration.dart';

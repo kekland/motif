@@ -1,7 +1,11 @@
 part of 'core.dart';
 
 class VectorComplexContext {
-  VectorComplexContext({required this.generatorManager});
+  VectorComplexContext({
+    required this.generator,
+    required this.symbol,
+  });
 
-  final GeneratorManager generatorManager;
+  final GeneratorManager generator;
+  final SymbolManager symbol;
 }

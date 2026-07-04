@@ -5,10 +5,21 @@ final class VertexPrimitive extends CellPrimitive {
   final Vector2 position;
 
   @override
-  VertexPrimitive copyWith({Vector2? position}) => .new(
+  VertexPrimitive copyWith({
+    Vector2? position,
+    CellId id = .keep,
+  }) => .new(
     position: position ?? this.position.clone(),
-    id: id,
+    id: .resolve(this.id, id),
   );
+
+  @override
+  VertexPrimitive transform(Matrix4 transform, {CellId id = .keep}) {
+    return .new(
+      position: transform.transform2(position),
+      id: .resolve(this.id, id),
+    );
+  }
 
   Vertex inflate() => .new(position.clone(), id: id);
 }
@@ -51,7 +62,7 @@ final class Vertex extends Cell {
   ReadonlySignal<Vertex> call() => _complex!._signalFor(this);
 
   @override
-  VertexPrimitive asPrimitive() => .new(
+  VertexPrimitive deflate() => .new(
     position: position.clone(),
     id: id,
   );

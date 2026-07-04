@@ -6,12 +6,17 @@ import 'package:vc/vc.dart';
 
 export 'blueprint.g.dart';
 
+part 'nodes/_shared.dart';
 part 'nodes/geometry_output_node.dart';
 part 'nodes/join_geometry_node.dart';
 part 'nodes/primitive_vertex_node.dart';
 part 'nodes/random_vector_node.dart';
-part 'nodes/shift_vertices_node.dart';
+part 'nodes/shift_geometry_node.dart';
 part 'nodes/connect_vertices_node.dart';
+part 'nodes/instance_on_vertices_node.dart';
+part 'nodes/instance_on_knots_node.dart';
+part 'nodes/geometry_input_node.dart';
+part 'nodes/symbol_node.dart';
 
 class EvaluationContext extends bp.EvaluationContext {
   EvaluationContext._({this.index, this.element});
@@ -36,4 +41,9 @@ class FilledEvaluationContext extends EvaluationContext {
   Object get element => super.element!;
 
   int get seed => element.hashCode;
+}
+
+extension EnvironmentExtension on bp.Node {
+  VectorComplexContext get context => getEnvironment<VectorComplexContext>();
+  Cell get cell => getEnvironment<Cell>();
 }

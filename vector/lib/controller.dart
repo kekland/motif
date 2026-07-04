@@ -51,11 +51,28 @@ class VectorController extends Controller {
     return render.rectHitTestCells(localRect);
   }
 
-  late final complex = $disposable(VectorComplex(context: .new(generatorManager: generatorManager)));
-  // late final symbolManager = $disposable(SymbolManager({}));
+  late final complex = $disposable(
+    VectorComplex(
+      context: .new(generator: generatorManager, symbol: symbolManager),
+    ),
+  );
+
+  late final symbolManager = $disposable(SymbolManager());
   late final generatorManager = $disposable(GeneratorManager());
   late final transientEdges = $disposable(TransientEdges(this));
   late final transientStrokes = $disposable(TransientStrokes(this));
   late final tool = $disposable(ToolController(initialToolset: toolset));
   late final selection = $disposable(SelectionController());
+}
+
+extension VectorControllerContext on BuildContext {
+  VectorController get vectorController => VectorController.of(this);
+  VectorComplexContext get vectorComplexContext => .new(generator: generatorManager, symbol: symbolManager);
+
+  SymbolManager get symbolManager => vectorController.symbolManager;
+  GeneratorManager get generatorManager => vectorController.generatorManager;
+  TransientEdges get transientEdges => vectorController.transientEdges;
+  TransientStrokes get transientStrokes => vectorController.transientStrokes;
+  ToolController get tool => vectorController.tool;
+  SelectionController get selection => vectorController.selection;
 }
