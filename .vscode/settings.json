@@ -10,8 +10,8 @@
     "**/.symlinks": true,
     "**/.plugin_symlinks": true,
     ".fvm": true,
-    // ".fvmrc": true,
-    // "**/.dart_tool": true,
+    ".fvmrc": true,
+    "**/.dart_tool": true,
     "**/.idea": true,
     "**/*.iml": true,
     "**/.metadata": true,
@@ -44,4 +44,7 @@
   "editor.rulers": [
     120
   ],
+  "material-icon-theme.folders.associations": {
+    "editor": "container"
+  }
 }

@@ -8,17 +8,10 @@ class SelectionMoveHandle extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (onMove == null) return const SizedBox.expand();
-    final recognizer = useManagedResource(
-      create: () => onMove != null ? DragActivityGestureRecognizer(activityFactory: onMove!) : null,
-      dispose: (v) => v?.dispose(),
-      keys: [onMove != null],
-    );
 
-    if (onMove != null) recognizer!.activityFactory = onMove!;
-
-    return Listener(
-      onPointerDown: (d) => recognizer?.addPointer(d),
+    return DragActivityDetector(
       behavior: .translucent,
+      activityFactory: onMove!,
       child: SizedBox.expand(),
     );
   }
@@ -42,9 +35,9 @@ class SelectionCornerResizeHandle extends StatelessWidget {
       cursor: Cursors.resize,
       hitTestBehavior: .opaque,
       corner: corner,
-      child: RawGestureDetector(
-        gestures: {DragActivityGestureRecognizer: DragActivityGestureRecognizerFactory(activityFactory: onResize!)},
+      child: DragActivityDetector(
         behavior: .opaque,
+        activityFactory: onResize!,
         child: SizedBox.square(dimension: SelectionCornerResizeHandleIcon.size),
       ),
     );
@@ -75,9 +68,9 @@ class SelectionCornerRotateHandle extends StatelessWidget {
       cursor: Cursors.rotate,
       hitTestBehavior: .opaque,
       corner: corner,
-      child: RawGestureDetector(
-        gestures: {DragActivityGestureRecognizer: DragActivityGestureRecognizerFactory(activityFactory: onRotate!)},
+      child: DragActivityDetector(
         behavior: .opaque,
+        activityFactory: onRotate!,
         child: SizedBox.expand(),
       ),
     );
@@ -108,9 +101,9 @@ class SelectionEdgeResizeHandle extends StatelessWidget {
       cursor: Cursors.resize,
       hitTestBehavior: .opaque,
       edge: edge,
-      child: RawGestureDetector(
-        gestures: {DragActivityGestureRecognizer: DragActivityGestureRecognizerFactory(activityFactory: onResize!)},
+      child: DragActivityDetector(
         behavior: .opaque,
+        activityFactory: onResize!,
         child: SizedBox.expand(),
       ),
     );

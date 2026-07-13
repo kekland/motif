@@ -36,13 +36,20 @@ class SelectionControls extends StatelessWidget {
     // Find the "lowest" edge of the quad.
     var lowestEdgeIndex = -1;
     var lowestEdgeCenterDy = 0.0;
+    var lowestEdgeDirX = double.negativeInfinity;
     for (var i = 0; i < 4; i++) {
       final (p1, p2) = (quad[i], quad[(i + 1) % 4]);
       final center = (p1 + p2) / 2.0;
+      final dirX = p1.x - p2.x;
 
-      if (lowestEdgeIndex == -1 || center.y > lowestEdgeCenterDy) {
+      final isFirst = lowestEdgeIndex == -1;
+      final isLower = !isFirst && (center.y - lowestEdgeCenterDy) > 1e-6;
+      final isTie = !isFirst && (center.y - lowestEdgeCenterDy).abs() <= 1e-6;
+
+      if (isFirst || isLower || (isTie && dirX > lowestEdgeDirX)) {
         lowestEdgeIndex = i;
         lowestEdgeCenterDy = center.y;
+        lowestEdgeDirX = dirX;
       }
     }
 
@@ -92,7 +99,7 @@ class SelectionControls extends StatelessWidget {
       extent: padding * 1.5,
       child: SelectionCornerRotateHandle(
         corner: corner,
-        onRotate: onRotate != null ? () => onRotate!(corner) : null,
+        onRotate: onRotate != null ? (_) => onRotate!(corner) : null,
       ),
     );
 
@@ -102,7 +109,7 @@ class SelectionControls extends StatelessWidget {
       extent: padding,
       child: SelectionCornerResizeHandle(
         corner: corner,
-        onResize: onCornerResize != null ? () => onCornerResize!(corner) : null,
+        onResize: onCornerResize != null ? (_) => onCornerResize!(corner) : null,
       ),
     );
 
@@ -112,7 +119,7 @@ class SelectionControls extends StatelessWidget {
       extent: padding,
       child: SelectionEdgeResizeHandle(
         edge: edge,
-        onResize: onEdgeResize != null ? () => onEdgeResize!(edge) : null,
+        onResize: onEdgeResize != null ? (_) => onEdgeResize!(edge) : null,
       ),
     );
 
@@ -122,7 +129,7 @@ class SelectionControls extends StatelessWidget {
       top: padding,
       bottom: padding,
       child: SelectionMoveHandle(
-        onMove: onMove != null ? () => onMove!() : null,
+        onMove: onMove != null ? (_) => onMove!() : null,
       ),
     );
 

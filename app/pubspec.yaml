@@ -12,8 +12,7 @@ dependencies:
   stack_ffi:
   stack_window_manager:
 
-  design:
-  vector:
+  editor:
 
   skia:
   shared:

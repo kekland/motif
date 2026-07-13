@@ -16,6 +16,9 @@ extension Aabb2Utils on Aabb2 {
   //   return distance;
   // }
 
+  double get width => max.x - min.x;
+  double get height => max.y - min.y;
+
   double distanceTo(Vector2 p) {
     final dx = math.max(0.0, math.max(min.x - p.x, p.x - max.x));
     final dy = math.max(0.0, math.max(min.y - p.y, p.y - max.y));

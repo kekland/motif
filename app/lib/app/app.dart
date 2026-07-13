@@ -1,6 +1,5 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_page.dart';
-import 'package:design/design.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -37,14 +36,12 @@ class App extends StatelessWidget {
       theme: theme,
       child: Surface(
         color: theme.colors.surface.primary,
-        child: TransientTransformsTickerProvider(
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            // showPerformanceOverlay: true,
-            showPerformanceOverlay: false,
-            theme: themeData,
-            home: WindowNavigator(child: RootPage()),
-          ),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          showPerformanceOverlay: true,
+          // showPerformanceOverlay: false,
+          theme: themeData,
+          home: WindowNavigator(child: RootPage()),
         ),
       ),
     );

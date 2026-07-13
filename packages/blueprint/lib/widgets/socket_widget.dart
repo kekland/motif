@@ -40,7 +40,7 @@ class BaseSocketWidget extends StatelessWidget {
         cursor: Cursors.toolCursorControlPoint,
         child: DragActivityDetector(
           behavior: .translucent,
-          activityFactory: () => ConnectSocketActivity(
+          activityFactory: (_) => ConnectSocketActivity(
             controller: BlueprintController.of(context),
             socket: socket,
           ),

@@ -1,0 +1,18 @@
+name: editor
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  canvas:
+  geometry:
+  scene:
+  shared:
+  ui:
+  tool:
+  stack_multi_pane_container:

@@ -1,9 +1,6 @@
 import 'package:app/imports.dart';
 import 'package:app/app/root_navigation_bar.dart';
-
-// ignore: unused_import
-import 'package:design/design.dart';
-import 'package:vector/vector.dart';
+import 'package:editor/editor.dart';
 
 // import 'package:design/design.dart';
 // import 'package:metal_capture_util/metal_capture_util.dart' as mtl_capture;
@@ -21,7 +18,7 @@ class RootPage extends StatelessWidget {
               SizedBox(width: double.infinity, child: RootNavigationBar()),
               Divider(height: 1.0),
               Expanded(
-                child: VectorEditorPage(),
+                child: EditorWidget(),
                 // child: DesignEditorPage(),
               ),
             ],

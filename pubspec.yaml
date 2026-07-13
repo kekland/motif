@@ -7,8 +7,7 @@ environment:
 workspace:
   - app
 
-  - design
-  - vector
+  - editor
 
   - packages/blueprint
   - packages/canvas
@@ -18,16 +17,12 @@ workspace:
   - packages/genie
   - packages/geometry
   - packages/ink_stroke_modeler
-  - packages/node
+  - packages/scene
   - packages/shared
   - packages/skia
   - packages/text
   - packages/tool
-  - packages/tree
   - packages/ui
-  - packages/vc
-  - packages/vgc
-  - packages/vgc_renderer
   - packages/wgpu
   - packages/wgslgen
 

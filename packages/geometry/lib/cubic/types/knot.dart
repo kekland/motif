@@ -1,28 +1,28 @@
 part of '../cubic.dart';
 
 class CubicKnot2 {
-  CubicKnot2(this.p, {this.cIn, this.cOut});
-  CubicKnot2.point(this.p) : cIn = null, cOut = null;
+  CubicKnot2(this.p, {Vector2? cIn, Vector2? cOut}) : cIn = cIn ?? p.clone(), cOut = cOut ?? p.clone();
+  CubicKnot2.point(Vector2 p) : this(p);
 
-  CubicKnot2 copy() => .new(p.clone(), cIn: cIn?.clone(), cOut: cOut?.clone());
-  CubicKnot2 _reversed() => .new(p.clone(), cIn: cOut?.clone(), cOut: cIn?.clone());
+  CubicKnot2 copy() => .new(p.clone(), cIn: cIn.clone(), cOut: cOut.clone());
+  CubicKnot2 _reversed() => .new(p.clone(), cIn: cOut.clone(), cOut: cIn.clone());
 
   Vector2 p;
-  Vector2? cIn;
-  Vector2? cOut;
+  Vector2 cIn;
+  Vector2 cOut;
 
   Aabb2 get bbox => _knotBbox(this);
 
   CubicKnot2 shifted(Vector2 delta) => .new(
     p + delta,
-    cIn: cIn != null ? cIn! + delta : null,
-    cOut: cOut != null ? cOut! + delta : null,
+    cIn: cIn + delta,
+    cOut: cOut + delta,
   );
 
   CubicKnot2 transform(Matrix4 transform) => .new(
     transform.transform2(p),
-    cIn: cIn != null ? transform.transform2(cIn!) : null,
-    cOut: cOut != null ? transform.transform2(cOut!) : null,
+    cIn: transform.transform2(cIn),
+    cOut: transform.transform2(cOut),
   );
 
   // @override

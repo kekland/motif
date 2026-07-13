@@ -1,6 +1,5 @@
 import 'package:blueprint/blueprint.dart';
 import 'package:canvas/canvas.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ui/ui.dart';
 
 abstract class BlueprintSocketValueBuilder<T> {

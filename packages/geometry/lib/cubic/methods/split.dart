@@ -27,8 +27,8 @@ void _validateT(double t) {
   if (rounded >= 1 && rounded <= n - 1 && (local - rounded).abs() < 1e-9) {
     final left = knots.take(rounded + 1).map((k) => k.copy()).toList();
     final right = knots.skip(rounded).map((k) => k.copy()).toList();
-    left.last.cOut = null;
-    right.first.cIn = null;
+    left.last.cOut = left.last.p.clone();
+    right.first.cIn = right.first.p.clone();
     return (.new(left), .new(right));
   }
 
@@ -38,14 +38,14 @@ void _validateT(double t) {
 
   final leftKnots = knots.take(i).map((k) => k.copy()).toList();
   final leftBoundary = knots[i].copy();
-  leftBoundary.cOut = left.isP1Collapsed ? null : left.p1.clone();
+  leftBoundary.cOut = left.p1.clone();
   leftKnots.add(leftBoundary);
   leftKnots.add(left.endKnot);
 
   final rightKnots = <CubicKnot2>[];
   rightKnots.add(right.startKnot);
   final rightBoundary = knots[i + 1].copy();
-  rightBoundary.cIn = right.isP2Collapsed ? null : right.p2.clone();
+  rightBoundary.cIn = right.p2.clone();
   rightKnots.add(rightBoundary);
   rightKnots.addAll(knots.skip(i + 2).map((k) => k.copy()));
 

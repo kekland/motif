@@ -2,7 +2,7 @@ part of '../cubic.dart';
 
 final class Cubic2 {
   Cubic2(this.p0, this.p3, {Vector2? p1, Vector2? p2}) : p1 = p1 ?? p0, p2 = p2 ?? p3;
-  Cubic2.line(this.p0, this.p3) : p1 = (p0 + p3) * 0.25, p2 = (p0 + p3) * 0.75;
+  Cubic2.line(this.p0, this.p3) : p1 = p0 + (p3 - p0) * 0.25, p2 = p0 + (p3 - p0) * 0.75;
 
   Cubic2 copy() => .new(p0.clone(), p3.clone(), p1: p1.clone(), p2: p2.clone());
   Cubic2 reversed() => .new(p3.clone(), p0.clone(), p1: p2.clone(), p2: p1.clone());

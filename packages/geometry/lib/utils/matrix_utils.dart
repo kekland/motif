@@ -13,4 +13,10 @@ extension Matrix4Utils on Matrix4 {
 
     return Vector2(nx, ny);
   }
+
+  Aabb2 transformAabb2(Aabb2 aabb) {
+    final min = transform2(aabb.min);
+    final max = transform2(aabb.max);
+    return Aabb2.minMax(min, max);
+  }
 }
