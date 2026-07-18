@@ -9,10 +9,10 @@ class SceneNodeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (node) {
-      ContainerObject o => ContainerObjectWidget(object: o),
-      RectangleObject o => RectangleObjectWidget(object: o),
+      ContainerObject o => ContainerObjectWidget(key: ValueKey(o), object: o),
+      RectangleObject o => RectangleObjectWidget(key: ValueKey(o), object: o),
 
-      Cell c => RenderCellWidget(cell: c),
+      Cell c => RenderCellWidget(key: ValueKey(c), cell: c),
       _ => throw UnimplementedError(),
     };
   }

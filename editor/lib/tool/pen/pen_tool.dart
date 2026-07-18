@@ -1,5 +1,7 @@
 import 'package:editor/imports.dart';
 
+import 'transient_edges_widget.dart';
+
 class PenTool extends Tool {
   const PenTool();
 
@@ -21,11 +23,19 @@ class _PenToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = Editor.watch(context);
+    final transientEdge = useState<TransientEdge?>(null);
     final hoveredCell = useState<Cell?>(null);
+
+    useOnDispose(() {
+      final edge = transientEdge.value;
+      if (edge != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => edge.remove());
+      }
+    });
 
     return MouseRegion(
       hitTestBehavior: .translucent,
-      cursor: switch(hoveredCell.value) {
+      cursor: switch (hoveredCell.value) {
         Vertex() => Cursors.toolPenVertex,
         Edge() => Cursors.toolPenEdge,
         _ => Cursors.precise,
@@ -33,9 +43,23 @@ class _PenToolOverlay extends HookWidget {
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
-          final result = editor.hitTestScene(e.position);
+          final result = editor.hitTestScene(e.position.vec2);
           hoveredCell.value = result.cell?.node;
         },
+        child: DragActivityDetector(
+          behavior: .translucent,
+          activityFactory: (_) => CreateVertexActivity(
+            editor: editor,
+            existingTransientEdge: transientEdge.value,
+            onTransientEdgeCreated: (v) => transientEdge.value = v,
+            onTransientEdgeCompleted: (v) {
+              transientEdge.value = null;
+            },
+          ),
+          child: TransientEdgesWidget(
+            transform: info.childPaintTransform,
+          ),
+        ),
       ),
     );
   }

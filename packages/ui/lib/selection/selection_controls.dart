@@ -31,7 +31,9 @@ class SelectionControls extends StatelessWidget {
     // Compute the quad
     final transform = Matrix4.copy(this.transform ?? Matrix4.identity());
     final paddedSize = EdgeInsets.all(padding).inflateSize(layoutSize);
-    final quad = (Offset.zero & layoutSize).transformToQuad(transform);
+
+    final bbox = Aabb2.minMax(.zero(), .new(layoutSize.width, layoutSize.height));
+    final quad = bbox.transformToQuad(transform);
 
     // Find the "lowest" edge of the quad.
     var lowestEdgeIndex = -1;

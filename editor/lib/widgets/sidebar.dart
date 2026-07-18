@@ -13,7 +13,7 @@ class Sidebar extends StatelessWidget {
       direction: .vertical,
       panels: [
         Panel(
-          constraints: .pixels(192.0, .infinity),
+          constraints: .pixels(384.0, .infinity),
           child: SelectionPanel(),
         ),
         Panel(

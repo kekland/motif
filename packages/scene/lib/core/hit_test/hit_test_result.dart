@@ -10,7 +10,7 @@ final class SceneHitTestResult {
   }
 
   Iterable<SceneHitTestEntry> get nodes => _entries;
-  SceneHitTestEntry? get node => _entries.isNotEmpty ? _entries.first : null;
+  SceneHitTestEntry get node => _entries.first;
 
   Iterable<SceneObjectHitTestEntry> get objects => nodes.whereType<SceneObjectHitTestEntry>();
   SceneObjectHitTestEntry? get object => objects.isNotEmpty ? objects.first : null;

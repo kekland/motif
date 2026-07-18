@@ -163,3 +163,4 @@ class ResizeNodesActivity {
     return _CornerResizeMultiNodesActivity(controller: controller, nodes: nodes, corner: corner);
   }
 }
+

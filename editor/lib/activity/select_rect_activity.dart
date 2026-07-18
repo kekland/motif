@@ -8,7 +8,7 @@ class SelectRectActivity extends DragActivity {
   });
 
   final Editor editor;
-  final ValueChanged<(Rect, ObjectHitTestRectMode)?> onRectChanged;
+  final ValueChanged<(Rect, HitTestRectMode)?> onRectChanged;
 
   @override
   void onStart(PositionedGestureDetails details) {
@@ -21,7 +21,7 @@ class SelectRectActivity extends DragActivity {
   void onUpdate(DragUpdateDetails details) {
     final start = startDetails.localPosition;
     final end = details.localPosition;
-    late final ObjectHitTestRectMode mode;
+    late final HitTestRectMode mode;
     if (end.dx > start.dx) {
       mode = .contain;
     } else {
@@ -52,7 +52,7 @@ class SelectRectDetector extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = Editor.watch(context);
-    final state = useState<(Rect, ObjectHitTestRectMode)?>(null);
+    final state = useState<(Rect, HitTestRectMode)?>(null);
 
     return MouseRegion(
       cursor: Cursors.toolMarquee,
@@ -74,7 +74,7 @@ class SelectRectOverlay extends StatelessWidget {
   const SelectRectOverlay({super.key, this.rect, this.mode});
 
   final Rect? rect;
-  final ObjectHitTestRectMode? mode;
+  final HitTestRectMode? mode;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class _SelectRectOverlayPainter extends CustomPainter {
   });
 
   final Color color;
-  final ObjectHitTestRectMode mode;
+  final HitTestRectMode mode;
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -11,6 +11,9 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   factory Cell.edge(Vertex start, Vertex end, {NodeId id, EdgePath path}) = Edge;
   // dart format on
 
+  @override
+  MultiChildSceneObject? get parent => super.parent as MultiChildSceneObject?;
+
   int get degree => _star.length;
   late final star = UnmodifiableSetView<Cell>(_star);
   final _star = <Cell>{};
@@ -18,7 +21,6 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   void _addStar(Cell c) => _star.add(c);
   void _removeStar(Cell c) => _star.remove(c);
 
-  // void applyTransform(Matrix4 transform);
   void setFrom(covariant Cell other);
 
   @override
@@ -30,8 +32,11 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
     for (final cell in _star) cell._markNeedsLayout();
   }
 
+  @override
+  bool get isLayoutBoundary => true;
+
   List<SceneHitTestEntry> _hitTestCell(Vector2 localPosition, {Matrix4? globalToScene}) => [];
-  List<SceneHitTestEntry> _hitTestRectCell(Aabb2 localRect, {RectHitTestMode mode = .normal}) => [];
+  List<SceneHitTestEntry> _hitTestRectCell(Aabb2 localRect, {HitTestRectMode mode = .normal}) => [];
 
   @override
   bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) {
@@ -50,7 +55,7 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   }
 
   @override
-  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {RectHitTestMode mode = .normal}) {
+  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal}) {
     final entries = _hitTestRectCell(localRect, mode: mode);
     for (final entry in entries) result.add(entry);
     return entries.isNotEmpty;

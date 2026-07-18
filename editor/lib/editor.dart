@@ -3,6 +3,7 @@ import 'package:editor/imports.dart';
 export 'widgets/editor.dart';
 
 part 'modules/selection.dart';
+part 'modules/transient_edge.dart';
 
 final class Editor with ChangeNotifier, ChangeNotifierDisposable {
   Editor() {
@@ -25,18 +26,37 @@ final class Editor with ChangeNotifier, ChangeNotifierDisposable {
   late final scene = $disposable(Scene());
   late final selection = $disposable(SelectionController());
   late final tool = $disposable(ToolController(initialToolset: toolset));
+  late final transientEdges = $disposable(TransientEdges(this));
 
   final sceneKey = GlobalKey();
   RenderScene get render => sceneKey.currentContext!.findRenderObject() as RenderScene;
   RenderSceneNode getRenderNode(SceneNode node) => render.getRenderNode(node);
 
-  SceneHitTestResult hitTestScene(Offset globalPosition) {
-    final localPosition = render.globalToLocal(globalPosition);
-    final transform = render.getTransformTo(null)..invert();
-    return scene.hitTest(.new(localPosition.dx, localPosition.dy), globalToLocal: transform);
+  Vector2 globalToScene(Vector2 globalPosition) {
+    return render.globalToLocal(globalPosition.offset).vec2;
   }
 
-  SceneHitTestResult hitTestRect(Rect globalRect, {RectHitTestMode mode = .normal}) {
+  Vector2 sceneToGlobal(Vector2 scenePosition) {
+    return render.localToGlobal(scenePosition.offset).vec2;
+  }
+
+  Vector2 globalToLocal(SceneNode node, Vector2 globalPosition) {
+    final scenePosition = globalToScene(globalPosition);
+    return node.sceneToLocal(scenePosition);
+  }
+
+  Vector2 localToGlobal(SceneNode node, Vector2 localPosition) {
+    final scenePosition = node.localToScene(localPosition);
+    return sceneToGlobal(scenePosition);
+  }
+
+  SceneHitTestResult hitTestScene(Vector2 globalPosition) {
+    final localPosition = globalToScene(globalPosition);
+    final transform = render.getTransformTo(null);
+    return scene.hitTest(localPosition, globalToLocal: transform);
+  }
+
+  SceneHitTestResult hitTestRect(Rect globalRect, {HitTestRectMode mode = .normal}) {
     final localRect = MatrixUtils.inverseTransformRect(render.getTransformTo(null), globalRect);
     return scene.hitTestRect(.minMax(localRect.topLeft.vec2, localRect.bottomRight.vec2), mode: mode);
   }

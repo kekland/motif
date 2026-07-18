@@ -12,12 +12,12 @@ class CreateRectangleActivity extends DragActivity {
 
     final rectangle = RectangleObject(size: .fixed(10.0, 10.0));
 
-    final hitTest = editor.hitTestScene(details.globalPosition);
+    final hitTest = editor.hitTestScene(details.globalPosition.vec2);
     for (final hit in hitTest.objects) {
       final object = hit.node;
       if (object is MultiChildSceneObject) {
         final position = hit.localPosition;
-        rectangle.transform = .translationValues(position.dx, position.dy, 0.0);
+        rectangle.transform = .translationValues(position.x, position.y, 0.0);
         object.addChild(rectangle);
         break;
       }

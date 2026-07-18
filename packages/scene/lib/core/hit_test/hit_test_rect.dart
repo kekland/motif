@@ -1,6 +1,6 @@
 part of '../core.dart';
 
-enum RectHitTestMode {
+enum HitTestRectMode {
   /// Only allow nodes that intersect, but don't require to be contanied
   intersect,
 
@@ -15,7 +15,7 @@ bool _objectHitTestRect(
   SceneHitTestResult result,
   SceneObject object,
   Aabb2 rect, {
-  RectHitTestMode mode = .normal,
+  HitTestRectMode mode = .normal,
 }) {
   final boundingBox = object.resolvedSize.boundingBox;
   if (!boundingBox.intersectsWithAabb2(rect)) return false;
@@ -38,7 +38,7 @@ bool _objectHitTestRectChildren(
   SceneHitTestResult result,
   SceneObject object,
   Aabb2 rect, {
-  RectHitTestMode mode = .normal,
+  HitTestRectMode mode = .normal,
 }) {
   if (object.isLeaf) return false;
   var _result = false;
@@ -62,7 +62,7 @@ List<SceneHitTestEntry> _hitTestRectCells(
   MultiChildSceneObject parent,
   List<Cell> cells,
   Aabb2 localRect, {
-  RectHitTestMode mode = .normal,
+  HitTestRectMode mode = .normal,
 }) {
   final indexed = <(SceneHitTestEntry, int)>[];
   var depth = 0;
@@ -91,7 +91,7 @@ List<SceneHitTestEntry> _hitTestRectVertex(Vertex vertex, Aabb2 localRect) {
 List<SceneHitTestEntry> _hitTestRectEdge(
   Edge edge,
   Aabb2 localRect, {
-  RectHitTestMode mode = .normal,
+  HitTestRectMode mode = .normal,
 }) {
   final bboxTight = edge.bboxTight;
 

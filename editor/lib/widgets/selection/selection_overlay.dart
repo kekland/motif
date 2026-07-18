@@ -52,7 +52,7 @@ class ObjectSelectionOverlay extends StatelessWidget {
   }
 }
 
-class ObjectSelectionGroupOverlay extends StatelessWidget {
+class ObjectSelectionGroupOverlay extends HookWidget {
   const ObjectSelectionGroupOverlay({
     super.key,
     required this.nodes,
@@ -68,16 +68,25 @@ class ObjectSelectionGroupOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     const gesturePadding = 16.0;
     final root = editor.render;
+    final nodes = this.nodes.toList();
+
+    final stamp = useState(0);
+    useEffect(() {
+      return effect(() {
+        for (final n in nodes) n().value;
+        stamp.value += 1;
+      });
+    }, [nodes]);
 
     Widget _buildSelectionControls({required Matrix4 transform, required Size layoutSize, required Size childSize}) {
       return SelectionControls(
-        key: ValueKey(nodes),
+        key: ValueKey(this.nodes),
         transform: transform,
         layoutSize: layoutSize,
-        // onMove: onMove,
-        // onEdgeResize: onEdgeResize,
-        // onCornerResize: onCornerResize,
-        // onRotate: onRotate,
+        onMove: () => MoveNodesActivity(editor, nodes: nodes),
+        onEdgeResize: (e) => ResizeNodesActivity.edge(editor, nodes: nodes, edge: e),
+        onCornerResize: (c) => ResizeNodesActivity.corner(editor, nodes: nodes, corner: c),
+        onRotate: (c) => RotateNodesActivity(editor, nodes: nodes, corner: c),
         padding: gesturePadding,
         childSize: childSize,
       );
@@ -86,19 +95,20 @@ class ObjectSelectionGroupOverlay extends StatelessWidget {
     if (nodes.length == 1) {
       final node = nodes.single;
       final bbox = node.boundingBox;
-      final renderNode = editor.getRenderNode(node);
+      final nodeToScene = node.getTransformTo(null);
 
-      final renderTransform = renderNode.getTransformTo(root);
-      renderTransform.translateByDouble(bbox.min.x, bbox.min.y, 0.0, 1.0);
+      final Matrix4 totalTransform = childPaintTransform * (nodeToScene);
+      totalTransform.translateByDouble(bbox.min.x, bbox.min.y, 0.0, 1.0);
 
-      final Matrix4 totalTransform = childPaintTransform * renderTransform;
-      final rect = MatrixUtils.transformRect(totalTransform, Rect.fromPoints(bbox.min.offset, bbox.max.offset));
       final transform = totalTransform.getWithNormalizedScale();
+
+      final size = Size(node.resolvedSize.width, node.resolvedSize.height);
+      final layoutSize = Size(size.width * totalTransform.scaleX, size.height * totalTransform.scaleY);
 
       return _buildSelectionControls(
         transform: transform,
-        layoutSize: rect.size,
-        childSize: renderNode.size,
+        layoutSize: layoutSize,
+        childSize: size,
       );
     } else {
       final rects = nodes

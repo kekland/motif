@@ -11,22 +11,22 @@ mixin TopologicalSceneObject on SceneObject {
   void _attachToScene(Scene scene) {
     super._attachToScene(scene);
 
-    for (final c in _cells) {
+    for (final c in _ownedCells) {
       _scene!._attachNode(c);
       c._parent = _parent;
     }
 
-    parent?._children.insertAll(parent!.children.indexOf(this) + 1, _cells);
+    parent?._children.insertAll(parent!.children.indexOf(this) + 1, _ownedCells);
   }
 
   @override
   void _detachFromScene() {
-    for (final c in _cells) _scene!._detachNode(c);
+    for (final c in _ownedCells) _scene!._detachNode(c);
     super._detachFromScene();
   }
 
-  var _cells = <Cell>[];
-  Iterable<Cell> get cells => _cells;
+  var _ownedCells = <Cell>[];
+  Iterable<Cell> get ownedCells => _ownedCells;
 
   void _onCellsInvalidated(List<Cell> oldCells, List<Cell> newCells) {
     for (final c in oldCells) {
@@ -41,7 +41,7 @@ mixin TopologicalSceneObject on SceneObject {
     }
 
     parent?._children.insertAll(parent!.children.indexOf(this) + 1, newCells);
-    _cells = newCells;
+    _ownedCells = newCells;
   }
 
   List<Cell> produceCells(ResolvedSize size) => [];
@@ -52,30 +52,24 @@ mixin TopologicalSceneObject on SceneObject {
 
     var didInvalidate = false;
     final newCells = produceCells(size);
-    for (final c in newCells) c.applyTransform(transform.value);
 
-    if (_cells.length != newCells.length) {
-      _onCellsInvalidated(_cells, newCells);
+    if (_ownedCells.length != newCells.length) {
+      _onCellsInvalidated(_ownedCells, newCells);
       didInvalidate = true;
     } else {
-      for (var i = 0; i < _cells.length; i++) {
-        if (_cells[i].runtimeType != newCells[i].runtimeType) {
-          _onCellsInvalidated(_cells, newCells);
+      for (var i = 0; i < _ownedCells.length; i++) {
+        if (_ownedCells[i].runtimeType != newCells[i].runtimeType) {
+          _onCellsInvalidated(_ownedCells, newCells);
           didInvalidate = true;
           break;
         }
       }
     }
 
+    for (final c in newCells) c.transformWith(transform.value);
     if (!didInvalidate) {
-      for (var i = 0; i < _cells.length; i++) {
-        _cells[i].setFrom(newCells[i]);
-      }
-    }
-
-    if (_scene != null) {
-      for (final c in _cells) {
-        c.layout(.new());
+      for (var i = 0; i < _ownedCells.length; i++) {
+        _ownedCells[i].setFrom(newCells[i]);
       }
     }
 

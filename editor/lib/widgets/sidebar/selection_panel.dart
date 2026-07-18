@@ -6,11 +6,10 @@ class SelectionPanel extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selection = useListenable(context.selection);
+
     return Column(
       children: [
-        Subtitle(
-          child: Text('Selection'),
-        ),
+        Subtitle(child: Text('Selection')),
         Divider(),
         Text(selection.nodes.toString()),
       ],

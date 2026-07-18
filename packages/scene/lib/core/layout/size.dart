@@ -1,7 +1,9 @@
 part of '../core.dart';
 
 class ResolvedSize {
-  ResolvedSize(this.width, this.height);
+  const ResolvedSize(this.width, this.height);
+
+  static const ResolvedSize zero = .new(0, 0);
 
   final double width;
   final double height;

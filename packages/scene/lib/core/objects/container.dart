@@ -11,14 +11,14 @@ final class ContainerObject extends SceneObject with MultiChildSceneObject, Topo
     _initialize();
   }
 
-  Vertex get topLeft => _cells[0] as Vertex;
-  Vertex get topRight => _cells[1] as Vertex;
-  Vertex get bottomRight => _cells[2] as Vertex;
-  Vertex get bottomLeft => _cells[3] as Vertex;
-  Edge get left => _cells[4] as Edge;
-  Edge get top => _cells[5] as Edge;
-  Edge get right => _cells[6] as Edge;
-  Edge get bottom => _cells[7] as Edge;
+  Vertex get topLeft => _ownedCells[0] as Vertex;
+  Vertex get topRight => _ownedCells[1] as Vertex;
+  Vertex get bottomRight => _ownedCells[2] as Vertex;
+  Vertex get bottomLeft => _ownedCells[3] as Vertex;
+  Edge get left => _ownedCells[4] as Edge;
+  Edge get top => _ownedCells[5] as Edge;
+  Edge get right => _ownedCells[6] as Edge;
+  Edge get bottom => _ownedCells[7] as Edge;
 
   @override
   List<Cell> produceCells(ResolvedSize size) {

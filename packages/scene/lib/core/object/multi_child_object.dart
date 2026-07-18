@@ -6,6 +6,7 @@ mixin MultiChildSceneObject on SceneObject {
 
   @override
   List<SceneNode> get children => _children;
+  List<Cell> get cells => _children.whereType<Cell>().toList();
 
   void addChild(SceneNode child) => _addChild(child);
   void insertChild(int index, SceneNode child) => _insertChild(index, child);
@@ -21,5 +22,13 @@ mixin MultiChildSceneObject on SceneObject {
   @override
   bool hitTestChildren(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) {
     return _hitTestChildren(result, this, _children, localPosition, globalToScene: globalToScene);
+  }
+
+  @override
+  void layout(LayoutConstraints constraints) {
+    super.layout(constraints);
+    for (final child in _children) {
+      child.layout(constraints);
+    }
   }
 }

@@ -35,7 +35,6 @@ class RenderSceneObjectLayoutTransform extends RenderProxyBox {
   void performLayout() {
     size = .new(object.resolvedSize.width, object.resolvedSize.height);
     child!.layout(BoxConstraints.tight(size));
-    
   }
 
   @override

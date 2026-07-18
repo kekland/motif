@@ -61,8 +61,11 @@ sealed class SceneNode {
   void _markNeedsLayout();
   void _markNeedsPaint();
 
+  ResolvedSize get resolvedSize;
   Aabb2 get boundingBox;
+  bool get isLayoutBoundary;
   void layout(LayoutConstraints constraints);
+  void transformWith(Matrix4 transform);
 
   // --------------------
   // Tree traversal
@@ -79,11 +82,20 @@ sealed class SceneNode {
   // --------------------
   Matrix4 getTransformTo(SceneNode? node);
   void applyTransform(Matrix4 transform);
+  Vector2 sceneToLocal(Vector2 globalPosition, {SceneNode? ancestor});
+  Vector2 localToScene(Vector2 localPosition, {SceneNode? ancestor});
 
   bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene});
   bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene});
 
-  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {RectHitTestMode mode = .normal});
+  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal});
+
+  // --------------------
+  // Snapshotting
+  // --------------------
+
+  NodeSnapshot snapshot();
+  void applySnapshot(covariant NodeSnapshot snapshot);
 
   // --------------------
   // Other stuff
@@ -244,12 +256,20 @@ mixin SceneNodeImpl implements SceneNode {
     _scene?._markNeedsPaint(this);
   }
 
+  ResolvedSize? _resolvedSize;
+
+  @override
+  ResolvedSize get resolvedSize => _resolvedSize!;
+
   @override
   void layout(LayoutConstraints constraints) {}
 
   // --------------------
   // Tree traversal
   // --------------------
+
+  @override
+  void applyTransform(Matrix4 transform) {}
 
   @override
   Matrix4 getTransformTo(SceneNode? target) {
@@ -288,12 +308,25 @@ mixin SceneNodeImpl implements SceneNode {
     if (toPath == null) return fromTransform ?? .identity();
 
     final toTransform = Matrix4.identity();
-    for (var i = toPath.length - 1; i >= 0; i--) {
+    for (var i = toPath.length - 2; i >= 0; i--) {
       toPath[i].applyTransform(toTransform);
     }
 
     if (toTransform.invert() == 0) return .zero();
     return (fromTransform?..multiply(toTransform)) ?? toTransform;
+  }
+
+  @override
+  Vector2 sceneToLocal(Vector2 globalPosition, {SceneNode? ancestor}) {
+    final transform = getTransformTo(ancestor);
+    if (transform.invert() == 0.0) return .zero();
+    return transform.unproject2(globalPosition);
+  }
+
+  @override
+  Vector2 localToScene(Vector2 localPosition, {SceneNode? ancestor}) {
+    final transform = getTransformTo(ancestor);
+    return transform.transform2(localPosition);
   }
 
   @override
@@ -336,17 +369,17 @@ mixin SceneNodeImpl implements SceneNode {
   void addLayoutListener(VoidCallback callback) => _scene!._addObjectLayoutListener(id, callback);
 
   @override
-  void removeLayoutListener(VoidCallback callback) => _scene!._removeObjectLayoutListener(id, callback);
+  void removeLayoutListener(VoidCallback callback) => _scene?._removeObjectLayoutListener(id, callback);
 
   @override
   void addPaintListener(VoidCallback callback) => _scene!._addObjectPaintListener(id, callback);
 
   @override
-  void removePaintListener(VoidCallback callback) => _scene!._removeObjectPaintListener(id, callback);
+  void removePaintListener(VoidCallback callback) => _scene?._removeObjectPaintListener(id, callback);
 
   @override
   ReadonlySignal<SceneNode> call() => _scene!._signalFor(this);
 
   @override
-  String toString() => '$runtimeType[id: $id, depth: $depth]';
+  String toString() => '$runtimeType[id: $id, depth: ${_scene != null ? depth : "detached"}]';
 }

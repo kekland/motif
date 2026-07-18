@@ -38,7 +38,7 @@ class App extends StatelessWidget {
         color: theme.colors.surface.primary,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          showPerformanceOverlay: true,
+          showPerformanceOverlay: false,
           // showPerformanceOverlay: false,
           theme: themeData,
           home: WindowNavigator(child: RootPage()),

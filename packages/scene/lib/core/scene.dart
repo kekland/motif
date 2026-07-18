@@ -2,11 +2,14 @@ part of 'core.dart';
 
 class Scene with ChangeNotifier, ChangeNotifierDisposable, SceneListeners, SceneTopology, SceneLayout {
   Scene() : root = .new() {
+    topology = .new(scene: this);
     root._attachToScene(this);
   }
 
   final RootObject root;
   final Map<NodeId, SceneNode> _nodes = {};
+
+  late final Topology topology;
 
   void _attachNode(SceneNode node) => node._attachToScene(this);
   void _onNodeAttached(SceneNode node) {
@@ -36,7 +39,7 @@ class Scene with ChangeNotifier, ChangeNotifierDisposable, SceneListeners, Scene
     return result;
   }
 
-  SceneHitTestResult hitTestRect(Aabb2 localRect, {RectHitTestMode mode = .normal}) {
+  SceneHitTestResult hitTestRect(Aabb2 localRect, {HitTestRectMode mode = .normal}) {
     final result = SceneHitTestResult();
     root.hitTestRect(result, localRect);
     return result;

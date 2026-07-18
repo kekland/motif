@@ -4,19 +4,23 @@ mixin SceneLayout on SceneListeners {
   final _nodesNeedingLayout = <SceneNode>{};
   void _markNeedsLayout(SceneNode object) {
     if (_nodesNeedingLayout.contains(object)) return;
+    SceneNode current = object;
 
-    SceneNode? current = object;
-    while (current != null) {
-      _nodesNeedingLayout.add(current);
-      _nodeSignals[current.id]?.markAsDirty();
-      _layoutListeners[current.id]?.notifyListeners();
-
-      current = current.parent;
+    while (true) {
+      if (current.parent == null) break;
+      if (current.isLayoutBoundary) break;
+      current = current.parent!;
     }
 
-    _nodesNeedingLayout.add(object);
-    _nodeSignals[object.id]?.markAsDirty();
-    _layoutListeners[object.id]?.notifyListeners();
+    if (current is Cell) {
+      for (final c in current._star) {
+        _markNeedsLayout(c);
+      }
+    }
+
+    _nodesNeedingLayout.add(current);
+    _nodeSignals[current.id]?.markAsDirty();
+    _layoutListeners[current.id]?.notifyListeners();
     notifyListeners();
   }
 
@@ -27,22 +31,15 @@ mixin SceneLayout on SceneListeners {
   }
 
   void _layout() {
-    print('LAYOUT (${DateTime.now()}) - ${_nodesNeedingLayout.length} objects');
-    var iteration = 0;
+    final objectsNeedingLayout = _nodesNeedingLayout.whereType<SceneObject>().toList();
+    for (final o in objectsNeedingLayout) o.layout(.new());
 
-    while (true) {
-      iteration++;
+    final cellsNeedingLayout = _nodesNeedingLayout.whereType<Cell>();
+    final verticesNeedingLayout = cellsNeedingLayout.whereType<Vertex>();
+    final edgesNeedingLayout = cellsNeedingLayout.whereType<Edge>();
 
-      if (iteration > 100) throw Exception('circular layout');
-      if (_nodesNeedingLayout.isEmpty) break;
-      final _needingLayout = _nodesNeedingLayout.toList();
-      _nodesNeedingLayout.clear();
-
-      for (final object in _needingLayout) {
-        print('  = layout: ${object}');
-        object.layout(.new());
-      }
-    }
+    for (final c in verticesNeedingLayout) c.layout(.new());
+    for (final e in edgesNeedingLayout) e.layout(.new());
 
     _nodesNeedingLayout.clear();
   }

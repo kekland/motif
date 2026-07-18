@@ -86,6 +86,10 @@ final class RenderEdge extends RenderCell<Edge> {
       ..style = .stroke
       ..strokeWidth = 1.0;
 
+    final controlPointPaint = Paint()
+      ..color = .new(0xFF0000FF)
+      ..style = .fill;
+
     final cubics = cell.path.segments;
     final cubicCount = cubics.length;
     if (cubicCount == 0) return;
@@ -99,9 +103,12 @@ final class RenderEdge extends RenderCell<Edge> {
       final p2 = transform.transform2(cubic.p2);
       final p3 = transform.transform2(cubic.p3);
 
+      context.canvas.drawCircle(p1.offset, 2.0, controlPointPaint);
+      context.canvas.drawCircle(p2.offset, 2.0, controlPointPaint);
+
       path.cubicTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
     }
-    
+
     context.canvas.drawPath(path, paint);
   }
 }

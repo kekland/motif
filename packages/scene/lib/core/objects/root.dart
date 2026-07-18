@@ -14,6 +14,9 @@ final class RootObject extends SceneObject with MultiChildSceneObject {
   int get depth => 0;
 
   @override
+  bool get isLayoutBoundary => true;
+
+  @override
   set size(ObjectSize value) => throw UnsupportedError('RootSceneObject size cannot be changed.');
 
   @override
@@ -21,4 +24,7 @@ final class RootObject extends SceneObject with MultiChildSceneObject {
 
   @override
   ReadonlySignal<RootObject> call() => _scene!._signalFor(this);
+
+  @override
+  bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => true;
 }

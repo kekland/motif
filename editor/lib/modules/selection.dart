@@ -19,7 +19,7 @@ class SelectionController with ChangeNotifier, ChangeNotifierDisposable {
 
   void set(SceneNode node) {
     _selectedNodes.clear();
-    _selectedNodes.add(node);
+    _add(node);
     _computeSelectionGroups();
     notifyListeners();
   }
@@ -39,7 +39,7 @@ class SelectionController with ChangeNotifier, ChangeNotifierDisposable {
 
   void _add(SceneNode node) {
     if (node is RootObject) return;
-    if (_selectedNodes.any((o) => o.isAncestorOf(node))) return;
+    if (node is Cell && node.owner != null) return _add(node.owner!);
 
     final toRemove = _selectedNodes.where((o) => o.isVirtualDescendantOf(node)).toList();
     _selectedNodes.removeAll(toRemove);

@@ -2,6 +2,9 @@ part of '../../core.dart';
 
 sealed class EdgeKnotControlPoint extends Vector2 with SceneNodeImpl implements SceneNode {
   EdgeKnotControlPoint.zero({NodeId? id}) : id = id ?? .generate(), super.zero();
+  EdgeKnotControlPoint.fromSnapshot(EdgeKnotControlPointSnapshot snapshot) : id = snapshot.id, super.zero() {
+    setFrom(snapshot.position);
+  }
 
   @override
   final NodeId id;
@@ -29,7 +32,15 @@ sealed class EdgeKnotControlPoint extends Vector2 with SceneNodeImpl implements 
   Aabb2 get boundingBox => .minMax(this, this);
 
   @override
-  void applyTransform(Matrix4 transform) {}
+  bool get isLayoutBoundary => false;
+
+  @override
+  ResolvedSize get resolvedSize => .zero;
+
+  @override
+  void transformWith(Matrix4 transform) {
+    setFrom(transform.transform2(this));
+  }
 
   @override
   bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) => false;
@@ -38,13 +49,23 @@ sealed class EdgeKnotControlPoint extends Vector2 with SceneNodeImpl implements 
   bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => false;
 
   @override
-  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {RectHitTestMode mode = .normal}) => false;
+  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal}) => false;
+
+  @override
+  String toString() => '${super.toString()}{$x, $y}';
+
+  @override
+  EdgeKnotControlPointSnapshot snapshot() => .new(id: id, position: clone());
+
+  @override
+  void applySnapshot(EdgeKnotControlPointSnapshot snapshot) => setFrom(snapshot.position);
 }
 
 final class EdgeKnotInControlPoint extends EdgeKnotControlPoint {
   EdgeKnotInControlPoint.zero({super.id}) : super.zero();
   factory EdgeKnotInControlPoint(double x, double y) => .zero()..setValues(x, y);
   factory EdgeKnotInControlPoint.from(Vector2 other) => .zero()..setValues(other.x, other.y);
+  EdgeKnotInControlPoint.fromSnapshot(super.snapshot) : super.fromSnapshot();
 
   @override
   bool get isIn => true;
@@ -54,6 +75,7 @@ final class EdgeKnotOutControlPoint extends EdgeKnotControlPoint {
   EdgeKnotOutControlPoint.zero({super.id}) : super.zero();
   factory EdgeKnotOutControlPoint(double x, double y) => .zero()..setValues(x, y);
   factory EdgeKnotOutControlPoint.from(Vector2 other) => .zero()..setValues(other.x, other.y);
+  EdgeKnotOutControlPoint.fromSnapshot(super.snapshot) : super.fromSnapshot();
 
   @override
   bool get isIn => false;
@@ -70,6 +92,15 @@ final class EdgeKnot extends CubicKnot2 with SceneNodeImpl implements SceneNode 
   }
 
   EdgeKnot.from(CubicKnot2 k) : this(k.p.clone(), cIn: k.cIn.clone(), cOut: k.cOut.clone());
+  EdgeKnot.fromSnapshot(EdgeKnotSnapshot snapshot)
+    : id = snapshot.id,
+      super(
+        snapshot.position.clone(),
+        cIn: EdgeKnotInControlPoint.fromSnapshot(snapshot.cIn),
+        cOut: EdgeKnotOutControlPoint.fromSnapshot(snapshot.cOut),
+      ) {
+    _addChildren([cIn, cOut]);
+  }
 
   @override
   final NodeId id;
@@ -80,14 +111,23 @@ final class EdgeKnot extends CubicKnot2 with SceneNodeImpl implements SceneNode 
   // dart format on
 
   @override
+  bool get isLayoutBoundary => false;
+
+  @override
   Edge get parent => super.parent as Edge;
 
   @override
   Edge get owner => parent;
 
   @override
+  ResolvedSize get resolvedSize => .zero;
+
+  @override
   set p(Vector2 p) {
     if (super.p == p) return;
+    if (cIn == super.p) cIn.setFrom(p);
+    if (cOut == super.p) cOut.setFrom(p);
+
     super.p.setFrom(p);
     _markNeedsLayout();
   }
@@ -106,13 +146,13 @@ final class EdgeKnot extends CubicKnot2 with SceneNodeImpl implements SceneNode 
     _markNeedsLayout();
   }
 
-  // void applyTransform(Matrix4 transform) {
-  //   p = transform.transform2(p);
-  //   cIn = transform.transform2(cIn);
-  //   cOut = transform.transform2(cOut);
-  // }
+  @override
+  void layout(LayoutConstraints constraints) {
+    cIn.layout(constraints);
+    cOut.layout(constraints);
+  }
 
-  void setFrom(EdgeKnot other) {
+  void setFrom(CubicKnot2 other) {
     p = other.p;
     cIn = other.cIn;
     cOut = other.cOut;
@@ -122,10 +162,10 @@ final class EdgeKnot extends CubicKnot2 with SceneNodeImpl implements SceneNode 
   Aabb2 get boundingBox => bbox;
 
   @override
-  void applyTransform(Matrix4 transform) {
-    // p = transform.transform2(p);
-    // cIn = transform.transform2(cIn);
-    // cOut = transform.transform2(cOut);
+  void transformWith(Matrix4 transform) {
+    if (super.p != cIn) cIn.transformWith(transform);
+    if (super.p != cOut) cOut.transformWith(transform);
+    p = transform.transform2(p);
   }
 
   @override
@@ -135,5 +175,32 @@ final class EdgeKnot extends CubicKnot2 with SceneNodeImpl implements SceneNode 
   bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => false;
 
   @override
-  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {RectHitTestMode mode = .normal}) => false;
+  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal}) => false;
+
+  @override
+  String toString() => '${super.toString()} $p (${cIn.x}, ${cIn.y}) (${cOut.x}, ${cOut.y})';
+
+  @override
+  EdgeKnotSnapshot snapshot() => .new(id: id, position: p.clone(), cIn: cIn.snapshot(), cOut: cOut.snapshot());
+
+  @override
+  void applySnapshot(EdgeKnotSnapshot snapshot) {
+    p = snapshot.position;
+    cIn.applySnapshot(snapshot.cIn);
+    cOut.applySnapshot(snapshot.cOut);
+  }
+}
+
+class EdgeKnotControlPointSnapshot extends NodeSnapshot {
+  const EdgeKnotControlPointSnapshot({required super.id, required this.position});
+
+  final Vector2 position;
+}
+
+class EdgeKnotSnapshot extends NodeSnapshot {
+  const EdgeKnotSnapshot({required super.id, required this.position, required this.cIn, required this.cOut});
+
+  final Vector2 position;
+  final EdgeKnotControlPointSnapshot cIn;
+  final EdgeKnotControlPointSnapshot cOut;
 }

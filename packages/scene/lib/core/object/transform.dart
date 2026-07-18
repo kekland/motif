@@ -34,4 +34,6 @@ extension type ObjectTransform._(Matrix4 value) {
     final translationMatrix = Matrix4.translationValues(offset.x, offset.y, 0.0);
     return .raw(translationMatrix * value);
   }
+
+  ObjectTransform clone() => .raw(value.clone());
 }

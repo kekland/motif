@@ -16,6 +16,7 @@ dependencies:
   stack_multi_pane_container:
 
   genie:
+  geometry:
 
   defer_pointer: ^0.0.2
   expressions: ^0.2.5+3

@@ -35,3 +35,10 @@ part 'hit_test/hit_test_rect.dart';
 part 'layout/constraints.dart';
 part 'layout/size.dart';
 part 'layout/layout.dart';
+
+part 'topology/topology.dart';
+part 'topology/interesections.dart';
+part 'topology/cut_edge.dart';
+part 'topology/commit_stroke.dart';
+
+part 'snapshot/node_snapshot.dart';

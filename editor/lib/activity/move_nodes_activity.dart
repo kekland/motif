@@ -1,26 +1,16 @@
 import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
-sealed class _NodeMover {
-  _NodeMover(this.node);
-
-  final SceneNode node;
-
-  void onStart(PositionedGestureDetails details);
-  void applyDelta(Vector2 delta);
-}
-
-class MoveNodesActivity extends DragActivity with ExclusiveCursorDragActivity {
-  MoveNodesActivity({
-    required this.editor,
-    required this.nodes,
+class MoveNodesActivity extends NodeGroupActivity with ExclusiveCursorDragActivity {
+  MoveNodesActivity(
+    super.editor, {
+    required super.nodes,
+    this._onStart,
   });
 
-  final Editor editor;
-  final List<SceneNode> nodes;
+  final VoidCallback? _onStart;
 
   late final List<SceneNode> targetNodes;
-  late final SceneObject targetObject;
 
   @override
   MouseCursor get cursor => Cursors.toolMove;
@@ -28,54 +18,17 @@ class MoveNodesActivity extends DragActivity with ExclusiveCursorDragActivity {
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
-
-    // // Resolve the nodes to move.
-    // final targetNodes = <SceneNode>{};
-    // final nodesToProcess = <SceneNode>{};
-    // nodesToProcess.addAll(nodes);
-
-    // while (nodesToProcess.isNotEmpty) {
-    //   final object = nodesToProcess.first;
-    //   nodesToProcess.remove(object);
-
-    //   if (object is Cell) {
-    //     if (object.isOwned) {
-    //       targetNodes.add(object.owner);
-    //     } else {
-    //       targetNodes.add(object);
-    //     }
-    //   } else {
-    //     targetNodes.add(object);
-    //   }
-    // }
-
-    // this.targetNodes = targetNodes.toList();
-
-    // final hitTest = editor.hitTestScene(details.globalPosition);
-    // for (final entry in hitTest.path) {
-    //   if (targetNodes.contains(entry.object)) {
-    //     targetObject = entry.object;
-    //     break;
-    //   }
-    // }
-
-    // print(targetObject);
+    _onStart?.call();
   }
 
   @override
   void onUpdate(DragUpdateDetails details) {
-    final node = nodes.first;
-    final renderNode = editor.getRenderNode(node);
-    final transform = renderNode.getTransformTo(null);
-    final inverseTransform = Matrix4.inverted(transform);
-    final delta =
-        MatrixUtils.transformPoint(inverseTransform, details.globalPosition) -
-        MatrixUtils.transformPoint(inverseTransform, (lastUpdateDetails ?? startDetails).globalPosition);
+    final startPosition = startDetails.globalPosition.vec2;
+    final currentPosition = details.globalPosition.vec2;
 
-    if (node is SceneObject) {
-      node.transform = node.transform.translated(delta);
-    }
-
+    final sceneDelta = editor.globalToScene(currentPosition) - editor.globalToScene(startPosition);
+    final transform = Matrix4.translationValues(sceneDelta.x, sceneDelta.y, 0);
+    applyTransformToNodes(transform);
     super.onUpdate(details);
   }
 }

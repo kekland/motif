@@ -34,6 +34,9 @@ class CubicKnot2 {
 
   // @override
   // int get hashCode => Object.hash(p, cIn, cOut);
+
+  @override
+  String toString() => 'CubicKnot2(p: $p, cIn: $cIn, cOut: $cOut)';
 }
 
 extension CubicKnot2IterableExtension on Iterable<CubicKnot2> {

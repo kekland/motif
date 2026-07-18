@@ -29,13 +29,19 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
     _markNeedsLayout();
   }
 
-  ResolvedSize? _resolvedSize;
-  ResolvedSize get resolvedSize => _resolvedSize!;
-
   bool get isLeaf => this is! MultiChildSceneObject;
 
   @override
   Aabb2 get boundingBox => .minMax(.zero(), .new(resolvedSize.width, resolvedSize.height));
+
+  @override
+  bool get isLayoutBoundary => !size.dependsOnParent;
+
+  @override
+  ResolvedSize get resolvedSize {
+    if (size.isFixed) return size.resolve(.new());
+    return super.resolvedSize;
+  }
 
   ResolvedSize performLayout(LayoutConstraints constraints) {
     return size.resolve(constraints);
@@ -49,6 +55,18 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   @override
   void applyTransform(Matrix4 transform) {
     transform.multiply(_transform.value);
+  }
+
+  @override
+  void transformWith(Matrix4 transform) {
+    final bbox = boundingBox;
+    size = .fixed(bbox.width * transform.scaleX, bbox.height * transform.scaleY);
+
+    final normalized = transform.getWithNormalizedScale();
+    final current = _transform.value.clone();
+    current.multiply(normalized);
+
+    this.transform = .raw(current);
   }
 
   @override
@@ -67,7 +85,19 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   bool hitTestChildren(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) => false;
 
   @override
-  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {RectHitTestMode mode = .normal}) {
+  bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal}) {
     return _objectHitTestRect(result, this, localRect, mode: mode);
+  }
+
+  @override
+  ObjectSnapshot snapshot() {
+    return ObjectSnapshot(id: id, transform: transform.clone(), size: size);
+  }
+
+  @override
+  @mustCallSuper
+  void applySnapshot(covariant ObjectSnapshot snapshot) {
+    transform = snapshot.transform;
+    size = snapshot.size;
   }
 }

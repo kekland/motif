@@ -64,8 +64,8 @@ final class Edge extends Cell {
   }
 
   @override
-  void applyTransform(Matrix4 transform) {
-    path.applyTransform(transform);
+  void transformWith(Matrix4 transform) {
+    path.transformWith(transform);
   }
 
   @override
@@ -76,18 +76,14 @@ final class Edge extends Cell {
   @override
   void layout(LayoutConstraints constraints) {
     path.first.p = start.position;
-    path.first.cIn = start.position;
-    path.first.cOut = start.position;
-
     path.last.p = end.position;
-    path.last.cIn = end.position;
-    path.last.cOut = end.position;
+    path.layout();
+
+    _resolvedSize = .new(path.bboxTight.width, path.bboxTight.height);
   }
 
   @override
-  Aabb2 get boundingBox {
-    return bbox;
-  }
+  Aabb2 get boundingBox => bboxTight;
 
   Aabb2 get bbox => path.bbox;
   Aabb2 get bboxTight => path.bboxTight;
@@ -101,7 +97,28 @@ final class Edge extends Cell {
   }
 
   @override
-  List<SceneHitTestEntry> _hitTestRectCell(Aabb2 localRect, {RectHitTestMode mode = .normal}) {
+  List<SceneHitTestEntry> _hitTestRectCell(Aabb2 localRect, {HitTestRectMode mode = .normal}) {
     return _hitTestRectEdge(this, localRect, mode: mode);
   }
+
+  EdgeCutResult cut(double t) => _scene!.topology.cutEdge(this, t);
+  MultiEdgeCutResult cutMultiple(List<double> ts) => _scene!.topology.multiCutEdge(this, ts);
+
+  @override
+  EdgeSnapshot snapshot() => .new(id: id, startId: _startId, endId: _endId, path: path.snapshot());
+
+  @override
+  void applySnapshot(covariant EdgeSnapshot snapshot) {
+    startId = snapshot.startId;
+    endId = snapshot.endId;
+    path.applySnapshot(snapshot.path);
+  }
+}
+
+class EdgeSnapshot extends NodeSnapshot {
+  const EdgeSnapshot({required super.id, required this.startId, required this.endId, required this.path});
+
+  final NodeId startId;
+  final NodeId endId;
+  final EdgePathSnapshot path;
 }
