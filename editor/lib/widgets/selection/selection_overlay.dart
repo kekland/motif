@@ -1,4 +1,5 @@
 import 'package:editor/imports.dart';
+import 'package:flutter/gestures.dart';
 
 class ObjectSelectionOverlayBuilder extends StatelessWidget {
   const ObjectSelectionOverlayBuilder({
@@ -31,11 +32,13 @@ class ObjectSelectionOverlay extends StatelessWidget {
     required this.editor,
     required this.selectionGroups,
     required this.childPaintTransform,
+    this.onTapUp,
   });
 
   final Editor editor;
   final List<Set<SceneNode>> selectionGroups;
   final Matrix4 childPaintTransform;
+  final GestureTapUpCallback? onTapUp;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class ObjectSelectionOverlay extends StatelessWidget {
             nodes: group,
             editor: editor,
             childPaintTransform: childPaintTransform,
+            onTapUp: onTapUp,
           ),
       ],
     );
@@ -58,31 +62,27 @@ class ObjectSelectionGroupOverlay extends HookWidget {
     required this.nodes,
     required this.editor,
     required this.childPaintTransform,
+    this.onTapUp,
   });
 
   final Iterable<SceneNode> nodes;
   final Editor editor;
   final Matrix4 childPaintTransform;
+  final GestureTapUpCallback? onTapUp;
 
   @override
   Widget build(BuildContext context) {
     const gesturePadding = 16.0;
-    final root = editor.render;
-    final nodes = this.nodes.toList();
+    final nodes = useNodeList(this.nodes, aspect: .layout).toList();
 
-    final stamp = useState(0);
-    useEffect(() {
-      return effect(() {
-        for (final n in nodes) n().value;
-        stamp.value += 1;
-      });
-    }, [nodes]);
+    debugPrintGestureArenaDiagnostics = true;
 
     Widget _buildSelectionControls({required Matrix4 transform, required Size layoutSize, required Size childSize}) {
       return SelectionControls(
         key: ValueKey(this.nodes),
         transform: transform,
         layoutSize: layoutSize,
+        onTapUp: onTapUp,
         onMove: () => MoveNodesActivity(editor, nodes: nodes),
         onEdgeResize: (e) => ResizeNodesActivity.edge(editor, nodes: nodes, edge: e),
         onCornerResize: (c) => ResizeNodesActivity.corner(editor, nodes: nodes, corner: c),
@@ -94,15 +94,15 @@ class ObjectSelectionGroupOverlay extends HookWidget {
 
     if (nodes.length == 1) {
       final node = nodes.single;
-      final bbox = node.boundingBox;
-      final nodeToScene = node.getTransformTo(null);
+      final bbox = node.bbox;
+      final nodeToScene = node.getPaintTransformTo(null);
 
       final Matrix4 totalTransform = childPaintTransform * (nodeToScene);
       totalTransform.translateByDouble(bbox.min.x, bbox.min.y, 0.0, 1.0);
 
       final transform = totalTransform.getWithNormalizedScale();
 
-      final size = Size(node.resolvedSize.width, node.resolvedSize.height);
+      final size = Size(bbox.width, bbox.height);
       final layoutSize = Size(size.width * totalTransform.scaleX, size.height * totalTransform.scaleY);
 
       return _buildSelectionControls(
@@ -111,19 +111,19 @@ class ObjectSelectionGroupOverlay extends HookWidget {
         childSize: size,
       );
     } else {
-      final rects = nodes
-          .map((n) => (editor.getRenderNode(n), n.boundingBox.asRect))
-          .map((t) => MatrixUtils.transformRect(t.$1.getTransformTo(root), t.$2))
+      final bboxes = nodes
+          .map((n) => (n.getPaintTransformTo(null), n.bbox))
+          .map((t) => t.$1.transformAabb2(t.$2))
           .toList();
 
-      final overlayRects = rects.map((r) => MatrixUtils.transformRect(childPaintTransform, r)).toList();
-      final bbox = rects.boundingBox;
-      final overlayBbox = overlayRects.boundingBox;
+      final overlayRects = bboxes.map((b) => childPaintTransform.transformAabb2(b)).toList();
+      final bbox = bboxes.bbox;
+      final overlayBbox = overlayRects.bbox;
 
       return _buildSelectionControls(
         transform: .translationValues(overlayBbox.left, overlayBbox.top, 0.0),
-        layoutSize: overlayBbox.size,
-        childSize: bbox.size,
+        layoutSize: .new(overlayBbox.width, overlayBbox.height),
+        childSize: .new(bbox.width, bbox.height),
       );
     }
   }

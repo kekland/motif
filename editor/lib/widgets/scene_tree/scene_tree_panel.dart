@@ -10,8 +10,8 @@ class SceneTreePanel extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final scene = useListenable(context.scene);
-    final root = useExistingSignal(scene.root()).value;
+    final scene = context.scene;
+    final root = useNode(scene.root, aspect: .children);
 
     final children = NodeTile.childrenToDisplay(root, {});
 
@@ -28,13 +28,17 @@ class SceneTreePanel extends HookWidget {
                 final object = children[i];
 
                 return NodeTile(
-                  key: ValueKey(object),
+                  key: ValueKey(object.id),
                   editor: editor,
                   index: i,
                   node: object,
                 );
               },
               childCount: children.length,
+              findChildIndexCallback: (key) {
+                final id = (key as ValueKey<NodeId>).value;
+                return children.indexWhere((e) => e.id == id);
+              }
             ),
           ),
         ),

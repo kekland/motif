@@ -14,7 +14,7 @@ class SelectionController with ChangeNotifier, ChangeNotifierDisposable {
   ///
   /// If the object is a cell, it will check if the cell is owned by any selected node.
   bool isImplicitlySelected(SceneNode node) {
-    return _selectedNodes.any((o) => o == node || o.isVirtualAncestorOf(node));
+    return _selectedNodes.any((o) => o == node || o.isAncestorOf(node));
   }
 
   void set(SceneNode node) {
@@ -39,9 +39,8 @@ class SelectionController with ChangeNotifier, ChangeNotifierDisposable {
 
   void _add(SceneNode node) {
     if (node is RootObject) return;
-    if (node is Cell && node.owner != null) return _add(node.owner!);
 
-    final toRemove = _selectedNodes.where((o) => o.isVirtualDescendantOf(node)).toList();
+    final toRemove = _selectedNodes.where((o) => o.isDescendantOf(node)).toList();
     _selectedNodes.removeAll(toRemove);
     _selectedNodes.add(node);
   }

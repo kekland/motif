@@ -4,52 +4,29 @@ mixin TopologicalSceneObject on SceneObject {
   @override
   void _initialize() {
     super._initialize();
-    performLayout(.new());
-  }
-
-  @override
-  void _attachToScene(Scene scene) {
-    super._attachToScene(scene);
-
-    for (final c in _ownedCells) {
-      _scene!._attachNode(c);
-      c._parent = _parent;
-    }
-
-    parent?._children.insertAll(parent!.children.indexOf(this) + 1, _ownedCells);
-  }
-
-  @override
-  void _detachFromScene() {
-    for (final c in _ownedCells) _scene!._detachNode(c);
-    super._detachFromScene();
+    final cells = produceCells(.zero);
+    _onCellsInvalidated([], cells);
   }
 
   var _ownedCells = <Cell>[];
   Iterable<Cell> get ownedCells => _ownedCells;
 
   void _onCellsInvalidated(List<Cell> oldCells, List<Cell> newCells) {
-    for (final c in oldCells) {
-      _scene?._detachNode(c);
-      parent!._children.remove(c);
-    }
+    _removeChildren(oldCells);
+    _addChildren(newCells);
 
-    for (final c in newCells) {
-      _scene?._attachNode(c);
-      c._parent = _parent;
-      c._owner = this;
-    }
-
-    parent?._children.insertAll(parent!.children.indexOf(this) + 1, newCells);
     _ownedCells = newCells;
   }
 
   List<Cell> produceCells(ResolvedSize size) => [];
 
   @override
-  ResolvedSize performLayout(LayoutConstraints constraints) {
-    final size = super.performLayout(constraints);
+  void performLayout(LayoutConstraints constraints) {
+    super.performLayout(constraints);
+    _layoutTopology(_resolvedSize!);
+  }
 
+  void _layoutTopology(ResolvedSize size) {
     var didInvalidate = false;
     final newCells = produceCells(size);
 
@@ -66,13 +43,12 @@ mixin TopologicalSceneObject on SceneObject {
       }
     }
 
-    for (final c in newCells) c.transformWith(transform.value);
     if (!didInvalidate) {
-      for (var i = 0; i < _ownedCells.length; i++) {
-        _ownedCells[i].setFrom(newCells[i]);
-      }
+      for (var i = 0; i < _ownedCells.length; i++) _ownedCells[i].setFrom(newCells[i]);
     }
 
-    return size;
+    for (var i = 0; i < _ownedCells.length; i++) {
+      _ownedCells[i].layout(.unconstrained);
+    }
   }
 }

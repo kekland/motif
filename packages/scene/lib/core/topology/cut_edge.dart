@@ -22,7 +22,7 @@ final class MultiEdgeCutResult {
 void _onCutEdge(Edge originalEdge, List<Vertex> vertices, List<Edge> newEdges) {
   final parent = originalEdge.parent;
   final index = parent!.children.indexOf(originalEdge);
-  parent.insertChildren(index, [...vertices, ...newEdges]);
+  parent._insertChildren(index, [...vertices, ...newEdges]);
   originalEdge.detach();
 }
 

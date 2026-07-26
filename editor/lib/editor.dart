@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:editor/imports.dart';
 
 export 'widgets/editor.dart';
@@ -18,6 +20,26 @@ final class Editor with ChangeNotifier, ChangeNotifierDisposable {
 
     final edge = Edge(r1.bottomRight, r2.topLeft);
     scene.root.addChild(edge);
+
+    final container = ContainerObject(
+      size: .fixed(400.0, 400.0),
+      transform: .translationValues(400.0, 0.0),
+      childLayout: .flex(direction: .row),
+    );
+
+    final random = Random();
+    for (var i = 0; i < 10; i++) {
+      final child = RectangleObject(
+        size: .fixed(20.0, 20.0),
+        transform: .translationValues(
+          random.nextDouble() * 400.0,
+          random.nextDouble() * 400.0,
+        ).copyWithRotation(random.nextDouble() * pi * 2),
+      );
+      container.addChild(child);
+    }
+
+    scene.root.addChild(container);
   }
 
   static Editor of(BuildContext context) => context.read<Editor>();
@@ -30,7 +52,7 @@ final class Editor with ChangeNotifier, ChangeNotifierDisposable {
 
   final sceneKey = GlobalKey();
   RenderScene get render => sceneKey.currentContext!.findRenderObject() as RenderScene;
-  RenderSceneNode getRenderNode(SceneNode node) => render.getRenderNode(node);
+  // RenderSceneNode getRenderNode(SceneNode node) => render.getRenderNode(node);
 
   Vector2 globalToScene(Vector2 globalPosition) {
     return render.globalToLocal(globalPosition.offset).vec2;
@@ -50,10 +72,10 @@ final class Editor with ChangeNotifier, ChangeNotifierDisposable {
     return sceneToGlobal(scenePosition);
   }
 
-  SceneHitTestResult hitTestScene(Vector2 globalPosition) {
+  SceneHitTestResult hitTestScene(Vector2 globalPosition, {List<SceneNode> ignore = const []}) {
     final localPosition = globalToScene(globalPosition);
     final transform = render.getTransformTo(null);
-    return scene.hitTest(localPosition, globalToLocal: transform);
+    return scene.hitTest(localPosition, globalToLocal: transform, ignore: ignore);
   }
 
   SceneHitTestResult hitTestRect(Rect globalRect, {HitTestRectMode mode = .normal}) {

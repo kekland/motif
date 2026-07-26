@@ -1,6 +1,5 @@
 // Default
 import 'package:geometry/geometry.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 import 'package:skia/geometry.dart' as bindings;
 import 'package:skia/utils.dart';

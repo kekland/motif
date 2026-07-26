@@ -23,8 +23,14 @@ final class RootObject extends SceneObject with MultiChildSceneObject {
   set transform(ObjectTransform value) => throw UnsupportedError('RootSceneObject transform cannot be changed.');
 
   @override
-  ReadonlySignal<RootObject> call() => _scene!._signalFor(this);
+  bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => true;
 
   @override
-  bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => true;
+  void performLayout(LayoutConstraints constraints) {
+    for (final child in children) child.layout(constraints);
+    _resolvedSize = size.resolve(constraints);
+  }
+
+  @override
+  NodeType get type => .root;
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geometry/geometry.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 extension _OffsetExt on ui.Offset {
   Vector2 get v2 => Vector2(dx, dy);

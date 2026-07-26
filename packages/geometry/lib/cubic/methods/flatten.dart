@@ -61,7 +61,7 @@ void _splineFlatten(CubicSpline2 spline, double? tolerance, FlattenCallback call
     final k1 = spline.knots[i + 1];
 
     var isFirstPoint = true;
-    _cubicFlatten(k0.p, k0.cOut ?? k0.p, k1.cIn ?? k1.p, k1.p, tolerance ?? _kCubicFlatnessTolerance, (point, t) {
+    _cubicFlatten(k0.p, k0.cOut, k1.cIn, k1.p, tolerance ?? _kCubicFlatnessTolerance, (point, t) {
       if (isFirstPoint) {
         isFirstPoint = false;
         return;

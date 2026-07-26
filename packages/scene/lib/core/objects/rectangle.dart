@@ -31,5 +31,5 @@ final class RectangleObject extends SceneObject with TopologicalSceneObject {
   }
 
   @override
-  ReadonlySignal<RectangleObject> call() => _scene!._signalFor(this);
+  NodeType get type => .rectangle;
 }

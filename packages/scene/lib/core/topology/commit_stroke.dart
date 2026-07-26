@@ -1,7 +1,7 @@
 part of '../core.dart';
 
 List<Edge> _commitStroke(
-  MultiChildSceneObject parent,
+  SceneNode parent,
   EdgePath path, {
   Vertex? startVertex,
   Vertex? endVertex,
@@ -23,7 +23,7 @@ List<Edge> _commitStroke(
 }
 
 List<Edge> _commitSplineSegments(
-  MultiChildSceneObject parent,
+  SceneNode parent,
   CubicSpline2 spline,
   Vertex startVertex,
   Vertex endVertex,
@@ -50,7 +50,7 @@ List<Edge> _commitSplineSegments(
     }
     
     breakpoints.sort((a, b) => a.$1.compareTo(b.$1));
-    parent.insertChildren(startIndex, breakpoints.map((b) => b.$2));
+    parent._insertChildren(startIndex, breakpoints.map((b) => b.$2));
     startIndex += breakpoints.length; 
 
     final ts = breakpoints.map((b) => b.$1).toList();
@@ -69,12 +69,12 @@ List<Edge> _commitSplineSegments(
     edges.add(edge);
   }
 
-  parent.insertChildren(startIndex, edges);
+  parent._insertChildren(startIndex, edges);
   return edges;
 }
 
 List<(Vertex, Vertex, CubicSpline2)> _commitSubSpline(
-  MultiChildSceneObject parent,
+  SceneNode parent,
   CubicSpline2 spline,
   Vertex start,
   Vertex end,

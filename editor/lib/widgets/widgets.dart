@@ -1,6 +1,6 @@
 export 'scene_tree/scene_tree_panel.dart';
 export 'selection/selection_overlay.dart';
-export 'sidebar/selection_panel.dart';
+export 'properties_panel/properties_panel.dart';
 
 export 'actions.dart';
 export 'canvas.dart';

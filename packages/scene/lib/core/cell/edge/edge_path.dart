@@ -49,8 +49,8 @@ final class EdgePath extends CubicSpline2 {
   @override
   List<EdgePath> splitMultiple(List<double> ts) => super.splitMultiple(ts).map(EdgePath.from).toList();
 
-  void transformWith(Matrix4 transform) {
-    for (final k in knots) k.transformWith(transform);
+  void applyTransform(Matrix4 transform) {
+    for (final k in knots) k.applyTransform(transform);
   }
 
   void setFrom(EdgePath other) {

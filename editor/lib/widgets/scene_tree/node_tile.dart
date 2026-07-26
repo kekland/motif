@@ -10,10 +10,8 @@ class NodeTile extends HookWidget {
   });
 
   static List<SceneNode> childrenToDisplay(SceneNode object, Set<SceneNode> selection) {
-    if (object is! MultiChildSceneObject) return [];
-
     return object.children.where((o) {
-      if (o is Cell && o.isOwned) return selection.contains(o);
+      // if (o is Cell && o.isOwned) return selection.contains(o);
       return true;
     }).toList();
   }
@@ -28,7 +26,7 @@ class NodeTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final node = useExistingSignal(this.node()).value;
+    final node = useNode(this.node, aspect: .children);
     final expansibleController = useExpansibleController();
     final isSelected = useComputed(() => editor.selection.isSelected(node));
     final isSubtreeSelected = useComputed(() {
@@ -57,8 +55,8 @@ class NodeTile extends HookWidget {
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         color: color,
-        child: _ObjectTileBody(
-          object: node,
+        child: _NodeTileBody(
+          node: node,
           isSelected: isSelected.value,
           depth: depth,
           trailing: children.isNotEmpty
@@ -72,23 +70,30 @@ class NodeTile extends HookWidget {
               : null,
         ),
       ),
-      bodyBuilder: (context, _) => CustomPaint(
-        foregroundPainter: _NodeChildrenTreePainter(
-          color: context.colors.inverse.withScaledAlpha(0.25),
-          depth: depth,
-        ),
-        child: Column(
-          children: [
-            for (var i = 0; i < children.length; i++)
-              NodeTile(
-                key: ValueKey(children[i]),
-                editor: editor,
-                node: children[i],
-                depth: depth + 1,
-                index: i,
-              ),
-          ],
-        ),
+      bodyBuilder: (context, animation) => AnimatedBuilder(
+        animation: animation,
+        builder: (context, _) {
+          final shouldDisplay = animation.value > 0.0;
+          return CustomPaint(
+            foregroundPainter: _NodeChildrenTreePainter(
+              color: context.colors.divider,
+              depth: depth,
+            ),
+            child: Column(
+              children: [
+                if (shouldDisplay)
+                  for (var i = 0; i < children.length; i++)
+                    NodeTile(
+                      key: ValueKey(children[i].id),
+                      editor: editor,
+                      node: children[i],
+                      depth: depth + 1,
+                      index: i,
+                    ),
+              ],
+            ),
+          );
+        },
       ),
     );
 
@@ -125,24 +130,26 @@ class NodeTile extends HookWidget {
   }
 }
 
-class _ObjectTileBody extends HookWidget {
-  const _ObjectTileBody({
+class _NodeTileBody extends HookWidget {
+  const _NodeTileBody({
     super.key,
-    required this.object,
+    required this.node,
     required this.isSelected,
     required this.depth,
     this.trailing,
   });
 
-  final Object object;
+  final SceneNode node;
   final bool isSelected;
   final int depth;
   final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    final name = object.runtimeType.toString();
-    final icon = switch (object) {
+    final node = useNode(this.node, aspect: .name);
+
+    final name = node.name;
+    final icon = switch (node) {
       RectangleObject() => Icons.square(),
       ContainerObject() => Icons.container(),
       Vertex() => Icons.vertex(),
@@ -159,7 +166,7 @@ class _ObjectTileBody extends HookWidget {
           child: CustomPaint(
             painter: _NodeChildTreeBranchPainter(
               depth: depth,
-              color: context.colors.inverse.withScaledAlpha(0.25),
+              color: context.colors.divider,
             ),
           ),
         ),

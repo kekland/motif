@@ -30,8 +30,11 @@ extension type const ObjectSize._((ObjectLayoutDimension width, ObjectLayoutDime
     height != null ? .fixed(height) : this.height,
   );
 
-  ResolvedSize resolve(LayoutConstraints constraints) {
-    return .new(width.value!, height.value!);
+  ResolvedSize resolve(LayoutConstraints constraints, {double childWidth = 0.0, double childHeight = 0.0}) {
+    return .new(
+      width.resolve(constraints.minWidth, constraints.maxWidth, childValue: childWidth),
+      height.resolve(constraints.minHeight, constraints.maxHeight, childValue: childHeight),
+    );
   }
 }
 
@@ -48,6 +51,14 @@ extension type const ObjectLayoutDimension._((double? value, ObjectLayoutDimensi
 
   double? get value => _.$1;
   ObjectLayoutDimensionType get type => _.$2;
+
+  double resolve(double min, double max, {double childValue = 0.0}) => switch (type) {
+    .fixed => value!.clamp(min, max),
+    .expand when max.isFinite => max,
+    .expand when max.isInfinite => childValue.clamp(min, max),
+    .contain => childValue.clamp(min, max),
+    _ => unreachable(),
+  };
 
   ObjectLayoutDimension copyWith({
     double? value,

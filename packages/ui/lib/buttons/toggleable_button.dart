@@ -44,22 +44,31 @@ class ToggleableButtonRow extends StatelessWidget {
     required this.children,
     this.borderRadius,
     this.height = 32.0,
+    this.isFilled = true,
   });
 
   final List<Widget> children;
   final BorderRadius? borderRadius;
   final double height;
+  final bool isFilled;
 
   @override
   Widget build(BuildContext context) {
-    return Surface(
-      width: double.infinity,
-      height: height,
-      color: context.colors.surface.secondary,
-      borderRadius: borderRadius ?? .circular(4.0),
-      child: Row(
-        children: children.map<Widget>((c) => Expanded(child: c)).interleave(VerticalDivider()).toList(),
-      ),
+    final child = Row(
+      children: children.map<Widget>((c) => Expanded(child: c)).interleave(VerticalDivider()).toList(),
     );
+
+    if (isFilled) {
+      return Surface(
+        width: double.infinity,
+        height: height,
+        color: context.colors.surface.secondary,
+        borderRadius: borderRadius ?? .circular(4.0),
+        borderSide: .new(color: context.colors.divider, width: 1.0),
+        child: child,
+      );
+    }
+
+    return SizedBox(height: height, child: child);
   }
 }

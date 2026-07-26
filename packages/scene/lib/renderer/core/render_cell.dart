@@ -29,12 +29,15 @@ sealed class RenderCell<C extends Cell> extends RenderSceneNode<C> {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    final transform = Matrix4.identity();
+    applyPaintTransform(this, transform);
+    
     context.canvas.save();
-    final transform = Matrix4.fromFloat64List(context.canvas.getTransform());
-    final inverse = Matrix4.inverted(transform);
+    final canvasTrasform = Matrix4.fromFloat64List(context.canvas.getTransform());
+    final inverseCanvasTransform = Matrix4.inverted(canvasTrasform);
     context.canvas.translate(offset.dx, offset.dy);
-    context.canvas.transform(inverse.storage);
-    debugPaintCell(context, transform);
+    context.canvas.transform(inverseCanvasTransform.storage);
+    debugPaintCell(context, canvasTrasform * transform);
     context.canvas.restore();
   }
 
@@ -53,7 +56,7 @@ final class RenderVertex extends RenderCell<Vertex> {
   @override
   void performLayout() {
     size = .zero;
-    _sortChildrenList();
+    _maybeSortChildrenList();
   }
 
   @override
@@ -76,7 +79,7 @@ final class RenderEdge extends RenderCell<Edge> {
   @override
   void performLayout() {
     size = .zero;
-    _sortChildrenList();
+    _maybeSortChildrenList();
   }
 
   @override
@@ -90,15 +93,17 @@ final class RenderEdge extends RenderCell<Edge> {
       ..color = .new(0xFF0000FF)
       ..style = .fill;
 
-    final cubics = cell.path.segments;
+    final cubics = cell.path.segments.toList();
     final cubicCount = cubics.length;
     if (cubicCount == 0) return;
 
     final path = Path();
-    var point = transform.transform2(cell.start.position);
+    var cubic = cubics.first;
+    var point = transform.transform2(cubic.p0);
     path.moveTo(point.x, point.y);
 
-    for (final cubic in cubics) {
+    for (var i = 0; i < cubicCount; i++) {
+      cubic = cubics[i];
       final p1 = transform.transform2(cubic.p1);
       final p2 = transform.transform2(cubic.p2);
       final p3 = transform.transform2(cubic.p3);

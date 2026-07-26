@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:stack_multi_pane_container/stack_multi_pane_container.dart';
 
-import 'sidebar/selection_panel.dart';
+import 'properties_panel/properties_panel.dart';
 import 'scene_tree/scene_tree_panel.dart';
 
 class Sidebar extends StatelessWidget {
@@ -14,12 +14,12 @@ class Sidebar extends StatelessWidget {
       panels: [
         Panel(
           constraints: .pixels(384.0, .infinity),
-          child: SelectionPanel(),
+          child: PropertiesPanel(),
         ),
-        Panel(
-          constraints: .flex(1.0),
-          child: SceneTreePanel(),
-        ),
+        // Panel(
+        //   constraints: .flex(1.0),
+        //   child: SceneTreePanel(),
+        // ),
       ],
     );
   }

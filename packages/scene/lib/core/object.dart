@@ -1,6 +1,7 @@
 part of 'core.dart';
 
-sealed class SceneObject extends SceneNode with SceneNodeImpl {
+/// A scene object is a node in the scene graph that has a transform and a rectangular size.
+sealed class SceneObject extends SceneNode with SceneNodeBase {
   SceneObject({ObjectTransform? transform, ObjectSize? size, NodeId? id})
     : _transform = transform ?? .identity(),
       _size = size ?? .zero,
@@ -14,11 +15,12 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   MultiChildSceneObject? get parent => super.parent as MultiChildSceneObject?;
 
   final ObjectTransform _transform;
+
   ObjectTransform get transform => _transform;
   set transform(ObjectTransform value) {
     if (_transform == value) return;
     _transform._setFrom(value);
-    _markNeedsLayout();
+    _markNeedsLayout(.transform);
   }
 
   ObjectSize _size;
@@ -26,40 +28,35 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   set size(ObjectSize value) {
     if (_size == value) return;
     _size = value;
-    _markNeedsLayout();
+    _markNeedsLayout(.size);
   }
 
   bool get isLeaf => this is! MultiChildSceneObject;
 
   @override
-  Aabb2 get boundingBox => .minMax(.zero(), .new(resolvedSize.width, resolvedSize.height));
+  Aabb2 get bbox => .minMax(.zero(), .new(_resolvedSize!.width, _resolvedSize!.height));
 
   @override
   bool get isLayoutBoundary => !size.dependsOnParent;
 
   @override
-  ResolvedSize get resolvedSize {
-    if (size.isFixed) return size.resolve(.new());
-    return super.resolvedSize;
-  }
+  bool get isTransformControlled => parent?.controlsChildTransform(this) ?? false;
 
-  ResolvedSize performLayout(LayoutConstraints constraints) {
-    return size.resolve(constraints);
+  ResolvedSize? _resolvedSize;
+
+  @override
+  void performLayout(LayoutConstraints constraints) {
+    _resolvedSize = size.resolve(constraints);
   }
 
   @override
-  void layout(LayoutConstraints constraints) {
-    _resolvedSize = performLayout(constraints);
-  }
-
-  @override
-  void applyTransform(Matrix4 transform) {
+  void cascadeTransform(Matrix4 transform) {
     transform.multiply(_transform.value);
   }
 
   @override
-  void transformWith(Matrix4 transform) {
-    final bbox = boundingBox;
+  void applyTransform(Matrix4 transform) {
+    final bbox = this.bbox;
     size = .fixed(bbox.width * transform.scaleX, bbox.height * transform.scaleY);
 
     final normalized = transform.getWithNormalizedScale();
@@ -70,8 +67,15 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   }
 
   @override
-  bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) {
-    if (hitTestChildren(result, localPosition, globalToScene: globalToScene) ||
+  bool hitTest(
+    SceneHitTestResult result,
+    Vector2 localPosition, {
+    Matrix4? globalToScene,
+    List<SceneNode> ignore = const [],
+  }) {
+    if (ignore.contains(this)) return false;
+
+    if (hitTestChildren(result, localPosition, globalToScene: globalToScene, ignore: ignore) ||
         hitTestSelf(localPosition, globalToScene: globalToScene)) {
       result.add(SceneObjectHitTestEntry(this, localPosition));
       return true;
@@ -81,8 +85,13 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   }
 
   @override
-  bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => resolvedSize.contains(localPosition);
-  bool hitTestChildren(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) => false;
+  bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene}) => bbox.containsVector2(localPosition);
+  bool hitTestChildren(
+    SceneHitTestResult result,
+    Vector2 localPosition, {
+    Matrix4? globalToScene,
+    List<SceneNode> ignore = const [],
+  }) => false;
 
   @override
   bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal}) {
@@ -91,7 +100,12 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
 
   @override
   ObjectSnapshot snapshot() {
-    return ObjectSnapshot(id: id, transform: transform.clone(), size: size);
+    return ObjectSnapshot(
+      id: id,
+      transform: transform.clone(),
+      size: size,
+      resolvedSize: _resolvedSize,
+    );
   }
 
   @override
@@ -99,5 +113,6 @@ sealed class SceneObject extends SceneNode with SceneNodeImpl {
   void applySnapshot(covariant ObjectSnapshot snapshot) {
     transform = snapshot.transform;
     size = snapshot.size;
+    _resolvedSize = snapshot.resolvedSize;
   }
 }

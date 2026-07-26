@@ -13,8 +13,10 @@ class ObjectSnapshot extends NodeSnapshot {
     required super.id,
     required this.transform,
     required this.size,
+    this.resolvedSize,
   });
 
   final ObjectTransform transform;
   final ObjectSize size;
+  final ResolvedSize? resolvedSize;
 }

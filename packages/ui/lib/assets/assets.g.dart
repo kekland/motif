@@ -424,6 +424,9 @@ class Icons extends _BaseIcon {
   const Icons.mirror({super.key, super.size, super.color}): super.iconData(icon: Symbols.flip_rounded);
   const Icons.generator({super.key, super.size, super.color}): super.iconData(icon: Symbols.graph_4_rounded);
   const Icons.symbols({super.key, super.size, super.color}): super.iconData(icon: Symbols.category_rounded);
+  const Icons.unknown({super.key, super.size, super.color}): super.iconData(icon: Symbols.help_rounded);
+  const Icons.stacks({super.key, super.size, super.color}): super.iconData(icon: Symbols.stacks_rounded);
+  const Icons.world({super.key, super.size, super.color}): super.iconData(icon: Symbols.public_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

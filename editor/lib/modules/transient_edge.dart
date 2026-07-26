@@ -13,7 +13,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
   final Vertex startVertex;
 
   Vector2 get start => startVertex.position;
-  MultiChildSceneObject get parent => startVertex.parent!;
+  SceneNode get parent => startVertex.parent!;
 
   Vector2? _cStart;
   Vector2? get cStart => _cStart;

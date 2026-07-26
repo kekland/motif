@@ -5,50 +5,48 @@ class SceneWidget extends StatefulWidget {
 
   final Scene scene;
 
+  static SceneWidgetState of(BuildContext context) => context.findAncestorStateOfType<SceneWidgetState>()!;
+
   @override
-  State<SceneWidget> createState() => _SceneWidgetState();
+  State<SceneWidget> createState() => SceneWidgetState();
 }
 
-class _SceneWidgetState extends State<SceneWidget> {
-  var _frameScheduled = false;
+class SceneWidgetState extends State<SceneWidget> {
+  // var _frameScheduled = false;
+  // VoidCallback? _rootSubscription;
+  // StreamSubscription? _layoutSubscription;
+
+  Scene get scene => widget.scene;
 
   @override
   void initState() {
     super.initState();
-    widget.scene.addListener(_onSceneChanged);
-    widget.scene.layout();
+    scene.flush();
+    scene.scheduler.scheduler = _scheduleFrameCallback;
+    scene.root(.children).addListener(_onRootChanged);
+  }
+
+  void _scheduleFrameCallback(void Function() callback) {
+    SchedulerBinding.instance.scheduleFrameCallback((_) => callback(), scheduleNewFrame: true);
+  }
+
+  void _onRootChanged() {
+    setState(() {});
   }
 
   @override
   void dispose() {
-    widget.scene.removeListener(_onSceneChanged);
+    scene.root(.children).removeListener(_onRootChanged);
+    // _layoutSubscription?.cancel();
     super.dispose();
-  }
-
-  void _onSceneChanged() {
-    if (_frameScheduled) return;
-
-    _frameScheduled = true;
-
-    SchedulerBinding.instance.scheduleFrameCallback((_) {
-      if (!mounted) return;
-
-      widget.scene.layout();
-      setState(() => _frameScheduled = false);
-    }, scheduleNewFrame: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final children = [
-      for (final c in widget.scene.root.children) SceneNodeWidget.from(c),
-    ];
-
-    return RenderSceneWidget(
-      scene: widget.scene,
-      child: Stack(
-        clipBehavior: .none,
-        children: children,
+    return SceneTransientTransformsTickerProvider(
+      child: RenderSceneWidget(
+        scene: scene,
+        child: SceneObjectChildrenWidget(object: scene.root),
       ),
     );
   }

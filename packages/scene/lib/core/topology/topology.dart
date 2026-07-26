@@ -42,7 +42,7 @@ class Topology {
   MultiEdgeCutResult multiCutEdge(Edge edge, List<double> ts) => _multiCutEdge(edge, ts);
 
   List<Edge> commitStroke(
-    MultiChildSceneObject parent,
+    SceneNode parent,
     EdgePath path, {
     Vertex? startVertex,
     Vertex? endVertex,

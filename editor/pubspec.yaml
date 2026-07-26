@@ -16,3 +16,4 @@ dependencies:
   ui:
   tool:
   stack_multi_pane_container:
+  stack_mouse_cursor:

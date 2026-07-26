@@ -39,7 +39,7 @@ class _NodeChildTreeBranchPainter extends CustomPainter {
     if (depth == 0) return;
 
     const indent = NodeTile.indent;
-    final paddingLeft = (depth - 1) * indent + (indent / 2.0) - 2.0;
+    final paddingLeft = (depth - 1) * indent + (indent / 2.0);
 
     canvas.drawLine(
       Offset(paddingLeft, 0.0),

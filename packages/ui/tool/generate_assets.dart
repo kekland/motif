@@ -45,6 +45,9 @@ Future<void> main() async {
     .new('mirror', 'Symbols.flip_rounded'),
     .new('generator', 'Symbols.graph_4_rounded'),
     .new('symbols', 'Symbols.category_rounded'),
+    .new('unknown', 'Symbols.help_rounded'),
+    .new('stacks', 'Symbols.stacks_rounded'),
+    .new('world', 'Symbols.public_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

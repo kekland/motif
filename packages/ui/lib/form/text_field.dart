@@ -86,12 +86,11 @@ class TextField extends HookWidget {
               ? context.colors.accent.primary.background
               : context.colors.divider,
         ),
-        foregroundColor: hasFocus ? context.colors.accent.primary.background : context.colors.display.tertiary,
         borderRadius: BorderRadius.circular(4.0),
-        padding: padding,
         cursor: SystemMouseCursors.text,
         builder: (context, states) {
-          final child = SizedBox(
+          final child = Container(
+            padding: padding,
             height: 32.0,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

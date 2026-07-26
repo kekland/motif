@@ -30,7 +30,7 @@ abstract class _BaseEdgeResizeNodesActivity extends _BaseResizeNodesActivity {
   final ui.Edge edge;
 
   @override
-  MouseCursor get cursor => Cursors.resize;
+  MouseCursor get cursor => resolveRotatingCursor(Cursors.resize, edge: edge);
 
   @override
   Aabb2 applyResize(Aabb2 initial, Vector2 delta, bool symmetric, bool keepAspectRatio) {
@@ -48,7 +48,7 @@ class _BaseCornerResizeNodesActivity extends _BaseResizeNodesActivity {
   final ui.Corner corner;
 
   @override
-  MouseCursor get cursor => Cursors.resize;
+  MouseCursor get cursor => resolveRotatingCursor(Cursors.resize, corner: corner);
 
   @override
   Aabb2 applyResize(Aabb2 initial, Vector2 delta, bool symmetric, bool keepAspectRatio) {

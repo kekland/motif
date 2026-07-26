@@ -14,7 +14,7 @@ class RotateNodesActivity extends NodeGroupActivity with ExclusiveCursorDragActi
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight};
 
   @override
-  MouseCursor get cursor => Cursors.rotate;
+  MouseCursor get cursor => resolveRotatingCursor(Cursors.rotate, corner: corner);
 
   late final Vector2 groupPivot;
   late final double initialAngle;

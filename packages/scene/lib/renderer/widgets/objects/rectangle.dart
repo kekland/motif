@@ -9,7 +9,10 @@ class RectangleObjectWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SceneObjectBuilder(
       object: object,
-      builder: (context) => Container(color: Colors.blue),
+      builder: (context, child) => DecoratedBox(
+        decoration: BoxDecoration(color: Colors.blue),
+        child: child,
+      ),
     );
   }
 }

@@ -5,10 +5,24 @@ final class ContainerObject extends SceneObject with MultiChildSceneObject, Topo
     super.id,
     super.transform,
     super.size,
+    this._childLayout = .stack,
     List<SceneNode> children = const [],
   }) {
     _children.addAll(children);
     _initialize();
+  }
+
+  ContainerChildLayout _childLayout;
+  ContainerChildLayout get childLayout => _childLayout;
+  set childLayout(ContainerChildLayout value) {
+    if (_childLayout == value) return;
+    _childLayout = value;
+    _markNeedsLayout(.size);
+  }
+
+  @override
+  bool controlsChildTransform(SceneObject child) {
+    return _childLayout.type == .flex;
   }
 
   Vertex get topLeft => _ownedCells[0] as Vertex;
@@ -39,5 +53,19 @@ final class ContainerObject extends SceneObject with MultiChildSceneObject, Topo
   }
 
   @override
-  ReadonlySignal<ContainerObject> call() => _scene!._signalFor(this);
+  void performLayout(LayoutConstraints constraints) {
+    final sceneObjects = <SceneObject>[];
+    for (final child in children) {
+      if (child is SceneObject) {
+        sceneObjects.add(child);
+      } else {
+        child.layout(constraints);
+      }
+    }
+
+    _resolvedSize = _childLayout.layout(size, constraints, sceneObjects);
+  }
+
+  @override
+  NodeType get type => .container;
 }

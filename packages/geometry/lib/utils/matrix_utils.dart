@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:geometry/geometry.dart';
 
 extension Matrix4Utils on Matrix4 {
@@ -52,14 +54,50 @@ extension Matrix4Utils on Matrix4 {
   }
 
   Aabb2 transformAabb2(Aabb2 aabb) {
-    final a = transform2(aabb.min);
-    final b = transform2(aabb.max);
-    return a.aabb2(b);
+    final p1 = aabb.topLeft;
+    final p2 = aabb.topRight;
+    final p3 = aabb.bottomRight;
+    final p4 = aabb.bottomLeft;
+
+    final t1 = transform2(p1);
+    final t2 = transform2(p2);
+    final t3 = transform2(p3);
+    final t4 = transform2(p4);
+
+    final minX = math.min(math.min(t1.x, t2.x), math.min(t3.x, t4.x));
+    final minY = math.min(math.min(t1.y, t2.y), math.min(t3.y, t4.y));
+    final maxX = math.max(math.max(t1.x, t2.x), math.max(t3.x, t4.x));
+    final maxY = math.max(math.max(t1.y, t2.y), math.max(t3.y, t4.y));
+
+    return .minMax(.new(minX, minY), .new(maxX, maxY));
   }
 
   Vector2 transformDelta2(Vector2 a, Vector2 b) {
     final ta = transform2(a);
     final tb = transform2(b);
     return ta - tb;
+  }
+
+  (double width, double height) transformSize(double width, double height) {
+    return (width * scaleX, height * scaleY);
+  }
+
+  Matrix4 lerpDecomposed(Matrix4 other, double t) {
+    // Source from SDK (Matrix4Tween)
+    final beginTranslation = Vector3.zero();
+    final endTranslation = Vector3.zero();
+    final beginRotation = Quaternion.identity();
+    final endRotation = Quaternion.identity();
+    final beginScale = Vector3.zero();
+    final endScale = Vector3.zero();
+
+    decompose(beginTranslation, beginRotation, beginScale);
+    other.decompose(endTranslation, endRotation, endScale);
+
+    final Vector3 lerpTranslation = beginTranslation * (1.0 - t) + endTranslation * t;
+    final Quaternion lerpRotation = (beginRotation.scaled(1.0 - t) + endRotation.scaled(t)).normalized();
+    final Vector3 lerpScale = beginScale * (1.0 - t) + endScale * t;
+
+    return Matrix4.compose(lerpTranslation, lerpRotation, lerpScale);
   }
 }

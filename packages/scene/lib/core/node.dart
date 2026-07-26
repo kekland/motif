@@ -1,385 +1,220 @@
 part of 'core.dart';
 
-extension type const NodeId(int id) {
-  static NodeId generate() => .new(_id++);
-  static var _id = 0;
-
-  static const NodeId keep = .new(-1);
-  static const NodeId none = .new(-2);
-
-  static NodeId resolve(NodeId existing, NodeId requested) {
-    if (requested == .keep) return existing;
-    if (requested == .none) return generate();
-    return requested;
-  }
-}
-
-sealed class SceneNode {
+/// A scene node is a fundamental element in the scene graph.
+///
+/// Scene nodes, by default, only contain a name and an identifier.
+///
+/// The root scene node is unique and is always present in the scene graph. Other scene nodes can either be objects or
+/// topological cells. Objects can also be topological, meaning that they will produce topological cells when they are
+/// laid out. Topological cells are used to represent the topology of the scene, and they can be used to create complex
+/// shapes or relationships between objects.
+abstract interface class SceneNode {
   SceneNode() {
     _initialize();
   }
 
+  /// Identifier of the node. This is guaranteed to be unique once the node is attached to the scene graph.
   NodeId get id;
 
-  // dart format off
-  factory SceneNode.vertex(Vector2 position, {NodeId id}) = Vertex;
-  factory SceneNode.edge(Vertex start, Vertex end, {NodeId id, EdgePath path}) = Edge;
-  factory SceneNode.rectangle({NodeId id, ObjectTransform transform, ObjectSize size}) = RectangleObject;
-  factory SceneNode.container({NodeId id, ObjectTransform transform, ObjectSize size, List<SceneNode> children}) = ContainerObject;
-  factory SceneNode.root({List<SceneNode> children}) = RootObject;
-  // dart format on
+  /// The name of the node. It's generated automatically, but can be supplied with a user-generated name later.
+  String get name;
+  set name(String? value);
 
-  // --------------------
-  // Parent/child mechanisms
-  // --------------------
+  /// The type of the node.
+  NodeType get type;
 
-  SceneNode? get _parent;
-  set _parent(covariant SceneNode? value);
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Scene attachment and initialization
+  // @-----------------------------------------------------------------------------------------------------------------@
 
-  SceneNode? get parent;
-  set parent(covariant SceneNode? value);
-  void detach();
-
-  @protected
-  List<SceneNode> get children;
-
-  void _addChild(SceneNode child);
-  SceneNode _removeChild(SceneNode child);
-
-  SceneNode? get owner;
-  bool get isOwned;
-
-  // --------------------
-  // Initialization, scene attachment, layout
-  // --------------------
-
+  /// Initializes this node. This is called when the node is created, and it is used to perform any additional
+  /// setup.
   void _initialize();
 
+  /// Attaches this node and its children to the scene.
   void _attachToScene(Scene scene);
+
+  /// Detaches this node and its children from the scene.
   void _detachFromScene();
 
-  void _markNeedsLayout();
-  void _markNeedsPaint();
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Scene graph relationships
+  // @-----------------------------------------------------------------------------------------------------------------@
 
-  ResolvedSize get resolvedSize;
-  Aabb2 get boundingBox;
-  bool get isLayoutBoundary;
-  void layout(LayoutConstraints constraints);
-  void transformWith(Matrix4 transform);
+  /// The parent of the scene node. This is null either if:
+  /// - The node is the root node of the scene graph.
+  /// - The node is not attached to the scene graph.
+  SceneNode? get parent;
 
-  // --------------------
-  // Tree traversal
-  // --------------------
+  /// Sets the parent of the scene node. Setting it to `null` will detach the node from the scene graph.
+  set parent(covariant SceneNode? value);
 
+  /// Detaches the node from the scene graph. This is equivalent to `parent = null`.
+  void detach();
+
+  /// List of children of the scene node. Not all nodes can contain children, so this list is exposed in the subclasses
+  /// that can contain children.
+  List<SceneNode> get children;
+
+  /// List of topological cells that are children of this node.
+  Iterable<Cell> get cells;
+
+  /// The owner of this scene node. The owner creates this node during its layout process. Usually the owner is a
+  /// [TopologicalSceneObject] that creates cells during its layout.
+  SceneNode? get owner;
+
+  /// Whether the node is owned by another node. See [owner] for more information.
+  bool get isOwned;
+
+  void _setParent(SceneNode? parent);
+  void _addChild(SceneNode child);
+  void _removeChild(SceneNode child);
+  void _insertChildren(int index, Iterable<SceneNode> children);
+
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Tree traversal
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Depth of this node in the scene graph. The root node has a depth of `0`.
   int get depth;
+
+  /// Whether this node is an ancestor of the given [node].
   bool isAncestorOf(SceneNode node);
+
+  /// Whether this node is a descendant of the given [node].
   bool isDescendantOf(SceneNode node);
+
+  /// Whether this node is a virtual ancestor of the given [node]. Virtual ancestry respects the ownership of the nodes,
+  /// meaning that if a node is owned by another node, it is considered a virtual descendant of that owner, i.e.:
+  ///
+  /// Node X owns 4 vertices (A, B, C, D). Node Y is a parent of Node X. Then:
+  /// - A, B, C, D are virtual descendants of Y, but not descendants of Y.
+  /// - Y is an ancestor of X, A, B, C, D.
   bool isVirtualAncestorOf(SceneNode node);
+
+  /// Whether this node is a virtual descendant of the given [node]. See [isVirtualAncestorOf] for more information.
   bool isVirtualDescendantOf(SceneNode node);
 
-  // --------------------
-  // Hit testing
-  // --------------------
-  Matrix4 getTransformTo(SceneNode? node);
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Invalidation and updates
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Whether this node needs to be laid out.
+  bool get needsLayout;
+  set _needsLayout(bool value);
+
+  /// Marks this node as needing an update. The update type is specified by the [aspects] parameter.
+  void _markNeedsUpdate(Set<NodeUpdateAspect> aspects);
+
+  /// Marks this node as needing a layout update because of a specific [aspect].
+  void _markNeedsLayout([NodeUpdateAspect? aspect]);
+
+  /// Flushes this node's update flags into listeners.
+  void _$flushUpdates(SceneNodeNotifier notifier);
+
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Layout and transformation
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Bounding box of the node in its local coordinate space. Only valid after layout.
+  Aabb2 get bbox;
+
+  /// Whether this node is a layout boundary. Layout boundaries are used to limit the bubbling of layout invalidation.
+  bool get isLayoutBoundary;
+
+  /// Last layout constraints used to layout this node. `null` if the node was never laid out.
+  LayoutConstraints? get _lastConstraints;
+
+  /// Performs the actual layout of this node. This should be implemented by subclasses to perform their layout logic.
+  void performLayout(LayoutConstraints constraints);
+
+  /// Lays out this node and its children. This is called during the layout phase of the scene.
+  void layout(LayoutConstraints constraints);
+
+  /// Relayouts this node with the same constraints as the last layout.
+  /// 
+  /// This is similar to a reflow.
+  void relayout();
+
+  /// Whether this node's transformation is controlled by its parent. If true, the node's transformation is computed
+  /// in the parent's layout process.
+  bool get isTransformControlled;
+
+  /// Applies a transformation to this node.
   void applyTransform(Matrix4 transform);
+
+  /// Returns the transformation to a given node in the scene graph. If [target] is `null`, returns the transformation
+  /// to the root node.
+  Matrix4 getTransformTo(SceneNode? target);
+
+  /// Cascades/multiplies the node's own transformation into the given [transform] matrix.
+  void cascadeTransform(Matrix4 transform);
+
+  /// Returns the paint-level transformation to a given node in the scene graph. If [target] is `null`, returns the
+  /// transformation to the root node.
+  Matrix4 getPaintTransformTo(SceneNode? target);
+
+  /// Cascades/multiplies the node's own transformation into the given [transform] matrix.
+  ///
+  /// This is different from [cascadeTransform] in that it also applies the transient transformations.
+  void cascadePaintTransform(Matrix4 transform);
+
+  /// Transforms a point given in [ancestor]'s coordinate space into the local coordinate space.
   Vector2 sceneToLocal(Vector2 globalPosition, {SceneNode? ancestor});
+
+  /// Transforms a point given in local coordinate space into [ancestor]'s coordinate space.
   Vector2 localToScene(Vector2 localPosition, {SceneNode? ancestor});
 
-  bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene});
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Transient transformations
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Returns the transient transformation of this node. Transient transformations are temporary transformations that
+  /// are only applied to the node during the rendering phase.
+  ///
+  /// Returns `null` if there is no transient transformation applied to this node (same as an identity transformation).
+  TransientTransform? get transientTransform;
+  set transientTransform(TransientTransform? value);
+
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Hit testing
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Performs a hit test on this node and its children. Returns [true] if the hit test was successful.
+  ///
+  /// [globalToScene] is the transformation from the screen-space to the scene-space. This is used to adjust the
+  /// hit-test tolerance values for zero-size objects (e.g. vertices) based on the current zoom level of the scene.
+  bool hitTest(
+    SceneHitTestResult result,
+    Vector2 localPosition, {
+    Matrix4? globalToScene,
+    List<SceneNode> ignore = const [],
+  });
+
+  /// Returns [true] if this node is hit by the given [localPosition]. Called by [hitTest].
   bool hitTestSelf(Vector2 localPosition, {Matrix4? globalToScene});
 
+  /// Performs a rectangular hit test on this node and its children. Returns [true] if the hit test was successful.
+  ///
+  /// Rectangular hit testing is like a marquee selection. The [mode] parameter controls how to interpret total
+  /// containment vs partial overlap of the node's bounding box.
   bool hitTestRect(SceneHitTestResult result, Aabb2 localRect, {HitTestRectMode mode = .normal});
 
-  // --------------------
-  // Snapshotting
-  // --------------------
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Snapshotting
+  // @-----------------------------------------------------------------------------------------------------------------@
 
+  /// Creates a snapshot of this node. Snapshots are lightweight representations of the node's own state at a given
+  /// point in time.
   NodeSnapshot snapshot();
+
+  /// Applies a snapshot to this node. This is used to restore the node's state from a snapshot.
   void applySnapshot(covariant NodeSnapshot snapshot);
 
-  // --------------------
-  // Other stuff
-  // --------------------
-
-  void addLayoutListener(VoidCallback callback);
-  void removeLayoutListener(VoidCallback callback);
-  void addPaintListener(VoidCallback callback);
-  void removePaintListener(VoidCallback callback);
-
-  ReadonlySignal<SceneNode> call();
-
-  @override
-  String toString();
-}
-
-mixin SceneNodeImpl implements SceneNode {
-  // --------------------
-  // Parent/child mechanisms
-  // --------------------
-
-  @override
-  SceneNode? _parent;
-
-  @override
-  SceneNode? get parent => _parent;
-
-  @override
-  set parent(covariant SceneNode? value) {
-    if (_parent == value) return;
-
-    if (value == null) {
-      detach();
-    } else {
-      value._addChild(this);
-      _markNeedsLayout();
-    }
-  }
-
-  @override
-  void detach() {
-    _parent?._removeChild(this);
-  }
-
-  final _children = <SceneNode>[];
-
-  @override
-  List<SceneNode> get children => _children;
-
-  @override
-  void _addChild(SceneNode child) => _insertChild(_children.length, child);
-
-  void _insertChild(int index, SceneNode child) {
-    assert(!_children.contains(child) || child._parent == this, '$child is already a child of this node');
-
-    child.detach();
-    _children.insert(index, child);
-    child._parent = this;
-    if (_scene != null) child._attachToScene(_scene!);
-
-    child._markNeedsLayout();
-    _markNeedsLayout();
-  }
-
-  void _addChildren(Iterable<SceneNode> children) => _insertChildren(_children.length, children);
-
-  void _insertChildren(int index, Iterable<SceneNode> children) {
-    assert(children.every((child) => !_children.contains(child) || child._parent == this));
-
-    for (final child in children) child.detach();
-    _children.insertAll(index, children);
-
-    for (final child in children) {
-      child._parent = this;
-      if (_scene != null) child._attachToScene(_scene!);
-      child._markNeedsLayout();
-    }
-
-    _markNeedsLayout();
-  }
-
-  @override
-  SceneNode _removeChild(SceneNode child) {
-    assert(!_children.contains(child) || child._parent == this, '$child is not a child of this node');
-
-    _children.remove(child);
-    child._parent = null;
-    child._detachFromScene();
-
-    child._markNeedsLayout();
-    _markNeedsLayout();
-
-    return child;
-  }
-
-  List<SceneNode> _clearChildren() => _removeChildren(_children.toList());
-
-  List<SceneNode> _removeChildren(Iterable<SceneNode> children) {
-    final removed = <SceneNode>[];
-
-    for (final child in children) {
-      if (_children.contains(child)) {
-        _children.remove(child);
-        child._parent = null;
-        child._detachFromScene();
-
-        child._markNeedsLayout();
-        removed.add(child);
-      }
-    }
-
-    _markNeedsLayout();
-    return removed;
-  }
-
-  @override
-  SceneNode? get owner => _owner;
-  SceneNode? _owner;
-
-  @override
-  bool get isOwned => _owner != null;
-
-  // --------------------
-  // Initialization, scene attachment, layout
-  // --------------------
-
-  @override
-  @mustCallSuper
-  void _initialize() {
-    for (final child in _children) child._parent = this;
-  }
-
-  Scene? _scene;
-
-  @override
-  @mustCallSuper
-  void _attachToScene(Scene scene) {
-    scene._onNodeAttached(this);
-    _scene = scene;
-    for (final child in _children) child._attachToScene(scene);
-  }
-
-  @override
-  @mustCallSuper
-  void _detachFromScene() {
-    for (final child in _children) child._detachFromScene();
-    _scene!._onNodeDetached(this);
-    _scene = null;
-  }
-
-  @override
-  void _markNeedsLayout() {
-    _scene?._markNeedsLayout(this);
-  }
-
-  @override
-  void _markNeedsPaint() {
-    _scene?._markNeedsPaint(this);
-  }
-
-  ResolvedSize? _resolvedSize;
-
-  @override
-  ResolvedSize get resolvedSize => _resolvedSize!;
-
-  @override
-  void layout(LayoutConstraints constraints) {}
-
-  // --------------------
-  // Tree traversal
-  // --------------------
-
-  @override
-  void applyTransform(Matrix4 transform) {}
-
-  @override
-  Matrix4 getTransformTo(SceneNode? target) {
-    // Adapted from RenderObject.getTransformTo in Flutter
-    List<SceneNode>? fromPath;
-    List<SceneNode>? toPath;
-
-    SceneNode from = this;
-    SceneNode to = target ?? _scene!.root;
-
-    while (!identical(from, to)) {
-      final fromDepth = from.depth;
-      final toDepth = to.depth;
-
-      if (fromDepth >= toDepth) {
-        final fromParent = from.parent!;
-        fromPath ??= [this];
-        fromPath.add(fromParent);
-        from = fromParent;
-      }
-      if (fromDepth <= toDepth) {
-        final toParent = to.parent!;
-        toPath ??= [to];
-        toPath.add(toParent);
-        to = toParent;
-      }
-    }
-
-    Matrix4? fromTransform;
-    if (fromPath != null) {
-      fromTransform = .identity();
-      for (var i = fromPath.length - 1; i >= 0; i--) {
-        fromPath[i].applyTransform(fromTransform);
-      }
-    }
-    if (toPath == null) return fromTransform ?? .identity();
-
-    final toTransform = Matrix4.identity();
-    for (var i = toPath.length - 2; i >= 0; i--) {
-      toPath[i].applyTransform(toTransform);
-    }
-
-    if (toTransform.invert() == 0) return .zero();
-    return (fromTransform?..multiply(toTransform)) ?? toTransform;
-  }
-
-  @override
-  Vector2 sceneToLocal(Vector2 globalPosition, {SceneNode? ancestor}) {
-    final transform = getTransformTo(ancestor);
-    if (transform.invert() == 0.0) return .zero();
-    return transform.unproject2(globalPosition);
-  }
-
-  @override
-  Vector2 localToScene(Vector2 localPosition, {SceneNode? ancestor}) {
-    final transform = getTransformTo(ancestor);
-    return transform.transform2(localPosition);
-  }
-
-  @override
-  int get depth => (parent?.depth ?? -1) + 1;
-
-  @override
-  bool isAncestorOf(SceneNode node) {
-    SceneNode? current = node;
-
-    while (current != null) {
-      if (current == this) return true;
-      current = current.parent;
-    }
-
-    return false;
-  }
-
-  @override
-  bool isDescendantOf(SceneNode node) => node.isAncestorOf(this);
-
-  @override
-  bool isVirtualAncestorOf(SceneNode node) {
-    if (isAncestorOf(node)) return true;
-    if (node.isOwned) return isAncestorOf(node.owner!);
-    return false;
-  }
-
-  @override
-  bool isVirtualDescendantOf(SceneNode node) {
-    if (isDescendantOf(node)) return true;
-    if (isOwned) return node == owner! || node.isAncestorOf(owner!);
-    return false;
-  }
-
-  // --------------------
-  // Other stuff
-  // --------------------
-
-  @override
-  void addLayoutListener(VoidCallback callback) => _scene!._addObjectLayoutListener(id, callback);
-
-  @override
-  void removeLayoutListener(VoidCallback callback) => _scene?._removeObjectLayoutListener(id, callback);
-
-  @override
-  void addPaintListener(VoidCallback callback) => _scene!._addObjectPaintListener(id, callback);
-
-  @override
-  void removePaintListener(VoidCallback callback) => _scene?._removeObjectPaintListener(id, callback);
-
-  @override
-  ReadonlySignal<SceneNode> call() => _scene!._signalFor(this);
-
-  @override
-  String toString() => '$runtimeType[id: $id, depth: ${_scene != null ? depth : "detached"}]';
+  // @-----------------------------------------------------------------------------------------------------------------@
+  //    Other stuff
+  // @-----------------------------------------------------------------------------------------------------------------@
+
+  /// Returns a notifier that can be used to listen to changes in this node.
+  ChangeNotifier call([NodeUpdateAspect aspect = .all]);
 }

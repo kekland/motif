@@ -168,7 +168,7 @@ AppColors generateAppColors({
 
   final secondaryMixRatio = brightness == Brightness.light ? 0.08 : 0.24;
 
-  Color getSurfaceHoverColor(Color baseColor) => _mixColor(baseColor, scheme.surfaceTint, 0.08);
+  Color getSurfaceHoverColor(Color baseColor) => _mixColor(baseColor, scheme.surfaceTint, 0.048);
   Color getAccentHoverColor(Color baseColor) => _mixColor(baseColor, seedColor, 0.12);
 
   final isLight = brightness == Brightness.light;

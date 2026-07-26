@@ -9,3 +9,5 @@ export 'actions/actions.dart';
 export 'activity/activity.dart';
 export 'tool/tool.dart';
 export 'widgets/widgets.dart';
+
+export 'utils/scene_hooks.dart';

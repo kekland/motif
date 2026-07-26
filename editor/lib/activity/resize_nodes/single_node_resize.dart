@@ -10,7 +10,7 @@ mixin _SingleNodeResize on _BaseResizeNodesActivity {
     super.onStart(details);
 
     final node = this.node;
-    initialBbox = node.boundingBox;
+    initialBbox = node.bbox;
   }
 
   @override
@@ -24,7 +24,7 @@ mixin _SingleNodeResize on _BaseResizeNodesActivity {
     final transform = getResizeTransform(initialBbox, delta, isShiftPressed, isAltPressed);
 
     node.applySnapshot(initialSnapshots.first);
-    node.transformWith(transform);
+    node.applyTransform(transform);
     super.onUpdate(details);
   }
 }

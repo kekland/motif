@@ -19,16 +19,22 @@ mixin MultiChildSceneObject on SceneObject {
   List<SceneNode> clearChildren() => _clearChildren();
   List<SceneNode> removeChildren(Iterable<SceneNode> children) => _removeChildren(children);
 
-  @override
-  bool hitTestChildren(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) {
-    return _hitTestChildren(result, this, _children, localPosition, globalToScene: globalToScene);
-  }
+  bool controlsChildTransform(SceneObject child) => false;
 
   @override
-  void layout(LayoutConstraints constraints) {
-    super.layout(constraints);
-    for (final child in _children) {
-      child.layout(constraints);
-    }
+  bool hitTestChildren(
+    SceneHitTestResult result,
+    Vector2 localPosition, {
+    Matrix4? globalToScene,
+    List<SceneNode> ignore = const [],
+  }) {
+    return _hitTestChildren(
+      result,
+      this,
+      _children,
+      localPosition,
+      globalToScene: globalToScene,
+      ignore: ignore,
+    );
   }
 }

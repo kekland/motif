@@ -17,7 +17,7 @@ bool _objectHitTestRect(
   Aabb2 rect, {
   HitTestRectMode mode = .normal,
 }) {
-  final boundingBox = object.resolvedSize.boundingBox;
+  final boundingBox = object.bbox;
   if (!boundingBox.intersectsWithAabb2(rect)) return false;
 
   final isLeaf = object.isLeaf;
@@ -29,7 +29,8 @@ bool _objectHitTestRect(
   }
 
   if (isContained) return _addSelf();
-  if (isLeaf && mode != .contain) return _addSelf();
+  // if (mode == .contain) return false;
+  if (isLeaf) return _addSelf();
   if (!isLeaf && mode == .intersect) return _addSelf();
   return _objectHitTestRectChildren(result, object, rect, mode: mode);
 }

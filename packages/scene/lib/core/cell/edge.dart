@@ -58,14 +58,14 @@ final class Edge extends Cell {
 
   @override
   void _detachFromScene() {
-    _scene?._removeStar(_startId, this);
-    _scene?._removeStar(_endId, this);
+    // _scene?._removeStar(_startId, this);
+    // _scene?._removeStar(_endId, this);
     super._detachFromScene();
   }
 
   @override
-  void transformWith(Matrix4 transform) {
-    path.transformWith(transform);
+  void applyTransform(Matrix4 transform) {
+    path.applyTransform(transform);
   }
 
   @override
@@ -74,22 +74,19 @@ final class Edge extends Cell {
   }
 
   @override
-  void layout(LayoutConstraints constraints) {
-    path.first.p = start.position;
-    path.last.p = end.position;
-    path.layout();
+  void performLayout(LayoutConstraints constraints) {
+    final startPosition = start.getTransformTo(this).transform2(start.position);
+    final endPosition = end.getTransformTo(this).transform2(end.position);
 
-    _resolvedSize = .new(path.bboxTight.width, path.bboxTight.height);
+    path.first.p = startPosition;
+    path.last.p = endPosition;
+
+    path.layout();
   }
 
   @override
-  Aabb2 get boundingBox => bboxTight;
-
-  Aabb2 get bbox => path.bbox;
+  Aabb2 get bbox => bboxTight;
   Aabb2 get bboxTight => path.bboxTight;
-
-  @override
-  ReadonlySignal<Edge> call() => _scene!._signalFor(this);
 
   @override
   List<SceneHitTestEntry> _hitTestCell(Vector2 localPosition, {Matrix4? globalToScene}) {
@@ -113,6 +110,9 @@ final class Edge extends Cell {
     endId = snapshot.endId;
     path.applySnapshot(snapshot.path);
   }
+
+  @override
+  NodeType get type => .edge;
 }
 
 class EdgeSnapshot extends NodeSnapshot {

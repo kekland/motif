@@ -1,5 +1,4 @@
 import 'package:blueprint/blueprint.dart';
-import 'package:flutter/rendering.dart';
 import 'package:ui/ui.dart';
 
 part 'transient_connection.dart';

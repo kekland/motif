@@ -1,6 +1,7 @@
 part of 'core.dart';
 
-sealed class Cell extends SceneNode with SceneNodeImpl {
+/// Cell is a topological unit represented in the scene graph.
+sealed class Cell extends SceneNode with SceneNodeBase {
   Cell({NodeId? id}) : id = id ?? .generate();
 
   @override
@@ -10,9 +11,6 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   factory Cell.vertex(Vector2 position, {NodeId id}) = Vertex;
   factory Cell.edge(Vertex start, Vertex end, {NodeId id, EdgePath path}) = Edge;
   // dart format on
-
-  @override
-  MultiChildSceneObject? get parent => super.parent as MultiChildSceneObject?;
 
   int get degree => _star.length;
   late final star = UnmodifiableSetView<Cell>(_star);
@@ -24,12 +22,9 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   void setFrom(covariant Cell other);
 
   @override
-  void applyTransform(Matrix4 transform) {}
-
-  @override
-  void _markNeedsLayout() {
-    super._markNeedsLayout();
-    for (final cell in _star) cell._markNeedsLayout();
+  void _markNeedsLayout([NodeUpdateAspect? aspect]) {
+    super._markNeedsLayout(aspect);
+    for (final cell in _star) cell._markNeedsLayout(aspect);
   }
 
   @override
@@ -39,7 +34,19 @@ sealed class Cell extends SceneNode with SceneNodeImpl {
   List<SceneHitTestEntry> _hitTestRectCell(Aabb2 localRect, {HitTestRectMode mode = .normal}) => [];
 
   @override
-  bool hitTest(SceneHitTestResult result, Vector2 localPosition, {Matrix4? globalToScene}) {
+  void layout(LayoutConstraints constraints) {
+    super.layout(constraints);
+    for (final cell in _star) cell.performLayout(constraints);
+  }
+
+  @override
+  bool hitTest(
+    SceneHitTestResult result,
+    Vector2 localPosition, {
+    Matrix4? globalToScene,
+    List<SceneNode> ignore = const [],
+  }) {
+    if (ignore.contains(this)) return false;
     final entries = _hitTestCell(localPosition, globalToScene: globalToScene);
     if (entries.isNotEmpty) {
       for (final e in entries) result.add(e);

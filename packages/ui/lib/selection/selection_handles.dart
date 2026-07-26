@@ -1,18 +1,27 @@
 part of 'selection.dart';
 
 class SelectionMoveHandle extends HookWidget {
-  const SelectionMoveHandle({super.key, this.onMove});
+  const SelectionMoveHandle({
+    super.key,
+    this.onMove,
+    this.onTapUp,
+  });
 
   final DragActivityFactory? onMove;
+  final GestureTapUpCallback? onTapUp;
 
   @override
   Widget build(BuildContext context) {
     if (onMove == null) return const SizedBox.expand();
 
-    return DragActivityDetector(
-      behavior: .translucent,
-      activityFactory: onMove!,
-      child: SizedBox.expand(),
+    return GestureDetector(
+      behavior: .opaque,
+      onTapUp: onTapUp,
+      child: DragActivityDetector(
+        behavior: .opaque,
+        activityFactory: onMove!,
+        child: SizedBox.expand(),
+      ),
     );
   }
 }

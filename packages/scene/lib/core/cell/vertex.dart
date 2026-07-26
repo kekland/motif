@@ -12,7 +12,7 @@ final class Vertex extends Cell {
   }
 
   @override
-  void transformWith(Matrix4 transform) {
+  void applyTransform(Matrix4 transform) {
     position = transform.transform2(position);
   }
 
@@ -22,13 +22,7 @@ final class Vertex extends Cell {
   }
 
   @override
-  Aabb2 get boundingBox => .minMax(position, position);
-
-  @override
-  ResolvedSize get resolvedSize => .zero;
-
-  @override
-  ReadonlySignal<Vertex> call() => _scene!._signalFor(this);
+  Aabb2 get bbox => .minMax(position, position);
 
   @override
   List<SceneHitTestEntry> _hitTestCell(Vector2 localPosition, {Matrix4? globalToScene}) {
@@ -47,6 +41,9 @@ final class Vertex extends Cell {
   void applySnapshot(covariant VertexSnapshot snapshot) {
     position = snapshot.position.clone();
   }
+
+  @override
+  NodeType get type => .vertex;
 }
 
 class VertexSnapshot extends NodeSnapshot {

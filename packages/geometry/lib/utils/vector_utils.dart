@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:geometry/geometry.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 double perpendicularDistance(Vector2 p, Vector2 a, Vector2 b) {
   final d = b - a;
@@ -26,6 +25,11 @@ extension Aabb2Utils on Aabb2 {
   Vector2 get bottomLeft => Vector2(min.x, max.y);
   Vector2 get bottomRight => max;
 
+  double get left => min.x;
+  double get top => min.y;
+  double get right => max.x;
+  double get bottom => max.y;
+
   double distanceTo(Vector2 p) {
     final dx = math.max(0.0, math.max(min.x - p.x, p.x - max.x));
     final dy = math.max(0.0, math.max(min.y - p.y, p.y - max.y));
@@ -42,6 +46,26 @@ extension Aabb2Utils on Aabb2 {
   Aabb2 inflate(double amount) {
     final inflated = Aabb2.minMax(min - Vector2.all(amount), max + Vector2.all(amount));
     return inflated;
+  }
+}
+
+extension Aabb2IterableUtils on Iterable<Aabb2> {
+  Aabb2 get bbox {
+    if (isEmpty) return .minMax(.zero(), .zero());
+
+    var minX = double.infinity;
+    var minY = double.infinity;
+    var maxX = double.negativeInfinity;
+    var maxY = double.negativeInfinity;
+
+    for (final aabb in this) {
+      minX = math.min(minX, aabb.min.x);
+      minY = math.min(minY, aabb.min.y);
+      maxX = math.max(maxX, aabb.max.x);
+      maxY = math.max(maxY, aabb.max.y);
+    }
+
+    return .minMax(.new(minX, minY), .new(maxX, maxY));
   }
 }
 

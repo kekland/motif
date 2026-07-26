@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:stack_window_manager/stack_window_manager.dart' as wm;
 import 'package:ui/ui.dart';
 

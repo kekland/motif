@@ -10,6 +10,7 @@ class SelectionControls extends StatelessWidget {
     this.onEdgeResize,
     this.onCornerResize,
     this.onRotate,
+    this.onTapUp,
     this.childSize,
     this.padding = 0.0,
     this.transform,
@@ -22,6 +23,7 @@ class SelectionControls extends StatelessWidget {
   final DragActivity Function(Edge)? onEdgeResize;
   final DragActivity Function(Corner)? onCornerResize;
   final DragActivity Function(Corner)? onRotate;
+  final GestureTapUpCallback? onTapUp;
   final Size? childSize;
   final double padding;
   final Widget? trailing;
@@ -131,6 +133,7 @@ class SelectionControls extends StatelessWidget {
       top: padding,
       bottom: padding,
       child: SelectionMoveHandle(
+        onTapUp: onTapUp,
         onMove: onMove != null ? (_) => onMove!() : null,
       ),
     );

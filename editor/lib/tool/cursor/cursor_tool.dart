@@ -26,6 +26,17 @@ class _CursorToolOverlay extends HookWidget {
     final shouldUpdateSelectionOnUp = useRef(true);
     final selection = useListenable(editor.selection);
 
+    void onTapUp(TapUpDetails details) {
+      if (!shouldUpdateSelectionOnUp.value) return;
+
+      final target = editor.hitTestScene(details.globalPosition.vec2).node.node;
+      if (target is RootObject) {
+        context.invoke(intents.clearSelection());
+      } else {
+        context.invoke(intents.selectNode(target));
+      }
+    }
+
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: switch (hoveredNode.value) {
@@ -34,61 +45,55 @@ class _CursorToolOverlay extends HookWidget {
         // RootObject() => Cursors.toolMarquee,
         _ => Cursors.toolCursor,
       },
-      child: Listener(
-        behavior: .translucent,
-        onPointerHover: (e) {
-          final result = editor.hitTestScene(e.position.vec2);
-          hoveredNode.value = result.node.node;
-        },
-        child: DragActivityDetector(
-          behavior: .translucent,
-          activityFactory: (e) {
-            shouldUpdateSelectionOnUp.value = true;
-            final target = editor.hitTestScene(e.position.vec2).node.node;
-
-            if (target is RootObject) {
-              context.invoke(intents.clearSelection());
-            } else {
-              context.invoke(intents.selectNode(target));
-            }
-
-            if (selection.nodes.isNotEmpty) {
-              return MoveNodesActivity(
-                editor,
-                nodes: selection.nodes.toList(),
-                onStart: () => shouldUpdateSelectionOnUp.value = false,
-              );
-            } else {
-              return SelectRectActivity(
-                editor: editor,
-                onRectChanged: (v) => marqueeRect.value = v,
-              );
-            }
-          },
-          child: GestureDetector(
+      child: Stack(
+        children: [
+          Listener(
             behavior: .translucent,
-            onTapUp: (details) {
-              if (!shouldUpdateSelectionOnUp.value) return;
-
-              final target = editor.hitTestScene(details.globalPosition.vec2).node.node;
-              if (target is RootObject) {
-                context.invoke(intents.clearSelection());
-              } else {
-                context.invoke(intents.selectNode(target));
-              }
+            onPointerHover: (e) {
+              final result = editor.hitTestScene(e.position.vec2);
+              hoveredNode.value = result.node.node;
             },
-            child: Stack(
-              children: [
-                SelectRectOverlay(rect: marqueeRect.value?.$1, mode: marqueeRect.value?.$2),
-                ObjectSelectionOverlay(
-                  editor: editor,
-                  selectionGroups: selection.selectionGroups,
-                  childPaintTransform: info.childPaintTransform,
-                ),
-              ],
+            child: DragActivityDetector(
+              behavior: .translucent,
+              activityFactory: (e) {
+                if (e is PointerDownEvent) {
+                  shouldUpdateSelectionOnUp.value = true;
+                  final target = editor.hitTestScene(e.position.vec2).node.node;
+
+                  if (target is RootObject) {
+                    context.invoke(intents.clearSelection());
+                  } else {
+                    context.invoke(intents.selectNode(target));
+                  }
+                }
+
+                if (selection.nodes.isNotEmpty) {
+                  return MoveNodesActivity(
+                    editor,
+                    nodes: selection.nodes.toList(),
+                    // onStart: () => shouldUpdateSelectionOnUp.value = false,
+                  );
+                } else {
+                  return SelectRectActivity(
+                    editor: editor,
+                    onRectChanged: (v) => marqueeRect.value = v,
+                  );
+                }
+              },
+              child: GestureDetector(
+                behavior: .translucent,
+                onTapUp: onTapUp,
+              ),
             ),
           ),
-        ),
+          SelectRectOverlay(rect: marqueeRect.value?.$1, mode: marqueeRect.value?.$2),
+          ObjectSelectionOverlay(
+            editor: editor,
+            selectionGroups: selection.selectionGroups,
+            childPaintTransform: info.childPaintTransform,
+            onTapUp: onTapUp,
+          ),
+        ],
       ),
     );
   }

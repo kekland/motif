@@ -15,11 +15,13 @@ List<SceneHitTestEntry> _hitTestCells(
   List<Cell> cells,
   Vector2 localPosition, {
   Matrix4? globalToScene,
+  List<SceneNode> ignore = const [],
 }) {
   final indexed = <(SceneHitTestEntry, int)>[];
   var depth = 0;
 
   for (final c in cells.reversed) {
+    if (ignore.contains(c)) continue;
     final entries = switch (c) {
       Vertex v => _hitTestVertex(v, localPosition, globalToScene: globalToScene),
       Edge e => _hitTestEdge(e, localPosition, globalToScene: globalToScene),

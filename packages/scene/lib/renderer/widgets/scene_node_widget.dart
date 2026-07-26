@@ -1,19 +1,13 @@
 part of 'widgets.dart';
 
-class SceneNodeWidget extends StatelessWidget {
-  const SceneNodeWidget({super.key, required this.node});
-  const SceneNodeWidget.from(SceneNode node, {Key? key}) : this(node: node, key: key);
+Widget sceneNodeWidget(BuildContext context, SceneNode node) {
+  final key = ObjectKey(node);
 
-  final SceneNode node;
+  return switch (node) {
+    ContainerObject o => ContainerObjectWidget(key: key, object: o),
+    RectangleObject o => RectangleObjectWidget(key: key, object: o),
 
-  @override
-  Widget build(BuildContext context) {
-    return switch (node) {
-      ContainerObject o => ContainerObjectWidget(key: ValueKey(o), object: o),
-      RectangleObject o => RectangleObjectWidget(key: ValueKey(o), object: o),
-
-      Cell c => RenderCellWidget(key: ValueKey(c), cell: c),
-      _ => throw UnimplementedError(),
-    };
-  }
+    Cell c => RenderCellWidget(key: key, cell: c),
+    _ => throw UnimplementedError(),
+  };
 }

@@ -44,8 +44,22 @@ class RenderSceneObject extends RenderSceneNode<SceneObject> {
 
   @override
   void performLayout() {
-    size = .new(object.resolvedSize.width, object.resolvedSize.height);
-    child!.layout(constraints);
-    _sortChildrenList();
+    size = .new(object.bbox.width, object.bbox.height);
+    child!.layout(BoxConstraints.tight(size));
+    _maybeSortChildrenList();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final transform = Matrix4.identity();
+    applyPaintTransform(this, transform);
+
+    layer = context.pushTransform(
+      child!.needsCompositing,
+      offset,
+      transform,
+      (context, offset) => context.paintChild(child!, offset),
+      oldLayer: layer as TransformLayer?,
+    );
   }
 }

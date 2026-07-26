@@ -12,7 +12,7 @@ class CellIntersection extends Intersection {
 }
 
 List<CellIntersection> _intersectCellsWithGeometry(
-  List<Cell> cells,
+  Iterable<Cell> cells,
   Aabb2 bbox,
   List<Intersection> Function(CubicSpline2 spline) intersectFunction,
 ) {
@@ -29,19 +29,19 @@ List<CellIntersection> _intersectCellsWithGeometry(
   return result;
 }
 
-List<CellIntersection> _intersectCellsWithCubic(List<Cell> cells, Cubic2 cubic) => _intersectCellsWithGeometry(
+List<CellIntersection> _intersectCellsWithCubic(Iterable<Cell> cells, Cubic2 cubic) => _intersectCellsWithGeometry(
   cells,
   cubic.bbox,
   (spline) => spline.intersectWithCubic(cubic),
 );
 
-List<CellIntersection> _intersectCellsWithSpline(List<Cell> cells, CubicSpline2 spline) => _intersectCellsWithGeometry(
+List<CellIntersection> _intersectCellsWithSpline(Iterable<Cell> cells, CubicSpline2 spline) => _intersectCellsWithGeometry(
   cells,
   spline.bbox,
   (spline) => spline.intersectWith(spline),
 );
 
-extension MultiChildSceneObjectIntersections on List<Cell> {
+extension MultiChildSceneObjectIntersections on Iterable<Cell> {
   List<CellIntersection> intersectionsWithCubic(Cubic2 cubic) => _intersectCellsWithCubic(this, cubic);
   List<CellIntersection> intersectionsWithSpline(CubicSpline2 spline) => _intersectCellsWithSpline(this, spline);
 }

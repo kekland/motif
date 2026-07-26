@@ -1,6 +1,6 @@
 part of 'widgets.dart';
 
-class SceneObjectBuilder extends StatelessWidget {
+class SceneObjectBuilder extends HookWidget {
   const SceneObjectBuilder({
     super.key,
     required this.object,
@@ -8,18 +8,18 @@ class SceneObjectBuilder extends StatelessWidget {
   });
 
   final SceneObject object;
-  final WidgetBuilder? builder;
+  final Widget Function(BuildContext context, Widget? child)? builder;
 
   @override
   Widget build(BuildContext context) {
-    final builder = this.builder;
+    useListenable(object(.paint));
 
-    return RenderSceneObjectLayoutTransformWidget(
+    final builder = this.builder;
+    final child = SceneObjectChildrenWidget(object: object);
+
+    return RenderSceneObjectWidget(
       object: object,
-      child: RenderSceneObjectWidget(
-        object: object,
-        child: builder != null ? HookBuilder(builder: builder) : null,
-      ),
+      child: builder?.call(context, child),
     );
   }
 }
