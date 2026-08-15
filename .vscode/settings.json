@@ -18,14 +18,14 @@
     "**/pubspec.lock": true,
     "build": true,
     "**/__pycache__": true,
-    "**/.flutter-plugins-dependencies": true,
+    "**/.flutter-plugins-dependencies": true
   },
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
     "**/*.code-search": true,
     "**/.dart_tool": true,
-    "packages/skia/build/skia": true,
+    "packages/skia/build/skia": true
   },
   "files.watcherExclude": {
     ".git/objects/**": true,
@@ -35,7 +35,7 @@
     "*/.git/subtree-cache/**": true,
     "*/.hg/store/**": true,
     "**/.dart_tool": true,
-    "packages/skia/build/skia": true,
+    "packages/skia/build/skia": true
   },
   "dart.flutterSdkPath": ".fvm/versions/master",
   "editor.rulers": [
