@@ -1,0 +1,116 @@
+part of '../scene.dart';
+
+final class TransformSession {
+  TransformSession._(
+    this.scene,
+    this.router,
+    this.cells,
+    this.refs,
+    this.spaceToWorld,
+    this.worldToSpace,
+    this.initialHull,
+  );
+
+  final Scene scene;
+  final TransformRouter router;
+
+  final List<CellKey> cells;
+  final List<Ref> refs;
+
+  final Mat4 spaceToWorld;
+  final Mat4 worldToSpace;
+  final Aabb2 initialHull;
+
+  factory TransformSession.statement(Scene scene, StatementId id) {
+    final statement = scene.program.byId(id)!;
+    final first = statement.products.first;
+    final key = scene.keyOf(first);
+    return .of(scene, [key]);
+  }
+
+  factory TransformSession.of(Scene scene, Iterable<CellKey> cells) {
+    final refs = cells.map((c) => scene.refOf(c)!).toList();
+    final router = scene.resolveTransformRouter(refs);
+
+    final absorbers = router.absorbers.keys;
+
+    late final Mat4 spaceToWorld;
+    late final Mat4 worldToSpace;
+    late final Aabb2 initialHull;
+
+    if (absorbers.length == 1) {
+      final absorber = router.absorbers.values.single;
+      final handle = absorber.handle;
+      spaceToWorld = absorber.localToWorld;
+      worldToSpace = absorber.worldToLocal;
+      initialHull = scene.bundle.query.cellBbox(handle);
+    } else {
+      final hull = Aabb2.invertedInfinity();
+      for (final id in absorbers) {
+        final absorber = router.absorbers[id]!;
+        final handle = absorber.handle;
+        final bbox = scene.bundle.query.cellBboxWorld(handle);
+        hull.hull(bbox);
+      }
+
+      spaceToWorld = Mat4.identity();
+      worldToSpace = Mat4.identity();
+      initialHull = hull;
+    }
+
+    return ._(scene, router, cells.toList(), refs, spaceToWorld, worldToSpace, initialHull);
+  }
+
+  Vec2 get worldPivot => spaceToWorld.transform2(initialHull.center);
+  Iterable<StatementId> get absorbers => router.absorbers.keys;
+  Set<Ref> get locked => router.locked;
+  bool get isEmpty => router.isEmpty;
+
+  void apply(Mat4 transform) {
+    final result = router.transform(transform);
+    scene.edit((txn) {
+      for (final entry in result.entries) txn.replace(entry.key, [entry.value]);
+    });
+  }
+
+  void translateBy(Vec2 delta) => apply(Mat4.translation2(delta));
+  void rotateBy(double deltaRad, {Vec2? pivot}) {
+    final anchor = pivot ?? worldPivot;
+    final transform = Mat4.identity()
+      ..translate2(anchor)
+      ..rotateZ(deltaRad)
+      ..translate2(-anchor);
+
+    apply(transform);
+  }
+
+  TransformAbsorber get _single {
+    assert(absorbers.length == 1, 'field edits must have only a single absorber');
+    return router.absorbers.values.single;
+  }
+
+  Vec2 get fieldPivot {
+    final absorber = _single;
+    return (absorber.worldToLocal * absorber.spaceToWorld).transform2(initialHull.center);
+  }
+
+  void setTranslation(Vec2 translation) {
+    assert(absorbers.length == 1, 'translation can only be set when there is a single absorber');
+    final statement = scene.program.byId(absorbers.single)!;
+    if (statement is! FrameStatement) return;
+
+    final transform = statement.transform;
+    final current = transform.translation2;
+    translateBy(translation - current);
+  }
+
+  void setRotation(double rotationRad, {Vec2? pivot}) {
+    assert(absorbers.length == 1, 'rotation can only be set when there is a single absorber');
+    final statement = scene.program.byId(absorbers.single)!;
+    if (statement is! FrameStatement) return;
+
+    final transform = statement.transform;
+    final current = transform.rotationZ;
+    rotateBy(rotationRad - current, pivot: pivot);
+  }
+}

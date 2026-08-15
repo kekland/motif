@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "app",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--enable-impeller",
+      ]
+    },
+    {
+      "name": "app (wasm)",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      // "flutterMode": "release",
+      "toolArgs": [
+        "--wasm",
+      ],
+    },
+    {
+      "name": "app (profile)",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "toolArgs": [
+        "--enable-impeller",
+      ]
+    },
+    {
+      "name": "app (release)",
+      "program": "app/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "server",
+      "program": "server/lib/main.dart",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}

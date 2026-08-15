@@ -1,0 +1,14 @@
+name: stack_assets
+description: Generator for platform and variant-aware assets.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  vector_graphics_compiler: ^1.2.0

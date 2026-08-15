@@ -1,0 +1,29 @@
+name: native
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  state:
+  objective_c: ^9.3.0
+  ffi: ^2.2.0
+
+dev_dependencies: 
+  ffigen: ^20.1.1
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: NativePluginIos
+        sharedDarwinSource: true
+        ffiPlugin: true
+      macos:
+        pluginClass: NativePluginMacos
+        sharedDarwinSource: true
+        ffiPlugin: true

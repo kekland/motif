@@ -1,0 +1,12 @@
+name: server
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  grpc: ^5.1.0
+
+  schema:
+  log:

@@ -1,0 +1,20 @@
+name: editor
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  state:
+  mouse_cursor:
+
+  geometry:
+  kernel:
+  scene:
+  renderer:
+  ui:
+  tool:

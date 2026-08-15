@@ -1,0 +1,7 @@
+message Hello {
+  required string greeting = 1;
+}
+
+service HelloService {
+  rpc SayHello (Hello) returns (Hello);
+}
