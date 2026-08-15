@@ -1,6 +1,4 @@
 import 'package:ui/ui.dart';
-import 'package:state/state.dart';
-
 export 'tool_shortcuts.dart';
 
 abstract class Tool {

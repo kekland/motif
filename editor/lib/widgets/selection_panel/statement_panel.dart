@@ -14,7 +14,7 @@ class const StatementPanel({
   @override
   Widget build(BuildContext context) {
     final statement = context.editor.statement(id);
-    print(statement);
+    // print(statement);
 
     return switch (statement) {
       ContainerStatement _ => ContainerPanel(id: id),
