@@ -7,8 +7,10 @@ analyzer:
     unused_element_parameter: ignore
 
   exclude:
+    - packages/skia/build/**
+    - packages/dawn/build/**
+    - packages/ink_stroke_modeler/build/**
     - __archive__/**
-    - vendor/stack_assets/lib/src/templates/base_icon.dart
 
 formatter:
   page_width: 120

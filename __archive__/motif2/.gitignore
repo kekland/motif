@@ -1,0 +1,10 @@
+**/.DS_Store
+
+.fvm/
+
+**/.flutter-plugins-dependencies
+**/.dart_tool/
+**/build
+**/.idea
+**/__pycache__
+**/.build
