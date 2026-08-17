@@ -51,15 +51,23 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
       endVertex = editor.edit((txn) => txn.insert(VertexStatement(end!))).vertex;
     }
 
+    final startHandle = editor.handleOf(startVertex);
+    final endHandle = editor.handleOf(endVertex);
+
     final parentHandle = editor.bundle.lca(startHandle, editor.handleOf(endVertex));
     final parentKey = editor.bundle.frameKey(parentHandle)!;
     final transform = editor.bundle.frameTransformWorld(parentHandle);
     final transformedCubic = cubic.transformed(transform);
 
+    final startTransform = editor.bundle.cellWorldTransform(startHandle);
+    final endTransform = editor.bundle.cellWorldTransform(endHandle);
+
     final statement = EdgeStatement(
       startVertex,
       endVertex,
       parent: editor.refOf(parentKey),
+      startTangent: startTransform.transformDelta2(transformedCubic.p1 - transformedCubic.p0),
+      endTangent: endTransform.transformDelta2(transformedCubic.p2 - transformedCubic.p3),
     );
 
     editor.edit((txn) => txn.insert(statement));
@@ -104,13 +112,15 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     remove(edge);
 
     if (startNewEdge && newEdges.isNotEmpty) {
-      final last = newEdges.last;
-      final lastHandle = editor.handleOf(last);
-      final endHandle = editor.bundle.edgeEnd(lastHandle);
+      final edge = newEdges.last;
+      final edgeHandle = editor.handleOf(edge);
+      final endHandle = editor.bundle.edgeEnd(edgeHandle);
       final end = editor.refOf(editor.bundle.vertexKey(endHandle))!;
-      // final lastKnot = last.last;
-      // final cStart = lastKnot.cIn.pointReflect(last.end.position);
-      return create(end);
+      final endPosition = editor.bundle.vertexPositionWorld(endHandle);
+      final endTangent = editor.bundle.edgeEndTangentWorld(edgeHandle);
+      final cStart = endPosition - endTangent;
+
+      return create(end, cStart: cStart);
     }
 
     return null;

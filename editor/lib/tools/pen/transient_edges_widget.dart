@@ -36,7 +36,8 @@ class _TransientEdgeWidget extends HookWidget {
       painter: _TransientEdgePainter(
         edge: edge,
         transform: transform,
-        color: context.colors.accent.primary,
+        primaryColor: context.colors.accent.primary,
+        secondaryColor: context.colors.accent.secondary,
       ),
     );
   }
@@ -46,30 +47,44 @@ class _TransientEdgePainter extends CustomPainter {
   _TransientEdgePainter({
     required this.edge,
     required this.transform,
-    required this.color,
+    required this.primaryColor,
+    required this.secondaryColor,
   });
 
   final TransientEdge edge;
   final Matrix4 transform;
-  final Color color;
+  final Color primaryColor;
+  final Color secondaryColor;
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Draw control points
+    final paintControlPoint = Paint()
+      ..color = secondaryColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    final cubic = edge.cubic.transformed(.fromListFloat64(transform.storage));
+    canvas.drawLine(cubic.p0.offset, cubic.p1.offset, paintControlPoint);
+
     if (edge.end == null) return;
 
     final paint = Paint()
-      ..color = color
+      ..color = primaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
     final path = Path();
-    final cubic = edge.cubic;
 
     path.moveTo(cubic.p0.x, cubic.p0.y);
     path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y);
-    canvas.drawPath(path.transform(transform.storage), paint);
+    canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(_TransientEdgePainter oldDelegate) => oldDelegate.edge != edge;
+  bool shouldRepaint(_TransientEdgePainter oldDelegate) =>
+      oldDelegate.edge != edge ||
+      oldDelegate.primaryColor != primaryColor ||
+      oldDelegate.secondaryColor != secondaryColor ||
+      oldDelegate.transform != transform;
 }

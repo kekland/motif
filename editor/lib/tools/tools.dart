@@ -15,3 +15,12 @@ const toolset = <Tool>[
   ContainerTool(),
   RectangleTool(),
 ];
+
+const tools = (
+  cursor: CursorTool(),
+  marquee: MarqueeTool(),
+  pen: PenTool(),
+  fill: FillTool(),
+  container: ContainerTool(),
+  rectangle: RectangleTool(),
+);

@@ -36,7 +36,7 @@ class ToolbarTemplate extends StatelessWidget {
               onTap: onToolSelected != null ? () => onToolSelected!(tool) : null,
               child: tool.buildIcon(context),
             ),
-            divider,
+            // divider,
           ],
         );
       },
@@ -58,10 +58,14 @@ class ToolbarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ToggleableButton(
-      onChanged: (v) => onTap?.call(),
-      isActive: isActive,
-      child: child,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ToggleableButton(
+        onChanged: (v) => onTap?.call(),
+        isActive: isActive,
+        borderRadius: .circular(4.0),
+        child: child,
+      ),
     );
   }
 }

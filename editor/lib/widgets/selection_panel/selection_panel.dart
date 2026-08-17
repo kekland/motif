@@ -15,6 +15,7 @@ class SelectionPanel extends HookWidget {
     useListenable(selection);
 
     final selectedCells = selection.cells;
+    final selectedStatements = selection.statements;
 
     if (selection.isEmpty) {
       return SingleChildScrollView(
@@ -40,12 +41,22 @@ class SelectionPanel extends HookWidget {
       );
     }
 
-    return Column(
-      children: [
-        Text(
-          'Selected Cells: ${selectedCells.toList()}',
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (selectedCells.length == 1)
+            CellPanel(cellKey: selectedCells.first)
+          else
+            Text('Selected Cells: ${selectedCells.toList()}'),
+
+          Divider(),
+
+          if (selectedStatements.length == 1)
+            StatementPanel(id: selectedStatements.first)
+          else
+            Text('Selected Statements: ${selectedStatements.toList()}'),
+        ],
+      ),
     );
   }
 }

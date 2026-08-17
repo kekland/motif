@@ -54,6 +54,8 @@ message EdgeStatement {
   optional Ref parent = 2;
   required Ref start = 3;
   required Ref end = 4;
+  optional Vec2 startTangent = 5;
+  optional Vec2 endTangent = 6;
 }
 
 message FaceStatement {

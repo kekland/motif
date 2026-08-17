@@ -46,7 +46,6 @@ class CreateContainerActivity extends DragActivity {
     final newRectangle = container.copyWith(
       transform: .translation2(aabb.min),
       size: .fixed(aabb.width, aabb.height),
-      shape: .circular(32.0),
     );
 
     editor.edit((txn) => txn.replace(container.id, [newRectangle]));

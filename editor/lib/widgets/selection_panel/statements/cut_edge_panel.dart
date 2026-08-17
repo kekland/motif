@@ -11,7 +11,6 @@ class const CutEdgePanel({
 
     return StatementPanelBase(
       id: id,
-      children: [],
     );
   }
 }

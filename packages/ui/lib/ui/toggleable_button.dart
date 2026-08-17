@@ -6,12 +6,14 @@ class ToggleableButton extends StatelessWidget {
     required this.child,
     this.isActive = false,
     this.onChanged,
+    this.borderRadius,
     this.iconSize = 24.0,
   });
 
   final bool isActive;
   final ValueChanged<bool>? onChanged;
   final double iconSize;
+  final BorderRadius? borderRadius;
   final Widget child;
 
   @override
@@ -21,6 +23,7 @@ class ToggleableButton extends StatelessWidget {
       child: GestureSurface(
         onTap: onChanged != null ? () => onChanged?.call(!isActive) : null,
         color: isActive ? context.colors.accent.secondary : null,
+        borderRadius: borderRadius,
         state: {if (isActive) .selected},
         child: Center(
           child: DefaultForegroundStyle(

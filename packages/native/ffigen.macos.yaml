@@ -67,3 +67,7 @@ objc-interfaces:
 objc-protocols:
   include:
     - NSHapticFeedbackPerformer
+
+objc-categories:
+  rename:
+    'Deprecated': 'NSImageDeprecated'

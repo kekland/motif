@@ -4,6 +4,8 @@ final class EdgeStatement extends PlacedStatement {
   EdgeStatement(
     VertexRef start,
     VertexRef end, {
+    this.startTangent,
+    this.endTangent,
     super.parent,
     super.id,
   }) : start = start.borrow(),
@@ -11,6 +13,8 @@ final class EdgeStatement extends PlacedStatement {
 
   final Arg<VertexRef> start;
   final Arg<VertexRef> end;
+  final Vec2? startTangent;
+  final Vec2? endTangent;
 
   @override
   late final _args = [start, end, ?parent];
@@ -26,7 +30,15 @@ final class EdgeStatement extends PlacedStatement {
     final end = context.resolve(this.end);
     final parent = context.resolveOptional(this.parent);
 
-    final handle = context.transaction.addEdge(cellId('e'), start, end, parent: parent);
+    final handle = context.transaction.addEdge(
+      cellId('e'),
+      start,
+      end,
+      parent: parent,
+      startTangent: startTangent,
+      endTangent: endTangent,
+    );
+
     context.bind(edge, handle);
   }
 
@@ -37,10 +49,18 @@ final class EdgeStatement extends PlacedStatement {
   }
 
   @override
-  EdgeStatement copyWith({VertexRef? start, VertexRef? end, FrameRef? parent}) => .new(
+  EdgeStatement copyWith({
+    VertexRef? start,
+    VertexRef? end,
+    FrameRef? parent,
+    Vec2? startTangent,
+    Vec2? endTangent,
+  }) => .new(
     start ?? this.start.ref,
     end ?? this.end.ref,
     parent: parent ?? this.parent?.ref,
+    startTangent: startTangent ?? this.startTangent,
+    endTangent: endTangent ?? this.endTangent,
     id: id,
   );
 }

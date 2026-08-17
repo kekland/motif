@@ -5,7 +5,7 @@ extension FrameBoundsQuery on TopologyQuery {
     if (h.kind == .vertex) {
       return .point(bundle.vertexPosition(h.asVertex));
     } else if (h.kind == .edge) {
-      return bundle.edgeCubic(h.asEdge).bbox;
+      return bundle.edgeCubic(h.asEdge).bboxTight;
     } else if (h.kind == .frame) {
       final bounds = frameBounds(h.asFrame);
       if (bounds != null) return bounds;
@@ -16,7 +16,7 @@ extension FrameBoundsQuery on TopologyQuery {
       final boundary = bundle.faceBoundary(h.asFace);
       for (final cycle in boundary) {
         for (final coedge in cycle) {
-          final edgeBbox = bundle.edgeCubic(coedge.edge, space: bundle.parentOf(h)).bbox;
+          final edgeBbox = bundle.edgeCubic(coedge.edge, space: bundle.parentOf(h)).bboxTight;
           hull.hull(edgeBbox);
         }
       }
@@ -30,7 +30,7 @@ extension FrameBoundsQuery on TopologyQuery {
     if (h.kind == .vertex) {
       return .point(bundle.vertexPositionWorld(h.asVertex));
     } else if (h.kind == .edge) {
-      return bundle.edgeCubicWorld(h.asEdge).bbox;
+      return bundle.edgeCubicWorld(h.asEdge).bboxTight;
     } else if (h.kind == .frame) {
       final bounds = frameBounds(h.asFrame);
       final transform = bundle.frameTransformWorld(h.asFrame);
@@ -41,7 +41,7 @@ extension FrameBoundsQuery on TopologyQuery {
       final boundary = bundle.faceBoundary(h.asFace);
       for (final cycle in boundary) {
         for (final coedge in cycle) {
-          final edgeBbox = bundle.edgeCubicWorld(coedge.edge).bbox;
+          final edgeBbox = bundle.edgeCubicWorld(coedge.edge).bboxTight;
           hull.hull(edgeBbox);
         }
       }
@@ -75,7 +75,7 @@ extension FrameBoundsQuery on TopologyQuery {
         final v1 = bundle.edgeStart(child.asEdge);
         final v2 = bundle.edgeEnd(child.asEdge);
         if (bundle._isAncestorOf(v1, ancestor: h) && bundle._isAncestorOf(v2, ancestor: h)) {
-          hull(bundle.edgeCubic(child.asEdge).bbox);
+          hull(bundle.edgeCubic(child.asEdge).bboxTight);
         }
       } else if (child.kind == .frame) {
         final f = child.asFrame;

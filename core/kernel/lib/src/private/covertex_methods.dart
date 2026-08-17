@@ -85,4 +85,10 @@ extension TopologyBundleCovertex on TopologyBundle {
 
     return _frameTransformBetween(f, space).transformDelta2(t);
   }
+
+  Vec2 _covertexTangentWorld(CovertexIndex cv) {
+    final t = _covertex.tangent[cv];
+    final v = _covertex.vertex[cv];
+    return _frameWorldTransform(_vertex.parent[v]).transformDelta2(t);
+  }
 }

@@ -1,5 +1,9 @@
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/selection_panel/components/child_layout_component.dart';
+import 'package:editor/widgets/selection_panel/components/size_component.dart';
+import 'package:editor/widgets/selection_panel/components/transform_component.dart';
 import 'package:editor/widgets/selection_panel/statement_panel.dart';
+import 'package:editor/widgets/selection_panel/widgets.dart';
 
 class const ContainerPanel({
   super.key,
@@ -7,11 +11,53 @@ class const ContainerPanel({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final statement = context.editor.statement<ContainerStatement>(id);
+    final editor = context.editor;
+    final statement = editor.statement<ContainerStatement>(id);
+    final layout = editor.scene.layout.of(id);
+
+    void apply(RectangleStatement newStatement) {
+      return editor.edit((txn) {
+        txn.replace(id, [newStatement]);
+      });
+    }
 
     return StatementPanelBase(
       id: id,
-      children: [],
+      child: PropertiesBody(
+        children: [
+          PropertiesSection(
+            title: Text('Transform'),
+            children: [
+              TransformComponentWidget(
+                transform: statement.transform,
+                overridePosition: layout?.offset,
+                onPositionChanged: (p) {
+                  final s = TransformSession.statement(editor.scene, id);
+                  s.setTranslation(p);
+                },
+                onRotationChanged: (r) {
+                  final s = TransformSession.statement(editor.scene, id);
+                  s.setRotation(r);
+                },
+              ),
+            ],
+          ),
+          PropertiesSection(
+            title: Text('Layout'),
+            children: [
+              SizeComponentWidget(
+                size: statement.size,
+                resolvedSize: layout?.size,
+                onChanged: (s) => apply(statement.copyWith(size: s)),
+              ),
+              ChildLayoutComponentWidget(
+                childLayout: statement.childLayout,
+                onChanged: (l) => apply(statement.copyWith(childLayout: l)),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

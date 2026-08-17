@@ -123,6 +123,8 @@ extension type const Mat4._(Float64x2List storage) {
     return _invertMat4(this);
   }
 
+  Mat4 inverted() => .copy(this)..invert();
+
   Mat4 operator *(Mat4 other) {
     final result = Mat4.copy(this);
     result.multiply(other);

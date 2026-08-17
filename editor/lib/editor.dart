@@ -25,6 +25,8 @@ final class Editor extends Controller {
   H handleOf<H extends CellHandle>(Ref<H> ref) => scene.handleOf(ref);
   S statementOf<S extends Statement>(Ref ref) => scene.statementOf(ref);
   S statement<S extends Statement>(StatementId id) => scene.statement(id);
+  Iterable<Ref> refsOf(Iterable<CellKey> keys) => scene.refsOf(keys);
+  Iterable<CellKey> keysOf(Iterable<Ref> refs) => scene.keysOf(refs);
 
   final sceneKey = GlobalKey();
   RenderBox get renderScene => sceneKey.currentContext!.findRenderObject() as RenderBox;

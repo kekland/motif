@@ -18,6 +18,7 @@ class CreateRectangleActivity extends DragActivity {
     );
 
     editor.edit((txn) => txn.insert(rectangle));
+    editor.selection.setStatement(rectangle.id);
   }
 
   @override
@@ -34,5 +35,11 @@ class CreateRectangleActivity extends DragActivity {
     );
 
     editor.edit((txn) => txn.replace(rectangle.id, [newRectangle]));
+  }
+
+  @override
+  void onEnd(DragEndDetails? details) {
+    editor.tool.activeTool = tools.cursor;
+    super.onEnd(details);
   }
 }

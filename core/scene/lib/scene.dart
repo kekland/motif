@@ -60,6 +60,14 @@ final class Scene with ChangeNotifier {
   S statementOf<S extends Statement>(Ref ref) => program.byId(ref.statement) as S;
   S statement<S extends Statement>(StatementId id) => program.byId(id) as S;
 
+  Iterable<CellKey> keysOf(Iterable<Ref> refs) sync* {
+    for (final r in refs) yield keyOf(r);
+  }
+
+  Iterable<Ref> refsOf(Iterable<CellKey> keys) sync* {
+    for (final k in keys) yield refOf(k)!;
+  }
+
   void evaluate() {
     final eval = dryExecute(program);
     _evaluation = eval;

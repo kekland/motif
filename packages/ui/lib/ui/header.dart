@@ -2,8 +2,8 @@ import 'package:ui/ui.dart';
 
 class const Header({
   super.key,
-  required final Widget leading,
   required final Widget title,
+  final Widget? leading,
   final Widget? footnote,
   final Widget? trailing,
 }) extends StatelessWidget {

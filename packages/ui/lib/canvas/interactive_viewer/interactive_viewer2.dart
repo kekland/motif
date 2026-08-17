@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:ui/ui.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 import 'interactive_viewer_gesture_recognizer.dart';
+import 'interactive_viewer_native.dart' if (dart.library.html) 'interactive_viewer_web.dart' as web;
 
 class InteractiveViewer2 extends StatefulWidget {
   const InteractiveViewer2({
@@ -15,7 +16,7 @@ class InteractiveViewer2 extends StatefulWidget {
   final TransformationController? controller;
   final double minScale;
   final double maxScale;
-  final Widget Function(BuildContext context, Quad quad) builder;
+  final Widget Function(BuildContext context, Matrix4 transform) builder;
 
   @override
   State<InteractiveViewer2> createState() => _InteractiveViewer2State();
@@ -24,6 +25,10 @@ class InteractiveViewer2 extends StatefulWidget {
 class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProviderStateMixin {
   late final _translationFlingAnimationController = AnimationController(vsync: this);
   late final _scaleFlingAnimationController = AnimationController(vsync: this);
+  late final _recognizer = InteractiveViewerGestureRecognizer(
+    minAllowedPointerCount: 1,
+    supportedDevices: {.trackpad, .touch},
+  );
 
   Animation<Offset>? _translationFlingAnimation;
   Offset? _scaleFocalPoint;
@@ -61,6 +66,7 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
   }
 
   void _onGestureEnd(TransformEndDetails details) {
+    activeTransform = details.transform;
     transform = _totalTransform;
     activeTransform = Matrix4.identity();
     setState(() {});
@@ -127,25 +133,33 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
 
   @override
   Widget build(BuildContext context) {
-    return RawGestureDetector(
-      behavior: .opaque,
-      gestures: {
-        InteractiveViewerGestureRecognizer: GestureRecognizerFactoryWithHandlers<InteractiveViewerGestureRecognizer>(
-          () => InteractiveViewerGestureRecognizer(
-            minAllowedPointerCount: 1,
-            supportedDevices: {.trackpad, .touch},
-          ),
-          (instance) {
-            instance
-              ..onStart = _onGestureStart
-              ..onUpdate = _onGestureUpdate
-              ..onEnd = _onGestureEnd;
-          },
-        ),
+    return MouseRegion(
+      hitTestBehavior: .translucent,
+      onEnter: (e) {
+        if (kIsWeb) web.CanvasWebInterop.lockBrowserGestures();
       },
-      child: widget.builder(
-        context,
-        Quad.points(.zero(), .zero(), .zero(), .zero()),
+      onExit: (e) {
+        if (kIsWeb) web.CanvasWebInterop.unlockBrowserGestures();
+      },
+      child: Listener(
+        behavior: .translucent,
+        onPointerSignal: (e) => _recognizer.onPointerSignal(e),
+        child: RawGestureDetector(
+          behavior: .opaque,
+          gestures: {
+            InteractiveViewerGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<InteractiveViewerGestureRecognizer>(
+                  () => _recognizer,
+                  (instance) {
+                    instance
+                      ..onStart = _onGestureStart
+                      ..onUpdate = _onGestureUpdate
+                      ..onEnd = _onGestureEnd;
+                  },
+                ),
+          },
+          child: widget.builder(context, _totalTransform),
+        ),
       ),
     );
   }

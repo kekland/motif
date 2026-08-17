@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 
 /// The minimum distance travelled by a pointer for the gesture to be
 /// considered a transform gesture.
@@ -292,6 +293,64 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   void didStopTrackingLastPointer(int pointer) {
     if (_state == .ready) resolve(.rejected);
     _state = .ready;
+  }
+
+  void onPointerSignal(PointerSignalEvent event) {
+    if (_state == .started) return;
+
+    var handled = false;
+    var newTransform = Matrix4.identity();
+    Offset? scaleFocalPoint;
+
+    if (event is PointerScaleEvent) {
+      final focalPoint = event.localPosition;
+      scaleFocalPoint = focalPoint;
+      final scale = event.scale;
+
+      newTransform
+        ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
+        ..scaleByDouble(scale, scale, 1.0, 1.0)
+        ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
+
+      handled = true;
+    } else if (event is PointerScrollEvent) {
+      final keyboard = HardwareKeyboard.instance;
+      final isZoom = keyboard.isMetaPressed || keyboard.isControlPressed;
+
+      final delta = event.scrollDelta;
+
+      if (!isZoom) {
+        newTransform.translateByDouble(-delta.dx, -delta.dy, 0.0, 1.0);
+      } else {
+        final focalPoint = event.localPosition;
+        scaleFocalPoint = focalPoint;
+
+        final scale = 1.0 + delta.dy * 0.01;
+
+        newTransform
+          ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
+          ..scaleByDouble(scale, scale, 1.0, 1.0)
+          ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
+      }
+      handled = true;
+    }
+
+    if (handled) {
+      _transform = newTransform;
+
+      onStart?.call(.new(pointerCount: 0, transform: .identity()));
+      onUpdate?.call(.new(pointerCount: 0, transform: _transform));
+      onEnd?.call(
+        .new(
+          transform: _transform,
+          translationVelocity: .zero,
+          scaleVelocity: 0.0,
+          scaleFocalPoint: scaleFocalPoint,
+        ),
+      );
+
+      _transform = Matrix4.identity();
+    }
   }
 }
 

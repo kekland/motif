@@ -197,10 +197,20 @@ final class TopologyBundle {
     return _covertexTangentIn(_edge.cvStart[h.index], space: space?.index ?? _edge.parent[h.index]);
   }
 
+  Vec2 edgeStartTangentWorld(EdgeHandle h) {
+    assert(_checkEdge(h));
+    return _covertexTangentWorld(_edge.cvStart[h.index]);
+  }
+
   Vec2 edgeEndTangent(EdgeHandle h, {FrameHandle? space}) {
     assert(_checkEdge(h));
     assert(space == null || _checkFrame(space));
     return _covertexTangentIn(_edge.cvEnd[h.index], space: space?.index ?? _edge.parent[h.index]);
+  }
+
+  Vec2 edgeEndTangentWorld(EdgeHandle h) {
+    assert(_checkEdge(h));
+    return _covertexTangentWorld(_edge.cvEnd[h.index]);
   }
 
   Cubic2 edgeCubic(EdgeHandle h, {FrameHandle? space}) {

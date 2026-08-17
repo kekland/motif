@@ -96,9 +96,11 @@ extension HitTestQuery on TopologyQuery {
 
       final bounds = frameBounds(f);
       if (f.index != .root && bounds != null) {
-        final world = bounds.transformed(bundle.frameTransformWorld(f)).inflated(tolerance);
+        final transform = bundle.frameTransformWorld(f);
+        final world = bounds.transformed(transform).inflated(tolerance);
         if (world.contains(p)) {
-          frames.add(.new(handle: f, distance: 0.0, point: p));
+          final localPosition = transform.inverted().transform2(p);
+          frames.add(.new(handle: f, distance: 0.0, point: localPosition));
         }
       }
     }

@@ -48,9 +48,7 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
           controller: controller,
           minScale: 0.1,
           maxScale: 100.0,
-          builder: (context, _) {
-            final rawTransform = controller.value;
-
+          builder: (context, rawTransform) {
             final translate = widget.centerOrigin
                 ? Matrix4.translationValues(size.width / 2, size.height / 2, 0.0)
                 : Matrix4.identity();

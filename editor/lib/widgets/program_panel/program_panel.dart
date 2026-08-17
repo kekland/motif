@@ -9,19 +9,31 @@ class ProgramPanel extends HookWidget {
     final editor = context.editor;
     useListenable(editor.scene);
 
+    final selection = editor.selection;
+    useListenable(selection);
+
     final program = editor.program;
 
     return CustomScrollView(
       slivers: [
         PinnedHeaderSliver(
-          child: Header(
-            leading: Icons.stacks(),
-            title: Text('Program'),
+          child: Column(
+            mainAxisSize: .min,
+            children: [
+              Header(
+                // leading: Icons.stacks(),
+                title: Text('Program'),
+              ),
+              Divider(),
+            ],
           ),
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, i) => StatementWidget(statement: program[i]),
+            (context, i) => StatementWidget(
+              statement: program[i],
+              isSelected: selection.statements.contains(program[i].id),
+            ),
             childCount: program.length,
           ),
         ),

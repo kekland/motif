@@ -11,7 +11,6 @@ class const GlueVerticesPanel({
 
     return StatementPanelBase(
       id: id,
-      children: [],
     );
   }
 }

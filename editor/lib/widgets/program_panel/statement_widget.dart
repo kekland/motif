@@ -3,6 +3,7 @@ import 'package:editor/imports.dart';
 class const StatementWidget({
   super.key,
   required final Statement statement,
+  final bool isSelected = false,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class const StatementWidget({
       leading: icon,
       title: Text(name),
       footnote: Text(statement.id.value),
+      isSelected: isSelected,
     );
   }
 }
