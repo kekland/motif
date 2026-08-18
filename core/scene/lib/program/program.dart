@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
+import 'package:css/css.dart' as css;
 
 part 'builder.dart';
 part 'context.dart';
@@ -12,6 +13,10 @@ part 'utils.dart';
 part 'evaluate.dart';
 part 'delta.dart';
 
+part 'decoration/decoration.dart';
+part 'decoration/edge_decoration.dart';
+part 'decoration/face_decoration.dart';
+
 part 'layout/insets.dart';
 part 'layout/layout.dart';
 part 'layout/overrides.dart';
@@ -21,6 +26,9 @@ part 'layout/size.dart';
 part 'layout/solver.dart';
 part 'layout/layouts/flex.dart';
 part 'layout/layouts/stack.dart';
+part 'layout/shapes/circle_shape.dart';
+part 'layout/shapes/rectangle_shape.dart';
+part 'layout/shapes/triangle_shape.dart';
 
 part 'transform/transform_router.dart';
 
@@ -32,6 +40,9 @@ part 'statements/cut_edge_statement.dart';
 part 'statements/glue_vertices_statement.dart';
 part 'statements/rectangle_statement.dart';
 part 'statements/container_statement.dart';
+part 'statements/shape_statement.dart';
+part 'statements/triangle_statement.dart';
+part 'statements/circle_statement.dart';
 
 final class Program {
   Program(List<Statement> statements) : _statements = [...statements];

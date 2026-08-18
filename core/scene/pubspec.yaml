@@ -9,6 +9,7 @@ dependencies:
   geometry:
   kernel:
   schema:
+  css:
   listen: ^1.0.1
 
 dev_dependencies:

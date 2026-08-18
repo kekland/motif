@@ -1,5 +1,4 @@
-export 'create_container_activity.dart';
-export 'create_rectangle_activity.dart';
+export 'create_shape_activity.dart';
 export 'create_vertex_activity.dart';
 export 'transform_activity.dart';
 export 'move_activity.dart';

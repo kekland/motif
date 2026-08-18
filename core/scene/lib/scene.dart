@@ -15,7 +15,6 @@ export 'query/query.dart';
 part 'delta/delta.dart';
 part 'delta/history.dart';
 part 'delta/transaction.dart';
-
 part 'utils/embed_vertex.dart';
 part 'utils/transform_session.dart';
 

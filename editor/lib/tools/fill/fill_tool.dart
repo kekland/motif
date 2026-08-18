@@ -1,6 +1,5 @@
 import 'package:editor/imports.dart';
 import 'package:editor/tools/fill/transient_face_widget.dart';
-import 'package:editor/widgets/selection_overlay/selection_overlay.dart';
 
 class FillTool extends Tool {
   const FillTool();

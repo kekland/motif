@@ -68,6 +68,9 @@ enum ColorComponent {
 sealed class ColorData {
   const ColorData({this._v1 = .nan, this._v2 = .nan, this._v3 = .nan, this.alpha = 1.0});
 
+  static const ColorData black = ColorData.srgb(r: 0.0, g: 0.0, b: 0.0);
+  static const ColorData white = ColorData.srgb(r: 1.0, g: 1.0, b: 1.0);
+
   /// Parses a color from a CSS-like color string.
   factory ColorData.parse(String str) => _colorParser.parse(str).value;
 

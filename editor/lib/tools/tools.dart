@@ -4,8 +4,11 @@ export 'cursor/cursor_tool.dart';
 export 'marquee/marquee_tool.dart';
 export 'fill/fill_tool.dart';
 export 'pen/pen_tool.dart';
-export 'container/container_tool.dart';
-export 'rectangle/rectangle_tool.dart';
+export 'shape/shape_tool.dart';
+export 'shape/container_tool.dart';
+export 'shape/rectangle_tool.dart';
+export 'shape/circle_tool.dart';
+export 'shape/triangle_tool.dart';
 
 const toolset = <Tool>[
   CursorTool(),
@@ -14,6 +17,8 @@ const toolset = <Tool>[
   FillTool(),
   ContainerTool(),
   RectangleTool(),
+  CircleTool(),
+  TriangleTool(),
 ];
 
 const tools = (
@@ -23,4 +28,6 @@ const tools = (
   fill: FillTool(),
   container: ContainerTool(),
   rectangle: RectangleTool(),
+  circle: CircleTool(),
+  triangle: TriangleTool(),
 );

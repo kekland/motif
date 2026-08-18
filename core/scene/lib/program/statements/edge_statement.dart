@@ -6,6 +6,7 @@ final class EdgeStatement extends PlacedStatement {
     VertexRef end, {
     this.startTangent,
     this.endTangent,
+    this.decoration,
     super.parent,
     super.id,
   }) : start = start.borrow(),
@@ -15,6 +16,7 @@ final class EdgeStatement extends PlacedStatement {
   final Arg<VertexRef> end;
   final Vec2? startTangent;
   final Vec2? endTangent;
+  final EdgeDecoration? decoration;
 
   @override
   late final _args = [start, end, ?parent];
@@ -55,12 +57,14 @@ final class EdgeStatement extends PlacedStatement {
     FrameRef? parent,
     Vec2? startTangent,
     Vec2? endTangent,
+    EdgeDecoration? decoration,
   }) => .new(
     start ?? this.start.ref,
     end ?? this.end.ref,
     parent: parent ?? this.parent?.ref,
     startTangent: startTangent ?? this.startTangent,
     endTangent: endTangent ?? this.endTangent,
+    decoration: decoration ?? this.decoration,
     id: id,
   );
 }

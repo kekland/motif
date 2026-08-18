@@ -4,6 +4,7 @@ final class FaceStatement extends PlacedStatement {
   FaceStatement(
     List<EdgeRef> outer, {
     List<List<EdgeRef>> holes = const [],
+    this.decoration,
     super.parent,
     super.id,
   }) : outer = outer.borrow(),
@@ -11,6 +12,7 @@ final class FaceStatement extends PlacedStatement {
 
   final List<Arg<EdgeRef>> outer;
   final List<List<Arg<EdgeRef>>> holes;
+  final FaceDecoration? decoration;
 
   @override
   late final _args = [...outer, for (final hole in holes) ...hole, ?parent];
@@ -42,10 +44,16 @@ final class FaceStatement extends PlacedStatement {
   }
 
   @override
-  FaceStatement copyWith({List<EdgeRef>? outer, List<List<EdgeRef>>? holes, FrameRef? parent}) => .new(
+  FaceStatement copyWith({
+    List<EdgeRef>? outer,
+    List<List<EdgeRef>>? holes,
+    FaceDecoration? decoration,
+    FrameRef? parent,
+  }) => .new(
     outer ?? this.outer.refs,
     holes: holes ?? [for (final hole in this.holes) hole.refs],
     parent: parent ?? this.parent?.ref,
+    decoration: decoration ?? this.decoration,
     id: id,
   );
 }

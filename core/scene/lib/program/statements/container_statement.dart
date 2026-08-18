@@ -1,14 +1,14 @@
 part of '../program.dart';
 
-final class ContainerStatement extends RectangleStatement {
+final class ContainerStatement extends ShapeStatement<ObjectShape> {
   ContainerStatement({
     super.transform,
     super.size,
     super.parent,
     this.childLayout = .default_,
-    super.shape,
+    ObjectShape? shape,
     super.id,
-  });
+  }) : super(shape: shape ?? .default_);
 
   @override
   final ChildLayout childLayout;
@@ -17,7 +17,7 @@ final class ContainerStatement extends RectangleStatement {
   ContainerStatement copyWith({
     Mat4? transform,
     LayoutSize? size,
-    RectangleObjectShape? shape,
+    ObjectShape? shape,
     ChildLayout? childLayout,
     FrameRef? parent,
   }) {

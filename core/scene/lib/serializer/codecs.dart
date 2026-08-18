@@ -128,7 +128,7 @@ final _containerStatementCodec = _codec<ContainerStatement, pb.ContainerStatemen
   encoder: (v) => .new(
     transform: v.transform.encode(),
     size: v.size.encode(),
-    shape: v.shape.encode(),
+    // shape: v.shape.encode(),
     childLayout: v.childLayout.encode(),
     id: v.id.encode(),
     parent: v.parent?.ref.encode(),

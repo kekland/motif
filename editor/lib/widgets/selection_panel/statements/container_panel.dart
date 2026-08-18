@@ -15,7 +15,7 @@ class const ContainerPanel({
     final statement = editor.statement<ContainerStatement>(id);
     final layout = editor.scene.layout.of(id);
 
-    void apply(RectangleStatement newStatement) {
+    void apply(ContainerStatement newStatement) {
       return editor.edit((txn) {
         txn.replace(id, [newStatement]);
       });
