@@ -103,7 +103,9 @@ void main() {
     );
   }
 
-  if (axis_t > (1.0 - t_slide)) { discard; }
+  if (axis_t > (1.0 - t_slide)) {
+    f_color = vec4(0.0); return;
+  }
 
   float opacity_factor = smoothstep(0.75, 1.0, 1.0 - t_slide);
   float axis_opacity = mix(opacity_factor, 1.0, axis_t);
