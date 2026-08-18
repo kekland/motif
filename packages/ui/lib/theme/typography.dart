@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'theme.dart';
@@ -5,6 +6,7 @@ import 'theme.dart';
 AppTypography generateMaterialTypography(AppColors colors) {
   const base = TextStyle(
     fontFamily: 'Roboto Mono',
+    package: 'ui',
     fontWeight: .w300,
     leadingDistribution: TextLeadingDistribution.even,
   );
@@ -29,24 +31,24 @@ AppTypography generateMaterialTypography(AppColors colors) {
     ),
     subtitle: .from(
       base.copyWith(
-        fontSize: 16.0,
-        height: 20.0 / 16.0,
+        fontSize: 13.0,
+        height: 16.0 / 13.0,
         letterSpacing: 0.0,
       ),
       colors.display,
     ),
     body: .from(
       base.copyWith(
-        fontSize: 13.0,
-        height: 17.0 / 13.0,
+        fontSize: 12.0,
+        height: 14.0 / 12.0,
         letterSpacing: 0.0,
       ),
       colors.display,
     ),
     footnote: .from(
       base.copyWith(
-        fontSize: 10.0,
-        height: 14.0 / 10.0,
+        fontSize: 8.0,
+        height: 12.0 / 8.0,
         letterSpacing: 0.0,
       ),
       colors.display,
@@ -55,6 +57,8 @@ AppTypography generateMaterialTypography(AppColors colors) {
 }
 
 AppTypography generateCupertinoTypography(AppColors colors) {
+  if (kIsWeb) return generateMaterialTypography(colors);
+
   const fallback = [
     '.AppleSystemUIFont',
     'Apple Color Emoji',
