@@ -82,7 +82,7 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
                     transformationController: controller,
                     backgroundColor: context.colors.surface.canvas.background,
                     dotColor: context.colors.surface.canvas.foreground,
-                    baseSpacing: 64.0,
+                    baseSpacing: 50.0,
                   ),
                 ),
                 child,

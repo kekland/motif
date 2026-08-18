@@ -58,7 +58,7 @@ class _CanvasBackgroundPainter extends CustomPainter {
 
     final crossfade = zoom - zoomLevel;
 
-    final step = baseSpacing / math.pow(2, zoomLevel);
+    final step = baseSpacing / math.pow(2.0, zoomLevel);
     final halfStep = step / 2.0;
 
     final startX = -tx / scale;
@@ -76,7 +76,7 @@ class _CanvasBackgroundPainter extends CustomPainter {
 
     for (var i = startIdxX; i <= endIdxX; i++) {
       for (var j = startIdxY; j <= endIdxY; j++) {
-        final isMajor = (i % 2 == 0) && (j % 2 == 0);
+        final isMajor = i.isEven && j.isEven;
         final x = (i * halfStep) * scale + tx;
         final y = (j * halfStep) * scale + ty;
         final point = Offset(x, y);
