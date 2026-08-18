@@ -13,11 +13,16 @@ final class ColorField extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final valueSignal = useComputed(() => value);
+    final (createEntry, hasEntry) = useCreateWindowEntry(
+      (context) => ColorInputWindow.createEntry(context, value: valueSignal, onChanged: onChanged),
+    );
+
     final leading = Builder(
       builder: (context) {
         final iconTheme = IconTheme.of(context);
         return GestureSurface(
-          // onTap: () => createEntry(context),
+          onTap: () => createEntry(context),
           borderRadius: BorderRadius.circular(4.0),
           borderSide: BorderSide(color: context.colors.inverse.withScaledAlpha(0.05)),
           width: iconTheme.size ?? 16.0,
@@ -60,7 +65,7 @@ final class ColorField extends HookWidget {
     );
 
     return GestureSurface(
-      // onTap: () => createEntry(context),
+      onTap: () => createEntry(context),
       supportedDevices: {.stylus, .touch},
       child: Row(
         children: [

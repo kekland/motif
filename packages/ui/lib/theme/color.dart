@@ -83,13 +83,14 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
     ),
   );
 
-  final colors = (
+  final AppColors colors = (
     surface: surfaceColors,
     display: displayColors,
     accent: accentColors,
     danger: dangerColors,
     divider: divider,
     tint: scheme.surfaceTint,
+    shadow: scheme.shadow,
     normal: switch (brightness) {
       .light => Colors.white,
       .dark => Colors.black,

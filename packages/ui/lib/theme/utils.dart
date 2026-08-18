@@ -54,4 +54,6 @@ extension ThemeContextExtension on BuildContext {
   AppThemeDevice get device => theme.device;
   AppColors get colors => theme.colors;
   AppTypography get typography => theme.typography;
+  AppAnimations get animations => theme.animations;
+  AppShadows get shadows => theme.shadows;
 }

@@ -13,6 +13,7 @@ dependencies:
   state:
   mouse_cursor:
   color:
+  genie:
 
   expressions: ^0.2.5+3
   material_symbols_icons: ^4.2960.0

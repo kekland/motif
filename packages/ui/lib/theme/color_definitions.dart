@@ -34,4 +34,5 @@ typedef AppColors = ({
   Color tint,
   Color normal,
   Color inverse,
+  Color shadow,
 });

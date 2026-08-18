@@ -1,21 +1,27 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'animations.dart';
 import 'color_definitions.dart';
 import 'typography_definitions.dart';
 import 'color.dart';
 import 'typography.dart';
+import 'shadows.dart';
 
+export 'animations.dart';
 export 'augmentations.dart';
 export 'color_definitions.dart';
 export 'color.dart';
 export 'typography_definitions.dart';
 export 'typography.dart';
 export 'utils.dart';
+export 'shadows.dart';
 
 typedef AppTheme = ({
   AppColors colors,
   AppTypography typography,
+  AppAnimations animations,
+  AppShadows shadows,
   AppThemePlatform platform,
   AppThemeDevice device,
   Brightness brightness,
@@ -67,11 +73,18 @@ AppTheme generateAppTheme({
     };
   }
 
+  final AppAnimations animations = switch (_platform) {
+    .material => materialAnimations,
+    .cupertino => cupertinoAnimations,
+  };
+
   return (
+    animations: animations,
     platform: _platform,
     device: _device,
     brightness: brightness,
     colors: colors,
+    shadows: generateShadows(colors),
     typography: switch (_platform) {
       .material => generateMaterialTypography(colors),
       .cupertino => generateCupertinoTypography(colors),

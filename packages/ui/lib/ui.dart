@@ -1,3 +1,4 @@
+export 'package:flutter/foundation.dart' hide VoidCallback, Listenable, ChangeNotifier, ValueNotifier, ValueListenable;
 export 'package:flutter/material.dart'
     hide
         Scaffold,
@@ -29,11 +30,14 @@ export 'panels/panels.dart';
 export 'gestures/gestures.dart';
 export 'theme/theme.dart';
 export 'utils/utils.dart';
-export 'window/window.dart';
+export 'window/window.dart' show WindowNavigator;
+
+export 'ui/window/window.dart';
 
 export 'ui/form/text_field.dart';
 export 'ui/form/expression_input.dart';
 export 'ui/form/text_form_field.dart';
+export 'ui/color/color_input_window.dart';
 
 export 'ui/default_gesture_reaction.dart';
 export 'ui/divider.dart';

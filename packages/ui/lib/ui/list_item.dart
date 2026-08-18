@@ -10,6 +10,7 @@ class const ListItem({
   final Color? color,
   final double? height,
   final bool isSelected = false,
+  final EdgeInsets? padding,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class const ListItem({
     return GestureSurface(
       onTap: onTap,
       color: isSelected ? context.colors.accent.secondary : color,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 8.0),
       height: height ?? 36.0,
       child: Row(
         children: [

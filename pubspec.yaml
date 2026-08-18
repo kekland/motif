@@ -16,6 +16,7 @@ workspace:
   - core/renderer
 
   - packages/native
+  - packages/genie
   - packages/log
   - packages/mouse_cursor
   - packages/bindings

@@ -282,7 +282,10 @@ class WindowWidgetState<T> extends State<WindowWidget<T>> with SingleTickerProvi
                 widget.entry._resolve(result);
                 _animationController.reverse();
               },
-              child: child,
+              child: Material(
+                type: .transparency,
+                child: child,
+              ),
             ),
 
             // TODO: allow configurable draggable area.
@@ -315,7 +318,7 @@ class WindowAnchor {
 }
 
 class _WindowPositioned extends SingleChildRenderObjectWidget {
-  _WindowPositioned({
+  const _WindowPositioned({
     super.key,
     required Widget super.child,
     this.rect,
@@ -352,14 +355,11 @@ class _WindowPositioned extends SingleChildRenderObjectWidget {
 
 class _RenderWindowPositioned extends RenderProxyBox {
   _RenderWindowPositioned({
-    BoxConstraints? windowConstraints,
-    Rect? rect,
-    WindowAnchor? anchor,
-    ValueChanged<Rect>? onInitialRectComputed,
-  }) : _rect = rect,
-       _anchor = anchor,
-       _onInitialRectComputed = onInitialRectComputed,
-       _windowConstraints = windowConstraints;
+    this._windowConstraints,
+    this._rect,
+    this._anchor,
+    this._onInitialRectComputed,
+  });
 
   BoxConstraints? _windowConstraints;
   BoxConstraints? get windowConstraints => _windowConstraints;

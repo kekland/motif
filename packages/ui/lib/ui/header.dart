@@ -6,6 +6,7 @@ class const Header({
   final Widget? leading,
   final Widget? footnote,
   final Widget? trailing,
+  final EdgeInsets? padding,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class const Header({
       title: title,
       footnote: footnote,
       trailing: trailing,
+      padding: padding,
       height: 36.0,
     );
   }
