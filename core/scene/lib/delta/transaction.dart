@@ -5,6 +5,7 @@ final class SceneTransaction {
   final Scene scene;
 
   final _ops = <ProgramOp>[];
+  final _decorations = <(Ref, CellStylePartial?, CellStylePartial?)>[];
 
   Program get program => scene.program;
 
@@ -25,6 +26,12 @@ final class SceneTransaction {
     final index = program.indexOf(target);
     if (index == null) throw StateError('statement $target does not exist in program');
     _record(index, inserted: statements, removed: [program[index]]);
+  }
+
+  void decorate(Ref ref, CellStylePartial decoration) {
+    final current = scene.styleOverrides.of(ref);
+    _decorations.add((ref, current, decoration));
+    scene.styleOverrides.set(ref, decoration);
   }
 
   void _rollback() {

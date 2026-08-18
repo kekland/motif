@@ -6,6 +6,8 @@ final class TriangleStatement({
   super.size,
   super.parent,
   TriangleObjectShape? shape,
+  super.edgeStyle,
+  super.faceStyle,
 }) extends ShapeStatement<TriangleObjectShape> {
   this : super(shape: shape ?? .new());
 
@@ -22,6 +24,8 @@ final class TriangleStatement({
     Mat4? transform,
     LayoutSize? size,
     TriangleObjectShape? shape,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
     FrameRef? parent,
   }) {
     return TriangleStatement(
@@ -29,7 +33,31 @@ final class TriangleStatement({
       size: size ?? this.size,
       shape: shape ?? this.shape,
       parent: parent ?? this.parent?.ref,
+      edgeStyle: edgeStyle ?? this.edgeStyle,
+      faceStyle: faceStyle ?? this.faceStyle,
       id: id,
     );
   }
+
+  @override
+  TriangleStatement updateWith(TriangleStatementPartial partial) => partial.apply(this);
+}
+
+final class const TriangleStatementPartial({
+  super.transform,
+  super.size,
+  super.parent,
+  super.edgeStyle,
+  super.faceStyle,
+  final TriangleObjectShape? shape,
+}) extends ShapeStatementPartial<TriangleStatement> {
+  @override
+  TriangleStatement apply(TriangleStatement statement) => statement.copyWith(
+    transform: transform,
+    size: size,
+    shape: shape,
+    parent: parent,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
+  );
 }

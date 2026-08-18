@@ -1,7 +1,7 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/selection_panel/components/child_layout_component.dart';
-import 'package:editor/widgets/selection_panel/components/size_component.dart';
-import 'package:editor/widgets/selection_panel/components/transform_component.dart';
+import 'package:editor/widgets/selection_panel/properties/child_layout_property.dart';
+import 'package:editor/widgets/selection_panel/properties/size_property.dart';
+import 'package:editor/widgets/selection_panel/properties/transform_property.dart';
 import 'package:editor/widgets/selection_panel/statement_panel.dart';
 import 'package:editor/widgets/selection_panel/widgets.dart';
 

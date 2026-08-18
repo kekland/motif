@@ -110,9 +110,16 @@ class RenderDivider extends RenderBox {
 
   @override
   void performLayout() {
+    var mainExtent = switch (direction) {
+      .horizontal => constraints.maxWidth,
+      .vertical => constraints.maxHeight,
+    };
+
+    if (!mainExtent.isFinite) mainExtent = 0.0;
+
     size = switch (direction) {
-      .horizontal => .new(constraints.maxWidth, crossExtent),
-      .vertical => .new(crossExtent, constraints.maxHeight),
+      .horizontal => .new(mainExtent, crossExtent),
+      .vertical => .new(crossExtent, mainExtent),
     };
   }
 

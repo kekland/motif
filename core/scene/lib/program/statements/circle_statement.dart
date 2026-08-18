@@ -6,6 +6,8 @@ final class CircleStatement({
   super.size,
   super.parent,
   CircleObjectShape? shape,
+  super.edgeStyle,
+  super.faceStyle,
 }) extends ShapeStatement<CircleObjectShape> {
   this : super(shape: shape ?? .new());
 
@@ -24,6 +26,8 @@ final class CircleStatement({
     Mat4? transform,
     LayoutSize? size,
     CircleObjectShape? shape,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
     FrameRef? parent,
   }) {
     return CircleStatement(
@@ -31,7 +35,31 @@ final class CircleStatement({
       size: size ?? this.size,
       shape: shape ?? this.shape,
       parent: parent ?? this.parent?.ref,
+      edgeStyle: edgeStyle ?? this.edgeStyle,
+      faceStyle: faceStyle ?? this.faceStyle,
       id: id,
     );
   }
+
+  @override
+  CircleStatement updateWith(CircleStatementPartial partial) => partial.apply(this);
+}
+
+final class CircleStatementPartial({
+  super.transform,
+  super.size,
+  super.parent,
+  super.edgeStyle,
+  super.faceStyle,
+  final CircleObjectShape? shape,
+}) extends ShapeStatementPartial<CircleStatement> {
+  @override
+  CircleStatement apply(CircleStatement statement) => statement.copyWith(
+    transform: transform,
+    size: size,
+    shape: shape,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
+    parent: parent,
+  );
 }

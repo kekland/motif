@@ -39,4 +39,18 @@ final class VertexStatement extends PlacedStatement {
     parent: parent ?? this.parent?.ref,
     id: id,
   );
+
+  @override
+  VertexStatement updateWith(VertexStatementPartial partial) => partial.apply(this);
+}
+
+final class const VertexStatementPartial({
+  final Vec2? position,
+  final FrameRef? parent,
+}) extends StatementPartial<VertexStatement> {
+  @override
+  VertexStatement apply(VertexStatement statement) => statement.copyWith(
+    position: position,
+    parent: parent,
+  );
 }

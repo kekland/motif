@@ -62,4 +62,18 @@ final class CutEdgeStatement extends Statement {
     t: t ?? this.t,
     id: id,
   );
+
+  @override
+  CutEdgeStatement updateWith(CutEdgeStatementPartial partial) => partial.apply(this);
+}
+
+final class CutEdgeStatementPartial({
+  final EdgeRef? target,
+  final double? t,
+}) extends StatementPartial<CutEdgeStatement> {
+  @override
+  CutEdgeStatement apply(CutEdgeStatement statement) => statement.copyWith(
+    target: target,
+    t: t,
+  );
 }

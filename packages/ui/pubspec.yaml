@@ -12,6 +12,7 @@ dependencies:
   geometry:
   state:
   mouse_cursor:
+  color:
 
   expressions: ^0.2.5+3
   material_symbols_icons: ^4.2960.0

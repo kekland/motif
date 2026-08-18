@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
-import 'package:css/css.dart' as css;
+import 'package:color/color.dart';
 
 part 'builder.dart';
 part 'context.dart';
@@ -13,9 +13,9 @@ part 'utils.dart';
 part 'evaluate.dart';
 part 'delta.dart';
 
-part 'decoration/decoration.dart';
-part 'decoration/edge_decoration.dart';
-part 'decoration/face_decoration.dart';
+part 'style/style.dart';
+part 'style/edge_style.dart';
+part 'style/face_style.dart';
 
 part 'layout/insets.dart';
 part 'layout/layout.dart';

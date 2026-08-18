@@ -12,7 +12,7 @@ final class FaceStatement extends PlacedStatement {
 
   final List<Arg<EdgeRef>> outer;
   final List<List<Arg<EdgeRef>>> holes;
-  final FaceDecoration? decoration;
+  final FaceStyle? decoration;
 
   @override
   late final _args = [...outer, for (final hole in holes) ...hole, ?parent];
@@ -31,7 +31,7 @@ final class FaceStatement extends PlacedStatement {
 
     final parent = context.resolveOptional(this.parent);
     final handle = context.transaction.makeFace(cellId('face'), outer, holes: holes, parent: parent);
-    context.bind(face, handle);
+    context.bind(face, handle, decoration: decoration);
   }
 
   @override
@@ -47,7 +47,7 @@ final class FaceStatement extends PlacedStatement {
   FaceStatement copyWith({
     List<EdgeRef>? outer,
     List<List<EdgeRef>>? holes,
-    FaceDecoration? decoration,
+    FaceStyle? decoration,
     FrameRef? parent,
   }) => .new(
     outer ?? this.outer.refs,
@@ -55,5 +55,23 @@ final class FaceStatement extends PlacedStatement {
     parent: parent ?? this.parent?.ref,
     decoration: decoration ?? this.decoration,
     id: id,
+  );
+
+  @override
+  FaceStatement updateWith(FaceStatementPartial partial) => partial.apply(this);
+}
+
+final class const FaceStatementPartial({
+  final List<EdgeRef>? outer,
+  final List<List<EdgeRef>>? holes,
+  final FaceStyle? decoration,
+  final FrameRef? parent,
+}) extends StatementPartial<FaceStatement> {
+  @override
+  FaceStatement apply(FaceStatement statement) => statement.copyWith(
+    outer: outer,
+    holes: holes,
+    decoration: decoration,
+    parent: parent,
   );
 }

@@ -32,4 +32,6 @@ typedef AppColors = ({
   AppDangerColors danger,
   Color divider,
   Color tint,
+  Color normal,
+  Color inverse,
 });

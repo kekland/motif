@@ -10,5 +10,4 @@ export 'actions/actions.dart';
 export 'activities/activities.dart';
 export 'editor.dart';
 export 'tools/tools.dart';
-export 'utils/geometry_extensions.dart';
 export 'widgets/widgets.dart';

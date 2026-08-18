@@ -1,6 +1,7 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/selection_panel/components/size_component.dart';
-import 'package:editor/widgets/selection_panel/components/transform_component.dart';
+import 'package:editor/widgets/selection_panel/properties/edge_style_property.dart';
+import 'package:editor/widgets/selection_panel/properties/size_property.dart';
+import 'package:editor/widgets/selection_panel/properties/transform_property.dart';
 import 'package:editor/widgets/selection_panel/statement_panel.dart';
 import 'package:editor/widgets/selection_panel/widgets.dart';
 
@@ -48,6 +49,17 @@ class const RectanglePanel({
                 size: statement.size,
                 resolvedSize: layout?.size,
                 onChanged: (s) => apply(statement.copyWith(size: s)),
+              ),
+            ],
+          ),
+          PropertiesSection(
+            title: Text('Stroke'),
+            children: [
+              EdgeStyleProperty(
+                value: statement.edgeStyle,
+                onChanged: (v) {
+                  apply(statement.copyWith(edgeStyle: v));
+                },
               ),
             ],
           ),

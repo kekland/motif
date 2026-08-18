@@ -64,6 +64,7 @@ class ScenePainter extends CustomPainter {
 
   final Scene scene;
   TopologyBundle get bundle => scene.bundle;
+  StyleTable get decoration => scene.style;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -96,17 +97,20 @@ class ScenePainter extends CustomPainter {
       ..style = .fill;
 
     final pos = bundle.vertexPosition(vertex);
-    canvas.drawCircle(
-      MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
-      4,
-      paint,
-    );
+    // canvas.drawCircle(
+    //   MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
+    //   4,
+    //   paint,
+    // );
   }
 
   void _paintEdge(Canvas canvas, EdgeHandle edge, Matrix4 transform) {
+    final edgeRef = scene.refOf(bundle.edgeKey(edge));
+    final dec = decoration.of<EdgeStyle>(edgeRef!);
+
     final paint = Paint()
       ..color = Colors.grey.shade800
-      ..strokeWidth = 2.0
+      ..strokeWidth = dec.width!
       ..style = .stroke;
 
     final cubic = bundle.edgeCubic(edge);

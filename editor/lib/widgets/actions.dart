@@ -30,8 +30,8 @@ class EditorShortcuts extends StatelessWidget {
     return Shortcuts(
       shortcuts: {
         SingleActivator(.escape): intents.clearSelection(),
-        SingleActivator(.keyZ, meta: true, control: true): intents.undo(),
-        SingleActivator(.keyY, meta: true, control: true): intents.redo(),
+        SingleActivator(.keyZ, meta: true): intents.undo(),
+        SingleActivator(.keyY, meta: true): intents.redo(),
       },
       child: child,
     );

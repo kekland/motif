@@ -1,5 +1,5 @@
-import 'package:editor/widgets/selection_panel/components/position_component.dart';
-import 'package:editor/widgets/selection_panel/components/rotation_component.dart';
+import 'package:editor/widgets/selection_panel/properties/position_property.dart';
+import 'package:editor/widgets/selection_panel/properties/rotation_property.dart';
 import 'package:ui/ui.dart';
 import 'package:geometry/geometry.dart';
 

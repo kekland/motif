@@ -44,3 +44,22 @@ final class CompositeSceneDelta extends SceneDelta {
     for (final delta in deltas.reversed) delta.unapply(scene);
   }
 }
+
+final class DecorationSceneDelta extends SceneDelta {
+  DecorationSceneDelta(this.decorations);
+
+  final List<(Ref, CellStyle, CellStyle)> decorations;
+
+  @override
+  bool get isEmpty => false;
+
+  @override
+  void reapply(Scene scene) {
+    // scene.decoration.
+  }
+
+  @override
+  void unapply(Scene scene) {
+    // TODO: implement unapply
+  }
+}

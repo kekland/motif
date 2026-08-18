@@ -1,16 +1,27 @@
 part of '../program.dart';
 
-sealed class ShapeStatement<S extends ObjectShape> extends FrameStatement with LayoutBoxStatement {
+sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
+    with LayoutBoxStatement
+    implements FrameStatement {
   new({
     required this.shape,
-    super.transform,
+    Mat4? transform,
     super.parent,
     super.id,
     LayoutSize? size,
-  }) : size = size ?? .zero;
+    this.edgeStyle = .default_,
+    this.faceStyle = .default_,
+  }) : size = size ?? .zero,
+       transform = transform ?? .identity();
 
   @override
   final LayoutSize size;
+
+  @override
+  final Mat4 transform;
+
+  final EdgeStyle edgeStyle;
+  final FaceStyle faceStyle;
 
   final S shape;
 
@@ -19,6 +30,9 @@ sealed class ShapeStatement<S extends ObjectShape> extends FrameStatement with L
 
   @override
   late final _products = [frame, face, ...shape.produceRefs(id)];
+
+  @override
+  late final frame = FrameRef(id, #frame);
 
   late final face = FaceRef(id, #face);
 
@@ -58,7 +72,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends FrameStatement with L
       final edge = txn.addEdge(cellId(key.name), start, end, parent: frame, startTangent: t0, endTangent: t1);
       eHandles[key] = edge;
       handles[key] = edge;
-      context.bind(EdgeRef(id, key), edge);
+      context.bind(EdgeRef(id, key), edge, decoration: edgeStyle);
     }
 
     for (final entry in t.aliases.entries) {
@@ -78,7 +92,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends FrameStatement with L
     final faceHandle = txn.makeFace(cellId('face'), boundary, parent: frame);
     txn.setFrameClip(frame, faceHandle);
 
-    context.bind(FaceRef(id, #face), faceHandle);
+    context.bind(FaceRef(id, #face), faceHandle, decoration: faceStyle);
   }
 
   @override
@@ -107,4 +121,15 @@ sealed class ShapeStatement<S extends ObjectShape> extends FrameStatement with L
     S? shape,
     FrameRef? parent,
   });
+
+  @override
+  ShapeStatement<S> updateWith(covariant ShapeStatementPartial partial);
 }
+
+sealed class const ShapeStatementPartial<T extends ShapeStatement>({
+  super.transform,
+  super.parent,
+  final LayoutSize? size,
+  final EdgeStyle? edgeStyle,
+  final FaceStyle? faceStyle,
+}) extends FrameStatementPartialBase<T> {}

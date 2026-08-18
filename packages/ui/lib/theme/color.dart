@@ -90,6 +90,14 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
     danger: dangerColors,
     divider: divider,
     tint: scheme.surfaceTint,
+    normal: switch (brightness) {
+      .light => Colors.white,
+      .dark => Colors.black,
+    },
+    inverse: switch (brightness) {
+      .light => Colors.black,
+      .dark => Colors.white,
+    },
   );
 
   return (colors, scheme);

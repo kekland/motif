@@ -64,6 +64,7 @@ class ToolbarButton extends StatelessWidget {
         onChanged: (v) => onTap?.call(),
         isActive: isActive,
         borderRadius: .circular(4.0),
+        foregroundColor: isActive ? null : context.colors.display.secondary,
         child: child,
       ),
     );

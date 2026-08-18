@@ -1,10 +1,18 @@
 part of 'program.dart';
 
 final class Evaluation {
-  Evaluation._(this.bundle, this.table, this.layout);
+  Evaluation._(
+    this.bundle,
+    this.table,
+    this.style,
+    this.styleOverrides,
+    this.layout,
+  );
 
   final TopologyBundle bundle;
   final ExportTable table;
+  final StyleTable style;
+  final StyleOverrides? styleOverrides;
   final LayoutOverrides? layout;
 
   CellHandle? cell(Ref ref) {
@@ -33,16 +41,23 @@ final class Evaluation {
   }
 }
 
-Evaluation dryExecute(Program program, {LayoutOverrides? layout}) {
+Evaluation dryExecute(
+  Program program, {
+  LayoutOverrides? layout,
+  StyleOverrides? decoration,
+}) {
   final resolvedLayout = layout ?? solveLayout(program.layoutBoxes);
 
   final bundle = TopologyBundle();
   final transaction = bundle.beginTransaction();
   final table = ExportTable();
+  final decorationTable = StyleTable();
   final context = EvalContext(
     transaction: transaction,
     exports: table,
     layout: resolvedLayout,
+    decoration: decorationTable,
+    decorationOverrides: decoration,
   );
 
   for (final stmt in program._statements) {
@@ -50,7 +65,7 @@ Evaluation dryExecute(Program program, {LayoutOverrides? layout}) {
   }
 
   transaction.commit();
-  return ._(bundle, table, resolvedLayout);
+  return Evaluation._(bundle, table, decorationTable, decoration, resolvedLayout);
 }
 
 (List<TopologyOp>, bool) _executeOne(EvalContext context, Statement stmt) {

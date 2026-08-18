@@ -28,6 +28,7 @@ sealed class Statement {
   void execute(EvalContext context);
 
   Statement copyWith();
+  Statement updateWith(covariant StatementPartial partial) => partial.apply(this);
 }
 
 sealed class PlacedStatement extends Statement {
@@ -60,4 +61,9 @@ final class Own<R extends Ref> extends Arg<R> {
   @override bool get isBorrow => false;
   @override bool get isOwn => true;
   // dart format on
+}
+
+sealed class StatementPartial<T extends Statement> {
+  const StatementPartial();
+  T apply(T statement);
 }

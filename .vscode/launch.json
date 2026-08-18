@@ -7,7 +7,7 @@
       "request": "launch",
       "type": "dart",
       "toolArgs": [
-        "--enable-impeller",
+        "--enable-impeller"
       ]
     },
     {
@@ -15,10 +15,9 @@
       "program": "app/lib/main.dart",
       "request": "launch",
       "type": "dart",
-      // "flutterMode": "release",
       "toolArgs": [
-        "--wasm",
-      ],
+        "--wasm"
+      ]
     },
     {
       "name": "app (profile)",
@@ -27,7 +26,7 @@
       "type": "dart",
       "flutterMode": "profile",
       "toolArgs": [
-        "--enable-impeller",
+        "--enable-impeller"
       ]
     },
     {
@@ -42,6 +41,13 @@
       "program": "server/lib/main.dart",
       "request": "launch",
       "type": "dart"
+    },
+    {
+      "name": "Flutter (lib/utils/typedefs.dart)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "packages/ui",
+      "program": "lib/utils/typedefs.dart"
     }
   ]
 }

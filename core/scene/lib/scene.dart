@@ -21,16 +21,21 @@ part 'utils/transform_session.dart';
 part 'selection/selection.dart';
 
 final class Scene with ChangeNotifier {
-  Scene({required this.program}) {
+  Scene({
+    required this.program,
+    StyleOverrides? styleOverrides,
+  }) {
     history = .new(this);
     query = .new(this);
     selection = .new(this);
+    styleOverrides = styleOverrides ?? .empty();
     evaluate();
   }
 
   factory Scene.decode({required pb.Scene scene}) => SceneCodec.decodeScene(scene);
 
   final Program program;
+  late final StyleOverrides styleOverrides;
 
   late final SceneHistory history;
   late final SceneQuery query;
@@ -53,11 +58,17 @@ final class Scene with ChangeNotifier {
     return _evaluation!.layout!;
   }
 
+  StyleTable get style {
+    assert(_evaluation != null, 'scene has not been evaluated yet.');
+    return _evaluation!.style;
+  }
+
   Ref<H>? refOf<H extends CellHandle>(CellKey<H> cell) => table.refOf(cell);
   CellKey<H> keyOf<H extends CellHandle>(Ref<H> ref) => table.keyOf(ref) as CellKey<H>;
   H handleOf<H extends CellHandle>(Ref<H> ref) => bundle.handle(table.keyOf(ref)!) as H;
   S statementOf<S extends Statement>(Ref ref) => program.byId(ref.statement) as S;
   S statement<S extends Statement>(StatementId id) => program.byId(id) as S;
+  D decorationOf<D extends CellStyle<D>>(Ref ref) => _evaluation!.style.of<D>(ref);
 
   Iterable<CellKey> keysOf(Iterable<Ref> refs) sync* {
     for (final r in refs) yield keyOf(r);
