@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:ui/ui.dart';
 
@@ -9,13 +8,13 @@ class ExpressionInputField<T> extends HookWidget {
     super.key,
     required this.valueToString,
     required this.evaluateExpression,
-    this.value,
+    required this.value,
     this.onChanged,
     this.supportedDevices,
     this.options = const .new(),
   });
 
-  final T? value;
+  final ReadonlySignal<T?> value;
   final ValueChanged<T>? onChanged;
   final String Function(T?) valueToString;
   final T Function(String) evaluateExpression;
@@ -28,11 +27,12 @@ class ExpressionInputField<T> extends HookWidget {
     final focusNode = useFocusNode();
     final didChange = useRef(false);
 
-    useEffect(() {
+    useSignalEffect(() {
+      final v = value();
       if (didChange.value) return;
-      controller.text = valueToString(value);
+      controller.text = valueToString(v);
       return null;
-    }, [value]);
+    }, keys: [value]);
 
     void onEditingComplete() {
       try {
@@ -42,7 +42,7 @@ class ExpressionInputField<T> extends HookWidget {
         controller.text = valueToString(result);
       } catch (e) {
         _logger.warning('Failed to parse expression: ${controller.text}: $e');
-        controller.text = valueToString(value);
+        controller.text = valueToString(value.value);
       }
 
       didChange.value = false;
@@ -66,14 +66,14 @@ class ExpressionInputField<T> extends HookWidget {
 class DoubleExpressionInputField extends StatelessWidget {
   const DoubleExpressionInputField({
     super.key,
-    this.value,
+    required this.value,
     this.onChanged,
     this.fractionDigits = 3,
     this.supportedDevices,
     this.options = const .new(),
   });
 
-  final double? value;
+  final ReadonlySignal<double?> value;
   final ValueChanged<double>? onChanged;
   final int fractionDigits;
   final Set<PointerDeviceKind>? supportedDevices;

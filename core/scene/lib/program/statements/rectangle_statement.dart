@@ -16,10 +16,10 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
   late final bottomRight = RectangleCorner._for(id, #br);
   late final bottomLeft = RectangleCorner._for(id, #bl);
 
-  late final top = EdgeRef(id, #top);
-  late final right = EdgeRef(id, #right);
-  late final bottom = EdgeRef(id, #bottom);
-  late final left = EdgeRef(id, #left);
+  late final top = Ref.edge(id, #top);
+  late final right = Ref.edge(id, #right);
+  late final bottom = Ref.edge(id, #bottom);
+  late final left = Ref.edge(id, #left);
 
   @override
   RectangleStatement copyWith({
@@ -43,15 +43,32 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
 
   @override
   RectangleStatement updateWith(RectangleStatementPartial partial) => partial.apply(this);
+
+  @override
+  RectangleStatementPartial partial({
+    Mat4? transform,
+    LayoutSizePartial? size,
+    RectangleObjectShape? shape,
+    EdgeStylePartial? edgeStyle,
+    FaceStylePartial? faceStyle,
+    FrameRef? parent,
+  }) => .new(
+    transform: transform,
+    size: size,
+    shape: shape,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
+    parent: parent,
+  );
 }
 
 extension type RectangleCorner._((VertexRef, VertexRef, VertexRef, EdgeRef) _) {
   RectangleCorner._for(StatementId id, Symbol base)
     : this._((
-        VertexRef(id, base),
-        VertexRef(id, base / 'a'),
-        VertexRef(id, base / 'b'),
-        EdgeRef(id, base / 'arc'),
+        .vertex(id, base),
+        .vertex(id, base / 'a'),
+        .vertex(id, base / 'b'),
+        .edge(id, base / 'arc'),
       ));
 
   VertexRef get vertex => _.$1;
@@ -73,10 +90,10 @@ final class const RectangleStatementPartial({
   @override
   RectangleStatement apply(RectangleStatement statement) => statement.copyWith(
     transform: transform,
-    size: size,
+    size: size?.apply(statement.size),
     shape: shape,
     parent: parent,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
+    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
+    faceStyle: statement.faceStyle.updateWith(faceStyle),
   );
 }

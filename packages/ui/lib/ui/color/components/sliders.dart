@@ -7,7 +7,7 @@ class _HueSlider extends StatelessWidget {
     this.onChanged,
   });
 
-  final ColorData value;
+  final ColorData? value;
   final ValueChanged<ColorData>? onChanged;
 
   @override
@@ -43,7 +43,7 @@ class _SaturationSlider extends StatelessWidget {
     this.onChanged,
   });
 
-  final ColorData value;
+  final ColorData? value;
   final ValueChanged<ColorData>? onChanged;
 
   @override
@@ -67,7 +67,7 @@ class _ValueSlider extends StatelessWidget {
     this.onChanged,
   });
 
-  final ColorData value;
+  final ColorData? value;
   final ValueChanged<ColorData>? onChanged;
 
   @override
@@ -91,7 +91,7 @@ class _AlphaSlider extends StatelessWidget {
     this.onChanged,
   });
 
-  final ColorData value;
+  final ColorData? value;
   final ValueChanged<ColorData>? onChanged;
 
   @override

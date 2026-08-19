@@ -17,7 +17,9 @@ sealed class const CellStylePartial<D extends CellStyle<D>>() {
 final class StyleTable {
   final _styles = <Ref, CellStyle>{};
 
-  T of<T extends CellStyle<T>>(Ref ref) => _styles[ref] as T;
+  T? of<T extends CellStyle<T>>(Ref ref) => _styles[ref] as T?;
+  EdgeStyle? ofEdge(Ref ref) => of(ref);
+  FaceStyle? ofFace(Ref ref) => of(ref);
 
   void bind(Ref ref, CellStyle decoration) {
     _styles[ref] = decoration;

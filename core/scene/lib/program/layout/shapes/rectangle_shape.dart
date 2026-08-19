@@ -81,15 +81,15 @@ final class RectangleObjectShape extends ObjectShape {
   @override
   Iterable<Ref> produceRefs(StatementId id) sync* {
     for (final base in const [#tl, #tr, #br, #bl]) {
-      yield VertexRef(id, base);
-      yield VertexRef(id, base / 'a');
-      yield VertexRef(id, base / 'b');
-      yield EdgeRef(id, base / 'arc');
+      yield .vertex(id, base);
+      yield .vertex(id, base / 'a');
+      yield .vertex(id, base / 'b');
+      yield .edge(id, base / 'arc');
     }
 
-    yield EdgeRef(id, #top);
-    yield EdgeRef(id, #right);
-    yield EdgeRef(id, #bottom);
-    yield EdgeRef(id, #left);
+    yield .edge(id, #top);
+    yield .edge(id, #right);
+    yield .edge(id, #bottom);
+    yield .edge(id, #left);
   }
 }

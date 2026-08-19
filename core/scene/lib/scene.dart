@@ -1,6 +1,7 @@
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
+import 'package:signals/signals.dart';
 import 'package:schema/scene.dart' as pb;
 
 import 'program/program.dart';
@@ -17,6 +18,7 @@ part 'delta/history.dart';
 part 'delta/transaction.dart';
 part 'utils/embed_vertex.dart';
 part 'utils/transform_session.dart';
+part 'utils/resolved_style.dart';
 
 part 'selection/selection.dart';
 
@@ -40,6 +42,8 @@ final class Scene with ChangeNotifier {
   late final SceneHistory history;
   late final SceneQuery query;
   late final SceneSelection selection;
+
+  late final signal = Signal(this);
 
   Evaluation? _evaluation;
 
@@ -68,7 +72,7 @@ final class Scene with ChangeNotifier {
   H handleOf<H extends CellHandle>(Ref<H> ref) => bundle.handle(table.keyOf(ref)!) as H;
   S statementOf<S extends Statement>(Ref ref) => program.byId(ref.statement) as S;
   S statement<S extends Statement>(StatementId id) => program.byId(id) as S;
-  D decorationOf<D extends CellStyle<D>>(Ref ref) => _evaluation!.style.of<D>(ref);
+  D? styleOf<D extends CellStyle<D>>(Ref ref) => _evaluation!.style.of<D>(ref);
 
   Iterable<CellKey> keysOf(Iterable<Ref> refs) sync* {
     for (final r in refs) yield keyOf(r);
@@ -81,6 +85,7 @@ final class Scene with ChangeNotifier {
   void evaluate() {
     final eval = dryExecute(program);
     _evaluation = eval;
+    signal.set(this, force: true);
     notifyListeners();
   }
 
@@ -109,6 +114,7 @@ final class Scene with ChangeNotifier {
 
   @override
   void dispose() {
+    signal.dispose();
     selection.dispose();
     super.dispose();
   }

@@ -33,8 +33,8 @@ class SelectRectActivity extends DragActivity {
 
     final globalRect = Rect.fromPoints(startDetails.globalPosition, details.globalPosition);
     final hitTestResult = editor.hitTestRect(globalRect, mode: mode);
-    final cells = hitTestResult.cells;
-    editor.selection.setMultiple(cells);
+    final refs = hitTestResult.refs;
+    editor.selection.setMultiple(refs);
 
     super.onUpdate(details);
   }

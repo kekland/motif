@@ -66,16 +66,16 @@ class _CursorToolOverlay extends HookWidget {
                   final target = editor.hitTest(e.position).top;
 
                   if (target != null) {
-                    context.invoke(intents.selectCell(target.key));
+                    context.invoke(intents.selectCell(target.ref));
                   } else {
                     context.invoke(intents.clearSelection());
                   }
                 }
 
-                if (selection.cells.isNotEmpty) {
+                if (selection.refs.isNotEmpty) {
                   return MoveActivity(
                     editor,
-                    selection.cells.toList(),
+                    selection.refs.toList(),
                     onStart: () => shouldUpdateSelectionOnUp.value = false,
                   );
                 } else {
@@ -91,7 +91,7 @@ class _CursorToolOverlay extends HookWidget {
                   final target = editor.hitTest(details.globalPosition).top;
 
                   if (target != null) {
-                    context.invoke(intents.selectCell(target.key));
+                    context.invoke(intents.selectCell(target.ref));
                   } else {
                     context.invoke(intents.clearSelection());
                   }

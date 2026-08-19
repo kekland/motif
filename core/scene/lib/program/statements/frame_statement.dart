@@ -15,7 +15,7 @@ final class FrameStatement extends PlacedStatement {
   @override
   late final _products = [frame];
 
-  late final frame = FrameRef(id, #frame);
+  late final frame = Ref.frame(id, #frame);
 
   @override
   void execute(EvalContext context) {
@@ -42,6 +42,15 @@ final class FrameStatement extends PlacedStatement {
 
   @override
   FrameStatement updateWith(covariant FrameStatementPartialBase partial) => partial.apply(this);
+
+  @override
+  FrameStatementPartialBase partial({
+    Mat4? transform,
+    FrameRef? parent,
+  }) => FrameStatementPartial(
+    transform: transform,
+    parent: parent,
+  );
 }
 
 sealed class const FrameStatementPartialBase<T extends FrameStatement>({

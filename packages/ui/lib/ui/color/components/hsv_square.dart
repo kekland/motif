@@ -7,7 +7,7 @@ class _HSVSquare extends HookWidget {
     this.onChanged,
   });
 
-  final ColorData value;
+  final ColorData? value;
   final ValueChanged<ColorData>? onChanged;
 
   @override
@@ -96,7 +96,9 @@ class _HSVSquare extends HookWidget {
           // Drag handle
           Align(
             alignment: FractionalOffset(x, 1.0 - y),
-            child: _DragHandle(innerColor: value.toUiColor().withValues(alpha: 1.0)),
+            child: _DragHandle(
+              innerColor: value?.toUiColor().withValues(alpha: 1.0),
+            ),
           ),
         ],
       ),

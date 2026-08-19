@@ -216,7 +216,7 @@ extension _RefListDecode on Iterable<pb.Ref> { List<Ref> decode() => map((e) => 
 // dart format on
 
 final _refCodec = _codec<Ref, pb.Ref>(
-  decoder: (v) => .new(_statementIdCodec.decode(v.id), Symbol(v.product)),
+  decoder: (v) => .new(_statementIdCodec.decode(v.id), Symbol(v.product), .face), // TODO fix
   encoder: (v) => .new(id: _statementIdCodec.encode(v.statement), product: v.product.name),
 );
 

@@ -23,7 +23,7 @@ class App extends StatelessWidget {
         color: theme.colors.surface.primary,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          showPerformanceOverlay: false,
+          showPerformanceOverlay: true,
           theme: materialTheme,
           home: RootPage(),
         ),

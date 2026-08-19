@@ -81,6 +81,7 @@ final class SceneHitResult {
   Iterable<VertexSceneHitEntry> get vertices => entries.whereType<VertexSceneHitEntry>();
 
   Iterable<CellKey> get cells => entries.map((e) => e.key);
+  Iterable<Ref> get refs => entries.map((e) => e.ref);
 
   bool get isEmpty => entries.isEmpty;
   bool get isNotEmpty => entries.isNotEmpty;

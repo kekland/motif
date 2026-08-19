@@ -1,25 +1,47 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/selection_panel/statements/container_panel.dart';
-import 'package:editor/widgets/selection_panel/statements/cut_edge_panel.dart';
-import 'package:editor/widgets/selection_panel/statements/glue_vertices_panel.dart';
-import 'package:editor/widgets/selection_panel/statements/rectangle_panel.dart';
+import 'package:editor/widgets/selection_panel/props/prop.dart';
 
 class const StatementPanel({
   super.key,
-  required final StatementId id,
+  required final List<StatementId> statements,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final statement = context.editor.statement(id);
-    // print(statement);
+    final editor = context.editor;
+    final rawProps = <List<Prop>>[];
+    for (final id in statements) {
+      final statement = editor.statement(id);
+      rawProps.add(statement.props.toList());
+    }
 
-    return switch (statement) {
-      ContainerStatement _ => ContainerPanel(id: id),
-      RectangleStatement _ => RectanglePanel(id: id),
-      CutEdgeStatement _ => CutEdgePanel(id: id),
-      GlueVerticesStatement _ => GlueVerticesPanel(id: id),
-      _ => const SizedBox.shrink(),
-    };
+    final props = CompositeProp.resolveFor(rawProps);
+
+    late final Widget? icon, title, footnote;
+    if (statements.length == 1) {
+      final statement = context.editor.statement(statements.single);
+      icon = statement.icon(context);
+      title = Text(statement.name(context));
+      footnote = Text(statement.id.value);
+    } else {
+      icon = Icons.stacks();
+      title = Text('${statements.length} statements');
+      footnote = null;
+    }
+
+    return Column(
+      children: [
+        Header(
+          leading: icon,
+          title: title,
+          footnote: footnote,
+        ),
+        Divider(),
+        PropListBuilder(
+          scene: editor.scene,
+          props: props,
+        ),
+      ],
+    );
   }
 }
 

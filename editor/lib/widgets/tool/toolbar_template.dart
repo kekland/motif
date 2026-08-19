@@ -16,8 +16,6 @@ class ToolbarTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final divider = direction == .vertical ? Divider(height: 0.0) : VerticalDivider(width: 0.0);
-
     return ListView.builder(
       padding: .zero,
       scrollDirection: direction,

@@ -6,16 +6,24 @@ final class ColorField extends HookWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.options = const TextFieldOptions(),
   });
 
-  final ColorData value;
+  final ReadonlySignal<ColorData?> value;
   final ValueChanged<ColorData>? onChanged;
+  final TextFieldOptions options;
 
   @override
   Widget build(BuildContext context) {
-    final valueSignal = useComputed(() => value);
+    final value = this.value;
+    final alpha = useComputed(() {
+      final color = value.value;
+      if (color == null) return 100.0;
+      return color.alpha * 100.0;
+    }, keys: [value]);
+
     final (createEntry, hasEntry) = useCreateWindowEntry(
-      (context) => ColorInputWindow.createEntry(context, value: valueSignal, onChanged: onChanged),
+      (context) => ColorInputWindow.createEntry(context, value: value, onChanged: onChanged),
     );
 
     final leading = Builder(
@@ -27,7 +35,7 @@ final class ColorField extends HookWidget {
           borderSide: BorderSide(color: context.colors.inverse.withScaledAlpha(0.05)),
           width: iconTheme.size ?? 16.0,
           height: iconTheme.size ?? 16.0,
-          color: value.toUiColor(colorSpace: .sRGB),
+          color: value.value?.toUiColor(colorSpace: .sRGB),
         );
       },
     );
@@ -47,17 +55,19 @@ final class ColorField extends HookWidget {
         //   value.z.clamp(0, 255).round(),
         // );
       },
-      options: .new(
-        leading: leading,
-        borderRadius: .horizontal(left: .circular(4.0), right: .circular(2.0)),
+      options: options.merge(
+        .new(
+          leading: leading,
+          borderRadius: .horizontal(left: .circular(4.0), right: .circular(2.0)),
+        ),
       ),
     );
 
     final opacityInput = DoubleExpressionInputField(
-      value: value.alpha * 100,
+      value: alpha,
       fractionDigits: 1,
       supportedDevices: {.mouse, .trackpad},
-      onChanged: (a) => onChanged?.call(value.withAlpha(a / 100)),
+      onChanged: (a) => onChanged?.call((value.value ?? .black).withAlpha(a / 100)),
       options: .new(
         trailing: Text('%'),
         borderRadius: .horizontal(right: .circular(4.0), left: .circular(2.0)),

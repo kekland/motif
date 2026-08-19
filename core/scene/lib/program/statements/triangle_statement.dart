@@ -11,13 +11,13 @@ final class TriangleStatement({
 }) extends ShapeStatement<TriangleObjectShape> {
   this : super(shape: shape ?? .new());
 
-  late final top = VertexRef(id, #top);
-  late final bottomLeft = VertexRef(id, #bl);
-  late final bottomRight = VertexRef(id, #br);
+  late final top = Ref.vertex(id, #top);
+  late final bottomLeft = Ref.vertex(id, #bl);
+  late final bottomRight = Ref.vertex(id, #br);
 
-  late final rightEdge = EdgeRef(id, #right);
-  late final leftEdge = EdgeRef(id, #left);
-  late final bottomEdge = EdgeRef(id, #bottom);
+  late final rightEdge = Ref.edge(id, #right);
+  late final leftEdge = Ref.edge(id, #left);
+  late final bottomEdge = Ref.edge(id, #bottom);
 
   @override
   TriangleStatement copyWith({
@@ -41,6 +41,23 @@ final class TriangleStatement({
 
   @override
   TriangleStatement updateWith(TriangleStatementPartial partial) => partial.apply(this);
+
+  @override
+  TriangleStatementPartial partial({
+    Mat4? transform,
+    LayoutSizePartial? size,
+    TriangleObjectShape? shape,
+    EdgeStylePartial? edgeStyle,
+    FaceStylePartial? faceStyle,
+    FrameRef? parent,
+  }) => .new(
+    transform: transform,
+    size: size,
+    shape: shape,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
+    parent: parent,
+  );
 }
 
 final class const TriangleStatementPartial({
@@ -54,10 +71,10 @@ final class const TriangleStatementPartial({
   @override
   TriangleStatement apply(TriangleStatement statement) => statement.copyWith(
     transform: transform,
-    size: size,
+    size: size?.apply(statement.size),
     shape: shape,
     parent: parent,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
+    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
+    faceStyle: statement.faceStyle.updateWith(faceStyle),
   );
 }

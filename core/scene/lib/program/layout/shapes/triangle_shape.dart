@@ -26,11 +26,11 @@ final class TriangleObjectShape extends ObjectShape {
 
   @override
   Iterable<Ref> produceRefs(StatementId id) => [
-    VertexRef(id, #top),
-    VertexRef(id, #br),
-    VertexRef(id, #bl),
-    EdgeRef(id, #right),
-    EdgeRef(id, #bottom),
-    EdgeRef(id, #left),
+    .vertex(id, #top),
+    .vertex(id, #br),
+    .vertex(id, #bl),
+    .edge(id, #right),
+    .edge(id, #bottom),
+    .edge(id, #left),
   ];
 }

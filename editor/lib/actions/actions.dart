@@ -12,9 +12,9 @@ class SelectCellAction extends ContextAction<SelectCellIntent> {
 
     final controller = context!.editor.selection;
     if (isShiftPressed) {
-      controller.add(intent.cell);
+      controller.add(intent.ref);
     } else {
-      controller.set(intent.cell);
+      controller.set(intent.ref);
     }
   }
 }

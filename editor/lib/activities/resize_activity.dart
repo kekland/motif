@@ -1,13 +1,12 @@
 import 'package:editor/imports.dart';
-import 'package:flutter/gestures.dart';
 
 class ResizeActivity {
-  static DragActivity side(Editor editor, Iterable<CellKey> cells, {required Side side}) {
-    return _SideResizeActivity(editor, cells, side);
+  static DragActivity side(Editor editor, Iterable<Ref> refs, {required Side side}) {
+    return _SideResizeActivity(editor, refs, side);
   }
 
-  static DragActivity corner(Editor editor, Iterable<CellKey> cells, {required Corner corner}) {
-    return _CornerResizeActivity(editor, cells, corner);
+  static DragActivity corner(Editor editor, Iterable<Ref> refs, {required Corner corner}) {
+    return _CornerResizeActivity(editor, refs, corner);
   }
 }
 

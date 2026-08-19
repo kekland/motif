@@ -13,6 +13,8 @@ part 'utils.dart';
 part 'evaluate.dart';
 part 'delta.dart';
 
+part 'partials/partials.dart';
+
 part 'style/style.dart';
 part 'style/edge_style.dart';
 part 'style/face_style.dart';

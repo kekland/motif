@@ -33,13 +33,13 @@ final class CircleObjectShape extends ObjectShape {
 
   @override
   Iterable<Ref> produceRefs(StatementId id) => [
-    VertexRef(id, #t),
-    VertexRef(id, #r),
-    VertexRef(id, #b),
-    VertexRef(id, #l),
-    EdgeRef(id, #tr),
-    EdgeRef(id, #rb),
-    EdgeRef(id, #bl),
-    EdgeRef(id, #lt),
+    .vertex(id, #t),
+    .vertex(id, #r),
+    .vertex(id, #b),
+    .vertex(id, #l),
+    .edge(id, #tr),
+    .edge(id, #rb),
+    .edge(id, #bl),
+    .edge(id, #lt),
   ];
 }

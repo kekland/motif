@@ -32,9 +32,9 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
   late final _products = [frame, face, ...shape.produceRefs(id)];
 
   @override
-  late final frame = FrameRef(id, #frame);
+  late final frame = Ref.frame(id, #frame);
 
-  late final face = FaceRef(id, #face);
+  late final face = Ref.face(id, #face);
 
   @override
   ChildLayout get childLayout => .default_;
@@ -62,7 +62,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
       final v = txn.addVertex(cellId(key.name), pos, parent: frame);
       vHandles[key] = v;
       handles[key] = v;
-      context.bind(VertexRef(id, key), v);
+      context.bind(.vertex(id, key), v);
     }
 
     final eHandles = <Symbol, EdgeHandle>{};
@@ -72,7 +72,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
       final edge = txn.addEdge(cellId(key.name), start, end, parent: frame, startTangent: t0, endTangent: t1);
       eHandles[key] = edge;
       handles[key] = edge;
-      context.bind(EdgeRef(id, key), edge, decoration: edgeStyle);
+      context.bind(.edge(id, key), edge, decoration: edgeStyle);
     }
 
     for (final entry in t.aliases.entries) {
@@ -81,10 +81,10 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
       if (handle == null) continue;
 
       final _ = switch (handle.kind) {
-        .frame => context.bind(FrameRef(id, key), handle.asFrame),
-        .vertex => context.bind(VertexRef(id, key), handle.asVertex),
-        .edge => context.bind(EdgeRef(id, key), handle.asEdge),
-        .face => context.bind(FaceRef(id, key), handle.asFace),
+        .frame => context.bind(.frame(id, key), handle.asFrame),
+        .vertex => context.bind(.vertex(id, key), handle.asVertex),
+        .edge => context.bind(.edge(id, key), handle.asEdge),
+        .face => context.bind(.face(id, key), handle.asFace),
       };
     }
 
@@ -92,7 +92,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
     final faceHandle = txn.makeFace(cellId('face'), boundary, parent: frame);
     txn.setFrameClip(frame, faceHandle);
 
-    context.bind(FaceRef(id, #face), faceHandle, decoration: faceStyle);
+    context.bind(face, faceHandle, decoration: faceStyle);
   }
 
   @override
@@ -124,12 +124,21 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
 
   @override
   ShapeStatement<S> updateWith(covariant ShapeStatementPartial partial);
+
+  @override
+  ShapeStatementPartial partial({
+    Mat4? transform,
+    FrameRef? parent,
+    LayoutSizePartial? size,
+    EdgeStylePartial? edgeStyle,
+    FaceStylePartial? faceStyle,
+  });
 }
 
 sealed class const ShapeStatementPartial<T extends ShapeStatement>({
   super.transform,
   super.parent,
-  final LayoutSize? size,
-  final EdgeStyle? edgeStyle,
-  final FaceStyle? faceStyle,
+  final LayoutSizePartial? size,
+  final EdgeStylePartial? edgeStyle,
+  final FaceStylePartial? faceStyle,
 }) extends FrameStatementPartialBase<T> {}

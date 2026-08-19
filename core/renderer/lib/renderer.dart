@@ -92,21 +92,21 @@ class ScenePainter extends CustomPainter {
   }
 
   void _paintVertex(Canvas canvas, VertexHandle vertex, Matrix4 transform) {
-    final paint = Paint()
-      ..color = Colors.grey
-      ..style = .fill;
+    // final paint = Paint()
+    //   ..color = Colors.grey
+    //   ..style = .fill;
 
-    final pos = bundle.vertexPosition(vertex);
-    // canvas.drawCircle(
-    //   MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
-    //   4,
-    //   paint,
-    // );
+    // final pos = bundle.vertexPosition(vertex);
+    // // canvas.drawCircle(
+    // //   MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
+    // //   4,
+    // //   paint,
+    // // );
   }
 
   void _paintEdge(Canvas canvas, EdgeHandle edge, Matrix4 transform) {
     final edgeRef = scene.refOf(bundle.edgeKey(edge));
-    final style = this.style.of<EdgeStyle>(edgeRef!);
+    final style = this.style.of<EdgeStyle>(edgeRef!)!;
 
     final paint = Paint()
       ..color = style.color.toUiColor()
@@ -119,31 +119,32 @@ class ScenePainter extends CustomPainter {
   }
 
   void _paintFace(Canvas canvas, FaceHandle face, Matrix4 transform, int depth) {
-    final stripePaint = Paint()
-      ..color = color.withValues(alpha: 0.35)
-      ..strokeWidth = 0.0
-      ..style = .stroke;
+    final faceRef = scene.refOf(bundle.faceKey(face));
+    final style = this.style.of<FaceStyle>(faceRef!)!;
+
+    final paint = Paint()..color = style.color.toUiColor();
 
     var path = _facePath(bundle, face);
     path = path.transform(transform.storage);
+    canvas.drawPath(path, paint);
 
-    canvas.save();
-    canvas.clipPath(path);
+    // canvas.save();
+    // canvas.clipPath(path);
 
-    const spacing = 8.0;
-    final b = path.getBounds().inflate(spacing);
+    // const spacing = 8.0;
+    // final b = path.getBounds().inflate(spacing);
 
-    final s = depth.isEven ? 1.0 : -1.0;
-    final top = s * b.top, bottom = s * b.bottom;
+    // final s = depth.isEven ? 1.0 : -1.0;
+    // final top = s * b.top, bottom = s * b.bottom;
 
-    final from = b.left + math.min(top, bottom);
-    final to = b.right + math.max(top, bottom);
+    // final from = b.left + math.min(top, bottom);
+    // final to = b.right + math.max(top, bottom);
 
-    for (var c = from; c <= to; c += spacing * math.sqrt2) {
-      canvas.drawLine(Offset(c - top, b.top), Offset(c - bottom, b.bottom), stripePaint);
-    }
+    // for (var c = from; c <= to; c += spacing * math.sqrt2) {
+    //   canvas.drawLine(Offset(c - top, b.top), Offset(c - bottom, b.bottom), stripePaint);
+    // }
 
-    canvas.restore();
+    // canvas.restore();
   }
 
   @override

@@ -72,9 +72,4 @@ class _WebMouseCursorSession extends FfiMouseCursorSession {
       }
     }
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

@@ -39,6 +39,25 @@ final class ContainerStatement extends ShapeStatement<ObjectShape> {
 
   @override
   ContainerStatement updateWith(ContainerStatementPartial partial) => partial.apply(this);
+
+  @override
+  ContainerStatementPartial partial({
+    Mat4? transform,
+    LayoutSizePartial? size,
+    ObjectShape? shape,
+    ChildLayout? childLayout,
+    EdgeStylePartial? edgeStyle,
+    FaceStylePartial? faceStyle,
+    FrameRef? parent,
+  }) => .new(
+    transform: transform,
+    size: size,
+    shape: shape,
+    childLayout: childLayout,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
+    parent: parent,
+  );
 }
 
 final class ContainerStatementPartial({
@@ -53,11 +72,11 @@ final class ContainerStatementPartial({
   @override
   ContainerStatement apply(ContainerStatement statement) => statement.copyWith(
     transform: transform,
-    size: size,
+    size: size?.apply(statement.size),
     shape: shape,
     childLayout: childLayout,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
     parent: parent,
+    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
+    faceStyle: statement.faceStyle.updateWith(faceStyle),
   );
 }

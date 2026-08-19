@@ -29,6 +29,8 @@ sealed class Statement {
 
   Statement copyWith();
   Statement updateWith(covariant StatementPartial partial) => partial.apply(this);
+  
+  StatementPartial partial();
 }
 
 sealed class PlacedStatement extends Statement {

@@ -8,8 +8,8 @@ final intents = (
 );
 
 class SelectCellIntent extends Intent {
-  const SelectCellIntent(this.cell);
-  final CellKey cell;
+  const SelectCellIntent(this.ref);
+  final Ref ref;
 }
 
 class ClearSelectionIntent extends Intent {

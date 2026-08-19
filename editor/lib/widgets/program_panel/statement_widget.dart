@@ -15,7 +15,7 @@ class const StatementWidget({
         final editor = context.editor;
         final products = statement.products;
         final selection = editor.selection;
-        selection.setMultiple(products.map((r) => editor.keyOf(r)));
+        selection.setMultiple(products);
       },
       leading: icon,
       title: Text(name),

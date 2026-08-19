@@ -11,6 +11,7 @@ dependencies:
   schema:
   color:
   listen: ^1.0.1
+  signals: ^7.1.0
 
 dev_dependencies:
   test: ^1.31.2

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:ui/ui.dart';
 
 import 'interactive_viewer_gesture_recognizer.dart';

@@ -1,5 +1,4 @@
 import 'package:editor/imports.dart';
-import 'package:flutter/widgets.dart';
 
 class PropertiesBody extends StatelessWidget {
   const new({
@@ -21,11 +20,11 @@ class PropertiesSection extends StatelessWidget {
   const new({
     super.key,
     required this.title,
-    required this.children,
+    required this.child,
   });
 
   final Widget title;
-  final List<Widget> children;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class PropertiesSection extends StatelessWidget {
             style: context.typography.body.secondary,
             child: title,
           ),
-          ...children,
+          child,
         ],
       ),
     );

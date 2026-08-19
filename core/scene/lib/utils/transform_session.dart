@@ -3,6 +3,7 @@ part of '../scene.dart';
 final class TransformSession {
   TransformSession._(
     this.scene,
+    this.transaction,
     this.router,
     this.cells,
     this.refs,
@@ -12,6 +13,7 @@ final class TransformSession {
   );
 
   final Scene scene;
+  final SceneTransaction? transaction;
   final TransformRouter router;
 
   final List<CellKey> cells;
@@ -21,15 +23,13 @@ final class TransformSession {
   final Mat4 worldToSpace;
   final Aabb2 initialHull;
 
-  factory TransformSession.statement(Scene scene, StatementId id) {
+  factory TransformSession.statement(Scene scene, StatementId id, {SceneTransaction? transaction}) {
     final statement = scene.program.byId(id)!;
     final first = statement.products.first;
-    final key = scene.keyOf(first);
-    return .of(scene, [key]);
+    return .of(scene, [first], transaction: transaction);
   }
 
-  factory TransformSession.of(Scene scene, Iterable<CellKey> cells) {
-    final refs = cells.map((c) => scene.refOf(c)!).toList();
+  factory TransformSession.of(Scene scene, Iterable<Ref> refs, {SceneTransaction? transaction}) {
     final router = scene.resolveTransformRouter(refs);
 
     final absorbers = router.absorbers.keys;
@@ -58,7 +58,8 @@ final class TransformSession {
       initialHull = hull;
     }
 
-    return ._(scene, router, cells.toList(), refs, spaceToWorld, worldToSpace, initialHull);
+    final cells = refs.map((r) => scene.keyOf(r)).whereType<CellKey>().toList();
+    return ._(scene, transaction, router, cells, refs.toList(), spaceToWorld, worldToSpace, initialHull);
   }
 
   Vec2 get worldPivot => spaceToWorld.transform2(initialHull.center);
@@ -66,11 +67,17 @@ final class TransformSession {
   Set<Ref> get locked => router.locked;
   bool get isEmpty => router.isEmpty;
 
-  void apply(Mat4 transform) {
+  void _apply(SceneTransaction txn, Mat4 transform) {
     final result = router.transform(transform);
-    scene.edit((txn) {
-      for (final entry in result.entries) txn.replace(entry.key, [entry.value]);
-    });
+    for (final entry in result.entries) txn.replace(entry.key, [entry.value]);
+  }
+
+  void apply(Mat4 transform) {
+    if (transaction != null) {
+      _apply(transaction!, transform);
+    } else {
+      scene.edit((txn) => _apply(txn, transform));
+    }
   }
 
   void translateBy(Vec2 delta) => apply(Mat4.translation2(delta));

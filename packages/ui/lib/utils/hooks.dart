@@ -10,3 +10,9 @@ bool useFocusNodeHasFocus(FocusNode focusNode) {
 void useOnDispose(VoidCallback callback) {
   useEffect(() => callback, const []);
 }
+
+Computed<T> useMemoComputed<T>(T Function() compute, {List<Object?> keys = const []}) {
+  final computed = useMemoized(() => Computed(compute), keys);
+  useEffect(() => computed.dispose, [computed]);
+  return computed;
+}

@@ -28,6 +28,14 @@ final class SceneTransaction {
     _record(index, inserted: statements, removed: [program[index]]);
   }
 
+  void update(StatementId target, StatementPartial update) {
+    final index = program.indexOf(target);
+    if (index == null) throw StateError('statement $target does not exist in program');
+    final current = program[index];
+    final updated = current.updateWith(update);
+    replace(target, [updated]);
+  }
+
   void decorate(Ref ref, CellStylePartial decoration) {
     final current = scene.styleOverrides.of(ref);
     _decorations.add((ref, current, decoration));

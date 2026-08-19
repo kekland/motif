@@ -16,7 +16,7 @@ final class GlueVerticesStatement extends Statement {
   @override
   late final _products = [vertex];
 
-  late final vertex = VertexRef(id, #vertex);
+  late final vertex = Ref.vertex(id, #vertex);
 
   @override
   void execute(EvalContext context) {
@@ -37,6 +37,15 @@ final class GlueVerticesStatement extends Statement {
 
   @override
   GlueVerticesStatement updateWith(GlueVerticesStatementPartial partial) => partial.apply(this);
+
+  @override
+  GlueVerticesStatementPartial partial({
+    List<VertexRef>? targets,
+    GlueVerticesPosition? position,
+  }) => .new(
+    targets: targets,
+    position: position,
+  );
 }
 
 final class GlueVerticesStatementPartial({

@@ -9,12 +9,12 @@ part 'components/sliders.dart';
 class ColorInputWindow extends HookWidget {
   const new({super.key, required this.value, this.onChanged});
 
-  final ReadonlySignal<ColorData> value;
+  final ReadonlySignal<ColorData?> value;
   final ValueChanged<ColorData>? onChanged;
 
   static WindowEntry createEntry(
     BuildContext context, {
-    required ReadonlySignal<ColorData> value,
+    required ReadonlySignal<ColorData?> value,
     ValueChanged<ColorData>? onChanged,
   }) => WindowEntry.withContextAnchor(
     context,
@@ -64,7 +64,7 @@ class ColorInputWindow extends HookWidget {
             onChanged: onChanged,
           ),
           ColorField(
-            value: color,
+            value: value,
             onChanged: onChanged,
           ),
         ],

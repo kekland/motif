@@ -15,7 +15,7 @@ final class VertexStatement extends PlacedStatement {
   @override
   late final _products = [vertex];
 
-  late final vertex = VertexRef(id, #vertex);
+  late final vertex = Ref.vertex(id, #vertex);
 
   @override
   void execute(EvalContext context) {
@@ -42,15 +42,21 @@ final class VertexStatement extends PlacedStatement {
 
   @override
   VertexStatement updateWith(VertexStatementPartial partial) => partial.apply(this);
+
+  @override
+  VertexStatementPartial partial({Vec2Partial? position, FrameRef? parent}) => .new(
+    position: position,
+    parent: parent,
+  );
 }
 
 final class const VertexStatementPartial({
-  final Vec2? position,
+  final Vec2Partial? position,
   final FrameRef? parent,
 }) extends StatementPartial<VertexStatement> {
   @override
   VertexStatement apply(VertexStatement statement) => statement.copyWith(
-    position: position,
+    position: position?.apply(statement.position),
     parent: parent,
   );
 }

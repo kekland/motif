@@ -4,7 +4,7 @@ final class FaceStatement extends PlacedStatement {
   FaceStatement(
     List<EdgeRef> outer, {
     List<List<EdgeRef>> holes = const [],
-    this.decoration,
+    this.style = .default_,
     super.parent,
     super.id,
   }) : outer = outer.borrow(),
@@ -12,7 +12,7 @@ final class FaceStatement extends PlacedStatement {
 
   final List<Arg<EdgeRef>> outer;
   final List<List<Arg<EdgeRef>>> holes;
-  final FaceStyle? decoration;
+  final FaceStyle style;
 
   @override
   late final _args = [...outer, for (final hole in holes) ...hole, ?parent];
@@ -20,7 +20,7 @@ final class FaceStatement extends PlacedStatement {
   @override
   late final _products = [face];
 
-  late final face = FaceRef(id, #face);
+  late final face = Ref.face(id, #face);
 
   @override
   void execute(EvalContext context) {
@@ -31,7 +31,7 @@ final class FaceStatement extends PlacedStatement {
 
     final parent = context.resolveOptional(this.parent);
     final handle = context.transaction.makeFace(cellId('face'), outer, holes: holes, parent: parent);
-    context.bind(face, handle, decoration: decoration);
+    context.bind(face, handle, decoration: style);
   }
 
   @override
@@ -47,31 +47,44 @@ final class FaceStatement extends PlacedStatement {
   FaceStatement copyWith({
     List<EdgeRef>? outer,
     List<List<EdgeRef>>? holes,
-    FaceStyle? decoration,
+    FaceStyle? style,
     FrameRef? parent,
   }) => .new(
     outer ?? this.outer.refs,
     holes: holes ?? [for (final hole in this.holes) hole.refs],
     parent: parent ?? this.parent?.ref,
-    decoration: decoration ?? this.decoration,
+    style: style ?? this.style,
     id: id,
   );
 
   @override
   FaceStatement updateWith(FaceStatementPartial partial) => partial.apply(this);
+
+  @override
+  FaceStatementPartial partial({
+    List<EdgeRef>? outer,
+    List<List<EdgeRef>>? holes,
+    FaceStylePartial? style,
+    FrameRef? parent,
+  }) => .new(
+    outer: outer,
+    holes: holes,
+    style: style,
+    parent: parent,
+  );
 }
 
 final class const FaceStatementPartial({
   final List<EdgeRef>? outer,
   final List<List<EdgeRef>>? holes,
-  final FaceStyle? decoration,
+  final FaceStylePartial? style,
   final FrameRef? parent,
 }) extends StatementPartial<FaceStatement> {
   @override
   FaceStatement apply(FaceStatement statement) => statement.copyWith(
     outer: outer,
     holes: holes,
-    decoration: decoration,
+    style: style?.apply(statement.style),
     parent: parent,
   );
 }

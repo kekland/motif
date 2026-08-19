@@ -4,35 +4,34 @@ final class SceneSelection with ChangeNotifier {
   SceneSelection(this.scene);
   final Scene scene;
 
-  final _selected = <CellKey>{};
+  final _selected = <Ref>{};
   final _selectedStatements = <StatementId>{};
   var _stamp = 0;
 
-  Iterable<CellKey> get cells => _selected;
+  Iterable<Ref> get refs => _selected;
   bool get isEmpty => _selected.isEmpty;
 
   Iterable<StatementId> get statements => _selectedStatements;
 
-  void set(CellKey key) {
+  void set(Ref ref) {
     _selected.clear();
-    _selected.add(key);
+    _selected.add(ref);
     _onUpdated();
   }
 
   void setStatement(StatementId id) {
     final statement = scene.statement(id);
-    final keys = scene.keysOf(statement.products);
-    setMultiple(keys);
+    setMultiple(statement.products);
   }
 
-  void setMultiple(Iterable<CellKey> keys) {
+  void setMultiple(Iterable<Ref> keys) {
     _selected.clear();
     _selected.addAll(keys);
     _onUpdated();
   }
 
-  void add(CellKey key) {
-    _selected.add(key);
+  void add(Ref ref) {
+    _selected.add(ref);
     _onUpdated();
   }
 
@@ -42,7 +41,7 @@ final class SceneSelection with ChangeNotifier {
   }
 
   void _onUpdated() {
-    final stmts = _selected.map((key) => scene.refOf(key)?.statement).whereType<StatementId>().toSet();
+    final stmts = _selected.map((ref) => ref.statement).whereType<StatementId>().toSet();
     _selectedStatements.clear();
     _selectedStatements.addAll(stmts);
     notifyListeners();

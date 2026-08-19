@@ -16,9 +16,9 @@ final class CutEdgeStatement extends Statement {
   @override
   late final _products = [edge0, edge1, vertex];
 
-  late final edge0 = EdgeRef(id, #edge0);
-  late final edge1 = EdgeRef(id, #edge1);
-  late final vertex = VertexRef(id, #vertex);
+  late final edge0 = Ref.edge(id, #edge0);
+  late final edge1 = Ref.edge(id, #edge1);
+  late final vertex = Ref.vertex(id, #vertex);
 
   Cubic2? _originalCubic;
 
@@ -65,6 +65,12 @@ final class CutEdgeStatement extends Statement {
 
   @override
   CutEdgeStatement updateWith(CutEdgeStatementPartial partial) => partial.apply(this);
+
+  @override
+  CutEdgeStatementPartial partial({EdgeRef? target, double? t}) => .new(
+    target: target,
+    t: t,
+  );
 }
 
 final class CutEdgeStatementPartial({
