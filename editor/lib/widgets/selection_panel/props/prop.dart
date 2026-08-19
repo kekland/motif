@@ -13,6 +13,7 @@ final class PropType<T> {
   const PropType._(this.id);
   final String id;
 
+  static const coordinate = PropType<double>._('coordinate');
   static const position = PropType<Vec2Partial>._('position');
   static const rotation = PropType<double>._('rotation');
   static const transform = PropType<Mat4>._('transform');
@@ -23,6 +24,7 @@ final class PropType<T> {
   static const cutT = PropType<double>._('cutT');
 
   CompositeProp<T> compose(Iterable<Prop> props) => switch (T) {
+    const (Vec2Partial) => CompositePositionProp._(props.cast<Prop<Vec2Partial>>().toList()),
     const (Mat4) => CompositeTransformProp._(props.cast<Prop<Mat4>>().toList()),
     const (LayoutSizePartial) => CompositeLayoutSizeProp._(props.cast<LayoutSizePropBase>().toList()),
     _ => CompositeProp<T>._(props.cast<Prop<T>>().toList()),
@@ -78,6 +80,8 @@ sealed class Prop<T> {
   }
 
   PropType<T> get type;
+
+  bool compare(T a, T b) => a == b;
 }
 
 sealed class ObjectProp<T> extends Prop<T> {
@@ -91,6 +95,11 @@ sealed class ObjectProp<T> extends Prop<T> {
 
   @override
   void set(SceneTransaction txn, T value) => _setter(txn, value);
+}
+
+mixin PositionPropBase on Prop<Vec2Partial> {
+  Prop<double> get x;
+  Prop<double> get y;
 }
 
 mixin TransformPropBase on Prop<Mat4> {
@@ -150,7 +159,8 @@ class CompositeProp<T> implements Prop<T> {
 
     for (final prop in props.skip(1)) {
       final v = prop.value(scene);
-      if (v is! Uniform<T> || v.value != first.value) return const .mixed();
+      if (v is! Uniform<T>) return const .mixed();
+      if (!prop.compare(first.value, v.value)) return const .mixed();
     }
 
     return first;
@@ -165,13 +175,16 @@ class CompositeProp<T> implements Prop<T> {
   void alter(SceneTransaction txn, T Function(T current) update) {
     for (final prop in props) prop.alter(txn, update);
   }
+
+  @override
+  bool compare(T a, T b) => props.first.compare(a, b);
 }
 
 class CompositeTransformProp extends CompositeProp<Mat4> with TransformPropBase {
   CompositeTransformProp._(super.props) : super._();
 
   @override
-  late final position = CompositeProp<Vec2Partial>._(
+  late final position = CompositePositionProp._(
     [for (final prop in props) (prop as TransformPropBase).position],
   );
 
@@ -194,4 +207,18 @@ class CompositeLayoutSizeProp extends CompositeProp<LayoutSizePartial> with Layo
     }
     return first;
   }
+}
+
+class CompositePositionProp extends CompositeProp<Vec2Partial> with PositionPropBase {
+  CompositePositionProp._(super.props) : super._();
+
+  @override
+  late final x = CompositeProp<double>._(
+    [for (final prop in props) (prop as PositionPropBase).x],
+  );
+
+  @override
+  late final y = CompositeProp<double>._(
+    [for (final prop in props) (prop as PositionPropBase).y],
+  );
 }

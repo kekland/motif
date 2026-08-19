@@ -1,6 +1,13 @@
 part of 'prop.dart';
 
-final class PositionProp extends ObjectProp<Vec2Partial> {
+final class CoordinateProp extends ObjectProp<double> {
+  CoordinateProp(super.getter, super.setter);
+
+  @override
+  PropType<double> get type => .coordinate;
+}
+
+final class PositionProp extends ObjectProp<Vec2Partial> with PositionPropBase {
   PositionProp(this.session, Vec2Partial Function(Scene) getter) : super(getter, (txn, value) {});
 
   final TransformSession Function(SceneTransaction) session;
@@ -13,6 +20,18 @@ final class PositionProp extends ObjectProp<Vec2Partial> {
 
   @override
   PropType<Vec2Partial> get type => .position;
+
+  @override
+  late final x = CoordinateProp(
+    (scene) => value(scene).unwrap.x!,
+    (txn, value) => set(txn, .new(x: value)),
+  );
+
+  @override
+  late final y = CoordinateProp(
+    (scene) => value(scene).unwrap.y!,
+    (txn, value) => set(txn, .new(y: value)),
+  );
 }
 
 final class RotationProp extends ObjectProp<double> {

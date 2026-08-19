@@ -21,9 +21,11 @@ class PositionPropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    final position = usePropComputed(scene, prop);
-    final x = useMemoComputed(() => position.value()?.x, keys: [position]);
-    final y = useMemoComputed(() => position.value()?.y, keys: [position]);
+    final xComputed = usePropComputed(scene, (prop as PositionPropBase).x);
+    final yComputed = usePropComputed(scene, (prop as PositionPropBase).y);
+
+    final x = useMemoComputed(() => xComputed.value(), keys: [xComputed]);
+    final y = useMemoComputed(() => yComputed.value(), keys: [yComputed]);
 
     return Row(
       spacing: 4.0,
@@ -207,7 +209,7 @@ class ChildLayoutPropWidget extends PropWidget {
   final Prop<ChildLayout> prop;
 
   @override
-  String resolveHeader(BuildContext context) => 'Child Layout';
+  String resolveHeader(BuildContext context) => 'Children';
 
   @override
   Widget build(BuildContext context) {
