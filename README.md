@@ -2,6 +2,8 @@
 
 An open-source vector graphics design, drawing, and animation tool.
 
+![Screenshot](./.github/screenshot.png)
+
 ## Goals
 
 Provide a free and open-source alternative to vector graphics design tools like Figma and Illustrator, without the predatory subscription models, paywalls, tracking, other anti-consumer practices, and useless "AI" features.

@@ -47,9 +47,10 @@ final class RotationProp(super.sources) extends Prop<double, double> {
 
 final class TransformData {
   const TransformData(this.translation, this.rotation);
-  TransformData.from(Mat4 mat) : this(mat.translation2, mat.rotationZ);
+  TransformData.from(Mat4 mat, {Vec2? translationOverride})
+    : this(.new(mat.translation2, translationOverride), mat.rotationZ);
 
-  final Vec2 translation;
+  final ResolvedPosition translation;
   final double rotation;
 }
 
@@ -60,14 +61,16 @@ final class TransformDataPartial {
   final double? rotation;
 
   TransformData apply(TransformData current) {
+    final position = current.translation.position;
+
     return TransformData(
-      translation?.apply(current.translation) ?? current.translation,
+      .new(translation?.apply(position) ?? position, current.translation.overriden),
       rotation ?? current.rotation,
     );
   }
 
   void execute(TransformSession session, TransformData current) {
-    if (translation != null) session.setTranslation(translation!.apply(current.translation));
+    if (translation != null) session.setTranslation(translation!.apply(current.translation.position));
     if (rotation != null) session.setRotation(rotation!);
   }
 }
@@ -79,7 +82,7 @@ final class TransformProp(super.sources) extends Prop<TransformData, TransformDa
   late final PositionProp translation = .new(
     sources.remap(
       .position,
-      (v) => .from(v.translation),
+      (v) => v.translation,
       (v) => .new(translation: v),
     ),
   );

@@ -155,7 +155,7 @@ class TextField extends HookWidget {
                 controller.text.isNotEmpty ? controller.text : hintText ?? '',
                 style: controller.text.isNotEmpty ? effectiveTextStyle : context.typography.body.tertiary,
                 maxLines: 1,
-                overflow: .clip,
+                overflow: .visible,
               );
             },
           );

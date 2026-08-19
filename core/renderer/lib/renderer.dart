@@ -115,7 +115,11 @@ class ScenePainter extends CustomPainter {
 
     final cubic = bundle.edgeCubic(edge);
     final path = _cubicPath(cubic);
-    canvas.drawPath(path.transform(transform.storage), paint);
+
+    canvas.save();
+    canvas.transform(transform.storage);
+    canvas.drawPath(path, paint);
+    canvas.restore();
   }
 
   void _paintFace(Canvas canvas, FaceHandle face, Matrix4 transform, int depth) {

@@ -44,7 +44,7 @@ extension ShapeStatementProps on ShapeStatement {
   Iterable<PropSource> get props sync* {
     yield PropType.transform.transforming(
       (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
-      (scene) => .from(scene.statement<ShapeStatement>(id).transform),
+      (scene) => .from(scene.statement<ShapeStatement>(id).transform, translationOverride: scene.layout.of(id)?.offset),
       (session, current, value) => value.execute(session, current),
     );
 
