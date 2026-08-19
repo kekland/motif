@@ -2,7 +2,10 @@
 
 An open-source vector graphics design, drawing, and animation tool.
 
-![Screenshot](./.github/assets/screenshot.png)
+<p align="center">
+<img src="./.github/assets/screenshot2.png" alt="Screenshot" width="49%">
+<img src="./.github/assets/screenshot.png" alt="Screenshot" width="49%">
+</p>
 
 ## Goals
 
