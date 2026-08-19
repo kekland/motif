@@ -1,15 +1,14 @@
 part of '../program.dart';
 
-extension type const LayoutSize._((LayoutDimension, LayoutDimension) _) {
-  const LayoutSize(LayoutDimension width, LayoutDimension height) : this._((width, height));
+final class const LayoutSize(
+  final LayoutDimension width,
+  final LayoutDimension height,
+) {
   LayoutSize.fixed(double w, double h) : this(.fixed(w), .fixed(h));
   const LayoutSize.contain() : this(const .contain(), const .contain());
   const LayoutSize.expand() : this(const .expand(), const .expand());
 
   static const zero = LayoutSize(.fixed(0), .fixed(0));
-
-  LayoutDimension get width => _.$1;
-  LayoutDimension get height => _.$2;
 
   bool get isFullyFixed => width.isFixed && height.isFixed;
   Size2 natural(Size2 content) => .new(width.natural(content.width), height.natural(content.height));
@@ -21,35 +20,41 @@ extension type const LayoutSize._((LayoutDimension, LayoutDimension) _) {
 
   LayoutSize withWidth(LayoutDimension w) => .new(w, height);
   LayoutSize withHeight(LayoutDimension h) => .new(width, h);
+
+  @override
+  bool operator ==(Object other) => other is LayoutSize && other.width == width && other.height == height;
+
+  @override
+  int get hashCode => Object.hash(width, height);
 }
 
 enum LayoutDimensionType { fixed, expand, contain }
 
-extension type const LayoutRange._((double min, double max) _) {
-  const LayoutRange({double min = 0, double max = .infinity}) : this._((min, max));
+final class const LayoutRange._(
+  final double min,
+  final double max,
+) {
+  const LayoutRange({double min = 0, double max = .infinity}) : this._(min, max);
   const LayoutRange.atLeast(double min) : this(min: min);
   const LayoutRange.atMost(double max) : this(max: max);
   const LayoutRange.tight(double value) : this(min: value, max: value);
 
   static const unbounded = LayoutRange(min: 0, max: .infinity);
 
-  double get min => _.$1;
-  double get max => _.$2;
-
   bool get isTight => min >= max;
   double clamp(double v) => v.clamp(min, max.isFinite ? max : .maxFinite);
+
+  @override
+  bool operator ==(Object other) => other is LayoutRange && other.min == min && other.max == max;
+
+  @override
+  int get hashCode => Object.hash(min, max);
 }
 
-extension type const LayoutDimension._((double? value, LayoutDimensionType type, LayoutRange range) _) {
-  const LayoutDimension(double? value, LayoutDimensionType type, LayoutRange range) : this._((value, type, range));
-
+final class const LayoutDimension(final double? value, final LayoutDimensionType type, final LayoutRange range) {
   const LayoutDimension.fixed(double value, {LayoutRange range = .unbounded}) : this(value, .fixed, range);
   const LayoutDimension.expand({LayoutRange range = .unbounded}) : this(null, .expand, range);
   const LayoutDimension.contain({LayoutRange range = .unbounded}) : this(null, .contain, range);
-
-  double? get value => _.$1;
-  LayoutDimensionType get type => _.$2;
-  LayoutRange get range => _.$3;
 
   bool get isFixed => type == .fixed;
   bool get isExpand => type == .expand;
@@ -64,6 +69,13 @@ extension type const LayoutDimension._((double? value, LayoutDimensionType type,
 
   LayoutDimension withFixed(double v) => .new(v, .fixed, range);
   LayoutDimension withType(LayoutDimensionType t) => .new(value, t, range);
+
+  @override
+  bool operator ==(Object other) =>
+      other is LayoutDimension && other.value == value && other.type == type && other.range == range;
+
+  @override
+  int get hashCode => Object.hash(value, type, range);
 }
 
 final class LayoutConstraints {
@@ -79,4 +91,15 @@ final class LayoutConstraints {
 
   final double minWidth, maxWidth;
   final double minHeight, maxHeight;
+
+  @override
+  bool operator ==(Object other) =>
+      other is LayoutConstraints &&
+      other.minWidth == minWidth &&
+      other.maxWidth == maxWidth &&
+      other.minHeight == minHeight &&
+      other.maxHeight == maxHeight;
+
+  @override
+  int get hashCode => Object.hash(minWidth, maxWidth, minHeight, maxHeight);
 }

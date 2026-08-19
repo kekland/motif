@@ -14,40 +14,43 @@ class PositionPropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<Vec2Partial> prop;
+  final PositionProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Position';
 
   @override
   Widget build(BuildContext context) {
-    final xComputed = usePropComputed(scene, (prop as PositionPropBase).x);
-    final yComputed = usePropComputed(scene, (prop as PositionPropBase).y);
+    final xProp = usePropComputed(scene, prop.x);
+    final yProp = usePropComputed(scene, prop.y);
 
-    final x = useMemoComputed(() => xComputed.value(), keys: [xComputed]);
-    final y = useMemoComputed(() => yComputed.value(), keys: [yComputed]);
+    final xValue = useMemoComputed(() => xProp.value()?.value, keys: [xProp]);
+    final yValue = useMemoComputed(() => yProp.value()?.value, keys: [yProp]);
+
+    final isXOverriden = useComputed(() => xProp.value()?.overriden != null, keys: [xProp]).value;
+    final isYOverriden = useComputed(() => yProp.value()?.overriden != null, keys: [yProp]).value;
 
     return Row(
       spacing: 4.0,
       children: [
         Expanded(
           child: DoubleExpressionInputField(
-            value: x,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(x: v))),
+            value: xValue,
+            onChanged: (v) => scene.edit((txn) => prop.x.set(txn, v)),
             options: .new(
               leading: Icons.x(),
-              // textStyle: overridePosition != null ? context.typography.body.tertiary : null,
+              textStyle: isXOverriden ? context.typography.body.tertiary : null,
               hintText: 'Mixed',
             ),
           ),
         ),
         Expanded(
           child: DoubleExpressionInputField(
-            value: y,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(y: v))),
+            value: yValue,
+            onChanged: (v) => scene.edit((txn) => prop.y.set(txn, v)),
             options: .new(
               leading: Icons.y(),
-              // textStyle: overridePosition != null ? context.typography.body.tertiary : null,
+              textStyle: isYOverriden ? context.typography.body.tertiary : null,
               hintText: 'Mixed',
             ),
           ),
@@ -65,7 +68,7 @@ final class RotationPropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<double> prop;
+  final RotationProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Rotation';
@@ -109,30 +112,30 @@ final class EdgeStylePropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<EdgeStylePartial> prop;
+  final EdgeStyleProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Stroke';
 
   @override
   Widget build(BuildContext context) {
-    final style = usePropComputed(scene, prop);
-    final width = useMemoComputed(() => style.value()?.width, keys: [style]);
-    final color = useMemoComputed(() => style.value()?.color, keys: [style]);
+    final width = usePropComputed(scene, prop.width);
+    final color = usePropComputed(scene, prop.color);
 
     return Column(
       spacing: 8.0,
       children: [
         ColorField(
-          value: color,
-          onChanged: (color) => scene.edit((txn) => prop.set(txn, .new(color: color))),
+          value: useMemoComputed(() => color.value(), keys: [color]),
+          onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
+          options: .new(hintText: 'Mixed'),
         ),
         DoubleExpressionInputField(
-          value: width,
-          onChanged: (width) => scene.edit((txn) => prop.set(txn, .new(width: width))),
+          value: useMemoComputed(() => width.value(), keys: [width]),
+          onChanged: (width) => scene.edit((txn) => prop.width.set(txn, width)),
           options: .new(
             leading: Icons.weight(),
-            hintText: '0',
+            hintText: 'Mixed',
           ),
         ),
       ],
@@ -148,19 +151,19 @@ final class FaceStylePropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<FaceStylePartial> prop;
+  final FaceStyleProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Fill';
 
   @override
   Widget build(BuildContext context) {
-    final style = usePropComputed(scene, prop);
-    final color = useMemoComputed(() => style.value()?.color, keys: [style]);
+    final color = usePropComputed(scene, prop.color);
 
     return ColorField(
-      value: color,
-      onChanged: (color) => scene.edit((txn) => prop.set(txn, .new(color: color))),
+      value: useMemoComputed(() => color.value(), keys: [color]),
+      onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
+      options: .new(hintText: 'Mixed'),
     );
   }
 }
@@ -173,21 +176,19 @@ class TransformPropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<Mat4> prop;
+  final TransformProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Transform';
 
   @override
   Widget build(BuildContext context) {
-    final prop = this.prop as TransformPropBase;
-
     return Column(
       spacing: 8.0,
       children: [
         PositionPropWidget(
           scene: scene,
-          prop: prop.position,
+          prop: prop.translation,
         ),
         RotationPropWidget(
           scene: scene,
@@ -206,30 +207,30 @@ class ChildLayoutPropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<ChildLayout> prop;
+  final ChildLayoutProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Children';
 
   @override
   Widget build(BuildContext context) {
-    final value = usePropComputed(scene, prop);
-    final layout = useComputed(() => value.value(), keys: [value]).value;
+    final prop = usePropComputed(scene, this.prop);
+    final layout = useComputed(() => prop.value(), keys: [prop]).value;
 
     return ToggleableButtonRow(
       children: [
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => prop.set(txn, .stack())),
+          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .stack())),
           isActive: layout is StackChildLayout,
           child: Icons.layoutStack(),
         ),
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => prop.set(txn, .flex(direction: .row))),
+          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .row))),
           isActive: layout is FlexChildLayout && layout.direction == .row,
           child: Icons.layoutRow(),
         ),
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => prop.set(txn, .flex(direction: .column))),
+          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .column))),
           isActive: layout is FlexChildLayout && layout.direction == .column,
           child: Icons.layoutColumn(),
         ),
@@ -246,37 +247,39 @@ class LayoutSizePropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final Prop<LayoutSizePartial> prop;
+  final LayoutSizeProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Size';
 
   @override
   Widget build(BuildContext context) {
-    final size = usePropComputed(scene, prop);
-    final resolvedSize = useMemoComputed(() {
-      scene.signal();
-      return (prop as LayoutSizePropBase).resolvedSize(scene);
-    });
+    final width = usePropComputed(scene, prop.width);
+    final height = usePropComputed(scene, prop.height);
 
-    final layoutSize = useMemoComputed(() {
-      final s = size.value;
-      if (s.isMixed) return null;
-      return s()!.unwrap.natural(resolvedSize() ?? .zero());
-    }, keys: [size]);
+    final isWidthFixed = useComputed(() => width.value()?.dimension.isFixed ?? true, keys: [width]).value;
+    final isHeightFixed = useComputed(() => height.value()?.dimension.isFixed ?? true, keys: [height]).value;
 
-    final width = useMemoComputed(() => layoutSize()?.width, keys: [layoutSize]);
-    final height = useMemoComputed(() => layoutSize()?.height, keys: [layoutSize]);
+    final widthValue = useMemoComputed(() {
+      final w = width.value();
+      if (w?.overriden != null) return w?.overriden!;
+      if (w?.dimension.isFixed == true) return w?.dimension.value;
+      return null;
+    }, keys: [width]);
 
-    final isWidthFixed = useComputed(() => size.value()?.width?.isFixed ?? true).value;
-    final isHeightFixed = useComputed(() => size.value()?.height?.isFixed ?? true).value;
+    final heightValue = useMemoComputed(() {
+      final h = height.value();
+      if (h?.overriden != null) return h?.overriden!;
+      if (h?.dimension.isFixed == true) return h?.dimension.value;
+      return null;
+    }, keys: [height]);
 
     return Row(
       spacing: 4.0,
       children: [
         Expanded(
           child: DoubleExpressionInputField(
-            value: width,
+            value: widthValue,
             onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(width: .fixed(v)))),
             options: .new(
               leading: Icons.w(),
@@ -287,7 +290,7 @@ class LayoutSizePropWidget extends PropWidget {
         ),
         Expanded(
           child: DoubleExpressionInputField(
-            value: height,
+            value: heightValue,
             onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(height: .fixed(v)))),
             options: .new(
               leading: Icons.h(),

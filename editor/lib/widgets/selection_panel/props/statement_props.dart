@@ -1,7 +1,7 @@
 part of 'prop.dart';
 
 extension StatementProps on Statement {
-  Iterable<Prop> get props => switch (this) {
+  Iterable<PropSource> get props => switch (this) {
     VertexStatement s => s.props,
     EdgeStatement s => s.props,
     FaceStatement s => s.props,
@@ -13,17 +13,18 @@ extension StatementProps on Statement {
 }
 
 extension VertexStatementProps on VertexStatement {
-  Iterable<Prop> get props sync* {
-    yield PositionProp(
+  Iterable<PropSource> get props sync* {
+    yield PropType.position.transforming(
       (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
       (scene) => .from(scene.statement<VertexStatement>(id).position),
+      (session, current, value) => session.setTranslation(value.apply(current.value)),
     );
   }
 }
 
 extension EdgeStatementProps on EdgeStatement {
-  Iterable<Prop> get props sync* {
-    yield EdgeStyleProp(
+  Iterable<PropSource> get props sync* {
+    yield PropType.edgeStyle.delegating(
       (scene) => .from(scene.statement<EdgeStatement>(id).style),
       (txn, value) => txn.update(id, partial(style: value)),
     );
@@ -31,8 +32,8 @@ extension EdgeStatementProps on EdgeStatement {
 }
 
 extension FaceStatementProps on FaceStatement {
-  Iterable<Prop> get props sync* {
-    yield FaceStyleProp(
+  Iterable<PropSource> get props sync* {
+    yield PropType.faceStyle.delegating(
       (scene) => .from(scene.statement<FaceStatement>(id).style),
       (txn, value) => txn.update(id, partial(style: value)),
     );
@@ -40,24 +41,24 @@ extension FaceStatementProps on FaceStatement {
 }
 
 extension ShapeStatementProps on ShapeStatement {
-  Iterable<Prop> get props sync* {
-    yield TransformProp(
+  Iterable<PropSource> get props sync* {
+    yield PropType.transform.transforming(
       (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
-      (scene) => scene.statement<ShapeStatement>(id).transform,
+      (scene) => .from(scene.statement<ShapeStatement>(id).transform),
+      (session, current, value) => value.execute(session, current),
     );
 
-    yield LayoutSizeProp(
-      id,
-      (scene) => .from(scene.statement<ShapeStatement>(id).size),
+    yield PropType.layoutSize.delegating(
+      (scene) => .new(scene.statement<ShapeStatement>(id).size, scene.layout.of(id)?.size),
       (txn, value) => txn.update(id, partial(size: value)),
     );
 
-    yield FaceStyleProp(
+    yield PropType.faceStyle.delegating(
       (scene) => scene.statement<ShapeStatement>(id).resolvedFaceStyle(scene),
       (txn, value) => txn.update(id, partial(faceStyle: value)),
     );
 
-    yield EdgeStyleProp(
+    yield PropType.edgeStyle.delegating(
       (scene) => scene.statement<ShapeStatement>(id).resolvedEdgeStyle(scene),
       (txn, value) => txn.update(id, partial(edgeStyle: value)),
     );
@@ -65,10 +66,10 @@ extension ShapeStatementProps on ShapeStatement {
 }
 
 extension ContainerStatementProps on ContainerStatement {
-  Iterable<Prop> get props sync* {
+  Iterable<PropSource> get props sync* {
     yield* (this as ShapeStatement).props;
 
-    yield ChildLayoutProp(
+    yield PropType.childLayout.delegating(
       (scene) => scene.statement<ContainerStatement>(id).childLayout,
       (txn, value) => txn.update(id, partial(childLayout: value)),
     );
@@ -76,8 +77,8 @@ extension ContainerStatementProps on ContainerStatement {
 }
 
 extension CutEdgeStatementProps on CutEdgeStatement {
-  Iterable<Prop> get props sync* {
-    yield CutTProp(
+  Iterable<PropSource> get props sync* {
+    yield PropType.cutT.delegating(
       (scene) => scene.statement<CutEdgeStatement>(id).t,
       (txn, value) => txn.update(id, partial(t: value)),
     );

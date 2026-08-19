@@ -17,8 +17,8 @@ final class ColorField extends HookWidget {
   Widget build(BuildContext context) {
     final value = this.value;
     final alpha = useComputed(() {
-      final color = value.value;
-      if (color == null) return 100.0;
+      final color = value();
+      if (color == null) return null;
       return color.alpha * 100.0;
     }, keys: [value]);
 
@@ -26,16 +26,18 @@ final class ColorField extends HookWidget {
       (context) => ColorInputWindow.createEntry(context, value: value, onChanged: onChanged),
     );
 
-    final leading = Builder(
+    final leading = HookBuilder(
       builder: (context) {
         final iconTheme = IconTheme.of(context);
+        final color = useComputed(() => value()?.toUiColor(colorSpace: .sRGB), keys: [value]).value;
+
         return GestureSurface(
           onTap: () => createEntry(context),
           borderRadius: BorderRadius.circular(4.0),
           borderSide: BorderSide(color: context.colors.inverse.withScaledAlpha(0.05)),
           width: iconTheme.size ?? 16.0,
           height: iconTheme.size ?? 16.0,
-          color: value.value?.toUiColor(colorSpace: .sRGB),
+          color: color,
         );
       },
     );
@@ -43,7 +45,7 @@ final class ColorField extends HookWidget {
     final colorInput = ExpressionInputField<ColorData>(
       value: value,
       onChanged: onChanged,
-      valueToString: (color) => color?.cssColor.withAlpha(1.0).toString() ?? 'none',
+      valueToString: (color) => color?.cssColor.withAlpha(1.0).toString() ?? '',
       supportedDevices: {.mouse, .trackpad},
       evaluateExpression: (str) {
         return .transparent;
@@ -69,6 +71,7 @@ final class ColorField extends HookWidget {
       supportedDevices: {.mouse, .trackpad},
       onChanged: (a) => onChanged?.call((value.value ?? .black).withAlpha(a / 100)),
       options: .new(
+        hintText: '-',
         trailing: Text('%'),
         borderRadius: .horizontal(right: .circular(4.0), left: .circular(2.0)),
       ),

@@ -15,12 +15,12 @@ final class PropListBuilder extends StatelessWidget {
     final children = <Widget>[];
     for (final prop in props) {
       final widget = switch (prop) {
-        Prop<Vec2Partial> p => PositionPropWidget(scene: scene, prop: p),
-        Prop<EdgeStylePartial> p => EdgeStylePropWidget(scene: scene, prop: p),
-        Prop<FaceStylePartial> p => FaceStylePropWidget(scene: scene, prop: p),
-        Prop<Mat4> p => TransformPropWidget(scene: scene, prop: p),
-        Prop<ChildLayout> p => ChildLayoutPropWidget(scene: scene, prop: p),
-        Prop<LayoutSizePartial> p => LayoutSizePropWidget(scene: scene, prop: p),
+        PositionProp p => PositionPropWidget(scene: scene, prop: p),
+        EdgeStyleProp p => EdgeStylePropWidget(scene: scene, prop: p),
+        FaceStyleProp p => FaceStylePropWidget(scene: scene, prop: p),
+        TransformProp p => TransformPropWidget(scene: scene, prop: p),
+        ChildLayoutProp p => ChildLayoutPropWidget(scene: scene, prop: p),
+        LayoutSizeProp p => LayoutSizePropWidget(scene: scene, prop: p),
         _ => null,
       };
 
@@ -40,7 +40,7 @@ final class PropListBuilder extends StatelessWidget {
   }
 }
 
-Computed<PropValue<T>> usePropComputed<T>(Scene scene, Prop<T> prop) {
+Computed<PropValue<G>> usePropComputed<G, S>(Scene scene, Prop<G, S> prop) {
   final computed = useMemoComputed(() {
     scene.signal();
     return prop.value(scene);

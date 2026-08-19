@@ -12,6 +12,7 @@ dependencies:
   state:
   mouse_cursor:
 
+  color:
   geometry:
   kernel:
   scene:

@@ -8,7 +8,7 @@ class const CellPanel({
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final rawProps = <List<Prop>>[];
+    final rawProps = <List<PropSource>>[];
     for (final ref in refs) {
       final kind = editor.handleOf(ref).kind;
       final props = switch (kind) {
@@ -21,7 +21,7 @@ class const CellPanel({
       rawProps.add(props);
     }
 
-    final props = CompositeProp.resolveFor(rawProps);
+    final props = Prop.resolve(rawProps);
 
     late final Widget? icon, title, footnote;
     if (refs.length == 1) {

@@ -1,35 +1,37 @@
 part of 'prop.dart';
 
-List<Prop> frameProps(Scene scene, FrameRef ref) {
+List<PropSource> frameProps(Scene scene, FrameRef ref) {
   return [
-    TransformProp(
+    PropType.transform.transforming(
       (txn) => TransformSession.of(scene, [ref], transaction: txn),
-      (scene) => scene.bundle.frameTransform(scene.handleOf(ref)),
+      (scene) => .from(scene.bundle.frameTransform(scene.handleOf(ref))),
+      (session, current, value) => value.execute(session, current),
     ),
   ];
 }
 
-List<Prop> vertexProps(Scene scene, VertexRef ref) {
+List<PropSource> vertexProps(Scene scene, VertexRef ref) {
   return [
-    PositionProp(
+    PropType.position.transforming(
       (txn) => TransformSession.of(scene, [ref], transaction: txn),
       (scene) => .from(scene.bundle.vertexPosition(scene.handleOf(ref))),
+      (session, current, value) => session.setTranslation(value.apply(current.value)),
     ),
   ];
 }
 
-List<Prop> edgeProps(Scene scene, EdgeRef ref) {
+List<PropSource> edgeProps(Scene scene, EdgeRef ref) {
   return [
-    EdgeStyleProp(
+    PropType.edgeStyle.delegating(
       (scene) => .from(scene.styleOf(ref)!),
       (txn, value) => txn.decorate(ref, value),
     ),
   ];
 }
 
-List<Prop> faceProps(Scene scene, FaceRef ref) {
+List<PropSource> faceProps(Scene scene, FaceRef ref) {
   return [
-    FaceStyleProp(
+    PropType.faceStyle.delegating(
       (scene) => .from(scene.styleOf(ref)!),
       (txn, value) => txn.decorate(ref, value),
     ),

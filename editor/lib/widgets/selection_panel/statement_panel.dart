@@ -8,13 +8,13 @@ class const StatementPanel({
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final rawProps = <List<Prop>>[];
+    final rawProps = <List<PropSource>>[];
     for (final id in statements) {
       final statement = editor.statement(id);
       rawProps.add(statement.props.toList());
     }
 
-    final props = CompositeProp.resolveFor(rawProps);
+    final props = Prop.resolve(rawProps);
 
     late final Widget? icon, title, footnote;
     if (statements.length == 1) {

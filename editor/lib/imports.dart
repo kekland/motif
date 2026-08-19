@@ -5,6 +5,7 @@ export 'package:geometry/geometry.dart';
 export 'package:kernel/kernel.dart';
 export 'package:tool/tool.dart';
 export 'package:mouse_cursor/mouse_cursor.dart';
+export 'package:color/color.dart';
 
 export 'actions/actions.dart';
 export 'activities/activities.dart';
