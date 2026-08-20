@@ -8,14 +8,12 @@ part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
 
 const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhost:8085');
+const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: true);
 
 final class Editor extends Controller {
-  Editor({
-    Scene? scene,
-    ({String host, int port})? server,
-  }) : scene = scene ?? Scene(program: .new([])),
-       super(logger: Logger('editor')) {
-    sync = server == null ? null : SceneSync(this.scene, uri: Uri.parse(_syncUrl));
+  Editor({Scene? scene}) : scene = scene ?? Scene(program: .new([])), super(logger: Logger('editor')) {
+    logger.info('Editor initialized with sync URL: $_syncUrl (enabled: $_syncEnabled)');
+    sync = _syncEnabled ? SceneSync(this.scene, uri: Uri.parse(_syncUrl)) : null;
     sync?.connect();
   }
 
