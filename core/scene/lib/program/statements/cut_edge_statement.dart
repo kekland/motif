@@ -41,6 +41,16 @@ final class CutEdgeStatement extends Statement {
     };
   }
 
+  @override
+  DissolveResult routeDissolve(DissolveContext context, Set<Ref> lost) {
+    final handle = context.handle(vertex).asVertex;
+    final (parentHandle, parent) = context.survivingSpace(handle);
+    final position = context.bundle.vertexPosition(handle, space: parentHandle);
+
+    final newVertex = VertexStatement(position, parent: parent);
+    return .degrade([newVertex], refMap: {vertex: newVertex.vertex});
+  }
+
   AbsorbedTransform _slide(TransformContext context) {
     return .new(
       (transform) {

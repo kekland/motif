@@ -22,6 +22,7 @@ part 'delta/transaction.dart';
 part 'utils/embed_vertex.dart';
 part 'utils/transform_session.dart';
 part 'utils/resolved_style.dart';
+part 'utils/dissolve_session.dart';
 part 'slice/slice.dart';
 
 part 'selection/selection.dart';

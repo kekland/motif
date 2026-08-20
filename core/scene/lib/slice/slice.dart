@@ -47,18 +47,14 @@ final class SceneSlice {
       for (final s in statements) s.id: StatementId.generate(),
     };
 
-    Ref? remapRef(Ref ref) {
-      final newId = idMap[ref.statement];
-      if (newId == null) return null;
+    Ref remapRef(Ref ref) {
+      final newId = idMap[ref.statement]!;
       return ref.copyWith(statement: newId);
     }
 
-    final newStatements = statements.map((s) => s.copyWith(id: idMap[s.id]!)).toList();
-    for (final s in newStatements) {
-      for (final arg in s.args) arg.ref = remapRef(arg.ref)!;
-    }
+    final newStatements = statements.map((s) => s.copyWithRefs(remapRef, id: idMap[s.id]!)).toList();
+    final newStyle = styleOverrides.remap(remapRef);
 
-    final newStyle = styleOverrides.remap((id) => remapRef(id)!);
     return .new(
       statements: newStatements,
       styleOverrides: newStyle,

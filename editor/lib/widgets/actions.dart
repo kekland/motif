@@ -29,7 +29,7 @@ class EditorShortcuts extends StatelessWidget {
   final Widget child;
 
   static final _isApple = switch (defaultTargetPlatform) {
-    TargetPlatform.macOS || TargetPlatform.iOS => true,
+    .macOS || .iOS => true,
     _ => false,
   };
 

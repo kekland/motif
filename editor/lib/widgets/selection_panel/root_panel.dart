@@ -9,7 +9,7 @@ class RootSelectionPanel extends StatelessWidget {
       children: [
         Header(
           leading: Icons.frame(),
-          title: Text('Document'),
+          title: Text('Scene'),
         ),
         Divider(),
       ],

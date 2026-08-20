@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:color/color.dart';
+import 'package:scene/scene.dart';
 
 part 'builder.dart';
 part 'context.dart';
@@ -32,7 +33,8 @@ part 'layout/shapes/circle_shape.dart';
 part 'layout/shapes/rectangle_shape.dart';
 part 'layout/shapes/triangle_shape.dart';
 
-part 'transform/transform_router.dart';
+part 'router/dissolve_router.dart';
+part 'router/transform_router.dart';
 
 part 'statements/frame_statement.dart';
 part 'statements/vertex_statement.dart';

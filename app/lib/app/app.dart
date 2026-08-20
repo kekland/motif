@@ -8,7 +8,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final seedColor = Colors.indigo;
     final theme = generateAppTheme(
-      brightness: .light,
+      brightness: .dark,
       seedColor: seedColor,
     );
 

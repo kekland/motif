@@ -29,10 +29,23 @@ sealed class Statement {
   CellId cellId(String key) => baseId.derive(key);
 
   TransformResult routeTransform(TransformContext context, Symbol product) => const .refused();
+  DissolveResult routeDissolve(DissolveContext context, Set<Ref> lost) => const .cascade();
 
   void execute(EvalContext context);
 
   Statement copyWith({StatementId? id});
+  Statement copyWithRefs(Ref Function(Ref) remap, {StatementId? id}) {
+    var touched = id != this.id;
+    final s = copyWith(id: id);
+    for (final arg in s._args) {
+      final newRef = remap(arg.ref);
+      if (newRef != arg.ref) touched = true;
+      arg.ref = newRef;
+    }
+
+    if (!touched) return this;
+    return s;
+  }
 }
 
 sealed class PlacedStatement extends Statement {

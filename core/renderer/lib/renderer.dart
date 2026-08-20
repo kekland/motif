@@ -92,16 +92,16 @@ class ScenePainter extends CustomPainter {
   }
 
   void _paintVertex(Canvas canvas, VertexHandle vertex, Matrix4 transform) {
-    // final paint = Paint()
-    //   ..color = Colors.grey
-    //   ..style = .fill;
+    final paint = Paint()
+      ..color = Colors.grey
+      ..style = .fill;
 
-    // final pos = bundle.vertexPosition(vertex);
-    // // canvas.drawCircle(
-    // //   MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
-    // //   4,
-    // //   paint,
-    // // );
+    final pos = bundle.vertexPosition(vertex);
+    canvas.drawCircle(
+      MatrixUtils.transformPoint(transform, Offset(pos.x, pos.y)),
+      4,
+      paint,
+    );
   }
 
   void _paintEdge(Canvas canvas, EdgeHandle edge, Matrix4 transform) {

@@ -5,6 +5,17 @@ import 'package:flutter/services.dart';
 
 part 'intents.dart';
 
+bool get isTextFieldFocused {
+  final context = FocusManager.instance.primaryFocus?.context;
+  if (context == null) return false;
+  return context.findAncestorStateOfType<EditableTextState>() != null;
+}
+
+abstract class EditorAction<T extends Intent> extends ContextAction<T> {
+  @override
+  bool isEnabled(T intent, [BuildContext? context]) => !isTextFieldFocused;
+}
+
 class SelectCellAction extends ContextAction<SelectCellIntent> {
   @override
   void invoke(SelectCellIntent intent, [BuildContext? context]) {
@@ -29,7 +40,7 @@ class ClearSelectionAction extends ContextAction<ClearSelectionIntent> {
   }
 }
 
-class UndoAction extends ContextAction<UndoIntent> {
+class UndoAction extends EditorAction<UndoIntent> {
   @override
   void invoke(UndoIntent intent, [BuildContext? context]) {
     final history = context!.editor.history;
@@ -37,7 +48,7 @@ class UndoAction extends ContextAction<UndoIntent> {
   }
 }
 
-class RedoAction extends ContextAction<RedoIntent> {
+class RedoAction extends EditorAction<RedoIntent> {
   @override
   void invoke(RedoIntent intent, [BuildContext? context]) {
     final history = context!.editor.history;
@@ -45,24 +56,23 @@ class RedoAction extends ContextAction<RedoIntent> {
   }
 }
 
-class DeleteSelectionAction extends ContextAction<DeleteSelectionIntent> {
+class DeleteSelectionAction extends EditorAction<DeleteSelectionIntent> {
   @override
   void invoke(DeleteSelectionIntent intent, [BuildContext? context]) {
     final editor = context!.editor;
     final selection = editor.selection;
-
     if (selection.isEmpty) return;
 
     editor.edit((txn) {
       final statements = selection.statements;
-      for (final s in statements) txn.remove(s);
+      txn.dissolve(statements);
     });
 
     selection.clear();
   }
 }
 
-class CopySelectionAction extends ContextAction<CopySelectionIntent> {
+class CopySelectionAction extends EditorAction<CopySelectionIntent> {
   @override
   void invoke(CopySelectionIntent intent, [BuildContext? context]) {
     final editor = context!.editor;
@@ -76,7 +86,7 @@ class CopySelectionAction extends ContextAction<CopySelectionIntent> {
   }
 }
 
-class PasteAction extends ContextAction<PasteIntent> {
+class PasteAction extends EditorAction<PasteIntent> {
   @override
   void invoke(PasteIntent intent, [BuildContext? context]) async {
     final editor = context!.editor;
