@@ -43,7 +43,11 @@ final class PropListBuilder extends StatelessWidget {
 Computed<PropValue<G>> usePropComputed<G, S>(Scene scene, Prop<G, S> prop) {
   final computed = useMemoComputed(() {
     scene.signal();
-    return prop.value(scene);
+    try {
+      return prop.value(scene);
+    } catch (e) {
+      return PropValue<G>.mixed();
+    }
   }, keys: [scene, prop]);
 
   return computed;

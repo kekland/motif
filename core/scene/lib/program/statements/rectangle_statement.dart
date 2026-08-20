@@ -23,6 +23,7 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
 
   @override
   RectangleStatement copyWith({
+    StatementId? id,
     Mat4? transform,
     LayoutSize? size,
     RectangleObjectShape? shape,
@@ -31,13 +32,13 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
     FaceStyle? faceStyle,
   }) {
     return RectangleStatement(
+      id: id ?? this.id,
       transform: transform ?? this.transform,
       size: size ?? this.size,
       shape: shape ?? this.shape,
       parent: parent ?? this.parent?.ref,
       edgeStyle: edgeStyle ?? this.edgeStyle,
       faceStyle: faceStyle ?? this.faceStyle,
-      id: id,
     );
   }
 }

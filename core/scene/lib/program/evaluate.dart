@@ -44,7 +44,7 @@ final class Evaluation {
 Evaluation dryExecute(
   Program program, {
   LayoutOverrides? layout,
-  StyleOverrides? decoration,
+  StyleOverrides? styleOverrides,
 }) {
   final resolvedLayout = layout ?? solveLayout(program.layoutBoxes);
 
@@ -56,8 +56,8 @@ Evaluation dryExecute(
     transaction: transaction,
     exports: table,
     layout: resolvedLayout,
-    decoration: decorationTable,
-    decorationOverrides: decoration,
+    style: decorationTable,
+    styleOverrides: styleOverrides,
   );
 
   for (final stmt in program._statements) {
@@ -65,7 +65,7 @@ Evaluation dryExecute(
   }
 
   transaction.commit();
-  return Evaluation._(bundle, table, decorationTable, decoration, resolvedLayout);
+  return Evaluation._(bundle, table, decorationTable, styleOverrides, resolvedLayout);
 }
 
 (List<TopologyOp>, bool) _executeOne(EvalContext context, Statement stmt) {

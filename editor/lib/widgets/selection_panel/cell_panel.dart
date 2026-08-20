@@ -10,12 +10,13 @@ class const CellPanel({
     final editor = context.editor;
     final rawProps = <List<PropSource>>[];
     for (final ref in refs) {
-      final kind = editor.handleOf(ref).kind;
+      final kind = editor.handleOf(ref)?.kind;
       final props = switch (kind) {
         .vertex => vertexProps(editor.scene, ref.cast()),
         .edge => edgeProps(editor.scene, ref.cast()),
         .face => faceProps(editor.scene, ref.cast()),
         .frame => frameProps(editor.scene, ref.cast()),
+        _ => const <PropSource>[],
       };
 
       rawProps.add(props);

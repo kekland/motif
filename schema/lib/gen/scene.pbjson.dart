@@ -66,12 +66,21 @@ const Scene$json = {
   '1': 'Scene',
   '2': [
     {'1': 'program', '3': 1, '4': 1, '5': 11, '6': '.Program', '10': 'program'},
+    {
+      '1': 'styleOverrides',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.StyleOverrides',
+      '10': 'styleOverrides'
+    },
   ],
 };
 
 /// Descriptor for `Scene`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List sceneDescriptor = $convert.base64Decode(
-    'CgVTY2VuZRIiCgdwcm9ncmFtGAEgASgLMgguUHJvZ3JhbVIHcHJvZ3JhbQ==');
+    'CgVTY2VuZRIiCgdwcm9ncmFtGAEgASgLMgguUHJvZ3JhbVIHcHJvZ3JhbRI3Cg5zdHlsZU92ZX'
+    'JyaWRlcxgCIAEoCzIPLlN0eWxlT3ZlcnJpZGVzUg5zdHlsZU92ZXJyaWRlcw==');
 
 @$core.Deprecated('Use programDescriptor instead')
 const Program$json = {
@@ -91,6 +100,73 @@ const Program$json = {
 /// Descriptor for `Program`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List programDescriptor = $convert.base64Decode(
     'CgdQcm9ncmFtEioKCnN0YXRlbWVudHMYASADKAsyCi5TdGF0ZW1lbnRSCnN0YXRlbWVudHM=');
+
+@$core.Deprecated('Use sceneSliceDescriptor instead')
+const SceneSlice$json = {
+  '1': 'SceneSlice',
+  '2': [
+    {
+      '1': 'statements',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.Statement',
+      '10': 'statements'
+    },
+    {
+      '1': 'styleOverrides',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.StyleOverrides',
+      '10': 'styleOverrides'
+    },
+  ],
+};
+
+/// Descriptor for `SceneSlice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sceneSliceDescriptor = $convert.base64Decode(
+    'CgpTY2VuZVNsaWNlEioKCnN0YXRlbWVudHMYASADKAsyCi5TdGF0ZW1lbnRSCnN0YXRlbWVudH'
+    'MSNwoOc3R5bGVPdmVycmlkZXMYAiABKAsyDy5TdHlsZU92ZXJyaWRlc1IOc3R5bGVPdmVycmlk'
+    'ZXM=');
+
+@$core.Deprecated('Use styleOverridesDescriptor instead')
+const StyleOverrides$json = {
+  '1': 'StyleOverrides',
+  '2': [
+    {
+      '1': 'entries',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.StyleOverrides.Entry',
+      '10': 'entries'
+    },
+  ],
+  '3': [StyleOverrides_Entry$json],
+};
+
+@$core.Deprecated('Use styleOverridesDescriptor instead')
+const StyleOverrides_Entry$json = {
+  '1': 'Entry',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.Ref', '10': 'ref'},
+    {
+      '1': 'style',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.CellStylePartial',
+      '10': 'style'
+    },
+  ],
+};
+
+/// Descriptor for `StyleOverrides`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List styleOverridesDescriptor = $convert.base64Decode(
+    'Cg5TdHlsZU92ZXJyaWRlcxIvCgdlbnRyaWVzGAEgAygLMhUuU3R5bGVPdmVycmlkZXMuRW50cn'
+    'lSB2VudHJpZXMaSAoFRW50cnkSFgoDcmVmGAEgASgLMgQuUmVmUgNyZWYSJwoFc3R5bGUYAiAB'
+    'KAsyES5DZWxsU3R5bGVQYXJ0aWFsUgVzdHlsZQ==');
 
 @$core.Deprecated('Use statementDescriptor instead')
 const Statement$json = {
@@ -983,6 +1059,72 @@ final $typed_data.Uint8List colorDataDescriptor = $convert.base64Decode(
     'IgASgBUgJ2MRIOCgJ2MhgDIAEoAVICdjISDgoCdjMYBCABKAFSAnYzEhQKBWFscGhhGAUgASgB'
     'UgVhbHBoYSIfCgRUeXBlEhcKE0NPTE9SX0RBVEFfVFlQRV9IU1YQAA==');
 
+@$core.Deprecated('Use cellStyleDescriptor instead')
+const CellStyle$json = {
+  '1': 'CellStyle',
+  '2': [
+    {
+      '1': 'edge',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.EdgeStyle',
+      '9': 0,
+      '10': 'edge'
+    },
+    {
+      '1': 'face',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.FaceStyle',
+      '9': 0,
+      '10': 'face'
+    },
+  ],
+  '8': [
+    {'1': 'style'},
+  ],
+};
+
+/// Descriptor for `CellStyle`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cellStyleDescriptor = $convert.base64Decode(
+    'CglDZWxsU3R5bGUSIAoEZWRnZRgBIAEoCzIKLkVkZ2VTdHlsZUgAUgRlZGdlEiAKBGZhY2UYAi'
+    'ABKAsyCi5GYWNlU3R5bGVIAFIEZmFjZUIHCgVzdHlsZQ==');
+
+@$core.Deprecated('Use cellStylePartialDescriptor instead')
+const CellStylePartial$json = {
+  '1': 'CellStylePartial',
+  '2': [
+    {
+      '1': 'edge',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.EdgeStylePartial',
+      '9': 0,
+      '10': 'edge'
+    },
+    {
+      '1': 'face',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.FaceStylePartial',
+      '9': 0,
+      '10': 'face'
+    },
+  ],
+  '8': [
+    {'1': 'style'},
+  ],
+};
+
+/// Descriptor for `CellStylePartial`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cellStylePartialDescriptor = $convert.base64Decode(
+    'ChBDZWxsU3R5bGVQYXJ0aWFsEicKBGVkZ2UYASABKAsyES5FZGdlU3R5bGVQYXJ0aWFsSABSBG'
+    'VkZ2USJwoEZmFjZRgCIAEoCzIRLkZhY2VTdHlsZVBhcnRpYWxIAFIEZmFjZUIHCgVzdHlsZQ==');
+
 @$core.Deprecated('Use edgeStyleDescriptor instead')
 const EdgeStyle$json = {
   '1': 'EdgeStyle',
@@ -997,6 +1139,33 @@ final $typed_data.Uint8List edgeStyleDescriptor = $convert.base64Decode(
     'CglFZGdlU3R5bGUSFAoFd2lkdGgYASABKAFSBXdpZHRoEiAKBWNvbG9yGAIgASgLMgouQ29sb3'
     'JEYXRhUgVjb2xvcg==');
 
+@$core.Deprecated('Use edgeStylePartialDescriptor instead')
+const EdgeStylePartial$json = {
+  '1': 'EdgeStylePartial',
+  '2': [
+    {'1': 'width', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'width', '17': true},
+    {
+      '1': 'color',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.ColorData',
+      '9': 1,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_width'},
+    {'1': '_color'},
+  ],
+};
+
+/// Descriptor for `EdgeStylePartial`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List edgeStylePartialDescriptor = $convert.base64Decode(
+    'ChBFZGdlU3R5bGVQYXJ0aWFsEhkKBXdpZHRoGAEgASgBSABSBXdpZHRoiAEBEiUKBWNvbG9yGA'
+    'IgASgLMgouQ29sb3JEYXRhSAFSBWNvbG9yiAEBQggKBl93aWR0aEIICgZfY29sb3I=');
+
 @$core.Deprecated('Use faceStyleDescriptor instead')
 const FaceStyle$json = {
   '1': 'FaceStyle',
@@ -1008,6 +1177,31 @@ const FaceStyle$json = {
 /// Descriptor for `FaceStyle`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List faceStyleDescriptor = $convert.base64Decode(
     'CglGYWNlU3R5bGUSIAoFY29sb3IYASABKAsyCi5Db2xvckRhdGFSBWNvbG9y');
+
+@$core.Deprecated('Use faceStylePartialDescriptor instead')
+const FaceStylePartial$json = {
+  '1': 'FaceStylePartial',
+  '2': [
+    {
+      '1': 'color',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.ColorData',
+      '9': 0,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_color'},
+  ],
+};
+
+/// Descriptor for `FaceStylePartial`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List faceStylePartialDescriptor = $convert.base64Decode(
+    'ChBGYWNlU3R5bGVQYXJ0aWFsEiUKBWNvbG9yGAEgASgLMgouQ29sb3JEYXRhSABSBWNvbG9yiA'
+    'EBQggKBl9jb2xvcg==');
 
 @$core.Deprecated('Use layoutInsetsDescriptor instead')
 const LayoutInsets$json = {

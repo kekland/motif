@@ -1,6 +1,6 @@
 part of '../scene.dart';
 
-abstract interface class SceneDelta {
+sealed class SceneDelta {
   SceneDelta();
 
   factory SceneDelta.program(ProgramDelta delta) = ProgramSceneDelta;
@@ -19,7 +19,7 @@ abstract interface class SceneDelta {
   SceneDelta invert();
 }
 
-final class EmptySceneDelta implements SceneDelta {
+final class EmptySceneDelta extends SceneDelta {
   @override
   bool get isEmpty => true;
 

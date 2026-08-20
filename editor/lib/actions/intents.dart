@@ -5,6 +5,9 @@ final intents = (
   clearSelection: ClearSelectionIntent.new,
   undo: UndoIntent.new,
   redo: RedoIntent.new,
+  deleteSelection: DeleteSelectionIntent.new,
+  copySelection: CopySelectionIntent.new,
+  paste: PasteIntent.new,
 );
 
 class SelectCellIntent extends Intent {
@@ -22,4 +25,16 @@ class UndoIntent extends Intent {
 
 class RedoIntent extends Intent {
   const RedoIntent();
+}
+
+class DeleteSelectionIntent extends Intent {
+  const DeleteSelectionIntent();
+}
+
+class CopySelectionIntent extends Intent {
+  const CopySelectionIntent();
+}
+
+class PasteIntent extends Intent {
+  const PasteIntent();
 }

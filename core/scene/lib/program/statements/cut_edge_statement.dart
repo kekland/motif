@@ -57,9 +57,13 @@ final class CutEdgeStatement extends Statement {
   }
 
   @override
-  CutEdgeStatement copyWith({EdgeRef? target, double? t}) => .new(
+  CutEdgeStatement copyWith({
+    StatementId? id,
+    EdgeRef? target,
+    double? t,
+  }) => .new(
+    id: id ?? this.id,
     target ?? this.target.ref,
     t: t ?? this.t,
-    id: id,
   );
 }

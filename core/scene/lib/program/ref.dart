@@ -17,6 +17,16 @@ extension type Ref<H extends CellHandle>._(_RefData _v) implements Object {
   Symbol get product => _v.$2;
   CellKind get kind => _v.$3;
 
+  Ref<H> copyWith({
+    StatementId? statement,
+    Symbol? product,
+    CellKind? kind,
+  }) => .new(
+    statement ?? this.statement,
+    product ?? this.product,
+    kind ?? this.kind,
+  );
+
   Ref<C> cast<C extends CellHandle>() => Ref<C>(statement, product, kind);
 }
 

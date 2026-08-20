@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
@@ -21,6 +22,7 @@ part 'delta/transaction.dart';
 part 'utils/embed_vertex.dart';
 part 'utils/transform_session.dart';
 part 'utils/resolved_style.dart';
+part 'slice/slice.dart';
 
 part 'selection/selection.dart';
 
@@ -32,7 +34,7 @@ final class Scene with ChangeNotifier {
     history = .new(this);
     query = .new(this);
     selection = .new(this);
-    styleOverrides = styleOverrides ?? .empty();
+    this.styleOverrides = styleOverrides ?? .empty();
     evaluate();
   }
 
@@ -71,7 +73,7 @@ final class Scene with ChangeNotifier {
 
   Ref<H>? refOf<H extends CellHandle>(CellKey<H> cell) => table.refOf(cell);
   CellKey<H> keyOf<H extends CellHandle>(Ref<H> ref) => table.keyOf(ref) as CellKey<H>;
-  H handleOf<H extends CellHandle>(Ref<H> ref) => bundle.handle(table.keyOf(ref)!) as H;
+  H? handleOf<H extends CellHandle>(Ref<H> ref) => bundle.handle(table.keyOf(ref)!) as H?;
   S statementOf<S extends Statement>(Ref ref) => program.byId(ref.statement) as S;
   S statement<S extends Statement>(StatementId id) => program.byId(id) as S;
   D? styleOf<D extends CellStyle<D>>(Ref ref) => _evaluation!.style.of<D>(ref);
@@ -85,8 +87,9 @@ final class Scene with ChangeNotifier {
   }
 
   void evaluate() {
-    final eval = dryExecute(program);
+    final eval = dryExecute(program, styleOverrides: styleOverrides);
     _evaluation = eval;
+    selection._onEvaluated();
     signal.set(this, force: true);
     notifyListeners();
   }
@@ -110,7 +113,7 @@ final class Scene with ChangeNotifier {
       final result = fn(txn);
       txn.commit(mergeKey: mergeKey);
       return result;
-    } catch (_) {
+    } catch (e) {
       txn.cancel();
       rethrow;
     }
@@ -140,4 +143,6 @@ final class Scene with ChangeNotifier {
     selection.clear();
     evaluate();
   }
+
+  SceneSlice slice(Iterable<StatementId> selection) => .from(this, selection);
 }

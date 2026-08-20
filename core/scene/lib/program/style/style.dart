@@ -32,6 +32,7 @@ final class StyleOverrides {
   StyleOverrides.empty() : this();
 
   final _styles = <Ref, CellStylePartial>{};
+  Iterable<MapEntry<Ref, CellStylePartial>> get entries => _styles.entries;
 
   CellStylePartial? of(Ref ref) => _styles[ref];
   void set(Ref ref, CellStylePartial? decoration) {
@@ -41,5 +42,24 @@ final class StyleOverrides {
     }
 
     _styles[ref] = decoration;
+  }
+
+  StyleOverrides slice(Set<StatementId> targets) {
+    final result = StyleOverrides();
+    for (final entry in _styles.entries) {
+      if (targets.contains(entry.key.statement)) {
+        result._styles[entry.key] = entry.value;
+      }
+    }
+    return result;
+  }
+
+  StyleOverrides remap(Ref Function(Ref) remapRef) {
+    final result = StyleOverrides();
+    for (final entry in _styles.entries) {
+      final newRef = remapRef(entry.key);
+      result._styles[newRef] = entry.value;
+    }
+    return result;
   }
 }

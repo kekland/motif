@@ -34,9 +34,13 @@ final class FrameStatement extends PlacedStatement {
   }
 
   @override
-  FrameStatement copyWith({Mat4? transform, FrameRef? parent}) => .new(
+  FrameStatement copyWith({
+    StatementId? id,
+    Mat4? transform,
+    FrameRef? parent,
+  }) => .new(
+    id: id ?? this.id,
     transform: transform ?? this.transform,
     parent: parent ?? this.parent?.ref,
-    id: id,
   );
 }

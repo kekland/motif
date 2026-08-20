@@ -48,7 +48,7 @@ final class SceneHistory {
   void undo() {
     if (!canUndo) return;
     _mergeKey = null;
-    final entry = _entries[_cursor--];
+    final entry = _entries[--_cursor];
     entry.unapply(scene);
     scene.evaluate();
     _streamController.add(entry.invert());

@@ -31,7 +31,7 @@ final class Editor extends Controller {
   Ref<H>? refOf<H extends CellHandle>(CellKey<H> cell) => scene.refOf(cell);
   Ref<H>? refOfHandle<H extends CellHandle>(H handle) => scene.refOf(bundle.key(handle) as CellKey<H>);
   CellKey<H> keyOf<H extends CellHandle>(Ref<H> ref) => scene.keyOf(ref);
-  H handleOf<H extends CellHandle>(Ref<H> ref) => scene.handleOf(ref);
+  H? handleOf<H extends CellHandle>(Ref<H> ref) => scene.handleOf(ref);
   S statementOf<S extends Statement>(Ref ref) => scene.statementOf(ref);
   S statement<S extends Statement>(StatementId id) => scene.statement(id);
   Iterable<Ref> refsOf(Iterable<CellKey> keys) => scene.refsOf(keys);
@@ -45,8 +45,8 @@ final class Editor extends Controller {
   late final transientEdges = TransientEdges(this);
 
   SceneTransaction beginTransaction() => scene.beginTransaction();
-  T edit<T>(T Function(SceneTransaction txn) callback) {
-    return scene.edit(callback);
+  T edit<T>(T Function(SceneTransaction txn) callback, {Object? mergeKey}) {
+    return scene.edit(callback, mergeKey: mergeKey);
   }
 }
 

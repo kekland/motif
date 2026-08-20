@@ -24,6 +24,15 @@ final class SceneSelection with ChangeNotifier {
     setMultiple(statement.products);
   }
 
+  void setStatements(Iterable<StatementId> ids) {
+    _selected.clear();
+    for (final id in ids) {
+      final statement = scene.statement(id);
+      _selected.addAll(statement.products);
+    }
+    _onUpdated();
+  }
+
   void setMultiple(Iterable<Ref> keys) {
     _selected.clear();
     _selected.addAll(keys);
@@ -46,6 +55,10 @@ final class SceneSelection with ChangeNotifier {
     _selectedStatements.addAll(stmts);
     notifyListeners();
     _stamp++;
+  }
+
+  void _onEvaluated() {
+    _selected.removeWhere((ref) => scene.program.byId(ref.statement) == null);
   }
 
   int get stamp => _stamp;

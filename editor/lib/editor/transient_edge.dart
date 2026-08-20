@@ -4,6 +4,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
   TransientEdge({
     required this.editor,
     required this.startVertex,
+    required this.mergeKey,
     this._cStart,
     this._cEnd,
     this._end,
@@ -11,8 +12,9 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
 
   final Editor editor;
   final VertexRef startVertex;
+  final Object mergeKey;
 
-  VertexHandle get startHandle => editor.scene.handleOf(startVertex);
+  VertexHandle get startHandle => editor.scene.handleOf(startVertex)!;
   Vec2 get start => editor.bundle.vertexPositionWorld(startHandle);
 
   Vec2? _cStart;
@@ -51,10 +53,10 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
       endVertex = editor.edit((txn) => txn.insert(VertexStatement(end!))).vertex;
     }
 
-    final startHandle = editor.handleOf(startVertex);
-    final endHandle = editor.handleOf(endVertex);
+    final startHandle = editor.handleOf(startVertex)!;
+    final endHandle = editor.handleOf(endVertex)!;
 
-    final parentHandle = editor.bundle.lca(startHandle, editor.handleOf(endVertex));
+    final parentHandle = editor.bundle.lca(startHandle, endHandle);
     final parentKey = editor.bundle.frameKey(parentHandle)!;
     final transform = editor.bundle.frameTransformWorld(parentHandle);
     final transformedCubic = cubic.transformed(transform);
@@ -95,16 +97,17 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
   final Editor editor;
   final instances = <TransientEdge>[];
 
-  TransientEdge create(VertexRef start, {Vec2? cStart}) {
-    final edge = TransientEdge(editor: editor, startVertex: start, cStart: cStart);
+  TransientEdge create(VertexRef start, {Vec2? cStart, required Object mergeKey}) {
+    final edge = TransientEdge(editor: editor, startVertex: start, cStart: cStart, mergeKey: mergeKey);
     instances.add(edge);
     notifyListeners();
     return edge;
   }
 
   TransientEdge createWithHitTest(SceneHitResult hitTest, {Vec2? cStart}) {
-    final ref = editor.edit((txn) => txn.embedVertex(hitTest));
-    return create(ref, cStart: cStart);
+    final mergeKey = Object();
+    final ref = editor.edit((txn) => txn.embedVertex(hitTest), mergeKey: mergeKey);
+    return create(ref, cStart: cStart, mergeKey: mergeKey);
   }
 
   TransientEdge? commit(TransientEdge edge, {SceneHitResult? endHitTest, bool startNewEdge = false}) {
@@ -114,13 +117,13 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     if (startNewEdge && newEdges.isNotEmpty) {
       final edge = newEdges.last;
       final edgeHandle = editor.handleOf(edge);
-      final endHandle = editor.bundle.edgeEnd(edgeHandle);
+      final endHandle = editor.bundle.edgeEnd(edgeHandle!);
       final end = editor.refOf(editor.bundle.vertexKey(endHandle))!;
       final endPosition = editor.bundle.vertexPositionWorld(endHandle);
       final endTangent = editor.bundle.edgeEndTangentWorld(edgeHandle);
       final cStart = endPosition - endTangent;
 
-      return create(end, cStart: cStart);
+      return create(end, cStart: cStart, mergeKey: Object());
     }
 
     return null;

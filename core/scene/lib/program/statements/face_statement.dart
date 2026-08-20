@@ -45,15 +45,16 @@ final class FaceStatement extends PlacedStatement {
 
   @override
   FaceStatement copyWith({
+    StatementId? id,
     List<EdgeRef>? outer,
     List<List<EdgeRef>>? holes,
     FaceStyle? style,
     FrameRef? parent,
   }) => .new(
+    id: id ?? this.id,
     outer ?? this.outer.refs,
     holes: holes ?? [for (final hole in this.holes) hole.refs],
     parent: parent ?? this.parent?.ref,
     style: style ?? this.style,
-    id: id,
   );
 }

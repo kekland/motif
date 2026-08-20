@@ -34,9 +34,13 @@ final class VertexStatement extends PlacedStatement {
   }
 
   @override
-  VertexStatement copyWith({Vec2? position, FrameRef? parent}) => .new(
+  VertexStatement copyWith({
+    StatementId? id,
+    Vec2? position,
+    FrameRef? parent,
+  }) => .new(
     position ?? this.position,
     parent: parent ?? this.parent?.ref,
-    id: id,
+    id: id ?? this.id,
   );
 }

@@ -23,6 +23,7 @@ final class CircleStatement({
 
   @override
   CircleStatement copyWith({
+    StatementId? id,
     Mat4? transform,
     LayoutSize? size,
     CircleObjectShape? shape,
@@ -31,13 +32,13 @@ final class CircleStatement({
     FrameRef? parent,
   }) {
     return CircleStatement(
+      id: id ?? this.id,
       transform: transform ?? this.transform,
       size: size ?? this.size,
       shape: shape ?? this.shape,
       parent: parent ?? this.parent?.ref,
       edgeStyle: edgeStyle ?? this.edgeStyle,
       faceStyle: faceStyle ?? this.faceStyle,
-      id: id,
     );
   }
 }

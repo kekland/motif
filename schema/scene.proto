@@ -1,11 +1,26 @@
 syntax = "proto3";
 
 message Scene {
-  Program program = 1;
+  Program        program        = 1;
+  StyleOverrides styleOverrides = 2;
 }
 
 message Program {
   repeated Statement statements = 1;
+}
+
+message SceneSlice {
+  repeated Statement statements     = 1;
+  StyleOverrides     styleOverrides = 2;
+}
+
+message StyleOverrides {
+  message Entry {
+    Ref              ref   = 1;
+    CellStylePartial style = 2;
+  }
+
+  repeated Entry entries = 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -207,13 +222,36 @@ message ColorData {
   double alpha = 5;
 }
 
+message CellStyle {
+  oneof style {
+    EdgeStyle edge = 1;
+    FaceStyle face = 2;
+  }
+}
+
+message CellStylePartial {
+  oneof style {
+    EdgeStylePartial edge = 1;
+    FaceStylePartial face = 2;
+  }
+}
+
 message EdgeStyle {
   double    width = 1;
   ColorData color = 2;
 }
 
+message EdgeStylePartial {
+  optional double    width = 1;
+  optional ColorData color = 2;
+}
+
 message FaceStyle {
   ColorData color = 1;
+}
+
+message FaceStylePartial {
+  optional ColorData color = 1;
 }
 
 enum LayoutAlign {

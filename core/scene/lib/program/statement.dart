@@ -32,7 +32,7 @@ sealed class Statement {
 
   void execute(EvalContext context);
 
-  Statement copyWith();
+  Statement copyWith({StatementId? id});
 }
 
 sealed class PlacedStatement extends Statement {

@@ -116,6 +116,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
 
   @override
   ShapeStatement<S> copyWith({
+    StatementId? id,
     Mat4? transform,
     LayoutSize? size,
     S? shape,

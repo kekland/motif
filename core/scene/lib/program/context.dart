@@ -25,16 +25,16 @@ final class EvalContext {
   EvalContext({
     required this.transaction,
     required this.exports,
-    required this.decoration,
+    required this.style,
     this.layout,
-    this.decorationOverrides,
+    this.styleOverrides,
   });
 
   final TopologyTransaction transaction;
   final ExportTable exports;
-  final StyleTable decoration;
+  final StyleTable style;
   final LayoutOverrides? layout;
-  final StyleOverrides? decorationOverrides;
+  final StyleOverrides? styleOverrides;
 
   H resolve<H extends CellHandle>(Arg<Ref<H>> arg) {
     final ref = arg.ref;
@@ -65,8 +65,8 @@ final class EvalContext {
 
   LayoutResult? layoutOf(StatementId id) => layout?.of(id);
 
-  void decorate(Ref ref, CellStyle<dynamic> decoration) {
-    final override = decorationOverrides?.of(ref);
-    this.decoration.bind(ref, decoration.updateWith(override));
+  void decorate(Ref ref, CellStyle<dynamic> style) {
+    final override = styleOverrides?.of(ref);
+    this.style.bind(ref, style.updateWith(override));
   }
 }

@@ -52,6 +52,7 @@ final class EdgeStatement extends PlacedStatement {
 
   @override
   EdgeStatement copyWith({
+    StatementId? id,
     VertexRef? start,
     VertexRef? end,
     FrameRef? parent,
@@ -59,12 +60,12 @@ final class EdgeStatement extends PlacedStatement {
     Vec2? endTangent,
     EdgeStyle? style,
   }) => .new(
+    id: id ?? this.id,
     start ?? this.start.ref,
     end ?? this.end.ref,
     parent: parent ?? this.parent?.ref,
     startTangent: startTangent ?? this.startTangent,
     endTangent: endTangent ?? this.endTangent,
     style: style ?? this.style,
-    id: id,
   );
 }

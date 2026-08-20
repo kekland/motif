@@ -29,9 +29,13 @@ final class GlueVerticesStatement extends Statement {
   // TransformResult performTransform(TransformContext context, Symbol product, Mat4 transform) {
 
   @override
-  GlueVerticesStatement copyWith({List<VertexRef>? targets, GlueVerticesPosition? position}) => .new(
+  GlueVerticesStatement copyWith({
+    StatementId? id,
+    List<VertexRef>? targets,
+    GlueVerticesPosition? position,
+  }) => .new(
+    id: id ?? this.id,
     targets ?? this.targets.refs,
     position: position ?? this.position,
-    id: id,
   );
 }

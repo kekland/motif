@@ -23,9 +23,11 @@ export 'scene.pbenum.dart';
 class Scene extends $pb.GeneratedMessage {
   factory Scene({
     Program? program,
+    StyleOverrides? styleOverrides,
   }) {
     final result = create();
     if (program != null) result.program = program;
+    if (styleOverrides != null) result.styleOverrides = styleOverrides;
     return result;
   }
 
@@ -43,6 +45,8 @@ class Scene extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<Program>(1, _omitFieldNames ? '' : 'program',
         subBuilder: Program.create)
+    ..aOM<StyleOverrides>(2, _omitFieldNames ? '' : 'styleOverrides',
+        protoName: 'styleOverrides', subBuilder: StyleOverrides.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -73,6 +77,17 @@ class Scene extends $pb.GeneratedMessage {
   void clearProgram() => $_clearField(1);
   @$pb.TagNumber(1)
   Program ensureProgram() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  StyleOverrides get styleOverrides => $_getN(1);
+  @$pb.TagNumber(2)
+  set styleOverrides(StyleOverrides value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStyleOverrides() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStyleOverrides() => $_clearField(2);
+  @$pb.TagNumber(2)
+  StyleOverrides ensureStyleOverrides() => $_ensure(1);
 }
 
 class Program extends $pb.GeneratedMessage {
@@ -120,6 +135,186 @@ class Program extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<Statement> get statements => $_getList(0);
+}
+
+class SceneSlice extends $pb.GeneratedMessage {
+  factory SceneSlice({
+    $core.Iterable<Statement>? statements,
+    StyleOverrides? styleOverrides,
+  }) {
+    final result = create();
+    if (statements != null) result.statements.addAll(statements);
+    if (styleOverrides != null) result.styleOverrides = styleOverrides;
+    return result;
+  }
+
+  SceneSlice._();
+
+  factory SceneSlice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SceneSlice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SceneSlice',
+      createEmptyInstance: create)
+    ..pPM<Statement>(1, _omitFieldNames ? '' : 'statements',
+        subBuilder: Statement.create)
+    ..aOM<StyleOverrides>(2, _omitFieldNames ? '' : 'styleOverrides',
+        protoName: 'styleOverrides', subBuilder: StyleOverrides.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SceneSlice clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SceneSlice copyWith(void Function(SceneSlice) updates) =>
+      super.copyWith((message) => updates(message as SceneSlice)) as SceneSlice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SceneSlice create() => SceneSlice._();
+  @$core.override
+  SceneSlice createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SceneSlice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SceneSlice>(create);
+  static SceneSlice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Statement> get statements => $_getList(0);
+
+  @$pb.TagNumber(2)
+  StyleOverrides get styleOverrides => $_getN(1);
+  @$pb.TagNumber(2)
+  set styleOverrides(StyleOverrides value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStyleOverrides() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStyleOverrides() => $_clearField(2);
+  @$pb.TagNumber(2)
+  StyleOverrides ensureStyleOverrides() => $_ensure(1);
+}
+
+class StyleOverrides_Entry extends $pb.GeneratedMessage {
+  factory StyleOverrides_Entry({
+    Ref? ref,
+    CellStylePartial? style,
+  }) {
+    final result = create();
+    if (ref != null) result.ref = ref;
+    if (style != null) result.style = style;
+    return result;
+  }
+
+  StyleOverrides_Entry._();
+
+  factory StyleOverrides_Entry.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StyleOverrides_Entry.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StyleOverrides.Entry',
+      createEmptyInstance: create)
+    ..aOM<Ref>(1, _omitFieldNames ? '' : 'ref', subBuilder: Ref.create)
+    ..aOM<CellStylePartial>(2, _omitFieldNames ? '' : 'style',
+        subBuilder: CellStylePartial.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleOverrides_Entry clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleOverrides_Entry copyWith(void Function(StyleOverrides_Entry) updates) =>
+      super.copyWith((message) => updates(message as StyleOverrides_Entry))
+          as StyleOverrides_Entry;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StyleOverrides_Entry create() => StyleOverrides_Entry._();
+  @$core.override
+  StyleOverrides_Entry createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StyleOverrides_Entry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StyleOverrides_Entry>(create);
+  static StyleOverrides_Entry? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Ref get ref => $_getN(0);
+  @$pb.TagNumber(1)
+  set ref(Ref value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRef() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRef() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Ref ensureRef() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  CellStylePartial get style => $_getN(1);
+  @$pb.TagNumber(2)
+  set style(CellStylePartial value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStyle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStyle() => $_clearField(2);
+  @$pb.TagNumber(2)
+  CellStylePartial ensureStyle() => $_ensure(1);
+}
+
+class StyleOverrides extends $pb.GeneratedMessage {
+  factory StyleOverrides({
+    $core.Iterable<StyleOverrides_Entry>? entries,
+  }) {
+    final result = create();
+    if (entries != null) result.entries.addAll(entries);
+    return result;
+  }
+
+  StyleOverrides._();
+
+  factory StyleOverrides.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StyleOverrides.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StyleOverrides',
+      createEmptyInstance: create)
+    ..pPM<StyleOverrides_Entry>(1, _omitFieldNames ? '' : 'entries',
+        subBuilder: StyleOverrides_Entry.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleOverrides clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleOverrides copyWith(void Function(StyleOverrides) updates) =>
+      super.copyWith((message) => updates(message as StyleOverrides))
+          as StyleOverrides;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StyleOverrides create() => StyleOverrides._();
+  @$core.override
+  StyleOverrides createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StyleOverrides getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StyleOverrides>(create);
+  static StyleOverrides? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<StyleOverrides_Entry> get entries => $_getList(0);
 }
 
 enum Statement_Statement {
@@ -2484,6 +2679,179 @@ class ColorData extends $pb.GeneratedMessage {
   void clearAlpha() => $_clearField(5);
 }
 
+enum CellStyle_Style { edge, face, notSet }
+
+class CellStyle extends $pb.GeneratedMessage {
+  factory CellStyle({
+    EdgeStyle? edge,
+    FaceStyle? face,
+  }) {
+    final result = create();
+    if (edge != null) result.edge = edge;
+    if (face != null) result.face = face;
+    return result;
+  }
+
+  CellStyle._();
+
+  factory CellStyle.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CellStyle.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, CellStyle_Style> _CellStyle_StyleByTag = {
+    1: CellStyle_Style.edge,
+    2: CellStyle_Style.face,
+    0: CellStyle_Style.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CellStyle',
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<EdgeStyle>(1, _omitFieldNames ? '' : 'edge',
+        subBuilder: EdgeStyle.create)
+    ..aOM<FaceStyle>(2, _omitFieldNames ? '' : 'face',
+        subBuilder: FaceStyle.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CellStyle clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CellStyle copyWith(void Function(CellStyle) updates) =>
+      super.copyWith((message) => updates(message as CellStyle)) as CellStyle;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CellStyle create() => CellStyle._();
+  @$core.override
+  CellStyle createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CellStyle getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CellStyle>(create);
+  static CellStyle? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  CellStyle_Style whichStyle() => _CellStyle_StyleByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearStyle() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  EdgeStyle get edge => $_getN(0);
+  @$pb.TagNumber(1)
+  set edge(EdgeStyle value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEdge() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEdge() => $_clearField(1);
+  @$pb.TagNumber(1)
+  EdgeStyle ensureEdge() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  FaceStyle get face => $_getN(1);
+  @$pb.TagNumber(2)
+  set face(FaceStyle value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFace() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFace() => $_clearField(2);
+  @$pb.TagNumber(2)
+  FaceStyle ensureFace() => $_ensure(1);
+}
+
+enum CellStylePartial_Style { edge, face, notSet }
+
+class CellStylePartial extends $pb.GeneratedMessage {
+  factory CellStylePartial({
+    EdgeStylePartial? edge,
+    FaceStylePartial? face,
+  }) {
+    final result = create();
+    if (edge != null) result.edge = edge;
+    if (face != null) result.face = face;
+    return result;
+  }
+
+  CellStylePartial._();
+
+  factory CellStylePartial.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CellStylePartial.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, CellStylePartial_Style>
+      _CellStylePartial_StyleByTag = {
+    1: CellStylePartial_Style.edge,
+    2: CellStylePartial_Style.face,
+    0: CellStylePartial_Style.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CellStylePartial',
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<EdgeStylePartial>(1, _omitFieldNames ? '' : 'edge',
+        subBuilder: EdgeStylePartial.create)
+    ..aOM<FaceStylePartial>(2, _omitFieldNames ? '' : 'face',
+        subBuilder: FaceStylePartial.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CellStylePartial clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CellStylePartial copyWith(void Function(CellStylePartial) updates) =>
+      super.copyWith((message) => updates(message as CellStylePartial))
+          as CellStylePartial;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CellStylePartial create() => CellStylePartial._();
+  @$core.override
+  CellStylePartial createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CellStylePartial getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CellStylePartial>(create);
+  static CellStylePartial? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  CellStylePartial_Style whichStyle() =>
+      _CellStylePartial_StyleByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  void clearStyle() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  EdgeStylePartial get edge => $_getN(0);
+  @$pb.TagNumber(1)
+  set edge(EdgeStylePartial value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEdge() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEdge() => $_clearField(1);
+  @$pb.TagNumber(1)
+  EdgeStylePartial ensureEdge() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  FaceStylePartial get face => $_getN(1);
+  @$pb.TagNumber(2)
+  set face(FaceStylePartial value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFace() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFace() => $_clearField(2);
+  @$pb.TagNumber(2)
+  FaceStylePartial ensureFace() => $_ensure(1);
+}
+
 class EdgeStyle extends $pb.GeneratedMessage {
   factory EdgeStyle({
     $core.double? width,
@@ -2551,6 +2919,74 @@ class EdgeStyle extends $pb.GeneratedMessage {
   ColorData ensureColor() => $_ensure(1);
 }
 
+class EdgeStylePartial extends $pb.GeneratedMessage {
+  factory EdgeStylePartial({
+    $core.double? width,
+    ColorData? color,
+  }) {
+    final result = create();
+    if (width != null) result.width = width;
+    if (color != null) result.color = color;
+    return result;
+  }
+
+  EdgeStylePartial._();
+
+  factory EdgeStylePartial.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EdgeStylePartial.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EdgeStylePartial',
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'width')
+    ..aOM<ColorData>(2, _omitFieldNames ? '' : 'color',
+        subBuilder: ColorData.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EdgeStylePartial clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EdgeStylePartial copyWith(void Function(EdgeStylePartial) updates) =>
+      super.copyWith((message) => updates(message as EdgeStylePartial))
+          as EdgeStylePartial;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EdgeStylePartial create() => EdgeStylePartial._();
+  @$core.override
+  EdgeStylePartial createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static EdgeStylePartial getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EdgeStylePartial>(create);
+  static EdgeStylePartial? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get width => $_getN(0);
+  @$pb.TagNumber(1)
+  set width($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasWidth() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearWidth() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  ColorData get color => $_getN(1);
+  @$pb.TagNumber(2)
+  set color(ColorData value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasColor() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearColor() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ColorData ensureColor() => $_ensure(1);
+}
+
 class FaceStyle extends $pb.GeneratedMessage {
   factory FaceStyle({
     ColorData? color,
@@ -2593,6 +3029,62 @@ class FaceStyle extends $pb.GeneratedMessage {
   static FaceStyle getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FaceStyle>(create);
   static FaceStyle? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ColorData get color => $_getN(0);
+  @$pb.TagNumber(1)
+  set color(ColorData value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasColor() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearColor() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ColorData ensureColor() => $_ensure(0);
+}
+
+class FaceStylePartial extends $pb.GeneratedMessage {
+  factory FaceStylePartial({
+    ColorData? color,
+  }) {
+    final result = create();
+    if (color != null) result.color = color;
+    return result;
+  }
+
+  FaceStylePartial._();
+
+  factory FaceStylePartial.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FaceStylePartial.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FaceStylePartial',
+      createEmptyInstance: create)
+    ..aOM<ColorData>(1, _omitFieldNames ? '' : 'color',
+        subBuilder: ColorData.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FaceStylePartial clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FaceStylePartial copyWith(void Function(FaceStylePartial) updates) =>
+      super.copyWith((message) => updates(message as FaceStylePartial))
+          as FaceStylePartial;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FaceStylePartial create() => FaceStylePartial._();
+  @$core.override
+  FaceStylePartial createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FaceStylePartial getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FaceStylePartial>(create);
+  static FaceStylePartial? _defaultInstance;
 
   @$pb.TagNumber(1)
   ColorData get color => $_getN(0);

@@ -17,6 +17,7 @@ final class ContainerStatement extends ShapeStatement<ObjectShape> {
 
   @override
   ContainerStatement copyWith({
+    StatementId? id,
     Mat4? transform,
     LayoutSize? size,
     ObjectShape? shape,
@@ -26,6 +27,7 @@ final class ContainerStatement extends ShapeStatement<ObjectShape> {
     FrameRef? parent,
   }) {
     return ContainerStatement(
+      id: id ?? this.id,
       transform: transform ?? this.transform,
       size: size ?? this.size,
       shape: shape ?? this.shape,
@@ -33,7 +35,6 @@ final class ContainerStatement extends ShapeStatement<ObjectShape> {
       parent: parent ?? this.parent?.ref,
       edgeStyle: edgeStyle ?? this.edgeStyle,
       faceStyle: faceStyle ?? this.faceStyle,
-      id: id,
     );
   }
 }

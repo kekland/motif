@@ -3,9 +3,11 @@ part of 'serializer.dart';
 final _sceneCodec = _codec<Scene, pb.Scene>(
   decoder: (v) => .new(
     program: _programCodec.decode(v.program),
+    styleOverrides: _styleOverridesCodec.decode(v.styleOverrides),
   ),
   encoder: (v) => .new(
     program: _programCodec.encode(v.program),
+    styleOverrides: _styleOverridesCodec.encode(v.styleOverrides),
   ),
 );
 
@@ -15,6 +17,39 @@ final _programCodec = _codec<Program, pb.Program>(
   ),
   encoder: (v) => .new(
     statements: v.statements.map((s) => _statementCodec.encode(s)).toList(),
+  ),
+);
+
+final _sceneSliceCodec = _codec<SceneSlice, pb.SceneSlice>(
+  decoder: (v) => .new(
+    statements: v.statements.map((s) => _statementCodec.decode(s)).toList(),
+    styleOverrides: _styleOverridesCodec.decode(v.styleOverrides),
+  ),
+  encoder: (v) => .new(
+    statements: v.statements.map((s) => _statementCodec.encode(s)).toList(),
+    styleOverrides: _styleOverridesCodec.encode(v.styleOverrides),
+  ),
+);
+
+// ---------------------------------------------------------------------------
+// Style overrides
+// ---------------------------------------------------------------------------
+
+// dart format off
+extension _StyleOverridesEncode on StyleOverrides { pb.StyleOverrides encode() => _styleOverridesCodec.encode(this); }
+extension _StyleOverridesDecode on pb.StyleOverrides { StyleOverrides decode() => _styleOverridesCodec.decode(this); }
+// dart format on
+
+final _styleOverridesCodec = _codec<StyleOverrides, pb.StyleOverrides>(
+  decoder: (v) {
+    final overrides = StyleOverrides();
+    for (final entry in v.entries) {
+      overrides.set(entry.ref.decode(), entry.style.decode());
+    }
+    return overrides;
+  },
+  encoder: (v) => .new(
+    entries: v.entries.map((e) => pb.StyleOverrides_Entry(ref: e.key.encode(), style: e.value.encode())).toList(),
   ),
 );
 
@@ -345,6 +380,23 @@ final _colorDataCodec = _codec<ColorData, pb.ColorData>(
 );
 
 // dart format off
+extension _CellStyleEncode on CellStyle { pb.CellStyle encode() => _cellStyleCodec.encode(this); }
+extension _CellStyleDecode on pb.CellStyle { CellStyle decode() => _cellStyleCodec.decode(this); }
+// dart format on
+
+final _cellStyleCodec = _codec<CellStyle, pb.CellStyle>(
+  decoder: (v) => switch (v.whichStyle()) {
+    .edge => v.edge.decode(),
+    .face => v.face.decode(),
+    _ => throw ArgumentError.value(v, 'v', 'Unknown CellStyle'),
+  },
+  encoder: (v) => switch (v) {
+    EdgeStyle e => .new(edge: e.encode()),
+    FaceStyle f => .new(face: f.encode()),
+  },
+);
+
+// dart format off
 extension _EdgeStyleEncode on EdgeStyle { pb.EdgeStyle encode() => _edgeStyleCodec.encode(this); }
 extension _EdgeStyleDecode on pb.EdgeStyle { EdgeStyle decode() => _edgeStyleCodec.decode(this); }
 // dart format on
@@ -362,6 +414,43 @@ extension _FaceStyleDecode on pb.FaceStyle { FaceStyle decode() => _faceStyleCod
 final _faceStyleCodec = _codec<FaceStyle, pb.FaceStyle>(
   decoder: (v) => .new(color: v.color.decode()),
   encoder: (v) => .new(color: v.color.encode()),
+);
+
+// dart format off
+extension _CellStylePartialEncode on CellStylePartial { pb.CellStylePartial encode() => _cellStylePartialCodec.encode(this); }
+extension _CellStylePartialDecode on pb.CellStylePartial { CellStylePartial decode() => _cellStylePartialCodec.decode(this); }
+// dart format on
+
+final _cellStylePartialCodec = _codec<CellStylePartial, pb.CellStylePartial>(
+  decoder: (v) => switch (v.whichStyle()) {
+    .edge => v.edge.decode(),
+    .face => v.face.decode(),
+    _ => throw ArgumentError.value(v, 'v', 'Unknown CellStyle'),
+  },
+  encoder: (v) => switch (v) {
+    EdgeStylePartial e => .new(edge: e.encode()),
+    FaceStylePartial f => .new(face: f.encode()),
+  },
+);
+
+// dart format off
+extension _EdgeStylePartialEncode on EdgeStylePartial { pb.EdgeStylePartial encode() => _edgeStylePartialCodec.encode(this); }
+extension _EdgeStylePartialDecode on pb.EdgeStylePartial { EdgeStylePartial decode() => _edgeStylePartialCodec.decode(this); }
+// dart format on
+
+final _edgeStylePartialCodec = _codec<EdgeStylePartial, pb.EdgeStylePartial>(
+  decoder: (v) => .new(width: v.width, color: v.hasColor() ? v.color.decode() : null),
+  encoder: (v) => .new(width: v.width, color: v.color?.encode()),
+);
+
+// dart format off
+extension _FaceStylePartialEncode on FaceStylePartial { pb.FaceStylePartial encode() => _faceStylePartialCodec.encode(this); }
+extension _FaceStylePartialDecode on pb.FaceStylePartial { FaceStylePartial decode() => _faceStylePartialCodec.decode(this); }
+// dart format on
+
+final _faceStylePartialCodec = _codec<FaceStylePartial, pb.FaceStylePartial>(
+  decoder: (v) => .new(color: v.hasColor() ? v.color.decode() : null),
+  encoder: (v) => .new(color: v.color?.encode()),
 );
 
 // ---------------------------------------------------------------------------

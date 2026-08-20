@@ -16,6 +16,7 @@ class CreateVertexActivity extends DragActivity {
   final ValueChanged<TransientEdge> onTransientEdgeCompleted;
 
   late TransientEdge transientEdge;
+  Object get mergeKey => transientEdge.mergeKey;
   bool get isNewEdge => existingTransientEdge == null;
   var didPassThreshold = false;
 
@@ -27,8 +28,8 @@ class CreateVertexActivity extends DragActivity {
     if (existingTransientEdge != null) {
       transientEdge = existingTransientEdge!;
 
-      final endVertex = editor.edit((txn) => txn.embedVertex(hitTest));
-      transientEdge.end = editor.bundle.vertexPositionWorld(editor.handleOf(endVertex));
+      final endVertex = editor.edit((txn) => txn.embedVertex(hitTest), mergeKey: mergeKey);
+      transientEdge.end = editor.bundle.vertexPositionWorld(editor.handleOf(endVertex)!);
     } else {
       transientEdge = editor.transientEdges.createWithHitTest(hitTest);
       onTransientEdgeCreated(transientEdge);

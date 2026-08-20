@@ -21,6 +21,7 @@ final class TriangleStatement({
 
   @override
   TriangleStatement copyWith({
+    StatementId? id,
     Mat4? transform,
     LayoutSize? size,
     TriangleObjectShape? shape,
@@ -29,13 +30,13 @@ final class TriangleStatement({
     FrameRef? parent,
   }) {
     return TriangleStatement(
+      id: id ?? this.id,
       transform: transform ?? this.transform,
       size: size ?? this.size,
       shape: shape ?? this.shape,
       parent: parent ?? this.parent?.ref,
       edgeStyle: edgeStyle ?? this.edgeStyle,
       faceStyle: faceStyle ?? this.faceStyle,
-      id: id,
     );
   }
 }

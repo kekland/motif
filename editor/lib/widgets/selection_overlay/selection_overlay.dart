@@ -60,6 +60,9 @@ class CellSelectionGroupOverlay extends HookWidget {
     final refs = this.refs.toList();
     if (refs.isEmpty) return const SizedBox.expand();
 
+    final handles = refs.map((r) => editor.handleOf(r)).nonNulls.toList();
+    if (handles.isEmpty) return const SizedBox.expand();
+
     Widget _buildSelectionControls({
       required Mat4 transform,
       required Size layoutSize,
@@ -83,9 +86,8 @@ class CellSelectionGroupOverlay extends HookWidget {
       );
     }
 
-    if (refs.length == 1) {
-      final ref = refs.single;
-      final handle = editor.handleOf(ref);
+    if (handles.length == 1) {
+      final handle = handles.single;
       final bbox = editor.bundle.query.cellBbox(handle);
       final cellTransform = editor.bundle.cellWorldTransform(handle);
 
@@ -103,7 +105,6 @@ class CellSelectionGroupOverlay extends HookWidget {
         childSize: size,
       );
     } else {
-      final handles = refs.map((r) => editor.handleOf(r)).toList();
       final bboxes = handles.map((h) => editor.bundle.query.cellBboxWorld(h)).toList();
 
       final hull = Aabb2.invertedInfinity();
