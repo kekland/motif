@@ -34,27 +34,4 @@ final class GlueVerticesStatement extends Statement {
     position: position ?? this.position,
     id: id,
   );
-
-  @override
-  GlueVerticesStatement updateWith(GlueVerticesStatementPartial partial) => partial.apply(this);
-
-  @override
-  GlueVerticesStatementPartial partial({
-    List<VertexRef>? targets,
-    GlueVerticesPosition? position,
-  }) => .new(
-    targets: targets,
-    position: position,
-  );
-}
-
-final class GlueVerticesStatementPartial({
-  final List<VertexRef>? targets,
-  final GlueVerticesPosition? position,
-}) extends StatementPartial<GlueVerticesStatement> {
-  @override
-  GlueVerticesStatement apply(GlueVerticesStatement statement) => statement.copyWith(
-    targets: targets,
-    position: position,
-  );
 }

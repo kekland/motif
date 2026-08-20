@@ -1,3 +1,4 @@
+import 'package:editor/client/client.dart';
 import 'package:editor/imports.dart';
 
 export 'widgets/editor_widget.dart';
@@ -7,12 +8,20 @@ part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
 
 final class Editor extends Controller {
-  Editor({Scene? scene}) : scene = scene ?? Scene(program: .new([])), super(logger: Logger('editor'));
+  Editor({
+    Scene? scene,
+    ({String host, int port})? server,
+  }) : scene = scene ?? Scene(program: .new([])),
+       super(logger: Logger('editor')) {
+    sync = server == null ? null : SceneSync(this.scene, uri: Uri.parse('ws://${server.host}:${server.port}'));
+    sync?.connect();
+  }
 
   static Editor of(BuildContext context) => context.read<Editor>();
   static Editor watch(BuildContext context) => context.watch<Editor>();
 
   final Scene scene;
+  late final SceneSync? sync;
   Program get program => scene.program;
   TopologyBundle get bundle => scene.bundle;
   SceneHistory get history => scene.history;
@@ -35,6 +44,7 @@ final class Editor extends Controller {
   late final tool = ToolController(initialToolset: toolset);
   late final transientEdges = TransientEdges(this);
 
+  SceneTransaction beginTransaction() => scene.beginTransaction();
   T edit<T>(T Function(SceneTransaction txn) callback) {
     return scene.edit(callback);
   }

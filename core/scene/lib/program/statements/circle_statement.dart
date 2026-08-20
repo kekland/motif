@@ -40,43 +40,5 @@ final class CircleStatement({
       id: id,
     );
   }
-
-  @override
-  CircleStatement updateWith(CircleStatementPartial partial) => partial.apply(this);
-
-  @override
-  CircleStatementPartial partial({
-    Mat4? transform,
-    LayoutSizePartial? size,
-    CircleObjectShape? shape,
-    EdgeStylePartial? edgeStyle,
-    FaceStylePartial? faceStyle,
-    FrameRef? parent,
-  }) => .new(
-    transform: transform,
-    size: size,
-    shape: shape,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
-    parent: parent,
-  );
 }
 
-final class CircleStatementPartial({
-  super.transform,
-  super.size,
-  super.parent,
-  super.edgeStyle,
-  super.faceStyle,
-  final CircleObjectShape? shape,
-}) extends ShapeStatementPartial<CircleStatement> {
-  @override
-  CircleStatement apply(CircleStatement statement) => statement.copyWith(
-    transform: transform,
-    size: size?.apply(statement.size),
-    shape: shape,
-    parent: parent,
-    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
-    faceStyle: statement.faceStyle.updateWith(faceStyle),
-  );
-}

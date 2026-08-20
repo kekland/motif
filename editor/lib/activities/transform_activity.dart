@@ -13,15 +13,31 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight, .altLeft, .altRight};
 
+  SceneTransaction? transaction;
   late final TransformSession session;
+  final mergeKey = Object();
+
   Mat4 get worldToSpace => session.worldToSpace;
   Mat4 get spaceToWorld => session.spaceToWorld;
   Aabb2 get initialHull => session.initialHull;
 
   @override
   void onStart(PositionedGestureDetails details) {
-    session = .of(editor.scene, refs);
+    transaction = scene.beginTransaction();
+    session = .of(editor.scene, refs, transaction: transaction);
     super.onStart(details);
+  }
+
+  @override
+  void onEnd(DragEndDetails? details) {
+    transaction!.commit(mergeKey: mergeKey);
+    super.onEnd(details);
+  }
+
+  @override
+  void onCancel() {
+    transaction?.cancel();
+    super.onCancel();
   }
 
   MouseCursor resolveCursor(RotatingMouseCursor cursor, {Side? side, Corner? corner, Mat4? transform}) {

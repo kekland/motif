@@ -1,7 +1,41 @@
-message Hello {
-  required string greeting = 1;
+syntax = "proto3";
+
+import "scene.proto";
+
+message ServerEvent {
+  oneof event {
+    Scene      snapshot = 1;
+    DeltaBatch delta    = 2;
+  }
 }
 
-service HelloService {
-  rpc SayHello (Hello) returns (Hello);
+message Anchor {
+  oneof anchor {
+    bool        start = 1;
+    StatementId after = 2;
+    StatementId at    = 3;
+    bool        end   = 4;
+  }
+}
+
+message ProgramDelta {
+  Anchor               anchor   = 1;
+  repeated StatementId removed  = 2;
+  repeated Statement   inserted = 3;
+}
+
+// message DecorationDelta {
+//   Ref ref = 1;
+//   optional CellSty
+// }
+
+message Delta {
+  oneof delta {
+    ProgramDelta program = 1;
+    // DecorationDelta decoration = 2;
+  }
+}
+
+message DeltaBatch {
+  repeated Delta deltas = 1;
 }

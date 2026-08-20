@@ -38,43 +38,4 @@ final class TriangleStatement({
       id: id,
     );
   }
-
-  @override
-  TriangleStatement updateWith(TriangleStatementPartial partial) => partial.apply(this);
-
-  @override
-  TriangleStatementPartial partial({
-    Mat4? transform,
-    LayoutSizePartial? size,
-    TriangleObjectShape? shape,
-    EdgeStylePartial? edgeStyle,
-    FaceStylePartial? faceStyle,
-    FrameRef? parent,
-  }) => .new(
-    transform: transform,
-    size: size,
-    shape: shape,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
-    parent: parent,
-  );
-}
-
-final class const TriangleStatementPartial({
-  super.transform,
-  super.size,
-  super.parent,
-  super.edgeStyle,
-  super.faceStyle,
-  final TriangleObjectShape? shape,
-}) extends ShapeStatementPartial<TriangleStatement> {
-  @override
-  TriangleStatement apply(TriangleStatement statement) => statement.copyWith(
-    transform: transform,
-    size: size?.apply(statement.size),
-    shape: shape,
-    parent: parent,
-    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
-    faceStyle: statement.faceStyle.updateWith(faceStyle),
-  );
 }

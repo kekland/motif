@@ -1,78 +1,21 @@
 part of 'prop.dart';
 
-final class ResolvedCoordinate(final double coordinate, final double? overriden) {
-  @override
-  bool operator ==(Object other) =>
-      other is ResolvedCoordinate && other.coordinate == coordinate && other.overriden == overriden;
-
-  @override
-  int get hashCode => Object.hash(coordinate, overriden);
-
-  double get value => overriden ?? coordinate;
-}
-
-final class CoordinateProp(super.sources) extends Prop<ResolvedCoordinate, double> {
+final class CoordinateProp(super.sources) extends Prop<Coordinate, CoordinatePartial> {
   @override
   PropType get type => .coordinate;
 }
 
-final class ResolvedPosition(final Vec2 position, final Vec2? overriden) {
-  ResolvedPosition.from(Vec2 position, [Vec2? overriden]) : this(position, overriden);
-
-  @override
-  bool operator ==(Object other) =>
-      other is ResolvedPosition && other.position == position && other.overriden == overriden;
-
-  @override
-  int get hashCode => Object.hash(position, overriden);
-
-  Vec2 get value => overriden ?? position;
-
-  ResolvedCoordinate get x => .new(position.x, overriden?.x);
-  ResolvedCoordinate get y => .new(position.y, overriden?.y);
-}
-
-final class PositionProp(super.sources) extends Prop<ResolvedPosition, Vec2Partial> {
+final class PositionProp(super.sources) extends Prop<Position, PositionPartial> {
   @override
   PropType get type => .position;
 
-  late final CoordinateProp x = .new(sources.remap(.coordinate, (v) => v.x, (v) => .new(x: v)));
-  late final CoordinateProp y = .new(sources.remap(.coordinate, (v) => v.y, (v) => .new(y: v)));
+  late final CoordinateProp x = .new(sources.remap(.coordinate, (v) => v.x, (v) => .new(x: v.value)));
+  late final CoordinateProp y = .new(sources.remap(.coordinate, (v) => v.y, (v) => .new(y: v.value)));
 }
 
 final class RotationProp(super.sources) extends Prop<double, double> {
   @override
   PropType get type => .rotation;
-}
-
-final class TransformData {
-  const TransformData(this.translation, this.rotation);
-  TransformData.from(Mat4 mat, {Vec2? translationOverride})
-    : this(.new(mat.translation2, translationOverride), mat.rotationZ);
-
-  final ResolvedPosition translation;
-  final double rotation;
-}
-
-final class TransformDataPartial {
-  const TransformDataPartial({this.translation, this.rotation});
-
-  final Vec2Partial? translation;
-  final double? rotation;
-
-  TransformData apply(TransformData current) {
-    final position = current.translation.position;
-
-    return TransformData(
-      .new(translation?.apply(position) ?? position, current.translation.overriden),
-      rotation ?? current.rotation,
-    );
-  }
-
-  void execute(TransformSession session, TransformData current) {
-    if (translation != null) session.setTranslation(translation!.apply(current.translation.position));
-    if (rotation != null) session.setRotation(rotation!);
-  }
 }
 
 final class TransformProp(super.sources) extends Prop<TransformData, TransformDataPartial> {
@@ -96,37 +39,12 @@ final class TransformProp(super.sources) extends Prop<TransformData, TransformDa
   );
 }
 
-final class ResolvedLayoutDimension(final LayoutDimension dimension, final double? overriden) {
-  @override
-  bool operator ==(Object other) =>
-      other is ResolvedLayoutDimension && other.dimension == dimension && other.overriden == overriden;
-
-  @override
-  int get hashCode => Object.hash(dimension, overriden);
-}
-
 final class LayoutDimensionProp(super.sources) extends Prop<ResolvedLayoutDimension, LayoutDimension> {
   @override
   PropType get type => .layoutDimension;
-
-  // @override
-  // bool compare(ResolvedLayoutDimension a, ResolvedLayoutDimension b) {
-  //   return super.compare(a, b);
-  // }
 }
 
-final class ResolvedLayoutSize(final LayoutSize size, final Size2? overriden) {
-  @override
-  bool operator ==(Object other) => other is ResolvedLayoutSize && other.size == size && other.overriden == overriden;
-
-  @override
-  int get hashCode => Object.hash(size, overriden);
-
-  ResolvedLayoutDimension get width => .new(size.width, overriden?.width);
-  ResolvedLayoutDimension get height => .new(size.height, overriden?.height);
-}
-
-final class LayoutSizeProp(super.sources) extends Prop<ResolvedLayoutSize, LayoutSizePartial> {
+final class LayoutSizeProp(super.sources) extends Prop<ResolvedLayoutSize, ResolvedLayoutSizePartial> {
   @override
   PropType get type => .layoutSize;
 

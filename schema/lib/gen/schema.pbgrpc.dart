@@ -20,8 +20,8 @@ import 'schema.pb.dart' as $0;
 
 export 'schema.pb.dart';
 
-@$pb.GrpcServiceName('HelloService')
-class HelloServiceClient extends $grpc.Client {
+@$pb.GrpcServiceName('SceneSync')
+class SceneSyncClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,41 +30,37 @@ class HelloServiceClient extends $grpc.Client {
     '',
   ];
 
-  HelloServiceClient(super.channel, {super.options, super.interceptors});
+  SceneSyncClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.Hello> sayHello(
-    $0.Hello request, {
+  $grpc.ResponseStream<$0.ServerEvent> sync(
+    $async.Stream<$0.DeltaBatch> request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$sayHello, request, options: options);
+    return $createStreamingCall(_$sync, request, options: options);
   }
 
   // method descriptors
 
-  static final _$sayHello = $grpc.ClientMethod<$0.Hello, $0.Hello>(
-      '/HelloService/SayHello',
-      ($0.Hello value) => value.writeToBuffer(),
-      $0.Hello.fromBuffer);
+  static final _$sync = $grpc.ClientMethod<$0.DeltaBatch, $0.ServerEvent>(
+      '/SceneSync/Sync',
+      ($0.DeltaBatch value) => value.writeToBuffer(),
+      $0.ServerEvent.fromBuffer);
 }
 
-@$pb.GrpcServiceName('HelloService')
-abstract class HelloServiceBase extends $grpc.Service {
-  $core.String get $name => 'HelloService';
+@$pb.GrpcServiceName('SceneSync')
+abstract class SceneSyncServiceBase extends $grpc.Service {
+  $core.String get $name => 'SceneSync';
 
-  HelloServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Hello, $0.Hello>(
-        'SayHello',
-        sayHello_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Hello.fromBuffer(value),
-        ($0.Hello value) => value.writeToBuffer()));
+  SceneSyncServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.DeltaBatch, $0.ServerEvent>(
+        'Sync',
+        sync,
+        true,
+        true,
+        ($core.List<$core.int> value) => $0.DeltaBatch.fromBuffer(value),
+        ($0.ServerEvent value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Hello> sayHello_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.Hello> $request) async {
-    return sayHello($call, await $request);
-  }
-
-  $async.Future<$0.Hello> sayHello($grpc.ServiceCall call, $0.Hello request);
+  $async.Stream<$0.ServerEvent> sync(
+      $grpc.ServiceCall call, $async.Stream<$0.DeltaBatch> request);
 }

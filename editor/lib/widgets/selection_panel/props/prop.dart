@@ -2,48 +2,15 @@ import 'dart:math';
 
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/selection_panel/widgets.dart';
+import 'package:equatable/equatable.dart';
 
+part 'partials.dart';
+part 'prop_type.dart';
 part 'props.dart';
 part 'cell_props.dart';
 part 'statement_props.dart';
 part 'widgets/builder.dart';
 part 'widgets/widgets.dart';
-
-final class const PropType<G, S>(
-  final String key,
-  final Prop<G, S> Function(List<PropSource<G, S>>) factory,
-) {
-  static const coordinate = PropType('coordinate', CoordinateProp.new);
-  static const position = PropType('position', PositionProp.new);
-  static const rotation = PropType('rotation', RotationProp.new);
-  static const transform = PropType('transform', TransformProp.new);
-  static const layoutDimension = PropType('layoutDimension', LayoutDimensionProp.new);
-  static const layoutSize = PropType('layoutSize', LayoutSizeProp.new);
-  static const childLayout = PropType('childLayout', ChildLayoutProp.new);
-  static const edgeStyle = PropType('edgeStyle', EdgeStyleProp.new);
-  static const faceStyle = PropType('faceStyle', FaceStyleProp.new);
-  static const cutT = PropType('cutT', CutTProp.new);
-  static const strokeWidth = PropType('strokeWidth', StrokeWidthProp.new);
-  static const strokeColor = PropType('strokeColor', StrokeColorProp.new);
-  static const fillColor = PropType('fillColor', FillColorProp.new);
-
-  Prop<G, S> compose(Iterable<PropSource> props) {
-    return factory(props.cast<PropSource<G, S>>().toList());
-  }
-}
-
-extension PropTypeExt<G, S> on PropType<G, S> {
-  PropSource<G, S> transforming(
-    TransformSession Function(SceneTransaction) session,
-    G Function(Scene scene) getter,
-    void Function(TransformSession session, G current, S value) setter,
-  ) => PropSource<G, S>.transforming(this, session, getter, setter);
-
-  PropSource<G, S> delegating(
-    G Function(Scene scene) getter,
-    void Function(SceneTransaction txn, S value) setter,
-  ) => PropSource<G, S>.delegating(this, getter, setter);
-}
 
 abstract class PropSource<G, S> {
   PropSource();

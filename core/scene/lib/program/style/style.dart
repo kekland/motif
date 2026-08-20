@@ -10,7 +10,8 @@ sealed class const CellStyle<D extends CellStyle<D>>() {
   D updateWith(covariant CellStylePartial<D>? partial) => partial == null ? this as D : partial.apply(this as D);
 }
 
-sealed class const CellStylePartial<D extends CellStyle<D>>() {
+sealed class const CellStylePartial<D extends CellStyle<D>>() extends Partial<D> {
+  @override
   D apply(D style);
 }
 
@@ -33,7 +34,12 @@ final class StyleOverrides {
   final _styles = <Ref, CellStylePartial>{};
 
   CellStylePartial? of(Ref ref) => _styles[ref];
-  void set(Ref ref, CellStylePartial decoration) {
+  void set(Ref ref, CellStylePartial? decoration) {
+    if (decoration == null) {
+      _styles.remove(ref);
+      return;
+    }
+
     _styles[ref] = decoration;
   }
 }

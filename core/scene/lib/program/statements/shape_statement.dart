@@ -120,25 +120,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends PlacedStatement
     LayoutSize? size,
     S? shape,
     FrameRef? parent,
-  });
-
-  @override
-  ShapeStatement<S> updateWith(covariant ShapeStatementPartial partial);
-
-  @override
-  ShapeStatementPartial partial({
-    Mat4? transform,
-    FrameRef? parent,
-    LayoutSizePartial? size,
-    EdgeStylePartial? edgeStyle,
-    FaceStylePartial? faceStyle,
+    FaceStyle? faceStyle,
+    EdgeStyle? edgeStyle,
   });
 }
-
-sealed class const ShapeStatementPartial<T extends ShapeStatement>({
-  super.transform,
-  super.parent,
-  final LayoutSizePartial? size,
-  final EdgeStylePartial? edgeStyle,
-  final FaceStylePartial? faceStyle,
-}) extends FrameStatementPartialBase<T> {}

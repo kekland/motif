@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:color/color.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:scene/scene.dart';
-import 'package:schema/scene.dart' as pb;
+import 'package:schema/schema.dart' as pb;
 
-part 'codecs.dart';
+part 'scene_codec.dart';
+part 'delta_codec.dart';
 part 'utils.dart';
 
 class SceneCodec {

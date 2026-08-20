@@ -14,28 +14,30 @@ extension StatementProps on Statement {
 
 extension VertexStatementProps on VertexStatement {
   Iterable<PropSource> get props sync* {
-    yield PropType.position.transforming(
-      (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
-      (scene) => .from(scene.statement<VertexStatement>(id).position),
-      (session, current, value) => session.setTranslation(value.apply(current.value)),
+    yield PropType.position.transformingOf<VertexStatement>(
+      id,
+      get: (scene, s) => .new(s.position, overridden: scene.layout.of(id)?.offset),
+      execute: (session, value) => session.setTranslation(value.resolved),
     );
   }
 }
 
 extension EdgeStatementProps on EdgeStatement {
   Iterable<PropSource> get props sync* {
-    yield PropType.edgeStyle.delegating(
-      (scene) => .from(scene.statement<EdgeStatement>(id).style),
-      (txn, value) => txn.update(id, partial(style: value)),
+    yield PropType.edgeStyle.of<EdgeStatement>(
+      id,
+      get: (scene, s) => .from(s.style),
+      set: (scene, s, value) => s.copyWith(style: value.apply(s.style)),
     );
   }
 }
 
 extension FaceStatementProps on FaceStatement {
   Iterable<PropSource> get props sync* {
-    yield PropType.faceStyle.delegating(
-      (scene) => .from(scene.statement<FaceStatement>(id).style),
-      (txn, value) => txn.update(id, partial(style: value)),
+    yield PropType.faceStyle.of<FaceStatement>(
+      id,
+      get: (scene, s) => .from(s.style),
+      set: (scene, s, value) => s.copyWith(style: value.apply(s.style)),
     );
   }
 }
@@ -48,19 +50,22 @@ extension ShapeStatementProps on ShapeStatement {
       (session, current, value) => value.execute(session, current),
     );
 
-    yield PropType.layoutSize.delegating(
-      (scene) => .new(scene.statement<ShapeStatement>(id).size, scene.layout.of(id)?.size),
-      (txn, value) => txn.update(id, partial(size: value)),
+    yield PropType.layoutSize.of<ShapeStatement>(
+      id,
+      get: (scene, s) => .new(s.size, overridden: scene.layout.of(id)?.size),
+      set: (scene, s, value) => s.copyWith(size: value.size),
     );
 
-    yield PropType.faceStyle.delegating(
-      (scene) => scene.statement<ShapeStatement>(id).resolvedFaceStyle(scene),
-      (txn, value) => txn.update(id, partial(faceStyle: value)),
+    yield PropType.faceStyle.of<ShapeStatement>(
+      id,
+      get: (scene, s) => s.resolvedFaceStyle(scene),
+      set: (scene, s, value) => s.copyWith(faceStyle: value.apply(s.faceStyle)),
     );
 
-    yield PropType.edgeStyle.delegating(
-      (scene) => scene.statement<ShapeStatement>(id).resolvedEdgeStyle(scene),
-      (txn, value) => txn.update(id, partial(edgeStyle: value)),
+    yield PropType.edgeStyle.of<ShapeStatement>(
+      id,
+      get: (scene, s) => s.resolvedEdgeStyle(scene),
+      set: (scene, s, value) => s.copyWith(edgeStyle: value.apply(s.edgeStyle)),
     );
   }
 }
@@ -69,18 +74,20 @@ extension ContainerStatementProps on ContainerStatement {
   Iterable<PropSource> get props sync* {
     yield* (this as ShapeStatement).props;
 
-    yield PropType.childLayout.delegating(
-      (scene) => scene.statement<ContainerStatement>(id).childLayout,
-      (txn, value) => txn.update(id, partial(childLayout: value)),
+    yield PropType.childLayout.of<ContainerStatement>(
+      id,
+      get: (scene, s) => s.childLayout,
+      set: (scene, s, value) => s.copyWith(childLayout: value),
     );
   }
 }
 
 extension CutEdgeStatementProps on CutEdgeStatement {
   Iterable<PropSource> get props sync* {
-    yield PropType.cutT.delegating(
-      (scene) => scene.statement<CutEdgeStatement>(id).t,
-      (txn, value) => txn.update(id, partial(t: value)),
+    yield PropType.cutT.of<CutEdgeStatement>(
+      id,
+      get: (scene, s) => s.t,
+      set: (scene, s, value) => s.copyWith(t: value),
     );
   }
 }

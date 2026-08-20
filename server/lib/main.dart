@@ -1,4 +1,5 @@
 import 'package:server/imports.dart';
+import 'package:server/service.dart';
 
 final logger = Logger('server');
 
@@ -9,7 +10,6 @@ Future<void> main() async {
     .production => .INFO,
   };
 
-  final server = Server.create(services: []);
-  await server.serve(port: env.port);
-  logger.info('server listening on port ${server.port}');
+  await SceneSyncServer().serve(port: env.port);
+  logger.info('server listening on port ${env.port}');
 }

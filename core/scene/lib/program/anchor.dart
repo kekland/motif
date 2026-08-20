@@ -3,38 +3,38 @@ part of 'program.dart';
 sealed class Anchor {
   const Anchor();
 
-  const factory Anchor.start() = _StartAnchor;
-  const factory Anchor.end() = _EndAnchor;
-  const factory Anchor.at(StatementId id) = _AtAnchor;
-  const factory Anchor.after(StatementId id) = _AfterAnchor;
+  const factory Anchor.start() = StartAnchor;
+  const factory Anchor.end() = EndAnchor;
+  const factory Anchor.at(StatementId id) = AtAnchor;
+  const factory Anchor.after(StatementId id) = AfterAnchor;
 
   int? resolve(Program program);
 }
 
-final class _StartAnchor extends Anchor {
-  const _StartAnchor();
+final class StartAnchor extends Anchor {
+  const StartAnchor();
 
   @override
   int? resolve(Program program) => 0;
 }
 
-final class _EndAnchor extends Anchor {
-  const _EndAnchor();
+final class EndAnchor extends Anchor {
+  const EndAnchor();
 
   @override
   int? resolve(Program program) => program.length;
 }
 
-final class _AtAnchor extends Anchor {
-  const _AtAnchor(this.id);
+final class AtAnchor extends Anchor {
+  const AtAnchor(this.id);
   final StatementId id;
 
   @override
   int? resolve(Program program) => program.indexOf(id);
 }
 
-final class _AfterAnchor extends Anchor {
-  const _AfterAnchor(this.id);
+final class AfterAnchor extends Anchor {
+  const AfterAnchor(this.id);
   final StatementId id;
 
   @override

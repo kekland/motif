@@ -39,35 +39,4 @@ final class FrameStatement extends PlacedStatement {
     parent: parent ?? this.parent?.ref,
     id: id,
   );
-
-  @override
-  FrameStatement updateWith(covariant FrameStatementPartialBase partial) => partial.apply(this);
-
-  @override
-  FrameStatementPartialBase partial({
-    Mat4? transform,
-    FrameRef? parent,
-  }) => FrameStatementPartial(
-    transform: transform,
-    parent: parent,
-  );
-}
-
-sealed class const FrameStatementPartialBase<T extends FrameStatement>({
-  final Mat4? transform,
-  final FrameRef? parent,
-}) extends StatementPartial<T> {
-  @override
-  T apply(T statement);
-}
-
-final class const FrameStatementPartial({
-  super.transform,
-  super.parent,
-}) extends FrameStatementPartialBase<FrameStatement> {
-  @override
-  FrameStatement apply(FrameStatement statement) => statement.copyWith(
-    transform: transform,
-    parent: parent,
-  );
 }

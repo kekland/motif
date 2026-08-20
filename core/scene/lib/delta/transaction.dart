@@ -4,55 +4,104 @@ final class SceneTransaction {
   SceneTransaction._(this.scene);
   final Scene scene;
 
-  final _ops = <ProgramOp>[];
-  final _decorations = <(Ref, CellStylePartial?, CellStylePartial?)>[];
+  var _closed = false;
+  final _entries = <SceneDelta>[];
 
   Program get program => scene.program;
 
+  // -------------------------------------------------------------------------------------------------------------------
+  // Program ops
+  // -------------------------------------------------------------------------------------------------------------------
+
   T insert<T extends Statement>(T statement, {Anchor anchor = const .end()}) {
+    _checkOpen();
+
     final index = anchor.resolve(program);
     if (index == null) throw StateError('anchor $anchor does not resolve for program');
-    _record(index, inserted: [statement], removed: []);
+    _recordOp(index, inserted: [statement], removed: []);
     return statement;
   }
 
   void remove(StatementId id) {
+    _checkOpen();
+
     final index = program.indexOf(id);
     if (index == null) throw StateError('statement $id does not exist in program');
-    _record(index, inserted: [], removed: [program[index]]);
+    _recordOp(index, inserted: [], removed: [program[index]]);
   }
 
   void replace(StatementId target, List<Statement> statements) {
+    _checkOpen();
+
     final index = program.indexOf(target);
     if (index == null) throw StateError('statement $target does not exist in program');
-    _record(index, inserted: statements, removed: [program[index]]);
+    _recordOp(index, inserted: statements, removed: [program[index]]);
   }
 
-  void update(StatementId target, StatementPartial update) {
-    final index = program.indexOf(target);
-    if (index == null) throw StateError('statement $target does not exist in program');
-    final current = program[index];
-    final updated = current.updateWith(update);
-    replace(target, [updated]);
+  void update<T extends Statement>(StatementId target, T Function(T) update) {
+    _checkOpen();
+
+    final statement = program.byId<T>(target);
+    if (statement == null) throw StateError('statement $target does not exist in program');
+    final updated = update(statement);
+    if (statement == updated) return;
+    return replace(target, [updated]);
   }
 
-  void decorate(Ref ref, CellStylePartial decoration) {
-    final current = scene.styleOverrides.of(ref);
-    _decorations.add((ref, current, decoration));
-    scene.styleOverrides.set(ref, decoration);
-  }
-
-  void _rollback() {
-    for (final op in _ops.reversed) op.unapply(program);
-    _ops.clear();
-  }
-
-  void _record(int index, {required List<Statement> inserted, required List<Statement> removed}) {
+  void _recordOp(int index, {required List<Statement> inserted, required List<Statement> removed}) {
     final anchor = index == 0 ? const Anchor.start() : Anchor.after(program[index - 1].id);
     final op = ProgramOp(anchor: anchor, removed: removed, inserted: inserted);
     op.reapply(program);
-    _ops.add(op);
+    _entries.add(.program(.new([op])));
   }
 
-  SceneDelta _build() => .program(.new(_ops));
+  // -------------------------------------------------------------------------------------------------------------------
+  // Decoration
+  // -------------------------------------------------------------------------------------------------------------------
+
+  void decorate(Ref ref, CellStylePartial decoration) {
+    _checkOpen();
+
+    final before = scene.styleOverrides.of(ref);
+    if (before == decoration) return;
+
+    final delta = SceneDelta.decoration(ref, before, decoration);
+    delta.reapply(scene);
+    _entries.add(delta);
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------------------------------------------------
+
+  void preview() {
+    _checkOpen();
+    scene.evaluate();
+  }
+
+  void commit({Object? mergeKey}) {
+    _checkOpen();
+    _closed = true;
+    scene._endTransaction(this);
+    scene.history.commit(_build(), mergeKey: mergeKey);
+  }
+
+  void cancel() {
+    _checkOpen();
+    _closed = true;
+    _rollback();
+    scene._endTransaction(this);
+    scene.evaluate();
+  }
+
+  void _rollback() {
+    for (final entry in _entries.reversed) entry.unapply(scene);
+    _entries.clear();
+  }
+
+  void _checkOpen() {
+    if (_closed) throw StateError('transaction has already been committed or cancelled');
+  }
+
+  SceneDelta _build() => .coalesced(_entries);
 }

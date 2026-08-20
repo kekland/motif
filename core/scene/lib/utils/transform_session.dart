@@ -23,6 +23,8 @@ final class TransformSession {
   final Mat4 worldToSpace;
   final Aabb2 initialHull;
 
+  final mergeKey = Object();
+
   factory TransformSession.statement(Scene scene, StatementId id, {SceneTransaction? transaction}) {
     final statement = scene.program.byId(id)!;
     final first = statement.products.first;
@@ -75,8 +77,9 @@ final class TransformSession {
   void apply(Mat4 transform) {
     if (transaction != null) {
       _apply(transaction!, transform);
+      transaction!.preview();
     } else {
-      scene.edit((txn) => _apply(txn, transform));
+      scene.edit((txn) => _apply(txn, transform), mergeKey: mergeKey);
     }
   }
 

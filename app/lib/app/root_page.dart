@@ -6,7 +6,9 @@ class RootPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = useDisposable(() => Editor());
+    final editor = useDisposable(() => Editor(
+      server: (host: 'localhost', port: 8085),
+    ));
 
     return WindowNavigator(
       child: Scaffold(

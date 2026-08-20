@@ -40,26 +40,6 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
       id: id,
     );
   }
-
-  @override
-  RectangleStatement updateWith(RectangleStatementPartial partial) => partial.apply(this);
-
-  @override
-  RectangleStatementPartial partial({
-    Mat4? transform,
-    LayoutSizePartial? size,
-    RectangleObjectShape? shape,
-    EdgeStylePartial? edgeStyle,
-    FaceStylePartial? faceStyle,
-    FrameRef? parent,
-  }) => .new(
-    transform: transform,
-    size: size,
-    shape: shape,
-    edgeStyle: edgeStyle,
-    faceStyle: faceStyle,
-    parent: parent,
-  );
 }
 
 extension type RectangleCorner._((VertexRef, VertexRef, VertexRef, EdgeRef) _) {
@@ -77,23 +57,4 @@ extension type RectangleCorner._((VertexRef, VertexRef, VertexRef, EdgeRef) _) {
   EdgeRef get arc => _.$4;
 
   Iterable<Ref> get all => [vertex, a, b, arc];
-}
-
-final class const RectangleStatementPartial({
-  super.transform,
-  super.size,
-  super.parent,
-  super.edgeStyle,
-  super.faceStyle,
-  final RectangleObjectShape? shape,
-}) extends ShapeStatementPartial<RectangleStatement> {
-  @override
-  RectangleStatement apply(RectangleStatement statement) => statement.copyWith(
-    transform: transform,
-    size: size?.apply(statement.size),
-    shape: shape,
-    parent: parent,
-    edgeStyle: statement.edgeStyle.updateWith(edgeStyle),
-    faceStyle: statement.faceStyle.updateWith(faceStyle),
-  );
 }

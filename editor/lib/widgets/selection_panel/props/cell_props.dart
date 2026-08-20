@@ -14,8 +14,8 @@ List<PropSource> vertexProps(Scene scene, VertexRef ref) {
   return [
     PropType.position.transforming(
       (txn) => TransformSession.of(scene, [ref], transaction: txn),
-      (scene) => .from(scene.bundle.vertexPosition(scene.handleOf(ref))),
-      (session, current, value) => session.setTranslation(value.apply(current.value)),
+      (scene) => .new(scene.bundle.vertexPosition(scene.handleOf(ref))),
+      (session, current, value) => session.setTranslation(value.apply(current).value),
     ),
   ];
 }

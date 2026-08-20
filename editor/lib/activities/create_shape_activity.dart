@@ -5,7 +5,10 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
   CreateShapeActivity(this.editor);
 
   final Editor editor;
+  SceneTransaction? transaction;
   late final S statement;
+
+  final mergeKey = Object();
 
   S create(Vec2 position, FrameRef? parent);
 
@@ -13,6 +16,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
+    transaction = editor.beginTransaction();
     final hitTest = editor.hitTest(details.globalPosition);
 
     FrameRef? parent;
@@ -28,7 +32,8 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
     final localPosition = editor.globalToLocal(parent, details.globalPosition);
     statement = create(localPosition, parent);
 
-    editor.edit((txn) => txn.insert(statement));
+    transaction!.insert(statement);
+    transaction!.preview();
     editor.selection.setStatement(statement.id);
   }
 
@@ -47,13 +52,21 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
       size: .fixed(aabb.width, aabb.height),
     );
 
-    editor.edit((txn) => txn.replace(statement.id, [newStatement]));
+    transaction!.replace(statement.id, [newStatement]);
+    transaction!.preview();
   }
 
   @override
   void onEnd(DragEndDetails? details) {
+    transaction!.commit(mergeKey: mergeKey);
     editor.tool.activeTool = tools.cursor;
     super.onEnd(details);
+  }
+
+  @override
+  void onCancel() {
+    transaction?.cancel();
+    super.onCancel();
   }
 }
 

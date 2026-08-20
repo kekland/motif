@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
@@ -94,28 +96,48 @@ final class Scene with ChangeNotifier {
     return program.resolveTransformRouter(_evaluation!, products);
   }
 
-  var _editing = false;
-  T edit<T>(T Function(SceneTransaction txn) fn) {
-    if (_editing) throw StateError('cannot edit scene while already editing');
-    _editing = true;
+  SceneTransaction? _activeTransaction;
 
-    final txn = SceneTransaction._(this);
+  SceneTransaction beginTransaction() {
+    if (_activeTransaction != null) throw StateError('transaction is already active');
+    _activeTransaction = ._(this);
+    return _activeTransaction!;
+  }
+
+  T edit<T>(T Function(SceneTransaction txn) fn, {Object? mergeKey}) {
+    final txn = beginTransaction();
     try {
       final result = fn(txn);
-      history.commit(txn._build());
+      txn.commit(mergeKey: mergeKey);
       return result;
     } catch (_) {
-      txn._rollback();
+      txn.cancel();
       rethrow;
-    } finally {
-      _editing = false;
     }
+  }
+
+  void _endTransaction(SceneTransaction txn) {
+    assert(identical(txn, _activeTransaction), 'transaction mismatch');
+    _activeTransaction = null;
   }
 
   @override
   void dispose() {
+    history.dispose();
     signal.dispose();
     selection.dispose();
     super.dispose();
+  }
+
+  void applyRemote(SceneDelta delta) {
+    delta.reapply(this);
+    evaluate();
+  }
+
+  void load(Program program) {
+    this.program.replaceAll(program.statements);
+    history.clear();
+    selection.clear();
+    evaluate();
   }
 }

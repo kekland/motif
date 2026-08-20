@@ -14,31 +14,6 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class LayoutDimensionType extends $pb.ProtobufEnum {
-  static const LayoutDimensionType LAYOUT_DIMENSION_TYPE_FIXED =
-      LayoutDimensionType._(
-          0, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_FIXED');
-  static const LayoutDimensionType LAYOUT_DIMENSION_TYPE_EXPAND =
-      LayoutDimensionType._(
-          1, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_EXPAND');
-  static const LayoutDimensionType LAYOUT_DIMENSION_TYPE_CONTAIN =
-      LayoutDimensionType._(
-          2, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_CONTAIN');
-
-  static const $core.List<LayoutDimensionType> values = <LayoutDimensionType>[
-    LAYOUT_DIMENSION_TYPE_FIXED,
-    LAYOUT_DIMENSION_TYPE_EXPAND,
-    LAYOUT_DIMENSION_TYPE_CONTAIN,
-  ];
-
-  static final $core.List<LayoutDimensionType?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static LayoutDimensionType? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const LayoutDimensionType._(super.value, super.name);
-}
-
 class LayoutAlign extends $pb.ProtobufEnum {
   static const LayoutAlign LAYOUT_ALIGN_START =
       LayoutAlign._(0, _omitEnumNames ? '' : 'LAYOUT_ALIGN_START');
@@ -126,6 +101,72 @@ class GlueVerticesStatement_Position extends $pb.ProtobufEnum {
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const GlueVerticesStatement_Position._(super.value, super.name);
+}
+
+class Ref_Kind extends $pb.ProtobufEnum {
+  static const Ref_Kind REF_KIND_FRAME =
+      Ref_Kind._(0, _omitEnumNames ? '' : 'REF_KIND_FRAME');
+  static const Ref_Kind REF_KIND_VERTEX =
+      Ref_Kind._(1, _omitEnumNames ? '' : 'REF_KIND_VERTEX');
+  static const Ref_Kind REF_KIND_EDGE =
+      Ref_Kind._(2, _omitEnumNames ? '' : 'REF_KIND_EDGE');
+  static const Ref_Kind REF_KIND_FACE =
+      Ref_Kind._(3, _omitEnumNames ? '' : 'REF_KIND_FACE');
+
+  static const $core.List<Ref_Kind> values = <Ref_Kind>[
+    REF_KIND_FRAME,
+    REF_KIND_VERTEX,
+    REF_KIND_EDGE,
+    REF_KIND_FACE,
+  ];
+
+  static final $core.List<Ref_Kind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static Ref_Kind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Ref_Kind._(super.value, super.name);
+}
+
+class LayoutDimension_Type extends $pb.ProtobufEnum {
+  static const LayoutDimension_Type LAYOUT_DIMENSION_TYPE_FIXED =
+      LayoutDimension_Type._(
+          0, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_FIXED');
+  static const LayoutDimension_Type LAYOUT_DIMENSION_TYPE_EXPAND =
+      LayoutDimension_Type._(
+          1, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_EXPAND');
+  static const LayoutDimension_Type LAYOUT_DIMENSION_TYPE_CONTAIN =
+      LayoutDimension_Type._(
+          2, _omitEnumNames ? '' : 'LAYOUT_DIMENSION_TYPE_CONTAIN');
+
+  static const $core.List<LayoutDimension_Type> values = <LayoutDimension_Type>[
+    LAYOUT_DIMENSION_TYPE_FIXED,
+    LAYOUT_DIMENSION_TYPE_EXPAND,
+    LAYOUT_DIMENSION_TYPE_CONTAIN,
+  ];
+
+  static final $core.List<LayoutDimension_Type?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static LayoutDimension_Type? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const LayoutDimension_Type._(super.value, super.name);
+}
+
+class ColorData_Type extends $pb.ProtobufEnum {
+  static const ColorData_Type COLOR_DATA_TYPE_HSV =
+      ColorData_Type._(0, _omitEnumNames ? '' : 'COLOR_DATA_TYPE_HSV');
+
+  static const $core.List<ColorData_Type> values = <ColorData_Type>[
+    COLOR_DATA_TYPE_HSV,
+  ];
+
+  static final $core.List<ColorData_Type?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 0);
+  static ColorData_Type? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ColorData_Type._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

@@ -67,43 +67,4 @@ final class EdgeStatement extends PlacedStatement {
     style: style ?? this.style,
     id: id,
   );
-
-  @override
-  EdgeStatement updateWith(EdgeStatementPartial partial) => partial.apply(this);
-
-  @override
-  EdgeStatementPartial partial({
-    VertexRef? start,
-    VertexRef? end,
-    FrameRef? parent,
-    Vec2? startTangent,
-    Vec2? endTangent,
-    EdgeStylePartial? style,
-  }) => .new(
-    start: start,
-    end: end,
-    parent: parent,
-    startTangent: startTangent,
-    endTangent: endTangent,
-    style: style,
-  );
-}
-
-final class const EdgeStatementPartial({
-  final VertexRef? start,
-  final VertexRef? end,
-  final FrameRef? parent,
-  final Vec2? startTangent,
-  final Vec2? endTangent,
-  final EdgeStylePartial? style,
-}) extends StatementPartial<EdgeStatement> {
-  @override
-  EdgeStatement apply(EdgeStatement statement) => statement.copyWith(
-    start: start,
-    end: end,
-    parent: parent,
-    startTangent: startTangent,
-    endTangent: endTangent,
-    style: statement.style.updateWith(style),
-  );
 }

@@ -1,31 +1,135 @@
+syntax = "proto3";
+
 message Scene {
-  required Program program = 1;
+  Program program = 1;
 }
 
 message Program {
   repeated Statement statements = 1;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Statements
+// ---------------------------------------------------------------------------------------------------------------------
+
 message Statement {
   oneof statement {
-    FrameStatement frame = 1;
-    VertexStatement vertex = 2;
-    EdgeStatement edge = 3;
-    FaceStatement face = 4;
-    CutEdgeStatement cutEdge = 5;
+    FrameStatement        frame        = 1;
+    VertexStatement       vertex       = 2;
+    EdgeStatement         edge         = 3;
+    FaceStatement         face         = 4;
+    CutEdgeStatement      cutEdge      = 5;
     GlueVerticesStatement glueVertices = 6;
-    RectangleStatement rectangle = 7;
-    ContainerStatement container = 8;
+    CircleStatement       circle       = 7;
+    RectangleStatement    rectangle    = 8;
+    TriangleStatement     triangle     = 9;
+    ContainerStatement    container    = 10;
   }
 }
 
+message FrameStatement {
+  StatementId  id        = 1;
+  optional Ref parent    = 2;
+  Mat4         transform = 3;
+}
+
+message VertexStatement {
+  StatementId  id       = 1;
+  optional Ref parent   = 2;
+  Vec2         position = 3;
+}
+
+message EdgeStatement {
+  StatementId   id           = 1;
+  optional Ref  parent       = 2;
+  Ref           start        = 3;
+  Ref           end          = 4;
+  optional Vec2 startTangent = 5;
+  optional Vec2 endTangent   = 6;
+  EdgeStyle     style        = 7;
+}
+
+message FaceStatement {
+  message Cycle {
+    repeated Ref edges = 1;
+  }
+
+  StatementId    id     = 1;
+  optional Ref   parent = 2;
+  Cycle          outer  = 3;
+  repeated Cycle holes  = 4;
+  FaceStyle      style  = 5;
+}
+
+message CutEdgeStatement {
+  StatementId id     = 1;
+  Ref         target = 2;
+  double      t      = 3;
+}
+
+message GlueVerticesStatement {
+  enum Position {
+    GLUE_VERTICES_STATEMENT_POSITION_CENTROID = 0;
+    GLUE_VERTICES_STATEMENT_POSITION_FIRST    = 1;
+  }
+
+  StatementId  id       = 1;
+  repeated Ref targets  = 2;
+  Position     position = 3;
+}
+
+message CircleStatement {
+  StatementId       id        = 1;
+  optional Ref      parent    = 2;
+  Mat4              transform = 3;
+  LayoutSize        size      = 4;
+  CircleObjectShape shape     = 5;
+  EdgeStyle         edgeStyle = 6;
+  FaceStyle         faceStyle = 7;
+}
+
+message RectangleStatement {
+  StatementId          id        = 1;
+  optional Ref         parent    = 2;
+  Mat4                 transform = 3;
+  LayoutSize           size      = 4;
+  RectangleObjectShape shape     = 5;
+  EdgeStyle            edgeStyle = 6;
+  FaceStyle            faceStyle = 7;
+}
+
+message TriangleStatement {
+  StatementId         id        = 1;
+  optional Ref        parent    = 2;
+  Mat4                transform = 3;
+  LayoutSize          size      = 4;
+  TriangleObjectShape shape     = 5;
+  EdgeStyle           edgeStyle = 6;
+  FaceStyle           faceStyle = 7;
+}
+
+message ContainerStatement {
+  StatementId  id          = 1;
+  optional Ref parent      = 2;
+  Mat4         transform   = 3;
+  LayoutSize   size        = 4;
+  ObjectShape  shape       = 5;
+  ChildLayout  childLayout = 6;
+  EdgeStyle    edgeStyle   = 7;
+  FaceStyle    faceStyle   = 8;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Primitives
+// ---------------------------------------------------------------------------------------------------------------------
+
 message StatementId {
-  required string value = 1;
+  string value = 1;
 }
 
 message Vec2 {
-  required double x = 1;
-  required double y = 2;
+  double x = 1;
+  double y = 2;
 }
 
 message Mat4 {
@@ -33,152 +137,127 @@ message Mat4 {
 }
 
 message Ref {
-  required StatementId id = 1;
-  required string product = 2;
-}
-
-message FrameStatement {
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Mat4 transform = 3;
-}
-
-message VertexStatement {
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Vec2 position = 3;
-}
-
-message EdgeStatement {
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Ref start = 3;
-  required Ref end = 4;
-  optional Vec2 startTangent = 5;
-  optional Vec2 endTangent = 6;
-}
-
-message FaceStatement {
-  message Cycle {
-    repeated Ref edges = 1;
-  }
-  
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Cycle outer = 3;
-  repeated Cycle holes = 4;
-}
-
-message CutEdgeStatement {
-  required StatementId id = 1;
-  required Ref target = 2;
-  required double t = 3;
-}
-
-message GlueVerticesStatement {
-  enum Position {
-    GLUE_VERTICES_STATEMENT_POSITION_CENTROID = 0;
-    GLUE_VERTICES_STATEMENT_POSITION_FIRST = 1;
+  enum Kind {
+    REF_KIND_FRAME  = 0;
+    REF_KIND_VERTEX = 1;
+    REF_KIND_EDGE   = 2;
+    REF_KIND_FACE   = 3;
   }
 
-  required StatementId id = 1;
-  repeated Ref targets = 2;
-  required Position position = 3;
+  StatementId id      = 1;
+  string      product = 2;
+  Kind        kind    = 3;
 }
 
 message LayoutRange {
-  required double min = 1;
-  required double max = 2;
-}
-
-enum LayoutDimensionType {
-  LAYOUT_DIMENSION_TYPE_FIXED = 0;
-  LAYOUT_DIMENSION_TYPE_EXPAND = 1;
-  LAYOUT_DIMENSION_TYPE_CONTAIN = 2;
+  double min = 1;
+  double max = 2;
 }
 
 message LayoutDimension {
+  enum Type {
+    LAYOUT_DIMENSION_TYPE_FIXED   = 0;
+    LAYOUT_DIMENSION_TYPE_EXPAND  = 1;
+    LAYOUT_DIMENSION_TYPE_CONTAIN = 2;
+  };
+
   optional double value = 1;
-  required LayoutDimensionType type = 2;
-  required LayoutRange range = 3;
+  Type            type  = 2;
+  LayoutRange     range = 3;
 }
 
 message LayoutSize {
-  required LayoutDimension width = 1;
-  required LayoutDimension height = 2;
+  LayoutDimension width  = 1;
+  LayoutDimension height = 2;
 }
 
 message CornerRadius {
-  required double x = 1;
-  required double y = 2;
+  double x = 1;
+  double y = 2;
 }
+
+message CircleObjectShape {}
 
 message RectangleObjectShape {
-  required CornerRadius top_left_radius = 1;
-  required CornerRadius top_right_radius = 2;
-  required CornerRadius bottom_right_radius = 3;
-  required CornerRadius bottom_left_radius = 4;
+  CornerRadius top_left_radius     = 1;
+  CornerRadius top_right_radius    = 2;
+  CornerRadius bottom_right_radius = 3;
+  CornerRadius bottom_left_radius  = 4;
 }
 
-message RectangleStatement {
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Mat4 transform = 3;
-  required LayoutSize size = 4;
-  required RectangleObjectShape shape = 5;
+message TriangleObjectShape {}
+
+message ObjectShape {
+  oneof shape {
+    CircleObjectShape    circle    = 1;
+    RectangleObjectShape rectangle = 2;
+    TriangleObjectShape  triangle  = 3;
+  }
+}
+
+message ColorData {
+  enum Type {
+    COLOR_DATA_TYPE_HSV = 0;
+  }
+
+  Type   type  = 1;
+  double v1    = 2;
+  double v2    = 3;
+  double v3    = 4;
+  double alpha = 5;
+}
+
+message EdgeStyle {
+  double    width = 1;
+  ColorData color = 2;
+}
+
+message FaceStyle {
+  ColorData color = 1;
 }
 
 enum LayoutAlign {
-  LAYOUT_ALIGN_START = 0;
+  LAYOUT_ALIGN_START  = 0;
   LAYOUT_ALIGN_CENTER = 1;
-  LAYOUT_ALIGN_END = 2;
+  LAYOUT_ALIGN_END    = 2;
 }
 
 enum LayoutJustify {
-  LAYOUT_JUSTIFY_START = 0;
-  LAYOUT_JUSTIFY_CENTER = 1;
-  LAYOUT_JUSTIFY_END = 2;
+  LAYOUT_JUSTIFY_START         = 0;
+  LAYOUT_JUSTIFY_CENTER        = 1;
+  LAYOUT_JUSTIFY_END           = 2;
   LAYOUT_JUSTIFY_SPACE_BETWEEN = 3;
 }
 
 enum FlexDirection {
-  FLEX_DIRECTION_ROW = 0;
+  FLEX_DIRECTION_ROW    = 0;
   FLEX_DIRECTION_COLUMN = 1;
 }
 
 message LayoutInsets {
-  required double left = 1;
-  required double top = 2;
-  required double right = 3;
-  required double bottom = 4;
+  double left   = 1;
+  double top    = 2;
+  double right  = 3;
+  double bottom = 4;
 }
 
 message ChildLayout {
   oneof layout {
     StackChildLayout stack = 1;
-    FlexChildLayout flex = 2;
+    FlexChildLayout  flex  = 2;
   }
 }
 
 message StackChildLayout {
   optional LayoutAlign alignHorizontal = 1;
-  optional LayoutAlign alignVertical = 2;
-  required LayoutInsets padding = 3;
+  optional LayoutAlign alignVertical   = 2;
+  LayoutInsets         padding         = 3;
 }
 
 message FlexChildLayout {
-  required FlexDirection direction = 1;
-  required LayoutJustify justify = 2;
-  required LayoutAlign crossAlign = 3;
-  required double gap = 4;
-  required LayoutInsets padding = 5;
-}
-
-message ContainerStatement {
-  required StatementId id = 1;
-  optional Ref parent = 2;
-  required Mat4 transform = 3;
-  required LayoutSize size = 4;
-  required RectangleObjectShape shape = 5;
-  required ChildLayout childLayout = 6;
+  FlexDirection direction  = 1;
+  LayoutJustify justify    = 2;
+  LayoutAlign   crossAlign = 3;
+  double        gap        = 4;
+  LayoutInsets  padding    = 5;
 }

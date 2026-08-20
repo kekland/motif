@@ -1,6 +1,10 @@
 import 'dart:ui' as ui;
 import 'package:css/color.dart' as css_color;
 
+enum ColorType {
+  hsv,
+}
+
 sealed class ColorData {
   const ColorData(this._v1, this._v2, this._v3, {this.alpha = 1.0});
 
@@ -12,6 +16,8 @@ sealed class ColorData {
   static const ColorData white = .hsv(h: 0.0, s: 0.0, v: 1.0);
 
   const factory ColorData.hsv({double h, double s, double v, double alpha}) = HsvColorData;
+  
+  ColorType get type;
 
   final double _v1;
   final double _v2;
@@ -21,10 +27,17 @@ sealed class ColorData {
   css_color.ColorData get cssColor;
   ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => cssColor.toUiColor(colorSpace: colorSpace);
   ColorData withAlpha(double alpha);
+
+  double get v1 => _v1;
+  double get v2 => _v2;
+  double get v3 => _v3;
 }
 
 final class HsvColorData extends ColorData {
   const HsvColorData({double h = .nan, double s = .nan, double v = .nan, super.alpha}) : super(h, s, v);
+
+  @override
+  ColorType get type => .hsv;
 
   double get h => _v1;
   double get s => _v2;

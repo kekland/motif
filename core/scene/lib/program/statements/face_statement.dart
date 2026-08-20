@@ -56,35 +56,4 @@ final class FaceStatement extends PlacedStatement {
     style: style ?? this.style,
     id: id,
   );
-
-  @override
-  FaceStatement updateWith(FaceStatementPartial partial) => partial.apply(this);
-
-  @override
-  FaceStatementPartial partial({
-    List<EdgeRef>? outer,
-    List<List<EdgeRef>>? holes,
-    FaceStylePartial? style,
-    FrameRef? parent,
-  }) => .new(
-    outer: outer,
-    holes: holes,
-    style: style,
-    parent: parent,
-  );
-}
-
-final class const FaceStatementPartial({
-  final List<EdgeRef>? outer,
-  final List<List<EdgeRef>>? holes,
-  final FaceStylePartial? style,
-  final FrameRef? parent,
-}) extends StatementPartial<FaceStatement> {
-  @override
-  FaceStatement apply(FaceStatement statement) => statement.copyWith(
-    outer: outer,
-    holes: holes,
-    style: style?.apply(statement.style),
-    parent: parent,
-  );
 }

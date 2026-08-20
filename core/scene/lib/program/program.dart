@@ -61,14 +61,20 @@ final class Program {
     return i;
   }
 
-  Statement? byId(StatementId id) {
+  T? byId<T extends Statement>(StatementId id) {
     final i = indexOf(id);
     if (i == null) return null;
-    return _statements[i];
+    return _statements[i] as T;
   }
 
   void _insertAt(int index, Statement s) => _statements.insert(index, s);
   void _removeAt(int index) => _statements.removeAt(index);
+
+  void replaceAll(Iterable<Statement> statements) {
+    _statements
+      ..clear()
+      ..addAll(statements);
+  }
 
   Iterable<LayoutBox> get layoutBoxes => _statements.whereType<LayoutBox>();
 }

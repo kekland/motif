@@ -27,8 +27,8 @@ class PositionPropWidget extends PropWidget {
     final xValue = useMemoComputed(() => xProp.value()?.value, keys: [xProp]);
     final yValue = useMemoComputed(() => yProp.value()?.value, keys: [yProp]);
 
-    final isXOverriden = useComputed(() => xProp.value()?.overriden != null, keys: [xProp]).value;
-    final isYOverriden = useComputed(() => yProp.value()?.overriden != null, keys: [yProp]).value;
+    final isXOverriden = useComputed(() => xProp.value()?.overridden != null, keys: [xProp]).value;
+    final isYOverriden = useComputed(() => yProp.value()?.overridden != null, keys: [yProp]).value;
 
     return Row(
       spacing: 4.0,
@@ -36,7 +36,7 @@ class PositionPropWidget extends PropWidget {
         Expanded(
           child: DoubleExpressionInputField(
             value: xValue,
-            onChanged: (v) => scene.edit((txn) => prop.x.set(txn, v)),
+            onChanged: (v) => scene.edit((txn) => prop.x.set(txn, .new(v))),
             options: .new(
               leading: Icons.x(),
               textStyle: isXOverriden ? context.typography.body.tertiary : null,
@@ -47,7 +47,7 @@ class PositionPropWidget extends PropWidget {
         Expanded(
           child: DoubleExpressionInputField(
             value: yValue,
-            onChanged: (v) => scene.edit((txn) => prop.y.set(txn, v)),
+            onChanged: (v) => scene.edit((txn) => prop.y.set(txn, .new(v))),
             options: .new(
               leading: Icons.y(),
               textStyle: isYOverriden ? context.typography.body.tertiary : null,
@@ -262,14 +262,14 @@ class LayoutSizePropWidget extends PropWidget {
 
     final widthValue = useMemoComputed(() {
       final w = width.value();
-      if (w?.overriden != null) return w?.overriden!;
+      if (w?.overridden != null) return w?.overridden!;
       if (w?.dimension.isFixed == true) return w?.dimension.value;
       return null;
     }, keys: [width]);
 
     final heightValue = useMemoComputed(() {
       final h = height.value();
-      if (h?.overriden != null) return h?.overriden!;
+      if (h?.overridden != null) return h?.overridden!;
       if (h?.dimension.isFixed == true) return h?.dimension.value;
       return null;
     }, keys: [height]);

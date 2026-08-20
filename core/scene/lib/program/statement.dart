@@ -2,10 +2,15 @@ part of 'program.dart';
 
 /// Identifier for a statement in a program. Guaranteed to be unique and increasing.
 extension type const StatementId._(int internal) {
-  StatementId.generate() : this._(_value++);
-  StatementId.fromValue(String value) : this._(int.parse(value));
+  StatementId.generate() : this._(_next++);
 
-  static var _value = 0;
+  factory StatementId.fromValue(String value) {
+    final parsed = int.parse(value);
+    if (parsed >= _next) _next = parsed + 1;
+    return StatementId._(parsed);
+  }
+
+  static var _next = 0;
 
   String get value => internal.toString();
 }
@@ -28,9 +33,6 @@ sealed class Statement {
   void execute(EvalContext context);
 
   Statement copyWith();
-  Statement updateWith(covariant StatementPartial partial) => partial.apply(this);
-  
-  StatementPartial partial();
 }
 
 sealed class PlacedStatement extends Statement {
@@ -63,9 +65,4 @@ final class Own<R extends Ref> extends Arg<R> {
   @override bool get isBorrow => false;
   @override bool get isOwn => true;
   // dart format on
-}
-
-sealed class StatementPartial<T extends Statement> {
-  const StatementPartial();
-  T apply(T statement);
 }
