@@ -7,13 +7,15 @@ part 'editor/transform.dart';
 part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
 
+const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhost:8085');
+
 final class Editor extends Controller {
   Editor({
     Scene? scene,
     ({String host, int port})? server,
   }) : scene = scene ?? Scene(program: .new([])),
        super(logger: Logger('editor')) {
-    sync = server == null ? null : SceneSync(this.scene, uri: Uri.parse('ws://${server.host}:${server.port}'));
+    sync = server == null ? null : SceneSync(this.scene, uri: Uri.parse(_syncUrl));
     sync?.connect();
   }
 

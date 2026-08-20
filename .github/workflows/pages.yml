@@ -18,3 +18,4 @@ jobs:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
+          customArgs: --dart-define="SYNC_URL=wss://motif.kz"
