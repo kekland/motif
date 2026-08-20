@@ -1,4 +1,0 @@
-const packages = {
-  'geometry',
-  'text',
-};
