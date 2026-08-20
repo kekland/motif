@@ -6,9 +6,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.grey;
+    final seedColor = Colors.indigo;
     final theme = generateAppTheme(
-      brightness: .dark,
+      brightness: .light,
       seedColor: seedColor,
     );
 

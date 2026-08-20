@@ -8,7 +8,7 @@ part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
 
 const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhost:8085');
-const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: true);
+const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: false);
 
 final class Editor extends Controller {
   Editor({Scene? scene}) : scene = scene ?? Scene(program: .new([])), super(logger: Logger('editor')) {
