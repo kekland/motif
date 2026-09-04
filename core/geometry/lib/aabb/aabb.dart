@@ -85,13 +85,26 @@ final class Aabb2 {
 
   double distanceTo(Vec2 p) => math.sqrt(distance2To(p));
 
-  Aabb2 transformed(Mat4 m) {
+  void transform(Mat4 m) {
     final a = m.transform2(Vec2(min.x, min.y));
     final b = m.transform2(Vec2(max.x, min.y));
     final c = m.transform2(Vec2(max.x, max.y));
     final d = m.transform2(Vec2(min.x, max.y));
-    return .minMax(.min(a, .min(b, .min(c, d))), .max(a, .max(b, .max(c, d))));
+    _min = .min(a, .min(b, .min(c, d)));
+    _max = .max(a, .max(b, .max(c, d)));
   }
+
+  void transformDelta(Mat4 m) {
+    final a = m.transformDelta2(Vec2(min.x, min.y));
+    final b = m.transformDelta2(Vec2(max.x, min.y));
+    final c = m.transformDelta2(Vec2(max.x, max.y));
+    final d = m.transformDelta2(Vec2(min.x, max.y));
+    _min = .min(a, .min(b, .min(c, d)));
+    _max = .max(a, .max(b, .max(c, d)));
+  }
+
+  Aabb2 transformed(Mat4 m) => copyWith()..transform(m);
+  Aabb2 transformedDelta(Mat4 m) => copyWith()..transformDelta(m);
 
   Size2 get size => .new(max.x - min.x, max.y - min.y);
   double get width => max.x - min.x;
@@ -108,6 +121,8 @@ final class Aabb2 {
   Vec2 get bottomRight => max;
   Vec2 get bottomLeft => .new(min.x, max.y);
   Vec2 get center => .new((min.x + max.x) * 0.5, (min.y + max.y) * 0.5);
+
+  Aabb2 copyWith({Vec2? min, Vec2? max}) => .minMax(min ?? this.min, max ?? this.max);
 
   @override
   String toString() {

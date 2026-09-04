@@ -1,9 +1,7 @@
 part of '../cubic.dart';
 
-typedef _Cubic = ({Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3});
-
 @pragma('vm:prefer-inline')
-(_Cubic, _Cubic) _deCasteljauSplit(Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3, double t) {
+void _deCasteljauSplit(Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3, double t, Cubic2 a, Cubic2 b) {
   if (!(t > 0 && t < 1)) throw ArgumentError.value(t, 't', 'must be in range (0, 1)');
 
   final u = 1 - t;
@@ -14,8 +12,13 @@ typedef _Cubic = ({Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3});
   final m123 = m12 * u + m23 * t;
   final m0123 = m012 * u + m123 * t;
 
-  return (
-    (p0: p0, p1: m01, p2: m012, p3: m0123),
-    (p0: m0123, p1: m123, p2: m23, p3: p3),
-  );
+  a.p0 = p0;
+  a.p1 = m01;
+  a.p2 = m012;
+  a.p3 = m0123;
+
+  b.p0 = m0123;
+  b.p1 = m123;
+  b.p2 = m23;
+  b.p3 = p3;
 }

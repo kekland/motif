@@ -36,4 +36,7 @@ extension type Size2._(Vec2 vec) {
   Size2 withHeight(double newHeight) => .new(width, newHeight);
 
   Size2 scale(double sx, double sy) => .new(width * sx, height * sy);
+
+  bool equals(Size2 other, [double epsilon = 1e-12]) => vec.equals(other.vec, epsilon);
+  bool exactEquals(Size2 other) => vec.exactEquals(other.vec);
 }

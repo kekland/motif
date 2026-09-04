@@ -25,7 +25,7 @@ sealed class ColorData {
   final double alpha;
 
   css_color.ColorData get cssColor;
-  ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => cssColor.toUiColor(colorSpace: colorSpace);
+  // ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => cssColor.toUiColor(colorSpace: colorSpace);
   ColorData withAlpha(double alpha);
 
   double get v1 => _v1;

@@ -1,0 +1,17 @@
+name: scene3
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  geometry:
+  kernel:
+  program:
+  schema:
+  color:
+  listen: ^1.0.1
+
+dev_dependencies:
+  test: ^1.31.2

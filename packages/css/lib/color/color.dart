@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+// import 'dart:ui' as ui;
 import 'dart:math' as math;
 
 import 'package:petitparser/petitparser.dart';
@@ -100,8 +100,8 @@ sealed class ColorData {
     };
   }
 
-  /// Creates a [ColorData] from a [ui.Color] in its color space.
-  factory ColorData.fromUiColor(ui.Color color) => _Converter.fromUiColor(color);
+  // /// Creates a [ColorData] from a [ui.Color] in its color space.
+  // factory ColorData.fromUiColor(ui.Color color) => _Converter.fromUiColor(color);
 
   const factory ColorData.rgb({double r, double g, double b, double alpha}) = SrgbColorData; // Alias for .srgb
   const factory ColorData.srgb({double r, double g, double b, double alpha}) = SrgbColorData;
@@ -140,8 +140,8 @@ sealed class ColorData {
   /// Return a color data where the values of this color are unchanged and used in a different model.
   ColorData reinterpretAs(ColorModel model) => .from(model: model, v1: _v1, v2: _v2, v3: _v3, alpha: alpha);
 
-  /// Converts this color data to a [ui.Color] in a given color space.
-  ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => _Converter.convertToUi(this, colorSpace: colorSpace);
+  // /// Converts this color data to a [ui.Color] in a given color space.
+  // ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => _Converter.convertToUi(this, colorSpace: colorSpace);
 
   /// Returns a map of color components and their values for this color.
   Map<ColorComponent, double> get components;

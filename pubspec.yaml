@@ -10,8 +10,9 @@ workspace:
   - server
   - editor
 
-  - core/kernel
   - core/geometry
+  - core/kernel
+  - core/program
   - core/scene
   - core/renderer
 

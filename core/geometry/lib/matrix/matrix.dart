@@ -236,6 +236,22 @@ extension type const Mat4._(Float64x2List storage) {
   }
 
   Mat4 withRotationZ(double rad) => copy()..setRotationZ(rad);
+
+  Float64List get storage64 => storage.buffer.asFloat64List();
+
+  bool equals(Mat4 other, [double epsilon = 1e-12]) {
+    for (var i = 0; i < 16; i++) {
+      if ((this[i] - other[i]).abs() > epsilon) return false;
+    }
+    return true;
+  }
+
+  bool exactEquals(Mat4 other) {
+    for (var i = 0; i < 16; i++) {
+      if (this[i] != other[i]) return false;
+    }
+    return true;
+  }
 }
 
 double _invertMat4(Mat4 m) {

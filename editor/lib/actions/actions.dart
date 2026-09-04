@@ -64,8 +64,7 @@ class DeleteSelectionAction extends EditorAction<DeleteSelectionIntent> {
     if (selection.isEmpty) return;
 
     editor.edit((txn) {
-      final statements = selection.statements;
-      txn.dissolve(statements);
+      txn.dissolve(refs: selection.refs);
     });
 
     selection.clear();

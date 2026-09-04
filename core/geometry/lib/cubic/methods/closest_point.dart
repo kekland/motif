@@ -6,31 +6,6 @@ ClosestPointResult _cubicClosestPoint(Cubic2 c, Vec2 q) {
   return _cubicClosestPointRaw(c.p0, c.p1, c.p2, c.p3, q);
 }
 
-ClosestPointResult _splineClosestPoint(CubicSpline2 s, Vec2 q) {
-  if (s.segmentCount == 0) throw ArgumentError.value(s, 's', 'must have at least one segment');
-
-  var bestSegIdx = 0;
-  var bestLocalT = 0.0;
-  var bestPoint = Vec2.zero();
-  var bestDistance = double.infinity;
-
-  for (var i = 0; i < s.segmentCount; i++) {
-    final r = _cubicClosestPoint(s.segment(i), q);
-    if (r.distance < bestDistance) {
-      bestSegIdx = i;
-      bestLocalT = r.t;
-      bestPoint = r.point;
-      bestDistance = r.distance;
-    }
-  }
-
-  return (
-    t: (bestSegIdx + bestLocalT) / s.segmentCount,
-    point: bestPoint,
-    distance: bestDistance,
-  );
-}
-
 ClosestPointResult _cubicClosestPointRaw(Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 q) {
   final w = _closestPointQuintic(p0, p1, p2, p3, q);
   final candidates = <double>[];

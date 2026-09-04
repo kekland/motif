@@ -22,7 +22,7 @@ class const CellPanel({
       rawProps.add(props);
     }
 
-    final props = Prop.resolve(rawProps);
+    final props = Prop.union(rawProps);
 
     late final Widget? icon, title, footnote;
     if (refs.length == 1) {

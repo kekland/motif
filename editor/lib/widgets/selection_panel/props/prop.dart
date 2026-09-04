@@ -109,7 +109,23 @@ final class const Mixed<T>() extends PropValue<T>;
 sealed class Prop<G, S> {
   Prop(this.sources);
 
-  static List<Prop> resolve(Iterable<Iterable<PropSource>> group) {
+  static List<Prop> union(Iterable<Iterable<PropSource>> group) {
+    final propsByType = <PropType, List<PropSource>>{};
+    for (final props in group) {
+      for (final prop in props) {
+        propsByType.putIfAbsent(prop.type, () => []).add(prop);
+      }
+    }
+
+    final result = <Prop>[];
+    for (final entry in propsByType.entries) {
+      result.add(entry.key.compose(entry.value));
+    }
+
+    return result;
+  }
+
+  static List<Prop> intersect(Iterable<Iterable<PropSource>> group) {
     final count = group.length;
 
     final propsByType = <PropType, List<PropSource>>{};

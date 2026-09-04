@@ -20,26 +20,3 @@ int _cubicWinding(Cubic2 c, Vec2 p) {
 
   return winding;
 }
-
-int _splineWinding(CubicSpline2 s, Vec2 p) {
-  var winding = 0;
-
-  for (var k = 0; k < s.segmentCount; k++) {
-    final y0 = s.p[k].y;
-    final y1 = s.cOut[k].y;
-    final y2 = s.cIn[k + 1].y;
-    final y3 = s.p[k + 1].y;
-    final roots = _bernsteinCubicRoots(y0 - p.y, y1 - p.y, y2 - p.y, y3 - p.y);
-
-    for (final t in roots) {
-      if (t >= 1.0) continue;
-      final x = _bernsteinEvaluate1d(s.p[k].x, s.cOut[k].x, s.cIn[k + 1].x, s.p[k + 1].x, t);
-      if (x <= p.x) continue;
-
-      final dy = _bernsteinVelocityEvaluate1d(y0, y1, y2, y3, t);
-      winding += dy.sign.toInt();
-    }
-  }
-
-  return winding;
-}

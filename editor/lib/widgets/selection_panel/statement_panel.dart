@@ -14,7 +14,7 @@ class const StatementPanel({
       rawProps.add(statement.props.toList());
     }
 
-    final props = Prop.resolve(rawProps);
+    final props = Prop.intersect(rawProps);
 
     late final Widget? icon, title, footnote;
     if (statements.length == 1) {
