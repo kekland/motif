@@ -64,7 +64,7 @@ class DeleteSelectionAction extends EditorAction<DeleteSelectionIntent> {
     if (selection.isEmpty) return;
 
     editor.edit((txn) {
-      txn.dissolve(refs: selection.refs);
+      txn.delete(selection.refs);
     });
 
     selection.clear();
@@ -79,9 +79,9 @@ class CopySelectionAction extends EditorAction<CopySelectionIntent> {
 
     if (selection.isEmpty) return;
 
-    final slice = editor.scene.slice(selection.statements);
-    final data = base64Encode(slice.encode().writeToBuffer());
-    Clipboard.setData(.new(text: data));
+    // final slice = editor.scene.slice(selection.statements);
+    // final data = base64Encode(slice.encode().writeToBuffer());
+    // Clipboard.setData(.new(text: data));
   }
 }
 
@@ -93,15 +93,15 @@ class PasteAction extends EditorAction<PasteIntent> {
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     if (clipboardData == null || clipboardData.text == null) return;
 
-    final slice = SceneSlice.decodeRaw(base64Decode(clipboardData.text!));
-    if (slice == null) return;
+    // final slice = SceneSlice.decodeRaw(base64Decode(clipboardData.text!));
+    // if (slice == null) return;
 
-    final remapped = slice.remap();
-    editor.edit((txn) {
-      for (final s in remapped.statements) txn.insert(s);
-      for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
-    });
+    // final remapped = slice.remap();
+    // editor.edit((txn) {
+    //   for (final s in remapped.statements) txn.insert(s);
+    //   for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
+    // });
 
-    editor.selection.setStatements(remapped.statements.map((s) => s.id));
+    // editor.selection.setStatements(remapped.statements.map((s) => s.id));
   }
 }

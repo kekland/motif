@@ -16,7 +16,7 @@ extension VertexStatementProps on VertexStatement {
   Iterable<PropSource> get props sync* {
     yield PropType.position.transformingOf<VertexStatement>(
       id,
-      get: (scene, s) => .new(s.position, overridden: scene.layout.of(id)?.offset),
+      get: (scene, s) => .new(s.position, overridden: scene.layoutOf(id)?.offset),
       execute: (session, value) => session.setTranslation(value.resolved),
     );
   }
@@ -46,13 +46,13 @@ extension ShapeStatementProps on ShapeStatement {
   Iterable<PropSource> get props sync* {
     yield PropType.transform.transforming(
       (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
-      (scene) => .from(scene.statement<ShapeStatement>(id).transform, translationOverride: scene.layout.of(id)?.offset),
+      (scene) => .from(scene.statement<ShapeStatement>(id)!.transform, translationOverride: scene.layoutOf(id)?.offset),
       (session, current, value) => value.execute(session, current),
     );
 
     yield PropType.layoutSize.of<ShapeStatement>(
       id,
-      get: (scene, s) => .new(s.size, overridden: scene.layout.of(id)?.size),
+      get: (scene, s) => .new(s.size, overridden: scene.layoutOf(id)?.size),
       set: (scene, s, value) => s.copyWith(size: value.size),
     );
 
@@ -74,10 +74,10 @@ extension ContainerStatementProps on ContainerStatement {
   Iterable<PropSource> get props sync* {
     yield* (this as ShapeStatement).props;
 
-    yield PropType.childLayout.of<ContainerStatement>(
+    yield PropType.layout.of<ContainerStatement>(
       id,
-      get: (scene, s) => s.childLayout,
-      set: (scene, s, value) => s.copyWith(childLayout: value),
+      get: (scene, s) => s.layout,
+      set: (scene, s, value) => s.copyWith(layout: value),
     );
   }
 }

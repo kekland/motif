@@ -2,7 +2,7 @@ part of '../program.dart';
 
 final class const FaceStyle({
   required final ColorData color,
-}) extends CellStyle<FaceStyle> {
+}) extends CellStyle<FaceHandle> {
   static const default_ = FaceStyle(
     color: .white,
   );
@@ -21,11 +21,14 @@ final class const FaceStyle({
 
   @override
   bool operator ==(Object other) => identical(this, other) || (other is FaceStyle && color == other.color);
+
+  @override
+  String toString() => 'FaceStyle(color: $color)';
 }
 
 final class const FaceStylePartial({
   final ColorData? color,
-}) extends CellStylePartial<FaceStyle> {
+}) extends CellStylePartial<FaceHandle> {
   factory FaceStylePartial.from(FaceStyle style) => .new(
     color: style.color,
   );

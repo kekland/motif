@@ -12,6 +12,9 @@ class CursorTool extends Tool {
 
   @override
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _CursorToolOverlay(info: info);
+
+  @override
+  LogicalKeySet? get shortcut => .new(.keyV);
 }
 
 class _CursorToolOverlay extends HookWidget {

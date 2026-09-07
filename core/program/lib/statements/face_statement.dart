@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-final class Face extends Statement with PlacedStatement {
+final class FaceStatement extends Statement with PlacedStatement {
   new(
     this.outer, {
     this.holes = const [],
@@ -8,7 +8,7 @@ final class Face extends Statement with PlacedStatement {
     super.id,
     super.modifiers,
     FrameRef? parent,
-  }) : parent = parent != null ? ParentSelector(parent) : null;
+  }) : parent = .of(parent);
 
   final ChainSelector outer;
   final List<ChainSelector> holes;
@@ -23,7 +23,8 @@ final class Face extends Statement with PlacedStatement {
   late final selectors = [outer, ...holes, ?parent];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
+  Iterable<Op> execute(EvalContext context) sync* {
+    context.style(ref, style);
     yield MakeFaceOp(
       context.resolve(outer),
       holes: [for (final h in holes) context.resolve(h)],
@@ -32,7 +33,7 @@ final class Face extends Statement with PlacedStatement {
   }
 
   @override
-  Face copyWith({
+  FaceStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     ChainSelector? outer,

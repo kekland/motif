@@ -10,16 +10,16 @@ sealed class ProgramOp {
     required List<Statement> inserted,
   }) = StatementOp;
 
-  // factory ProgramOp.style(
-  //   CellKey key, {
-  //   required CellStylePartial? before,
-  //   required CellStylePartial? after,
-  // }) = StyleOp;
+  factory ProgramOp.style(
+    CellRef ref, {
+    required CellStylePartial? before,
+    required CellStylePartial? after,
+  }) = StyleOp;
 
   bool get isEmpty;
 
-  ProgramDelta reapply(Evaluation evaluation);
-  ProgramDelta unapply(Evaluation evaluation);
+  void reapply(EvaluationPass pass);
+  void unapply(EvaluationPass pass);
 
   ProgramOp? coalesce(ProgramOp next);
   bool commutesWith(ProgramOp other);
@@ -31,10 +31,10 @@ final class const EmptyOp() extends ProgramOp {
   bool get isEmpty => true;
 
   @override
-  ProgramDelta reapply(Evaluation evaluation) => .empty();
+  void reapply(EvaluationPass pass) {}
 
   @override
-  ProgramDelta unapply(Evaluation evaluation) => .empty();
+  void unapply(EvaluationPass pass) {}
 
   @override
   ProgramOp? coalesce(ProgramOp next) => next;
@@ -63,21 +63,25 @@ final class StatementOp extends ProgramOp {
   bool get isEmpty => removed.isEmpty && inserted.isEmpty;
 
   @override
-  ProgramDelta reapply(Evaluation evaluation) => _execute(evaluation, remove: removed, insert: inserted);
+  void reapply(EvaluationPass pass) => _execute(pass, remove: removed, insert: inserted);
 
   @override
-  ProgramDelta unapply(Evaluation evaluation) => _execute(evaluation, remove: inserted, insert: removed);
+  void unapply(EvaluationPass pass) => _execute(pass, remove: inserted, insert: removed);
 
-  ProgramDelta _execute(Evaluation evaluation, {required List<Statement> remove, required List<Statement> insert}) {
+  void _execute(
+    EvaluationPass pass, {
+    required List<Statement> remove,
+    required List<Statement> insert,
+  }) {
+    final evaluation = pass.evaluation;
     final program = evaluation.program;
     final index = anchor.resolve(program);
     if (index == null || index + remove.length > program.length) throw StateError('invalid anchor for program op');
     for (var i = 0; i < remove.length; i++) {
       if (program[index + i].id != remove[i].id) throw StateError('invalid anchor for program op');
     }
-    
-    evaluation.apply(index, remove, insert);
-    return .single(this);
+
+    evaluation.edit(pass, index, remove, insert);
   }
 
   bool get isPureInsert => removed.isEmpty && inserted.length == 1;
@@ -110,7 +114,7 @@ final class StatementOp extends ProgramOp {
 
   @override
   bool commutesWith(ProgramOp other) => switch (other) {
-    // StyleOp _ => true,
+    StyleOp _ => true,
     EmptyOp _ => true,
     _ => false,
   };
@@ -129,47 +133,47 @@ final class StatementOp extends ProgramOp {
   );
 }
 
-// final class StyleOp extends ProgramOp {
-//   new(
-//     this.key, {
-//     required this.before,
-//     required this.after,
-//   });
+final class StyleOp extends ProgramOp {
+  new(
+    this.key, {
+    required this.before,
+    required this.after,
+  });
 
-//   final CellKey key;
-//   final CellStylePartial? before;
-//   final CellStylePartial? after;
+  final CellRef key;
+  final CellStylePartial? before;
+  final CellStylePartial? after;
 
-//   @override
-//   bool get isEmpty => before == after;
+  @override
+  bool get isEmpty => before == after;
 
-//   @override
-//   ProgramDelta reapply(Evaluation evaluation) {
-//     evaluation.program._styleOverrides.set(key, after);
-//     return .single(this);
-//   }
+  @override
+  void reapply(EvaluationPass pass) {
+    pass.program.styles.set(key, after);
+    pass.evaluation.restyle(pass, key);
+  }
 
-//   @override
-//   ProgramDelta unapply(Evaluation evaluation) {
-//     evaluation.program._styleOverrides.set(key, before);
-//     return .single(this);
-//   }
+  @override
+  void unapply(EvaluationPass pass) {
+    pass.program.styles.set(key, before);
+    pass.evaluation.restyle(pass, key);
+  }
 
-//   @override
-//   ProgramOp? coalesce(ProgramOp next) {
-//     if (next is! StyleOp) return null;
-//     if (next.key != key) return null;
-//     if (before == next.after) return .empty();
-//     return .style(key, before: before, after: next.after);
-//   }
+  @override
+  ProgramOp? coalesce(ProgramOp next) {
+    if (next is! StyleOp) return null;
+    if (next.key != key) return null;
+    if (before == next.after) return .empty();
+    return .style(key, before: before, after: next.after);
+  }
 
-//   @override
-//   bool commutesWith(ProgramOp other) => switch (other) {
-//     StyleOp d => d.key != key,
-//     StatementOp _ => true,
-//     EmptyOp _ => true,
-//   };
+  @override
+  bool commutesWith(ProgramOp other) => switch (other) {
+    StyleOp d => d.key != key,
+    StatementOp _ => true,
+    EmptyOp _ => true,
+  };
 
-//   @override
-//   StyleOp invert() => .new(key, before: after, after: before);
-// }
+  @override
+  StyleOp invert() => .new(key, before: after, after: before);
+}

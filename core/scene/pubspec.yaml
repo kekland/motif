@@ -9,6 +9,7 @@ dependencies:
   geometry:
   kernel:
   program:
+  state:
 
 dev_dependencies:
   test: ^1.31.2

@@ -15,7 +15,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
   final Object mergeKey;
 
   VertexHandle get startHandle => editor.scene.handleOf(startVertex)!;
-  Vec2 get start => editor.bundle.vertexPositionWorld(startHandle);
+  Vec2 get start => editor.bundle.vertexPosition(startHandle, space: .root);
 
   Vec2? _cStart;
   Vec2? get cStart => _cStart;
@@ -48,33 +48,32 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
 
     late final VertexRef endVertex;
     if (endHitTest != null) {
-      endVertex = editor.edit((txn) => txn.embedVertex(endHitTest));
+      endVertex = editor.edit((txn) => txn.embedVertex(endHitTest), mergeKey: mergeKey);
     } else {
-      endVertex = editor.edit((txn) => txn.insert(VertexStatement(end!))).vertex;
+      endVertex = editor.edit((txn) => txn.insert(VertexStatement(end!)), mergeKey: mergeKey).ref;
     }
 
     final startHandle = editor.handleOf(startVertex)!;
     final endHandle = editor.handleOf(endVertex)!;
 
     final parentHandle = editor.bundle.lca(startHandle, endHandle);
-    final parentKey = editor.bundle.frameKey(parentHandle)!;
-    final transform = editor.bundle.frameTransformWorld(parentHandle);
+    final parentRef = editor.bundle.frameRef(parentHandle);
+    final transform = editor.bundle.frameTransform(parentHandle, space: .root);
     final transformedCubic = cubic.transformed(transform);
 
-    final startTransform = editor.bundle.cellWorldTransform(startHandle);
-    final endTransform = editor.bundle.cellWorldTransform(endHandle);
+    final startTransform = editor.bundle.query.localToWorld(startHandle);
+    final endTransform = editor.bundle.query.localToWorld(endHandle);
 
     final statement = EdgeStatement(
-      startVertex,
-      endVertex,
-      parent: editor.refOf(parentKey),
+      startVertex.selector(),
+      endVertex.selector(),
+      parent: parentRef,
       startTangent: startTransform.transformDelta2(transformedCubic.p1 - transformedCubic.p0),
       endTangent: endTransform.transformDelta2(transformedCubic.p2 - transformedCubic.p3),
     );
 
-    editor.edit((txn) => txn.insert(statement));
-
-    return [statement.edge];
+    editor.edit((txn) => txn.insert(statement), mergeKey: mergeKey);
+    return [statement.ref];
   }
 
   TransientEdge? commit({SceneHitResult? endHitTest, bool startNewEdge = false}) {
@@ -83,11 +82,6 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
 
   void remove() {
     editor.transientEdges.remove(this);
-  }
-
-  void _performRemove() {
-    final hasUses = editor.bundle.vertexHasUses(startHandle);
-    if (!hasUses) editor.edit((txn) => txn.remove(editor.scene.statementOf(startVertex).id));
   }
 }
 
@@ -118,9 +112,9 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
       final edge = newEdges.last;
       final edgeHandle = editor.handleOf(edge);
       final endHandle = editor.bundle.edgeEnd(edgeHandle!);
-      final end = editor.refOf(editor.bundle.vertexKey(endHandle))!;
-      final endPosition = editor.bundle.vertexPositionWorld(endHandle);
-      final endTangent = editor.bundle.edgeEndTangentWorld(edgeHandle);
+      final end = editor.refOf(endHandle)!;
+      final endPosition = editor.bundle.vertexPosition(endHandle, space: .root);
+      final endTangent = editor.bundle.edgeEndTangent(edgeHandle, space: .root);
       final cStart = endPosition - endTangent;
 
       return create(end, cStart: cStart, mergeKey: Object());
@@ -130,7 +124,6 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
   }
 
   void remove(TransientEdge edge) {
-    edge._performRemove();
     instances.remove(edge);
     notifyListeners();
   }

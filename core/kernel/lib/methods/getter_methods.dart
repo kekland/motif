@@ -59,6 +59,14 @@ extension GetterMethods on Bundle {
 
   bool _frameHasChildren(FrameIndex f) => _frame.childHead[f] != .none;
 
+  Iterable<CoframeIndex> _frameDependents(FrameIndex f) sync* {
+    for (var c = _frame.dependentStart[f]; c != .none; c = _coframe.dependentNext[c]) yield c;
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Coframe
+  // -------------------------------------------------------------------------------------------------------------------
+
   // -------------------------------------------------------------------------------------------------------------------
   // Vertex
   // -------------------------------------------------------------------------------------------------------------------
@@ -75,6 +83,15 @@ extension GetterMethods on Bundle {
 
   Iterable<EdgeIndex> _vertexEdges(VertexIndex v) sync* {
     for (final cv in _vertexDiskLive(v)) yield _covertex.edge[cv];
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Covertex
+  // -------------------------------------------------------------------------------------------------------------------
+
+  Covertex _covertexFor(CovertexIndex cv) {
+    assert(cv.isNotNone);
+    return .new(_edge.handleFor(_covertex.edge[cv]), isStart: _covertex.isStart[cv]);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -160,6 +177,7 @@ extension GetterMethods on Bundle {
   // -------------------------------------------------------------------------------------------------------------------
 
   Coedge _coedgeFor(CoedgeIndex ce) {
+    assert(ce.isNotNone);
     return .new(_edge.handleFor(_coedge.edge[ce]), forward: _coedge.direction[ce]);
   }
 
@@ -201,5 +219,41 @@ extension GetterMethods on Bundle {
       .edge => _edge.handleFor(t.asEdge),
       .face => _face.handleFor(t.asFace),
     } as H;
+  }
+
+  CoframeIndex _cellCrossStart(CellIndex c) => switch (c.kind) {
+    .edge => _edge.crossStart[c.asEdge],
+    .face => _face.crossStart[c.asFace],
+    .frame || .vertex => .none,
+  };
+
+  Iterable<CoframeIndex> _cellCross(CellIndex c) sync* {
+    for (var cf = _cellCrossStart(c); cf != .none; cf = _coframe.crossNext[cf]) yield cf;
+  }
+
+  Iterable<CellIndex> _cellDependents(CellIndex c) {
+    return switch (c.kind) {
+      .frame => _frameChildren(c.asFrame),
+      .vertex => _vertexEdges(c.asVertex).map((e) => e.cell),
+      .edge => _edgeFaces(c.asEdge).map((f) => f.cell),
+      .face => .empty(),
+    };
+  }
+
+  Iterable<CellIndex> _cellDependencies(CellIndex c) {
+    final out = <CellIndex>[];
+
+    if (c.kind == .edge) {
+      out.add(_edge.vStart[c.asEdge].cell);
+      out.add(_edge.vEnd[c.asEdge].cell);
+    } else if (c.kind == .face) {
+      for (final head in _faceBoundary(c.asFace)) {
+        for (final ce in _cycleCoedges(head)) {
+          out.add(_coedge.edge[ce].cell);
+        }
+      }
+    }
+
+    return out;
   }
 }

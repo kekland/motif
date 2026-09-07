@@ -8,7 +8,7 @@ extension type const EdgeIndex(int i) implements ElementIndex {
 extension type const EdgeHandle._(CellHandle h) implements CellHandle {
   EdgeHandle.make(EdgeIndex index, int gen) : h = .make(.edge, index, gen);
   EdgeIndex get index => .new(_index);
-  EdgeRef ref(Bundle bundle) => bundle.ref(this) as EdgeRef;
+  EdgeRef ref(Bundle bundle) => bundle.ref(this);
 }
 
 final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage> {
@@ -18,12 +18,14 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
   var cvEnd = CovertexIndexStorage<EdgeIndex>();
   var radialStart = CoedgeIndexStorage<EdgeIndex>();
   var cubic = Cubic2Storage<EdgeIndex>();
+  var cubicWorld = Cubic2Storage<EdgeIndex>();
   var cubicVersion = Int32Storage<EdgeIndex>();
   var cubicEpoch = Int32Storage<EdgeIndex>();
   var cubicArcIndex = ObjectStorage<EdgeIndex, CubicArcIndex>();
   var parent = FrameIndexStorage<EdgeIndex>();
   var siblingPrev = CellIndexStorage<EdgeIndex>();
   var siblingNext = CellIndexStorage<EdgeIndex>();
+  var crossStart = CoframeIndexStorage<EdgeIndex>();
 
   final id = IdTable<EdgeIndex>('edge');
 
@@ -37,12 +39,14 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
       cvEnd = cvEnd.grow(atLeast);
       radialStart = radialStart.grow(atLeast);
       cubic = cubic.grow(atLeast);
+      cubicWorld = cubicWorld.grow(atLeast);
       cubicVersion = cubicVersion.grow(atLeast);
       cubicEpoch = cubicEpoch.grow(atLeast);
       cubicArcIndex = cubicArcIndex.grow(atLeast);
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
+      crossStart = crossStart.grow(atLeast);
     }
   }
 
@@ -55,12 +59,14 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
     cvEnd = .copyFrom(other.cvEnd);
     radialStart = .copyFrom(other.radialStart);
     cubic = .copyFrom(other.cubic);
+    cubicWorld = .copyFrom(other.cubicWorld);
     cubicVersion = .copyFrom(other.cubicVersion);
     cubicEpoch = .copyFrom(other.cubicEpoch);
     cubicArcIndex = .copyFrom(other.cubicArcIndex);
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
+    crossStart = .copyFrom(other.crossStart);
     id.copyFrom(other.id);
   }
 

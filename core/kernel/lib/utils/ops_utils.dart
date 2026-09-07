@@ -38,10 +38,11 @@ extension OpsUtils on Transaction {
   void markAdded(CellHandle h) => delta.markAdded(h.ref(bundle));
   void markDeleted(CellHandle h) => delta.markDeleted(h.ref(bundle));
 
-  void markFrameMoved(FrameHandle f) => bundle._changeTracker.add(bundle._frame, f);
-  void markVertexMoved(VertexHandle v) => bundle._changeTracker.add(bundle._vertex, v);
-  void markEdgeMoved(EdgeHandle e) => bundle._changeTracker.add(bundle._edge, e);
-  void markFaceMoved(FaceHandle f) => bundle._changeTracker.add(bundle._face, f);
+  void markMoved(CellHandle h) => bundle._changeTracker.add(bundle, bundle._arenaOf(h.kind), h);
+  void markFrameMoved(FrameHandle f) => bundle._changeTracker.add(bundle, bundle._frame, f);
+  void markVertexMoved(VertexHandle v) => bundle._changeTracker.add(bundle, bundle._vertex, v);
+  void markEdgeMoved(EdgeHandle e) => bundle._changeTracker.add(bundle, bundle._edge, e);
+  void markFaceMoved(FaceHandle f) => bundle._changeTracker.add(bundle, bundle._face, f);
 
   // void markEdgeEndpointsMoved(EdgeHandle e) {
   //   delta.markMoved(bundle.edgeStart(e).ref(bundle));

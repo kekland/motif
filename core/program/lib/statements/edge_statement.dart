@@ -1,16 +1,18 @@
 part of '../program.dart';
 
-final class Edge extends Statement with PlacedStatement {
+final class EdgeStatement extends Statement with PlacedStatement {
   new(
-    this.start,
-    this.end, {
+    VertexSelector start,
+    VertexSelector end, {
     this.startTangent,
     this.endTangent,
     this.style = .default_,
     super.id,
     super.modifiers,
     FrameRef? parent,
-  }) : parent = parent != null ? ParentSelector(parent) : null;
+  }) : start = start.clone(),
+       end = end.clone(),
+       parent = .of(parent);
 
   final VertexSelector start;
   final VertexSelector end;
@@ -27,7 +29,8 @@ final class Edge extends Statement with PlacedStatement {
   late final selectors = [start, end, ?parent];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
+  Iterable<Op> execute(EvalContext context) sync* {
+    context.style(ref, style);
     yield AddEdgeOp(
       context.resolve(start),
       context.resolve(end),
@@ -38,7 +41,7 @@ final class Edge extends Statement with PlacedStatement {
   }
 
   @override
-  Edge copyWith({
+  EdgeStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     VertexSelector? start,

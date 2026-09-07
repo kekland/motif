@@ -1,15 +1,7 @@
 part of '../program.dart';
 
-final class FilletFace extends Statement {
-  new(
-    this.face, {
-    this.corners = const [],
-    this.radius,
-    super.id,
-    super.modifiers,
-  }) : _corners = CornersSelector(face);
-
-  FilletFace._withCornersSelector(
+final class FilletFaceStatement extends Statement {
+  FilletFaceStatement._(
     this.face,
     this._corners, {
     this.corners = const [],
@@ -18,6 +10,24 @@ final class FilletFace extends Statement {
     super.modifiers,
   });
 
+  factory FilletFaceStatement(
+    FaceSelector face, {
+    List<(VertexSelector, CornerRadius)> corners = const [],
+    CornerRadius? radius,
+    StatementId? id,
+    List<Statement> modifiers = const [],
+  }) {
+    final f = face.clone();
+    return ._(
+      f,
+      .new(f),
+      corners: corners.map((e) => (e.$1.clone(), e.$2)).toList(),
+      radius: radius,
+      id: id,
+      modifiers: modifiers,
+    );
+  }
+
   final FaceSelector face;
   final CornerRadius? radius;
   final List<(VertexSelector, CornerRadius)> corners;
@@ -25,10 +35,10 @@ final class FilletFace extends Statement {
   final CornersSelector _corners;
 
   @override
-  Iterable<Selector> get selectors => [_corners, for (final (v, _) in corners) v];
+  Iterable<Selector> get selectors => [face, _corners, for (final (v, _) in corners) v];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
+  Iterable<Op> execute(EvalContext context) sync* {
     final radii = {for (final (v, r) in corners) context.resolve(v): r};
     final list = <FilletCorner>[];
 
@@ -42,20 +52,23 @@ final class FilletFace extends Statement {
   }
 
   @override
-  FilletFace copyWith({
+  FilletFaceStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     FaceSelector? face,
     List<(VertexSelector, CornerRadius)>? corners,
     CornerRadius? radius,
-  }) => ._withCornersSelector(
-    face ?? this.face,
-    face != null && face != this.face ? .new(face) : _corners,
-    corners: corners ?? this.corners,
-    radius: radius ?? this.radius,
-    id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
-  );
+  }) {
+    final f = (face ?? this.face).clone();
+    return ._(
+      f,
+      .new(f),
+      corners: (corners ?? this.corners).map((e) => (e.$1.clone(), e.$2)).toList(),
+      radius: radius ?? this.radius,
+      id: id ?? this.id,
+      modifiers: modifiers ?? this.modifiers,
+    );
+  }
 
   @override
   TransformResult routeTransform(EvalContext context, CellRef target) => .forward([

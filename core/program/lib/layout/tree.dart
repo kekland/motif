@@ -9,7 +9,7 @@ final class LayoutTree {
   final _children = <StatementId, List<_LayoutNode>>{};
   final _dirty = <_LayoutNode>{};
 
-  Placement placementOf(StatementId id) => _nodes[id]!.placement!;
+  Placement? placementOf(StatementId id) => _nodes[id]?.placement;
 
   _LayoutNode? _parentOf(_LayoutNode n) {
     final p = n.box.parentId;
@@ -59,7 +59,9 @@ final class LayoutTree {
 
     _dirtyParent(n);
     _dirty.remove(n);
-    for (final c in _childrenOf(n)) _dirty.add(c);
+    if (n is LayoutContainer) {
+      for (final c in _childrenOf(n)) _dirty.add(c);
+    }
   }
 
   void update(LayoutBox box) {

@@ -159,6 +159,8 @@ extension type const Mat4._(Float64x2List storage) {
     return m;
   }
 
+  double get maxScaleOnAxis => math.max(math.max(scaleX, scaleY), scaleZ);
+
   Mat4 copy() => Mat4.view(.fromList(storage));
 
   // *******************************************************************************************************************

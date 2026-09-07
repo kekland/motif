@@ -199,7 +199,7 @@ class TransformPropWidget extends PropWidget {
   }
 }
 
-class ChildLayoutPropWidget extends PropWidget {
+class LayoutPropWidget extends PropWidget {
   const new({
     super.key,
     required this.scene,
@@ -207,7 +207,7 @@ class ChildLayoutPropWidget extends PropWidget {
   });
 
   final Scene scene;
-  final ChildLayoutProp prop;
+  final LayoutProp prop;
 
   @override
   String resolveHeader(BuildContext context) => 'Children';
@@ -221,17 +221,17 @@ class ChildLayoutPropWidget extends PropWidget {
       children: [
         ToggleableButton(
           onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .stack())),
-          isActive: layout is StackChildLayout,
+          isActive: layout is StackLayout,
           child: Icons.layoutStack(),
         ),
         ToggleableButton(
           onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .row))),
-          isActive: layout is FlexChildLayout && layout.direction == .row,
+          isActive: layout is FlexLayout && layout.direction == .row,
           child: Icons.layoutRow(),
         ),
         ToggleableButton(
           onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .column))),
-          isActive: layout is FlexChildLayout && layout.direction == .column,
+          isActive: layout is FlexLayout && layout.direction == .column,
           child: Icons.layoutColumn(),
         ),
       ],

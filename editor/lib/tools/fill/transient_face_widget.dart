@@ -71,7 +71,7 @@ class _RegionPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-Path _regionPath(TopologyBundle bundle, Region region) {
+Path _regionPath(Bundle bundle, Region region) {
   final path = Path()..fillType = .nonZero;
   path.addPath(_cyclePath(bundle, region.outer), .zero);
   for (final hole in region.holes) {
@@ -81,12 +81,12 @@ Path _regionPath(TopologyBundle bundle, Region region) {
   return path;
 }
 
-Path _cyclePath(TopologyBundle bundle, Cycle cycle) {
+Path _cyclePath(Bundle bundle, Cycle cycle) {
   final path = Path()..fillType = .nonZero;
 
   var first = true;
   for (final u in cycle) {
-    var cubic = bundle.edgeCubicWorld(u.edge);
+    var cubic = bundle.edgeCubic(u.edge, space: .root);
     if (!u.forward) cubic = cubic.reversed();
 
     if (first) {

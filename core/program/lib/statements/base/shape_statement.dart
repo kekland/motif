@@ -13,7 +13,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
     super.modifiers,
   }) : size = size ?? .zero,
        transform = transform ?? .identity(),
-       parent = parent != null ? ParentSelector(parent) : null;
+       parent = .of(parent);
 
   @override
   final LayoutSize size;
@@ -39,14 +39,17 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
   late final face = shape.faceOf(id);
 
   @override
-  Iterable<Op> ops(EvalContext context) {
+  Iterable<Op> execute(EvalContext context) {
     final (transform, size) = resolveBox(context);
 
-    return shape.produce(
-      id,
+    return shape.execute(
+      context,
       transform,
       size,
-      context.maybeResolve(parent),
+      parent: context.maybeResolve(parent),
+      vertexStyle: vertexStyle,
+      edgeStyle: edgeStyle,
+      faceStyle: faceStyle,
     );
   }
 
@@ -63,16 +66,22 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
   });
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef<CellHandle> target) => .absorb(
-    (m) {
-      final composed = m * transform;
-      final size = context.placementOf(id).size.scale(composed.scaleX, composed.scaleY);
+  DissolveIntent routeDissolve(Set<CellRef<CellHandle>> targeted) => .new({frame});
 
-      return copyWith(
-        transform: composed.withNormalizedScale(),
-        size: .fixed(size.width, size.height),
-      );
-    },
-    frame,
-  );
+  @override
+  TransformResult routeTransform(EvalContext context, CellRef target) {
+    final oldSize = context.placementOf(id).size;
+    return .absorb(
+      (m) {
+        final composed = m * transform;
+        final size = oldSize.scale(composed.scaleX, composed.scaleY);
+
+        return copyWith(
+          transform: composed.withNormalizedScale(),
+          size: .fixed(size.width, size.height),
+        );
+      },
+      frame,
+    );
+  }
 }

@@ -23,7 +23,7 @@ List<PropSource> vertexProps(Scene scene, VertexRef ref) {
 List<PropSource> edgeProps(Scene scene, EdgeRef ref) {
   return [
     PropType.edgeStyle.delegating(
-      (scene) => .from(scene.styleOf(ref)!),
+      (scene) => .from(scene.styleOf(ref).asEdge),
       (txn, value) => txn.decorate(ref, value),
     ),
   ];
@@ -32,7 +32,7 @@ List<PropSource> edgeProps(Scene scene, EdgeRef ref) {
 List<PropSource> faceProps(Scene scene, FaceRef ref) {
   return [
     PropType.faceStyle.delegating(
-      (scene) => .from(scene.styleOf(ref)!),
+      (scene) => .from(scene.styleOf(ref).asFace),
       (txn, value) => txn.decorate(ref, value),
     ),
   ];

@@ -45,6 +45,12 @@ final class Graph {
     if (d != null) out.addAll(d);
   }
 
+  Set<StatementId> readers(Iterable<CellRef> cells) {
+    final out = <StatementId>{};
+    readersOf(cells, out);
+    return out;
+  }
+
   void readersOf(Iterable<CellRef> cells, Set<StatementId> out) {
     for (final c in cells) {
       final r = _readers[c];
@@ -52,11 +58,23 @@ final class Graph {
     }
   }
 
+  Set<StatementId> targeting(Iterable<CellRef> cells) {
+    final out = <StatementId>{};
+    targetingOf(cells, out);
+    return out;
+  }
+
   void targetingOf(Iterable<CellRef> cells, Set<StatementId> out) {
     for (final c in cells) {
       final t = _targeting[c];
       if (t != null) out.addAll(t);
     }
+  }
+
+  Set<StatementId> dependents(Iterable<StatementId> ids) {
+    final out = <StatementId>{};
+    for (final id in ids) dependentsOf(id, out);
+    return out;
   }
 
   void dependentsOf(StatementId id, Set<StatementId> out) {

@@ -1,49 +1,73 @@
 part of '../program.dart';
 
-sealed class DissolveIntent {
-  const DissolveIntent();
-  const factory DissolveIntent.statement() = DissolveStatement;
-  const factory DissolveIntent.cells(Set<CellRef> cells) = DissolveCells;
+final class const DissolveIntent(final Set<CellRef> cells) {
+  static const none = DissolveIntent({});
 }
-
-final class const DissolveStatement() extends DissolveIntent;
-final class const DissolveCells(final Set<CellRef> cells) extends DissolveIntent;
 
 final class DissolveRouter {
   new({
-    required this.remove,
-    required this.insert,
+    required this.owners,
+    required this.deleted,
+    required this.held,
   });
 
-  final Set<StatementId> remove;
-  final List<Statement> insert;
+  final Set<StatementId> owners;
+  final Set<CellRef> deleted;
+  final Set<CellRef> held;
+
+  bool get isEmpty => deleted.isEmpty;
 }
 
 extension RouteDissolve on Evaluation {
   DissolveRouter routeDissolve(Iterable<CellRef> targets) {
-    final remove = HashSet<StatementId>();
-
+    final owners = <StatementId>{};
     final byOwner = <StatementId, HashSet<CellRef>>{};
     for (final t in targets) {
-      byOwner.putIfAbsent(ownerOf(t.statementId), HashSet.new).add(t);
+      final owner = ownerOf(t.statementId);
+      byOwner.putIfAbsent(owner, HashSet.new).add(t);
+      owners.addAll(subtree(owner).map((s) => s.id));
     }
 
-    final cells = <CellRef>{};
+    final resolved = <CellRef>{};
+    void resolve(CellRef r) {
+      for (final d in lineage.descendantsOf(r, bundle)) {
+        if (!resolved.add(d)) continue;
+        if (d.kind == .frame) {
+          for (final c in bundle.frameChildren(bundle.handle(d)!.asFrame)) {
+            resolve(c.ref(bundle));
+          }
+        }
+      }
+    }
+
     for (final entry in byOwner.entries) {
-      final s = program.statement(entry.key)!;
-      final targeted = entry.value;
-      final intent = s.resolveDissolve(targeted);
-      final _ = switch (intent) {
-        DissolveStatement() => remove.add(s.id),
-        DissolveCells d => cells.addAll(d.cells),
-      };
+      final s = statement(entry.key);
+      if (s == null) continue;
+      final cells = entry.value;
+      for (final r in s.routeDissolve(cells).cells) resolve(r);
     }
 
-    final selectors = cells.map((c) => c.selector()).toList();
+    final deleted = {...resolved};
+    final holders = <StatementId>{};
+    bool held(CellRef r) {
+      holders.clear();
+      graph.targetingOf([r], holders);
+      if (holders.any((h) => !owners.contains(h))) return true;
 
-    return .new(
-      remove: remove,
-      insert: selectors.isNotEmpty ? [Dissolve(selectors)] : [],
-    );
+      for (final d in bundle.cellDirectDependents(r)) {
+        if (!deleted.contains(d)) return true;
+      }
+
+      return false;
+    }
+
+    var changed = true;
+    while (changed) {
+      final before = deleted.length;
+      deleted.removeWhere(held);
+      changed = before != deleted.length;
+    }
+
+    return DissolveRouter(owners: owners, deleted: deleted, held: resolved.difference(deleted));
   }
 }

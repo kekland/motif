@@ -12,11 +12,13 @@ dependencies:
   state:
   mouse_cursor:
 
-  color:
   geometry:
   kernel:
+  program:
   scene:
   renderer:
+
+  color:
   ui:
   schema:
   tool:

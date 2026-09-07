@@ -1,6 +1,13 @@
 part of '../kernel.dart';
 
 extension UtilityMethods on Bundle {
+  ArenaStorage _arenaOf(CellKind kind) => switch (kind) {
+    .frame => _frame,
+    .vertex => _vertex,
+    .edge => _edge,
+    .face => _face,
+  };
+
   // -------------------------------------------------------------------------------------------------------------------
   // Assertions
   // -------------------------------------------------------------------------------------------------------------------

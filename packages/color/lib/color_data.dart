@@ -25,12 +25,14 @@ sealed class ColorData {
   final double alpha;
 
   css_color.ColorData get cssColor;
-  // ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => cssColor.toUiColor(colorSpace: colorSpace);
   ColorData withAlpha(double alpha);
 
   double get v1 => _v1;
   double get v2 => _v2;
   double get v3 => _v3;
+
+  @override
+  String toString() => cssColor.toString();
 }
 
 final class HsvColorData extends ColorData {

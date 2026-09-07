@@ -13,13 +13,13 @@ class const StatementWidget({
     return ListItem(
       onTap: () {
         final editor = context.editor;
-        final products = statement.products;
+        final products = editor.productsOf(statement.id);
         final selection = editor.selection;
         selection.setMultiple(products);
       },
       leading: icon,
       title: Text(name),
-      footnote: Text(statement.id.value),
+      footnote: Text(statement.id.toString()),
       isSelected: isSelected,
     );
   }

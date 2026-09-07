@@ -9,11 +9,11 @@ extension EditorTransform on Editor {
     return renderScene.localToGlobal(scenePosition.offset);
   }
 
-  Vec2 globalToLocal(Ref<FrameHandle>? ref, Offset globalPosition) {
+  Vec2 globalToLocal(CellRef<FrameHandle>? ref, Offset globalPosition) {
     if (ref == null) return globalToScene(globalPosition);
 
     final frame = handleOf(ref)!;
-    final worldTransform = bundle.frameTransformWorld(frame);
+    final worldTransform = bundle.frameTransform(frame, space: .root);
     final inverse = worldTransform..invert();
     return inverse.transform2(globalToScene(globalPosition));
   }

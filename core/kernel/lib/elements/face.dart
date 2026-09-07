@@ -8,7 +8,7 @@ extension type const FaceIndex(int i) implements ElementIndex {
 extension type const FaceHandle._(CellHandle h) implements CellHandle {
   FaceHandle.make(FaceIndex index, int gen) : h = .make(.face, index, gen);
   FaceIndex get index => .new(_index);
-  FaceRef ref(Bundle bundle) => bundle.ref(this) as FaceRef;
+  FaceRef ref(Bundle bundle) => bundle.ref(this);
 }
 
 final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage> {
@@ -16,6 +16,7 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
   var parent = FrameIndexStorage<FaceIndex>();
   var siblingPrev = CellIndexStorage<FaceIndex>();
   var siblingNext = CellIndexStorage<FaceIndex>();
+  var crossStart = CoframeIndexStorage<FaceIndex>();
 
   final id = IdTable<FaceIndex>('face');
 
@@ -27,6 +28,7 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
+      crossStart = crossStart.grow(atLeast);
     }
   }
 
@@ -37,6 +39,7 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
+    crossStart = .copyFrom(other.crossStart);
     id.copyFrom(other.id);
   }
 

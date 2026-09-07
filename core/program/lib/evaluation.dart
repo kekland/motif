@@ -20,6 +20,9 @@ final class Evaluation {
   final _index = <StatementId, int>{};
   final _span = <StatementId, int>{};
   final _owner = <StatementId, StatementId>{};
+  final _host = <StatementId, StatementId?>{};
+  final _styles = <CellRef, CellStyle>{};
+  final _drawOrder = <FrameRef, List<CellRef>>{};
 
   @pragma('vm:prefer-inline')
   int? indexOf(StatementId id) => _index[id];
@@ -31,31 +34,54 @@ final class Evaluation {
   }
 
   StatementId ownerOf(StatementId id) => _owner[id]!;
+  StatementId? hostOf(StatementId id) => _host[id];
   Iterable<Statement> subtree(StatementId id) => order.getRange(_index[id]!, _index[id]! + _span[id]!);
 
-  Placement placementOf(StatementId id) => layoutTree.placementOf(id);
+  Iterable<CellRef> descendantsOf(CellRef ref) => lineage.descendantsOf(ref, bundle);
+  Iterable<CellRef> productsOf(StatementId id) => commits[id]?.added ?? const {};
 
-  void _flattenInto(Statement s, List<Statement> out, List<int> spans, List<StatementId> owners, [StatementId? root]) {
+  Placement? layoutOf(StatementId id) => layoutTree.placementOf(id);
+
+  void _flattenInto(
+    Statement s,
+    List<Statement> out,
+    List<int> spans,
+    List<StatementId> owners,
+    List<StatementId?> hosts, [
+    StatementId? root,
+    StatementId? host,
+  ]) {
     final at = out.length;
     out.add(s);
     spans.add(0);
     owners.add(root ?? s.id);
-    for (final c in s.expand()) _flattenInto(c, out, spans, owners, root ?? s.id);
-    for (final m in s.modifiers) _flattenInto(m, out, spans, owners);
+    hosts.add(host);
+    for (final c in s.expand()) _flattenInto(c, out, spans, owners, hosts, root ?? s.id, null);
+    for (final m in s.modifiers) _flattenInto(m, out, spans, owners, hosts, null, s.id);
     spans[at] = out.length - at;
   }
 
-  void _splice(int start, int end, List<Statement> inserted, List<int> spans, List<StatementId> owners) {
+  void _splice(
+    int start,
+    int end,
+    List<Statement> inserted,
+    List<int> spans,
+    List<StatementId> owners,
+    List<StatementId?> hosts,
+  ) {
     for (var i = start; i < end; i++) {
       final id = order[i].id;
       _index.remove(id);
       _span.remove(id);
       _owner.remove(id);
+      _host.remove(id);
     }
 
     for (var i = 0; i < inserted.length; i++) {
-      _span[inserted[i].id] = spans[i];
-      _owner[inserted[i].id] = owners[i];
+      final id = inserted[i].id;
+      _span[id] = spans[i];
+      _owner[id] = owners[i];
+      _host[id] = hosts[i];
     }
 
     order.replaceRange(start, end, inserted);
@@ -78,7 +104,7 @@ final class Evaluation {
   // -------------------------------------------------------------------------------------------------------------------
 
   late var _lastPass = EvaluationPass(this);
-  late final _updateNotifier = ValueNotifier<EvaluationPass>(_lastPass);
+  late final _updateNotifier = AlwaysNotifier<EvaluationPass>(_lastPass);
 
   void addUpdateListener(void Function(EvaluationPass) listener) {
     _updateNotifier.addListener(() => listener(_updateNotifier.value));
@@ -95,5 +121,17 @@ final class Evaluation {
 
   void dispose() {
     _updateNotifier.dispose();
+  }
+}
+
+class AlwaysNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
+  AlwaysNotifier(this._value);
+
+  @override
+  T get value => _value;
+  T _value;
+  set value(T newValue) {
+    _value = newValue;
+    notifyListeners();
   }
 }

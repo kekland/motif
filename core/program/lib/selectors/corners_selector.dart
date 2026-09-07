@@ -1,12 +1,12 @@
 part of '../program.dart';
 
-typedef Corner = ({VertexRef v, EdgeRef a, EdgeRef b});
+typedef ResolvedCorner = ({VertexRef v, EdgeRef a, EdgeRef b});
 
-final class CornersSelector(final FaceSelector face) extends Selector<List<Corner>> {
+final class CornersSelector(final FaceSelector face) extends Selector<List<ResolvedCorner>> {
   @override
-  List<Corner> _resolve(EvalContext context) {
+  List<ResolvedCorner> _resolve(EvalContext context) {
     final bundle = context.bundle;
-    final result = <Corner>[];
+    final result = <ResolvedCorner>[];
 
     final handle = context.handle(context.resolve(face));
     for (final cycle in bundle.faceBoundary(handle)) {
@@ -41,4 +41,16 @@ final class CornersSelector(final FaceSelector face) extends Selector<List<Corne
 
     return results;
   }
+
+  @override
+  CornersSelector clone() => .new(face.clone());
+
+  @override
+  RemapResult _remap(Remap remap) => face._remap(remap);
+
+  @override
+  int get hashCode => Object.hash(runtimeType, face.hashCode);
+
+  @override
+  bool operator ==(Object other) => other.runtimeType == runtimeType && (other as CornersSelector).face == face;
 }

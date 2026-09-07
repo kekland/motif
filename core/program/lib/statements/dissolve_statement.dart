@@ -1,33 +1,50 @@
 part of '../program.dart';
 
-final class Dissolve extends Statement {
-  new(this.targets, {super.id, super.modifiers});
+final class DissolveStatement extends Statement {
+  new(
+    DissolveSelector selector, {
+    this.keep = const [],
+    super.id,
+    super.modifiers,
+  }) : selector = selector.clone();
 
-  final List<Selector<CellRef>> targets;
+  final DissolveSelector selector;
+  final List<(CellSelector, FrameSelector?)> keep;
 
   @override
-  Iterable<Selector> get selectors => targets;
+  Iterable<Selector> get selectors => [
+    selector,
+    for (final (c, f) in keep) ...[c, ?f],
+  ];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
-    for (final t in targets) {
-      final r = context.resolve(t);
-      yield switch (r.kind) {
-        .frame => DeleteFrameOp(r.asFrame),
-        .vertex => DeleteVertexOp(r.asVertex),
-        .edge => DeleteEdgeOp(r.asEdge),
-        .face => DeleteFaceOp(r.asFace),
-      };
+  Iterable<Op> execute(EvalContext context) sync* {
+    for (final (cell, frame) in keep) {
+      yield ReparentOp(
+        cell: context.resolve(cell),
+        parent: context.maybeResolve(frame),
+      );
     }
+
+    final targets = context.resolve(selector);
+    final targetByKind = <CellKind, HashSet<CellRef>>{.frame: .new(), .vertex: .new(), .edge: .new(), .face: .new()};
+    for (final target in targets) targetByKind[target.kind]!.add(target);
+
+    for (final f in targetByKind[CellKind.frame]!) yield DeleteFrameOp(f.asFrame);
+    for (final v in targetByKind[CellKind.vertex]!) yield DeleteVertexOp(v.asVertex);
+    for (final e in targetByKind[CellKind.edge]!) yield DeleteEdgeOp(e.asEdge);
+    for (final f in targetByKind[CellKind.face]!) yield DeleteFaceOp(f.asFace);
   }
 
   @override
-  Dissolve copyWith({
+  DissolveStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
-    List<Selector<CellRef>>? targets,
+    DissolveSelector? selector,
+    List<(CellSelector, FrameSelector?)>? keep,
   }) => .new(
-    targets ?? this.targets,
+    selector ?? this.selector,
+    keep: keep ?? this.keep,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
   );

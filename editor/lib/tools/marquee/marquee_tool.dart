@@ -12,6 +12,9 @@ class MarqueeTool extends Tool {
 
   @override
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _MarqueeToolOverlay(info: info);
+
+  @override
+  LogicalKeySet? get shortcut => .new(.keyM);
 }
 
 class _MarqueeToolOverlay extends HookWidget {

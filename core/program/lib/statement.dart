@@ -29,17 +29,38 @@ sealed class Statement {
   Iterable<Selector> get selectors;
 
   Iterable<Statement> expand() => const [];
-  Iterable<Op> ops(EvalContext context);
+  Iterable<Op> execute(EvalContext context);
 
   Statement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
   });
 
+  Statement? remap(Remap remap) {
+    final copy = copyWith();
+    var touched = false;
+    for (final s in copy.selectors) {
+      final result = s._remap(remap);
+      if (result == .refused) return null;
+      if (result == .changed) touched = true;
+    }
+
+    final modifiers = <Statement>[];
+    for (final m in copy.modifiers) {
+      final remapped = m.remap(remap);
+      if (remapped == null) return null;
+      if (!identical(remapped, m)) touched = true;
+      modifiers.add(remapped);
+    }
+
+    if (!touched) return this;
+    return copy.copyWith(modifiers: modifiers);
+  }
+
   // ----
   // Routers
   // ----
 
-  DissolveIntent resolveDissolve(Set<CellRef> targeted) => .cells(targeted);
+  DissolveIntent routeDissolve(Set<CellRef> targeted) => .new(targeted);
   TransformResult routeTransform(EvalContext context, CellRef target) => .refused;
 }

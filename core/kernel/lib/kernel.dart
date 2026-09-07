@@ -17,6 +17,7 @@ part 'utils/change_tracker.dart';
 part 'utils/cycle_algebra.dart';
 
 part 'elements/frame.dart';
+part 'elements/coframe.dart';
 part 'elements/vertex.dart';
 part 'elements/covertex.dart';
 part 'elements/edge.dart';
@@ -26,6 +27,7 @@ part 'elements/face.dart';
 
 part 'bundle.dart';
 part 'transaction.dart';
+part 'queries.dart';
 
 part 'methods/utility_methods.dart';
 part 'methods/getter_methods.dart';
@@ -49,3 +51,14 @@ part 'ops/cut_edge.dart';
 part 'ops/fillet_vertex.dart';
 part 'ops/fillet_face.dart';
 part 'ops/make_face.dart';
+part 'ops/reparent.dart';
+
+part 'arrangement/arrangement.dart';
+
+part 'queries/nearest_vertex.dart';
+part 'queries/nearest_edge.dart';
+part 'queries/faces_at.dart';
+part 'queries/frame_bounds.dart';
+part 'queries/hit_test.dart';
+part 'queries/hit_test_rect.dart';
+part 'queries/transform.dart';

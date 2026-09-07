@@ -3,7 +3,7 @@ part of '../program.dart';
 final class const VertexStyle({
   required final double radius,
   required final ColorData color,
-}) extends CellStyle<VertexStyle> {
+}) extends CellStyle<VertexHandle> {
   static const default_ = VertexStyle(
     radius: 1.0,
     color: .white,
@@ -26,12 +26,15 @@ final class const VertexStyle({
   @override
   bool operator ==(Object other) =>
       identical(this, other) || (other is VertexStyle && radius == other.radius && color == other.color);
+
+  @override
+  String toString() => 'VertexStyle(radius: $radius, color: $color)';
 }
 
 final class const VertexStylePartial({
   final double? radius,
   final ColorData? color,
-}) extends CellStylePartial<VertexStyle> {
+}) extends CellStylePartial<VertexHandle> {
   factory VertexStylePartial.from(VertexStyle style) => VertexStylePartial(
     radius: style.radius,
     color: style.color,
@@ -53,7 +56,7 @@ final class const VertexStylePartial({
   }
 
   @override
-  VertexStyle apply(VertexStyle style) => style.copyWith(
+  CellStyle<VertexHandle> apply(VertexStyle style) => style.copyWith(
     radius: radius,
     color: color,
   );

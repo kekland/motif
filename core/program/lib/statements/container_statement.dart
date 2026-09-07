@@ -1,7 +1,7 @@
 part of '../program.dart';
 
-final class Container extends ShapeStatement<RectangleObjectShape> implements LayoutContainer {
-  Container({
+final class ContainerStatement extends ShapeStatement<RectangleObjectShape> implements LayoutContainer {
+  ContainerStatement({
     this.layout = .default_,
     super.size,
     super.transform,
@@ -18,7 +18,7 @@ final class Container extends ShapeStatement<RectangleObjectShape> implements La
   final Layout layout;
 
   @override
-  Container copyWith({
+  ContainerStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     Layout? layout,

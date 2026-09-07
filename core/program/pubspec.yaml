@@ -8,7 +8,9 @@ environment:
 dependencies:
   geometry:
   kernel:
+  color:
 
+  collection: ^1.19.1
   listen: ^1.0.1
 
 dev_dependencies:

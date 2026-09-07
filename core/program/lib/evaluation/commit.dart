@@ -8,7 +8,8 @@ final class Commit {
     this.targets,
     this.reads,
     this.dependencies,
-    this.resolutions, {
+    this.resolutions,
+    this.styles, {
     this.error,
   }) : added = d.added,
        deleted = d.deleted,
@@ -26,6 +27,7 @@ final class Commit {
   final Set<CellRef> reads;
   final Set<StatementId> dependencies;
   final Map<Selector, Object?> resolutions;
+  final Map<CellRef, CellStyle> styles;
   final Object? error;
 
   bool get failed => error != null;
@@ -36,8 +38,10 @@ final class Commit {
   List<CellRef> refresh(
     Statement statement,
     Delta delta,
+    Map<CellRef, CellStyle> styles,
   ) {
     this.statement = statement;
+    this.styles.addAll(styles);
 
     final newlyMoved = <CellRef>[];
     for (final r in delta.moved) {

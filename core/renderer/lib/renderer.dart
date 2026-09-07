@@ -5,6 +5,8 @@ import 'package:program/program.dart';
 
 import 'paint.dart' as painter;
 
+export 'widget.dart';
+
 final class ProgramRenderer {
   new(this.evaluation) {
     evaluation.addUpdateListener(_onEvaluationUpdate);
@@ -12,28 +14,32 @@ final class ProgramRenderer {
 
   final Evaluation evaluation;
   Bundle get bundle => evaluation.bundle;
-  final _cache = <FrameRef, ui.Picture>{};
+  final _cache = <FrameRef, List<DrawEntry>>{};
 
   void _onEvaluationUpdate(EvaluationPass pass) {
-    for (final r in pass.added) _invalidate(r);
-    for (final r in pass.deleted) _invalidate(r, removed: true);
-    for (final r in pass.moved) _invalidate(r);
+    for (final r in pass.deleted) _invalidate(pass, r, removed: true);
+    for (final r in pass.added) _invalidate(pass, r);
+    for (final r in pass.moved) if (r.kind != .frame) _invalidate(pass, r);
+    for (final r in pass.reordered) _invalidate(pass, r);
+    for (final r in pass.restyled) _invalidate(pass, r);
   }
 
-  void _invalidate(CellRef r, {bool removed = false}) {
-    if (r.kind == .frame) {
-      if (removed) _cache.remove(r.asFrame)?.dispose();
-      return;
-    }
+  void _invalidate(EvaluationPass pass, CellRef r, {bool removed = false}) {
+    if (removed && r.kind == .frame) _stale(r as FrameRef);
+    final frame = pass.frameOf(r);
+    if (frame != null) _stale(frame);
+  }
 
-    final h = bundle.handle(r);
-    if (h == null) return;
-    final frame = bundle.parentOf(h);
-    if (frame != null) _cache.remove(frame.ref(bundle))?.dispose();
+  void _stale(FrameRef r) {
+    final segments = _cache.remove(r);
+    if (segments == null) return;
+    for (final s in segments) {
+      if (s is DrawPicture) s.picture.dispose();
+    }
   }
 
   void dispose() {
-    for (final p in _cache.values) p.dispose();
+    for (final f in _cache.keys) _stale(f);
     _cache.clear();
     evaluation.removeUpdateListener(_onEvaluationUpdate);
   }
@@ -46,13 +52,22 @@ final class ProgramRenderer {
     canvas.save();
     canvas.transform(bundle.frameTransform(frame).storage64);
 
-    final picture = _cache.putIfAbsent(frame.ref(bundle), () => painter.paintFrame(bundle, frame, depth));
-    canvas.drawPicture(picture);
-
-    for (final child in bundle.frameChildren(frame)) {
-      if (child.kind == .frame) _paintFrame(canvas, child.asFrame, depth + 1);
+    final entries = _cache.putIfAbsent(frame.ref(bundle), () => painter.paintFrame(evaluation, frame, depth));
+    for (final e in entries) {
+      final _ = switch (e) {
+        DrawPicture(:final picture) => canvas.drawPicture(picture),
+        DrawFrame(:final frame) => _paintFrame(canvas, frame, depth + 1),
+      };
     }
 
     canvas.restore();
   }
+
+  void reassemble() {
+    for (final f in _cache.keys.toList()) _stale(f);
+  }
 }
+
+sealed class DrawEntry();
+final class DrawPicture(final ui.Picture picture) extends DrawEntry;
+final class DrawFrame(final FrameHandle frame) extends DrawEntry;

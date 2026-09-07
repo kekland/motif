@@ -64,6 +64,6 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
 
   bool exactEquals(Vec2 other) => value.x == other.x && value.y == other.y;
 
-  Aabb2 aabb(Vec2 other) => Aabb2.minMax(this, other);
+  Aabb2 aabb(Vec2 other) => Aabb2.bbox2(this, other);
   Aabb2 operator &(Size2 size) => Aabb2.ltwh(x, y, size.width, size.height);
 }

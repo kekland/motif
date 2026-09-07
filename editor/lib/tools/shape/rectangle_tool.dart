@@ -12,4 +12,7 @@ class const RectangleTool() extends ShapeTool {
 
   @override
   MouseCursor get cursor => Cursors.toolRectangle;
+
+  @override
+  LogicalKeySet? get shortcut => .new(.keyR);
 }

@@ -132,16 +132,13 @@ sealed class ColorData {
   ColorData withAlpha(double alpha);
 
   /// Converts this color data to a given model [T].
-  T convert<T extends ColorData>() => _Converter.convert<T>(this);
+  T convert<T extends ColorData>() => Converter.convert<T>(this);
 
   /// Converts this color data to a given [ColorModel].
-  ColorData convertTo(ColorModel toModel) => _Converter.convertTo(this, toModel);
+  ColorData convertTo(ColorModel toModel) => Converter.convertTo(this, toModel);
 
   /// Return a color data where the values of this color are unchanged and used in a different model.
   ColorData reinterpretAs(ColorModel model) => .from(model: model, v1: _v1, v2: _v2, v3: _v3, alpha: alpha);
-
-  // /// Converts this color data to a [ui.Color] in a given color space.
-  // ui.Color toUiColor({ui.ColorSpace colorSpace = .sRGB}) => _Converter.convertToUi(this, colorSpace: colorSpace);
 
   /// Returns a map of color components and their values for this color.
   Map<ColorComponent, double> get components;

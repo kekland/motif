@@ -1,14 +1,14 @@
 import 'package:editor/imports.dart';
 
-class const TriangleTool() extends ShapeTool {
+class const PolygonTool() extends ShapeTool {
   @override
   Widget buildIcon(BuildContext context) => Icons.polygon();
 
   @override
-  String get key => 'triangle';
+  String get key => 'polygon';
 
   @override
-  CreateShapeActivity Function(Editor editor) get activityFactory => CreateTriangleActivity.new;
+  CreateShapeActivity Function(Editor editor) get activityFactory => CreatePolygonActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.precise;

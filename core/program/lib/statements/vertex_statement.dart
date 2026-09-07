@@ -1,13 +1,13 @@
 part of '../program.dart';
 
-final class Vertex extends Statement with PlacedStatement {
+final class VertexStatement extends Statement with PlacedStatement {
   new(
     this.position, {
     this.style = .default_,
     super.id,
     super.modifiers,
     FrameRef? parent,
-  }) : parent = parent != null ? ParentSelector(parent) : null;
+  }) : parent = .of(parent);
 
   final Vec2 position;
   final VertexStyle style;
@@ -21,7 +21,8 @@ final class Vertex extends Statement with PlacedStatement {
   late final selectors = [?parent];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
+  Iterable<Op> execute(EvalContext context) sync* {
+    context.style(ref, style);
     yield AddVertexOp(
       position,
       parent: context.maybeResolve(parent),
@@ -29,7 +30,7 @@ final class Vertex extends Statement with PlacedStatement {
   }
 
   @override
-  Vertex copyWith({
+  VertexStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     Vec2? position,

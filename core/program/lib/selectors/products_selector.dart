@@ -1,12 +1,16 @@
 part of '../program.dart';
 
-final class ProductsSelector<H extends CellHandle>(final StatementId id, {final CellKind? kind})
-    extends Selector<List<CellRef<H>>> {
+final class ProductsSelector<H extends CellHandle> extends Selector<List<CellRef<H>>> {
+  ProductsSelector(this.id, {this.kind});
+
+  final StatementId id;
+  final CellKind? kind;
+
   @override
   List<CellRef<H>> _resolve(EvalContext context) {
     final out = <CellRef<H>>{};
 
-    for (final p in context.products(id)) {
+    for (final p in context.productsOf(id)) {
       if (kind != null && p.kind != kind) continue;
       for (final k in context.descendants(p)) {
         if (kind != null && k.kind != kind) continue;
@@ -25,27 +29,17 @@ final class ProductsSelector<H extends CellHandle>(final StatementId id, {final 
 
   @override
   Iterable<StatementId> get dependencies => [id];
-}
-
-final class SingleSelector<H extends CellHandle>(final Selector<List<CellRef<H>>> selector)
-    extends Selector<CellRef<H>> {
-  @override
-  CellRef<H> _resolve(EvalContext context) {
-    final list = selector._resolve(context);
-    if (list.length != 1) throw StateError('SingleSelector got ${list.length} results');
-    return list.single;
-  }
 
   @override
-  Iterable<CellRef> resolved(EvalContext context) => [context.resolve(this)];
+  ProductsSelector<H> clone() => .new(id, kind: kind);
 
   @override
-  Iterable<CellRef> get refs => selector.refs;
+  RemapResult _remap(Remap remap) => .unchanged;
 
   @override
-  Iterable<StatementId> get dependencies => selector.dependencies;
-}
+  int get hashCode => Object.hash(runtimeType, id, kind);
 
-extension SingularSelector<H extends CellHandle> on Selector<List<CellRef<H>>> {
-  Selector<CellRef<H>> get single => SingleSelector(this);
+  @override
+  bool operator ==(Object other) =>
+      other.runtimeType == runtimeType && (other as ProductsSelector).id == id && other.kind == kind;
 }

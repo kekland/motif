@@ -1,7 +1,7 @@
 part of '../program.dart';
 
-final class Rectangle extends ShapeStatement<RectangleObjectShape> {
-  Rectangle({
+final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
+  RectangleStatement({
     super.size,
     super.transform,
     super.shape = .default_,
@@ -14,7 +14,7 @@ final class Rectangle extends ShapeStatement<RectangleObjectShape> {
   });
 
   @override
-  Rectangle copyWith({
+  RectangleStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     LayoutSize? size,

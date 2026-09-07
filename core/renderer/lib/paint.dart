@@ -1,54 +1,91 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' show Colors;
+import 'package:color/color_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
+import 'package:program/program.dart';
+import 'package:renderer/renderer.dart';
 
-ui.Picture paintFrame(Bundle bundle, FrameHandle frame, int depth) {
-  // print('repainting frame ${frame.ref(bundle)}');
-  final recorder = ui.PictureRecorder();
-  final canvas = Canvas(recorder);
+List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
+  final bundle = e.bundle;
+  final entries = <DrawEntry>[];
 
-  final edges = Path();
-  final vertices = <Offset>[];
+  ui.PictureRecorder? recorder;
+  ui.Canvas? canvas;
 
-  for (final child in bundle.frameChildren(frame)) {
-    final kind = child.kind;
+  Canvas open() {
+    recorder ??= ui.PictureRecorder();
+    canvas ??= ui.Canvas(recorder!);
+    return canvas!;
+  }
 
-    if (kind == .vertex) {
-      final p = bundle.vertexPosition(child.asVertex);
-      vertices.add(Offset(p.x, p.y));
-    } else if (kind == .edge) {
-      _addCubicPath(edges, bundle.edgeCubic(child.asEdge));
-    } else if (kind == .face) {
-      final path = Path()..fillType = .nonZero;
-      _addFacePath(bundle, path, child.asFace);
+  void flush() {
+    if (recorder == null) return;
+    entries.add(DrawPicture(recorder!.endRecording()));
+    recorder = null;
+    canvas = null;
+  }
 
-      final paint = Paint()
-        ..shader = hatchShader(
-          color: Colors.primaries[child.index.i % Colors.primaries.length].withValues(alpha: 0.5),
-          depth: depth,
-        );
-      canvas.drawPath(path, paint);
+  for (final ref in e.drawOrderOf(frame)) {
+    final h = bundle.handle(ref)!;
+
+    switch (ref.kind) {
+      case .frame:
+        {
+          flush();
+          entries.add(DrawFrame(h.asFrame));
+        }
+
+      case .vertex:
+        {
+          // final p = bundle.vertexPosition(h.asVertex);
+          // final style = e.styleOf(ref).asVertex;
+          // final paint = ui.Paint()
+          //   ..color = style.color.toUiColor()
+          //   ..style = .fill;
+
+          // open().drawCircle(Offset(p.x, p.y), style.radius, paint);
+        }
+
+      case .edge:
+        {
+          final path = Path();
+          _addCubicPath(path, bundle.edgeCubic(h.asEdge));
+          final style = e.styleOf(ref).asEdge;
+          final paint = ui.Paint()
+            ..style = .stroke
+            ..color = style.color.toUiColor()
+            ..strokeCap = .square
+            ..strokeWidth = style.width;
+
+          open().drawPath(path, paint);
+        }
+
+      case .face:
+        {
+          final path = Path()..fillType = .nonZero;
+          _addFacePath(bundle, path, h.asFace);
+          final style = e.styleOf(ref).asFace;
+          // final paint = ui.Paint()
+          //   ..style = .fill
+          //   ..shader = hatchShader(
+          //     color: style.color.toUiColor(),
+          //     depth: depth,
+          //   );
+
+          final paint = ui.Paint()
+            ..style = .fill
+            ..color = style.color.toUiColor();
+
+          open().drawPath(path, paint);
+        }
     }
   }
 
-  final vertexPaint = Paint()
-    ..color = Colors.blueGrey
-    ..strokeWidth = 4.0
-    ..strokeCap = .round
-    ..style = .fill;
-
-  final edgePaint = Paint()
-    ..color = Colors.grey
-    ..strokeWidth = 1.0
-    ..style = .stroke;
-
-  canvas.drawPath(edges, edgePaint);
-  canvas.drawPoints(ui.PointMode.points, vertices, vertexPaint);
-  return recorder.endRecording();
+  flush();
+  return entries;
 }
 
 void _addCubicPath(Path path, Cubic2 c) {

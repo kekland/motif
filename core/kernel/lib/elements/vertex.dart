@@ -8,12 +8,15 @@ extension type const VertexIndex(int i) implements ElementIndex {
 extension type const VertexHandle._(CellHandle h) implements CellHandle {
   VertexHandle.make(VertexIndex index, int gen) : h = .make(.vertex, index, gen);
   VertexIndex get index => .new(_index);
-  VertexRef ref(Bundle bundle) => bundle.ref(this) as VertexRef;
+  VertexRef ref(Bundle bundle) => bundle.ref(this);
 }
 
 final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, VertexStorage> {
   var position = Vec2Storage<VertexIndex>();
   var diskStart = CovertexIndexStorage<VertexIndex>();
+  var positionWorld = Vec2Storage<VertexIndex>();
+  var positionVersion = Int32Storage<VertexIndex>();
+  var positionEpoch = Int32Storage<VertexIndex>();
   var parent = FrameIndexStorage<VertexIndex>();
   var siblingPrev = CellIndexStorage<VertexIndex>();
   var siblingNext = CellIndexStorage<VertexIndex>();
@@ -26,6 +29,9 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
     if (position.length < atLeast) {
       position = position.grow(atLeast);
       diskStart = diskStart.grow(atLeast);
+      positionWorld = positionWorld.grow(atLeast);
+      positionVersion = positionVersion.grow(atLeast);
+      positionEpoch = positionEpoch.grow(atLeast);
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
@@ -37,6 +43,9 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
     super.copyFrom(other);
     position = .copyFrom(other.position);
     diskStart = .copyFrom(other.diskStart);
+    positionWorld = .copyFrom(other.positionWorld);
+    positionVersion = .copyFrom(other.positionVersion);
+    positionEpoch = .copyFrom(other.positionEpoch);
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);

@@ -8,11 +8,12 @@ final intents = (
   deleteSelection: DeleteSelectionIntent.new,
   copySelection: CopySelectionIntent.new,
   paste: PasteIntent.new,
+  selectTool: SelectToolIntent.new,
 );
 
 class SelectCellIntent extends Intent {
   const SelectCellIntent(this.ref);
-  final Ref ref;
+  final CellRef ref;
 }
 
 class ClearSelectionIntent extends Intent {

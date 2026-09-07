@@ -10,7 +10,7 @@ final class const PropType<G, S>(
   static const transform = PropType('transform', TransformProp.new);
   static const layoutDimension = PropType('layoutDimension', LayoutDimensionProp.new);
   static const layoutSize = PropType('layoutSize', LayoutSizeProp.new);
-  static const childLayout = PropType('childLayout', ChildLayoutProp.new);
+  static const layout = PropType('layout', LayoutProp.new);
   static const edgeStyle = PropType('edgeStyle', EdgeStyleProp.new);
   static const faceStyle = PropType('faceStyle', FaceStyleProp.new);
   static const cutT = PropType('cutT', CutTProp.new);
@@ -31,7 +31,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropType<G, S> {
   }) {
     return .delegating(
       this,
-      (scene) => get(scene, scene.statement<T>(id)),
+      (scene) => get(scene, scene.statement<T>(id)!),
       (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value.apply(get(txn.scene, s)))),
     );
   }
@@ -44,7 +44,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropType<G, S> {
     return .transforming(
       this,
       (txn) => .statement(txn.scene, id, transaction: txn),
-      (scene) => get(scene, scene.statement<T>(id)),
+      (scene) => get(scene, scene.statement<T>(id)!),
       (session, current, value) => execute(session, value.apply(current)),
     );
   }
@@ -58,7 +58,7 @@ extension TotalStatementFieldProp<V> on PropType<V, V> {
   }) {
     return .delegating(
       this,
-      (scene) => get(scene, scene.statement<T>(id)),
+      (scene) => get(scene, scene.statement<T>(id)!),
       (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value)),
     );
   }

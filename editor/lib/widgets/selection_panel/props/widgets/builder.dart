@@ -19,7 +19,7 @@ final class PropListBuilder extends StatelessWidget {
         EdgeStyleProp p => EdgeStylePropWidget(scene: scene, prop: p),
         FaceStyleProp p => FaceStylePropWidget(scene: scene, prop: p),
         TransformProp p => TransformPropWidget(scene: scene, prop: p),
-        ChildLayoutProp p => ChildLayoutPropWidget(scene: scene, prop: p),
+        LayoutProp p => LayoutPropWidget(scene: scene, prop: p),
         LayoutSizeProp p => LayoutSizePropWidget(scene: scene, prop: p),
         _ => null,
       };

@@ -4,11 +4,12 @@ export 'src/disposable.dart';
 export 'src/hooks_utils.dart';
 export 'src/listen_shims.dart';
 export 'src/log.dart';
+export 'src/utils.dart';
 
 export 'package:async/async.dart';
 export 'package:listen/listen.dart';
 export 'package:log/log.dart';
-export 'package:provider/provider.dart' hide Dispose;
+export 'package:provider/provider.dart' hide Dispose, Selector;
 export 'package:flutter_hooks/flutter_hooks.dart'
     hide useListenable, useValueListenable, useValueNotifier, useOnListenableChange;
 export 'package:signals/signals_flutter.dart';

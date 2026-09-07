@@ -8,10 +8,12 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
   var mark = Uint32List(_baseSize);
   var version = Uint32List(_baseSize);
   var top = 0;
+  var _liveCount = 0;
   final _freeIndices = <int>[];
 
   static const _free = 0, _live = 1, _ghost = 2;
   int get rowCount => top - _freeIndices.length;
+  int get liveCount => _liveCount;
 
   Iterable<I> get liveIndices sync* {
     for (var i = 0; i < top; i++) {
@@ -34,6 +36,7 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
     }
 
     state[i] = _live;
+    _liveCount++;
     return _wrapIndex(i);
   }
 
@@ -45,11 +48,13 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
   void ghost(I index) {
     assert(state[index.i] == _live, 'ghosting a non-live index $index');
     state[index.i] = _ghost;
+    _liveCount--;
   }
 
   void relink(I index) {
     assert(state[index.i] == _ghost, 'relinking a non-ghost index $index');
     state[index.i] = _live;
+    _liveCount++;
   }
 
   void free(I index) {
@@ -57,6 +62,7 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
     state[index.i] = _free;
     gen[index.i]++;
     _freeIndices.add(index.i);
+    _liveCount--;
   }
 
   void grow(int atLeast) {

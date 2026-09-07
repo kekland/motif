@@ -3,7 +3,7 @@ part of '../program.dart';
 final class const EdgeStyle({
   required final double width,
   required final ColorData color,
-}) extends CellStyle<EdgeStyle> {
+}) extends CellStyle<EdgeHandle> {
   static const default_ = EdgeStyle(
     width: 1.0,
     color: .white,
@@ -26,12 +26,15 @@ final class const EdgeStyle({
   @override
   bool operator ==(Object other) =>
       identical(this, other) || (other is EdgeStyle && width == other.width && color == other.color);
+
+  @override
+  String toString() => 'EdgeStyle(width: $width, color: $color)';
 }
 
 final class const EdgeStylePartial({
   final double? width,
   final ColorData? color,
-}) extends CellStylePartial<EdgeStyle> {
+}) extends CellStylePartial<EdgeHandle> {
   factory EdgeStylePartial.from(EdgeStyle style) => EdgeStylePartial(
     width: style.width,
     color: style.color,

@@ -2,12 +2,21 @@ part of '../kernel.dart';
 
 final class ChangeTracker {
   var _epoch = 0;
-  var _buffer = Uint32List(64);
+  var _buffer = Int64List(64);
   var _count = 0;
 
   void begin() => _epoch++;
 
-  void add(ArenaStorage arena, CellHandle h) {
+  void add(Bundle bundle, ArenaStorage arena, CellHandle h) {
+    _mark(arena, h);
+    if (h.kind != .frame) return;
+    for (final cf in bundle._frameDependents(h.asFrame.index)) {
+      final c = bundle._coframe.cell[cf];
+      _mark(bundle._arenaOf(c.kind), bundle._cellHandle(c));
+    }
+  }
+
+  void _mark(ArenaStorage arena, CellHandle h) {
     final i = h.index.i;
     if (arena.mark[i] == _epoch) return;
     arena.mark[i] = _epoch;

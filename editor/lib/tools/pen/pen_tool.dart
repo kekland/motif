@@ -12,6 +12,9 @@ class PenTool extends Tool {
 
   @override
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _PenToolOverlay(info: info);
+
+  @override
+  LogicalKeySet? get shortcut => .new(.keyP);
 }
 
 class _PenToolOverlay extends HookWidget {
@@ -27,9 +30,7 @@ class _PenToolOverlay extends HookWidget {
 
     useOnDispose(() {
       final edge = transientEdge.value;
-      if (edge != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => edge.remove());
-      }
+      if (edge != null) edge.remove();
     });
 
     return CallbackShortcuts(

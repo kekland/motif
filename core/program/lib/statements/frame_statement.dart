@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-final class Frame extends Statement with PlacedStatement {
+final class FrameStatement extends Statement with PlacedStatement {
   new({
     Mat4? transform,
     this.size,
@@ -8,7 +8,7 @@ final class Frame extends Statement with PlacedStatement {
     super.modifiers,
     FrameRef? parent,
   }) : transform = transform ?? .identity(),
-       parent = parent != null ? ParentSelector(parent) : null;
+       parent = .of(parent);
 
   final Mat4 transform;
   final Size2? size;
@@ -22,7 +22,7 @@ final class Frame extends Statement with PlacedStatement {
   late final selectors = [?parent];
 
   @override
-  Iterable<Op> ops(EvalContext context) sync* {
+  Iterable<Op> execute(EvalContext context) sync* {
     yield AddFrameOp(
       transform,
       size: size,
@@ -31,17 +31,36 @@ final class Frame extends Statement with PlacedStatement {
   }
 
   @override
-  Frame copyWith({
+  FrameStatement copyWith({
     StatementId? id,
     List<Statement>? modifiers,
     Mat4? transform,
     Size2? size,
     FrameRef? parent,
-  }) => Frame(
+  }) => FrameStatement(
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
     transform: transform ?? this.transform,
     size: size ?? this.size,
     parent: parent ?? this.parent?.ref,
   );
+
+  @override
+  TransformResult routeTransform(EvalContext context, CellRef target) {
+    final bundle = context.bundle;
+    final bounds = bundle.query.frameBounds(bundle.handle(ref)!);
+
+    return .absorb(
+      (m) {
+        final composed = m * transform;
+        final size = bounds?.size.scale(composed.scaleX, composed.scaleY);
+
+        return copyWith(
+          transform: composed.withNormalizedScale(),
+          size: size,
+        );
+      },
+      ref,
+    );
+  }
 }

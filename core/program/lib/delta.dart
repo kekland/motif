@@ -16,8 +16,17 @@ final class ProgramDelta {
   final List<ProgramOp> ops;
   bool get isEmpty => ops.isEmpty;
 
-  ProgramDelta reapply(Evaluation evaluation) => .coalesced(ops.map((op) => op.reapply(evaluation)));
-  ProgramDelta unapply(Evaluation evaluation) => .coalesced(ops.reversed.map((op) => op.unapply(evaluation)));
+  void reapply(Evaluation evaluation) {
+    final pass = evaluation.beginPass();
+    for (final op in ops) op.reapply(pass);
+    evaluation.drain(pass);
+  }
+
+  void unapply(Evaluation evaluation) {
+    final pass = evaluation.beginPass();
+    for (final op in ops.reversed) op.unapply(pass);
+    evaluation.drain(pass);
+  }
 
   ProgramDelta coalesce(ProgramDelta next) {
     final out = [...ops];

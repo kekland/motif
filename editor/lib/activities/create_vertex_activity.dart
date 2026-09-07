@@ -29,7 +29,7 @@ class CreateVertexActivity extends DragActivity {
       transientEdge = existingTransientEdge!;
 
       final endVertex = editor.edit((txn) => txn.embedVertex(hitTest), mergeKey: mergeKey);
-      transientEdge.end = editor.bundle.vertexPositionWorld(editor.handleOf(endVertex)!);
+      transientEdge.end = editor.bundle.vertexPosition(editor.handleOf(endVertex)!, space: .root);
     } else {
       transientEdge = editor.transientEdges.createWithHitTest(hitTest);
       onTransientEdgeCreated(transientEdge);

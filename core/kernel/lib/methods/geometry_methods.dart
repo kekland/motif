@@ -8,7 +8,7 @@ extension GeometryMethods on Bundle {
   Mat4 _frameTransform(FrameIndex i, {FrameIndex? space}) {
     if (space == null) return _frame.transform[i].copy();
     if (i == space) return .identity();
-    return _frameTransformBetween(space, i);
+    return _frameTransformBetween(i, space);
   }
 
   Size2? _frameSize(FrameIndex i, {FrameIndex? space}) {
@@ -28,8 +28,11 @@ extension GeometryMethods on Bundle {
     assert(_checkFrame(h));
     final i = h.index;
 
+    late final parent = _frame.parent[i];
     final before = _frame.transform[i];
-    final after = space == null || i == space ? transform : (_frameTransformBetween(space, i)..multiply(transform));
+    final after = space == null || i == space
+        ? transform
+        : (_frameTransformBetween(space, parent)..multiply(transform));
 
     if (!before.equals(after)) {
       _frame.transform[i] = after;
@@ -57,7 +60,7 @@ extension GeometryMethods on Bundle {
     assert(clip == null || _checkFace(clip));
     final i = h.index;
 
-    if (clip != null && _treeParentOf(clip.cell) != h.index) {
+    if (clip != null && _treeParentOf(clip.cellIndex) != h.index) {
       throw ArgumentError.value(clip, 'clip', 'must be a child of the frame');
     }
 
@@ -73,8 +76,8 @@ extension GeometryMethods on Bundle {
 
   Mat4 _frameTransformBetween(FrameIndex from, FrameIndex to) {
     if (from == to) return .identity();
-    if (from == .root) return _frameWorldTransform(to);
-    if (to == .root) return _frameInverseWorldTransform(from);
+    if (from == .root) return _frameInverseWorldTransform(to);
+    if (to == .root) return _frameWorldTransform(from);
 
     final chainFrom = _frameChainToRoot(from);
     final chainTo = _frameChainToRoot(to);
@@ -138,17 +141,45 @@ extension GeometryMethods on Bundle {
     }
   }
 
+  FrameIndex _frameLca(FrameIndex a, FrameIndex b) {
+    if (a == b) return a;
+    final chainA = _frameChainToRoot(a), chainB = _frameChainToRoot(b);
+    var ia = chainA.length - 1, ib = chainB.length - 1;
+    var lca = chainA[ia];
+    while (ia > 0 && ib > 0 && chainA[ia - 1] == chainB[ib - 1]) {
+      ia--;
+      ib--;
+      lca = chainA[ia];
+    }
+    return lca;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Vertex
   // -------------------------------------------------------------------------------------------------------------------
 
   Vec2 _vertexPosition(VertexIndex v, {FrameIndex? space}) {
     late final f = _vertex.parent[v];
+    final stale = _vertex.positionVersion[v] != _vertex.version[v.i];
+    final moved = _vertex.positionEpoch[v] != _worldEpoch;
+
+    if (space == .root) {
+      if (stale || moved) _vertexRecompute(v, f);
+      return _vertex.positionWorld[v];
+    }
+
     final p = _vertex.position[v];
     if (space == null || f == space) return p;
 
     final m = _frameTransformBetween(f, space);
     return m.transform2(p);
+  }
+
+  void _vertexRecompute(VertexIndex v, FrameIndex parent) {
+    final p = _vertex.position[v];
+    _vertex.positionWorld[v] = _frameWorldTransform(parent).transform2(p);
+    _vertex.positionVersion[v] = _vertex.version[v.i];
+    _vertex.positionEpoch[v] = _worldEpoch;
   }
 
   void _vertexSetPosition(VertexHandle h, Vec2 p, {FrameHandle? space}) {
@@ -176,7 +207,7 @@ extension GeometryMethods on Bundle {
     if (space == null || f == space) return t;
 
     final m = _frameTransformBetween(f, space);
-    return m.transform2(t);
+    return m.transformDelta2(t);
   }
 
   void _covertexSetTangent(CovertexIndex c, Vec2 t, {FrameHandle? space}) {
@@ -184,7 +215,7 @@ extension GeometryMethods on Bundle {
     final s = space?.index;
 
     final prev = _covertex.tangent[c];
-    final next = s == null || f == s ? t : _frameTransformBetween(s, f).transform2(t);
+    final next = s == null || f == s ? t : _frameTransformBetween(s, f).transformDelta2(t);
     if (prev.equals(next)) return;
 
     _covertex.tangent[c] = next;
@@ -208,18 +239,30 @@ extension GeometryMethods on Bundle {
 
   Cubic2 _edgeCubic(EdgeIndex e, {FrameIndex? space}) {
     final f = _edge.parent[e];
-    if (space != null && space != f) return _edgeCubicIn(e, space: space);
+    final stale = _edge.cubicVersion[e] != _edge.version[e.i];
+    final moved = _edge.cubicEpoch[e] != _worldEpoch;
 
-    final crossFrame = _vertex.parent[_edge.vStart[e]] != f || _vertex.parent[_edge.vEnd[e]] != f;
-    final valid = _edge.cubicVersion[e] == _edge.version[e.i] && (!crossFrame || _edge.cubicEpoch[e] == _worldEpoch);
-    if (valid) return _edge.cubic[e];
+    if (space == .root) {
+      if (stale || moved) _edgeRecompute(e, f);
+      return _edge.cubicWorld[e];
+    }
 
+    if (space == null || space == f) {
+      final crossFrame = _vertex.parent[_edge.vStart[e]] != f || _vertex.parent[_edge.vEnd[e]] != f;
+      if (stale || (crossFrame && moved)) _edgeRecompute(e, f);
+      return _edge.cubic[e];
+    }
+
+    return _edgeCubicIn(e, space: space);
+  }
+
+  void _edgeRecompute(EdgeIndex e, FrameIndex parent) {
     final c = _edgeCubicIn(e);
     _edge.cubic[e] = c;
+    _edge.cubicWorld[e] = c.transformed(_frameWorldTransform(parent));
     _edge.cubicVersion[e] = _edge.version[e.i];
     _edge.cubicEpoch[e] = _worldEpoch;
     _edge.cubicArcIndex[e] = null;
-    return c;
   }
 
   Cubic2 _edgeCubicIn(EdgeIndex e, {FrameIndex? space}) {
@@ -235,11 +278,11 @@ extension GeometryMethods on Bundle {
     if (f0 != f || f1 != f) {
       final m0 = _frameTransformBetween(f0, f);
       a = m0.transform2(a);
-      t0 = m0.transform2(t0);
+      t0 = m0.transformDelta2(t0);
 
       final m1 = f0 == f1 ? m0 : _frameTransformBetween(f1, f);
       b = m1.transform2(b);
-      t1 = m1.transform2(t1);
+      t1 = m1.transformDelta2(t1);
     }
 
     return .new(a, b, p1: a + t0, p2: b + t1);
@@ -257,26 +300,51 @@ extension GeometryMethods on Bundle {
   // Cycle
   // -------------------------------------------------------------------------------------------------------------------
 
-  double _cycleSignedArea(Cycle cycle) {
+  double _cycleSignedArea(Cycle cycle, {FrameIndex? space}) {
     var total = 0.0;
     for (final u in cycle) {
-      final a = _edgeCubic(u.edge.index, space: .root).signedAreaIntegral;
+      final a = _edgeCubic(u.edge.index, space: space).signedAreaIntegral;
       total += u.forward ? a : -a;
     }
     return total;
+  }
+
+  int _cycleWinding(Cycle cycle, Vec2 p, {FrameIndex? space}) {
+    var winding = 0;
+
+    for (final u in cycle) {
+      final w = _edgeCubic(u.edge.index, space: space).winding(p);
+      winding += u.forward ? w : -w;
+    }
+
+    return winding;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Face
   // -------------------------------------------------------------------------------------------------------------------
 
-  double _faceSignedArea(FaceIndex i) {
+  double _faceSignedArea(FaceIndex i, {FrameIndex? space}) {
+    space ??= _face.parent[i];
+
     var total = 0.0;
     for (final head in _faceBoundary(i)) {
       final cycle = _cycleFor(_cycleCoedges(head));
-      total += _cycleSignedArea(cycle);
+      total += _cycleSignedArea(cycle, space: space);
     }
     return total;
+  }
+
+  int _faceWinding(FaceIndex i, Vec2 p, {FrameIndex? space}) {
+    space ??= _face.parent[i];
+    var winding = 0;
+
+    for (final head in _faceBoundary(i)) {
+      final cycle = _cycleFor(_cycleCoedges(head));
+      winding += _cycleWinding(cycle, p, space: space);
+    }
+
+    return winding;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -286,17 +354,8 @@ extension GeometryMethods on Bundle {
   FrameIndex _treeSpaceOf(CellIndex i) => i.kind == .frame ? i.asFrame : _treeParentOf(i);
 
   FrameIndex _treeLca(CellIndex a, CellIndex b) {
-    final chainA = _frameChainToRoot(_treeSpaceOf(a));
-    final chainB = _frameChainToRoot(_treeSpaceOf(b));
-    var ia = chainA.length - 1, ib = chainB.length - 1;
-    var lca = chainA[ia];
-    while (ia > 0 && ib > 0 && chainA[ia - 1] == chainB[ib - 1]) {
-      ia--;
-      ib--;
-      lca = chainA[ia];
-    }
-
-    return lca;
+    final sa = _treeSpaceOf(a), sb = _treeSpaceOf(b);
+    return _frameLca(sa, sb);
   }
 
   bool _treeIsAncestorOf(CellIndex target, {required FrameIndex ancestor}) {

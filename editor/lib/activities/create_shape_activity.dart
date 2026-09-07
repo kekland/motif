@@ -22,7 +22,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
     FrameRef? parent;
     for (final frame in hitTest.frames) {
       final id = frame.statementId;
-      final statement = editor.program.byId(id)!;
+      final statement = editor.statement(id);
       if (statement is ContainerStatement) {
         parent = statement.frame;
         break;
@@ -33,7 +33,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
     statement = create(localPosition, parent);
 
     transaction!.insert(statement);
-    transaction!.preview();
+    transaction!.flush();
     editor.selection.setStatement(statement.id);
   }
 
@@ -53,7 +53,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
     );
 
     transaction!.replace(statement.id, [newStatement]);
-    transaction!.preview();
+    transaction!.flush();
   }
 
   @override
@@ -90,21 +90,21 @@ final class CreateRectangleActivity(
   );
 }
 
-final class CreateCircleActivity(
+final class CreateEllipseActivity(
   super.editor,
-) extends CreateShapeActivity<CircleStatement> {
+) extends CreateShapeActivity<EllipseStatement> {
   @override
-  CircleStatement create(Vec2 position, FrameRef? parent) => CircleStatement(
+  EllipseStatement create(Vec2 position, FrameRef? parent) => EllipseStatement(
     transform: .translation2(position),
     parent: parent,
   );
 }
 
-final class CreateTriangleActivity(
+final class CreatePolygonActivity(
   super.editor,
-) extends CreateShapeActivity<TriangleStatement> {
+) extends CreateShapeActivity<PolygonStatement> {
   @override
-  TriangleStatement create(Vec2 position, FrameRef? parent) => TriangleStatement(
+  PolygonStatement create(Vec2 position, FrameRef? parent) => PolygonStatement(
     transform: .translation2(position),
     parent: parent,
   );

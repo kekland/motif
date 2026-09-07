@@ -11,7 +11,7 @@ extension type const FrameHandle._(CellHandle h) implements CellHandle {
   FrameIndex get index => .new(_index);
 
   static final root = FrameHandle.make(.root, 0);
-  FrameRef ref(Bundle bundle) => bundle.ref(this) as FrameRef;
+  FrameRef ref(Bundle bundle) => bundle.ref(this);
 }
 
 final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStorage> {
@@ -26,6 +26,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
   var inverseWorldTransform = Mat4Storage<FrameIndex>();
   var clip = FaceIndexStorage<FrameIndex>();
   var composedAt = Int32Storage<FrameIndex>();
+  var dependentStart = CoframeIndexStorage<FrameIndex>();
 
   final id = IdTable<FrameIndex>('frame');
 
@@ -44,6 +45,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
       inverseWorldTransform = inverseWorldTransform.grow(atLeast);
       clip = clip.grow(atLeast);
       composedAt = composedAt.grow(atLeast);
+      dependentStart = dependentStart.grow(atLeast);
     }
   }
 
@@ -61,6 +63,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     inverseWorldTransform = .copyFrom(other.inverseWorldTransform);
     clip = .copyFrom(other.clip);
     composedAt = .copyFrom(other.composedAt);
+    dependentStart = .copyFrom(other.dependentStart);
     id.copyFrom(other.id);
   }
 
@@ -75,4 +78,19 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
 
   @override
   FrameIndex _wrapIndex(int i) => .new(i);
+
+  void allocRoot() {
+    final i = alloc();
+    parent[i] = .none;
+    siblingPrev[i] = .none;
+    siblingNext[i] = .none;
+    childHead[i] = .none;
+    size[i] = .zero();
+    hasSize[i] = false;
+    clip[i] = .none;
+    transform[i] = .identity();
+    worldTransform[i] = .identity();
+    inverseWorldTransform[i] = .identity();
+    id.assign(i, ._(0));
+  }
 }

@@ -16,28 +16,31 @@ class EditorWidget extends StatelessWidget {
       value: editor,
       child: EditorActions(
         child: EditorShortcuts(
-          child: Panels(
-            direction: .horizontal,
-            panels: [
-              Panel(
-                constraints: .pixels(48.0, 48.0),
-                child: EditorToolbar(),
-              ),
-              Panel(
-                constraints: .pixels(196.0, 384.0, initial: 200.0),
-                child: ProgramPanel(),
-              ),
-              Panel(
-                constraints: .flex(1.0),
-                child: ClipRect(
-                  child: EditorCanvas(),
+          child: ToolShortcuts(
+            controller: editor.tool,
+            child: Panels(
+              direction: .horizontal,
+              panels: [
+                Panel(
+                  constraints: .pixels(48.0, 48.0),
+                  child: EditorToolbar(),
                 ),
-              ),
-              Panel(
-                constraints: .pixels(196.0, 384.0, initial: 296.0),
-                child: EditorSidebar(),
-              ),
-            ],
+                Panel(
+                  constraints: .pixels(196.0, 384.0, initial: 200.0),
+                  child: ProgramPanel(),
+                ),
+                Panel(
+                  constraints: .flex(1.0),
+                  child: ClipRect(
+                    child: EditorCanvas(),
+                  ),
+                ),
+                Panel(
+                  constraints: .pixels(196.0, 384.0, initial: 296.0),
+                  child: EditorSidebar(),
+                ),
+              ],
+            ),
           ),
         ),
       ),

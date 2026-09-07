@@ -10,7 +10,7 @@ class CellSelectionOverlay extends HookWidget {
 
   final Editor editor;
   final Matrix4 childPaintTransform;
-  final DragActivity Function(List<Ref> refs)? onMove;
+  final DragActivity Function(List<CellRef> refs)? onMove;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +44,10 @@ class CellSelectionGroupOverlay extends HookWidget {
     this.onMove,
   });
 
-  final Iterable<Ref> refs;
+  final Iterable<CellRef> refs;
   final Editor editor;
   final Matrix4 childPaintTransform;
-  final DragActivity Function(List<Ref> nodes)? onMove;
+  final DragActivity Function(List<CellRef> refs)? onMove;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class CellSelectionGroupOverlay extends HookWidget {
         layoutSize: layoutSize,
         onMove: () => onMove(refs),
         onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s),
-        onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c),
+        onCornerResize: (c) => ResizeActivity.corner(editor, refs, corner: c),
         onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c),
         padding: gesturePadding,
         childSize: childSize,
@@ -89,7 +89,7 @@ class CellSelectionGroupOverlay extends HookWidget {
     if (handles.length == 1) {
       final handle = handles.single;
       final bbox = editor.bundle.query.cellBbox(handle);
-      final cellTransform = editor.bundle.cellWorldTransform(handle);
+      final cellTransform = editor.bundle.query.localToWorld(handle);
 
       final totalTransform = Mat4.viewFloat64(childPaintTransform.storage) * cellTransform;
       totalTransform.translate(bbox.min.x, bbox.min.y);

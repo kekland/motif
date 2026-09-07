@@ -1,8 +1,14 @@
 part of '../program.dart';
 
-final class ChainSelector(
-  final List<EdgeRef> edges,
-) extends Selector<List<EdgeRef>> {
+const _listEquality = ListEquality();
+const _setEquality = SetEquality();
+
+final class ChainSelector extends Selector<List<EdgeRef>> {
+  ChainSelector(this._edges);
+
+  List<EdgeRef> _edges;
+  List<EdgeRef> get edges => _edges;
+
   @override
   List<EdgeRef> _resolve(EvalContext context) {
     final result = <EdgeRef>[];
@@ -19,4 +25,21 @@ final class ChainSelector(
 
   @override
   Iterable<CellRef> get refs => edges;
+
+  @override
+  ChainSelector clone() => .new([...edges]);
+
+  @override
+  RemapResult _remap(Remap remap) {
+    final (result, edges) = remap.many(_edges, kind: .edge);
+    _edges = edges;
+    return result;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, _listEquality.hash(edges));
+
+  @override
+  bool operator ==(Object other) =>
+      other.runtimeType == runtimeType && _listEquality.equals(edges, (other as ChainSelector).edges);
 }

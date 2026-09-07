@@ -3,7 +3,7 @@ import 'package:editor/widgets/selection_panel/props/prop.dart';
 
 class const CellPanel({
   super.key,
-  required final List<Ref> refs,
+  required final List<CellRef> refs,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,10 +12,10 @@ class const CellPanel({
     for (final ref in refs) {
       final kind = editor.handleOf(ref)?.kind;
       final props = switch (kind) {
-        .vertex => vertexProps(editor.scene, ref.cast()),
-        .edge => edgeProps(editor.scene, ref.cast()),
-        .face => faceProps(editor.scene, ref.cast()),
-        .frame => frameProps(editor.scene, ref.cast()),
+        .frame => frameProps(editor.scene, ref.asFrame),
+        .vertex => vertexProps(editor.scene, ref.asVertex),
+        .edge => edgeProps(editor.scene, ref.asEdge),
+        .face => faceProps(editor.scene, ref.asFace),
         _ => const <PropSource>[],
       };
 
@@ -27,7 +27,6 @@ class const CellPanel({
     late final Widget? icon, title, footnote;
     if (refs.length == 1) {
       final ref = refs.single;
-      final key = editor.keyOf(ref);
       final kind = ref.kind;
 
       icon = switch (kind) {
@@ -44,7 +43,7 @@ class const CellPanel({
         .face => Text('Face'),
       };
 
-      footnote = Text(key.id.value);
+      footnote = Text(ref.id.toString());
     } else {
       icon = Icons.stacks();
       title = Text('${refs.length} cells');

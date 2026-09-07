@@ -5,10 +5,12 @@ final class SceneTransaction {
 
   final Scene scene;
   Program get program => scene.program;
-  Evaluation get evaluation => scene._evaluation;
+  Evaluation get evaluation => scene.evaluation;
 
   var _closed = false;
-  final _entries = <ProgramDelta>[];
+  var _dirty = false;
+  final _entries = <ProgramOp>[];
+  late final _pass = evaluation.beginPass();
 
   // -------------------------------------------------------------------------------------------------------------------
   // Base ops
@@ -24,7 +26,9 @@ final class SceneTransaction {
 
     final ProgramAnchor resolvedAnchor = index == 0 ? .start() : .after(program[index - 1].id);
     final resolvedOp = StatementOp(anchor: resolvedAnchor, inserted: inserted, removed: removed);
-    _entries.add(resolvedOp.reapply(evaluation));
+    resolvedOp.reapply(_pass);
+    _entries.add(resolvedOp);
+    _dirty = true;
   }
 
   T _resolveStatement<T extends Statement>(StatementId id) {
@@ -64,14 +68,16 @@ final class SceneTransaction {
     return updated;
   }
 
-  // void decorate(CellKey key, CellStylePartial decoration) {
-  //   _checkOpen();
-  //   final before = program.styleOverrides.of(key);
-  //   if (before == decoration) return;
+  void decorate(CellRef ref, CellStylePartial decoration) {
+    _checkOpen();
+    final before = program.styles.of(ref);
+    if (before == decoration) return;
 
-  //   final op = StyleOp(key, before: before, after: decoration);
-  //   _entries.add(op.reapply(evaluation));
-  // }
+    final op = StyleOp(ref, before: before, after: decoration);
+    _entries.add(op);
+    op.reapply(_pass);
+    _dirty = true;
+  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // High-level ops
@@ -79,9 +85,19 @@ final class SceneTransaction {
 
   void dissolve(Iterable<CellRef> targets) {
     _checkOpen();
+    flush();
     final router = evaluation.routeDissolve(targets);
-    for (final id in router.remove) remove(id);
-    insertAll(router.insert);
+    if (router.isEmpty) return;
+    final statement = DissolveStatement(.new(router.deleted));
+    insert(statement);
+  }
+
+  void delete(Iterable<CellRef> targets) {
+    _checkOpen();
+    flush();
+    final router = evaluation.routeDelete(targets);
+    for (final entry in router.replace.entries) replace(entry.key, entry.value);
+    for (final r in router.remove) remove(r);
   }
 
   // void embed(ProgramSlice slice) {
@@ -103,13 +119,20 @@ final class SceneTransaction {
     if (_closed) throw StateError('transaction has already been committed or cancelled');
   }
 
-  ProgramDelta _build() => .coalesced(_entries);
+  ProgramDelta _build() => .coalesced([.new(_entries)]);
 
   void commit({Object? mergeKey}) {
     _checkOpen();
+    flush();
     _closed = true;
     scene._endTransaction(this);
-    // scene.history.commit(_build(), mergeKey: mergeKey);
+    scene.history.commit(_build(), mergeKey: mergeKey);
+  }
+
+  void flush() {
+    if (!_dirty) return;
+    evaluation.drain(_pass);
+    _dirty = false;
   }
 
   void cancel() {
@@ -120,7 +143,10 @@ final class SceneTransaction {
   }
 
   void _rollback() {
-    for (final entry in _entries.reversed) entry.unapply(evaluation);
+    for (final op in _entries.reversed) op.unapply(_pass);
     _entries.clear();
+    evaluation.drain(_pass);
+    _pass.reset();
+    _dirty = false;
   }
 }

@@ -43,6 +43,41 @@ extension TopologyMethods on Bundle {
     _treeSetSiblingNext(t, .none);
   }
 
+  void _treeSetParent(CellHandle h, FrameHandle parent) {
+    assert(_checkCell(h));
+    assert(_treeCheckInsertion(parent));
+
+    final t = h.cellIndex;
+    final p = parent.index;
+    if (_treeParentOf(t) == p) return;
+
+    _treeSiblingUnlink(t);
+    _treeParentStorage(t.kind)[t.index] = p;
+    _treeSiblingInsert(p, t);
+
+    final kind = t.kind;
+    if (kind == .frame) {
+      _frame.touch(t.asFrame);
+      _frameInvalidateWorldTransforms();
+      final cells = _frameDependents(p).map((cf) => _coframe.cell[cf]);
+      for (final c in cells) _cellCrossUpdate(c);
+    } else if (kind == .vertex) {
+      _vertex.touch(t.asVertex);
+      for (final e in _vertexEdges(t.asVertex)) {
+        _edge.touch(e);
+        _cellCrossUpdate(e.cell);
+        for (final f in _edgeFaces(e)) _cellCrossUpdate(f.cell);
+      }
+    } else if (kind == .edge) {
+      _edge.touch(t.asEdge);
+      _cellCrossUpdate(t);
+      for (final f in _edgeFaces(t.asEdge)) _cellCrossUpdate(f.cell);
+    } else if (kind == .face) {
+      _face.touch(t.asFace);
+      _cellCrossUpdate(t);
+    }
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Frame
   // -------------------------------------------------------------------------------------------------------------------
@@ -63,6 +98,7 @@ extension TopologyMethods on Bundle {
     _frame.hasSize[i] = size != null;
     _frame.clip[i] = .none;
     _frame.childHead[i] = .none;
+    _frame.dependentStart[i] = .none;
 
     _frameLink(i, p);
     _frame.id.assign(i, id);
@@ -78,7 +114,7 @@ extension TopologyMethods on Bundle {
   void _frameRemove(FrameHandle h) {
     assert(_liveFrame(h));
     assert(_frame.childHead[h.index].isNone, 'cannot remove frame with children');
-    _treeSiblingUnlink(h.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _frame.ghost(h.index);
     _frameInvalidateWorldTransforms();
   }
@@ -93,10 +129,87 @@ extension TopologyMethods on Bundle {
   void _frameFree(FrameHandle h) {
     assert(_liveFrame(h));
     assert(_frame.childHead[h.index].isNone, 'cannot free frame with children');
-    _treeSiblingUnlink(h.cell);
+    assert(_frame.dependentStart[h.index].isNone, 'cannot free frame with dependents');
+    _treeSiblingUnlink(h.cellIndex);
     _frame.id.free(h.index);
     _frame.free(h.index);
     _frameInvalidateWorldTransforms();
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Coframe
+  // -------------------------------------------------------------------------------------------------------------------
+
+  CoframeIndex _coframeAdd(FrameIndex f, CellIndex c) {
+    final cf = _coframe.alloc();
+    _coframe.frame[cf] = f;
+    _coframe.cell[cf] = c;
+    _frameDependentsInsert(f, cf);
+    _cellCrossInsert(c, cf);
+    return cf;
+  }
+
+  void _coframeRemove(CoframeIndex cf) {
+    _frameDependentsUnlink(_coframe.frame[cf], cf);
+    _coframe.free(cf);
+  }
+
+  void _frameDependentsInsert(FrameIndex f, CoframeIndex cf) {
+    _coframe.dependentNext[cf] = _frame.dependentStart[f];
+    _frame.dependentStart[f] = cf;
+  }
+
+  void _frameDependentsUnlink(FrameIndex f, CoframeIndex cf) {
+    var cur = _frame.dependentStart[f];
+    if (cur == cf) {
+      _frame.dependentStart[f] = _coframe.dependentNext[cf];
+      return;
+    }
+
+    while (_coframe.dependentNext[cur] != cf) cur = _coframe.dependentNext[cur];
+    _coframe.dependentNext[cur] = _coframe.dependentNext[cf];
+  }
+
+  void _cellCrossInsert(CellIndex c, CoframeIndex cf) {
+    _coframe.crossNext[cf] = _cellCrossStart(c);
+    _cellSetCrossStart(c, cf);
+  }
+
+  void _cellSetCrossStart(CellIndex c, CoframeIndex cf) => switch (c.kind) {
+    .edge => _edge.crossStart[c.asEdge] = cf,
+    .face => _face.crossStart[c.asFace] = cf,
+    _ => throw ArgumentError('invalid cell kind for cross start: ${c.kind}'),
+  };
+
+  void _cellCrossRemove(CellIndex c) {
+    for (var cf = _cellCrossStart(c); cf != .none;) {
+      final next = _coframe.crossNext[cf];
+      _coframeRemove(cf);
+      cf = next;
+    }
+    if (c.kind == .edge || c.kind == .face) _cellSetCrossStart(c, .none);
+  }
+
+  void _cellCrossUpdate(CellIndex c) {
+    _cellCrossRemove(c);
+    if (c.kind != .edge && c.kind != .face) return;
+
+    final own = _treeSpaceOf(c);
+    final dependencies = _cellDependencies(c).toList();
+    var lca = own, cross = false;
+    for (final d in dependencies) {
+      final f = _treeSpaceOf(d);
+      if (f == own) continue;
+      lca = _frameLca(lca, f);
+      cross = true;
+    }
+    if (!cross) return;
+    _cellCrossInsertPath(c, own, lca);
+    for (final d in dependencies) _cellCrossInsertPath(c, _treeSpaceOf(d), lca);
+  }
+
+  void _cellCrossInsertPath(CellIndex c, FrameIndex from, FrameIndex to) {
+    for (var f = from; f != to; f = _frame.parent[f]) _coframeAdd(f, c);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -115,7 +228,7 @@ extension TopologyMethods on Bundle {
 
     _vertex.position[i] = position;
     _vertex.diskStart[i] = .none;
-    _vertex.parent[i] = frame;
+    _vertex.positionVersion[i] = -1;
 
     _vertexLink(i, frame);
     _vertex.id.assign(i, id);
@@ -130,7 +243,7 @@ extension TopologyMethods on Bundle {
   void _vertexRemove(VertexHandle h) {
     assert(_liveVertex(h));
     assert(!_vertexHasUses(h.index), 'cannot remove vertex with uses');
-    _treeSiblingUnlink(h.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _vertex.ghost(h.index);
   }
 
@@ -144,7 +257,7 @@ extension TopologyMethods on Bundle {
   void _vertexFree(VertexHandle h) {
     assert(_liveVertex(h));
     assert(_vertex.diskStart[h.index].isNone, 'cannot free vertex with uses');
-    _treeSiblingUnlink(h.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _vertex.id.free(h.index);
     _vertex.free(h.index);
   }
@@ -185,9 +298,9 @@ extension TopologyMethods on Bundle {
     _covertex.free(cv);
   }
 
-  void _covertexRepoint(CovertexIndex cv, {required VertexIndex to}) {
+  bool _covertexRepoint(CovertexIndex cv, {required VertexIndex to}) {
     final from = _covertex.vertex[cv];
-    if (from == to) return;
+    if (from == to) return false;
 
     _vertexDiskUnlink(from, cv);
     _covertex.vertex[cv] = to;
@@ -199,6 +312,7 @@ extension TopologyMethods on Bundle {
     }
     _vertexDiskInsert(to, cv);
     _edge.touch(e);
+    return true;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -228,8 +342,10 @@ extension TopologyMethods on Bundle {
     _edge.cvEnd[i] = cv1;
     _edge.radialStart[i] = .none;
     _edge.cubicVersion[i] = -1;
+    _edge.crossStart[i] = .none;
 
     _edgeLink(i, frame);
+    _cellCrossUpdate(i.cell);
     _edge.id.assign(i, id);
     return _edge.handleFor(i);
   }
@@ -242,7 +358,7 @@ extension TopologyMethods on Bundle {
   void _edgeRemove(EdgeHandle h) {
     assert(_liveEdge(h));
     assert(!_edgeHasUses(h.index), 'cannot remove edge with uses');
-    _treeSiblingUnlink(h.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _edge.ghost(h.index);
   }
 
@@ -260,7 +376,8 @@ extension TopologyMethods on Bundle {
     assert(_liveEdge(h));
     assert(_edge.radialStart[h.index].isNone, 'cannot free edge with uses');
     final i = h.index;
-    _treeSiblingUnlink(h.cell);
+    _cellCrossRemove(i.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _covertexRemove(_edge.cvStart[i]);
     _covertexRemove(_edge.cvEnd[i]);
     _edge.id.free(i);
@@ -270,14 +387,21 @@ extension TopologyMethods on Bundle {
   void _edgeRepoint(EdgeHandle e, {VertexHandle? start, VertexHandle? end}) {
     assert(_checkEdge(e));
 
+    var repointed = false;
+
     if (start != null) {
       assert(_checkVertex(start));
-      _covertexRepoint(_edge.cvStart[e.index], to: start.index);
+      repointed |= _covertexRepoint(_edge.cvStart[e.index], to: start.index);
     }
 
     if (end != null) {
       assert(_checkVertex(end));
-      _covertexRepoint(_edge.cvEnd[e.index], to: end.index);
+      repointed |= _covertexRepoint(_edge.cvEnd[e.index], to: end.index);
+    }
+
+    if (repointed) {
+      _cellCrossUpdate(e.cellIndex);
+      for (final f in _edgeFaces(e.index)) _cellCrossUpdate(f.cell);
     }
   }
 
@@ -331,6 +455,7 @@ extension TopologyMethods on Bundle {
     }
 
     _face.boundary[face].add(coedges.first);
+    _cellCrossUpdate(face.cell);
     return cycle;
   }
 
@@ -338,6 +463,7 @@ extension TopologyMethods on Bundle {
     final cycle = _cycleCoedges(head).toList();
     for (final ce in cycle) _coedgeRemove(ce);
     _face.boundary[face].remove(head);
+    _cellCrossUpdate(face.cell);
   }
 
   void _cycleSplice(FaceHandle face, List<Coedge> remove, List<Coedge> insert) {
@@ -395,6 +521,7 @@ extension TopologyMethods on Bundle {
     }
 
     for (final c in slots) _coedgeRemove(c);
+    _cellCrossUpdate(face.cellIndex);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -412,6 +539,7 @@ extension TopologyMethods on Bundle {
     final frame = parent?.index ?? .root;
 
     _face.boundary[i] = .empty();
+    _face.crossStart[i] = .none;
 
     _faceLink(i, frame);
     _face.id.assign(i, id);
@@ -426,7 +554,7 @@ extension TopologyMethods on Bundle {
 
   void _faceRemove(FaceHandle h) {
     assert(_liveFace(h));
-    _treeSiblingUnlink(h.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _face.ghost(h.index);
   }
 
@@ -446,7 +574,8 @@ extension TopologyMethods on Bundle {
     assert(_liveFace(h));
     final i = h.index;
     for (final head in _faceBoundary(i).toList()) _cycleRemove(i, head);
-    _treeSiblingUnlink(h.cell);
+    _cellCrossRemove(i.cell);
+    _treeSiblingUnlink(h.cellIndex);
     _face.id.free(i);
     _face.free(i);
   }
@@ -455,7 +584,7 @@ extension TopologyMethods on Bundle {
     assert(_checkFace(f));
 
     final i = f.index;
-    for (final head in _faceBoundary(i)) _cycleRemove(i, head);
+    for (final head in _faceBoundary(i).toList()) _cycleRemove(i, head);
     for (final cycle in boundary) _cycleAdd(i, cycle);
   }
 }

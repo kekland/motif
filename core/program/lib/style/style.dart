@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-sealed class const CellStyle<D extends CellStyle<D>>() {
+sealed class const CellStyle<H extends CellHandle>() {
   static CellStyle defaultOf(CellKind kind) => switch (kind) {
     .vertex => VertexStyle.default_,
     .edge => EdgeStyle.default_,
@@ -8,11 +8,26 @@ sealed class const CellStyle<D extends CellStyle<D>>() {
     _ => throw ArgumentError.value(kind, 'kind', 'unsupported kind'),
   };
 
-  D updateWith(covariant CellStylePartial<D>? partial) => partial == null ? this as D : partial.apply(this as D);
+  CellStyle<H> updateWith(covariant CellStylePartial<H>? partial) => partial == null ? this : partial.apply(this);
   CellKind get kind;
+
+  VertexStyle get asVertex {
+    assert(kind == .vertex);
+    return this as VertexStyle;
+  }
+
+  EdgeStyle get asEdge {
+    assert(kind == .edge);
+    return this as EdgeStyle;
+  }
+
+  FaceStyle get asFace {
+    assert(kind == .face);
+    return this as FaceStyle;
+  }
 }
 
-sealed class const CellStylePartial<D extends CellStyle<D>>() extends Partial<D> {
+sealed class const CellStylePartial<H extends CellHandle>() extends Partial<CellStyle<H>> {
   @override
-  D apply(D style);
+  CellStyle<H> apply(covariant CellStyle<H> style);
 }

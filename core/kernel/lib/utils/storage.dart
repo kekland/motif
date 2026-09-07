@@ -42,6 +42,14 @@ extension I32ListExt on Int32List {
   }
 }
 
+extension I64ListExt on Int64List {
+  Int64List grow(int atLeast) {
+    var n = isEmpty ? _arenaListBaseSize : length;
+    while (n < atLeast) n *= 2;
+    return Int64List(n)..setAll(0, this);
+  }
+}
+
 extension U32ListExt on Uint32List {
   Uint32List grow(int atLeast) {
     var n = isEmpty ? _arenaListBaseSize : length;
@@ -108,6 +116,17 @@ extension type const FrameIndexStorage<I extends ElementIndex>._(Int32List stora
 
   int get length => storage.length;
   FrameIndexStorage<I> grow(int atLeast) => ._(storage.grow(atLeast));
+}
+
+extension type const CoframeIndexStorage<I extends ElementIndex>._(Int32List storage) {
+  CoframeIndexStorage() : this._(Int32List(_baseSize));
+  CoframeIndexStorage.copyFrom(CoframeIndexStorage other) : this._(.fromList(other.storage));
+
+  CoframeIndex operator [](I index) => .new(storage[index.i]);
+  void operator []=(I index, CoframeIndex value) => storage[index.i] = value.i;
+
+  int get length => storage.length;
+  CoframeIndexStorage<I> grow(int atLeast) => ._(storage.grow(atLeast));
 }
 
 extension type const VertexIndexStorage<I extends ElementIndex>._(Int32List storage) {

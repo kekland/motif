@@ -1,0 +1,6 @@
+- Slices (copy/paste)
+[x] Circle/triangle (shape, create activity, tools, statements)
+- Client/server
+[x] Vertex/edge cache in world space
+- Z-order sort (also in hit testing)
+[x] Transaction preview

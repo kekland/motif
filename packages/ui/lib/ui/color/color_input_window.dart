@@ -1,4 +1,4 @@
-import 'package:color/color.dart';
+import 'package:color/color_flutter.dart';
 import 'package:ui/ui.dart';
 
 part 'components/drag_handle.dart';

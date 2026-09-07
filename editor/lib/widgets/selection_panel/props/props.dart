@@ -65,9 +65,9 @@ final class LayoutSizeProp(super.sources) extends Prop<ResolvedLayoutSize, Resol
   );
 }
 
-final class ChildLayoutProp(super.sources) extends Prop<ChildLayout, ChildLayout> {
+final class LayoutProp(super.sources) extends Prop<Layout, Layout> {
   @override
-  PropType get type => .childLayout;
+  PropType get type => .layout;
 }
 
 final class StrokeWidthProp(super.sources) extends Prop<double?, double> {

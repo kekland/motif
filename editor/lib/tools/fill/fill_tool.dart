@@ -12,6 +12,9 @@ class FillTool extends Tool {
 
   @override
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _FillToolOverlay(info: info);
+
+  @override
+  LogicalKeySet? get shortcut => .new(.keyG);
 }
 
 class _FillToolOverlay extends HookWidget {
@@ -44,13 +47,17 @@ class _FillToolOverlay extends HookWidget {
           final region = hoveredRegion.value;
           if (region == null) return;
 
-          final outer = region.outer.coedges.map((c) => editor.refOfHandle(c.edge)!).toList();
+          final outer = region.outer.coedges.map((c) => editor.refOf(c.edge)!).toList();
           final holes = <List<EdgeRef>>[];
           for (final hole in region.holes) {
-            holes.add(hole.coedges.map((c) => editor.refOfHandle(c.edge)!).toList());
+            holes.add(hole.coedges.map((c) => editor.refOf(c.edge)!).toList());
           }
 
-          final statement = FaceStatement(outer, holes: holes);
+          final statement = FaceStatement(
+            .new(outer),
+            holes: holes.map((e) => ChainSelector(e)).toList(),
+          );
+
           editor.edit((txn) => txn.insert(statement));
         },
         child: hoveredRegion.value != null

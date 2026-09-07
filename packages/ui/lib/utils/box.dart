@@ -10,6 +10,14 @@ enum Corner {
 
   const Corner(this.edges);
 
+  static Corner of(Side vertical, Side horizontal) => switch ((vertical, horizontal)) {
+    (.top, .left) => .topLeft,
+    (.top, .right) => .topRight,
+    (.bottom, .left) => .bottomLeft,
+    (.bottom, .right) => .bottomRight,
+    _ => throw ArgumentError('invalid corner: $vertical, $horizontal'),
+  };
+
   final List<Side> edges;
   bool get isTop => edges.contains(Side.top);
   bool get isLeft => edges.contains(Side.left);

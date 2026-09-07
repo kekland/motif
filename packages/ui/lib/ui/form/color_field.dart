@@ -1,5 +1,5 @@
 import 'package:ui/ui.dart';
-import 'package:color/color.dart';
+import 'package:color/color_flutter.dart';
 
 final class ColorField extends HookWidget {
   const new({

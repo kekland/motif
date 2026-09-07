@@ -7,8 +7,8 @@ export 'pen/pen_tool.dart';
 export 'shape/shape_tool.dart';
 export 'shape/container_tool.dart';
 export 'shape/rectangle_tool.dart';
-export 'shape/circle_tool.dart';
-export 'shape/triangle_tool.dart';
+export 'shape/ellipse_tool.dart';
+export 'shape/polygon_tool.dart';
 
 const toolset = <Tool>[
   CursorTool(),
@@ -17,8 +17,8 @@ const toolset = <Tool>[
   FillTool(),
   ContainerTool(),
   RectangleTool(),
-  CircleTool(),
-  TriangleTool(),
+  EllipseTool(),
+  PolygonTool(),
 ];
 
 const tools = (
@@ -28,6 +28,6 @@ const tools = (
   fill: FillTool(),
   container: ContainerTool(),
   rectangle: RectangleTool(),
-  circle: CircleTool(),
-  triangle: TriangleTool(),
+  ellipse: EllipseTool(),
+  polygon: PolygonTool(),
 );

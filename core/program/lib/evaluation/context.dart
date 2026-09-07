@@ -21,8 +21,12 @@ final class EvalContext {
   }
 
   Iterable<CellRef> descendants(CellRef ref) => _evaluation.lineage.descendantsOf(ref, bundle);
-  // CellRef ancestor(CellRef ref) => _evaluation.lineage.ancestorOf(ref);
-  Iterable<CellRef> products(StatementId id) => _evaluation.commits[id]?.added ?? const {};
+  // CellRef ancestor(CellRef ref) => _evaluation.lineage.ances(ref);
+  Iterable<CellRef> productsOf(StatementId id) => _evaluation.productsOf(id);
 
-  Placement placementOf(StatementId id) => _evaluation.placementOf(id);
+  final _styles = <CellRef, CellStyle>{};
+  void style(CellRef ref, CellStyle style) => _styles[ref] = style;
+  CellStyle styleOf(CellRef ref) => _evaluation.styleOf(ref);
+
+  Placement placementOf(StatementId id) => _evaluation.layoutOf(id)!;
 }

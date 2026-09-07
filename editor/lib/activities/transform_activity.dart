@@ -8,7 +8,7 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
   final Editor editor;
   Scene get scene => editor.scene;
 
-  final Iterable<Ref> refs;
+  final Iterable<CellRef> refs;
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight, .altLeft, .altRight};

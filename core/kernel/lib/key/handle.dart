@@ -4,10 +4,11 @@ extension type const CellHandle._(int _v) implements Object {
   CellHandle.make(CellKind kind, ElementIndex index, int gen) : _v = _pack(kind.index, index.i, gen);
 
   static int _pack(int kind, int index, int gen) => (gen << 32) | (index << 2) | kind;
+  static final CellHandle root = FrameHandle.root;
 
   int get _index => (_v & 0xFFFFFFFF) >> 2;
   ElementIndex get index => .new(_index);
-  CellIndex get cell => ._(_v & 0xFFFFFFFF);
+  CellIndex get cellIndex => ._(_v & 0xFFFFFFFF);
   int get gen => (_v >> 32);
   CellKind get kind => .values[_v & 3];
 
