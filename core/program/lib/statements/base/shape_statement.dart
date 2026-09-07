@@ -81,9 +81,9 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
       if (t.kind == .vertex) {
         points.add(bundle.vertexPosition(context.handle(t).asVertex, space: space));
       } else if (t.kind == .edge) {
-        final bbox = bundle.edgeCubic(context.handle(t).asEdge, space: space).bboxTight;
-        points.add(bbox.min);
-        points.add(bbox.max);
+        final h = context.handle(t).asEdge;
+        points.add(bundle.vertexPosition(bundle.edgeStart(h), space: space));
+        points.add(bundle.vertexPosition(bundle.edgeEnd(h), space: space));
       } else {
         throw ArgumentError('invalid target ${t.kind} for shape transform');
       }
@@ -153,6 +153,14 @@ final class _ResizeAxis(final bool min, final bool max, final bool inside) {
   }
 
   (double, double) solve(List<double> points, List<double> to, double extent) {
+    final d = to.first - points.first;
+    var rigid = true;
+    for (var i = 1; i < points.length; i++) {
+      rigid = (to[i] - points[i] - d).abs() < _eps;
+      if (!rigid) break;
+    }
+    if (rigid) return (extent, d);
+
     var lo = 0.0, hi = extent;
     var shift = 0.0;
     var n = 0;

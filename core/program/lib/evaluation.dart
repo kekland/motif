@@ -23,6 +23,7 @@ final class Evaluation {
   final _host = <StatementId, StatementId?>{};
   final _styles = <CellRef, CellStyle>{};
   final _drawOrder = <FrameRef, List<CellRef>>{};
+  Map<CellRef, int>? _drawIndex;
 
   @pragma('vm:prefer-inline')
   int? indexOf(StatementId id) => _index[id];

@@ -24,8 +24,8 @@ class PositionPropWidget extends PropWidget {
     final xProp = usePropComputed(scene, prop.x);
     final yProp = usePropComputed(scene, prop.y);
 
-    final xValue = useMemoComputed(() => xProp.value()?.value, keys: [xProp]);
-    final yValue = useMemoComputed(() => yProp.value()?.value, keys: [yProp]);
+    final xValue = useMemoComputed(() => xProp.value()?.resolved, keys: [xProp]);
+    final yValue = useMemoComputed(() => yProp.value()?.resolved, keys: [yProp]);
 
     final isXOverriden = useComputed(() => xProp.value()?.overridden != null, keys: [xProp]).value;
     final isYOverriden = useComputed(() => yProp.value()?.overridden != null, keys: [yProp]).value;

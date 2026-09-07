@@ -86,7 +86,6 @@ final class SceneHitResult {
 extension SceneHitTestQuery on SceneQuery {
   SceneHitResult _remapHitResult(Vec2 position, HitResult result) {
     final entries = <SceneHitEntry>[];
-    final statements = <StatementId>[];
 
     for (final entry in result.entries) {
       final handle = entry.handle;
@@ -119,11 +118,16 @@ extension SceneHitTestQuery on SceneQuery {
       };
 
       entries.add(sceneEntry);
+    }
 
-      final statementId = sceneEntry.statementId;
-      if (!statements.contains(statementId)) {
-        statements.add(statementId);
-      }
+    final evaluation = scene.evaluation;
+    entries.sort((a, b) => evaluation.drawIndexOf(b.ref).compareTo(evaluation.drawIndexOf(a.ref)));
+
+    final statements = <StatementId>[];
+    for (final entry in entries) {
+      final id = entry.statementId;
+      if (statements.contains(id)) continue;
+      statements.add(id);
     }
 
     return SceneHitResult(
