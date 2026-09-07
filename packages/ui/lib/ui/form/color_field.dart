@@ -45,18 +45,9 @@ final class ColorField extends HookWidget {
     final colorInput = ExpressionInputField<ColorData>(
       value: value,
       onChanged: onChanged,
-      valueToString: (color) => color?.cssColor.withAlpha(1.0).toString() ?? '',
+      valueToString: (color) => color?.withAlpha(1.0).toString() ?? '',
       supportedDevices: {.mouse, .trackpad},
-      evaluateExpression: (str) {
-        return .transparent;
-        // final value = evaluateExpression<Vector4>(str);
-        // return Color.fromARGB(
-        //   value.w.clamp(0, 255).round(),
-        //   value.x.clamp(0, 255).round(),
-        //   value.y.clamp(0, 255).round(),
-        //   value.z.clamp(0, 255).round(),
-        // );
-      },
+      evaluateExpression: (str) => null,
       options: options.merge(
         .new(
           leading: leading,

@@ -13,7 +13,7 @@ class SelectionPanel extends HookWidget {
     final selection = editor.selection;
     useListenable(selection);
 
-    final selectedCells = selection.refs;
+    var selectedCells = selection.refs.toSet();
     final selectedStatements = selection.statements;
 
     if (selection.isEmpty) {
@@ -22,11 +22,18 @@ class SelectionPanel extends HookWidget {
       );
     }
 
+    if (selectedStatements.length == 1) {
+      final products = editor.scene.productsOf(selectedStatements.single);
+      selectedCells.removeAll(products);
+    }
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          CellPanel(refs: selectedCells.toList()),
-          Divider(),
+          if (selectedCells.isNotEmpty) ...[
+            CellPanel(refs: selectedCells.toList()),
+            Divider(),
+          ],
           StatementPanel(statements: selectedStatements.toList()),
         ],
       ),

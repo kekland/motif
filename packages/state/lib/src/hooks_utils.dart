@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart' as flutter;
+import 'package:flutter/widgets.dart';
 import 'package:state/state.dart';
 
 T useManagedResource<T>({
@@ -59,7 +59,7 @@ class _ManagedResourceHookState<T> extends HookState<T, _ManagedResourceHook<T>>
   }
 
   @override
-  T build(flutter.BuildContext context) => value;
+  T build(BuildContext context) => value;
 }
 
 T useComputedValue<T>(T Function() getter) {
@@ -85,18 +85,9 @@ void useCallOnce(VoidCallback callback) {
 
 void useCallOncePostFrame(VoidCallback callback) {
   useEffect(() {
-    flutter.WidgetsBinding.instance.addPostFrameCallback((_) => callback());
+    WidgetsBinding.instance.addPostFrameCallback((_) => callback());
     return null;
   }, const []);
-}
-
-void $useListenerEffect(flutter.ChangeNotifier notifier, VoidCallback listener, {bool callImmediately = false}) {
-  useEffect(() {
-    notifier.addListener(listener);
-    if (callImmediately) listener();
-
-    return () => notifier.removeListener(listener);
-  }, [notifier, listener]);
 }
 
 void useListenerEffect(ChangeNotifier notifier, VoidCallback listener, {bool callImmediately = false}) {

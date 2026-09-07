@@ -62,5 +62,5 @@ sealed class Statement {
   // ----
 
   DissolveIntent routeDissolve(Set<CellRef> targeted) => .new(targeted);
-  TransformResult routeTransform(EvalContext context, CellRef target) => .refused;
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .refused;
 }

@@ -62,7 +62,7 @@ final class EdgeStatement extends Statement with PlacedStatement {
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef target) => .forward(
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .forward(
     [context.resolve(start), context.resolve(end)],
   );
 }

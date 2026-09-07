@@ -42,27 +42,11 @@ extension I32ListExt on Int32List {
   }
 }
 
-extension I64ListExt on Int64List {
-  Int64List grow(int atLeast) {
-    var n = isEmpty ? _arenaListBaseSize : length;
-    while (n < atLeast) n *= 2;
-    return Int64List(n)..setAll(0, this);
-  }
-}
-
 extension U32ListExt on Uint32List {
   Uint32List grow(int atLeast) {
     var n = isEmpty ? _arenaListBaseSize : length;
     while (n < atLeast) n *= 2;
     return Uint32List(n)..setAll(0, this);
-  }
-}
-
-extension U64ListExt on Uint64List {
-  Uint64List grow(int atLeast) {
-    var n = isEmpty ? _arenaListBaseSize : length;
-    while (n < atLeast) n *= 2;
-    return Uint64List(n)..setAll(0, this);
   }
 }
 

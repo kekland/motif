@@ -68,7 +68,7 @@ class CellSelectionGroupOverlay extends HookWidget {
       required Size layoutSize,
       required Size childSize,
     }) {
-      final isZero = childSize.width == 0.0 && childSize.height == 0.0;
+      final isZero = childSize.width == 0.0 || childSize.height == 0.0;
 
       final onMove = this.onMove ?? (refs) => MoveActivity(editor, refs);
 
@@ -78,7 +78,7 @@ class CellSelectionGroupOverlay extends HookWidget {
         layoutSize: layoutSize,
         onMove: () => onMove(refs),
         onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s),
-        onCornerResize: (c) => ResizeActivity.corner(editor, refs, corner: c),
+        onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c),
         onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c),
         padding: gesturePadding,
         childSize: childSize,

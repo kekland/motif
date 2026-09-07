@@ -17,7 +17,7 @@ class ExpressionInputField<T> extends HookWidget {
   final ReadonlySignal<T?> value;
   final ValueChanged<T>? onChanged;
   final String Function(T?) valueToString;
-  final T Function(String) evaluateExpression;
+  final T? Function(String) evaluateExpression;
   final TextFieldOptions options;
   final Set<PointerDeviceKind>? supportedDevices;
 
@@ -37,6 +37,10 @@ class ExpressionInputField<T> extends HookWidget {
     void onEditingComplete() {
       try {
         final result = evaluateExpression(controller.text);
+        if (result == null) {
+          controller.text = valueToString(value());
+          return;
+        }
 
         onChanged?.call(result);
         controller.text = valueToString(result);
@@ -48,7 +52,7 @@ class ExpressionInputField<T> extends HookWidget {
       didChange.value = false;
     }
 
-    $useListenerEffect(focusNode, () {
+    useListenerEffect(focusNode, () {
       if (!focusNode.hasFocus) onEditingComplete();
     });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:renderer/dbg_renderer.dart';
 import 'package:renderer/renderer.dart';
 import 'package:scene/scene.dart';
 
@@ -54,7 +55,11 @@ class _SceneWidgetState extends State<SceneWidget> {
   @override
   Widget build(BuildContext context) {
     // return CustomPaint(painter: BundlePainter(bundle: scene.bundle));
-    return CustomPaint(painter: _ProgramPainter(renderer: renderer!));
+    return CustomPaint(
+      painter: _ProgramPainter(renderer: renderer!),
+      isComplex: false,
+      willChange: true,
+    );
   }
 }
 

@@ -15,6 +15,7 @@ dependencies:
   color:
   genie:
 
+  defer_pointer: ^0.0.2
   expressions: ^0.2.5+3
   material_symbols_icons: ^4.2960.0
   vector_math: ^2.2.0

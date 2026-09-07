@@ -45,8 +45,8 @@ final class VertexStatement extends Statement with PlacedStatement {
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef<CellHandle> target) => .absorb(
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .absorb(
     (m) => copyWith(position: m.transform2(position)),
-    target,
+    ref,
   );
 }

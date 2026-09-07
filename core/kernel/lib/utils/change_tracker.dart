@@ -2,7 +2,7 @@ part of '../kernel.dart';
 
 final class ChangeTracker {
   var _epoch = 0;
-  var _buffer = Int64List(64);
+  var _bufferLow = Uint32List(64), _bufferHigh = Uint32List(64);
   var _count = 0;
 
   void begin() => _epoch++;
@@ -20,14 +20,21 @@ final class ChangeTracker {
     final i = h.index.i;
     if (arena.mark[i] == _epoch) return;
     arena.mark[i] = _epoch;
-    if (_count == _buffer.length) _buffer = _buffer.grow(_count * 2);
-    _buffer[_count++] = h._v;
+    if (_count == _bufferLow.length) {
+      _bufferLow = _bufferLow.grow(_count * 2);
+      _bufferHigh = _bufferHigh.grow(_count * 2);
+    }
+
+    _bufferLow[_count] = h._v & 0xFFFFFFFF;
+    _bufferHigh[_count] = h._v >> 32;
+    _count++;
   }
 
   List<CellRef> take(Bundle b) {
     final out = <CellRef>[];
     for (var i = 0; i < _count; i++) {
-      final h = CellHandle._(_buffer[i]);
+      final v = (_bufferHigh[i] << 32) | _bufferLow[i];
+      final h = CellHandle._(v);
       if (b.isCellReachable(h)) out.add(h.ref(b));
     }
 

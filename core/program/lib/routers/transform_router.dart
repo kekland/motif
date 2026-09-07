@@ -33,26 +33,38 @@ extension RouteTransform on Evaluation {
     final absorbers = <StatementId, TransformAbsorber>{};
     final refused = HashSet<CellRef>();
 
-    final work = [...targets], seen = HashSet<CellRef>();
-    while (work.isNotEmpty) {
-      final ref = work.removeLast();
-      if (!seen.add(ref)) continue;
+    final pending = <StatementId, Set<CellRef>>{};
+    final routed = <StatementId, Set<CellRef>>{};
 
-      final owner = statement(ownerOf(ref.statementId));
-      if (owner == null) continue;
+    void add(CellRef r) {
+      final owner = ownerOf(r.statementId);
+      if (routed[owner]?.contains(r) ?? false) return;
+      pending.putIfAbsent(owner, () => {}).add(r);
+    }
 
-      final context = _contextFor(owner.id);
-      final result = owner.routeTransform(context, ref);
+    for (final t in targets) add(t);
+
+    while (pending.isNotEmpty) {
+      final id = pending.keys.first;
+      final cells = {...?routed[id], ...?pending.remove(id)};
+      routed[id] = cells;
+
+      final s = statement(id);
+      if (s == null) continue;
+
+      final context = _contextFor(id);
+      final result = s.routeTransform(context, cells);
 
       if (result is TransformAbsorb) {
-        if (absorbers.containsKey(owner.id)) continue;
         final frame = bundle.parentOf(bundle.handle(result.cell)!)!;
         final spaceToWorld = bundle.frameTransform(frame, space: .root);
-        absorbers[owner.id] = .new(result.absorb, spaceToWorld, .inverse(spaceToWorld), result.cell);
+        absorbers[id] = .new(result.absorb, spaceToWorld, .inverse(spaceToWorld), result.cell);
       } else if (result is TransformForward) {
-        work.addAll(result.targets);
+        absorbers.remove(id);
+        for (final ref in result.targets) add(ref);
       } else if (result is TransformRefused) {
-        refused.add(ref);
+        absorbers.remove(id);
+        refused.addAll(cells);
       }
     }
 

@@ -1,3 +1,4 @@
+export 'border_utils.dart';
 export 'box.dart';
 export 'expression.dart';
 export 'color_utils.dart';
@@ -6,6 +7,7 @@ export 'intents.dart';
 export 'iterable_utils.dart';
 export 'typedefs.dart';
 export 'paint_utils.dart';
+export 'render_object_utils.dart';
 export 'text_style_utils.dart';
 export 'vector_math_utils.dart';
 export 'overflow_hit_testable.dart';

@@ -71,7 +71,7 @@ final class FilletFaceStatement extends Statement {
   }
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef target) => .forward([
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .forward([
     context.resolve(face),
   ]);
 }

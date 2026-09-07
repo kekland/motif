@@ -46,7 +46,7 @@ final class FrameStatement extends Statement with PlacedStatement {
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef target) {
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) {
     final bundle = context.bundle;
     final bounds = bundle.query.frameBounds(bundle.handle(ref)!);
 

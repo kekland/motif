@@ -107,7 +107,7 @@ class TextField extends HookWidget {
     );
 
     final focusScope = useFocusScopeNode();
-    $useListenerEffect(
+    useListenerEffect(
       focusScope,
       () {
         if (!focusScope.hasFocus) return;

@@ -43,9 +43,8 @@ final class TransformSession {
       initialHull = bundle.query.cellBbox(handle);
     } else {
       final hull = Aabb2.invertedInfinity();
-      for (final id in absorbers) {
-        final absorber = router.absorbers[id]!;
-        final handle = bundle.handle(absorber.cell)!;
+      for (final r in refs) {
+        final handle = bundle.handle(r)!;
         final bbox = scene.bundle.query.cellBboxWorld(handle);
         hull.hull(bbox);
       }

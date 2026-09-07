@@ -37,16 +37,17 @@ final class CutEdgeStatement extends Statement {
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, CellRef<CellHandle> target) {
-    final r = context.resolve(this.target);
-    if (target.kind == .edge) return .forward([r]);
+  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) {
+    final r = context.resolve(target);
+    if (targets.any((c) => c.kind == .edge)) return .forward([r]);
 
-    final p0 = context.bundle.vertexPosition(context.handle(target).asVertex);
+    final v = targets.single;
+    final p0 = context.bundle.vertexPosition(context.handle(v).asVertex);
     final cubic = context.bundle.edgeCubic(context.handle(r));
 
     return .absorb((m) {
       final t = cubic.closestPoint(m.transform2(p0)).t.clamp(1e-6, 1 - 1e-6);
       return copyWith(t: t);
-    }, target);
+    }, v);
   }
 }
