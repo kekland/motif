@@ -43,17 +43,17 @@ class ExclusiveMouseCursorManager extends MouseCursorManager {
       _devices.add(device);
     } else if (triggeringEvent is PointerRemovedEvent) {
       _lastCursors.remove(device);
-      _lastSession.remove(device);
+      _lastSession.remove(device)?.dispose();
+      _exclusiveSessions.remove(device)?.dispose();
       _devices.remove(device);
       return;
     }
 
     final nextCursor = _firstNonDeferred(cursorCandidates) ?? fallbackMouseCursor;
-    assert(nextCursor != MouseCursor.defer);
     if (_lastCursors[device] == nextCursor) return;
     _lastCursors[device] = nextCursor;
 
-    if (_exclusiveSessions[device] != null) return;
+    if (_exclusiveSessions.containsKey(device)) return;
     _activate(device);
   }
 
@@ -68,25 +68,25 @@ class ExclusiveMouseCursorManager extends MouseCursorManager {
   }
 
   void set(MouseCursor exclusiveCursor, {int? device}) {
-    final _device = device ?? _devices.firstOrNull;
-    if (_device == null) return;
+    final d = device ?? _devices.firstOrNull;
+    if (d == null) return;
 
-    _lastSession.remove(_device)?.dispose();
-    final exclusiveSession = exclusiveCursor.createSession(_device);
-    _exclusiveSessions[_device] = exclusiveSession;
-    exclusiveSession.activate();
+    _lastSession.remove(d)?.dispose();
+    final session = exclusiveCursor.createSession(d);
+    _exclusiveSessions[d] = session;
+    session.activate();
   }
 
   void release({int? device, bool update = false}) {
-    final _device = device ?? _devices.firstOrNull;
-    if (_device == null) return;
+    final d = device ?? _devices.firstOrNull;
+    if (d == null) return;
 
-    final session = _exclusiveSessions.remove(_device);
-    assert(session != null, 'exclusive mouse cursor session not found for device $_device');
+    final session = _exclusiveSessions.remove(d);
+    assert(session != null, 'exclusive mouse cursor session not found for device $d');
 
     session!.dispose();
-    final lastCursor = _lastCursors[_device];
-    if (!update && lastCursor != null) _activate(_device);
+    final lastCursor = _lastCursors[d];
+    if (!update && lastCursor != null) _activate(d);
   }
 }
 

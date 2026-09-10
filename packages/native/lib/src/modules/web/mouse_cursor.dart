@@ -16,6 +16,11 @@ abstract class FfiMouseCursor extends FfiMouseCursorBase {
 class _WebMouseCursorSession extends FfiMouseCursorSession {
   _WebMouseCursorSession(super.cursor, super.device);
 
+  String? _previous;
+
+  static web.HTMLElement get _target =>
+      (web.document.querySelector('flutter-view') ?? web.document.body!) as web.HTMLElement;
+
   @override
   Future<void> activate() async {
     final result = await cursor.nativeObjectMemoizer.runOnce(() async {
@@ -53,23 +58,28 @@ class _WebMouseCursorSession extends FfiMouseCursorSession {
       final hx = hotSpot.dx.round();
       final hy = hotSpot.dy.round();
       if (disposed) return;
+      _previous ??= _target.style.cursor;
 
       final standardStyle = 'image-set(url("$url") ${scale}x) $hx $hy, auto';
       final webkitStyle = '-webkit-image-set(url("$url") ${scale}x) $hx $hy, auto';
       final fallbackStyle = 'url("$url") $hx $hy, auto';
 
-      var targetElement = web.document.body;
-      if (targetElement == null) return;
+      _target.style.cursor = standardStyle;
 
-      targetElement.style.cursor = standardStyle;
-
-      if (targetElement.style.cursor == '') {
-        targetElement.style.cursor = webkitStyle;
+      if (_target.style.cursor == '') {
+        _target.style.cursor = webkitStyle;
       }
 
-      if (targetElement.style.cursor == '') {
-        targetElement.style.cursor = fallbackStyle;
+      if (_target.style.cursor == '') {
+        _target.style.cursor = fallbackStyle;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    if (_previous != null) _target.style.cursor = _previous!;
+    _previous = null;
+    super.dispose();
   }
 }

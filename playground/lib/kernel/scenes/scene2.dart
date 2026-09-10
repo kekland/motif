@@ -29,12 +29,12 @@ final class SceneSimulationShapes extends SceneSimulation {
   @override
   void update(Scene scene, double t) {
     scene.edit((txn) {
-      for (final rectangle in rectangles) {
+      // for (final rectangle in rectangles) {
         // var fillet = scene.program.statement(rectangle)!.modifiers.first as FilletFaceStatement;
         // fillet = fillet.copyWith(radius: .new(50.0 * t, 50.0 * t));
 
         // txn.update<RectangleStatement>(rectangle, (s) => s.copyWith(modifiers: [fillet]));
-      }
+      // }
     });
   }
 }
