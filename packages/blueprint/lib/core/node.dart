@@ -1,31 +1,28 @@
 part of 'core.dart';
 
 abstract class Node {
-  Node({required this.name, required this.inputs, required this.outputs}) {
-    for (final i in inputs) i._node = this;
-    for (final o in outputs) o._node = this;
-    _sockets = [...inputs, ...outputs];
+  Node({
+    required this.id,
+    required this.name,
+    required this.category,
+    required this.inputs,
+    required this.outputs,
+  }) {
+    _sockets = .unmodifiable([...inputs, ...outputs]);
+    for (final (i, s) in _sockets.indexed) s._attach(this, i);
   }
 
+  final NodeId id;
   final String name;
+  final Symbol category;
 
   final List<InputSocket> inputs;
   final List<OutputSocket> outputs;
-  Iterable<Socket> get sockets => _sockets;
   late final List<Socket> _sockets;
+  Iterable<Socket> get sockets => _sockets;
 
-  Blueprint? _blueprint;
-  ReadonlySignal<Node> call() => _blueprint!._signalForNode(this);
+  Node copyWith({NodeId? id});
+  Node copyWithInline(int index, Object? value);
 
-  Vec2 get position => _blueprint!.getNodePosition(this);
-  set position(Vec2 value) => _blueprint!.setNodePosition(this, value);
-
-  bool get isStatic => _blueprint!.getNodeStatic(this);
-  set isStatic(bool value) => _blueprint!.setNodeStatic(this, value);
-
-  void markAsDirty() => _blueprint?._markNodeAsDirty(this);
-
-  T getEnvironment<T extends Object>() => _blueprint!.getEnvironment<T>();
-
-  void execute();
+  void execute(BlueprintExecution context);
 }

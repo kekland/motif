@@ -6,7 +6,7 @@ final class FaceStatement extends Statement with PlacedStatement {
     this.holes = const [],
     this.style = .default_,
     super.id,
-    super.modifiers,
+    super.enabled,
     FrameRef? parent,
   }) : parent = .of(parent);
 
@@ -35,7 +35,7 @@ final class FaceStatement extends Statement with PlacedStatement {
   @override
   FaceStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     ChainSelector? outer,
     List<ChainSelector>? holes,
     FaceStyle? style,
@@ -45,12 +45,12 @@ final class FaceStatement extends Statement with PlacedStatement {
     holes: holes ?? this.holes,
     style: style ?? this.style,
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     parent: parent ?? this.parent?.ref,
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .forward([
+  TransformRoute routeTransform(EvalContext context, Ref target) => .forward([
     ...context.resolve(outer),
     for (final h in holes) ...context.resolve(h),
   ]);

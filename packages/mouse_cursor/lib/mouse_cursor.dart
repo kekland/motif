@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 import 'package:bindings/bindings.dart';
@@ -15,100 +14,26 @@ export 'rotating_mouse_cursor.dart';
 ///
 /// Requires [AugmentedWidgetsFlutterBinding] to be initialized.
 class ExclusiveMouseCursor {
-  ExclusiveMouseCursor() {
-    _binding.defaultBinaryMessenger.addOutgoingInterceptor(
-      SystemChannels.mouseCursor.name,
-      _mouseCursorChannelInterceptor,
-    );
-
-    _binding.pointerRouter.addGlobalRoute(_onPointerRouterEvent);
-  }
+  ExclusiveMouseCursor();
 
   static final instance = ExclusiveMouseCursor();
 
   late final _binding = AugmentedWidgetsFlutterBinding.instance;
-
-  bool get isSessionActive => _session != null;
-  var _isSessionInitialized = false;
-  MouseCursorSession? _session;
-  MouseCursor? _sessionCursor;
-
-  bool _mouseCursorChannelInterceptor(ByteData? message) => _isSessionInitialized;
-  bool _mouseCursorSessionInterceptor(MouseCursor cursor) => isSessionActive;
-
-  PointerEvent? _lastPointerEvent;
-  void _onPointerRouterEvent(PointerEvent event) {
-    _lastPointerEvent = event;
-  }
-
-  void _restoreMouseCursor() {
-    final e = _lastPointerEvent;
-    if (e == null) return;
-
-    // Send removed/added event to trigger forced update in framework.
-    _binding.handlePointerEvent(
-      PointerRemovedEvent(
-        device: e.device,
-        pointer: e.pointer,
-        kind: e.kind,
-        timeStamp: e.timeStamp,
-        position: e.position,
-        embedderId: e.embedderId,
-        viewId: e.viewId,
-      ),
-    );
-
-    _binding.handlePointerEvent(
-      PointerAddedEvent(
-        device: e.device,
-        pointer: e.pointer,
-        kind: e.kind,
-        timeStamp: e.timeStamp,
-        position: e.position,
-        embedderId: e.embedderId,
-        viewId: e.viewId,
-      ),
-    );
-  }
+  ExclusiveMouseCursorManager get manager => _binding.mouseCursorManager;
 
   Future<void> set(MouseCursor cursor, [int? device]) async {
-    if (_sessionCursor == cursor) return;
-    if (isSessionActive) release(update: true);
-
-    final _device = device ?? _lastPointerEvent?.device;
-    if (_device == null) return;
-
-    // ignore: invalid_use_of_protected_member
-    _session = cursor.createSession(_device);
-    _sessionCursor = cursor;
-
-    // ignore: invalid_use_of_protected_member
-    await _session!.activate();
-    _isSessionInitialized = true;
+    final current = manager.deviceExclusiveCursor(device);
+    if (current == cursor) return;
+    if (current != null) release(update: true);
+    manager.set(cursor, device: device);
   }
 
   void release({bool update = false}) {
-    if (!isSessionActive) return;
-
-    // ignore: invalid_use_of_protected_member
-    _session?.dispose();
-    _session = null;
-    _sessionCursor = null;
-    _isSessionInitialized = false;
-
-    if (!update) _restoreMouseCursor();
+    manager.release(update: update);
   }
 }
 
-mixin _StackMouseCursorMixin on MouseCursor {
-  @override
-  MouseCursorSession createSession(int device) {
-    if (ExclusiveMouseCursor.instance._mouseCursorSessionInterceptor(this)) return _NoOpCursorSession(this, device);
-    return super.createSession(device);
-  }
-}
-
-class VectorGraphicsMouseCursor extends FfiMouseCursor with _StackMouseCursorMixin {
+class VectorGraphicsMouseCursor extends FfiMouseCursor {
   VectorGraphicsMouseCursor({
     required this.loader,
     this.transform,
@@ -159,7 +84,7 @@ class VectorGraphicsMouseCursor extends FfiMouseCursor with _StackMouseCursorMix
   String get debugDescription => 'VectorGraphicsMouseCursor';
 }
 
-class ImageMouseCursor extends FfiMouseCursor with _StackMouseCursorMixin {
+class ImageMouseCursor extends FfiMouseCursor {
   ImageMouseCursor.single(ui.Image image)
     : _representations = [image],
       _size = Size(image.width.toDouble(), image.height.toDouble());
@@ -181,14 +106,4 @@ class ImageMouseCursor extends FfiMouseCursor with _StackMouseCursorMixin {
 
   @override
   String get debugDescription => 'ImageMouseCursor';
-}
-
-class _NoOpCursorSession extends MouseCursorSession {
-  _NoOpCursorSession(super.cursor, super.device);
-
-  @override
-  Future<void> activate() async {}
-
-  @override
-  void dispose() {}
 }

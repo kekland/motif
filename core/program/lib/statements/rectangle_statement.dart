@@ -10,13 +10,13 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
     super.faceStyle,
     super.parent,
     super.id,
-    super.modifiers,
+    super.enabled,
   });
 
   @override
   RectangleStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     LayoutSize? size,
     Mat4? transform,
     RectangleObjectShape? shape,
@@ -26,7 +26,7 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
     FrameRef? parent,
   }) => .new(
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     size: size ?? this.size,
     transform: transform ?? this.transform,
     shape: shape ?? this.shape,

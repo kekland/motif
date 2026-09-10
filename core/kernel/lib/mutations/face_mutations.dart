@@ -1,35 +1,35 @@
 part of '../kernel.dart';
 
 final class FaceAdd(
-  final CellId id,
+  final FaceRef ref,
   final List<CycleRef> boundary,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   FaceHandle reapply(Transaction txn) => txn.bundle._faceAdd(
-    id,
+    ref,
     boundary: boundary.map(txn.cycleFor).toList(),
     parent: placement.resolveParent(txn),
   );
 
   @override
   void unapply(Transaction txn) => txn.bundle._faceFree(
-    txn.faceFor(id),
+    txn.faceFor(ref),
   );
 }
 
 final class FaceDelete(
-  final CellId id,
+  final FaceRef ref,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   void reapply(Transaction txn) => txn.bundle._faceRemove(
-    txn.faceFor(id),
+    txn.faceFor(ref),
   );
 
   @override
   void unapply(Transaction txn) => txn.bundle._faceRelink(
-    txn.faceFor(id),
+    txn.faceFor(ref),
     parent: placement.resolveParent(txn),
   );
 }
@@ -37,7 +37,7 @@ final class FaceDelete(
 final class FaceSpliceBoundary extends Mutation {
   FaceSpliceBoundary(this.face, this.remove, this.insert);
 
-  final CellId face;
+  final FaceRef face;
   final List<CoedgeRef> remove;
   final List<CoedgeRef> insert;
 
@@ -57,21 +57,21 @@ final class FaceSpliceBoundary extends Mutation {
 }
 
 final class FaceSetBoundary extends Mutation {
-  FaceSetBoundary(this.id, this.fromBoundary, this.toBoundary);
+  FaceSetBoundary(this.ref, this.fromBoundary, this.toBoundary);
 
-  final CellId id;
+  final FaceRef ref;
   final List<CycleRef> fromBoundary;
   final List<CycleRef> toBoundary;
 
   @override
   void reapply(Transaction txn) => txn.bundle._faceSetBoundary(
-    txn.faceFor(id),
+    txn.faceFor(ref),
     toBoundary.map(txn.cycleFor).toList(),
   );
 
   @override
   void unapply(Transaction txn) => txn.bundle._faceSetBoundary(
-    txn.faceFor(id),
+    txn.faceFor(ref),
     fromBoundary.map(txn.cycleFor).toList(),
   );
 }
@@ -83,24 +83,28 @@ extension FaceMutationTransaction on Transaction {
   }) {
     _checkOpen();
 
-    final handle = _addCell((id) {
-      if (boundary.isEmpty || boundary.any((c) => c.isEmpty)) {
-        throw ArgumentError.value(boundary, 'boundary', 'must be non-empty and contain no empty cycles');
-      }
-
-      for (final cycle in boundary) {
-        for (var i = 0; i < cycle.length; i++) {
-          final u = cycle[i];
-          assert(bundle._checkEdge(u.edge));
-          final n = cycle[(i + 1) % cycle.length];
-          final endV = bundle.coedgeEnd(u);
-          final startV = bundle.coedgeStart(n);
-          if (endV != startV) throw ArgumentError('cycle $cycle is not closed');
+    final handle = _addCell<FaceHandle>(
+      .face,
+      (ref) {
+        if (boundary.isEmpty || boundary.any((c) => c.isEmpty)) {
+          throw ArgumentError.value(boundary, 'boundary', 'must be non-empty and contain no empty cycles');
         }
-      }
 
-      return FaceAdd(id, boundary.map((c) => c.asRef(bundle)).toList(), .from(bundle, parent));
-    }, (id) => bundle.face(id)!);
+        for (final cycle in boundary) {
+          for (var i = 0; i < cycle.length; i++) {
+            final u = cycle[i];
+            assert(bundle._checkEdge(u.edge));
+            final n = cycle[(i + 1) % cycle.length];
+            final endV = bundle.coedgeEnd(u);
+            final startV = bundle.coedgeStart(n);
+            if (endV != startV) throw ArgumentError('cycle $cycle is not closed');
+          }
+        }
+
+        return FaceAdd(ref, boundary.map((c) => c.asRef(bundle)).toList(), .from(bundle, parent));
+      },
+      (ref) => bundle.face(ref)!,
+    );
 
     return handle;
   }
@@ -112,7 +116,7 @@ extension FaceMutationTransaction on Transaction {
     _deleteCell(
       handle,
       FaceDelete(
-        handle.id(bundle),
+        handle.ref(bundle),
         .of(bundle, handle),
       ),
     );
@@ -124,7 +128,7 @@ extension FaceMutationTransaction on Transaction {
 
     final mutation = _recordMutation(
       FaceSetBoundary(
-        bundle.faceId(f),
+        bundle.faceRef(f),
         bundle.faceBoundary(f).map((c) => c.asRef(bundle)).toList(),
         boundary.map((c) => c.asRef(bundle)).toList(),
       ),
@@ -140,9 +144,9 @@ extension FaceMutationTransaction on Transaction {
 
     final mutation = _recordMutation(
       FaceSpliceBoundary(
-        bundle.faceId(f),
-        remove.map((c) => c.asRef(bundle)).toList(),
-        insert.map((c) => c.asRef(bundle)).toList(),
+        bundle.faceRef(f),
+        remove.map((c) => c.ref(bundle)).toList(),
+        insert.map((c) => c.ref(bundle)).toList(),
       ),
     );
 

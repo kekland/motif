@@ -8,7 +8,7 @@ final class EdgeStatement extends Statement with PlacedStatement {
     this.endTangent,
     this.style = .default_,
     super.id,
-    super.modifiers,
+    super.enabled,
     FrameRef? parent,
   }) : start = start.clone(),
        end = end.clone(),
@@ -43,7 +43,7 @@ final class EdgeStatement extends Statement with PlacedStatement {
   @override
   EdgeStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     VertexSelector? start,
     VertexSelector? end,
     Vec2? startTangent,
@@ -57,12 +57,46 @@ final class EdgeStatement extends Statement with PlacedStatement {
     endTangent: endTangent ?? this.endTangent,
     style: style ?? this.style,
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     parent: parent ?? this.parent?.ref,
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .forward(
-    [context.resolve(start), context.resolve(end)],
-  );
+  TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
+    CellRef(kind: .edge) => .forward([
+      context.resolve(start),
+      context.resolve(end),
+      CovertexRef.start(ref),
+      CovertexRef.end(ref),
+    ]),
+    CovertexRef c when c.edge == ref => .absorb,
+    _ => .refuse,
+  };
+
+  @override
+  TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
+    final bundle = context.bundle;
+    final e = bundle.edge(ref)!;
+    final space = bundle.parentOf(e);
+    final cubic = bundle.edgeCubic(e, space: space);
+    final moveStart = absorbed.contains(CovertexRef.start(ref));
+    final moveEnd = absorbed.contains(CovertexRef.end(ref));
+    final startVertexMoves = all.contains(context.resolve(start));
+    final endVertexMoves = all.contains(context.resolve(end));
+
+    final (ps, ts) = (cubic.p0, cubic.p1 - cubic.p0);
+    final (pe, te) = (cubic.p3, cubic.p2 - cubic.p3);
+
+    Vec2 moved(Mat4 m, Vec2 p, Vec2 t, bool vertexMoves) {
+      return m.transform2(p + t) - (vertexMoves ? m.transform2(p) : p);
+    }
+
+    return .new(
+      (m) => copyWith(
+        startTangent: moveStart ? moved(m, ps, ts, startVertexMoves) : null,
+        endTangent: moveEnd ? moved(m, pe, te, endVertexMoves) : null,
+      ),
+      cell: ref,
+    );
+  }
 }

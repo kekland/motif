@@ -10,7 +10,8 @@ class EditorActions extends StatelessWidget {
     return Actions(
       dispatcher: LoggingActionDispatcher(logger: Logger('editor.actions')),
       actions: {
-        SelectCellIntent: SelectCellAction(),
+        SelectRefIntent: SelectRefAction(),
+        SelectAllIntent: SelectAllAction(),
         ClearSelectionIntent: ClearSelectionAction(),
         UndoIntent: UndoAction(),
         RedoIntent: RedoAction(),
@@ -40,6 +41,7 @@ class EditorShortcuts extends StatelessWidget {
 
     return Shortcuts(
       shortcuts: {
+        SingleActivator(.keyA, meta: meta, control: ctrl): intents.selectAll(),
         SingleActivator(.escape): intents.clearSelection(),
         SingleActivator(.delete): intents.deleteSelection(),
         SingleActivator(.backspace): intents.deleteSelection(),

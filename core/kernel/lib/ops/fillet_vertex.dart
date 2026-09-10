@@ -20,7 +20,7 @@ final class FilletVertexOp extends Op<FilletVertexResult> {
   FilletVertexResult? _execute(Transaction t, bool produceResult) {
     final bundle = t.bundle;
 
-    final v = t.vertexFor(target.id);
+    final v = t.vertexFor(target);
     final space = bundle.parentOf(v)!;
 
     final sa = cutSide(t, v, a.$1, a.$2);
@@ -59,7 +59,7 @@ final class FilletVertexOp extends Op<FilletVertexResult> {
     double setback,
   ) {
     final bundle = t.bundle;
-    final eHandle = t.edgeFor(e.id);
+    final eHandle = t.edgeFor(e);
     final vAtStart = bundle.edgeStart(eHandle) == v;
     assert(vAtStart || bundle.edgeEnd(eHandle) == v);
 

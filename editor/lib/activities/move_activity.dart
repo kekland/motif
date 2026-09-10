@@ -1,7 +1,7 @@
 import 'package:editor/imports.dart';
 
 final class MoveActivity extends TransformActivity {
-  MoveActivity(super.editor, super.cells, {super.onStart, super.onEnd});
+  MoveActivity(super.editor, super.cells, {super.onStart, super.onUpdate, super.onEnd});
 
   @override
   @override

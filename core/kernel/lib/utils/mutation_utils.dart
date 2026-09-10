@@ -7,13 +7,14 @@ extension MutationUtils on Transaction {
   }
 
   H _addCell<H extends CellHandle>(
-    Mutation Function(CellId) builder,
-    H Function(CellId) getHandle,
+    CellKind kind,
+    Mutation Function(CellRef<H>) builder,
+    H Function(CellRef<H>) getHandle,
   ) {
     final H handle;
 
     if (mode == .topology) {
-      final mutation = builder(_id());
+      final mutation = builder(_ref<H>(kind));
       handle = mutation.reapply(this) as H;
       _record!._created.add(handle);
       _recordMutation(mutation);

@@ -13,7 +13,7 @@ class SelectionPanel extends HookWidget {
     final selection = editor.selection;
     useListenable(selection);
 
-    var selectedCells = selection.refs.toSet();
+    var selectedCells = selection.refs.cells.toSet();
     final selectedStatements = selection.statements;
 
     if (selection.isEmpty) {

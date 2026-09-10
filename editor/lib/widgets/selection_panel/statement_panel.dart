@@ -40,6 +40,11 @@ class const StatementPanel({
           scene: editor.scene,
           props: props,
         ),
+        Divider(),
+        ModifierStackWidget(
+          id: statements.first,
+        ),
+        Divider(),
       ],
     );
   }

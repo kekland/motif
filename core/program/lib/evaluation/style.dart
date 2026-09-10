@@ -1,36 +1,49 @@
 part of '../program.dart';
 
-extension EvaluationStyle on Evaluation {
-  CellStyle<H> styleOf<H extends CellHandle>(CellRef<H> ref) => _styles[ref]! as CellStyle<H>;
+final class StyleIndex {
+  StyleIndex(this.evaluation);
+  final Evaluation evaluation;
 
-  void _resolveStyles(EvaluationPass pass, Commit c) {
+  final _map = <CellRef, CellStyle>{};
+
+  CellStyle<H>? of<H extends CellHandle>(CellRef<H> ref) => _map[ref] as CellStyle<H>?;
+
+  void set(CellRef r, CellStyle style) {
+    _map[r] = style;
+  }
+
+  void _remove(CellRef r) => _map.remove(r);
+
+  void resolve(EvaluationPass pass, Commit c) {
     for (final r in c.added) {
       if (r.kind == .frame) continue;
-      final base = c.styles[r] ?? _inheritedStyle(r) ?? .defaultOf(r.kind);
-      final style = program.styles.of(r)?.apply(base) ?? base;
-      if (_styles[r] == style) continue;
-      _styles[r] = style;
+      final base = c.styles[r] ?? inherited(r) ?? .defaultOf(r.kind);
+      final resolved = evaluation.program.styles.of(r)?.apply(base) ?? base;
+      if (_map[r] == resolved) continue;
+      _map[r] = resolved;
       pass.restyled.add(r);
     }
   }
 
-  CellStyle? _inheritedStyle(CellRef ref) {
-    final source = lineage.producerOf(ref)?.source;
+  CellStyle? inherited(CellRef ref) {
+    final source = evaluation.lineage.producerOf(ref)?.source;
     if (source == null) return null;
 
-    final style = _styles[source];
-    if (style == null) return null;
-    if (style.kind != ref.kind) return null;
+    final inherited = of(source);
+    if (inherited == null) return null;
+    if (inherited.kind != ref.kind) return null;
 
-    return style;
+    return inherited;
   }
+}
 
+extension EvaluationStyle on Evaluation {
   void restyle(EvaluationPass pass, CellRef r) {
-    final c = commits[r.statementId];
+    final c = _commits[r.statementId];
     if (c == null || !c.added.contains(r)) return;
-    final base = c.styles[r] ?? _inheritedStyle(r) ?? .defaultOf(r.kind);
-    final style = program.styles.of(r)?.apply(base) ?? base;
-    _styles[r] = style;
+    final base = c.styles[r] ?? style.inherited(r) ?? .defaultOf(r.kind);
+    final resolved = program.styles.of(r)?.apply(base) ?? base;
+    style.set(r, resolved);
     pass.restyled.add(r);
   }
 }

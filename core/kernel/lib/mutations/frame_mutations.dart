@@ -1,14 +1,14 @@
 part of '../kernel.dart';
 
 final class FrameAdd(
-  final CellId id,
+  final FrameRef ref,
   final Mat4 transform,
   final Size2? size,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   FrameHandle reapply(Transaction txn) => txn.bundle._frameAdd(
-    id,
+    ref,
     transform: transform,
     size: size,
     parent: placement.resolveParent(txn),
@@ -16,22 +16,22 @@ final class FrameAdd(
 
   @override
   void unapply(Transaction txn) => txn.bundle._frameFree(
-    txn.frameFor(id),
+    txn.frameFor(ref),
   );
 }
 
 final class FrameDelete(
-  final CellId id,
+  final FrameRef ref,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   void reapply(Transaction txn) => txn.bundle._frameRemove(
-    txn.frameFor(id),
+    txn.frameFor(ref),
   );
 
   @override
   void unapply(Transaction txn) => txn.bundle._frameRelink(
-    txn.frameFor(id),
+    txn.frameFor(ref),
     parent: placement.resolveParent(txn),
   );
 }
@@ -61,9 +61,10 @@ extension FrameMutationTransaction on Transaction {
     FrameHandle? parent,
   }) {
     _checkOpen();
-    final handle = _addCell(
-      (id) => FrameAdd(id, transform ?? Mat4.identity(), size, .from(bundle, parent)),
-      (id) => bundle.frame(id)!,
+    final handle = _addCell<FrameHandle>(
+      .frame,
+      (ref) => FrameAdd(ref, transform ?? Mat4.identity(), size, .from(bundle, parent)),
+      (ref) => bundle.frame(ref)!,
     );
 
     _setFrameTransform(handle, transform ?? Mat4.identity());
@@ -92,7 +93,7 @@ extension FrameMutationTransaction on Transaction {
       }
     }
 
-    _deleteCell(handle, FrameDelete(bundle.frameId(handle), .of(bundle, handle)));
+    _deleteCell(handle, FrameDelete(bundle.frameRef(handle), .of(bundle, handle)));
   }
 
   void _setFrameTransform(FrameHandle f, Mat4 transform) {

@@ -22,6 +22,7 @@ class EditorCanvas extends HookWidget {
             child: SceneWidget(
               key: editor.sceneKey,
               scene: editor.scene,
+              debug: false,
             ),
           ),
         ),

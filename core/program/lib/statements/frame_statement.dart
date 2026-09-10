@@ -5,7 +5,7 @@ final class FrameStatement extends Statement with PlacedStatement {
     Mat4? transform,
     this.size,
     super.id,
-    super.modifiers,
+    super.enabled,
     FrameRef? parent,
   }) : transform = transform ?? .identity(),
        parent = .of(parent);
@@ -33,34 +33,45 @@ final class FrameStatement extends Statement with PlacedStatement {
   @override
   FrameStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     Mat4? transform,
     Size2? size,
     FrameRef? parent,
   }) => FrameStatement(
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     transform: transform ?? this.transform,
     size: size ?? this.size,
     parent: parent ?? this.parent?.ref,
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) {
+  TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
+
+  static (Mat4, Size2) transformBox(Mat4 own, Mat4 transform, Size2 box) {
+    final placement = own * transform.unmirrored(box);
+
+    return (
+      placement.withNormalizedScale(),
+      box.scale(placement.scaleX, placement.scaleY),
+    );
+  }
+
+  @override
+  TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
     final bundle = context.bundle;
     final bounds = bundle.query.frameBounds(bundle.handle(ref)!);
 
-    return .absorb(
+    return .new(
       (m) {
-        final composed = m * transform;
-        final size = bounds?.size.scale(composed.scaleX, composed.scaleY);
+        final (transform, size) = transformBox(this.transform, m, bounds?.size ?? .zero());
 
         return copyWith(
-          transform: composed.withNormalizedScale(),
-          size: size,
+          transform: transform,
+          size: this.size != null ? size : null,
         );
       },
-      ref,
+      cell: ref,
     );
   }
 }

@@ -18,7 +18,7 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
   var siblingNext = CellIndexStorage<FaceIndex>();
   var crossStart = CoframeIndexStorage<FaceIndex>();
 
-  final id = IdTable<FaceIndex>('face');
+  final id = IdTable<FaceRef, FaceIndex>('face');
 
   @override
   void grow(int atLeast) {
@@ -43,8 +43,8 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
     id.copyFrom(other.id);
   }
 
-  FaceHandle? handleForId(CellId id) {
-    final i = this.id.indexOf(id);
+  FaceHandle? handleForRef(FaceRef ref) {
+    final i = id.indexOf(ref);
     if (i == null) return null;
     return handleFor(i);
   }

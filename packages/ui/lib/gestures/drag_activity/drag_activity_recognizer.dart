@@ -132,6 +132,17 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
   }
 
   @override
+  void dispose() {
+    final activity = _currentActivity;
+    _currentActivity = null;
+    _trackedPointers.clear();
+    _lastPointerEvent = null;
+    super.dispose();
+
+    if (activity != null) scheduleMicrotask(activity.onCancel);
+  }
+
+  @override
   void rejectGesture(int pointer) {
     _trackedPointers.remove(pointer);
     super.rejectGesture(pointer);

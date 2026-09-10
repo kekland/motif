@@ -6,4 +6,5 @@ export 'size/size.dart';
 export 'vector/vector.dart';
 export 'vector/vector_test.dart';
 export 'vm/vm_utils.dart';
+export 'utils/rotation.dart';
 export 'utils/constants.dart';

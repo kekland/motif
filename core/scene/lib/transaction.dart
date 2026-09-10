@@ -68,6 +68,18 @@ final class SceneTransaction {
     return updated;
   }
 
+  void toggle(StatementId target, {bool? enabled}) {
+    update<Statement>(target, (s) => s.copyWith(enabled: enabled ?? !s.enabled));
+  }
+
+  void attach(StatementId host, Statement modifier) {
+    _checkOpen();
+    flush();
+    var last = evaluation.rootOf(host);
+    for (final s in evaluation.stackOf(last)) last = s.id;
+    insert(modifier, anchor: .after(last));
+  }
+
   void decorate(CellRef ref, CellStylePartial decoration) {
     _checkOpen();
     final before = program.styles.of(ref);
@@ -104,11 +116,6 @@ final class SceneTransaction {
   //   _checkOpen();
   //   final anchor = program.resolveEmbeddingAnchor(slice);
   //   insertAll(slice.statements, anchor: anchor);
-  // }
-
-  // void attach(StatementId id, Statement modifier) {
-  //   _checkOpen();
-  //   update<Statement>(id, (s) => s.copyWith(modifiers: [...s.modifiers, modifier]));
   // }
 
   // -------------------------------------------------------------------------------------------------------------------

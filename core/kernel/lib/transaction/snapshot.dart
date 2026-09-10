@@ -11,7 +11,7 @@ sealed class CellGeometry<H extends CellHandle> {
   static FrameGeometry frame(Bundle b, FrameHandle h) => .new(
     b.frameTransform(h),
     b.frameSize(h),
-    b.frameClip(h)?.id(b),
+    b.frameClip(h)?.ref(b),
   );
 
   static VertexGeometry vertex(Bundle b, VertexHandle h) => .new(
@@ -31,7 +31,7 @@ sealed class CellGeometry<H extends CellHandle> {
 final class FrameGeometry(
   final Mat4 transform,
   final Size2? size,
-  final CellId? clip,
+  final FaceRef? clip,
 ) extends CellGeometry<FrameHandle> {
   @override
   void set(Bundle b, FrameHandle handle) {

@@ -19,42 +19,42 @@ class WindowMoveActivity extends DragActivity {
   }
 }
 
-class WindowEdgeResizeActivity extends DragActivity {
-  WindowEdgeResizeActivity({
-    required this.initialRect,
-    required this.onChanged,
-    required this.side,
-  });
+// class WindowEdgeResizeActivity extends DragActivity {
+//   WindowEdgeResizeActivity({
+//     required this.initialRect,
+//     required this.onChanged,
+//     required this.side,
+//   });
 
-  final Side side;
-  final Rect initialRect;
-  final ValueChanged<Rect> onChanged;
+//   final Side side;
+//   final Rect initialRect;
+//   final ValueChanged<Rect> onChanged;
 
-  @override
-  void onUpdate(DragUpdateDetails details) {
-    final delta = details.globalPosition - startDetails.globalPosition;
-    final newAabb = side.applyResize(initialRect.aabb2, delta.vec2);
-    onChanged(newAabb.rect);
-    super.onUpdate(details);
-  }
-}
+//   @override
+//   void onUpdate(DragUpdateDetails details) {
+//     final delta = details.globalPosition - startDetails.globalPosition;
+//     final newAabb = side.applyResize(initialRect.aabb2, delta.vec2);
+//     onChanged(newAabb.rect);
+//     super.onUpdate(details);
+//   }
+// }
 
-class WindowCornerResizeActivity extends DragActivity {
-  WindowCornerResizeActivity({
-    required this.initialRect,
-    required this.onChanged,
-    required this.corner,
-  });
+// class WindowCornerResizeActivity extends DragActivity {
+//   WindowCornerResizeActivity({
+//     required this.initialRect,
+//     required this.onChanged,
+//     required this.corner,
+//   });
 
-  final Corner corner;
-  final Rect initialRect;
-  final ValueChanged<Rect> onChanged;
+//   final Corner corner;
+//   final Rect initialRect;
+//   final ValueChanged<Rect> onChanged;
 
-  @override
-  void onUpdate(DragUpdateDetails details) {
-    final delta = details.globalPosition - startDetails.globalPosition;
-    final newAabb = corner.applyResize(initialRect.aabb2, delta.vec2);
-    onChanged(newAabb.rect);
-    super.onUpdate(details);
-  }
-}
+//   @override
+//   void onUpdate(DragUpdateDetails details) {
+//     final delta = details.globalPosition - startDetails.globalPosition;
+//     final (:anchor, :scale) = corner.applyResize(initialRect.aabb2, delta.vec2);
+
+//     super.onUpdate(details);
+//   }
+// }

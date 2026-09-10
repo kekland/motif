@@ -18,7 +18,7 @@ class SelectionControls extends StatelessWidget {
 
   final Mat4? transform;
   final Size layoutSize;
-  final DragActivity Function()? onMove;
+  final DragActivityFactory? onMove;
   final DragActivity Function(Side)? onSideResize;
   final DragActivity Function(Corner)? onCornerResize;
   final DragActivity Function(Corner)? onRotate;
@@ -137,16 +137,13 @@ class SelectionControls extends StatelessWidget {
         right: padding,
         top: padding,
         bottom: padding,
-        child: SelectionMoveHandle(
-          onMove: onMove != null ? (_) => onMove!() : null,
-        ),
+        child: SelectionMoveHandle(onMove: onMove),
       );
     }
 
     final transformedChildren = Stack(
       clipBehavior: Clip.none,
       children: [
-        if (onMove != null) _buildMoveHandle(),
         Positioned(
           left: padding,
           right: padding,
@@ -156,24 +153,7 @@ class SelectionControls extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: context.colors.accent.primary,
-                  width: 1.0,
-                  strokeAlign: BorderSide.strokeAlignCenter,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          left: padding,
-          right: padding,
-          top: padding,
-          bottom: padding,
-          child: IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: context.colors.accent.primary,
+                  color: context.colors.selection.primary,
                   width: 1.0,
                   strokeAlign: BorderSide.strokeAlignCenter,
                 ),

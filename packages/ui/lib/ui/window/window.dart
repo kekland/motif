@@ -20,13 +20,14 @@ class WindowEntry<T> extends window.WindowEntry<T> {
     bool isModal = false,
   }) {
     final anchor = window.WindowEntry.createAnchorForContext(context, padding: padding);
-    final genieRect = anchor.rect.center & Size.zero;
+    // final genieRect = anchor.rect.center & Size.zero;
 
     return WindowEntry._(
       builder: builder,
       anchor: anchor,
-      animationStyle: context.animations.window,
-      transitionBuilder: windowTransitionBuilder(genieRect),
+      isModal: isModal,
+      // animationStyle: context.animations.window,
+      // transitionBuilder: windowTransitionBuilder(genieRect),
     );
   }
 }

@@ -28,7 +28,14 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
   var composedAt = Int32Storage<FrameIndex>();
   var dependentStart = CoframeIndexStorage<FrameIndex>();
 
-  final id = IdTable<FrameIndex>('frame');
+  final id = IdTable<FrameRef, FrameIndex>('frame');
+
+  @override
+  Iterable<FrameHandle> get liveHandles sync* {
+    for (var idx in liveIndices) {
+      if (idx != .root) yield handleFor(idx);
+    }
+  }
 
   @override
   void grow(int atLeast) {
@@ -67,8 +74,8 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     id.copyFrom(other.id);
   }
 
-  FrameHandle? handleForId(CellId id) {
-    final i = this.id.indexOf(id);
+  FrameHandle? handleForRef(FrameRef ref) {
+    final i = id.indexOf(ref);
     if (i == null) return null;
     return handleFor(i);
   }
@@ -91,6 +98,6 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     transform[i] = .identity();
     worldTransform[i] = .identity();
     inverseWorldTransform[i] = .identity();
-    id.assign(i, ._(0));
+    id.assign(i, .frame(namespace: 0, tag: 0));
   }
 }

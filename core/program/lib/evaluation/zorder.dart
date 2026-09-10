@@ -1,24 +1,38 @@
 part of '../program.dart';
 
-extension EvaluationZOrder on Evaluation {
-  List<CellRef> drawOrderOf(FrameHandle frame) {
-    return _drawOrder.putIfAbsent(
-      frame.ref(bundle),
-      () => _resolveDrawOrder(frame),
-    );
-  }
+final class DrawOrderIndex {
+  DrawOrderIndex(this.evaluation);
 
-  int drawIndexOf(CellRef r) {
-    _drawIndex ??= _buildDrawIndex();
+  final Evaluation evaluation;
+  late final Bundle bundle = evaluation.bundle;
+
+  final _drawOrder = <FrameRef, List<(CellRef, CellHandle)>>{};
+  Map<CellRef, int>? _drawIndex;
+
+  List<(CellRef, CellHandle)> of(FrameHandle frame) => _drawOrder.putIfAbsent(
+    frame.ref(bundle),
+    () => _resolve(frame),
+  );
+
+  int indexOf(CellRef r) {
+    _drawIndex ??= _buildIndex();
     return _drawIndex![r]!;
   }
 
-  List<CellRef> _resolveDrawOrder(FrameHandle frame) {
+  void invalidate(CellRef r) {
+    final h = bundle.handle(r);
+    if (h == null) return;
+    final parent = bundle.parentOf(h)?.ref(bundle);
+    _drawOrder.remove(parent);
+    _drawIndex = null;
+  }
+
+  List<(CellRef, CellHandle)> _resolve(FrameHandle frame) {
     final sorted = <CellRef>[];
     for (final c in bundle.frameChildren(frame)) sorted.add(c.ref(bundle));
 
     sorted.sort((a, b) {
-      final s = _index[a.statementId]!.compareTo(_index[b.statementId]!);
+      final s = evaluation._index[a.statementId]!.compareTo(evaluation._index[b.statementId]!);
       if (s != 0) return s;
       return a.kind.index.compareTo(b.kind.index);
     });
@@ -35,7 +49,7 @@ extension EvaluationZOrder on Evaluation {
     void place(CellRef r) {
       if (!placed.add(r)) return;
       final e = entries[r]!;
-      final anchor = program.zOrders.of(r);
+      final anchor = evaluation.program.zOrders.of(r);
 
       switch (anchor) {
         case null:
@@ -56,34 +70,30 @@ extension EvaluationZOrder on Evaluation {
     }
 
     for (final r in sorted) place(r);
-    return list.map((e) => e.ref).toList(growable: false);
+
+    final out = list.map((e) => (e.ref, bundle.handle(e.ref)!)).toList(growable: false);
+    return out;
   }
 
-  void _invalidateDrawOrder(CellRef r) {
-    final h = bundle.handle(r);
-    if (h == null) return;
-    final parent = bundle.parentOf(h)?.ref(bundle);
-    _drawOrder.remove(parent);
-    _drawIndex = null;
-  }
-
-  void reorder(EvaluationPass pass, CellRef r) {
-    _invalidateDrawOrder(r);
-    pass.reordered.add(r);
-  }
-
-  Map<CellRef, int> _buildDrawIndex() {
+  Map<CellRef, int> _buildIndex() {
     final out = <CellRef, int>{};
     var i = 0;
 
     void walk(FrameHandle f) {
-      for (final r in drawOrderOf(f)) {
-        out[r] = i++;
-        if (r.kind == .frame) walk(bundle.handle(r)!.asFrame);
+      for (final (ref, handle) in of(f)) {
+        out[ref] = i++;
+        if (ref.kind == .frame) walk(handle.asFrame);
       }
     }
 
     walk(.root);
     return out;
+  }
+}
+
+extension EvaluationZOrder on Evaluation {
+  void reorder(EvaluationPass pass, CellRef r) {
+    drawOrder.invalidate(r);
+    pass.reordered.add(r);
   }
 }

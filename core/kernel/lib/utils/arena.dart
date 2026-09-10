@@ -97,35 +97,35 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
   I _wrapIndex(int i);
 }
 
-final class IdTable<I extends ElementIndex> {
+final class IdTable<R extends CellRef, I extends ElementIndex> {
   IdTable(this.kind);
 
   final String kind;
 
-  final _slots = <CellId?>[];
-  final _indexById = <CellId, I>{};
+  final _slots = <R?>[];
+  final _indexOf = <R, I>{};
 
-  void assign(I index, CellId id) {
-    assert(!_indexById.containsKey(id), 'duplicate $kind id: $id');
+  void assign(I index, R ref) {
+    assert(!_indexOf.containsKey(ref), 'duplicate $kind ref: $ref');
     while (_slots.length <= index.i) _slots.add(null);
-    _slots[index.i] = id;
-    _indexById[id] = index;
+    _slots[index.i] = ref;
+    _indexOf[ref] = index;
   }
 
   void free(I index) {
     final id = _slots[index.i];
-    if (id != null) _indexById.remove(id);
+    if (id != null) _indexOf.remove(id);
     _slots[index.i] = null;
   }
 
-  CellId of(I index) => _slots[index.i]!;
-  CellId? maybeOf(I index) => index.i < _slots.length ? _slots[index.i] : null;
-  I? indexOf(CellId id) => _indexById[id];
+  R of(I index) => _slots[index.i]!;
+  R? maybeOf(I index) => index.i < _slots.length ? _slots[index.i] : null;
+  I? indexOf(R ref) => _indexOf[ref];
 
-  void copyFrom(IdTable<I> other) {
+  void copyFrom(IdTable<R, I> other) {
     _slots.clear();
     _slots.addAll(other._slots);
-    _indexById.clear();
-    _indexById.addAll(other._indexById);
+    _indexOf.clear();
+    _indexOf.addAll(other._indexOf);
   }
 }

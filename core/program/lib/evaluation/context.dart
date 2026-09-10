@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-final class EvalContext {
+class EvalContext {
   EvalContext(
     this._evaluation,
     this.id, {
@@ -10,8 +10,12 @@ final class EvalContext {
   final Evaluation _evaluation;
   final StatementId id;
   final Map<Selector, Object?> _resolutions;
+  final _styles = <CellRef, CellStyle>{};
 
   Bundle get bundle => _evaluation.bundle;
+
+  StatementId derive(int key, {Object? origin}) => _evaluation.generated.derive(id, key, origin: origin);
+  bool derived(StatementId generated) => _evaluation.generatorOf(generated) == id;
 
   T resolve<T>(Selector<T> s) => _resolutions.putIfAbsent(s, () => s._resolve(this)) as T;
   T? maybeResolve<T>(Selector<T>? s) => s == null ? null : resolve(s);
@@ -21,12 +25,9 @@ final class EvalContext {
   }
 
   Iterable<CellRef> descendants(CellRef ref) => _evaluation.lineage.descendantsOf(ref, bundle);
-  // CellRef ancestor(CellRef ref) => _evaluation.lineage.ances(ref);
   Iterable<CellRef> productsOf(StatementId id) => _evaluation.productsOf(id);
 
-  final _styles = <CellRef, CellStyle>{};
   void style(CellRef ref, CellStyle style) => _styles[ref] = style;
-  CellStyle styleOf(CellRef ref) => _evaluation.styleOf(ref);
-
+  CellStyle styleOf(CellRef ref) => _evaluation.style.of(ref)!;
   Placement placementOf(StatementId id) => _evaluation.layoutOf(id)!;
 }

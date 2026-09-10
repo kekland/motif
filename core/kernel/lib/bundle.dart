@@ -108,6 +108,29 @@ final class Bundle {
   }
 
   // -------------------------------------------------------------------------------------------------------------------
+  // Covertex
+  // -------------------------------------------------------------------------------------------------------------------
+
+  VertexHandle covertexVertex(Covertex cv) {
+    assert(_checkEdge(cv.edge));
+    return cv.isStart ? edgeStart(cv.edge) : edgeEnd(cv.edge);
+  }
+
+  Vec2 covertexTangent(Covertex cv, {FrameHandle? space}) {
+    assert(_checkEdge(cv.edge));
+    assert(space == null || _checkFrame(space));
+    final i = cv.isStart ? _edge.cvStart[cv.edge.index] : _edge.cvEnd[cv.edge.index];
+    return _covertexTangent(i, space: space?.index);
+  }
+
+  Vec2 covertexPosition(Covertex cv, {FrameHandle? space}) {
+    assert(_checkEdge(cv.edge));
+    assert(space == null || _checkFrame(space));
+    final i = cv.isStart ? _edge.cvStart[cv.edge.index] : _edge.cvEnd[cv.edge.index];
+    return _covertexPosition(i, space: space?.index);
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
   // Edge
   // -------------------------------------------------------------------------------------------------------------------
 
@@ -146,6 +169,21 @@ final class Bundle {
   Iterable<VertexHandle> edgeVertices(EdgeHandle e) sync* {
     assert(_checkEdge(e));
     for (final v in _edgeVertices(e.index)) yield _vertex.handleFor(v);
+  }
+
+  Covertex edgeStartCovertex(EdgeHandle e) {
+    assert(_checkEdge(e));
+    return _covertexFor(_edge.cvStart[e.index]);
+  }
+
+  Covertex edgeEndCovertex(EdgeHandle e) {
+    assert(_checkEdge(e));
+    return _covertexFor(_edge.cvEnd[e.index]);
+  }
+
+  Iterable<Covertex> edgeCovertices(EdgeHandle e) sync* {
+    assert(_checkEdge(e));
+    for (final cv in _edgeCovertices(e.index)) yield _covertexFor(cv);
   }
 
   Vec2 edgeStartTangent(EdgeHandle e, {FrameHandle? space}) {
@@ -207,9 +245,10 @@ final class Bundle {
   int get faceCount => _face.liveCount;
   Iterable<FaceHandle> get faces => _face.liveHandles;
 
-  Iterable<Cycle> faceBoundary(FaceHandle f) sync* {
+  List<Cycle> faceBoundary(FaceHandle f) {
     assert(_checkFace(f));
-    for (final ce in _faceBoundary(f.index)) yield _cycleFor(_cycleCoedges(ce));
+    final heads = _faceBoundary(f.index);
+    return [for (final head in heads) _cycleFor(head)];
   }
 
   double faceSignedArea(FaceHandle f, {FrameHandle? space}) {
@@ -256,50 +295,22 @@ final class Bundle {
   // Cells
   // -------------------------------------------------------------------------------------------------------------------
 
-  FrameHandle? frame(CellId id) => _frame.handleForId(id);
-  VertexHandle? vertex(CellId id) => _vertex.handleForId(id);
-  EdgeHandle? edge(CellId id) => _edge.handleForId(id);
-  FaceHandle? face(CellId id) => _face.handleForId(id);
+  FrameHandle? frame(FrameRef ref) => _frame.handleForRef(ref);
+  VertexHandle? vertex(VertexRef ref) => _vertex.handleForRef(ref);
+  EdgeHandle? edge(EdgeRef ref) => _edge.handleForRef(ref);
+  FaceHandle? face(FaceRef ref) => _face.handleForRef(ref);
 
-  FrameRef frameRef(FrameHandle h) => .frame(frameId(h));
-  CellId frameId(FrameHandle h) {
-    assert(_checkFrame(h));
-    return _frame.id.of(h.index);
-  }
-
-  VertexRef vertexRef(VertexHandle h) => .vertex(vertexId(h));
-  CellId vertexId(VertexHandle h) {
-    assert(_checkVertex(h));
-    return _vertex.id.of(h.index);
-  }
-
-  EdgeRef edgeRef(EdgeHandle h) => .edge(edgeId(h));
-  CellId edgeId(EdgeHandle h) {
-    assert(_checkEdge(h));
-    return _edge.id.of(h.index);
-  }
-
-  FaceRef faceRef(FaceHandle h) => .face(faceId(h));
-  CellId faceId(FaceHandle h) {
-    assert(_checkFace(h));
-    return _face.id.of(h.index);
-  }
+  FrameRef frameRef(FrameHandle h) => _frame.id.of(h.index);
+  VertexRef vertexRef(VertexHandle h) => _vertex.id.of(h.index);
+  EdgeRef edgeRef(EdgeHandle h) => _edge.id.of(h.index);
+  FaceRef faceRef(FaceHandle h) => _face.id.of(h.index);
 
   H? handle<H extends CellHandle>(CellRef ref) => switch (ref.kind) {
-    .frame => frame(ref.id),
-    .vertex => vertex(ref.id),
-    .edge => edge(ref.id),
-    .face => face(ref.id),
+    .frame => frame(ref.asFrame),
+    .vertex => vertex(ref.asVertex),
+    .edge => edge(ref.asEdge),
+    .face => face(ref.asFace),
   } as H?;
-
-  CellId id(CellHandle h) {
-    return switch (h.kind) {
-      .frame => frameId(h.asFrame),
-      .vertex => vertexId(h.asVertex),
-      .edge => edgeId(h.asEdge),
-      .face => faceId(h.asFace),
-    };
-  }
 
   CellRef<H> ref<H extends CellHandle>(H h) {
     return switch (h.kind) {
@@ -330,11 +341,11 @@ final class Bundle {
     final out = <CellRef>[];
 
     if (ref.kind == .edge) {
-      final e = edge(ref.id)!;
+      final e = edge(ref.asEdge)!;
       out.add(vertexRef(edgeStart(e)));
       out.add(vertexRef(edgeEnd(e)));
     } else if (ref.kind == .face) {
-      final f = face(ref.id)!;
+      final f = face(ref.asFace)!;
       for (final c in faceBoundary(f)) {
         for (final u in c) {
           out.add(edgeRef(u.edge));

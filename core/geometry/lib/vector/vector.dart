@@ -58,6 +58,8 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
     return (x - other.x).abs() < epsilon && (y - other.y).abs() < epsilon;
   }
 
+  bool isZero([double epsilon = 1e-12]) => x.abs() < epsilon && y.abs() < epsilon;
+
   Vec2 pointReflect(Vec2 p) {
     return p * 2 - this;
   }

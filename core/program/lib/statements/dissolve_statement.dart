@@ -5,7 +5,7 @@ final class DissolveStatement extends Statement {
     DissolveSelector selector, {
     this.keep = const [],
     super.id,
-    super.modifiers,
+    super.enabled,
   }) : selector = selector.clone();
 
   final DissolveSelector selector;
@@ -39,13 +39,13 @@ final class DissolveStatement extends Statement {
   @override
   DissolveStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     DissolveSelector? selector,
     List<(CellSelector, FrameSelector?)>? keep,
   }) => .new(
     selector ?? this.selector,
     keep: keep ?? this.keep,
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
   );
 }

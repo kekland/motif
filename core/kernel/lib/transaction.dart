@@ -126,8 +126,8 @@ final class Transaction {
     for (final m in record._mutations.reversed) m.unapply(this);
   }
 
-  CellId _id() {
-    return .make(namespace: _namespace!, tag: _record!.tag, sub: _sub++);
+  CellRef<H> _ref<H extends CellHandle>(CellKind kind) {
+    return .make(namespace: _namespace!, tag: _record!.tag, sub: _sub++, kind: kind);
   }
 
   M _recordMutation<M extends Mutation>(M m) {
@@ -138,9 +138,9 @@ final class Transaction {
   void _recordGeometry(CellHandle h) {
     if (mode == .geometry) return;
 
-    final id = h.id(bundle);
-    if (id.namespace != _namespace || id.tag != _record!.tag) {
-      _record!._geometry.putIfAbsent(.make(id, h.kind), () => .of(bundle, h));
+    final ref = h.ref(bundle);
+    if (ref.namespace != _namespace || ref.tag != _record!.tag) {
+      _record!._geometry.putIfAbsent(ref, () => .of(bundle, h));
     }
   }
 
@@ -154,7 +154,9 @@ final class Transaction {
     bundle._endTransaction();
     bundle._version++;
 
-    delta.moved = bundle._changeTracker.take(bundle);
+    final (moved, movedFrames) = bundle._changeTracker.take(bundle);
+    delta.moved = moved;
+    delta.movedFrames = movedFrames;
     return delta;
   }
 

@@ -7,7 +7,7 @@ extension type const Cycle(List<Coedge> coedges) implements Iterable<Coedge> {
   Coedge operator [](int i) => coedges[i];
   Cycle get reversed => Cycle(coedges.reversedWalk);
 
-  CycleRef asRef(Bundle bundle) => .new([for (final u in coedges) u.asRef(bundle)]);
+  CycleRef asRef(Bundle bundle) => .new([for (final u in coedges) u.ref(bundle)]);
 
   // Cycle where(bool Function(Coedge) f) => Cycle([
   //   for (final c in coedges)

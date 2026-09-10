@@ -12,6 +12,7 @@ dependencies:
   state:
   mouse_cursor:
 
+  blueprint:
   geometry:
   kernel:
   program:

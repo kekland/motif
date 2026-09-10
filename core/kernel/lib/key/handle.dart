@@ -32,6 +32,5 @@ extension type const CellHandle._(int _v) implements Object {
     return ._(this);
   }
 
-  CellId id(Bundle bundle) => bundle.id(this);
   CellRef ref(Bundle bundle) => bundle.ref(this);
 }

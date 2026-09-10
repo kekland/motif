@@ -201,6 +201,17 @@ extension GeometryMethods on Bundle {
   // Covertex
   // -------------------------------------------------------------------------------------------------------------------
 
+  Vec2 _covertexPosition(CovertexIndex cv, {FrameIndex? space}) {
+    final v = _covertex.vertex[cv];
+    late final f = _vertex.parent[v];
+    final p = _vertex.position[v];
+    final t = _covertex.tangent[cv];
+
+    if (space == null || f == space) return p + t;
+    final m = _frameTransformBetween(f, space);
+    return m.transform2(p + t);
+  }
+
   Vec2 _covertexTangent(CovertexIndex cv, {FrameIndex? space}) {
     late final f = _vertex.parent[_covertex.vertex[cv]];
     final t = _covertex.tangent[cv];
@@ -244,6 +255,11 @@ extension GeometryMethods on Bundle {
 
     if (space == .root) {
       if (stale || moved) _edgeRecompute(e, f);
+
+      final worldStale = _edge.cubicWorldVersion[e] != _edge.cubicVersion[e];
+      final worldMoved = _edge.cubicWorldEpoch[e] != _worldEpoch;
+      if (worldStale || worldMoved) _edgeWorldRecompute(e, f);
+
       return _edge.cubicWorld[e];
     }
 
@@ -259,10 +275,17 @@ extension GeometryMethods on Bundle {
   void _edgeRecompute(EdgeIndex e, FrameIndex parent) {
     final c = _edgeCubicIn(e);
     _edge.cubic[e] = c;
-    _edge.cubicWorld[e] = c.transformed(_frameWorldTransform(parent));
     _edge.cubicVersion[e] = _edge.version[e.i];
     _edge.cubicEpoch[e] = _worldEpoch;
     _edge.cubicArcIndex[e] = null;
+  }
+
+  void _edgeWorldRecompute(EdgeIndex e, FrameIndex parent) {
+    _frameEnsureWorldTransform(parent);
+    final c = _edge.cubic[e];
+    _edge.cubicWorld[e] = c.transformed(_frame.worldTransform[parent]);
+    _edge.cubicWorldVersion[e] = _edge.cubicVersion[e];
+    _edge.cubicWorldEpoch[e] = _worldEpoch;
   }
 
   Cubic2 _edgeCubicIn(EdgeIndex e, {FrameIndex? space}) {
@@ -329,7 +352,7 @@ extension GeometryMethods on Bundle {
 
     var total = 0.0;
     for (final head in _faceBoundary(i)) {
-      final cycle = _cycleFor(_cycleCoedges(head));
+      final cycle = _cycleFor(head);
       total += _cycleSignedArea(cycle, space: space);
     }
     return total;
@@ -340,7 +363,7 @@ extension GeometryMethods on Bundle {
     var winding = 0;
 
     for (final head in _faceBoundary(i)) {
-      final cycle = _cycleFor(_cycleCoedges(head));
+      final cycle = _cycleFor(head);
       winding += _cycleWinding(cycle, p, space: space);
     }
 

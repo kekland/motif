@@ -11,6 +11,7 @@ final class EvaluationPass {
   final deleted = HashSet<CellRef>();
   final changed = HashSet<CellRef>();
   final moved = HashSet<CellRef>();
+  final movedFrames = HashSet<FrameRef>();
   final relayouted = HashSet<StatementId>();
   final restyled = HashSet<CellRef>();
   final reordered = HashSet<CellRef>();
@@ -20,17 +21,22 @@ final class EvaluationPass {
 
   FrameRef? frameOf(CellRef r) {
     if (_frameOf.containsKey(r)) return _frameOf[r];
+
     final bundle = evaluation.bundle;
     final h = bundle.handle(r);
-    return h == null ? null : bundle.parentOf(h)?.ref(bundle);
+    if (h == null) return null;
+
+    final f = bundle.parentOf(h);
+    return f == null ? null : bundle.frameRef(f);
   }
 
   void _rememberFrames(Iterable<CellRef> cells) {
     final bundle = evaluation.bundle;
-
     for (final r in cells) {
       final h = bundle.handle(r);
-      if (h != null) _frameOf[r] = bundle.parentOf(h)?.ref(bundle);
+      if (h == null) continue;
+      final f = bundle.parentOf(h);
+      _frameOf[r] = f?.ref(bundle);
     }
   }
 
@@ -63,6 +69,7 @@ final class EvaluationPass {
     deleted.clear();
     changed.clear();
     moved.clear();
+    movedFrames.clear();
     relayouted.clear();
     restyled.clear();
     reordered.clear();
@@ -80,43 +87,13 @@ extension EvaluationPassImpl on Evaluation {
   EvaluationPass beginPass() => EvaluationPass(this);
 
   void edit(EvaluationPass pass, int index, List<Statement> removed, List<Statement> inserted) {
-    final start = index < program.length ? _index[program[index].id]! : order.length;
-    final end = start + removed.fold(0, (p, s) => p + _span[s.id]!).toInt();
-
-    final flattened = <Statement>[], spans = <int>[], owners = <StatementId>[], hosts = <StatementId?>[];
-    for (final s in inserted) _flattenInto(s, flattened, spans, owners, hosts);
-
-    final incoming = {for (final s in flattened) s.id};
-    final gone = <Commit>[];
-    for (final s in order.getRange(start, end)) {
-      if (incoming.contains(s.id)) continue;
-
-      final c = commits[s.id];
-      if (c != null) gone.add(c);
-    }
-
-    _retire(start - 1, gone, pass);
-    for (final s in order.getRange(start, end)) {
-      if (!incoming.contains(s.id)) pass.queue.remove(s.id);
-    }
-
-    for (final c in gone) {
-      if (c.statement is LayoutBox) layoutTree.detach(c.statement.id);
-    }
-
+    final start = index < program.length ? _index[program[index].id]! : _order.length;
+    final end = start + removed.length;
+    _replaceRange(pass, start, end, inserted);
     program._replace(index, removed, inserted);
-    _splice(start, end, flattened, spans, owners, hosts);
-    for (final s in flattened) {
-      if (s is LayoutBox) layoutTree.attachOrUpdate(s as LayoutBox);
-    }
-
-    pass.queue.addAll(incoming);
   }
 
   void drain(EvaluationPass pass) {
-    final relayouted = layoutTree.solve();
-    pass.relayouted.addAll(relayouted.keys);
-    pass.queue.addAll(relayouted.keys);
     _drain(pass);
     _onPassComplete(pass);
     pass.reset();
@@ -129,13 +106,20 @@ extension EvaluationPassImpl on Evaluation {
   }
 
   void _drain(EvaluationPass pass) {
-    while (pass.queue.isNotEmpty) {
+    while (true) {
+      if (layout.isDirty) {
+        final relayouted = layout.solve();
+        pass.relayouted.addAll(relayouted.keys);
+        pass.queue.addAll(relayouted.keys);
+      }
+      if (pass.queue.isEmpty) return;
+
       final id = pass.queue.first;
       pass.queue.remove(id);
 
       final i = _index[id]!;
-      final s = order[i];
-      final c = commits[id];
+      final s = _order[i];
+      final c = _commits[id];
 
       if (c == null) {
         _run(pass, i, s);
@@ -152,16 +136,16 @@ extension EvaluationPassImpl on Evaluation {
         if (_refresh(i, s, c, pass)) continue;
       }
 
-      _retire(i, [c], pass);
+      _retire([c], pass);
       _run(pass, i, s);
     }
   }
 
-  void _retire(int from, List<Commit> roots, EvaluationPass pass) {
+  void _retire(List<Commit> roots, EvaluationPass pass) {
     if (roots.isEmpty) return;
 
     final rootSet = roots.toSet();
-    for (final c in _dependentsAfter(from, roots).reversed) {
+    for (final c in _dependents(roots).reversed) {
       if (rootSet.contains(c)) continue;
       _revert(c, pass);
       pass.queue.add(c.statement.id);
@@ -173,12 +157,13 @@ extension EvaluationPassImpl on Evaluation {
   void _run(EvaluationPass pass, int i, Statement s) {
     while (true) {
       final c = _apply(pass, s);
-      final conflicts = _dependentsAfter(i, [c]);
+      final conflicts = _dependents([c]);
       if (conflicts.isEmpty) {
         pass.onTopologyChanged(c);
         pass.onGeometryChanged(c.moved);
         pass.rerun.add(s.id);
         pass._enqueue(i);
+        _expand(pass, i, s);
         return;
       }
 
@@ -191,18 +176,20 @@ extension EvaluationPassImpl on Evaluation {
     }
   }
 
-  List<Commit> _dependentsAfter(int from, List<Commit> roots) {
+  List<Commit> _dependents(List<Commit> roots) {
     final out = <Commit>{};
     final work = [...roots];
     final found = <StatementId>{};
     while (work.isNotEmpty) {
+      final c = work.removeLast();
+      final after = _index[c.statement.id]!;
       found.clear();
-      graph.overlapping(work.removeLast(), found);
+      graph.overlapping(c, found);
       for (final id in found) {
         final j = _index[id];
-        if (j == null || j <= from) continue;
-        final c = commits[id];
-        if (c != null && out.add(c)) work.add(c);
+        if (j == null || j <= after) continue;
+        final d = _commits[id];
+        if (d != null && out.add(d)) work.add(d);
       }
     }
 
@@ -217,18 +204,22 @@ extension EvaluationPassImpl on Evaluation {
 
   Commit _apply(EvaluationPass pass, Statement s) {
     final context = _contextFor(s.id, includeResolutions: false);
-    final dependencies = {for (final s in s.selectors) ...s.dependencies};
-    final txn = bundle.beginTransaction(namespace: s.id.namespace);
-
+    final dependencies = {for (final selector in s.selectors) ...selector.dependencies};
     final targets = HashSet<CellRef>();
     final reads = HashSet<CellRef>();
 
+    if (!s.enabled) {
+      return _attach(pass, Commit.disabled(s, dependencies, context._resolutions, context._styles));
+    }
+
+    final txn = bundle.beginTransaction(namespace: s.id.namespace);
+
     try {
-      for (final s in s.selectors) {
-        final resolved = s.resolved(context);
+      for (final selector in s.selectors) {
+        final resolved = selector.resolved(context);
         for (final r in resolved) {
           targets.add(r);
-          if (s is! ParentSelector) {
+          if (selector is! ParentSelector) {
             reads.add(r);
             reads.addAll(bundle.cellDependencies(r));
           }
@@ -239,13 +230,14 @@ extension EvaluationPassImpl on Evaluation {
       final delta = txn.commit();
 
       final commit = Commit.from(s, ops, delta, targets, reads, dependencies, context._resolutions, context._styles);
+      pass.movedFrames.addAll(delta.movedFrames);
       return _attach(pass, commit);
     } catch (e, st) {
       print('APPLY ERROR: $e (at $s)');
       print(st);
 
       txn.abort();
-      for (final sel in s.selectors) targets.addAll(sel.refs);
+      for (final selector in s.selectors) targets.addAll(selector.refs);
       final commit = Commit.from(
         s,
         [],
@@ -262,7 +254,7 @@ extension EvaluationPassImpl on Evaluation {
   }
 
   bool _refresh(int i, Statement s, Commit c, EvaluationPass pass) {
-    if (c.failed) return false;
+    if (c.failed || !s.enabled || !c.statement.enabled) return false;
     final context = _contextFor(s.id);
     final txn = bundle.beginTransaction(namespace: s.id.namespace);
 
@@ -281,11 +273,14 @@ extension EvaluationPassImpl on Evaluation {
       }
 
       final fresh = txn.commit();
+      pass.movedFrames.addAll(fresh.movedFrames);
+      final restyled = context._styles.entries.any((e) => c.styles[e.key] != e.value);
       final newlyMoved = c.refresh(s, fresh, context._styles);
       if (newlyMoved.isNotEmpty) graph.write(s.id, newlyMoved);
-      _resolveStyles(pass, c);
+      if (restyled) style.resolve(pass, c);
       pass.onGeometryChanged(fresh.moved);
       pass._enqueue(i);
+      _expand(pass, i, s);
       return true;
     } catch (e) {
       txn.abort();
@@ -293,50 +288,84 @@ extension EvaluationPassImpl on Evaluation {
     }
   }
 
+  void _expand(EvaluationPass pass, int i, Statement s) {
+    if (s is! GeneratorStatement) return;
+    final generated = s.enabled ? s.generate(_contextFor(s.id)).toList() : const <Statement>[];
+    _reconcile(pass, i + 1, _orderEnd(i), generated);
+  }
+
+  void _reconcile(EvaluationPass pass, int start, int end, List<Statement> roots) {
+    final block = <Statement>[];
+    for (final r in roots) {
+      block.add(r);
+      final j = _index[r.id];
+      if (j != null && j >= start && j < end) block.addAll(_order.getRange(j + 1, _orderEnd(j)));
+    }
+    _replaceRange(pass, start, end, block);
+  }
+
+  void _replaceRange(EvaluationPass pass, int start, int end, List<Statement> inserted) {
+    final incoming = {for (final s in inserted) s.id};
+    final leaving = <Statement>[];
+    final gone = <Commit>[];
+    for (final s in _order.getRange(start, end)) {
+      if (incoming.contains(s.id)) continue;
+      leaving.add(s);
+
+      final c = _commits[s.id];
+      if (c != null) gone.add(c);
+    }
+
+    _retire(gone, pass);
+    for (final s in leaving) {
+      final id = s.id;
+      pass.queue.remove(id);
+      if (s is LayoutBox) layout.detach(id);
+    }
+
+    _splice(start, end, inserted);
+    for (final s in inserted) {
+      if (s is LayoutBox) layout.attachOrUpdate(s as LayoutBox);
+    }
+
+    pass.queue.addAll(incoming);
+  }
+
   void _revert(Commit c, EvaluationPass pass) {
     pass._rememberFrames(c.added);
     _detach(c);
     pass.deleted.addAll(c.added);
     pass.added.addAll(c.deleted);
-    if (c.failed) return;
+    if (c.ops.isEmpty) return;
     final txn = bundle.beginTransaction();
     for (final op in c.ops.reversed) txn.revert(op);
     txn.commit();
   }
 
   Commit _attach(EvaluationPass pass, Commit c) {
-    commits[c.statement.id] = c;
+    _commits[c.statement.id] = c;
     lineage.add(c);
     graph.add(c);
-    _resolveStyles(pass, c);
-    for (final r in c.added) _invalidateDrawOrder(r);
-    for (final r in c.deleted) _invalidateDrawOrder(r);
+    style.resolve(pass, c);
+    for (final r in c.added) drawOrder.invalidate(r);
+    for (final r in c.deleted) drawOrder.invalidate(r);
     return c;
   }
 
   void _detach(Commit c) {
-    commits.remove(c.statement.id);
+    _commits.remove(c.statement.id);
     lineage.remove(c);
     graph.remove(c);
     for (final r in c.added) {
-      _invalidateDrawOrder(r);
-      _styles.remove(r);
+      drawOrder.invalidate(r);
+      style._remove(r);
     }
-    for (final r in c.deleted) _invalidateDrawOrder(r);
+    for (final r in c.deleted) drawOrder.invalidate(r);
   }
 
   void _initialPass() {
-    final flattened = <Statement>[], spans = <int>[], owners = <StatementId>[], hosts = <StatementId?>[];
-    for (final s in program.statements) _flattenInto(s, flattened, spans, owners, hosts);
-    _splice(0, 0, flattened, spans, owners, hosts);
-
     final pass = EvaluationPass(this);
-    for (final s in flattened) {
-      if (s is LayoutBox) layoutTree.attach(s as LayoutBox);
-      pass.queue.add(s.id);
-    }
-
-    layoutTree.solve();
+    _replaceRange(pass, 0, 0, program._statements);
     _drain(pass);
     _onPassComplete(pass);
   }

@@ -31,6 +31,18 @@ final class LineageIndex {
     for (final p in l.products) yield* descendantsOf(p, bundle);
   }
 
+  Iterable<CovertexRef> covertexDescendantsOf(CovertexRef ref, Bundle bundle) sync* {
+    if (bundle.isLive(ref.edge)) {
+      yield ref;
+      return;
+    }
+
+    final l = _bySource[ref.edge];
+    if (l == null) return;
+    final next = ref.isStart ? l.products.first : l.products.last;
+    yield* covertexDescendantsOf(.new(next.asEdge, isStart: ref.isStart), bundle);
+  }
+
   // CellRef ancestorOf(CellRef key) {
   //   var current = key;
 

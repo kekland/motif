@@ -47,13 +47,24 @@ class _TintEffectAnimatorState extends State<_TintEffectAnimator> {
     final isHovered = state.contains(WidgetState.hovered);
     final isPressed = state.contains(WidgetState.pressed);
 
+    final double tint;
+    if (isPressed) {
+      tint = 0.08;
+    } else if (isHovered) {
+      tint = 0.04;
+    } else if (isSelected || isFocused) {
+      tint = 0.02;
+    } else {
+      tint = 0.0;
+    }
+
     return ColoredBox(
-      color: color.tint?.withScaledAlpha(isHovered ? 0.08 : 0.0) ?? Colors.transparent,
+      color: color.tint?.withScaledAlpha(tint) ?? Colors.transparent,
       child: DefaultForegroundStyle(
         animationStyle: .noAnimation,
         iconWeight: 200.0,
         iconFill: isSelected || isFocused ? 1.0 : 0.0,
-        iconGrade: isHovered || isSelected || isFocused ? 100.0 : 0.0,
+        iconGrade: isPressed || isHovered || isSelected || isFocused ? 0.0 : 0.0,
         color: isPressed ? context.colors.accent.primary : null,
         child: widget.child,
       ),

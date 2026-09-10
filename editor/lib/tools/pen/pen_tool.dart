@@ -26,7 +26,7 @@ class _PenToolOverlay extends HookWidget {
   Widget build(BuildContext context) {
     final editor = context.editor;
     final transientEdge = useState<TransientEdge?>(null);
-    final hoveredCell = useState<CellKind?>(null);
+    final hoveredCell = useState<Ref?>(null);
 
     useOnDispose(() {
       final edge = transientEdge.value;
@@ -45,15 +45,15 @@ class _PenToolOverlay extends HookWidget {
         child: MouseRegion(
           hitTestBehavior: .translucent,
           cursor: switch (hoveredCell.value) {
-            .vertex => Cursors.toolPenVertex,
-            .edge => Cursors.toolPenEdge,
+            CellRef(kind: .vertex) => Cursors.toolPenVertex,
+            CellRef(kind: .edge) => Cursors.toolPenEdge,
             _ => Cursors.precise,
           },
           child: Listener(
             behavior: .translucent,
             onPointerHover: (e) {
               final result = editor.hitTest(e.position);
-              hoveredCell.value = result.top?.kind;
+              hoveredCell.value = result.top?.ref;
 
               if (transientEdge.value != null) {
                 final edge = transientEdge.value!;

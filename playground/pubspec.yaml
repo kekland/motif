@@ -1,0 +1,16 @@
+name: debug
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  geometry:
+  kernel:
+  program:
+  renderer:
+  scene:

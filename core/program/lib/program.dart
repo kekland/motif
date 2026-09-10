@@ -7,6 +7,9 @@ import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
 
+import 'generator/generator.dart';
+export 'generator/generator.dart';
+
 part 'selector.dart';
 part 'statement.dart';
 part 'evaluation.dart';
@@ -14,6 +17,7 @@ part 'errors.dart';
 part 'delta.dart';
 part 'slice.dart';
 part 'table.dart';
+part 'tree.dart';
 
 part 'delta/anchor.dart';
 part 'delta/op.dart';
@@ -32,6 +36,7 @@ part 'selectors/corners_selector.dart';
 part 'selectors/products_selector.dart';
 part 'selectors/parent_selector.dart';
 part 'selectors/dissolve_selector.dart';
+part 'selectors/fragment_selector.dart';
 
 part 'evaluation/commit.dart';
 part 'evaluation/context.dart';
@@ -40,7 +45,9 @@ part 'evaluation/lineage.dart';
 part 'evaluation/pass.dart';
 part 'evaluation/style.dart';
 part 'evaluation/zorder.dart';
+part 'evaluation/generated.dart';
 
+part 'routers/stack_router.dart';
 part 'routers/dissolve_router.dart';
 part 'routers/delete_router.dart';
 part 'routers/bake_router.dart';
@@ -74,6 +81,7 @@ part 'statements/rectangle_statement.dart';
 part 'statements/container_statement.dart';
 part 'statements/polygon_statement.dart';
 part 'statements/ellipse_statement.dart';
+part 'statements/generator_statement.dart';
 
 part 'utils/partial.dart';
 part 'utils/remap.dart';

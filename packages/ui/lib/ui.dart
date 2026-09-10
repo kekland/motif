@@ -47,6 +47,7 @@ export 'ui/toggleable_button.dart';
 
 export 'ui/selection/selection.dart';
 
+export 'ui/button.dart';
 export 'ui/icon_button.dart';
 export 'ui/list_item.dart';
 export 'ui/header.dart';

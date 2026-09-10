@@ -7,7 +7,7 @@ final class FilletFaceStatement extends Statement {
     this.corners = const [],
     this.radius,
     super.id,
-    super.modifiers,
+    super.enabled,
   });
 
   factory FilletFaceStatement(
@@ -15,7 +15,7 @@ final class FilletFaceStatement extends Statement {
     List<(VertexSelector, CornerRadius)> corners = const [],
     CornerRadius? radius,
     StatementId? id,
-    List<Statement> modifiers = const [],
+    bool enabled = true,
   }) {
     final f = face.clone();
     return ._(
@@ -24,7 +24,7 @@ final class FilletFaceStatement extends Statement {
       corners: corners.map((e) => (e.$1.clone(), e.$2)).toList(),
       radius: radius,
       id: id,
-      modifiers: modifiers,
+      enabled: enabled,
     );
   }
 
@@ -39,22 +39,18 @@ final class FilletFaceStatement extends Statement {
 
   @override
   Iterable<Op> execute(EvalContext context) sync* {
-    final radii = {for (final (v, r) in corners) context.resolve(v): r};
-    final list = <FilletCorner>[];
-
-    for (final k in context.resolve(_corners)) {
-      final r = radii[k.v] ?? radius;
-      if (r == null || (r.x <= 0 && r.y <= 0)) continue;
-      list.add((v: k.v, a: k.a, b: k.b, radius: r));
-    }
-
-    yield FilletFaceOp(context.resolve(face), corners: list);
+    yield FilletFaceOp(
+      context.resolve(face),
+      corners: context.resolve(_corners),
+      radius: radius,
+      radii: corners.isNotEmpty ? {for (final (v, r) in corners) context.resolve(v): r} : {},
+    );
   }
 
   @override
   FilletFaceStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     FaceSelector? face,
     List<(VertexSelector, CornerRadius)>? corners,
     CornerRadius? radius,
@@ -66,12 +62,12 @@ final class FilletFaceStatement extends Statement {
       corners: (corners ?? this.corners).map((e) => (e.$1.clone(), e.$2)).toList(),
       radius: radius ?? this.radius,
       id: id ?? this.id,
-      modifiers: modifiers ?? this.modifiers,
+      enabled: enabled ?? this.enabled,
     );
   }
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .forward([
+  TransformRoute routeTransform(EvalContext context, Ref target) => .forward([
     context.resolve(face),
   ]);
 }

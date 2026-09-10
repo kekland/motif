@@ -50,6 +50,12 @@ final class const FaceStylePartial({
     color: color,
   );
 
+  FaceStylePartial copyWith({
+    ColorData? color,
+  }) => FaceStylePartial(
+    color: color ?? this.color,
+  );
+
   @override
   bool operator ==(Object other) => identical(this, other) || (other is FaceStylePartial && color == other.color);
 

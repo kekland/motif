@@ -18,6 +18,19 @@ final class Commit {
     _writes = .of(added.followedBy(deleted).followedBy(moved));
   }
 
+  Commit.disabled(Statement s, this.dependencies, this.resolutions, this.styles)
+    : statement = s,
+      ops = [],
+      added = {},
+      deleted = {},
+      lineage = [],
+      moved = .new(),
+      targets = {},
+      reads = {},
+      error = null {
+    _writes = .new();
+  }
+
   Statement statement;
   List<OpRecord> ops;
   final Set<CellRef> added, deleted;

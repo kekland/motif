@@ -61,8 +61,8 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     final transform = editor.bundle.frameTransform(parentHandle, space: .root);
     final transformedCubic = cubic.transformed(transform);
 
-    final startTransform = editor.bundle.query.localToWorld(startHandle);
-    final endTransform = editor.bundle.query.localToWorld(endHandle);
+    final startTransform = editor.bundle.query.localToWorld(startVertex);
+    final endTransform = editor.bundle.query.localToWorld(endVertex);
 
     final statement = EdgeStatement(
       startVertex.selector(),

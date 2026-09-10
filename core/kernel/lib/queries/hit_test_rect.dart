@@ -25,33 +25,40 @@ extension HitTestRectQuery on TopologyQuery {
         final kind = child.kind;
         if (kind == .vertex) {
           final p = bundle.vertexPosition(child.asVertex, space: .root);
-          if (rect.contains(p)) vertices.add(.new(handle: child.asVertex, distance: 0.0));
+          if (rect.contains(p)) vertices.add(.new(child.asVertex.ref(bundle), distance: 0.0));
         } else if (kind == .edge) {
           final c = bundle.edgeCubic(child.asEdge, space: .root);
           final hit = containLeaves ? c.containedInAabb(rect) : c.intersectsAabb(rect);
-          if (hit) edges.add(.new(handle: child.asEdge, distance: 0.0, t: 0.0));
+          if (hit) edges.add(.new(child.asEdge.ref(bundle), distance: 0.0, t: 0.0));
         } else if (kind == .face) {
           final hit = containLeaves ? _faceContainedRect(child.asFace, rect) : _faceIntersectsRect(child.asFace, rect);
-          if (hit) faces.add(.new(handle: child.asFace, distance: 0.0, point: rect.center));
+          if (hit) faces.add(.new(child.asFace.ref(bundle), distance: 0.0, point: rect.center));
         } else if (kind == .frame) {
           walk(child.asFrame);
         }
       }
 
       if (f != bundle.root) {
-        final bounds = frameBounds(f);
+        final bounds = bbox(f.ref(bundle), space: .root);
         if (bounds != null) {
-          final hit = containFrames ? bounds.containsAabb(rect) : bounds.intersectsAabb(rect);
-          if (hit) frames.add(.new(handle: f, distance: 0.0, point: rect.center));
+          final hit = containFrames ? rect.containsAabb(bounds) : rect.intersectsAabb(bounds);
+          if (hit) frames.add(.new(f.asFrame.ref(bundle), distance: 0.0, point: rect.center));
         }
       }
     }
 
     walk(bundle.root);
-    return HitResult(vertices: vertices, edges: edges, faces: faces, frames: frames);
+    return HitResult(
+      vertices: vertices,
+      covertices: [],
+      edges: edges,
+      faces: faces,
+      frames: frames,
+    );
   }
 
   bool _faceIntersectsRect(FaceHandle f, Aabb2 rect) {
+    if (bundle.faceWinding(f, rect.center, space: .root) != 0) return true;
     for (final cycle in bundle.faceBoundary(f)) {
       for (final u in cycle) {
         final cubic = bundle.edgeCubic(u.edge, space: .root);

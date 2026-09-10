@@ -33,9 +33,11 @@ class _MarqueeToolOverlay extends HookWidget {
       children: [
         Positioned.fill(child: SelectRectDetector()),
         Positioned.fill(
-          child: CellSelectionOverlay(
-            editor: editor,
-            childPaintTransform: info.childPaintTransform,
+          child: IgnorePointer(
+            child: CellSelectionOverlay(
+              editor: editor,
+              childPaintTransform: info.childPaintTransform,
+            ),
           ),
         ),
       ],

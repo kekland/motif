@@ -45,7 +45,7 @@ extension RouteBake on Evaluation {
     for (final r in bake) bakeByKind[r.kind]!.add(r);
 
     for (final f in bakeByKind[CellKind.frame]!) {
-      final h = bundle.frame(f.id)!;
+      final h = bundle.frame(f.asFrame)!;
       final s = FrameStatement(
         transform: bundle.frameTransform(h, space: spaceOf(h)),
         size: bundle.frameSize(h),
@@ -57,14 +57,14 @@ extension RouteBake on Evaluation {
     }
 
     for (final v in bakeByKind[CellKind.vertex]!) {
-      final h = bundle.vertex(v.id)!;
+      final h = bundle.vertex(v.asVertex)!;
       final s = VertexStatement(bundle.vertexPosition(h, space: spaceOf(h)), parent: parentOf(h));
       out.add(s);
       refMap[v] = [s.ref];
     }
 
     for (final e in bakeByKind[CellKind.edge]!) {
-      final h = bundle.edge(e.id)!;
+      final h = bundle.edge(e.asEdge)!;
       final c = bundle.edgeCubic(h, space: spaceOf(h));
       final s = EdgeStatement(
         mapped(bundle.edgeStart(h).ref(bundle)).selector(),
@@ -79,7 +79,7 @@ extension RouteBake on Evaluation {
     }
 
     for (final f in bakeByKind[CellKind.face]!) {
-      final h = bundle.face(f.id)!;
+      final h = bundle.face(f.asFace)!;
 
       final cycles = <ChainSelector>[];
       for (final cycle in bundle.faceBoundary(h)) {
@@ -97,6 +97,6 @@ extension RouteBake on Evaluation {
       refMap[f] = [s.ref];
     }
 
-    return .new(statements: out, remap: ._(refMap));
+    return .new(statements: out, remap: .refs(refMap));
   }
 }

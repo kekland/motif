@@ -4,9 +4,14 @@ import 'package:renderer/renderer.dart';
 import 'package:scene/scene.dart';
 
 class SceneWidget extends StatefulWidget {
-  const SceneWidget({super.key, required this.scene});
+  const SceneWidget({
+    super.key,
+    required this.scene,
+    this.debug = false,
+  });
 
   final Scene scene;
+  final bool debug;
 
   @override
   State<SceneWidget> createState() => _SceneWidgetState();
@@ -54,7 +59,8 @@ class _SceneWidgetState extends State<SceneWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // return CustomPaint(painter: BundlePainter(bundle: scene.bundle));
+    if (widget.debug) return CustomPaint(painter: BundlePainter(bundle: scene.bundle));
+
     return CustomPaint(
       painter: _ProgramPainter(renderer: renderer!),
       isComplex: false,

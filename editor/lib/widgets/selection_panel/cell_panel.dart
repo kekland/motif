@@ -43,7 +43,7 @@ class const CellPanel({
         .face => Text('Face'),
       };
 
-      footnote = Text(ref.id.toString());
+      footnote = Text(ref.toString());
     } else {
       icon = Icons.stacks();
       title = Text('${refs.length} cells');

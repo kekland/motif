@@ -8,6 +8,7 @@ class const ListItem({
   final Widget? footnote,
   final Widget? trailing,
   final Color? color,
+  final double? width,
   final double? height,
   final bool isSelected = false,
   final EdgeInsets? padding,
@@ -21,6 +22,7 @@ class const ListItem({
       onTap: onTap,
       color: isSelected ? context.colors.accent.secondary : color,
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 8.0),
+      width: width,
       height: height ?? 36.0,
       child: Row(
         children: [

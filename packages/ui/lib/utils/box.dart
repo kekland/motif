@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:geometry/geometry.dart';
@@ -38,14 +39,21 @@ enum Side {
   bottom,
   left;
 
-  bool get isHorizontal => this == Side.top || this == Side.bottom;
-  bool get isVertical => this == Side.left || this == Side.right;
+  bool get isHorizontal => this == .top || this == .bottom;
+  bool get isVertical => this == .left || this == .right;
 
   Side get opposite => switch (this) {
     .top => .bottom,
     .right => .left,
     .bottom => .top,
     .left => .right,
+  };
+
+  Vec2 midpoint(Aabb2 box) => switch (this) {
+    .top => .new(box.center.x, box.top),
+    .right => .new(box.right, box.center.y),
+    .bottom => .new(box.center.x, box.bottom),
+    .left => .new(box.left, box.center.y),
   };
 }
 
@@ -65,6 +73,8 @@ extension RectBoxExtensions on Rect {
   };
 }
 
+typedef ResizeResult = ({Vec2 anchor, Vec2 scale});
+
 extension SideUtils on Side {
   double _edge(Aabb2 bbox) => switch (this) {
     .top => bbox.top,
@@ -73,40 +83,18 @@ extension SideUtils on Side {
     .left => bbox.left,
   };
 
-  Aabb2 applyResize(Aabb2 bbox, Vec2 delta, {bool symmetric = false, bool keepAspectRatio = false}) {
-    final center = bbox.center;
-    final target = Vec2(_edge(bbox), _edge(bbox)) + delta;
-    final aspectRatio = bbox.aspectRatio;
-    final anchor = symmetric ? center : Vec2(opposite._edge(bbox), opposite._edge(bbox));
-    var _delta = target - anchor;
-
-    if (symmetric) _delta *= 2.0;
-
-    var newWidth = bbox.width;
-    var newHeight = bbox.height;
-
-    if (isVertical) {
-      newWidth = _delta.x.abs();
-      if (keepAspectRatio) newHeight = newWidth / aspectRatio;
-    } else {
-      newHeight = _delta.y.abs();
-      if (keepAspectRatio) newWidth = newHeight * aspectRatio;
-    }
-
-    final sx = _delta.x.sign;
-    final sy = _delta.y.sign;
-
-    late final Vec2 newCenter;
-    if (symmetric) {
-      newCenter = center;
-    } else {
-      newCenter = switch (this) {
-        .left || .right => .new(anchor.x + (newWidth / 2.0 * sx), center.y),
-        .top || .bottom => .new(center.x, anchor.y + (newHeight / 2.0 * sy)),
-      };
-    }
-
-    return .center(newCenter, newWidth, newHeight);
+  ResizeResult applyResize(
+    Aabb2 bbox,
+    Vec2 delta, {
+    bool symmetric = false,
+    bool keepAspectRatio = false,
+  }) {
+    final anchor = symmetric ? bbox.center : opposite.midpoint(bbox);
+    final from = midpoint(bbox) - anchor;
+    final to = from + delta;
+    final s = isVertical ? (from.x == 0.0 ? 1.0 : to.x / from.x) : (from.y == 0.0 ? 1.0 : to.y / from.y);
+    final cross = keepAspectRatio ? s.abs() : 1.0;
+    return (anchor: anchor, scale: isVertical ? .new(s, cross) : .new(cross, s));
   }
 }
 
@@ -118,28 +106,22 @@ extension CornerUtils on Corner {
     .bottomLeft => bbox.bottomLeft,
   };
 
-  Aabb2 applyResize(Aabb2 bbox, Vec2 delta, {bool symmetric = false, bool keepAspectRatio = false}) {
-    final target = corner(bbox) + delta;
-    final aspectRatio = bbox.aspectRatio;
+  ResizeResult applyResize(
+    Aabb2 bbox,
+    Vec2 delta, {
+    bool symmetric = false,
+    bool keepAspectRatio = false,
+  }) {
     final anchor = symmetric ? bbox.center : opposite.corner(bbox);
-    final _delta = target - anchor;
-
-    var newWidth = _delta.x.abs() * (symmetric ? 2.0 : 1.0);
-    var newHeight = _delta.y.abs() * (symmetric ? 2.0 : 1.0);
-
+    final from = corner(bbox) - anchor;
+    final to = from + delta;
+    var sx = from.x == 0.0 ? 1.0 : to.x / from.x;
+    var sy = from.y == 0.0 ? 1.0 : to.y / from.y;
     if (keepAspectRatio) {
-      if (newWidth / newHeight < aspectRatio) {
-        newWidth = newHeight * aspectRatio;
-      } else {
-        newHeight = newWidth / aspectRatio;
-      }
+      final s = math.max(sx.abs(), sy.abs());
+      sx = sx.sign * s;
+      sy = sy.sign * s;
     }
-
-    if (symmetric) return .center(anchor, newWidth, newHeight);
-
-    final sx = _delta.x.sign;
-    final sy = _delta.y.sign;
-
-    return anchor.aabb(anchor + .new(newWidth * sx, newHeight * sy));
+    return (anchor: anchor, scale: .new(sx, sy));
   }
 }

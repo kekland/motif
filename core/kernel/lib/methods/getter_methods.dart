@@ -98,6 +98,11 @@ extension GetterMethods on Bundle {
   // Edge
   // -------------------------------------------------------------------------------------------------------------------
 
+  Iterable<CovertexIndex> _edgeCovertices(EdgeIndex e) sync* {
+    yield _edge.cvStart[e];
+    yield _edge.cvEnd[e];
+  }
+
   Iterable<CoedgeIndex> _edgeRadial(EdgeIndex e) sync* {
     for (var c = _edge.radialStart[e]; c != .none; c = _coedge.radialNext[c]) yield c;
   }
@@ -185,27 +190,31 @@ extension GetterMethods on Bundle {
   // Cycle
   // -------------------------------------------------------------------------------------------------------------------
 
-  Cycle _cycleFor(Iterable<CoedgeIndex> cycle) {
+  Cycle _cycleFor(CoedgeIndex head) {
     final out = <Coedge>[];
-    for (final ce in cycle) out.add(_coedgeFor(ce));
+    var i = head;
+    do {
+      out.add(_coedgeFor(i));
+      i = _coedge.cycleNext[i];
+    } while (i != head);
     return .new(out);
   }
 
-  Iterable<CoedgeIndex> _cycleCoedges(CoedgeIndex head) sync* {
+  List<CoedgeIndex> _cycleCoedges(CoedgeIndex head) {
+    final out = <CoedgeIndex>[];
     var i = head;
     do {
-      yield i;
+      out.add(i);
       i = _coedge.cycleNext[i];
     } while (i != head);
+    return out;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Face
   // -------------------------------------------------------------------------------------------------------------------
 
-  Iterable<CoedgeIndex> _faceBoundary(FaceIndex f) sync* {
-    for (final head in _face.boundary[f]) yield head;
-  }
+  List<CoedgeIndex> _faceBoundary(FaceIndex f) => _face.boundary[f].storage;
 
   // -------------------------------------------------------------------------------------------------------------------
   // Cell

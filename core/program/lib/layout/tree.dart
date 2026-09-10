@@ -8,6 +8,7 @@ final class LayoutTree {
   final _nodes = <StatementId, _LayoutNode>{};
   final _children = <StatementId, List<_LayoutNode>>{};
   final _dirty = <_LayoutNode>{};
+  bool get isDirty => _dirty.isNotEmpty;
 
   Placement? placementOf(StatementId id) => _nodes[id]?.placement;
 

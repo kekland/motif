@@ -46,7 +46,7 @@ final class CornersSelector(final FaceSelector face) extends Selector<List<Resol
   CornersSelector clone() => .new(face.clone());
 
   @override
-  RemapResult _remap(Remap remap) => face._remap(remap);
+  RemapResult _remap(Remap remap) => .unchanged;
 
   @override
   int get hashCode => Object.hash(runtimeType, face.hashCode);

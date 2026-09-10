@@ -98,14 +98,10 @@ class WindowEntry<T> extends OverlayEntry {
     EdgeInsets padding = .zero,
   }) {
     final overlay = context.findAncestorStateOfType<WindowNavigatorState>()!;
+    final overlayBox = overlay.context.findRenderObject() as RenderBox;
     final renderBox = context.findRenderObject() as RenderBox;
-
-    final rect = MatrixUtils.transformRect(
-      renderBox.getTransformTo(overlay.context.findRenderObject()),
-      (Offset.zero & renderBox.size),
-    );
-
-    return WindowAnchor(rect: padding.inflateRect(rect));
+    final rect = MatrixUtils.transformRect(renderBox.getTransformTo(overlayBox), (Offset.zero & renderBox.size));
+    return .new(rect: padding.inflateRect(rect));
   }
 
   factory WindowEntry.withContextAnchor(
@@ -271,6 +267,7 @@ class WindowWidgetState<T> extends State<WindowWidget<T>> with SingleTickerProvi
       },
       child: _WindowPositioned(
         rect: rect,
+        edgePadding: const EdgeInsets.only(top: 64.0, left: 16.0, right: 16.0, bottom: 16.0),
         onInitialRectComputed: (r) => _rect = r,
         anchor: widget.entry.anchor,
         // windowConstraints: BoxConstraints.loose(Size.square(400.0)),
@@ -325,12 +322,14 @@ class _WindowPositioned extends SingleChildRenderObjectWidget {
     this.anchor,
     this.onInitialRectComputed,
     this.windowConstraints,
+    this.edgePadding = .zero,
   });
 
   final Rect? rect;
   final WindowAnchor? anchor;
   final ValueChanged<Rect>? onInitialRectComputed;
   final BoxConstraints? windowConstraints;
+  final EdgeInsets edgePadding;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -339,6 +338,7 @@ class _WindowPositioned extends SingleChildRenderObjectWidget {
       anchor: anchor,
       onInitialRectComputed: onInitialRectComputed,
       windowConstraints: windowConstraints,
+      edgePadding: edgePadding,
     );
   }
 
@@ -349,7 +349,8 @@ class _WindowPositioned extends SingleChildRenderObjectWidget {
   ) {
     renderObject
       ..rect = rect
-      ..windowConstraints = windowConstraints;
+      ..windowConstraints = windowConstraints
+      ..edgePadding = edgePadding;
   }
 }
 
@@ -359,6 +360,7 @@ class _RenderWindowPositioned extends RenderProxyBox {
     this._rect,
     this._anchor,
     this._onInitialRectComputed,
+    this._edgePadding = .zero,
   });
 
   BoxConstraints? _windowConstraints;
@@ -377,56 +379,58 @@ class _RenderWindowPositioned extends RenderProxyBox {
     markNeedsLayout();
   }
 
+  EdgeInsets _edgePadding;
+  EdgeInsets get edgePadding => _edgePadding;
+  set edgePadding(EdgeInsets value) {
+    if (value == _edgePadding) return;
+    _edgePadding = value;
+    markNeedsLayout();
+  }
+
   final WindowAnchor? _anchor;
   final ValueChanged<Rect>? _onInitialRectComputed;
 
-  void _recomputeRect() {
-    child!.layout(
-      windowConstraints ?? constraints.loosen(),
-      parentUsesSize: true,
-    );
-
-    final childSize = child!.size;
-
-    final containerRect = Offset.zero & constraints.biggest;
-    late final Offset center;
-
-    if (_anchor != null) {
-      if (_anchor.alignment != null) {
-        // TODO
-      } else {
-        // Try to find a sensible default alignment based on the anchor rect, window rect and child size.
-        final anchorRect = _anchor.rect;
-        final anchorCenter = anchorRect.center;
-        final containerCenter = containerRect.center;
-
-        final halfWidth = childSize.width / 2.0;
-        final halfHeight = childSize.height / 2.0;
-
-        double centerY = anchorRect.bottom + halfHeight;
-        if (centerY + halfHeight > containerRect.bottom) {
-          centerY = anchorRect.top - halfHeight;
-        }
-
-        double centerX = anchorCenter.dx;
-        if (centerX + halfWidth > containerRect.right) {
-          centerX = containerRect.right - halfWidth;
-        } else if (centerX - halfWidth < containerRect.left) {
-          centerX = containerRect.left + halfWidth;
-        }
-
-        center = Offset(centerX, centerY);
-      }
-    } else {
-      center = containerRect.center;
+  static Rect _fitRect(Rect r, Rect container) {
+    double _d(double start, double end, double min, double max) {
+      if (start < min) return min - start;
+      if (end > max) return max - end;
+      return 0.0;
     }
 
-    _rect = Rect.fromCenter(
-      center: center,
-      width: childSize.width,
-      height: childSize.height,
+    return r.shift(
+      .new(
+        _d(r.left, r.right, container.left, container.right),
+        _d(r.top, r.bottom, container.top, container.bottom),
+      ),
     );
+  }
 
+  void _recomputeRect() {
+    child!.layout(windowConstraints ?? constraints.loosen(), parentUsesSize: true);
+
+    final childSize = child!.size;
+    final container = _edgePadding.deflateRect(Offset.zero & constraints.biggest);
+
+    final Offset topLeft;
+    final anchor = _anchor;
+
+    if (anchor == null) {
+      topLeft = container.center - childSize.center(.zero);
+    } else if (anchor.alignment != null) {
+      final a = anchor.alignment!;
+      topLeft = a.withinRect(anchor.rect) - (-a).alongSize(childSize);
+    } else {
+      final below = anchor.rect.bottom + 8.0;
+      final above = anchor.rect.top - 8.0 - childSize.height;
+      final fitsBelow = below + childSize.height <= container.bottom;
+      final fitsAbove = above >= container.top;
+      topLeft = Offset(
+        anchor.rect.center.dx - childSize.width / 2.0,
+        !fitsBelow && fitsAbove ? above : below,
+      );
+    }
+
+    _rect = _fitRect(topLeft & childSize, container);
     _onInitialRectComputed?.call(_rect!);
   }
 
@@ -441,13 +445,6 @@ class _RenderWindowPositioned extends RenderProxyBox {
     }
 
     final rectConstraints = BoxConstraints.tight(rect!.size);
-
-    // // To allow for iteration in debug mode, allow changing the rect during layout.
-    // if (kDebugMode) {
-    //   _recomputeRect();
-    //   return;
-    // }
-
     child!.layout(rectConstraints);
   }
 

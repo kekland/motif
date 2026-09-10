@@ -17,17 +17,22 @@ final class ProgramRenderer {
   final _cache = <FrameRef, List<DrawEntry>>{};
 
   void _onEvaluationUpdate(EvaluationPass pass) {
-    for (final r in pass.deleted) _invalidate(pass, r, removed: true);
-    for (final r in pass.added) _invalidate(pass, r);
-    for (final r in pass.moved) if (r.kind != .frame) _invalidate(pass, r);
-    for (final r in pass.reordered) _invalidate(pass, r);
-    for (final r in pass.restyled) _invalidate(pass, r);
-  }
+    final stale = <FrameRef>{...pass.movedFrames};
+    void mark(CellRef r) {
+      final f = pass.frameOf(r);
+      if (f != null) stale.add(f);
+    }
 
-  void _invalidate(EvaluationPass pass, CellRef r, {bool removed = false}) {
-    if (removed && r.kind == .frame) _stale(r as FrameRef);
-    final frame = pass.frameOf(r);
-    if (frame != null) _stale(frame);
+    for (final r in pass.deleted) {
+      if (r.kind == .frame) stale.add(r as FrameRef);
+      mark(r);
+    }
+
+    for (final r in pass.added) mark(r);
+    for (final r in pass.reordered) mark(r);
+    for (final r in pass.restyled) mark(r);
+
+    for (final f in stale) _stale(f);
   }
 
   void _stale(FrameRef r) {
@@ -39,7 +44,7 @@ final class ProgramRenderer {
   }
 
   void dispose() {
-    for (final f in _cache.keys) _stale(f);
+    for (final f in _cache.keys.toList()) _stale(f);
     _cache.clear();
     evaluation.removeUpdateListener(_onEvaluationUpdate);
   }

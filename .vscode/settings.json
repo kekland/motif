@@ -15,7 +15,7 @@
     "**/.idea": true,
     "**/*.iml": true,
     "**/.metadata": true,
-    "**/pubspec.lock": true,
+    // "**/pubspec.lock": true,
     "build": true,
     "**/__pycache__": true,
     "**/.flutter-plugins-dependencies": true

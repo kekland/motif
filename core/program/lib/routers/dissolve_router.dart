@@ -23,9 +23,9 @@ extension RouteDissolve on Evaluation {
     final owners = <StatementId>{};
     final byOwner = <StatementId, HashSet<CellRef>>{};
     for (final t in targets) {
-      final owner = ownerOf(t.statementId);
+      final owner = t.statementId;
       byOwner.putIfAbsent(owner, HashSet.new).add(t);
-      owners.addAll(subtree(owner).map((s) => s.id));
+      owners.addAll(groupOf(owner));
     }
 
     final resolved = <CellRef>{};
@@ -48,10 +48,20 @@ extension RouteDissolve on Evaluation {
     }
 
     final deleted = {...resolved};
-    final holders = <StatementId>{};
+
+    for (final r in deleted.where((r) => r.kind == .edge).toList()) {
+      final e = bundle.handle(r)?.asEdge;
+      if (e == null) continue;
+      deleted.add(bundle.vertexRef(bundle.edgeStart(e)));
+      deleted.add(bundle.vertexRef(bundle.edgeEnd(e)));
+    }
+
+    for (final r in deleted) {
+      owners.addAll(groupOf(r.statementId));
+    }
+
     bool held(CellRef r) {
-      holders.clear();
-      graph.targetingOf([r], holders);
+      final holders = graph.targeting([r]);
       if (holders.any((h) => !owners.contains(h))) return true;
 
       for (final d in bundle.cellDirectDependents(r)) {

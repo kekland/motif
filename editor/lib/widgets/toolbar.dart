@@ -21,6 +21,14 @@ class EditorToolbar extends HookWidget {
               direction: .vertical,
             ),
           ),
+          // GestureSurface(
+          //   onTap: () {},
+          //   width: 32.0,
+          //   height: 32.0,
+          //   borderRadius: .circular(16.0),
+          //   color: Colors.orange,
+          // ),
+          // const SizedBox(height: 8.0),
         ],
       ),
     );

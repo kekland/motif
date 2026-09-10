@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
+import 'package:state/initializer.dart';
 import 'package:state/state.dart';
 
 import 'query.dart';
@@ -11,10 +13,12 @@ export 'query.dart';
 part 'transaction.dart';
 part 'selection.dart';
 part 'history.dart';
+part 'notifier.dart';
 
 part 'utils/embed_vertex.dart';
 part 'utils/resolved_style.dart';
 part 'utils/transform_session.dart';
+part 'utils/covertices.dart';
 
 final class Scene with ChangeNotifier {
   new({required this.program}) {
@@ -22,10 +26,12 @@ final class Scene with ChangeNotifier {
     selection = .new(this);
     query = .new(this);
     history = .new(this);
+    notifier = .new(this);
 
-    evaluation.addUpdateListener((_) {
+    evaluation.addUpdateListener((pass) {
       selection._onEvaluated();
       signal.set(this, force: true);
+      notifier._update(pass);
       notifyListeners();
     });
   }
@@ -38,6 +44,7 @@ final class Scene with ChangeNotifier {
   late final SceneSelection selection;
   late final SceneQuery query;
   late final SceneHistory history;
+  late final SceneNotifier notifier;
 
   late final signal = Signal(this);
 
@@ -50,7 +57,7 @@ final class Scene with ChangeNotifier {
   H? handleOf<H extends CellHandle>(CellRef<H> ref) => bundle.handle<H>(ref);
 
   Placement? layoutOf(StatementId id) => evaluation.layoutOf(id);
-  CellStyle<H> styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.styleOf<H>(ref);
+  CellStyle<H> styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.style.of<H>(ref)!;
 
   // -------------------------------------------------------------------------------------------------------------------
   // Transaction
@@ -84,6 +91,7 @@ final class Scene with ChangeNotifier {
 
   @override
   void dispose() {
+    notifier.dispose();
     evaluation.dispose();
     selection.dispose();
     signal.dispose();

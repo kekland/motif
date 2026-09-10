@@ -3,60 +3,8 @@ import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:scene/scene.dart';
 
-sealed class SceneHitEntry<H extends CellHandle> {
-  const SceneHitEntry({
-    required this.ref,
-    required this.handle,
-    required this.distance,
-  });
-
-  final CellRef<H> ref;
-  final H handle;
-  final double distance;
-
-  CellKind get kind => ref.kind;
+extension SceneHitEntryExt<R extends Ref> on HitEntry<R> {
   StatementId get statementId => ref.statementId;
-}
-
-final class FrameSceneHitEntry extends SceneHitEntry<FrameHandle> {
-  const FrameSceneHitEntry({
-    required super.ref,
-    required super.handle,
-    required super.distance,
-    required this.point,
-  });
-
-  final Vec2 point;
-}
-
-final class VertexSceneHitEntry extends SceneHitEntry<VertexHandle> {
-  const VertexSceneHitEntry({
-    required super.ref,
-    required super.handle,
-    required super.distance,
-  });
-}
-
-final class EdgeSceneHitEntry extends SceneHitEntry<EdgeHandle> {
-  const EdgeSceneHitEntry({
-    required super.ref,
-    required super.handle,
-    required super.distance,
-    required this.t,
-  });
-
-  final double t;
-}
-
-final class FaceSceneHitEntry extends SceneHitEntry<FaceHandle> {
-  const FaceSceneHitEntry({
-    required super.ref,
-    required super.handle,
-    required super.distance,
-    required this.point,
-  });
-
-  final Vec2 point;
 }
 
 final class SceneHitResult {
@@ -67,61 +15,41 @@ final class SceneHitResult {
   });
 
   final Vec2 position;
-  final List<SceneHitEntry> entries;
+  final List<HitEntry> entries;
   final List<StatementId> statements;
 
-  Iterable<FrameSceneHitEntry> get frames => entries.whereType<FrameSceneHitEntry>();
-  Iterable<FaceSceneHitEntry> get faces => entries.whereType<FaceSceneHitEntry>();
-  Iterable<EdgeSceneHitEntry> get edges => entries.whereType<EdgeSceneHitEntry>();
-  Iterable<VertexSceneHitEntry> get vertices => entries.whereType<VertexSceneHitEntry>();
+  Iterable<FrameHitEntry> get frames => entries.whereType<FrameHitEntry>();
+  Iterable<FaceHitEntry> get faces => entries.whereType<FaceHitEntry>();
+  Iterable<EdgeHitEntry> get edges => entries.whereType<EdgeHitEntry>();
+  Iterable<VertexHitEntry> get vertices => entries.whereType<VertexHitEntry>();
+  Iterable<CovertexHitEntry> get coverties => entries.whereType<CovertexHitEntry>();
 
-  Iterable<CellRef> get refs => entries.map((e) => e.ref);
+  Iterable<Ref> get refs => entries.map((e) => e.ref);
 
   bool get isEmpty => entries.isEmpty;
   bool get isNotEmpty => entries.isNotEmpty;
 
-  SceneHitEntry? get top => isNotEmpty ? entries.first : null;
+  HitEntry? get top => isNotEmpty ? entries.first : null;
 }
 
 extension SceneHitTestQuery on SceneQuery {
   SceneHitResult _remapHitResult(Vec2 position, HitResult result) {
-    final entries = <SceneHitEntry>[];
+    final entries = result.entries;
 
-    for (final entry in result.entries) {
-      final handle = entry.handle;
-      final ref = scene.refOf(handle);
-
-      final SceneHitEntry sceneEntry = switch (entry) {
-        FrameHitEntry f => FrameSceneHitEntry(
-          handle: handle.asFrame,
-          ref: ref.asFrame,
-          distance: f.distance,
-          point: f.point,
-        ),
-        VertexHitEntry v => VertexSceneHitEntry(
-          handle: handle.asVertex,
-          ref: ref.asVertex,
-          distance: v.distance,
-        ),
-        EdgeHitEntry e => EdgeSceneHitEntry(
-          handle: handle.asEdge,
-          ref: ref.asEdge,
-          distance: e.distance,
-          t: e.t,
-        ),
-        FaceHitEntry f => FaceSceneHitEntry(
-          handle: handle.asFace,
-          ref: ref.asFace,
-          distance: f.distance,
-          point: f.point,
-        ),
-      };
-
-      entries.add(sceneEntry);
-    }
+    int priority(Ref r) => switch (r) {
+      CovertexRef() => 0,
+      CellRef(kind: .vertex) => 1,
+      CellRef(kind: .edge) => 2,
+      CellRef(kind: .face) => 3,
+      CellRef(kind: .frame) => 4,
+    };
 
     final evaluation = scene.evaluation;
-    entries.sort((a, b) => evaluation.drawIndexOf(b.ref).compareTo(evaluation.drawIndexOf(a.ref)));
+    entries.sort((a, b) {
+      final pa = priority(a.ref), pb = priority(b.ref);
+      if (pa != pb) return pa.compareTo(pb);
+      return evaluation.drawOrder.indexOf(b.ref.cell).compareTo(evaluation.drawOrder.indexOf(a.ref.cell));
+    });
 
     final statements = <StatementId>[];
     for (final entry in entries) {
@@ -138,7 +66,12 @@ extension SceneHitTestQuery on SceneQuery {
   }
 
   SceneHitResult hitTest(Vec2 p, {double tolerance = 0.0}) {
-    final result = scene.bundle.query.hitTest(p, tolerance: tolerance);
+    final result = scene.bundle.query.hitTest(
+      p,
+      tolerance: tolerance,
+      includeCovertices: scene.selection.visibleCovertices,
+    );
+
     return _remapHitResult(p, result);
   }
 

@@ -10,14 +10,14 @@ class SocketDescription {
   const SocketDescription({
     required this.name,
     required this.type,
+    required this.category,
     required this.defaultValue,
-    this.color,
     this.isList = false,
   });
 
   final String name;
   final String type;
-  final String? color;
+  final String category;
   final String defaultValue;
   final bool isList;
 
@@ -71,15 +71,15 @@ class OutputVariableDescription extends VariableDescription {
 class NodeDescription {
   const NodeDescription({
     required this.name,
+    required this.category,
     this.inputs = const [],
     this.outputs = const [],
-    this.color,
   });
 
   final String name;
+  final String category;
   final List<InputVariableDescription> inputs;
   final List<OutputVariableDescription> outputs;
-  final String? color;
 
   String get baseClassName => '${name}Node';
 }
@@ -96,7 +96,7 @@ List<String> generateBlueprint({
     '',
     '// ignore_for_file: unused_import',
     '',
-    'import \'package:blueprint/blueprint.dart\' as bp;',
+    'import \'package:blueprint/core.dart\' as bp;',
     ...prelude,
     '',
     '// dart format off',

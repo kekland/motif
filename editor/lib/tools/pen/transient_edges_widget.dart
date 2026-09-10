@@ -1,4 +1,5 @@
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/handles/cell_handles_painters.dart';
 
 class TransientEdgesWidget extends HookWidget {
   const TransientEdgesWidget({super.key, required this.transform});
@@ -36,8 +37,8 @@ class _TransientEdgeWidget extends HookWidget {
       painter: _TransientEdgePainter(
         edge: edge,
         transform: transform,
-        primaryColor: context.colors.accent.primary,
-        secondaryColor: context.colors.accent.secondary,
+        primaryColor: context.colors.selection.primary,
+        secondaryColor: context.colors.selection.secondary,
       ),
     );
   }
@@ -58,27 +59,22 @@ class _TransientEdgePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw control points
-    final paintControlPoint = Paint()
-      ..color = secondaryColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-
     final cubic = edge.cubic.transformed(.fromListFloat64(transform.storage));
-    canvas.drawLine(cubic.p0.offset, cubic.p1.offset, paintControlPoint);
+    final p0 = cubic.p0.offset, p1 = cubic.p1.offset, p2 = cubic.p2.offset, p3 = cubic.p3.offset;
 
-    if (edge.end == null) return;
-
-    final paint = Paint()
-      ..color = primaryColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-
-    final path = Path();
-
-    path.moveTo(cubic.p0.x, cubic.p0.y);
-    path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y);
-    canvas.drawPath(path, paint);
+    if (edge.end == null) {
+      paintCovertexTangent(canvas, p0, p1, secondaryColor);
+      paintCovertexHandle(canvas, p1, primaryColor, secondaryColor);
+      paintVertexHandle(canvas, p0, primaryColor, secondaryColor);
+    } else {
+      paintCovertexTangent(canvas, p0, p1, secondaryColor);
+      paintCovertexTangent(canvas, p3, p2, secondaryColor);
+      paintEdgeHandle(canvas, cubic, primaryColor);
+      paintVertexHandle(canvas, p0, primaryColor, secondaryColor);
+      paintVertexHandle(canvas, p3, primaryColor, secondaryColor);
+      paintCovertexHandle(canvas, p1, primaryColor, secondaryColor);
+      paintCovertexHandle(canvas, p2, primaryColor, secondaryColor);
+    }
   }
 
   @override

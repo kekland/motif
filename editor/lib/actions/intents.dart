@@ -1,7 +1,8 @@
 part of 'actions.dart';
 
 final intents = (
-  selectCell: SelectCellIntent.new,
+  selectRef: SelectRefIntent.new,
+  selectAll: SelectAllIntent.new,
   clearSelection: ClearSelectionIntent.new,
   undo: UndoIntent.new,
   redo: RedoIntent.new,
@@ -11,31 +12,11 @@ final intents = (
   selectTool: SelectToolIntent.new,
 );
 
-class SelectCellIntent extends Intent {
-  const SelectCellIntent(this.ref);
-  final CellRef ref;
-}
-
-class ClearSelectionIntent extends Intent {
-  const ClearSelectionIntent();
-}
-
-class UndoIntent extends Intent {
-  const UndoIntent();
-}
-
-class RedoIntent extends Intent {
-  const RedoIntent();
-}
-
-class DeleteSelectionIntent extends Intent {
-  const DeleteSelectionIntent();
-}
-
-class CopySelectionIntent extends Intent {
-  const CopySelectionIntent();
-}
-
-class PasteIntent extends Intent {
-  const PasteIntent();
-}
+final class const SelectRefIntent(final Ref ref) extends Intent;
+final class const SelectAllIntent() extends Intent;
+final class const ClearSelectionIntent() extends Intent;
+final class const UndoIntent() extends Intent;
+final class const RedoIntent() extends Intent;
+final class const DeleteSelectionIntent() extends Intent;
+final class const CopySelectionIntent() extends Intent;
+final class const PasteIntent() extends Intent;

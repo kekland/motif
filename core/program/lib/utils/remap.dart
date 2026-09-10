@@ -2,14 +2,28 @@ part of '../program.dart';
 
 enum RemapResult { unchanged, changed, refused }
 
-extension type const Remap._(Map<CellRef, List<CellRef>> map) implements Object {
-  Remap.empty() : this._({});
+final class Remap {
+  Remap.refs(Map<CellRef, List<CellRef>> map) : _map = map, _namespaceMap = {};
+  Remap.namespace(Map<StatementId, StatementId> map) : _map = {}, _namespaceMap = map;
+  Remap.empty() : _map = {}, _namespaceMap = {};
 
-  Iterable<CellRef> get keys => map.keys;
-  Iterable<List<CellRef>> get values => map.values;
+  final Map<CellRef, List<CellRef>> _map;
+  final Map<StatementId, StatementId> _namespaceMap;
 
-  List<CellRef>? operator [](CellRef key) => map[key];
-  void operator []=(CellRef key, List<CellRef> value) => map[key] = value;
+  Iterable<CellRef> get keys => _map.keys;
+  Iterable<List<CellRef>> get values => _map.values;
+
+  List<CellRef>? operator [](CellRef ref) {
+    final remapped = _map[ref];
+    if (remapped != null) return remapped;
+
+    final namespace = _namespaceMap[ref.statementId];
+    if (namespace != null) return [ref.copyWith(namespace: namespace.value)];
+
+    return null;
+  }
+
+  void operator []=(CellRef key, List<CellRef> value) => _map[key] = value;
 
   (RemapResult, CellRef<H>) one<H extends CellHandle>(CellRef<H> ref) => switch (this[ref]) {
     [final r] => (.changed, r as CellRef<H>),
@@ -37,7 +51,9 @@ extension type const Remap._(Map<CellRef, List<CellRef>> map) implements Object 
     return touched ? (.changed, out) : (.unchanged, refs.toList());
   }
 
+  StatementId? statement(StatementId id) => _namespaceMap[id];
+
   void add(Remap other) {
-    map.addAll(other.map);
+    _map.addAll(other._map);
   }
 }

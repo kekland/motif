@@ -6,7 +6,7 @@ final class DeleteFrameOp extends Op<void> {
 
   @override
   void _execute(Transaction t, bool produceResult) {
-    final f = t.bundle.frame(target.id);
+    final f = t.bundle.frame(target);
     if (f == null || !t.bundle.isFrameLive(f)) return;
     t._deleteFrame(f, cascade: true);
   }
@@ -21,7 +21,7 @@ final class DeleteVertexOp extends Op<void> {
 
   @override
   void _execute(Transaction t, bool produceResult) {
-    final v = t.bundle.vertex(target.id);
+    final v = t.bundle.vertex(target);
     if (v == null || !t.bundle.isVertexLive(v)) return;
     t._deleteVertex(v, cascade: true);
   }
@@ -38,7 +38,7 @@ final class DeleteEdgeOp extends Op<void> {
   @override
   void _execute(Transaction t, bool produceResult) {
     final b = t.bundle;
-    final e = b.edge(target.id);
+    final e = b.edge(target);
     if (e == null || !b.isEdgeLive(e)) return;
 
     final v0 = b.edgeStart(e), v1 = b.edgeEnd(e);
@@ -58,7 +58,7 @@ final class DeleteFaceOp extends Op<void> {
 
   @override
   void _execute(Transaction t, bool produceResult) {
-    final f = t.bundle.face(target.id);
+    final f = t.bundle.face(target);
     if (f == null || !t.bundle.isFaceLive(f)) return;
     t._deleteFace(f);
   }

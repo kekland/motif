@@ -5,7 +5,7 @@ final class CutEdgeStatement extends Statement {
     Selector<EdgeRef> target, {
     required this.t,
     super.id,
-    super.modifiers,
+    super.enabled,
   }) : target = target.clone();
 
   final Selector<EdgeRef> target;
@@ -26,28 +26,36 @@ final class CutEdgeStatement extends Statement {
   @override
   CutEdgeStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     Selector<EdgeRef>? target,
     double? t,
   }) => .new(
-    id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
     target ?? this.target,
+    id: id ?? this.id,
+    enabled: enabled ?? this.enabled,
     t: t ?? this.t,
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) {
-    final r = context.resolve(target);
-    if (targets.any((c) => c.kind == .edge)) return .forward([r]);
+  TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
+    CellRef c when c == vertex => .absorb,
+    CellRef(kind: .edge) => .forward([context.resolve(this.target)]),
+    CovertexRef c when c.edge == edge0 && c.isStart => .forward([CovertexRef.start(context.resolve(this.target))]),
+    CovertexRef c when c.edge == edge1 && c.isEnd => .forward([CovertexRef.end(context.resolve(this.target))]),
+    _ => .refuse,
+  };
 
-    final v = targets.single;
-    final p0 = context.bundle.vertexPosition(context.handle(v).asVertex);
-    final cubic = context.bundle.edgeCubic(context.handle(r));
+  @override
+  TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
+    final p0 = context.bundle.vertexPosition(context.handle(vertex).asVertex);
+    final cubic = context.bundle.edgeCubic(context.handle(context.resolve(target)));
 
-    return .absorb((m) {
-      final t = cubic.closestPoint(m.transform2(p0)).t.clamp(1e-6, 1 - 1e-6);
-      return copyWith(t: t);
-    }, v);
+    return .new(
+      (m) {
+        final t = cubic.closestPoint(m.transform2(p0)).t.clamp(1e-6, 1 - 1e-6);
+        return copyWith(t: t);
+      },
+      cell: vertex,
+    );
   }
 }

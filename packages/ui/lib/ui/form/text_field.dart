@@ -13,6 +13,7 @@ class TextFieldOptions {
     this.hintText,
     this.textStyle,
     this.builder,
+    this.color,
     this.border,
     this.borderRadius,
   });
@@ -25,6 +26,7 @@ class TextFieldOptions {
   final String? hintText;
   final TextStyle? textStyle;
   final ProxyWidgetBuilder? builder;
+  final Color? color;
   final BorderSide? border;
   final BorderRadius? borderRadius;
 
@@ -37,6 +39,7 @@ class TextFieldOptions {
     hintText: other.hintText ?? hintText,
     textStyle: other.textStyle ?? textStyle,
     builder: other.builder ?? builder,
+    color: other.color ?? color,
     border: other.border ?? border,
     borderRadius: other.borderRadius ?? borderRadius,
   );
@@ -52,6 +55,7 @@ class TextFieldOptions {
       other.hintText == hintText &&
       other.textStyle == textStyle &&
       other.builder == builder &&
+      other.color == color &&
       other.border == border &&
       other.borderRadius == borderRadius;
 
@@ -65,6 +69,7 @@ class TextFieldOptions {
     hintText,
     textStyle,
     builder,
+    color,
     border,
     borderRadius,
   );
@@ -124,6 +129,7 @@ class TextField extends HookWidget {
     final textStyle = options.textStyle;
     final useTabularFigures = options.useTabularFigures;
     final builder = options.builder;
+    final color = options.color;
     final border = options.border;
     final borderRadius = options.borderRadius;
 
@@ -193,6 +199,11 @@ class TextField extends HookWidget {
       child = builder(context, child);
     }
 
+    var resolvedBorder = border ?? .new(color: context.colors.divider);
+    if (hasFocus) {
+      resolvedBorder = resolvedBorder.copyWith(color: context.colors.accent.primary.background);
+    }
+
     return TextFieldTapRegion(
       child: FocusScope(
         autofocus: autofocus,
@@ -204,9 +215,8 @@ class TextField extends HookWidget {
           },
           supportedDevices: supportedDevices,
           width: double.infinity,
-          color: context.colors.surface.secondary,
-          borderSide:
-              border ?? .new(color: hasFocus ? context.colors.accent.primary.background : context.colors.divider),
+          color: color ?? context.colors.surface.secondary,
+          borderSide: resolvedBorder,
           borderRadius: borderRadius ?? .circular(4.0),
           cursor: SystemMouseCursors.text,
           state: {if (hasFocus) .focused},

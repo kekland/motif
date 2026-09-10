@@ -5,7 +5,7 @@ final class VertexStatement extends Statement with PlacedStatement {
     this.position, {
     this.style = .default_,
     super.id,
-    super.modifiers,
+    super.enabled,
     FrameRef? parent,
   }) : parent = .of(parent);
 
@@ -32,7 +32,7 @@ final class VertexStatement extends Statement with PlacedStatement {
   @override
   VertexStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     Vec2? position,
     VertexStyle? style,
     FrameRef? parent,
@@ -40,13 +40,16 @@ final class VertexStatement extends Statement with PlacedStatement {
     position ?? this.position,
     style: style ?? this.style,
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     parent: parent ?? this.parent?.ref,
   );
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) => .absorb(
+  TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
+
+  @override
+  TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) => .new(
     (m) => copyWith(position: m.transform2(position)),
-    ref,
+    cell: ref,
   );
 }

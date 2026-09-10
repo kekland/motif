@@ -26,6 +26,7 @@ final class Delta {
   final added = HashSet<CellRef>();
   final deleted = HashSet<CellRef>();
   var moved = <CellRef>[];
+  var movedFrames = <FrameRef>{};
 
   late final writes = {...added, ...deleted, ...moved};
 
@@ -34,20 +35,11 @@ final class Delta {
   void markAdded(CellRef ref) => added.add(ref);
   void markDeleted(CellRef ref) => deleted.add(ref);
 
-  // void record(Lineage l) {
-  //   assert(_deleted.contains(l.source), 'lineage source must be deleted');
-  //   assert(_lineageBySource[l.source] == null, 'duplicate lineage source ${l.source}');
-  //   _lineage.add(l);
-  //   _lineageBySource[l.source] = l;
-  //   for (final p in l.products) _lineageByProduct[p] = l;
-  // }
-
-  // void recordAll(Iterable<Lineage> ls) => ls.forEach(record);
-
   void fold(Delta other) {
     actions.addAll(other.actions);
     added.addAll(other.added);
     moved.addAll(other.moved);
+    movedFrames.addAll(other.movedFrames);
     deleted.addAll(other.deleted);
     lineage.addAll(other.lineage);
   }

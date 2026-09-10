@@ -18,6 +18,7 @@ class ColorInputWindow extends HookWidget {
     ValueChanged<ColorData>? onChanged,
   }) => WindowEntry.withContextAnchor(
     context,
+    isModal: true,
     builder: (_) => ColorInputWindow(value: value, onChanged: onChanged),
   );
 

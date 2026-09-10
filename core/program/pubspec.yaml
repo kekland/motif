@@ -9,6 +9,7 @@ dependencies:
   geometry:
   kernel:
   color:
+  blueprint:
 
   collection: ^1.19.1
   listen: ^1.0.1

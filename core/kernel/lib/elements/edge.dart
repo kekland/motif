@@ -18,16 +18,18 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
   var cvEnd = CovertexIndexStorage<EdgeIndex>();
   var radialStart = CoedgeIndexStorage<EdgeIndex>();
   var cubic = Cubic2Storage<EdgeIndex>();
-  var cubicWorld = Cubic2Storage<EdgeIndex>();
   var cubicVersion = Int32Storage<EdgeIndex>();
   var cubicEpoch = Int32Storage<EdgeIndex>();
+  var cubicWorld = Cubic2Storage<EdgeIndex>();
+  var cubicWorldVersion = Int32Storage<EdgeIndex>();
+  var cubicWorldEpoch = Int32Storage<EdgeIndex>();
   var cubicArcIndex = ObjectStorage<EdgeIndex, CubicArcIndex>();
   var parent = FrameIndexStorage<EdgeIndex>();
   var siblingPrev = CellIndexStorage<EdgeIndex>();
   var siblingNext = CellIndexStorage<EdgeIndex>();
   var crossStart = CoframeIndexStorage<EdgeIndex>();
 
-  final id = IdTable<EdgeIndex>('edge');
+  final id = IdTable<EdgeRef, EdgeIndex>('edge');
 
   @override
   void grow(int atLeast) {
@@ -39,9 +41,11 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
       cvEnd = cvEnd.grow(atLeast);
       radialStart = radialStart.grow(atLeast);
       cubic = cubic.grow(atLeast);
-      cubicWorld = cubicWorld.grow(atLeast);
       cubicVersion = cubicVersion.grow(atLeast);
       cubicEpoch = cubicEpoch.grow(atLeast);
+      cubicWorld = cubicWorld.grow(atLeast);
+      cubicWorldVersion = cubicWorldVersion.grow(atLeast);
+      cubicWorldEpoch = cubicWorldEpoch.grow(atLeast);
       cubicArcIndex = cubicArcIndex.grow(atLeast);
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
@@ -59,9 +63,11 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
     cvEnd = .copyFrom(other.cvEnd);
     radialStart = .copyFrom(other.radialStart);
     cubic = .copyFrom(other.cubic);
-    cubicWorld = .copyFrom(other.cubicWorld);
     cubicVersion = .copyFrom(other.cubicVersion);
     cubicEpoch = .copyFrom(other.cubicEpoch);
+    cubicWorld = .copyFrom(other.cubicWorld);
+    cubicWorldVersion = .copyFrom(other.cubicWorldVersion);
+    cubicWorldEpoch = .copyFrom(other.cubicWorldEpoch);
     cubicArcIndex = .copyFrom(other.cubicArcIndex);
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
@@ -70,8 +76,8 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
     id.copyFrom(other.id);
   }
 
-  EdgeHandle? handleForId(CellId id) {
-    final i = this.id.indexOf(id);
+  EdgeHandle? handleForRef(EdgeRef ref) {
+    final i = id.indexOf(ref);
     if (i == null) return null;
     return handleFor(i);
   }

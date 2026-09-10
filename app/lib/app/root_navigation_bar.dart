@@ -11,21 +11,21 @@ class RootNavigationBar extends StatelessWidget {
         top: true,
         bottom: false,
         child: WindowTitlebar(
-          preferredHeight: 48.0,
+          preferredHeight: 36.0,
           trafficLightsHorizontalOffset: 12.0,
           child: Row(
             children: [
               VerticalDivider(),
               GestureSurface(
                 onTap: () {},
-                width: 48.0,
-                height: 48.0,
+                width: 36.0,
+                height: 36.0,
                 child: Center(child: Icons.home()),
               ),
               VerticalDivider(),
               GestureSurface(
                 onTap: () {},
-                height: 48.0,
+                height: 36.0,
                 state: {.selected},
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Center(

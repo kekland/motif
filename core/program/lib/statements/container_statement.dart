@@ -11,7 +11,7 @@ final class ContainerStatement extends ShapeStatement<RectangleObjectShape> impl
     super.faceStyle,
     super.parent,
     super.id,
-    super.modifiers,
+    super.enabled,
   });
 
   @override
@@ -20,7 +20,7 @@ final class ContainerStatement extends ShapeStatement<RectangleObjectShape> impl
   @override
   ContainerStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     Layout? layout,
     LayoutSize? size,
     Mat4? transform,
@@ -31,7 +31,7 @@ final class ContainerStatement extends ShapeStatement<RectangleObjectShape> impl
     FrameRef? parent,
   }) => .new(
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     layout: layout ?? this.layout,
     size: size ?? this.size,
     transform: transform ?? this.transform,

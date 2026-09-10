@@ -1,54 +1,54 @@
 part of '../kernel.dart';
 
 extension FrameBoundsQuery on TopologyQuery {
-  Aabb2 cellBbox(CellHandle h) {
-    if (h.kind == .vertex) {
-      return .point(bundle.vertexPosition(h.asVertex));
-    } else if (h.kind == .edge) {
-      return bundle.edgeCubic(h.asEdge).bboxTight;
-    } else if (h.kind == .frame) {
-      final bounds = frameBounds(h.asFrame);
-      if (bounds != null) return bounds;
-      final transform = bundle.frameTransform(h.asFrame);
-      return .point(transform.translation2);
-    } else if (h.kind == .face) {
-      final hull = Aabb2.invertedInfinity();
-      final boundary = bundle.faceBoundary(h.asFace);
-      for (final cycle in boundary) {
-        for (final coedge in cycle) {
-          final edgeBbox = bundle.edgeCubic(coedge.edge, space: bundle.parentOf(h)).bboxTight;
-          hull.hull(edgeBbox);
-        }
-      }
-      return hull;
+  Aabb2 hull(Iterable<Ref> refs, {FrameRef? space}) {
+    final hull = Aabb2.invertedInfinity();
+
+    for (final r in refs) {
+      final b = bbox(r, space: space);
+      if (b != null) hull.hull(b);
     }
 
-    throw ArgumentError('Invalid cell kind: ${h.kind}');
+    return hull;
   }
 
-  Aabb2 cellBboxWorld(CellHandle h) {
-    if (h.kind == .vertex) {
-      return .point(bundle.vertexPosition(h.asVertex, space: .root));
-    } else if (h.kind == .edge) {
-      return bundle.edgeCubic(h.asEdge, space: .root).bboxTight;
-    } else if (h.kind == .frame) {
-      final bounds = frameBounds(h.asFrame);
-      final transform = bundle.frameTransform(h.asFrame, space: .root);
-      if (bounds != null) return bounds.transformed(transform);
-      return .point(transform.translation2);
-    } else if (h.kind == .face) {
-      final hull = Aabb2.invertedInfinity();
-      final boundary = bundle.faceBoundary(h.asFace);
-      for (final cycle in boundary) {
-        for (final coedge in cycle) {
-          final edgeBbox = bundle.edgeCubic(coedge.edge, space: .root).bboxTight;
-          hull.hull(edgeBbox);
-        }
-      }
-      return hull;
-    }
+  Aabb2? bbox(Ref ref, {FrameRef? space}) {
+    final spaceHandle = space != null ? bundle.frame(space)! : null;
+    return switch (ref) {
+      CellRef c => _cellBbox(bundle.handle(c)!, space: spaceHandle),
+      CovertexRef cv => _covertexBbox(cv.resolve(bundle)!, space: spaceHandle),
+    };
+  }
 
-    throw ArgumentError('Invalid cell kind: ${h.kind}');
+  Aabb2? _cellBbox(CellHandle handle, {FrameHandle? space}) {
+    return switch (handle.kind) {
+      .vertex => .point(bundle.vertexPosition(handle.asVertex, space: space)),
+      .edge => bundle.edgeCubic(handle.asEdge, space: space).bboxTight,
+      .frame => _frameBbox(handle.asFrame, space: space),
+      .face => _faceBbox(handle.asFace, space: space),
+    };
+  }
+
+  Aabb2? _covertexBbox(Covertex cv, {FrameHandle? space}) {
+    return .point(bundle.covertexPosition(cv, space: space));
+  }
+
+  Aabb2 _frameBbox(FrameHandle h, {FrameHandle? space}) {
+    final transform = bundle.frameTransform(h, space: space);
+    final bounds = frameBounds(h);
+    return bounds != null ? bounds.transformed(transform) : .point(transform.translation2);
+  }
+
+  Aabb2 _faceBbox(FaceHandle h, {FrameHandle? space}) {
+    final _space = space ?? bundle.parentOf(h);
+    final hull = Aabb2.invertedInfinity();
+    for (final cycle in bundle.faceBoundary(h)) {
+      for (final coedge in cycle) {
+        final edgeBbox = bundle.edgeCubic(coedge.edge, space: _space).bboxTight;
+        hull.hull(edgeBbox);
+      }
+    }
+    return hull;
   }
 
   Aabb2? frameBounds(FrameHandle h) {

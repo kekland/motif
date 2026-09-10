@@ -13,7 +13,7 @@ final class ReparentOp extends Op<void> {
   void _execute(Transaction t, bool produceResult) {
     t._reparent(
       t.cellFor(cell),
-      parent != null ? t.frameFor(parent!.id) : null,
+      parent != null ? t.frameFor(parent!) : null,
     );
   }
 

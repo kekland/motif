@@ -5,7 +5,7 @@ final class MakeFaceOp extends Op<FaceHandle> {
     this.outer, {
     this.holes = const [],
     FrameRef? parent,
-  }) : placement = .ref(parent?.id);
+  }) : placement = .ref(parent);
 
   final List<EdgeRef> outer;
   final List<List<EdgeRef>> holes;
@@ -20,7 +20,7 @@ final class MakeFaceOp extends Op<FaceHandle> {
     final bundle = t.bundle;
 
     Cycle makeCycle(List<EdgeRef> edges, String name, bool isPositive) {
-      final handles = [for (final e in edges) t.edgeFor(e.id)];
+      final handles = [for (final e in edges) t.edgeFor(e)];
       final chain = bundle._chainEdges(handles);
       if (!chain.isClosed) throw ArgumentError.value(edges, name, 'must form a closed chain');
 
@@ -46,7 +46,7 @@ final class MakeFaceOp extends Op<FaceHandle> {
     if (other is! MakeFaceOp) return false;
     if (outer.length != other.outer.length) return false;
     for (var k = 0; k < outer.length; k++) {
-      if (outer[k].id != other.outer[k].id) return false;
+      if (outer[k] != other.outer[k]) return false;
     }
 
     if (holes.length != other.holes.length) return false;
@@ -54,7 +54,7 @@ final class MakeFaceOp extends Op<FaceHandle> {
       final a = holes[k], b = other.holes[k];
       if (a.length != b.length) return false;
       for (var j = 0; j < a.length; j++) {
-        if (a[j].id != b[j].id) return false;
+        if (a[j] != b[j]) return false;
       }
     }
 

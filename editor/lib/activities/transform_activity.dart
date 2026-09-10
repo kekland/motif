@@ -3,12 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 abstract class TransformActivity extends DragActivity with ExclusiveCursorDragActivity, KeyboardListenerDragActivity {
-  TransformActivity(this.editor, this.refs, {super.onStart, super.onEnd});
+  TransformActivity(this.editor, this.refs, {super.onStart, super.onUpdate, super.onEnd});
 
   final Editor editor;
   Scene get scene => editor.scene;
 
-  final Iterable<CellRef> refs;
+  final Iterable<Ref> refs;
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight, .altLeft, .altRight};

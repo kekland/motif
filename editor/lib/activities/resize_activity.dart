@@ -2,32 +2,27 @@ import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
 class ResizeActivity {
-  static DragActivity side(Editor editor, Iterable<CellRef> refs, {required Side side}) {
+  static DragActivity side(Editor editor, Iterable<Ref> refs, {required Side side}) {
     return _SideResizeActivity(editor, refs, side);
   }
 
-  static DragActivity corner(Editor editor, Iterable<CellRef> refs, {required Corner corner}) {
+  static DragActivity corner(Editor editor, Iterable<Ref> refs, {required Corner corner}) {
     return _CornerResizeActivity(editor, refs, corner);
   }
 }
 
 abstract class _BaseResizeActivity extends TransformActivity {
   _BaseResizeActivity(super.editor, super.cells);
-  
+
   late final Aabb2 selectionHull;
 
-  Aabb2 applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio);
+  ResizeResult applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio);
 
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
 
-    selectionHull = Aabb2.invertedInfinity();
-    for (final r in refs) {
-      final handle = scene.bundle.handle(r)!;
-      final bbox = scene.bundle.query.cellBboxWorld(handle);
-      selectionHull.hull(bbox);
-    }
+    selectionHull = scene.bundle.query.hull(refs, space: .root);
     selectionHull.transform(worldToSpace);
   }
 
@@ -36,20 +31,14 @@ abstract class _BaseResizeActivity extends TransformActivity {
     final worldDelta = editor.globalToScene(details.globalPosition) - editor.globalToScene(startDetails.globalPosition);
     final delta = worldToSpace.transformDelta2(worldDelta);
 
-    final target = applyResize(initialHull, delta, isAltPressed, isShiftPressed);
-    final transform = _bboxTransform(initialHull, target);
+    final (:anchor, :scale) = applyResize(initialHull, delta, isAltPressed, isShiftPressed);
+    final transform = Mat4.identity()
+      ..translate(anchor.x, anchor.y)
+      ..scale(scale.x, scale.y)
+      ..translate(-anchor.x, -anchor.y);
 
     session.apply(spaceToWorld * transform * worldToSpace);
     super.onUpdate(details);
-  }
-
-  Mat4 _bboxTransform(Aabb2 from, Aabb2 to) {
-    final sx = from.width == 0 ? 1.0 : to.width / from.width;
-    final sy = from.height == 0 ? 1.0 : to.height / from.height;
-    return Mat4.identity()
-      ..translate(to.min.x, to.min.y)
-      ..scale(sx, sy)
-      ..translate(-from.min.x, -from.min.y);
   }
 
   @override
@@ -78,7 +67,7 @@ final class _SideResizeActivity extends _BaseResizeActivity {
   MouseCursor get cursor => resolveCursor(Cursors.resize, side: side);
 
   @override
-  Aabb2 applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio) {
+  ResizeResult applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio) {
     return effectiveSide.applyResize(initial, delta, symmetric: symmetric, keepAspectRatio: keepAspectRatio);
   }
 }
@@ -103,7 +92,7 @@ final class _CornerResizeActivity extends _BaseResizeActivity {
   }
 
   @override
-  Aabb2 applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio) {
+  ResizeResult applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio) {
     return effectiveCorner.applyResize(initial, delta, symmetric: symmetric, keepAspectRatio: keepAspectRatio);
   }
 }

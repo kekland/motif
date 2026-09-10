@@ -6,7 +6,7 @@ class IconButton extends StatelessWidget {
     required this.child,
     this.onTap,
     this.size = 32.0,
-    this.iconSize = 16.0,
+    this.iconSize = 18.0,
     this.color,
     this.foregroundColor,
     this.borderRadius,

@@ -25,14 +25,29 @@ typedef AppDangerColors = ({
   SurfaceColor secondary,
 });
 
+typedef AppBlueprintColors = ({
+  Color int,
+  Color float,
+  Color vector,
+  Color geometry,
+  Color math,
+});
+
+typedef AppSelectionColors = ({
+  Color primary,
+  Color secondary,
+});
+
 typedef AppColors = ({
   AppSurfaceColors surface,
   AppDisplayColors display,
   AppAccentColors accent,
   AppDangerColors danger,
+  AppSelectionColors selection,
   Color divider,
   Color tint,
   Color normal,
   Color inverse,
   Color shadow,
+  AppBlueprintColors blueprint,
 });

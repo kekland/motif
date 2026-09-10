@@ -2,11 +2,12 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 
 part 'key/index.dart';
 part 'key/handle.dart';
-part 'key/id.dart';
+part 'key/ref.dart';
 
 part 'utils/arena.dart';
 part 'utils/storage.dart';

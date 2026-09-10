@@ -65,15 +65,15 @@ extension type const Coedge._((EdgeHandle, bool) v) {
   Coedge get reversed => Coedge._((edge, !forward));
   Coedge withEdge(EdgeHandle other, {bool flip = false}) => Coedge._((other, flip ? !forward : forward));
 
-  CoedgeRef asRef(Bundle bundle) => .new(bundle.edgeId(edge), forward: forward);
+  CoedgeRef ref(Bundle bundle) => .new(bundle.edgeRef(edge), forward: forward);
 }
 
-extension type const CoedgeRef._((CellId, bool) v) {
-  const CoedgeRef(CellId edge, {required bool forward}) : this._((edge, forward));
-  const CoedgeRef.forward(CellId edge) : this._((edge, true));
-  const CoedgeRef.reverse(CellId edge) : this._((edge, false));
+extension type const CoedgeRef._((EdgeRef, bool) v) {
+  const CoedgeRef(EdgeRef edge, {required bool forward}) : this._((edge, forward));
+  const CoedgeRef.forward(EdgeRef edge) : this._((edge, true));
+  const CoedgeRef.reverse(EdgeRef edge) : this._((edge, false));
 
-  CellId get edge => v.$1;
+  EdgeRef get edge => v.$1;
   bool get forward => v.$2;
 
   CoedgeRef get reversed => CoedgeRef._((edge, !forward));

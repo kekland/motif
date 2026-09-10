@@ -14,7 +14,7 @@ final class CutEdgeOp extends Op<MultiCutEdgeResult> {
     if (ts.length == 1) return _executeOne(t);
 
     final b = t.bundle;
-    final target = t.edgeFor(this.target.id);
+    final target = t.edgeFor(this.target);
     final v0 = b.edgeStart(target), v1 = b.edgeEnd(target);
     final frame = b.parentOf(target)!;
     final cubic = b.edgeCubic(target);
@@ -58,7 +58,7 @@ final class CutEdgeOp extends Op<MultiCutEdgeResult> {
     assert(ts.length == 1);
     final b = t.bundle;
 
-    final target = t.edgeFor(this.target.id);
+    final target = t.edgeFor(this.target);
     final v0 = b.edgeStart(target), v1 = b.edgeEnd(target);
     final frame = b.parentOf(target)!;
     final cubic = b.edgeCubic(target);

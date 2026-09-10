@@ -50,26 +50,45 @@ mixin ExclusiveCursorDragActivity on DragActivity {
 
   @override
   void onEnd(DragEndDetails? details) {
-    ExclusiveMouseCursor.instance.release();
+    _release();
     super.onEnd(details);
+  }
+
+  @override
+  void onCancel() {
+    _release();
+    super.onCancel();
   }
 
   void updateCursor(MouseCursor cursor) => _set(cursor);
 
   MouseCursor? _cursorToSet;
+  var _isSet = false;
   var _isScheduled = false;
+  var _isReleased = false;
   void _set(MouseCursor cursor) {
     _cursorToSet = cursor;
 
     if (_isScheduled) return;
     _isScheduled = true;
 
-    SchedulerBinding.instance.scheduleFrameCallback(
-      (_) {
-        ExclusiveMouseCursor.instance.set(_cursorToSet!);
-        _isScheduled = false;
-      },
-      scheduleNewFrame: false,
-    );
+    scheduleMicrotask(() {
+      if (_isReleased) return;
+      ExclusiveMouseCursor.instance.set(_cursorToSet!);
+      _isScheduled = false;
+      _isSet = true;
+    });
+  }
+
+  void _release() {
+    if (!_isSet) {
+      _isScheduled = false;
+      _isReleased = true;
+      return;
+    }
+
+    if (_isReleased) return;
+    _isReleased = true;
+    ExclusiveMouseCursor.instance.release();
   }
 }

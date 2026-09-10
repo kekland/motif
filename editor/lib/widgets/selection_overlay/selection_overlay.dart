@@ -1,4 +1,5 @@
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/selection_overlay/selection_cell_handles.dart';
 
 class CellSelectionOverlay extends HookWidget {
   const CellSelectionOverlay({
@@ -10,7 +11,7 @@ class CellSelectionOverlay extends HookWidget {
 
   final Editor editor;
   final Matrix4 childPaintTransform;
-  final DragActivity Function(List<CellRef> refs)? onMove;
+  final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +24,18 @@ class CellSelectionOverlay extends HookWidget {
 
     return Stack(
       children: [
-        for (final group in selectionGroups)
+        for (final group in selectionGroups) ...[
+          SelectionCellHandles(
+            childPaintTransform: childPaintTransform,
+            refs: group,
+          ),
           CellSelectionGroupOverlay(
             refs: group,
             editor: editor,
             childPaintTransform: childPaintTransform,
             onMove: onMove,
           ),
+        ],
       ],
     );
   }
@@ -44,10 +50,10 @@ class CellSelectionGroupOverlay extends HookWidget {
     this.onMove,
   });
 
-  final Iterable<CellRef> refs;
+  final Iterable<Ref> refs;
   final Editor editor;
   final Matrix4 childPaintTransform;
-  final DragActivity Function(List<CellRef> refs)? onMove;
+  final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +65,7 @@ class CellSelectionGroupOverlay extends HookWidget {
 
     final refs = this.refs.toList();
     if (refs.isEmpty) return const SizedBox.expand();
-
-    final handles = refs.map((r) => editor.handleOf(r)).nonNulls.toList();
-    if (handles.isEmpty) return const SizedBox.expand();
+    final refHash = Object.hashAll(refs);
 
     Widget _buildSelectionControls({
       required Mat4 transform,
@@ -70,13 +74,13 @@ class CellSelectionGroupOverlay extends HookWidget {
     }) {
       final isZero = childSize.width == 0.0 || childSize.height == 0.0;
 
-      final onMove = this.onMove ?? (refs) => MoveActivity(editor, refs);
+      final onMove = this.onMove ?? (_, refs) => MoveActivity(editor, refs);
 
       return SelectionControls(
-        key: ValueKey(editor.selection.stamp),
+        key: ValueKey(refHash),
         transform: transform,
         layoutSize: layoutSize,
-        onMove: () => onMove(refs),
+        onMove: (e) => onMove(e, refs),
         onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s),
         onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c),
         onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c),
@@ -86,10 +90,10 @@ class CellSelectionGroupOverlay extends HookWidget {
       );
     }
 
-    if (handles.length == 1) {
-      final handle = handles.single;
-      final bbox = editor.bundle.query.cellBbox(handle);
-      final cellTransform = editor.bundle.query.localToWorld(handle);
+    if (refs.length == 1) {
+      final ref = refs.single;
+      final bbox = editor.bundle.query.bbox(ref)!;
+      final cellTransform = editor.bundle.query.localToWorld(ref);
 
       final totalTransform = Mat4.viewFloat64(childPaintTransform.storage) * cellTransform;
       totalTransform.translate(bbox.min.x, bbox.min.y);
@@ -105,11 +109,7 @@ class CellSelectionGroupOverlay extends HookWidget {
         childSize: size,
       );
     } else {
-      final bboxes = handles.map((h) => editor.bundle.query.cellBboxWorld(h)).toList();
-
-      final hull = Aabb2.invertedInfinity();
-      for (final bbox in bboxes) hull.hull(bbox);
-
+      final hull = editor.bundle.query.hull(refs, space: .root);
       final overlayHull = hull.transformed(Mat4.viewFloat64(childPaintTransform.storage));
 
       return _buildSelectionControls(

@@ -1,16 +1,16 @@
 part of '../kernel.dart';
 
 final class EdgeAdd(
-  final CellId id,
-  final CellId start,
-  final CellId end,
+  final EdgeRef ref,
+  final VertexRef start,
+  final VertexRef end,
   final Vec2? startTangent,
   final Vec2? endTangent,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   EdgeHandle reapply(Transaction txn) => txn.bundle._edgeAdd(
-    id,
+    ref,
     txn.vertexFor(start),
     txn.vertexFor(end),
     startTangent: startTangent,
@@ -20,22 +20,22 @@ final class EdgeAdd(
 
   @override
   void unapply(Transaction txn) => txn.bundle._edgeFree(
-    txn.edgeFor(id),
+    txn.edgeFor(ref),
   );
 }
 
 final class EdgeDelete(
-  final CellId id,
+  final EdgeRef ref,
   final CellPlacement placement,
 ) extends Mutation {
   @override
   void reapply(Transaction txn) => txn.bundle._edgeRemove(
-    txn.edgeFor(id),
+    txn.edgeFor(ref),
   );
 
   @override
   void unapply(Transaction txn) => txn.bundle._edgeRelink(
-    txn.edgeFor(id),
+    txn.edgeFor(ref),
     parent: placement.resolveParent(txn),
   );
 }
@@ -43,9 +43,9 @@ final class EdgeDelete(
 final class EdgeRepoint extends Mutation {
   EdgeRepoint(this.edge, {this.start, this.end});
 
-  final CellId edge;
-  final ({CellId from, CellId to})? start;
-  final ({CellId from, CellId to})? end;
+  final EdgeRef edge;
+  final ({VertexRef from, VertexRef to})? start;
+  final ({VertexRef from, VertexRef to})? end;
 
   @override
   void reapply(Transaction txn) => txn.bundle._edgeRepoint(
@@ -70,16 +70,17 @@ extension EdgeMutationTransaction on Transaction {
     Vec2? endTangent,
     FrameHandle? parent,
   }) {
-    final handle = _addCell(
-      (id) => EdgeAdd(
-        id,
-        start.id(bundle),
-        end.id(bundle),
+    final handle = _addCell<EdgeHandle>(
+      .edge,
+      (ref) => EdgeAdd(
+        ref,
+        start.ref(bundle),
+        end.ref(bundle),
         startTangent,
         endTangent,
         .from(bundle, parent),
       ),
-      (id) => bundle.edge(id)!,
+      (ref) => bundle.edge(ref)!,
     );
 
     _setEdgeTangents(handle, start: startTangent, end: endTangent);
@@ -95,7 +96,7 @@ extension EdgeMutationTransaction on Transaction {
       for (final face in bundle.edgeFaces(handle).toSet()) _deleteFace(face);
     }
 
-    _deleteCell(handle, EdgeDelete(handle.id(bundle), .of(bundle, handle)));
+    _deleteCell(handle, EdgeDelete(handle.ref(bundle), .of(bundle, handle)));
   }
 
   void _repointEdge(EdgeHandle e, {VertexHandle? start, VertexHandle? end}) {
@@ -110,9 +111,9 @@ extension EdgeMutationTransaction on Transaction {
 
     final mutation = _recordMutation(
       EdgeRepoint(
-        bundle.edgeId(e),
-        start: start != null ? (from: oldStart.id(bundle), to: start.id(bundle)) : null,
-        end: end != null ? (from: oldEnd.id(bundle), to: end.id(bundle)) : null,
+        bundle.edgeRef(e),
+        start: start != null ? (from: oldStart.ref(bundle), to: start.ref(bundle)) : null,
+        end: end != null ? (from: oldEnd.ref(bundle), to: end.ref(bundle)) : null,
       ),
     );
 

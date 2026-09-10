@@ -1,6 +1,6 @@
 part of '../kernel.dart';
 
-typedef NearestVertexResult = ({VertexHandle vertex, double distance});
+typedef NearestVertexResult = ({VertexRef vertex, double distance});
 
 extension NearestVertexQuery on TopologyQuery {
   NearestVertexResult? nearestVertex(Vec2 p, double tolerance) {
@@ -16,7 +16,7 @@ extension NearestVertexQuery on TopologyQuery {
       }
     }
 
-    if (best != null) return (vertex: best, distance: math.sqrt(bestD2));
-    return null;
+    if (best == null) return null;
+    return (vertex: bundle.vertexRef(best), distance: math.sqrt(bestD2));
   }
 }

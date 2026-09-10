@@ -30,16 +30,24 @@ final class ChangeTracker {
     _count++;
   }
 
-  List<CellRef> take(Bundle b) {
-    final out = <CellRef>[];
+  (List<CellRef>, Set<FrameRef>) take(Bundle b) {
+    final moved = List<CellRef?>.filled(_count, null, growable: false);
+    final movedFrames = HashSet<FrameRef>();
+    var n = 0;
     for (var i = 0; i < _count; i++) {
       final v = (_bufferHigh[i] << 32) | _bufferLow[i];
       final h = CellHandle._(v);
-      if (b.isCellReachable(h)) out.add(h.ref(b));
+      if (!b.isCellReachable(h)) continue;
+      moved[n++] = h.ref(b);
+      final f = b.parentOf(h);
+      if (f != null) movedFrames.add(f.ref(b));
     }
 
     _count = 0;
-    return out;
+    return (
+      moved.take(n).cast<CellRef>().toList(growable: false),
+      movedFrames,
+    );
   }
 
   void clear() {

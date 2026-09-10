@@ -60,6 +60,14 @@ final class const EdgeStylePartial({
     width: width,
     color: color,
   );
+  
+  EdgeStylePartial copyWith({
+    double? width,
+    ColorData? color,
+  }) => EdgeStylePartial(
+    width: width ?? this.width,
+    color: color ?? this.color,
+  );
 
   @override
   bool operator ==(Object other) =>

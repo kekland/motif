@@ -5,7 +5,7 @@ final class AddFrameOp extends Op<FrameHandle> {
     this.transform, {
     this.size,
     FrameRef? parent,
-  }) : placement = .ref(parent?.id);
+  }) : placement = .ref(parent);
 
   final Mat4 transform;
   final Size2? size;
@@ -31,7 +31,7 @@ final class AddVertexOp extends Op<VertexHandle> {
   AddVertexOp(
     this.position, {
     FrameRef? parent,
-  }) : placement = .ref(parent?.id);
+  }) : placement = .ref(parent);
 
   final Vec2 position;
   final CellPlacement placement;
@@ -60,8 +60,8 @@ final class AddEdgeOp extends Op<EdgeHandle> {
     this.end, {
     this.startTangent,
     this.endTangent,
-    CellRef? parent,
-  }) : placement = .ref(parent?.id);
+    FrameRef? parent,
+  }) : placement = .ref(parent);
 
   final VertexRef start, end;
   final Vec2? startTangent, endTangent;
@@ -71,8 +71,8 @@ final class AddEdgeOp extends Op<EdgeHandle> {
   EdgeHandle _execute(Transaction t, bool produceResult) {
     if (t.mode == .topology) {
       return t._addEdge(
-        t.vertexFor(start.id),
-        t.vertexFor(end.id),
+        t.vertexFor(start),
+        t.vertexFor(end),
         startTangent: startTangent,
         endTangent: endTangent,
         parent: placement.resolveParent(t),
@@ -92,8 +92,8 @@ final class AddEdgeOp extends Op<EdgeHandle> {
 final class AddFaceOp extends Op<FaceHandle> {
   AddFaceOp(
     this.boundary, {
-    CellRef? parent,
-  }) : placement = .ref(parent?.id);
+    FrameRef? parent,
+  }) : placement = .ref(parent);
 
   final List<CycleRef> boundary;
   final CellPlacement placement;

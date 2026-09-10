@@ -14,6 +14,7 @@ extension StatementUtils on Statement {
     // GlueVerticesStatement() => 'Glue vertices',
     FilletFaceStatement() => 'Fillet face',
     DissolveStatement() => 'Dissolve',
+    GeneratorStatement() => 'Generator',
     PlacedStatement() => unreachable(),
   };
 
@@ -29,6 +30,7 @@ extension StatementUtils on Statement {
     // CutEdgeStatement() => Icons.cut_edge(),
     // GlueVerticesStatement() => Icons.glue_vertices(),
     // _ => Icons.statement(),
+    GeneratorStatement() => Icons.generator(),
     PlacedStatement() => unreachable(),
     _ => Icons.s(),
   };

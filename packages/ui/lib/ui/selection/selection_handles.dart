@@ -133,7 +133,7 @@ class SelectionCornerResizeHandleIcon extends StatelessWidget {
         border: Border.all(
           width: 1.0,
           strokeAlign: BorderSide.strokeAlignCenter,
-          color: context.colors.accent.primary,
+          color: context.colors.selection.primary,
         ),
       ),
     );

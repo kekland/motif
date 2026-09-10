@@ -40,7 +40,7 @@ final class CovertexStorage extends ArenaStorage<CovertexIndex, int, CovertexSto
   CovertexIndex _wrapIndex(int i) => .new(i);
 }
 
-extension type const Covertex._((EdgeHandle, bool) v) {
+extension type const Covertex._((EdgeHandle, bool) v) implements Object {
   const Covertex(EdgeHandle edge, {required bool isStart}) : this._((edge, isStart));
   const Covertex.start(EdgeHandle edge) : this._((edge, true));
   const Covertex.end(EdgeHandle edge) : this._((edge, false));
@@ -51,17 +51,31 @@ extension type const Covertex._((EdgeHandle, bool) v) {
 
   Covertex get opposite => Covertex._((edge, !isStart));
 
-  CovertexRef asRef(Bundle bundle) => .new(bundle.edgeId(edge), isStart: isStart);
+  CovertexRef ref(Bundle bundle) => .new(bundle.edgeRef(edge), isStart: isStart);
 }
 
-extension type const CovertexRef._((CellId, bool) v) {
-  const CovertexRef(CellId edge, {required bool isStart}) : this._((edge, isStart));
-  const CovertexRef.start(CellId edge) : this._((edge, true));
-  const CovertexRef.end(CellId edge) : this._((edge, false));
+final class CovertexRef extends Ref {
+  CovertexRef(this.edge, {required this.isStart}) : hashCode = edge.hashCode * 31 + (isStart ? 1 : 0);
+  CovertexRef.start(EdgeRef edge) : this(edge, isStart: true);
+  CovertexRef.end(EdgeRef edge) : this(edge, isStart: false);
 
-  CellId get edge => v.$1;
-  bool get isStart => v.$2;
-  bool get isEnd => !v.$2;
+  final EdgeRef edge;
+  final bool isStart;
+  bool get isEnd => !isStart;
+
+  CovertexRef get opposite => CovertexRef(edge, isStart: !isStart);
+
+  @override
+  final int hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is CovertexRef && other.edge == edge && other.isStart == isStart;
+
+  VertexRef resolveVertex(Bundle bundle) {
+    final e = bundle.edge(edge)!;
+    return isStart ? bundle.edgeStart(e).ref(bundle) : bundle.edgeEnd(e).ref(bundle);
+  }
 
   Covertex? resolve(Bundle bundle) {
     final e = bundle.edge(edge);

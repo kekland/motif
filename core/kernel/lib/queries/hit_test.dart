@@ -1,22 +1,22 @@
 part of '../kernel.dart';
 
-sealed class HitEntry<T extends CellHandle> {
-  const HitEntry({required this.handle, required this.distance});
+sealed class HitEntry<R extends Ref> {
+  const HitEntry(this.ref, {required this.distance});
 
   // dart format off
-  static FrameHitEntry frame(FrameHandle cell, double distance, Vec2 point) => .new(handle: cell, distance: distance, point: point);
-  static VertexHitEntry vertex(VertexHandle cell, double distance) => .new(handle: cell, distance: distance);
-  static EdgeHitEntry edge(EdgeHandle cell, double distance, double t) => .new(handle: cell, distance: distance, t: t);
-  static FaceHitEntry face(FaceHandle cell, double distance, Vec2 point) => .new(handle: cell, distance: distance, point: point);
+  static FrameHitEntry frame(FrameRef ref, double distance, Vec2 point) => .new(ref, distance: distance, point: point);
+  static VertexHitEntry vertex(VertexRef ref, double distance) => .new(ref, distance: distance);
+  static EdgeHitEntry edge(EdgeRef ref, double distance, double t) => .new(ref, distance: distance, t: t);
+  static FaceHitEntry face(FaceRef ref, double distance, Vec2 point) => .new(ref, distance: distance, point: point);
   // dart format on
 
-  final T handle;
+  final R ref;
   final double distance;
 }
 
-final class FrameHitEntry extends HitEntry<FrameHandle> {
-  const FrameHitEntry({
-    required super.handle,
+final class FrameHitEntry extends HitEntry<FrameRef> {
+  const FrameHitEntry(
+    super.ref, {
     required super.distance,
     required this.point,
   });
@@ -24,13 +24,17 @@ final class FrameHitEntry extends HitEntry<FrameHandle> {
   final Vec2 point;
 }
 
-final class VertexHitEntry extends HitEntry<VertexHandle> {
-  const VertexHitEntry({required super.handle, required super.distance});
+final class CovertexHitEntry extends HitEntry<CovertexRef> {
+  const CovertexHitEntry(super.ref, {required super.distance});
 }
 
-final class EdgeHitEntry extends HitEntry<EdgeHandle> {
-  const EdgeHitEntry({
-    required super.handle,
+final class VertexHitEntry extends HitEntry<VertexRef> {
+  const VertexHitEntry(super.ref, {required super.distance});
+}
+
+final class EdgeHitEntry extends HitEntry<EdgeRef> {
+  const EdgeHitEntry(
+    super.ref, {
     required super.distance,
     required this.t,
   });
@@ -38,9 +42,9 @@ final class EdgeHitEntry extends HitEntry<EdgeHandle> {
   final double t;
 }
 
-final class FaceHitEntry extends HitEntry<FaceHandle> {
-  const FaceHitEntry({
-    required super.handle,
+final class FaceHitEntry extends HitEntry<FaceRef> {
+  const FaceHitEntry(
+    super.ref, {
     required super.distance,
     required this.point,
   });
@@ -51,30 +55,37 @@ final class FaceHitEntry extends HitEntry<FaceHandle> {
 class HitResult {
   HitResult({
     required this.vertices,
+    required this.covertices,
     required this.edges,
     required this.faces,
     required this.frames,
   });
 
   final List<VertexHitEntry> vertices;
+  final List<CovertexHitEntry> covertices;
   final List<EdgeHitEntry> edges;
   final List<FaceHitEntry> faces;
   final List<FrameHitEntry> frames;
 
-  late final List<HitEntry> entries = [...vertices, ...edges, ...faces, ...frames];
+  late final List<HitEntry> entries = [...vertices, ...covertices, ...edges, ...faces, ...frames];
   bool get isEmpty => entries.isEmpty;
 }
 
 extension HitTestQuery on TopologyQuery {
-  HitResult hitTest(Vec2 p, {double tolerance = 0.0}) {
+  HitResult hitTest(
+    Vec2 p, {
+    double tolerance = 0.0,
+    Set<CovertexRef> includeCovertices = const {},
+  }) {
     final vertices = <VertexHitEntry>[];
+    final covertices = <CovertexHitEntry>[];
     final edges = <EdgeHitEntry>[];
     final faces = <FaceHitEntry>[];
     final frames = <FrameHitEntry>[];
 
     void walk(FrameHandle f) {
       final clip = bundle.frameClip(f);
-      if (clip != null && !_faceContains(clip, p, tolerance)) return;
+      if (f != .root && clip != null && !_faceContains(clip, p, tolerance)) return;
 
       final children = bundle.frameChildren(f).toList();
       for (final child in children.reversed) {
@@ -101,23 +112,43 @@ extension HitTestQuery on TopologyQuery {
         final scale = worldToLocal.maxScaleOnAxis;
 
         if (bounds.inflated(tolerance * scale).contains(local)) {
-          frames.add(.new(handle: f, distance: 0.0, point: local));
+          frames.add(.new(f.ref(bundle), distance: 0.0, point: local));
         }
       }
     }
 
     walk(bundle.root);
 
+    for (final cvRef in includeCovertices) {
+      final cv = cvRef.resolve(bundle);
+      if (cv == null) continue;
+      final e = _hitTestCovertex(cv, p, tolerance, ref: cvRef);
+      if (e != null) covertices.add(e);
+    }
+
     _sortByDistance(vertices);
+    _sortByDistance(covertices);
     _sortByDistance(edges);
 
-    return HitResult(vertices: vertices, edges: edges, faces: faces, frames: frames);
+    return HitResult(
+      vertices: vertices,
+      covertices: covertices,
+      edges: edges,
+      faces: faces,
+      frames: frames,
+    );
   }
 
   VertexHitEntry? _hitTestVertex(VertexHandle v, Vec2 p, double tolerance) {
     final d = p.distanceTo(bundle.vertexPosition(v, space: .root));
-    if (d <= tolerance) return .new(handle: v, distance: d);
-    return null;
+    if (d > tolerance) return null;
+    return .new(v.ref(bundle), distance: d);
+  }
+
+  CovertexHitEntry? _hitTestCovertex(Covertex c, Vec2 p, double tolerance, {CovertexRef? ref}) {
+    final d = p.distanceTo(bundle.covertexPosition(c, space: .root));
+    if (d > tolerance) return null;
+    return .new(ref ?? c.ref(bundle), distance: d);
   }
 
   EdgeHitEntry? _hitTestEdge(EdgeHandle e, Vec2 p, double tolerance) {
@@ -125,17 +156,17 @@ extension HitTestQuery on TopologyQuery {
     if (c.bbox.distance2To(p) > tolerance * tolerance) return null;
 
     final r = c.closestPoint(p);
-    if (r.distance <= tolerance) return .new(handle: e, distance: r.distance, t: r.t);
-
-    return null;
+    if (r.distance > tolerance) return null;
+    return .new(e.ref(bundle), distance: r.distance, t: r.t);
   }
 
   FaceHitEntry? _hitTestFace(FaceHandle f, Vec2 p, double tolerance) {
     if (!_faceContains(f, p, tolerance)) return null;
-    return .new(handle: f, distance: 0.0, point: p);
+    return .new(f.ref(bundle), distance: 0.0, point: p);
   }
 
   bool _faceContains(FaceHandle f, Vec2 p, double tolerance) {
+    // if (bundle.query.cellBboxWorld(f).distance2To(p) > tolerance * tolerance) return false;
     if (bundle.faceWinding(f, p, space: .root) != 0) return true;
     if (tolerance <= 0.0) return false;
 
@@ -154,10 +185,6 @@ extension HitTestQuery on TopologyQuery {
 
   void _sortByDistance<T extends HitEntry>(List<T> list) {
     if (list.length < 2) return;
-    final order = <T, int>{for (var i = 0; i < list.length; i++) list[i]: i};
-    list.sort((a, b) {
-      final c = a.distance.compareTo(b.distance);
-      return c != 0 ? c : order[a]!.compareTo(order[b]!);
-    });
+    mergeSort(list, compare: (a, b) => a.distance.compareTo(b.distance));
   }
 }

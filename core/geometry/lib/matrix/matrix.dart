@@ -125,6 +125,11 @@ extension type const Mat4._(Float64x2List storage) {
 
   Mat4 inverted() => .copy(this)..invert();
 
+  double get determinant2 {
+    final c0 = storage[0], c1 = storage[2];
+    return c0.x * c1.y - c0.y * c1.x;
+  }
+
   Mat4 operator *(Mat4 other) {
     final result = Mat4.copy(this);
     result.multiply(other);
@@ -143,6 +148,23 @@ extension type const Mat4._(Float64x2List storage) {
   double get scaleX => math.sqrt(this[0] * this[0] + this[1] * this[1] + this[2] * this[2]);
   double get scaleY => math.sqrt(this[4] * this[4] + this[5] * this[5] + this[6] * this[6]);
   double get scaleZ => math.sqrt(this[8] * this[8] + this[9] * this[9] + this[10] * this[10]);
+
+  Mat4 unmirrored(Size2 box) {
+    if (determinant2 > 0) return this;
+
+    final Mat4 flip;
+    if (storage[0].x < 0) {
+      flip = Mat4.identity()
+        ..translate(box.width, 0.0)
+        ..scale(-1, 1);
+    } else {
+      flip = Mat4.identity()
+        ..translate(0.0, box.height)
+        ..scale(1, -1);
+    }
+
+    return this * flip;
+  }
 
   Mat4 withNormalizedScale() {
     final sx = scaleX;

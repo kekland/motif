@@ -9,8 +9,8 @@ final class PositionProp(super.sources) extends Prop<Position, PositionPartial> 
   @override
   PropType get type => .position;
 
-  late final CoordinateProp x = .new(sources.remap(.coordinate, (v) => v.x, (v) => .new(x: v.value)));
-  late final CoordinateProp y = .new(sources.remap(.coordinate, (v) => v.y, (v) => .new(y: v.value)));
+  late final CoordinateProp x = .new(sources.remap(.coordinate, (v) => v.x, (p, v) => .new(x: v.value)));
+  late final CoordinateProp y = .new(sources.remap(.coordinate, (v) => v.y, (p, v) => .new(y: v.value)));
 }
 
 final class RotationProp(super.sources) extends Prop<double, double> {
@@ -26,7 +26,7 @@ final class TransformProp(super.sources) extends Prop<TransformData, TransformDa
     sources.remap(
       .position,
       (v) => v.translation,
-      (v) => .new(translation: v),
+      (p, v) => .new(translation: v),
     ),
   );
 
@@ -34,7 +34,7 @@ final class TransformProp(super.sources) extends Prop<TransformData, TransformDa
     sources.remap(
       .rotation,
       (v) => v.rotation,
-      (v) => .new(rotation: v),
+      (p, v) => .new(rotation: v),
     ),
   );
 }
@@ -52,7 +52,7 @@ final class LayoutSizeProp(super.sources) extends Prop<ResolvedLayoutSize, Resol
     sources.remap(
       .layoutDimension,
       (v) => v.width,
-      (v) => .new(width: v),
+      (p, v) => .new(width: v),
     ),
   );
 
@@ -60,7 +60,7 @@ final class LayoutSizeProp(super.sources) extends Prop<ResolvedLayoutSize, Resol
     sources.remap(
       .layoutDimension,
       (v) => v.height,
-      (v) => .new(height: v),
+      (p, v) => .new(height: v),
     ),
   );
 }
@@ -85,11 +85,11 @@ final class EdgeStyleProp(super.sources) extends Prop<EdgeStylePartial, EdgeStyl
   PropType get type => .edgeStyle;
 
   late final StrokeWidthProp width = .new(
-    sources.remap(.strokeWidth, (v) => v.width, (v) => .new(width: v)),
+    sources.remap(.strokeWidth, (v) => v.width, (p, v) => p.copyWith(width: v)),
   );
 
   late final StrokeColorProp color = .new(
-    sources.remap(.strokeColor, (v) => v.color, (v) => .new(color: v)),
+    sources.remap(.strokeColor, (v) => v.color, (p, v) => p.copyWith(color: v)),
   );
 }
 
@@ -103,7 +103,7 @@ final class FaceStyleProp(super.sources) extends Prop<FaceStylePartial, FaceStyl
   PropType get type => .faceStyle;
 
   late final FillColorProp color = .new(
-    sources.remap(.fillColor, (v) => v.color, (v) => .new(color: v)),
+    sources.remap(.fillColor, (v) => v.color, (p, v) => p.copyWith(color: v)),
   );
 }
 

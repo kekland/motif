@@ -6,6 +6,8 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
+  collection: ^1.19.1
+
   geometry:
   kernel:
   program:

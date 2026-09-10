@@ -11,6 +11,7 @@ import 'package:renderer/renderer.dart';
 List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
   final bundle = e.bundle;
   final entries = <DrawEntry>[];
+  final paints = <CellStyle, ui.Paint>{};
 
   ui.PictureRecorder? recorder;
   ui.Canvas? canvas;
@@ -28,12 +29,33 @@ List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
     canvas = null;
   }
 
-  for (final ref in e.drawOrderOf(frame)) {
-    final h = bundle.handle(ref)!;
+  final edgePath = Path();
+  final facePath = Path()..fillType = .nonZero;
+  EdgeStyle? strokeStyle;
 
+  void flushStroke() {
+    if (strokeStyle == null) return;
+    open().drawPath(
+      edgePath,
+      paints.putIfAbsent(
+        strokeStyle!,
+        () => ui.Paint()
+          ..style = .stroke
+          ..color = strokeStyle!.color.toUiColor()
+          ..strokeCap = .square
+          ..strokeWidth = strokeStyle!.width,
+      ),
+    );
+
+    edgePath.reset();
+    strokeStyle = null;
+  }
+
+  for (final (ref, h) in e.drawOrder.of(frame)) {
     switch (ref.kind) {
       case .frame:
         {
+          flushStroke();
           flush();
           entries.add(DrawFrame(h.asFrame));
         }
@@ -51,39 +73,32 @@ List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
 
       case .edge:
         {
-          final path = Path();
-          _addCubicPath(path, bundle.edgeCubic(h.asEdge));
-          final style = e.styleOf(ref).asEdge;
-          final paint = ui.Paint()
-            ..style = .stroke
-            ..color = style.color.toUiColor()
-            ..strokeCap = .square
-            ..strokeWidth = style.width;
+          final style = e.style.of(ref)!.asEdge;
+          if (style != strokeStyle) {
+            flushStroke();
+            strokeStyle = style;
+          }
 
-          open().drawPath(path, paint);
+          _addCubicPath(edgePath, bundle.edgeCubic(h.asEdge));
         }
 
       case .face:
         {
-          final path = Path()..fillType = .nonZero;
-          _addFacePath(bundle, path, h.asFace);
-          final style = e.styleOf(ref).asFace;
-          // final paint = ui.Paint()
-          //   ..style = .fill
-          //   ..shader = hatchShader(
-          //     color: style.color.toUiColor(),
-          //     depth: depth,
-          //   );
+          flushStroke();
+          _addFacePath(bundle, facePath, h.asFace);
+          final style = e.style.of(ref)!.asFace;
 
           final paint = ui.Paint()
             ..style = .fill
             ..color = style.color.toUiColor();
 
-          open().drawPath(path, paint);
+          open().drawPath(facePath, paint);
+          facePath.reset();
         }
     }
   }
 
+  flushStroke();
   flush();
   return entries;
 }

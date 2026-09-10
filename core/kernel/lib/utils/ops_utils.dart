@@ -1,11 +1,11 @@
 part of '../kernel.dart';
 
-extension type const CellPlacement._(CellId? parent) {
-  CellPlacement.ref(CellId? parent) : this._(parent);
-  CellPlacement.of(Bundle bundle, CellHandle h) : this._(bundle.parentOf(h)?.id(bundle));
+extension type const CellPlacement._(FrameRef? parent) {
+  CellPlacement.ref(FrameRef? parent) : this._(parent);
+  CellPlacement.of(Bundle bundle, CellHandle h) : this._(bundle.parentOf(h)?.ref(bundle));
 
   static CellPlacement from(Bundle bundle, FrameHandle? parent) {
-    final parentId = parent?.id(bundle);
+    final parentId = parent?.ref(bundle);
     return CellPlacement._(parentId);
   }
 
@@ -20,14 +20,14 @@ extension type const CellPlacement._(CellId? parent) {
 }
 
 extension OpsUtils on Transaction {
-  CellHandle cellFor(CellRef ref) => _resolve(bundle.handle(ref), ref.id, bundle.isCellLive);
-  FrameHandle frameFor(CellId id) => _resolve(bundle.frame(id), id, bundle.isFrameLive);
-  VertexHandle vertexFor(CellId id) => _resolve(bundle.vertex(id), id, bundle.isVertexLive);
-  EdgeHandle edgeFor(CellId id) => _resolve(bundle.edge(id), id, bundle.isEdgeLive);
-  FaceHandle faceFor(CellId id) => _resolve(bundle.face(id), id, bundle.isFaceLive);
+  CellHandle cellFor(CellRef ref) => _resolve(bundle.handle(ref), ref, bundle.isCellLive);
+  FrameHandle frameFor(FrameRef ref) => _resolve(bundle.frame(ref), ref, bundle.isFrameLive);
+  VertexHandle vertexFor(VertexRef ref) => _resolve(bundle.vertex(ref), ref, bundle.isVertexLive);
+  EdgeHandle edgeFor(EdgeRef ref) => _resolve(bundle.edge(ref), ref, bundle.isEdgeLive);
+  FaceHandle faceFor(FaceRef ref) => _resolve(bundle.face(ref), ref, bundle.isFaceLive);
 
-  H _resolve<H extends CellHandle>(H? h, CellId id, bool Function(H) alive) {
-    if (h == null || (_mode == .topology && !alive(h))) throw StateError('referenced unknown cell $id');
+  H _resolve<H extends CellHandle>(H? h, CellRef ref, bool Function(H) alive) {
+    if (h == null || (_mode == .topology && !alive(h))) throw StateError('referenced unknown cell $ref');
     return h;
   }
 

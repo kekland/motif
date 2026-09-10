@@ -4,16 +4,20 @@ final class SceneSelection with ChangeNotifier {
   SceneSelection(this.scene);
   final Scene scene;
 
-  final _selected = <CellRef>{};
+  final _selected = <Ref>{};
   final _selectedStatements = <StatementId>{};
+  final _cells = <CellRef>{};
+  var _visibleCovertices = <CovertexRef>{};
   var _stamp = 0;
 
-  Iterable<CellRef> get refs => _selected;
+  Set<Ref> get refs => _selected;
+  Set<CellRef> get cells => _cells;
   bool get isEmpty => _selected.isEmpty;
 
   Iterable<StatementId> get statements => _selectedStatements;
+  Set<CovertexRef> get visibleCovertices => _visibleCovertices;
 
-  void set(CellRef ref) {
+  void set(Ref ref) {
     _selected.clear();
     _selected.add(ref);
     _onUpdated();
@@ -35,13 +39,13 @@ final class SceneSelection with ChangeNotifier {
     _onUpdated();
   }
 
-  void setMultiple(Iterable<CellRef> refs) {
+  void setMultiple(Iterable<Ref> refs) {
     _selected.clear();
     _selected.addAll(refs);
     _onUpdated();
   }
 
-  void add(CellRef ref) {
+  void add(Ref ref) {
     _selected.add(ref);
     _onUpdated();
   }
@@ -52,22 +56,36 @@ final class SceneSelection with ChangeNotifier {
   }
 
   void _onUpdated() {
-    final stmts = _selected.map((ref) => ref.statementId).toSet();
+    final stmts = _selected.map((ref) => scene.evaluation.rootOf(ref.statementId)).toSet();
     _selectedStatements.clear();
     _selectedStatements.addAll(stmts);
+
+    _cells.clear();
+    for (final r in _selected) {
+      if (r is CellRef) _cells.add(r);
+      if (r is CovertexRef) _cells.add(r.edge);
+    }
+
+    _resolveVisibleCovertices();
     notifyListeners();
     _stamp++;
   }
 
+  void _resolveVisibleCovertices() {
+    _visibleCovertices = resolveDisplayCovertices(scene.bundle, _selected);
+  }
+
   void _onEvaluated() {
     final e = scene.evaluation;
-    final next = <CellRef>{};
+    final next = <Ref>{};
     for (final r in _selected) next.addAll(e.descendantsOf(r));
 
-    if (next.length != _selected.length) {
+    if (!(const SetEquality()).equals(next, _selected)) {
       _selected.clear();
       _selected.addAll(next);
       _onUpdated();
+    } else {
+      _resolveVisibleCovertices();
     }
   }
 

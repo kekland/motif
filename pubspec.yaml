@@ -10,6 +10,8 @@ workspace:
   - server
   - editor
 
+  - playground
+
   - core/geometry
   - core/kernel
   - core/program

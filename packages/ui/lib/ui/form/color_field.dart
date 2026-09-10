@@ -51,7 +51,9 @@ final class ColorField extends HookWidget {
       options: options.merge(
         .new(
           leading: leading,
-          borderRadius: .horizontal(left: .circular(4.0), right: .circular(2.0)),
+          borderRadius: .horizontal(left: .circular(4.0)),
+          color: context.colors.surface.secondary.withScaledAlpha(0.0),
+          border: .new(color: context.colors.divider.withScaledAlpha(0.0)),
         ),
       ),
     );
@@ -62,27 +64,45 @@ final class ColorField extends HookWidget {
       supportedDevices: {.mouse, .trackpad},
       onChanged: (a) => onChanged?.call((value.value ?? .black).withAlpha(a / 100)),
       options: .new(
-        hintText: '-',
+        hintText: '0',
         trailing: Text('%'),
-        borderRadius: .horizontal(right: .circular(4.0), left: .circular(2.0)),
+        borderRadius: .horizontal(right: .circular(4.0)),
+        color: context.colors.surface.secondary.withScaledAlpha(0.0),
+        padding: const .only(left: 8.0, right: 6.0),
+        border: .new(color: context.colors.divider.withScaledAlpha(0.0)),
       ),
     );
 
-    return GestureSurface(
-      onTap: () => createEntry(context),
-      supportedDevices: {.stylus, .touch},
-      child: Row(
-        children: [
-          Expanded(
-            child: colorInput,
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Surface(
+            color: context.colors.surface.secondary,
+            borderSide: .new(color: context.colors.divider),
+            borderRadius: .circular(4.0),
           ),
-          const SizedBox(width: 2.0),
-          SizedBox(
-            width: 80.0,
-            child: opacityInput,
+        ),
+        Positioned(
+          right: 80.0,
+          child: SizedBox(height: 32.0, child: VerticalDivider()),
+        ),
+        GestureSurface(
+          onTap: () => createEntry(context),
+          supportedDevices: {.stylus, .touch},
+          borderRadius: .circular(4.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: colorInput,
+              ),
+              SizedBox(
+                width: 80.0,
+                child: opacityInput,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

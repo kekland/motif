@@ -10,13 +10,13 @@ final class EllipseStatement extends ShapeStatement<EllipseObjectShape> {
     super.faceStyle,
     super.parent,
     super.id,
-    super.modifiers,
+    super.enabled,
   });
 
   @override
   EllipseStatement copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     LayoutSize? size,
     Mat4? transform,
     EllipseObjectShape? shape,
@@ -26,7 +26,7 @@ final class EllipseStatement extends ShapeStatement<EllipseObjectShape> {
     FrameRef? parent,
   }) => .new(
     id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
+    enabled: enabled ?? this.enabled,
     size: size ?? this.size,
     transform: transform ?? this.transform,
     shape: shape ?? this.shape,

@@ -5,14 +5,25 @@ List<String> generateNode(NodeDescription description) {
   var className = description.baseClassName;
   className += 'Base';
 
+    final inline = [for (final i in description.inputs) if (!i.type.isList) i];
+
   code.add('abstract class $className extends bp.Node {');
-  code.add('  $className(): super(');
+  code.add('  $className({');
+  code.add('    required super.id,');
+
+  for (final input in inline) {
+    code.add('    ${input.type.type}? ${input.name},');
+  }
+
+  code.add('  }) : super(');
   code.add('    name: \'${description.name}\',');
+  code.add('    category: #${description.category},');
 
   if (description.inputs.isNotEmpty) {
     code.add('    inputs: [');
     for (final input in description.inputs) {
-      code.add('      ${input.ioClassName}(name: \'${input.name}\'),');
+      final args = input.type.isList ? '' : ', inlineValue: ${input.name}';
+      code.add('      ${input.ioClassName}(name: \'${input.name}\'$args),');
     }
     code.add('    ],');
   } else {
@@ -38,7 +49,7 @@ List<String> generateNode(NodeDescription description) {
     }
     code.add('  );');
   }
-  
+
   if (description.outputs.isNotEmpty) {
     code.add('');
     code.add('  late final o = (');
@@ -47,12 +58,28 @@ List<String> generateNode(NodeDescription description) {
     }
     code.add('  );');
   }
-
-  if (description.color != null) {
-    code.add('');
-    code.add('  @override');
-    code.add('  Color? resolveColor(BuildContext context) => ${description.color};');
+  code.add('');
+  code.add('  @override');
+  code.add('  ${description.baseClassName} copyWith({');
+  code.add('    bp.NodeId? id,');
+  for (final i in inline) {
+    code.add('    ${i.type.type}? ${i.name},');
   }
+  code.add('  }) => .new(');
+  code.add('    id: id ?? this.id,');
+  for (final i in inline) {
+    code.add('    ${i.name}: ${i.name} ?? i.${i.name}.inlineValue,');
+  }
+  code.add('  );');
+  code.add('');
+  code.add('  @override');
+  code.add('  ${description.baseClassName} copyWithInline(int index, Object? value) => switch(index) {');
+  for (final (i, input) in description.inputs.indexed) {
+    if (input.type.isList) continue;
+    code.add('    $i => copyWith(${input.name}: value as ${input.type.type}),');
+  }
+  code.add('    _ => throw RangeError.index(index, inputs),');
+  code.add('  };');
 
   code.add('}');
 

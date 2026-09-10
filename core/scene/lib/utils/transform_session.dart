@@ -14,7 +14,7 @@ final class TransformSession {
   final SceneTransaction? transaction;
   final TransformRouter router;
 
-  final List<CellRef> refs;
+  final List<Ref> refs;
 
   final Mat4 spaceToWorld;
   final Mat4 worldToSpace;
@@ -27,7 +27,7 @@ final class TransformSession {
     return .of(scene, [first], transaction: transaction);
   }
 
-  factory TransformSession.of(Scene scene, Iterable<CellRef> refs, {SceneTransaction? transaction}) {
+  factory TransformSession.of(Scene scene, Iterable<Ref> refs, {SceneTransaction? transaction}) {
     final bundle = scene.bundle;
     final router = scene.evaluation.routeTransform(refs);
 
@@ -36,21 +36,15 @@ final class TransformSession {
     final Mat4 spaceToWorld;
     final Aabb2 initialHull;
 
+    final worldHull = bundle.query.hull(refs, space: .root);
+
     if (absorbers.length == 1) {
       final absorber = router.absorbers.values.single;
-      final handle = bundle.handle(absorber.cell)!;
-      spaceToWorld = bundle.query.localToWorld(handle);
-      initialHull = bundle.query.cellBbox(handle);
+      spaceToWorld = absorber.spaceToWorld;
+      initialHull = absorber.hull;
     } else {
-      final hull = Aabb2.invertedInfinity();
-      for (final r in refs) {
-        final handle = bundle.handle(r)!;
-        final bbox = scene.bundle.query.cellBboxWorld(handle);
-        hull.hull(bbox);
-      }
-
       spaceToWorld = Mat4.identity();
-      initialHull = hull;
+      initialHull = worldHull;
     }
 
     return ._(scene, transaction, router, refs.toList(), spaceToWorld, initialHull);
@@ -58,7 +52,7 @@ final class TransformSession {
 
   Vec2 get worldPivot => spaceToWorld.transform2(initialHull.center);
   Iterable<StatementId> get absorbers => router.absorbers.keys;
-  Set<CellRef> get refused => router.refused;
+  Set<Ref> get refused => router.refused;
   bool get isEmpty => router.isEmpty;
 
   void _apply(SceneTransaction txn, Mat4 transform) {

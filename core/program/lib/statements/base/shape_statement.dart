@@ -10,7 +10,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
     this.faceStyle = .default_,
     FrameRef? parent,
     super.id,
-    super.modifiers,
+    super.enabled,
   }) : size = size ?? .zero,
        transform = transform ?? .identity(),
        parent = .of(parent);
@@ -56,7 +56,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
   @override
   ShapeStatement<S> copyWith({
     StatementId? id,
-    List<Statement>? modifiers,
+    bool? enabled,
     LayoutSize? size,
     Mat4? transform,
     VertexStyle? vertexStyle,
@@ -69,15 +69,22 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
   DissolveIntent routeDissolve(Set<CellRef<CellHandle>> targeted) => .new({frame});
 
   @override
-  TransformResult routeTransform(EvalContext context, Set<CellRef> targets) {
+  TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
+    CellRef _ => .absorb,
+    _ => .refuse,
+  };
+
+  @override
+  TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
+    final cells = absorbed.cells;
     final bundle = context.bundle;
     final space = context.handle(frame);
     final oldSize = context.placementOf(id).size;
 
-    if (targets.any((t) => t.kind == .frame || t.kind == .face)) return _absorbWhole(context, oldSize);
+    if (cells.any((t) => t.kind == .frame || t.kind == .face)) return _absorbWhole(context, oldSize);
 
     final points = <Vec2>[];
-    for (final t in targets) {
+    for (final t in cells) {
       if (t.kind == .vertex) {
         points.add(bundle.vertexPosition(context.handle(t).asVertex, space: space));
       } else if (t.kind == .edge) {
@@ -96,14 +103,10 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
     final y = _ResizeAxis.resolve(pointsY, oldSize.height);
     if (x.min && x.max && y.min && y.max) return _absorbWhole(context, oldSize);
 
-    final inParent = <Vec2>[];
-    for (final p in points) inParent.add(transform.transform2(p));
-    final toLocal = transform.inverted();
-
-    return .absorb(
+    return .new(
       (m) {
         final to = <Vec2>[];
-        for (final p in inParent) to.add(toLocal.transform2(m.transform2(p)));
+        for (final p in points) to.add(m.transform2(p));
         final toX = to.map((p) => p.x).toList();
         final toY = to.map((p) => p.y).toList();
 
@@ -114,21 +117,17 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement with Placed
           size: .fixed(w, h),
         );
       },
-      frame,
+      cell: frame,
     );
   }
 
-  TransformResult _absorbWhole(EvalContext context, Size2 oldSize) {
-    return .absorb(
+  TransformAbsorb _absorbWhole(EvalContext context, Size2 oldSize) {
+    return .new(
       (m) {
-        final composed = m * transform;
-        final size = oldSize.scale(composed.scaleX, composed.scaleY);
-        return copyWith(
-          transform: composed.withNormalizedScale(),
-          size: .fixed(size.width, size.height),
-        );
+        final (transform, size) = FrameStatement.transformBox(this.transform, m, oldSize);
+        return copyWith(transform: transform, size: .fixed(size.width, size.height));
       },
-      frame,
+      cell: frame,
     );
   }
 }
@@ -178,6 +177,6 @@ final class _ResizeAxis(final bool min, final bool max, final bool inside) {
     }
 
     if (!min && !max) return (extent, n == 0 ? 0 : shift / n);
-    return (math.max(hi - lo, 0), lo);
+    return ((hi - lo).abs(), math.min(lo, hi));
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/generators/generator_editor_window.dart';
 import 'package:editor/widgets/selection_panel/widgets.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,6 +11,7 @@ part 'props.dart';
 part 'cell_props.dart';
 part 'statement_props.dart';
 part 'widgets/builder.dart';
+part 'widgets/modifier_stack.dart';
 part 'widgets/widgets.dart';
 
 abstract class PropSource<G, S> {
@@ -36,11 +38,11 @@ abstract class PropSource<G, S> {
   PropSource<G2, S2> map<G2, S2>(
     PropType<G2, S2> type,
     G2 Function(G) getter,
-    S Function(S2) setter,
+    S Function(G, S2) setter,
   ) => .delegating(
     type,
     (scene) => getter(value(scene)),
-    (txn, value) => set(txn, setter(value)),
+    (txn, value) => set(txn, setter(this.value(txn.scene), value)),
   );
 }
 
@@ -48,7 +50,7 @@ extension PropSourceIterableExt<G, S> on Iterable<PropSource<G, S>> {
   List<PropSource<G2, S2>> remap<G2, S2>(
     PropType<G2, S2> type,
     G2 Function(G) getter,
-    S Function(S2) setter,
+    S Function(G, S2) setter,
   ) => map((s) => s.map(type, getter, setter)).toList();
 }
 

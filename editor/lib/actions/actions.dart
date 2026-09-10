@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:editor/imports.dart';
 import 'package:flutter/services.dart';
 
@@ -16,9 +14,9 @@ abstract class EditorAction<T extends Intent> extends ContextAction<T> {
   bool isEnabled(T intent, [BuildContext? context]) => !isTextFieldFocused;
 }
 
-class SelectCellAction extends ContextAction<SelectCellIntent> {
+class SelectRefAction extends ContextAction<SelectRefIntent> {
   @override
-  void invoke(SelectCellIntent intent, [BuildContext? context]) {
+  void invoke(SelectRefIntent intent, [BuildContext? context]) {
     final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;
     final isShiftPressed =
         keysPressed.contains(LogicalKeyboardKey.shiftLeft) || keysPressed.contains(LogicalKeyboardKey.shiftRight);
@@ -29,6 +27,23 @@ class SelectCellAction extends ContextAction<SelectCellIntent> {
     } else {
       controller.set(intent.ref);
     }
+  }
+}
+
+class SelectAllAction extends ContextAction<SelectAllIntent> {
+  @override
+  void invoke(SelectAllIntent intent, [BuildContext? context]) {
+    final controller = context!.editor.selection;
+    final scene = context.editor.scene;
+    final bundle = scene.bundle;
+
+    final refs = <CellRef>{};
+    for (final f in bundle.frames) refs.add(bundle.ref(f));
+    for (final v in bundle.vertices) refs.add(bundle.ref(v));
+    for (final e in bundle.edges) refs.add(bundle.ref(e));
+    for (final f in bundle.faces) refs.add(bundle.ref(f));
+
+    controller.setMultiple(refs);
   }
 }
 
@@ -63,10 +78,15 @@ class DeleteSelectionAction extends EditorAction<DeleteSelectionIntent> {
     final selection = editor.selection;
     if (selection.isEmpty) return;
 
-    editor.edit((txn) {
-      txn.delete(selection.refs);
-    });
+    final targets = <CellRef>{};
+    final work = [...selection.cells];
+    while (work.isNotEmpty) {
+      final r = work.removeLast();
+      if (!targets.add(r)) continue;
+      work.addAll(editor.bundle.cellDirectDependents(r));
+    }
 
+    editor.edit((txn) => txn.delete(targets));
     selection.clear();
   }
 }

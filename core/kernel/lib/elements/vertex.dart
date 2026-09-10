@@ -21,7 +21,7 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
   var siblingPrev = CellIndexStorage<VertexIndex>();
   var siblingNext = CellIndexStorage<VertexIndex>();
 
-  final id = IdTable<VertexIndex>('vertex');
+  final id = IdTable<VertexRef, VertexIndex>('vertex');
 
   @override
   void grow(int atLeast) {
@@ -52,8 +52,8 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
     id.copyFrom(other.id);
   }
 
-  VertexHandle? handleForId(CellId id) {
-    final i = this.id.indexOf(id);
+  VertexHandle? handleForRef(VertexRef ref) {
+    final i = id.indexOf(ref);
     if (i == null) return null;
     return handleFor(i);
   }

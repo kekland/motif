@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +10,10 @@ part 'drag_activity_mixins.dart';
 part 'drag_activity_recognizer.dart';
 
 abstract class DragActivity {
-  DragActivity({this._onStart, this._onEnd});
+  DragActivity({this._onStart, this._onUpdate, this._onEnd});
 
   final VoidCallback? _onStart;
+  final VoidCallback? _onUpdate;
   final VoidCallback? _onEnd;
 
   late final PositionedGestureDetails startDetails;
@@ -35,6 +38,7 @@ abstract class DragActivity {
   @mustCallSuper
   void onUpdate(DragUpdateDetails details) {
     _lastUpdateDetails = details;
+    _onUpdate?.call();
   }
 
   @mustCallSuper

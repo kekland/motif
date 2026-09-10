@@ -32,15 +32,16 @@ extension RouteDelete on Evaluation {
     final remap = Remap.empty();
 
     final bake = <CellRef>{};
-    for (final h in dissolve.held) {
-      if (!dead.contains(h.statementId)) continue;
-      if (h.kind == .frame) {
-        gone.add(h);
-        final survivor = _survivingFrame(h, gone);
-        remap[h] = survivor != null ? [survivor] : [];
-      }
-      else {
-        bake.add(h);
+    for (final s in dead) {
+      for (final r in productsOf(s)) {
+        if (!bundle.isLive(r) || gone.contains(r)) continue;
+        if (r.kind == .frame) {
+          gone.add(r);
+          final survivor = _survivingFrame(r, gone);
+          remap[r] = survivor != null ? [survivor] : [];
+        } else {
+          bake.add(r);
+        }
       }
     }
 
@@ -52,17 +53,8 @@ extension RouteDelete on Evaluation {
     StatementId? placement;
 
     for (final s in dead) {
-      if (ownerOf(s) != s) continue;
-      final host = hostOf(s);
-      if (host != null) {
-        if (dead.contains(host)) continue;
-        final h = statement(host)!;
-        final modifiers = h.modifiers.where((m) => !dead.contains(m.id)).toList();
-        replace[host] = [h.copyWith(modifiers: modifiers)];
-      } else {
-        remove.add(s);
-        if (placement == null || indexOf(s)! < indexOf(placement)!) placement = s;
-      }
+      remove.add(s);
+      if (placement == null || indexOf(s)! < indexOf(placement)!) placement = s;
     }
 
     if (placement != null && baked.statements.isNotEmpty) {

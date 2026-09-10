@@ -2,8 +2,6 @@ part of 'generator.dart';
 
 List<String> generateSocket(SocketDescription description) {
   final code = <String>[];
-
-  // List nodes can only be used as inputs, and have ListInputSocket mixin applied.
   final isList = description.isList;
 
   var type = description.type;
@@ -17,11 +15,9 @@ List<String> generateSocket(SocketDescription description) {
 
   code.add('abstract class ${name}Socket extends bp.Socket<$type> {');
   code.add('  ${name}Socket({required super.name});');
-  if (description.color != null) {
-    code.add('');
-    code.add('  @override');
-    code.add('  Color? resolveColor(BuildContext context) => ${description.color};');
-  }
+  code.add('');
+  code.add('  @override');
+  code.add('  Symbol get category => #${description.category};');
   code.add('}');
   code.add('');
 
@@ -29,7 +25,9 @@ List<String> generateSocket(SocketDescription description) {
 
   if (!isList) {
     code.add('$inputBase {');
-    code.add('  $inputClassName({required super.name});');
+    code.add('  $inputClassName({required super.name, $type? inlineValue}) {');
+    code.add('    this.inlineValue = inlineValue ?? defaultValue;');
+    code.add('  }');
     code.add('');
     code.add('  @override');
     code.add('  $type get defaultValue => ${description.defaultValue};');
@@ -37,7 +35,9 @@ List<String> generateSocket(SocketDescription description) {
     code.add('');
   } else {
     code.add('$inputBase, bp.ListInputSocket<${description.type}, $type> {');
-    code.add('  $inputClassName({required super.name});');
+    code.add('  $inputClassName({required super.name}) {');
+    code.add('    this.inlineValue = defaultValue;');
+    code.add('  }');
     code.add('}');
     code.add('');
   }
@@ -52,9 +52,10 @@ List<String> generateSocket(SocketDescription description) {
   // Constant classes
   final constantInputClassName = description.constantInputClassName;
   final constantOutputClassName = description.constantOutputClassName;
+  final inputClassConstructorArgs = isList ? '({required super.name})' : '({required super.name, super.inlineValue})';
 
   code.add('class $constantInputClassName extends $inputClassName with bp.ConstantSocket<$type> {');
-  code.add('  $constantInputClassName({required super.name});');
+  code.add('  $constantInputClassName$inputClassConstructorArgs;');
   code.add('}');
   code.add('');
 
@@ -70,7 +71,7 @@ List<String> generateSocket(SocketDescription description) {
   final dynamicOutputClassName = description.dynamicOutputClassName;
 
   code.add('class $dynamicInputClassName extends $inputClassName with bp.DynamicSocket<$type> {');
-  code.add('  $dynamicInputClassName({required super.name});');
+  code.add('  $dynamicInputClassName$inputClassConstructorArgs;');
   code.add('}');
   code.add('');
 

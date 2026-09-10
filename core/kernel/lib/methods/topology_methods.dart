@@ -83,7 +83,7 @@ extension TopologyMethods on Bundle {
   // -------------------------------------------------------------------------------------------------------------------
 
   FrameHandle _frameAdd(
-    CellId id, {
+    FrameRef ref, {
     Mat4? transform,
     Size2? size,
     FrameHandle? parent,
@@ -101,7 +101,7 @@ extension TopologyMethods on Bundle {
     _frame.dependentStart[i] = .none;
 
     _frameLink(i, p);
-    _frame.id.assign(i, id);
+    _frame.id.assign(i, ref);
     return _frame.handleFor(i);
   }
 
@@ -217,7 +217,7 @@ extension TopologyMethods on Bundle {
   // -------------------------------------------------------------------------------------------------------------------
 
   VertexHandle _vertexAdd(
-    CellId id,
+    VertexRef ref,
     Vec2 position, {
     FrameHandle? parent,
   }) {
@@ -231,7 +231,7 @@ extension TopologyMethods on Bundle {
     _vertex.positionVersion[i] = -1;
 
     _vertexLink(i, frame);
-    _vertex.id.assign(i, id);
+    _vertex.id.assign(i, ref);
     return _vertex.handleFor(i);
   }
 
@@ -320,7 +320,7 @@ extension TopologyMethods on Bundle {
   // -------------------------------------------------------------------------------------------------------------------
 
   EdgeHandle _edgeAdd(
-    CellId id,
+    EdgeRef ref,
     VertexHandle v0,
     VertexHandle v1, {
     Vec2? startTangent,
@@ -342,11 +342,12 @@ extension TopologyMethods on Bundle {
     _edge.cvEnd[i] = cv1;
     _edge.radialStart[i] = .none;
     _edge.cubicVersion[i] = -1;
+    _edge.cubicWorldVersion[i] = -1;
     _edge.crossStart[i] = .none;
 
     _edgeLink(i, frame);
     _cellCrossUpdate(i.cell);
-    _edge.id.assign(i, id);
+    _edge.id.assign(i, ref);
     return _edge.handleFor(i);
   }
 
@@ -529,7 +530,7 @@ extension TopologyMethods on Bundle {
   // -------------------------------------------------------------------------------------------------------------------
 
   FaceHandle _faceAdd(
-    CellId id, {
+    FaceRef ref, {
     List<Cycle> boundary = const [],
     FrameHandle? parent,
   }) {
@@ -542,7 +543,7 @@ extension TopologyMethods on Bundle {
     _face.crossStart[i] = .none;
 
     _faceLink(i, frame);
-    _face.id.assign(i, id);
+    _face.id.assign(i, ref);
     for (final cycle in boundary) _cycleAdd(i, cycle);
     return _face.handleFor(i);
   }

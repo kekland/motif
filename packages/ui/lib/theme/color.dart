@@ -13,12 +13,12 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
   final scheme = ColorScheme.fromSeed(
     seedColor: seedColor,
     brightness: brightness,
-    dynamicSchemeVariant: dynamicSchemeVariant ?? DynamicSchemeVariant.content,
-    contrastLevel: contrastLevel ?? 0.15,
+    dynamicSchemeVariant: dynamicSchemeVariant ?? .content,
+    contrastLevel: contrastLevel ?? 0.6,
   );
 
   final divider = _mixColor(scheme.surface, scheme.onSurface, 0.12);
-  final secondaryMixRatio = brightness == Brightness.light ? 0.08 : 0.24;
+  final secondaryMixRatio = brightness == Brightness.light ? 0.08 : 0.12;
 
   final AppDisplayColors displayColors = (
     primary: scheme.onSurface,
@@ -55,13 +55,13 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
 
   final AppAccentColors accentColors = (
     primary: .new(
-      background: seedColor,
+      background: scheme.primary,
       foreground: scheme.onPrimary,
       tint: scheme.surfaceTint,
       divider: divider,
     ),
     secondary: .new(
-      background: _mixColor(scheme.surfaceContainer, seedColor, secondaryMixRatio),
+      background: _mixColor(scheme.surfaceContainer, scheme.primary, secondaryMixRatio),
       foreground: scheme.primary,
       tint: scheme.surfaceTint,
       divider: divider,
@@ -88,6 +88,10 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
     display: displayColors,
     accent: accentColors,
     danger: dangerColors,
+    selection: (
+      primary: scheme.primaryContainer,
+      secondary: _mixColor(surfaceColors.tertiary.background, scheme.primaryContainer, 0.25),
+    ),
     divider: divider,
     tint: scheme.surfaceTint,
     shadow: scheme.shadow,
@@ -99,7 +103,29 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
       .light => Colors.black,
       .dark => Colors.white,
     },
+    blueprint: _generateBlueprintColors(seedColor, brightness),
   );
 
   return (colors, scheme);
+}
+
+AppBlueprintColors _generateBlueprintColors(Color seedColor, Brightness brightness) {
+  final _int = Color(0xFF5E239D);
+  final _float = Color(0xFF1B998B);
+  final _vector = Color(0xFF5398BE);
+  final _geometry = seedColor;
+  final _math = Color(0xFF5398BE);
+
+  Color _resolve(Color c) {
+    final scheme = ColorScheme.fromSeed(seedColor: c, brightness: brightness);
+    return scheme.primaryContainer;
+  }
+
+  return (
+    int: _int,
+    float: _float,
+    vector: _vector,
+    geometry: _resolve(_geometry),
+    math: _math,
+  );
 }

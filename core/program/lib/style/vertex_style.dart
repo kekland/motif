@@ -61,6 +61,14 @@ final class const VertexStylePartial({
     color: color,
   );
 
+  VertexStylePartial copyWith({
+    double? radius,
+    ColorData? color,
+  }) => VertexStylePartial(
+    radius: radius ?? this.radius,
+    color: color ?? this.color,
+  );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || (other is VertexStylePartial && radius == other.radius && color == other.color);
