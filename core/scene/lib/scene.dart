@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
-import 'package:state/initializer.dart';
 import 'package:state/state.dart';
 
 import 'query.dart';

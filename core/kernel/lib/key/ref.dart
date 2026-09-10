@@ -6,7 +6,7 @@ part of '../kernel.dart';
 sealed class Ref {}
 
 final class CellRef<H extends CellHandle> extends Ref {
-  CellRef._(this.namespace, this.local) : hashCode = _hash(namespace, local);
+  CellRef._(this.namespace, this.local) : hashCode = Mix.mix(namespace, local);
   CellRef.make({required int namespace, required int tag, int sub = 0, required CellKind kind})
     : this._(namespace, (tag << 16 | sub) << 2 | kind.index);
 
@@ -66,13 +66,6 @@ typedef FrameRef = CellRef<FrameHandle>;
 typedef VertexRef = CellRef<VertexHandle>;
 typedef EdgeRef = CellRef<EdgeHandle>;
 typedef FaceRef = CellRef<FaceHandle>;
-
-int _hash(int namespace, int local) {
-  var h = namespace * 0x9E3779B97F4A7C15;
-  h ^= h >>> 32;
-  h ^= local * 0x85EBCA6B;
-  return h ^ (h >>> 15);
-}
 
 extension RefIterableExt on Iterable<Ref> {
   Iterable<CellRef> get cells => whereType<CellRef>();

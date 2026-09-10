@@ -29,6 +29,7 @@ part 'elements/face.dart';
 part 'bundle.dart';
 part 'transaction.dart';
 part 'queries.dart';
+part 'mix.dart';
 
 part 'methods/utility_methods.dart';
 part 'methods/getter_methods.dart';

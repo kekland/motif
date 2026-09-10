@@ -4,7 +4,9 @@ extension type const StatementId._(int value) implements Object {
   static StatementId allocate() => ._(_seq++);
   static int _seq = 1;
 
-  static StatementId derived(StatementId base, int key) => ._(mix(base.value, key) | (1 << 62));
+  static const _generated = 0x8000000000000;
+
+  static StatementId derived(StatementId base, int key) => ._(mix(base.value, key) % _generated + _generated);
 
   int get namespace => value;
 
@@ -14,14 +16,9 @@ extension type const StatementId._(int value) implements Object {
     int sub = 0,
   ]) => .make(namespace: value, tag: tag, sub: sub, kind: kind);
 
-  bool get isGenerated => value & (1 << 62) != 0;
+  bool get isGenerated => value >= _generated;
 
-  static int mix(int a, int b) {
-    var x = a * 0x9E3779B97F4A7C15 ^ b;
-    x = (x ^ (x >>> 30)) * 0xBF58476D1CE4E5B9;
-    x = (x ^ (x >>> 27)) * 0x94D049BB133111EB;
-    return x ^ (x >>> 31);
-  }
+  static int mix(int a, int b) => Mix.mix(a, b);
 }
 
 extension StatementIdCellRefExt on CellRef {

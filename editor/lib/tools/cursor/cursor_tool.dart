@@ -1,7 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/selection_overlay/hover_overlay.dart';
 import 'package:editor/widgets/selection_overlay/selection_overlay.dart';
-import 'package:flutter/gestures.dart';
 
 class CursorTool extends Tool {
   const CursorTool();

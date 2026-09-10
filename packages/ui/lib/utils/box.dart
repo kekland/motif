@@ -76,13 +76,6 @@ extension RectBoxExtensions on Rect {
 typedef ResizeResult = ({Vec2 anchor, Vec2 scale});
 
 extension SideUtils on Side {
-  double _edge(Aabb2 bbox) => switch (this) {
-    .top => bbox.top,
-    .right => bbox.right,
-    .bottom => bbox.bottom,
-    .left => bbox.left,
-  };
-
   ResizeResult applyResize(
     Aabb2 bbox,
     Vec2 delta, {
