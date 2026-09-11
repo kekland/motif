@@ -5,9 +5,9 @@ extension type const EdgeIndex(int i) implements ElementIndex {
   CellIndex get cell => isNone ? .none : .from(i, .edge);
 }
 
-extension type const EdgeHandle._(CellHandle h) implements CellHandle {
+extension type const EdgeHandle.raw(CellHandle h) implements CellHandle {
   EdgeHandle.make(EdgeIndex index, int gen) : h = .make(.edge, index, gen);
-  EdgeIndex get index => .new(_index);
+  EdgeIndex get index => .new(rawIndex);
   EdgeRef ref(Bundle bundle) => bundle.ref(this);
 }
 

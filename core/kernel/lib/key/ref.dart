@@ -5,29 +5,36 @@ part of '../kernel.dart';
 /// - [CovertexRef]: for covertices (edge tangents)
 sealed class Ref {}
 
-final class CellRef<H extends CellHandle> extends Ref {
-  CellRef._(this.namespace, this.local) : hashCode = Mix.mix(namespace, local);
-  CellRef.make({required int namespace, required int tag, int sub = 0, required CellKind kind})
-    : this._(namespace, (tag << 16 | sub) << 2 | kind.index);
+// const _tagBits = 13;
+const _subBits = 16;
+const _kindBits = 2;
 
-  static final root = CellRef.frame(namespace: 0, tag: 0);
+const _tagShift = _subBits + _kindBits;
+const _subShift = _kindBits;
+
+final class CellRef<H extends CellHandle> extends Ref {
+  CellRef._(this.namespace, this.local) : hashCode = Mix64.hash32(namespace.hash32, local);
+  CellRef.make({required U64 namespace, required int tag, int sub = 0, required CellKind kind})
+    : this._(namespace, (tag << _tagShift) | (sub << _subShift) | kind.index);
+
+  static final root = CellRef.frame(namespace: .zero, tag: 0);
 
   // dart format off
-  static FrameRef frame({required int namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .frame);
-  static VertexRef vertex({required int namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .vertex);
-  static EdgeRef edge({required int namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .edge);
-  static FaceRef face({required int namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .face);
+  static FrameRef frame({required U64 namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .frame);
+  static VertexRef vertex({required U64 namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .vertex);
+  static EdgeRef edge({required U64 namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .edge);
+  static FaceRef face({required U64 namespace, required int tag, int sub = 0}) => .make(namespace: namespace, tag: tag, sub: sub, kind: .face);
   // dart format on
 
-  final int namespace;
+  final U64 namespace;
   final int local;
 
   @override
   final int hashCode;
 
   CellKind get kind => CellKind.values[local & 3];
-  int get tag => local >>> 18;
-  int get sub => (local >>> 2) & 0xFFFF;
+  int get tag => local >>> _tagShift;
+  int get sub => (local >>> _subShift) & 0xFFFF;
 
   FrameRef get asFrame {
     assert(kind == .frame);
@@ -49,14 +56,13 @@ final class CellRef<H extends CellHandle> extends Ref {
     return this as FaceRef;
   }
 
-  CellRef copyWith({int? namespace, int? tag, int? sub, CellKind? kind}) => .make(
+  CellRef copyWith({U64? namespace, int? tag, int? sub, CellKind? kind}) => .make(
     namespace: namespace ?? this.namespace,
     tag: tag ?? this.tag,
     sub: sub ?? this.sub,
     kind: kind ?? this.kind,
   );
 
-  /// Equal across type arguments: a `CellRef<FrameHandle>` and a `CellRef<CellHandle>` naming the same cell are the same key.
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is CellRef && other.namespace == namespace && other.local == local;

@@ -1,6 +1,7 @@
 import 'package:blueprint/core.dart';
 import 'package:geometry/geometry.dart';
 import 'package:program/program.dart';
+import 'package:u64/u64.dart';
 
 import 'generator.g.dart';
 
@@ -61,11 +62,9 @@ class Generator extends Blueprint<Generator> {
 extension GeneratorNode on BlueprintExecution {
   EvalContext get evalContext => environment<EvalContext>();
 
-  StatementId derive(Node node, int i, {StatementId? source}) {
-    final key = source != null
-        ? StatementId.mix(StatementId.mix(node.id.value, source.value), i)
-        : StatementId.mix(node.id.value, i);
-
+  StatementId derive(Node node, int k, {StatementId? source}) {
+    final base = U64.of(0, node.id.value);
+    final key = Mix64.mixWithKey(source == null? base : Mix64.mix(base, source.value), k);
     return evalContext.derive(key, origin: this);
   }
 }

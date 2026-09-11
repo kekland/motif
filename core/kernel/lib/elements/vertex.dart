@@ -5,9 +5,9 @@ extension type const VertexIndex(int i) implements ElementIndex {
   CellIndex get cell => isNone ? .none : .from(i, .vertex);
 }
 
-extension type const VertexHandle._(CellHandle h) implements CellHandle {
+extension type const VertexHandle.raw(CellHandle h) implements CellHandle {
   VertexHandle.make(VertexIndex index, int gen) : h = .make(.vertex, index, gen);
-  VertexIndex get index => .new(_index);
+  VertexIndex get index => .new(rawIndex);
   VertexRef ref(Bundle bundle) => bundle.ref(this);
 }
 

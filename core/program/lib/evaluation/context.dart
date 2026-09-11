@@ -14,7 +14,7 @@ class EvalContext {
 
   Bundle get bundle => _evaluation.bundle;
 
-  StatementId derive(int key, {Object? origin}) => _evaluation.generated.derive(id, key, origin: origin);
+  StatementId derive(U64 key, {Object? origin}) => _evaluation.generated.derive(id, key, origin: origin);
   bool derived(StatementId generated) => _evaluation.generatorOf(generated) == id;
 
   T resolve<T>(Selector<T> s) => _resolutions.putIfAbsent(s, () => s._resolve(this)) as T;

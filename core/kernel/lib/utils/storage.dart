@@ -84,8 +84,8 @@ extension type const CellIndexStorage<I extends ElementIndex>._(Int32List storag
   CellIndexStorage() : this._(Int32List(_baseSize));
   CellIndexStorage.copyFrom(CellIndexStorage other) : this._(.fromList(other.storage));
 
-  CellIndex operator [](I index) => ._(storage[index.i]);
-  void operator []=(I index, CellIndex value) => storage[index.i] = value._v;
+  CellIndex operator [](I index) => .raw(storage[index.i]);
+  void operator []=(I index, CellIndex value) => storage[index.i] = value.value;
 
   int get length => storage.length;
   CellIndexStorage<I> grow(int atLeast) => ._(storage.grow(atLeast));

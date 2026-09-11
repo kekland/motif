@@ -13,6 +13,7 @@ workspace:
   - playground
 
   - core/geometry
+  - core/u64
   - core/kernel
   - core/program
   - core/scene

@@ -6,9 +6,9 @@ extension type const FrameIndex(int i) implements ElementIndex {
   CellIndex get cell => isNone ? .none : .from(i, .frame);
 }
 
-extension type const FrameHandle._(CellHandle h) implements CellHandle {
+extension type const FrameHandle.raw(CellHandle h) implements CellHandle {
   FrameHandle.make(FrameIndex index, int gen) : h = .make(.frame, index, gen);
-  FrameIndex get index => .new(_index);
+  FrameIndex get index => .new(rawIndex);
 
   static final root = FrameHandle.make(.root, 0);
   FrameRef ref(Bundle bundle) => bundle.ref(this);
@@ -98,6 +98,6 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     transform[i] = .identity();
     worldTransform[i] = .identity();
     inverseWorldTransform[i] = .identity();
-    id.assign(i, .frame(namespace: 0, tag: 0));
+    id.assign(i, .frame(namespace: .zero, tag: 0));
   }
 }

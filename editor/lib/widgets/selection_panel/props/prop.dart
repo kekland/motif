@@ -101,8 +101,6 @@ sealed class PropValue<T> {
     Uniform(:final value) => value,
     Mixed() => null,
   };
-
-  T? call() => get();
 }
 
 final class const Uniform<T>(final T value) extends PropValue<T>;

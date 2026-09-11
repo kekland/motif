@@ -6,6 +6,7 @@ import 'package:color/color.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
+import 'package:u64/u64.dart';
 
 import 'generator/generator.dart';
 export 'generator/generator.dart';

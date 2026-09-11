@@ -22,7 +22,7 @@ final class Transaction {
   }
 
   final Bundle bundle;
-  final int? _namespace;
+  final U64? _namespace;
 
   final delta = Delta();
 

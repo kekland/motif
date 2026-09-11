@@ -1,24 +1,23 @@
 part of 'program.dart';
 
-extension type const StatementId._(int value) implements Object {
-  static StatementId allocate() => ._(_seq++);
+extension type const StatementId._(U64 value) implements Object {
+  static StatementId allocate() => ._(.of(0, _seq++));
   static int _seq = 1;
 
-  static const _generated = 0x8000000000000;
+  static const _derived = 0x40000000;
+  bool get isDerived => value.hi & _derived != 0;
+  static StatementId derived(StatementId base, U64 key) {
+    final m = Mix64.mix(base.value, key);
+    return ._(.of(m.hi | _derived, m.lo));
+  }
 
-  static StatementId derived(StatementId base, int key) => ._(mix(base.value, key) % _generated + _generated);
-
-  int get namespace => value;
+  U64 get namespace => value;
 
   CellRef<H> cell<H extends CellHandle>(
     CellKind kind,
     int tag, [
     int sub = 0,
   ]) => .make(namespace: value, tag: tag, sub: sub, kind: kind);
-
-  bool get isGenerated => value >= _generated;
-
-  static int mix(int a, int b) => Mix.mix(a, b);
 }
 
 extension StatementIdCellRefExt on CellRef {

@@ -373,7 +373,7 @@ final class Bundle {
 
   var _hasTransaction = false;
 
-  Transaction beginTransaction({int? namespace}) => Transaction(this, namespace: namespace);
+  Transaction beginTransaction({U64? namespace}) => Transaction(this, namespace: namespace);
 
   void _lockTransaction() {
     if (_hasTransaction) throw StateError('transaction already in progress');

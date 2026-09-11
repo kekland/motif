@@ -107,7 +107,7 @@ extension HitTestQuery on TopologyQuery {
 
       final bounds = frameBounds(f);
       if (f.index != .root && bounds != null) {
-        final worldToLocal = bundle.transformBetween(.root, f);
+        final worldToLocal = bundle.transformBetween(bundle.root, f);
         final local = worldToLocal.transform2(p);
         final scale = worldToLocal.maxScaleOnAxis;
 

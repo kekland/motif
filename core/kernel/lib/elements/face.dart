@@ -5,9 +5,9 @@ extension type const FaceIndex(int i) implements ElementIndex {
   CellIndex get cell => isNone ? .none : .from(i, .face);
 }
 
-extension type const FaceHandle._(CellHandle h) implements CellHandle {
+extension type const FaceHandle.raw(CellHandle h) implements CellHandle {
   FaceHandle.make(FaceIndex index, int gen) : h = .make(.face, index, gen);
-  FaceIndex get index => .new(_index);
+  FaceIndex get index => .new(rawIndex);
   FaceRef ref(Bundle bundle) => bundle.ref(this);
 }
 

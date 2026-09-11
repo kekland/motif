@@ -4,9 +4,12 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
+import 'package:u64/u64.dart';
+
+import 'key/handle.dart';
+export 'key/handle.dart';
 
 part 'key/index.dart';
-part 'key/handle.dart';
 part 'key/ref.dart';
 
 part 'utils/arena.dart';
@@ -29,7 +32,6 @@ part 'elements/face.dart';
 part 'bundle.dart';
 part 'transaction.dart';
 part 'queries.dart';
-part 'mix.dart';
 
 part 'methods/utility_methods.dart';
 part 'methods/getter_methods.dart';

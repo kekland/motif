@@ -6,6 +6,7 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
+  u64:
   geometry:
   kernel:
   color:

@@ -24,11 +24,11 @@ class PositionPropWidget extends PropWidget {
     final xProp = usePropComputed(scene, prop.x);
     final yProp = usePropComputed(scene, prop.y);
 
-    final xValue = useMemoComputed(() => xProp.value()?.resolved, keys: [xProp]);
-    final yValue = useMemoComputed(() => yProp.value()?.resolved, keys: [yProp]);
+    final xValue = useMemoComputed(() => xProp.value.get()?.resolved, keys: [xProp]);
+    final yValue = useMemoComputed(() => yProp.value.get()?.resolved, keys: [yProp]);
 
-    final isXOverriden = useComputed(() => xProp.value()?.overridden != null, keys: [xProp]).value;
-    final isYOverriden = useComputed(() => yProp.value()?.overridden != null, keys: [yProp]).value;
+    final isXOverriden = useComputed(() => xProp.value.get()?.overridden != null, keys: [xProp]).value;
+    final isYOverriden = useComputed(() => yProp.value.get()?.overridden != null, keys: [yProp]).value;
 
     return Row(
       spacing: 4.0,
@@ -77,7 +77,7 @@ final class RotationPropWidget extends PropWidget {
   Widget build(BuildContext context) {
     final rotation = usePropComputed(scene, prop);
     final value = useMemoComputed(() {
-      final value = rotation.value();
+      final value = rotation.value.get();
       if (value == null) return null;
       return value * rad2Deg;
     }, keys: [rotation]);
@@ -126,12 +126,12 @@ final class EdgeStylePropWidget extends PropWidget {
       spacing: 8.0,
       children: [
         ColorField(
-          value: useMemoComputed(() => color.value(), keys: [color]),
+          value: useMemoComputed(() => color.value.get(), keys: [color]),
           onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
           options: .new(hintText: 'Mixed'),
         ),
         DoubleExpressionInputField(
-          value: useMemoComputed(() => width.value(), keys: [width]),
+          value: useMemoComputed(() => width.value.get(), keys: [width]),
           onChanged: (width) => scene.edit((txn) => prop.width.set(txn, width)),
           options: .new(
             leading: Icons.weight(),
@@ -161,7 +161,7 @@ final class FaceStylePropWidget extends PropWidget {
     final color = usePropComputed(scene, prop.color);
 
     return ColorField(
-      value: useMemoComputed(() => color.value(), keys: [color]),
+      value: useMemoComputed(() => color.value.get(), keys: [color]),
       onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
       options: .new(hintText: 'Mixed'),
     );
@@ -215,7 +215,7 @@ class LayoutPropWidget extends PropWidget {
   @override
   Widget build(BuildContext context) {
     final prop = usePropComputed(scene, this.prop);
-    final layout = useComputed(() => prop.value(), keys: [prop]).value;
+    final layout = useComputed(() => prop.value.get(), keys: [prop]).value;
 
     return ToggleableButtonRow(
       children: [
@@ -257,18 +257,18 @@ class LayoutSizePropWidget extends PropWidget {
     final width = usePropComputed(scene, prop.width);
     final height = usePropComputed(scene, prop.height);
 
-    final isWidthFixed = useComputed(() => width.value()?.dimension.isFixed ?? true, keys: [width]).value;
-    final isHeightFixed = useComputed(() => height.value()?.dimension.isFixed ?? true, keys: [height]).value;
+    final isWidthFixed = useComputed(() => width.value.get()?.dimension.isFixed ?? true, keys: [width]).value;
+    final isHeightFixed = useComputed(() => height.value.get()?.dimension.isFixed ?? true, keys: [height]).value;
 
     final widthValue = useMemoComputed(() {
-      final w = width.value();
+      final w = width.value.get();
       if (w?.overridden != null) return w?.overridden!;
       if (w?.dimension.isFixed == true) return w?.dimension.value;
       return null;
     }, keys: [width]);
 
     final heightValue = useMemoComputed(() {
-      final h = height.value();
+      final h = height.value.get();
       if (h?.overridden != null) return h?.overridden!;
       if (h?.dimension.isFixed == true) return h?.dimension.value;
       return null;

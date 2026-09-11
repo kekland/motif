@@ -55,7 +55,7 @@ extension type const Covertex._((EdgeHandle, bool) v) implements Object {
 }
 
 final class CovertexRef extends Ref {
-  CovertexRef(this.edge, {required this.isStart}) : hashCode = Mix.mix(edge.hashCode, isStart ? 1 : 0);
+  CovertexRef(this.edge, {required this.isStart}) : hashCode = Mix64.hash32(edge.hashCode, isStart ? 1 : 0);
   CovertexRef.start(EdgeRef edge) : this(edge, isStart: true);
   CovertexRef.end(EdgeRef edge) : this(edge, isStart: false);
 

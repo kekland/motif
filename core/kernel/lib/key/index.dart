@@ -16,26 +16,26 @@ extension type const ElementIndex(int _i) implements Object {
 
 enum CellKind { frame, vertex, edge, face }
 
-extension type const CellIndex._(int _v) implements Object {
-  CellIndex.from(int index, CellKind kind) : _v = (index << 2) | kind.index;
+extension type const CellIndex.raw(int value) implements Object {
+  CellIndex.from(int index, CellKind kind) : value = (index << 2) | kind.index;
 
-  static const none = CellIndex._(kNone);
-  bool get isNone => _v == kNone;
-  bool get isNotNone => _v != kNone;
+  static const none = CellIndex.raw(kNone);
+  bool get isNone => value == kNone;
+  bool get isNotNone => value != kNone;
 
   int get i {
     assert(isNotNone);
-    return _v >> 2;
+    return value >> 2;
   }
 
   ElementIndex get index {
     assert(isNotNone);
-    return .new(_v >> 2);
+    return .new(value >> 2);
   }
 
   CellKind get kind {
     assert(isNotNone);
-    return .values[_v & 3];
+    return .values[value & 3];
   }
 
   FrameIndex get asFrame {

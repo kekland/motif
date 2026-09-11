@@ -3,7 +3,7 @@ part of '../program.dart';
 final class GeneratedIndex {
   final _generatorOf = <StatementId, (StatementId, Object?)>{};
 
-  StatementId derive(StatementId generator, int key, {Object? origin}) {
+  StatementId derive(StatementId generator, U64 key, {Object? origin}) {
     final id = StatementId.derived(generator, key);
     _generatorOf[id] = (generator, origin);
     return id;

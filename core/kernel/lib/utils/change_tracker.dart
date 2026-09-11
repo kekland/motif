@@ -25,8 +25,8 @@ final class ChangeTracker {
       _bufferHigh = _bufferHigh.grow(_count * 2);
     }
 
-    _bufferLow[_count] = h._v & 0xFFFFFFFF;
-    _bufferHigh[_count] = h._v >> 32;
+    _bufferLow[_count] = h.cellIndex.value;
+    _bufferHigh[_count] = h.gen;
     _count++;
   }
 
@@ -35,8 +35,7 @@ final class ChangeTracker {
     final movedFrames = HashSet<FrameRef>();
     var n = 0;
     for (var i = 0; i < _count; i++) {
-      final v = (_bufferHigh[i] << 32) | _bufferLow[i];
-      final h = CellHandle._(v);
+      final h = CellHandle.assemble(.raw(_bufferLow[i]), _bufferHigh[i]);
       if (!b.isCellReachable(h)) continue;
       moved[n++] = h.ref(b);
       final f = b.parentOf(h);
