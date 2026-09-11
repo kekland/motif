@@ -1,9 +1,0 @@
-.fvm/
-.DS_Store
-
-**/.flutter-plugins-dependencies
-**/.dart_tool/
-**/build
-**/.idea
-**/__pycache__
-**/.build
