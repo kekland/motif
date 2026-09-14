@@ -1,5 +1,8 @@
 part of 'command.dart';
 
+// AI slop below
+// Plan: clean the implementation, and add a pure fuzzy search if no subsequence match is found.
+
 /// Score of [query] against [target], higher is better, null if the query isn't a subsequence.
 /// Separators in the query are ignored; separators in the target are free to skip and mark the
 /// next character as a word start.
