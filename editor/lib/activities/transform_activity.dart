@@ -40,10 +40,18 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
     super.onCancel();
   }
 
-  MouseCursor resolveCursor(RotatingMouseCursor cursor, {Side? side, Corner? corner, Mat4? transform}) {
+  MouseCursor resolveCursor();
+
+  MouseCursor resolveRotatingCursor(RotatingMouseCursor cursor, {Side? side, Corner? corner, Mat4? transform}) {
     final globalToScene = editor.renderScene.getTransformTo(null);
     final totalTransform = globalToScene;
     if (transform != null) totalTransform.multiply(transform.asVM());
     return cursor.resolveRaw(totalTransform, side: side, corner: corner);
+  }
+  
+  @override
+  MouseCursor get cursor {
+    if (session.isEmpty) return Cursors.toolCursorForbidden;
+    return resolveCursor();
   }
 }

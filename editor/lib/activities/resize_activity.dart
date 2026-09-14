@@ -42,8 +42,8 @@ abstract class _BaseResizeActivity extends TransformActivity {
   }
 
   @override
-  MouseCursor resolveCursor(RotatingMouseCursor cursor, {Side? side, Corner? corner, Mat4? transform}) {
-    return super.resolveCursor(cursor, side: side, corner: corner, transform: spaceToWorld);
+  MouseCursor resolveRotatingCursor(RotatingMouseCursor cursor, {Side? side, Corner? corner, Mat4? transform}) {
+    return super.resolveRotatingCursor(cursor, side: side, corner: corner, transform: spaceToWorld);
   }
 }
 
@@ -64,7 +64,7 @@ final class _SideResizeActivity extends _BaseResizeActivity {
   }
 
   @override
-  MouseCursor get cursor => resolveCursor(Cursors.resize, side: side);
+  MouseCursor resolveCursor() => resolveRotatingCursor(Cursors.resize, side: side);
 
   @override
   ResizeResult applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio) {
@@ -83,7 +83,7 @@ final class _CornerResizeActivity extends _BaseResizeActivity {
   late final Corner effectiveCorner;
 
   @override
-  MouseCursor get cursor => resolveCursor(Cursors.resize, corner: corner);
+  MouseCursor resolveCursor() => resolveRotatingCursor(Cursors.resize, corner: corner);
 
   @override
   void onStart(PositionedGestureDetails details) {

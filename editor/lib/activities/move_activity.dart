@@ -14,5 +14,5 @@ final class MoveActivity extends TransformActivity {
   }
 
   @override
-  MouseCursor get cursor => Cursors.toolMove;
+  MouseCursor resolveCursor() => Cursors.toolMove;
 }

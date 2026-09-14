@@ -34,4 +34,9 @@ final class GlueVerticesStatement extends Statement {
     id: id ?? this.id,
     enabled: enabled ?? this.enabled,
   );
+
+  @override
+  TransformRoute routeTransform(EvalContext context, Ref target) => .forward(
+    vertices.map((s) => context.resolve(s)).toList(),
+  );
 }

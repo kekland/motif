@@ -22,6 +22,7 @@ class Cursors {
   static final toolCursorControlPoint = _PointerCursor(loader: _c.toolCursorControlPoint);
   static final toolCursorEdge = _PointerCursor(loader: _c.toolCursorEdge);
   static final toolCursorFace = _PointerCursor(loader: _c.toolCursorFace);
+  static final toolCursorForbidden = _PointerCursor(loader: _c.toolCursorForbidden);
 
   static final toolPenVertex = VectorGraphicsMouseCursor(loader: _c.toolPenVertex);
   static final toolPenEdge = VectorGraphicsMouseCursor(loader: _c.toolPenEdge);

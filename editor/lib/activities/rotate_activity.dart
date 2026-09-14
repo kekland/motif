@@ -14,7 +14,7 @@ final class RotateActivity extends TransformActivity {
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight};
 
   @override
-  MouseCursor get cursor => resolveCursor(Cursors.rotate, corner: corner);
+  MouseCursor resolveCursor() => resolveRotatingCursor(Cursors.rotate, corner: corner);
 
   late final Vec2 pivot;
   late final double initialAngle;

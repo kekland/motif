@@ -181,6 +181,7 @@ class CursorsAssets {
   static const rotate = AssetBytesLoader('assets/gen/cursors/rotate.vec', packageName: 'ui');
   static const toolCursorEdge = AssetBytesLoader('assets/gen/cursors/tool-cursor-edge.vec', packageName: 'ui');
   static const precise = AssetBytesLoader('assets/gen/cursors/precise.vec', packageName: 'ui');
+  static const toolCursorForbidden = AssetBytesLoader('assets/gen/cursors/tool-cursor-forbidden.vec', packageName: 'ui');
   static const toolTriangle = AssetBytesLoader('assets/gen/cursors/tool-triangle.vec', packageName: 'ui');
   static const toolFill = AssetBytesLoader('assets/gen/cursors/tool-fill.vec', packageName: 'ui');
   static const toolCursorFace = AssetBytesLoader('assets/gen/cursors/tool-cursor-face.vec', packageName: 'ui');
@@ -202,6 +203,7 @@ const cursorsAssets = (
   rotate: CursorsAssets.rotate,
   toolCursorEdge: CursorsAssets.toolCursorEdge,
   precise: CursorsAssets.precise,
+  toolCursorForbidden: CursorsAssets.toolCursorForbidden,
   toolTriangle: CursorsAssets.toolTriangle,
   toolFill: CursorsAssets.toolFill,
   toolCursorFace: CursorsAssets.toolCursorFace,
@@ -450,6 +452,7 @@ class CursorsIcons extends _BaseIcon {
   const CursorsIcons.rotate({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.rotate, filledLoader: null, autocolor: false);
   const CursorsIcons.toolCursorEdge({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorEdge, filledLoader: null, autocolor: false);
   const CursorsIcons.precise({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.precise, filledLoader: null, autocolor: false);
+  const CursorsIcons.toolCursorForbidden({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorForbidden, filledLoader: null, autocolor: false);
   const CursorsIcons.toolTriangle({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolTriangle, filledLoader: null, autocolor: false);
   const CursorsIcons.toolFill({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolFill, filledLoader: null, autocolor: false);
   const CursorsIcons.toolCursorFace({super.key, super.size, super.color}) : super.vgBasic(loader: CursorsAssets.toolCursorFace, filledLoader: null, autocolor: false);
