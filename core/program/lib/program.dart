@@ -29,6 +29,7 @@ part 'style/edge_style.dart';
 part 'style/face_style.dart';
 
 part 'zorder/zorder.dart';
+part 'zorder/zorder_table.dart';
 
 part 'selectors/cell_selector.dart';
 part 'selectors/chain_selector.dart';
@@ -47,6 +48,7 @@ part 'evaluation/pass.dart';
 part 'evaluation/style.dart';
 part 'evaluation/zorder.dart';
 part 'evaluation/generated.dart';
+part 'evaluation/live.dart';
 
 part 'routers/stack_router.dart';
 part 'routers/dissolve_router.dart';
@@ -54,6 +56,7 @@ part 'routers/delete_router.dart';
 part 'routers/bake_router.dart';
 part 'routers/transform_router.dart';
 part 'routers/slice_router.dart';
+part 'routers/zorder_router.dart';
 
 part 'layout/shape.dart';
 part 'layout/size.dart';
@@ -83,6 +86,7 @@ part 'statements/container_statement.dart';
 part 'statements/polygon_statement.dart';
 part 'statements/ellipse_statement.dart';
 part 'statements/generator_statement.dart';
+part 'statements/glue_vertices_statement.dart';
 
 part 'utils/partial.dart';
 part 'utils/remap.dart';
@@ -91,7 +95,7 @@ final class Program {
   Program(
     this._statements, {
     CellTable<CellStylePartial>? styles,
-    CellTable<ZAnchor>? zOrders,
+    ZOrderTable? zOrders,
   }) : styles = styles ?? .new(),
        zOrders = zOrders ?? .new() {
     _reindex(0, _statements.length);
@@ -104,7 +108,7 @@ final class Program {
   final _statementIndex = <StatementId, int>{};
 
   final CellTable<CellStylePartial> styles;
-  final CellTable<ZAnchor> zOrders;
+  final ZOrderTable zOrders;
 
   int get length => _statements.length;
   Statement operator [](int index) => _statements[index];

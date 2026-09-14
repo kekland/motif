@@ -4,11 +4,10 @@ export 'package:scene/scene.dart';
 export 'package:geometry/geometry.dart';
 export 'package:program/program.dart';
 export 'package:kernel/kernel.dart' hide Action;
-export 'package:tool/tool.dart';
 export 'package:mouse_cursor/mouse_cursor.dart';
 export 'package:color/color.dart';
 
-export 'actions/actions.dart';
+export 'actions/_intents.dart';
 export 'activities/activities.dart';
 export 'editor.dart';
 export 'tools/tools.dart';

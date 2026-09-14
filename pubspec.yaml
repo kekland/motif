@@ -26,7 +26,6 @@ workspace:
   - packages/mouse_cursor
   - packages/bindings
   - packages/state
-  - packages/tool
   - packages/ui
   - packages/color
   - packages/css

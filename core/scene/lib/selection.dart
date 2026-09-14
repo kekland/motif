@@ -13,6 +13,7 @@ final class SceneSelection with ChangeNotifier {
   Set<Ref> get refs => _selected;
   Set<CellRef> get cells => _cells;
   bool get isEmpty => _selected.isEmpty;
+  bool get isNotEmpty => _selected.isNotEmpty;
 
   Iterable<StatementId> get statements => _selectedStatements;
   Set<CovertexRef> get visibleCovertices => _visibleCovertices;

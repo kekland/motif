@@ -9,18 +9,25 @@ class EditorTabBar extends StatelessWidget {
       child: ListView(
         scrollDirection: .horizontal,
         children: [
-          ListItem(
-            onTap: () {},
-            width: 160.0,
-            leading: Icons.animation(),
-            title: Text('Animation'),
-          ),
-          VerticalDivider(),
+          // ListItem(
+          //   onTap: () {},
+          //   width: 160.0,
+          //   leading: Icons.animation(),
+          //   title: Text('Animation'),
+          // ),
+          // VerticalDivider(),
           ListItem(
             onTap: () {},
             width: 160.0,
             leading: Icons.generator(),
             title: Text('Generators'),
+          ),
+          VerticalDivider(),
+          ListItem(
+            onTap: () {},
+            width: 160.0,
+            leading: Icons.variable(),
+            title: Text('Variables'),
           ),
           VerticalDivider(),
         ],

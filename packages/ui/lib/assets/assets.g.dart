@@ -443,6 +443,7 @@ class Icons extends _BaseIcon {
   const Icons.lock({super.key, super.size, super.color}): super.iconData(icon: Symbols.lock_rounded);
   const Icons.home({super.key, super.size, super.color}): super.iconData(icon: Symbols.home_rounded);
   const Icons.animation({super.key, super.size, super.color}): super.iconData(icon: Symbols.animation_rounded);
+  const Icons.variable({super.key, super.size, super.color}): super.iconData(icon: Symbols.style_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

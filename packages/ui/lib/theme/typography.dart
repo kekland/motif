@@ -45,6 +45,14 @@ AppTypography generateMaterialTypography(AppColors colors) {
       ),
       colors.display,
     ),
+    caption: .from(
+      base.copyWith(
+        fontSize: 10.0,
+        height: 12.0 / 10.0,
+        letterSpacing: 0.0,
+      ),
+      colors.display,
+    ),
     footnote: .from(
       base.copyWith(
         fontSize: 8.0,
@@ -101,6 +109,14 @@ AppTypography generateCupertinoTypography(AppColors colors) {
       base.copyWith(
         fontSize: 12.0,
         height: 14.0 / 12.0,
+        letterSpacing: -0.2,
+      ),
+      colors.display,
+    ),
+    caption: .from(
+      base.copyWith(
+        fontSize: 10.0,
+        height: 12.0 / 10.0,
         letterSpacing: -0.2,
       ),
       colors.display,

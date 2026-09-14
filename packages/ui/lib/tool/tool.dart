@@ -5,7 +5,7 @@ abstract class Tool {
   const Tool();
 
   String get key;
-  LogicalKeySet? get shortcut => null;
+  SingleActivator? get shortcut => null;
 
   Widget buildIcon(BuildContext context);
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => const SizedBox.expand();

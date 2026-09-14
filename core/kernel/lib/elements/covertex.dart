@@ -4,12 +4,13 @@ extension type const CovertexIndex(int i) implements ElementIndex {
   static const none = CovertexIndex(kNone);
 }
 
-final class CovertexStorage extends ArenaStorage<CovertexIndex, int, CovertexStorage> {
+final class CovertexStorage extends ArenaStorage<CovertexIndex, CovertexIndex, CovertexStorage> {
   var vertex = VertexIndexStorage<CovertexIndex>();
   var isStart = BoolStorage<CovertexIndex>();
   var edge = EdgeIndexStorage<CovertexIndex>();
   var diskNext = CovertexIndexStorage<CovertexIndex>();
   var tangent = Vec2Storage<CovertexIndex>();
+  var tangentCollapsed = BoolStorage<CovertexIndex>();
 
   @override
   void grow(int atLeast) {
@@ -20,6 +21,7 @@ final class CovertexStorage extends ArenaStorage<CovertexIndex, int, CovertexSto
       edge = edge.grow(atLeast);
       diskNext = diskNext.grow(atLeast);
       tangent = tangent.grow(atLeast);
+      tangentCollapsed = tangentCollapsed.grow(atLeast);
     }
   }
 
@@ -31,10 +33,11 @@ final class CovertexStorage extends ArenaStorage<CovertexIndex, int, CovertexSto
     edge = .copyFrom(other.edge);
     diskNext = .copyFrom(other.diskNext);
     tangent = .copyFrom(other.tangent);
+    tangentCollapsed = .copyFrom(other.tangentCollapsed);
   }
 
   @override
-  int handleFor(CovertexIndex i) => i.i;
+  CovertexIndex handleFor(CovertexIndex i) => i;
 
   @override
   CovertexIndex _wrapIndex(int i) => .new(i);

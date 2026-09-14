@@ -14,7 +14,7 @@ class MarqueeTool extends Tool {
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _MarqueeToolOverlay(info: info);
 
   @override
-  LogicalKeySet? get shortcut => .new(.keyM);
+  SingleActivator? get shortcut => .new(.keyM);
 }
 
 class _MarqueeToolOverlay extends HookWidget {

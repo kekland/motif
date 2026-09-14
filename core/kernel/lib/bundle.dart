@@ -111,9 +111,18 @@ final class Bundle {
   // Covertex
   // -------------------------------------------------------------------------------------------------------------------
 
+  int get covertexCount => _covertex.liveCount;
+  Iterable<Covertex> get covertices => _covertex.liveHandles.map((cv) => _covertexFor(cv));
+
   VertexHandle covertexVertex(Covertex cv) {
     assert(_checkEdge(cv.edge));
     return cv.isStart ? edgeStart(cv.edge) : edgeEnd(cv.edge);
+  }
+
+  bool covertexTangentCollapsed(Covertex cv) {
+    assert(_checkEdge(cv.edge));
+    final i = cv.isStart ? _edge.cvStart[cv.edge.index] : _edge.cvEnd[cv.edge.index];
+    return _covertexTangentCollapsed(i);
   }
 
   Vec2 covertexTangent(Covertex cv, {FrameHandle? space}) {
@@ -360,6 +369,15 @@ final class Bundle {
   FrameHandle lca(CellHandle a, CellHandle b) {
     assert(_checkCell(a) && _checkCell(b));
     return _frame.handleFor(_treeLca(a.cellIndex, b.cellIndex));
+  }
+
+  FrameHandle lcaMany(Iterable<CellHandle> cells) {
+    var lca = root;
+    for (final c in cells) {
+      assert(_checkCell(c));
+      lca = _frame.handleFor(_treeLca(lca.cellIndex, c.cellIndex));
+    }
+    return lca;
   }
 
   bool isAncestorOf(CellHandle a, {required FrameHandle ancestor}) {

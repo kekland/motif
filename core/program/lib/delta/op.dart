@@ -16,6 +16,12 @@ sealed class ProgramOp {
     required CellStylePartial? after,
   }) = StyleOp;
 
+  factory ProgramOp.zOrder(
+    CellRef ref, {
+    required ZAnchor? before,
+    required ZAnchor? after,
+  }) = ZOrderOp;
+
   bool get isEmpty;
 
   void reapply(EvaluationPass pass);
@@ -116,6 +122,7 @@ final class StatementOp extends ProgramOp {
   bool commutesWith(ProgramOp other) => switch (other) {
     StyleOp _ => true,
     EmptyOp _ => true,
+    ZOrderOp _ => true,
     _ => false,
   };
 
@@ -170,10 +177,57 @@ final class StyleOp extends ProgramOp {
   @override
   bool commutesWith(ProgramOp other) => switch (other) {
     StyleOp d => d.key != key,
+    ZOrderOp _ => true,
     StatementOp _ => true,
     EmptyOp _ => true,
   };
 
   @override
   StyleOp invert() => .new(key, before: after, after: before);
+}
+
+final class ZOrderOp extends ProgramOp {
+  new(
+    this.key, {
+    required this.before,
+    required this.after,
+  });
+
+  final CellRef key;
+  final ZAnchor? before;
+  final ZAnchor? after;
+
+  @override
+  bool get isEmpty => before == after;
+
+  @override
+  void reapply(EvaluationPass pass) {
+    pass.program.zOrders.set(key, after);
+    pass.evaluation.reorder(pass, key);
+  }
+
+  @override
+  void unapply(EvaluationPass pass) {
+    pass.program.zOrders.set(key, before);
+    pass.evaluation.reorder(pass, key);
+  }
+
+  @override
+  ProgramOp? coalesce(ProgramOp next) {
+    if (next is! ZOrderOp) return null;
+    if (next.key != key) return null;
+    if (before == next.after) return .empty();
+    return .zOrder(key, before: before, after: next.after);
+  }
+
+  @override
+  bool commutesWith(ProgramOp other) => switch (other) {
+    ZOrderOp d => d.key != key,
+    StyleOp _ => true,
+    StatementOp _ => true,
+    EmptyOp _ => true,
+  };
+
+  @override
+  ZOrderOp invert() => .new(key, before: after, after: before);
 }

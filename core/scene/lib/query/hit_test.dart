@@ -65,11 +65,11 @@ extension SceneHitTestQuery on SceneQuery {
     );
   }
 
-  SceneHitResult hitTest(Vec2 p, {double tolerance = 0.0}) {
+  SceneHitResult hitTest(Vec2 p, {double tolerance = 0.0, HitTestCovertexMode? covertexMode}) {
     final result = scene.bundle.query.hitTest(
       p,
       tolerance: tolerance,
-      includeCovertices: scene.selection.visibleCovertices,
+      covertexMode: covertexMode ?? .some(scene.selection.visibleCovertices),
     );
 
     return _remapHitResult(p, result);

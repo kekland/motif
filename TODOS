@@ -1,6 +1,17 @@
-[x] Slices (copy/paste)
-[x] Circle/triangle (shape, create activity, tools, statements)
-- Client/server
-[x] Vertex/edge cache in world space
-[x] Z-order sort (also in hit testing)
-[x] Transaction preview
+- [x] Text field tab traversal
+- [?] RMB context menu
+- [?] Global fill/stroke color
+- [x] Commander interface
+- [ ] Serialization, load/save, etc
+- [ ] Slices - data (pb), copy/paste
+- [ ] Editor tabs (generators, variables)
+- [ ] Cubic-cubic intersections
+- [ ] Pencil tool
+- [ ] Bend tool
+- [ ] Pre-dissolve on transform (e.g. cut edge, select inner tangents)
+- [ ] Fix generator statement dissolution
+- [ ] Generator statement nodes implementations
+- [ ] Debug arrangement generation
+- [ ] Tree view
+- [ ] Move tool reparenting (transient transforms for locked transforms, etc)
+- [ ] Variables and variable binding

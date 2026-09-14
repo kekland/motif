@@ -22,10 +22,10 @@ class SelectionPanel extends HookWidget {
       );
     }
 
-    if (selectedStatements.length == 1) {
-      final products = editor.scene.productsOf(selectedStatements.single);
-      selectedCells.removeAll(products);
-    }
+    // if (selectedStatements.length == 1) {
+    //   final products = editor.scene.productsOf(selectedStatements.single);
+    //   selectedCells.removeAll(products);
+    // }
 
     return SingleChildScrollView(
       child: Column(

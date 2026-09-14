@@ -91,6 +91,22 @@ final class SceneTransaction {
     _dirty = true;
   }
 
+  bool reorder(CellRef ref, ZAnchor anchor) {
+    _checkOpen();
+
+    final resolvedRef = evaluation.routeZOrder(ref);
+    if (resolvedRef == null) return false;
+
+    final before = program.zOrders.of(resolvedRef);
+    if (before == anchor) return false;
+
+    final op = ZOrderOp(resolvedRef, before: before, after: anchor);
+    _entries.add(op);
+    op.reapply(_pass);
+    _dirty = true;
+    return true;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // High-level ops
   // -------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/tools/pen/transient_edges_widget.dart';
+import 'package:editor/widgets/selection_overlay/cell_handles.dart';
 
 class PenTool extends Tool {
   const PenTool();
@@ -14,7 +15,7 @@ class PenTool extends Tool {
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _PenToolOverlay(info: info);
 
   @override
-  LogicalKeySet? get shortcut => .new(.keyP);
+  SingleActivator? get shortcut => .new(.keyP);
 }
 
 class _PenToolOverlay extends HookWidget {
@@ -47,12 +48,17 @@ class _PenToolOverlay extends HookWidget {
           cursor: switch (hoveredCell.value) {
             CellRef(kind: .vertex) => Cursors.toolPenVertex,
             CellRef(kind: .edge) => Cursors.toolPenEdge,
+            CovertexRef() when transientEdge.value == null => Cursors.toolCursorControlPoint,
             _ => Cursors.precise,
           },
           child: Listener(
             behavior: .translucent,
             onPointerHover: (e) {
-              final result = editor.hitTest(e.position);
+              final result = editor.hitTest(
+                e.position,
+                covertexMode: transientEdge.value == null ? .all : .none,
+              );
+
               hoveredCell.value = result.top?.ref;
 
               if (transientEdge.value != null) {
@@ -62,16 +68,38 @@ class _PenToolOverlay extends HookWidget {
             },
             child: DragActivityDetector(
               behavior: .translucent,
-              activityFactory: (_) => CreateVertexActivity(
-                editor: editor,
-                existingTransientEdge: transientEdge.value,
-                onTransientEdgeCreated: (v) => transientEdge.value = v,
-                onTransientEdgeCompleted: (v) {
-                  transientEdge.value = null;
-                },
-              ),
-              child: TransientEdgesWidget(
-                transform: info.childPaintTransform,
+              activityFactory: (e) {
+                if (transientEdge.value == null) {
+                  final hitTest = editor.hitTest(e.position, covertexMode: .all);
+
+                  if (hitTest.top?.ref is CovertexRef) {
+                    return MoveActivity(editor, {hitTest.top!.ref});
+                  }
+                }
+
+                return CreateVertexActivity(
+                  editor: editor,
+                  existingTransientEdge: transientEdge.value,
+                  onTransientEdgeCreated: (v) => transientEdge.value = v,
+                  onTransientEdgeCompleted: (v) {
+                    transientEdge.value = null;
+                  },
+                );
+              },
+              child: Stack(
+                children: [
+                  CellHandlesWidget(
+                    scene: editor.scene,
+                    paintTransform: info.childPaintTransform,
+                    refs: {
+                      ...editor.scene.evaluation.live.ofKind(.vertex),
+                      ?hoveredCell.value,
+                    },
+                  ),
+                  TransientEdgesWidget(
+                    transform: info.childPaintTransform,
+                  ),
+                ],
               ),
             ),
           ),

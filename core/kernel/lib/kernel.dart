@@ -56,6 +56,7 @@ part 'ops/fillet_vertex.dart';
 part 'ops/fillet_face.dart';
 part 'ops/make_face.dart';
 part 'ops/reparent.dart';
+part 'ops/glue_vertices.dart';
 
 part 'arrangement/arrangement.dart';
 

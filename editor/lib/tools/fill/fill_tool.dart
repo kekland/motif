@@ -14,7 +14,7 @@ class FillTool extends Tool {
   Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _FillToolOverlay(info: info);
 
   @override
-  LogicalKeySet? get shortcut => .new(.keyG);
+  SingleActivator? get shortcut => .new(.keyG);
 }
 
 class _FillToolOverlay extends HookWidget {

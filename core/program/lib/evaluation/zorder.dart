@@ -45,11 +45,12 @@ final class DrawOrderIndex {
       list.add(entry);
     }
 
+    final zOrders = evaluation.program.zOrders;
     final placed = <CellRef>{};
     void place(CellRef r) {
       if (!placed.add(r)) return;
       final e = entries[r]!;
-      final anchor = evaluation.program.zOrders.of(r);
+      final anchor = zOrders.of(r);
 
       switch (anchor) {
         case null:
@@ -69,7 +70,9 @@ final class DrawOrderIndex {
       }
     }
 
-    for (final r in sorted) place(r);
+    for (final e in zOrders.entries) {
+      if (entries.containsKey(e.key)) place(e.key);
+    }
 
     final out = list.map((e) => (e.ref, bundle.handle(e.ref)!)).toList(growable: false);
     return out;

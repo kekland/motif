@@ -1,7 +1,6 @@
 import 'package:ui/ui.dart';
-import 'package:tool/tool.dart';
 
-class SelectToolIntent extends Intent {
+class SelectToolIntent extends CommandIntent {
   const SelectToolIntent(this.tool);
 
   final Tool tool;
@@ -19,7 +18,7 @@ class ToolShortcuts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shortcuts = <LogicalKeySet, Intent>{};
+    final shortcuts = <SingleActivator, Intent>{};
 
     for (final tool in controller.toolset) {
       if (tool.shortcut == null) continue;

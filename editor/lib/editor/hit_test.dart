@@ -1,16 +1,24 @@
 part of '../editor.dart';
 
 extension EditorHitTest on Editor {
-  SceneHitResult hitTest(Offset globalPosition) {
+  SceneHitResult hitTest(Offset globalPosition, {HitTestCovertexMode? covertexMode}) {
     final transform = renderScene.getTransformTo(null);
     final scale = transform.getMaxScaleOnAxis();
-    return scene.query.hitTest(globalToScene(globalPosition), tolerance: 8.0 / scale);
+    return scene.query.hitTest(
+      globalToScene(globalPosition),
+      tolerance: 8.0 / scale,
+      covertexMode: covertexMode,
+    );
   }
 
-  SceneHitResult hitTestScene(Vec2 scenePosition) {
+  SceneHitResult hitTestScene(Vec2 scenePosition, {HitTestCovertexMode? covertexMode}) {
     final transform = renderScene.getTransformTo(null);
     final scale = transform.getMaxScaleOnAxis();
-    return scene.query.hitTest(scenePosition, tolerance: 8.0 / scale);
+    return scene.query.hitTest(
+      scenePosition,
+      tolerance: 8.0 / scale,
+      covertexMode: covertexMode,
+    );
   }
 
   SceneHitResult hitTestRect(Rect globalRect, {HitTestRectMode mode = .normal}) {

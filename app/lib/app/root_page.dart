@@ -8,18 +8,23 @@ class RootPage extends HookWidget {
   Widget build(BuildContext context) {
     final editor = useDisposable(() => Editor());
 
-    return WindowNavigator(
-      child: Scaffold(
-        child: Stack(
-          children: [
-            Column(
+    return TooltipManager(
+      child: PortalRoot(
+        anchorResolver: (context) => .compute(context),
+        child: WindowNavigator(
+          child: Scaffold(
+            child: Stack(
               children: [
-                SizedBox(width: double.infinity, child: RootNavigationBar()),
-                Divider(height: 1.0),
-                Expanded(child: EditorWidget(editor: editor)),
+                Column(
+                  children: [
+                    SizedBox(width: double.infinity, child: RootNavigationBar()),
+                    Divider(height: 1.0),
+                    Expanded(child: EditorWidget(editor: editor)),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

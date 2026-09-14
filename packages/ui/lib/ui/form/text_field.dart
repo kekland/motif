@@ -111,14 +111,23 @@ class TextField extends HookWidget {
       dispose: (n) => n.dispose(),
     );
 
-    final focusScope = useFocusScopeNode();
+    final hadFocus = useRef(false);
+
+    final fieldFocusNode = useFocusNode(skipTraversal: true);
+
     useListenerEffect(
-      focusScope,
+      focusNode,
       () {
-        if (!focusScope.hasFocus) return;
-        controller.selection = .new(baseOffset: 0, extentOffset: controller.text.length);
+        if (!hadFocus.value && focusNode.hasFocus) {
+          controller.selection = .new(baseOffset: 0, extentOffset: controller.text.length);
+          focusNode.skipTraversal = true;
+          fieldFocusNode.requestFocus();
+        } else if (hadFocus.value && !focusNode.hasFocus) {
+          focusNode.skipTraversal = false;
+        }
+
+        hadFocus.value = focusNode.hasFocus;
       },
-      callImmediately: true,
     );
 
     final autofocus = options.autofocus;
@@ -133,38 +142,42 @@ class TextField extends HookWidget {
     final border = options.border;
     final borderRadius = options.borderRadius;
 
-    final hasFocus = useFocusNodeHasFocus(focusScope);
+    final hasFocus = useFocusNodeHasFocus(focusNode);
 
     var effectiveTextStyle = textStyle ?? context.typography.body.primary;
     if (useTabularFigures) effectiveTextStyle = effectiveTextStyle.tabular;
 
-    Widget child = hasFocus
-        ? material.TextField(
-            autofocus: true,
-            controller: controller,
-            focusNode: focusNode,
-            style: effectiveTextStyle,
-            inputFormatters: inputFormatters,
-            onTapUpOutside: (_) => focusNode.unfocus(),
-            onEditingComplete: onEditingComplete,
-            onSubmitted: (_) => onSubmitted?.call(),
-            onChanged: onChanged,
-            decoration: InputDecoration.collapsed(
-              hintText: hintText,
-              hintStyle: context.typography.body.tertiary,
-            ),
-          )
-        : ListenableBuilder(
-            listenable: controller,
-            builder: (context, _) {
-              return Text(
-                controller.text.isNotEmpty ? controller.text : hintText ?? '',
-                style: controller.text.isNotEmpty ? effectiveTextStyle : context.typography.body.tertiary,
-                maxLines: 1,
-                overflow: .visible,
-              );
-            },
+    Widget child;
+
+    if (hasFocus) {
+      child = material.TextField(
+        autofocus: true,
+        focusNode: fieldFocusNode,
+        controller: controller,
+        style: effectiveTextStyle,
+        inputFormatters: inputFormatters,
+        onTapUpOutside: (_) => focusNode.unfocus(),
+        onEditingComplete: onEditingComplete,
+        onSubmitted: (_) => onSubmitted?.call(),
+        onChanged: onChanged,
+        decoration: InputDecoration.collapsed(
+          hintText: hintText,
+          hintStyle: context.typography.body.tertiary,
+        ),
+      );
+    } else {
+      child = ListenableBuilder(
+        listenable: controller,
+        builder: (context, _) {
+          return Text(
+            controller.text.isNotEmpty ? controller.text : hintText ?? '',
+            style: controller.text.isNotEmpty ? effectiveTextStyle : context.typography.body.tertiary,
+            maxLines: 1,
+            overflow: .visible,
           );
+        },
+      );
+    }
 
     child = Surface(
       padding: padding,
@@ -205,14 +218,11 @@ class TextField extends HookWidget {
     }
 
     return TextFieldTapRegion(
-      child: FocusScope(
+      child: Focus(
+        focusNode: focusNode,
         autofocus: autofocus,
-        node: focusScope,
         child: GestureSurface(
-          onTap: () {
-            focusScope.requestFocus();
-            // controller.selection = .new(baseOffset: 0, extentOffset: controller.text.length);
-          },
+          onTap: focusNode.requestFocus,
           supportedDevices: supportedDevices,
           width: double.infinity,
           color: color ?? context.colors.surface.secondary,

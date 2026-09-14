@@ -52,6 +52,7 @@ Future<void> main() async {
     .new('lock', 'Symbols.lock_rounded'),
     .new('home', 'Symbols.home_rounded'),
     .new('animation', 'Symbols.animation_rounded'),
+    .new('variable', 'Symbols.style_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

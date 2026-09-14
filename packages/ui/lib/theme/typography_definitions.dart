@@ -27,5 +27,6 @@ typedef AppTypography = ({
   AppTextStyle title,
   AppTextStyle subtitle,
   AppTextStyle body,
+  AppTextStyle caption,
   AppTextStyle footnote,
 });

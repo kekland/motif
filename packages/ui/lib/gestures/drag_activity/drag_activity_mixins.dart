@@ -1,7 +1,7 @@
 part of './drag_activity.dart';
 
 mixin KeyboardListenerDragActivity on DragActivity {
-  Set<LogicalKeyboardKey> get keysToListen;
+  Set<LogicalKeyboardKey> get keysToListen => {};
 
   @override
   void onStart(PositionedGestureDetails details) {

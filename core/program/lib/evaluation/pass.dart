@@ -346,6 +346,7 @@ extension EvaluationPassImpl on Evaluation {
     _commits[c.statement.id] = c;
     lineage.add(c);
     graph.add(c);
+    live.add(c);
     style.resolve(pass, c);
     for (final r in c.added) drawOrder.invalidate(r);
     for (final r in c.deleted) drawOrder.invalidate(r);
@@ -356,6 +357,7 @@ extension EvaluationPassImpl on Evaluation {
     _commits.remove(c.statement.id);
     lineage.remove(c);
     graph.remove(c);
+    live.remove(c);
     for (final r in c.added) {
       drawOrder.invalidate(r);
       style._remove(r);

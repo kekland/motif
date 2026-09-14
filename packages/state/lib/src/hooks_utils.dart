@@ -98,3 +98,22 @@ void useListenerEffect(ChangeNotifier notifier, VoidCallback listener, {bool cal
     return () => notifier.removeListener(listener);
   }, [notifier, listener]);
 }
+
+void useControllerTextEffect(
+  TextEditingController controller,
+  void Function(String text) listener,
+) {
+  final previous = useRef('');
+
+  useEffect(() {
+    void _listener() {
+      if (controller.text != previous.value) {
+        previous.value = controller.text;
+        listener(controller.text);
+      }
+    }
+
+    controller.addListener(_listener);
+    return () => controller.removeListener(_listener);
+  }, [controller, listener]);
+}

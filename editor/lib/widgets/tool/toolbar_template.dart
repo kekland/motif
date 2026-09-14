@@ -28,11 +28,15 @@ class ToolbarTemplate extends StatelessWidget {
           direction: direction,
           mainAxisSize: MainAxisSize.min,
           children: [
-            ToolbarButton(
-              key: ValueKey(tool.key),
-              isActive: tool == activeTool,
-              onTap: onToolSelected != null ? () => onToolSelected!(tool) : null,
-              child: tool.buildIcon(context),
+            Tooltip(
+              tooltip: Text('${tool.key}'),
+              shortcut: tool.shortcut,
+              child: ToolbarButton(
+                key: ValueKey(tool.key),
+                isActive: tool == activeTool,
+                onTap: onToolSelected != null ? () => onToolSelected!(tool) : null,
+                child: tool.buildIcon(context),
+              ),
             ),
             // divider,
           ],

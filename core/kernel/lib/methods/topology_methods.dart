@@ -289,6 +289,7 @@ extension TopologyMethods on Bundle {
     _covertex.edge[cv] = e;
     _covertex.isStart[cv] = isStart;
     _covertex.tangent[cv] = tangent ?? .zero();
+    _covertex.tangentCollapsed[cv] = tangent?.isZero() ?? true;
     _vertexDiskInsert(v, cv);
     return cv;
   }

@@ -8,15 +8,15 @@ class CellHandlesWidget extends LeafRenderObjectWidget {
     super.key,
     required this.scene,
     required this.paintTransform,
-    required this.primaryColor,
-    required this.secondaryColor,
+    this.primaryColor,
+    this.secondaryColor,
     this.refs = const {},
   });
 
   final Scene scene;
   final Matrix4 paintTransform;
-  final Color primaryColor;
-  final Color secondaryColor;
+  final Color? primaryColor;
+  final Color? secondaryColor;
   final Set<Ref> refs;
 
   @override
@@ -24,8 +24,8 @@ class CellHandlesWidget extends LeafRenderObjectWidget {
     return CellHandlesRenderObject(
       scene: scene,
       paintTransform: paintTransform,
-      primaryColor: primaryColor,
-      secondaryColor: secondaryColor,
+      primaryColor: primaryColor ?? context.colors.selection.primary,
+      secondaryColor: secondaryColor ?? context.colors.selection.secondary,
       refs: refs,
     );
   }
@@ -35,8 +35,8 @@ class CellHandlesWidget extends LeafRenderObjectWidget {
     renderObject
       ..scene = scene
       ..paintTransform = paintTransform
-      ..primaryColor = primaryColor
-      ..secondaryColor = secondaryColor
+      ..primaryColor = primaryColor ?? context.colors.selection.primary
+      ..secondaryColor = secondaryColor ?? context.colors.selection.secondary
       ..refs = refs;
   }
 }
@@ -218,32 +218,9 @@ class CellHandlesRenderObject extends RenderBox {
 
     context.canvas.restore();
   }
-
-  @override
-  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    return result.addWithPaintTransform(
-      transform: paintTransform,
-      position: position,
-      hitTest: (result, position) {
-        for (final vertex in _vertices) {
-          if (vertex.hitTest(result, position: position)) return true;
-        }
-
-        for (final covertex in _covertices) {
-          if (covertex.hitTest(result, position: position)) return true;
-        }
-
-        for (final edge in _edges) {
-          if (edge.hitTest(result, position: position)) return true;
-        }
-
-        return false;
-      },
-    );
-  }
 }
 
-abstract class HandleRenderObject<R extends Ref> extends RenderBox implements MouseTrackerAnnotation {
+abstract class HandleRenderObject<R extends Ref> extends RenderBox {
   HandleRenderObject(this.ref);
   final R ref;
   var enabled = true;
@@ -264,18 +241,6 @@ abstract class HandleRenderObject<R extends Ref> extends RenderBox implements Mo
   Matrix4 get paintTransform => parent!.paintTransform;
   Color get primaryColor => parent!.primaryColor;
   Color get secondaryColor => parent!.secondaryColor;
-
-  @override
-  PointerEnterEventListener? get onEnter => null;
-
-  @override
-  PointerExitEventListener? get onExit => null;
-
-  @override
-  bool get validForMouseTracker => true;
-
-  @override
-  MouseCursor get cursor => .defer;
 
   late ChangeNotifier _sceneNotifier;
 
@@ -306,9 +271,6 @@ final class CovertexHandleRenderObject extends HandleRenderObject<CovertexRef> {
 
   late Vec2 vertexPosition;
   late Vec2 tangent;
-
-  @override
-  MouseCursor get cursor => Cursors.toolCursorControlPoint;
 
   @override
   void performLayout() {
@@ -352,14 +314,6 @@ final class CovertexHandleRenderObject extends HandleRenderObject<CovertexRef> {
       secondaryColor,
     );
   }
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    final distance = (vertexPosition + tangent).distanceTo(position.vec2);
-    if (distance > 8.0) return false;
-    result.add(BoxHitTestEntry(this, position));
-    return true;
-  }
 }
 
 final class VertexHandleRenderObject extends HandleRenderObject<VertexRef> {
@@ -391,14 +345,6 @@ final class VertexHandleRenderObject extends HandleRenderObject<VertexRef> {
       primaryColor,
       secondaryColor,
     );
-  }
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    final distance = this.position.distanceTo(position.vec2);
-    if (distance > 8.0) return false;
-    result.add(BoxHitTestEntry(this, position));
-    return true;
   }
 }
 
@@ -432,14 +378,6 @@ final class EdgeHandleRenderObject extends HandleRenderObject<EdgeRef> {
       cubic,
       primaryColor,
     );
-  }
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    final closest = cubic.closestPoint(position.vec2);
-    if (closest.distance > 8.0) return false;
-    result.add(BoxHitTestEntry(this, closest.point.offset));
-    return true;
   }
 }
 

@@ -7,10 +7,12 @@ class const Header({
   final Widget? footnote,
   final Widget? trailing,
   final EdgeInsets? padding,
+  final VoidCallback? onTap,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
+      onTap: onTap,
       color: context.colors.surface.secondary,
       leading: leading,
       title: title,

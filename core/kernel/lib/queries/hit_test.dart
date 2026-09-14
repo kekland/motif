@@ -71,11 +71,21 @@ class HitResult {
   bool get isEmpty => entries.isEmpty;
 }
 
+sealed class const HitTestCovertexMode() {
+  static const all = HitTestCovertexModeAll();
+  const factory some(Set<CovertexRef> covertices) = HitTestCovertexModeSome;
+  static const none = HitTestCovertexModeNone();
+}
+
+final class const HitTestCovertexModeAll() extends HitTestCovertexMode;
+final class const HitTestCovertexModeSome(final Set<CovertexRef> covertices) extends HitTestCovertexMode;
+final class const HitTestCovertexModeNone() extends HitTestCovertexMode;
+
 extension HitTestQuery on TopologyQuery {
   HitResult hitTest(
     Vec2 p, {
     double tolerance = 0.0,
-    Set<CovertexRef> includeCovertices = const {},
+    HitTestCovertexMode covertexMode = .none,
   }) {
     final vertices = <VertexHitEntry>[];
     final covertices = <CovertexHitEntry>[];
@@ -119,10 +129,15 @@ extension HitTestQuery on TopologyQuery {
 
     walk(bundle.root);
 
-    for (final cvRef in includeCovertices) {
-      final cv = cvRef.resolve(bundle);
+    final Iterable<Covertex?> cvs = switch (covertexMode) {
+      HitTestCovertexModeAll() => bundle.covertices,
+      HitTestCovertexModeSome(:final covertices) => covertices.map((r) => r.resolve(bundle)),
+      HitTestCovertexModeNone() || _ => const [],
+    };
+
+    for (final cv in cvs) {
       if (cv == null) continue;
-      final e = _hitTestCovertex(cv, p, tolerance, ref: cvRef);
+      final e = _hitTestCovertex(cv, p, tolerance);
       if (e != null) covertices.add(e);
     }
 
@@ -146,6 +161,7 @@ extension HitTestQuery on TopologyQuery {
   }
 
   CovertexHitEntry? _hitTestCovertex(Covertex c, Vec2 p, double tolerance, {CovertexRef? ref}) {
+    if (bundle.covertexTangentCollapsed(c)) return null;
     final d = p.distanceTo(bundle.covertexPosition(c, space: .root));
     if (d > tolerance) return null;
     return .new(ref ?? c.ref(bundle), distance: d);

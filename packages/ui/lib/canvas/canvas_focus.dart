@@ -20,7 +20,19 @@ class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
 
   void _onPrimaryFocusChanged() {
     final primaryFocus = FocusManager.instance.primaryFocus;
-    if (primaryFocus == focusNode.enclosingScope) focusNode.requestFocus();
+
+    var request = false;
+    if (primaryFocus == null) {
+      request = true;
+    } else if (primaryFocus.ancestors.isEmpty) {
+      request = true;
+    } else if (primaryFocus == focusNode.enclosingScope) {
+      request = true;
+    }
+
+    if (request) {
+      focusNode.requestFocus();
+    }
   }
 
   @override
@@ -28,6 +40,12 @@ class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
     FocusManager.instance.removeListener(_onPrimaryFocusChanged);
     focusNode.dispose();
     super.dispose();
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    _onPrimaryFocusChanged();
   }
 
   @override

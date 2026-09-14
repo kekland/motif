@@ -221,6 +221,8 @@ extension GeometryMethods on Bundle {
     return m.transformDelta2(t);
   }
 
+  bool _covertexTangentCollapsed(CovertexIndex cv) => _covertex.tangentCollapsed[cv];
+
   void _covertexSetTangent(CovertexIndex c, Vec2 t, {FrameHandle? space}) {
     late final f = _vertex.parent[_covertex.vertex[c]];
     final s = space?.index;
@@ -230,6 +232,7 @@ extension GeometryMethods on Bundle {
     if (prev.equals(next)) return;
 
     _covertex.tangent[c] = next;
+    _covertex.tangentCollapsed[c] = next.isZero();
     _edge.touch(_covertex.edge[c]);
   }
 

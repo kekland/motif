@@ -1,7 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
-sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity {
+sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity with KeyboardListenerDragActivity {
   CreateShapeActivity(this.editor);
 
   final Editor editor;
@@ -34,7 +36,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
 
     transaction!.insert(statement);
     transaction!.flush();
-    editor.selection.setStatement(statement.id);
+    editor.selection.set(statement.frame);
   }
 
   @override
@@ -43,9 +45,14 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
 
     final parent = statement.parent?.ref;
     final a = editor.globalToLocal(parent, startDetails.globalPosition);
-    final b = editor.globalToLocal(parent, details.globalPosition);
+    var d = editor.globalToLocal(parent, details.globalPosition) - a;
 
-    final aabb = Aabb2.bbox2(a, b);
+    if (isShiftPressed) {
+      final side = math.max(d.x.abs(), d.y.abs());
+      d = Vec2(side * d.x.sign, side * d.y.sign);
+    }
+
+    final aabb = isAltPressed ? Aabb2.bbox2(a - d, a + d) : Aabb2.bbox2(a, a + d);
 
     final newStatement = statement.copyWith(
       transform: .translation2(aabb.min),

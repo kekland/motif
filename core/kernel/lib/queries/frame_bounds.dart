@@ -13,7 +13,7 @@ extension FrameBoundsQuery on TopologyQuery {
   }
 
   Aabb2? bbox(Ref ref, {FrameRef? space}) {
-    final spaceHandle = space != null ? bundle.frame(space)! : null;
+    final spaceHandle = space != null ? bundle.frame(space)! : bundle.frame(localFrame(ref));
     return switch (ref) {
       CellRef c => _cellBbox(bundle.handle(c)!, space: spaceHandle),
       CovertexRef cv => _covertexBbox(cv.resolve(bundle)!, space: spaceHandle),

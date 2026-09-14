@@ -253,8 +253,6 @@ class WindowWidgetState<T> extends State<WindowWidget<T>> with SingleTickerProvi
     Widget child = widget.builder(context);
     child = widget.transitionBuilder(context, _animation, child);
 
-    // Navigator.of(context).pop();
-
     return Listener(
       behavior: .translucent,
       onPointerDown: (d) {

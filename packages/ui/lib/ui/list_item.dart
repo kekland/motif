@@ -56,6 +56,7 @@ class const ListItem({
             const SizedBox(width: 4.0),
             DefaultForegroundStyle(
               color: context.colors.display.tertiary,
+              style: context.typography.caption.tertiary,
               child: trailing!,
             ),
           ],

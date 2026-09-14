@@ -9,6 +9,7 @@ class Evaluation {
     style = .new(this);
     drawOrder = .new(this);
     generated = .new();
+    live = .new();
     _initialPass();
   }
 
@@ -20,6 +21,7 @@ class Evaluation {
   late final StyleIndex style;
   late final DrawOrderIndex drawOrder;
   late final GeneratedIndex generated;
+  late final LiveIndex live;
 
   // -------------------------------------------------------------------------------------------------------------------
   // Statement data
