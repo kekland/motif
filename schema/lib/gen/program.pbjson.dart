@@ -1,0 +1,1974 @@
+// This is a generated file - do not edit.
+//
+// Generated from program.proto.
+
+// @dart = 3.3
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: unused_import
+
+import 'dart:convert' as $convert;
+import 'dart:core' as $core;
+import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use cellKindDescriptor instead')
+const CellKind$json = {
+  '1': 'CellKind',
+  '2': [
+    {'1': 'CELL_KIND_FRAME', '2': 0},
+    {'1': 'CELL_KIND_VERTEX', '2': 1},
+    {'1': 'CELL_KIND_EDGE', '2': 2},
+    {'1': 'CELL_KIND_FACE', '2': 3},
+  ],
+};
+
+/// Descriptor for `CellKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List cellKindDescriptor = $convert.base64Decode(
+    'CghDZWxsS2luZBITCg9DRUxMX0tJTkRfRlJBTUUQABIUChBDRUxMX0tJTkRfVkVSVEVYEAESEg'
+    'oOQ0VMTF9LSU5EX0VER0UQAhISCg5DRUxMX0tJTkRfRkFDRRAD');
+
+@$core.Deprecated('Use programDescriptor instead')
+const Program$json = {
+  '1': 'Program',
+  '2': [
+    {
+      '1': 'statements',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.Statement',
+      '10': 'statements'
+    },
+    {
+      '1': 'style',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StyleTable',
+      '10': 'style'
+    },
+    {
+      '1': 'z_order',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZOrderTable',
+      '10': 'zOrder'
+    },
+  ],
+};
+
+/// Descriptor for `Program`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programDescriptor = $convert.base64Decode(
+    'CgdQcm9ncmFtEjAKCnN0YXRlbWVudHMYASADKAsyEC5tb3RpZi5TdGF0ZW1lbnRSCnN0YXRlbW'
+    'VudHMSJwoFc3R5bGUYAiABKAsyES5tb3RpZi5TdHlsZVRhYmxlUgVzdHlsZRIrCgd6X29yZGVy'
+    'GAMgASgLMhIubW90aWYuWk9yZGVyVGFibGVSBnpPcmRlcg==');
+
+@$core.Deprecated('Use programSliceDescriptor instead')
+const ProgramSlice$json = {
+  '1': 'ProgramSlice',
+  '2': [
+    {
+      '1': 'statements',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.Statement',
+      '10': 'statements'
+    },
+    {
+      '1': 'style',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StyleTable',
+      '10': 'style'
+    },
+    {
+      '1': 'z_order',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZOrderTable',
+      '10': 'zOrder'
+    },
+  ],
+};
+
+/// Descriptor for `ProgramSlice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programSliceDescriptor = $convert.base64Decode(
+    'CgxQcm9ncmFtU2xpY2USMAoKc3RhdGVtZW50cxgBIAMoCzIQLm1vdGlmLlN0YXRlbWVudFIKc3'
+    'RhdGVtZW50cxInCgVzdHlsZRgCIAEoCzIRLm1vdGlmLlN0eWxlVGFibGVSBXN0eWxlEisKB3pf'
+    'b3JkZXIYAyABKAsyEi5tb3RpZi5aT3JkZXJUYWJsZVIGek9yZGVy');
+
+@$core.Deprecated('Use statementDescriptor instead')
+const Statement$json = {
+  '1': 'Statement',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+    {'1': 'enabled', '3': 2, '4': 1, '5': 8, '10': 'enabled'},
+    {
+      '1': 'frame',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FrameStatement',
+      '9': 0,
+      '10': 'frame'
+    },
+    {
+      '1': 'vertex',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStatement',
+      '9': 0,
+      '10': 'vertex'
+    },
+    {
+      '1': 'edge',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStatement',
+      '9': 0,
+      '10': 'edge'
+    },
+    {
+      '1': 'face',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStatement',
+      '9': 0,
+      '10': 'face'
+    },
+    {
+      '1': 'cut_edge',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CutEdgeStatement',
+      '9': 0,
+      '10': 'cutEdge'
+    },
+    {
+      '1': 'dissolve',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.DissolveStatement',
+      '9': 0,
+      '10': 'dissolve'
+    },
+    {
+      '1': 'fillet_face',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FilletFaceStatement',
+      '9': 0,
+      '10': 'filletFace'
+    },
+    {
+      '1': 'glue_vertices',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.GlueVerticesStatement',
+      '9': 0,
+      '10': 'glueVertices'
+    },
+    {
+      '1': 'rectangle',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.RectangleStatement',
+      '9': 0,
+      '10': 'rectangle'
+    },
+    {
+      '1': 'polygon',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.PolygonStatement',
+      '9': 0,
+      '10': 'polygon'
+    },
+    {
+      '1': 'ellipse',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EllipseStatement',
+      '9': 0,
+      '10': 'ellipse'
+    },
+    {
+      '1': 'container',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ContainerStatement',
+      '9': 0,
+      '10': 'container'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `Statement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
+    'CglTdGF0ZW1lbnQSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSGAoHZW5hYm'
+    'xlZBgCIAEoCFIHZW5hYmxlZBItCgVmcmFtZRgKIAEoCzIVLm1vdGlmLkZyYW1lU3RhdGVtZW50'
+    'SABSBWZyYW1lEjAKBnZlcnRleBgLIAEoCzIWLm1vdGlmLlZlcnRleFN0YXRlbWVudEgAUgZ2ZX'
+    'J0ZXgSKgoEZWRnZRgMIAEoCzIULm1vdGlmLkVkZ2VTdGF0ZW1lbnRIAFIEZWRnZRIqCgRmYWNl'
+    'GA0gASgLMhQubW90aWYuRmFjZVN0YXRlbWVudEgAUgRmYWNlEjQKCGN1dF9lZGdlGA4gASgLMh'
+    'cubW90aWYuQ3V0RWRnZVN0YXRlbWVudEgAUgdjdXRFZGdlEjYKCGRpc3NvbHZlGA8gASgLMhgu'
+    'bW90aWYuRGlzc29sdmVTdGF0ZW1lbnRIAFIIZGlzc29sdmUSPQoLZmlsbGV0X2ZhY2UYECABKA'
+    'syGi5tb3RpZi5GaWxsZXRGYWNlU3RhdGVtZW50SABSCmZpbGxldEZhY2USQwoNZ2x1ZV92ZXJ0'
+    'aWNlcxgRIAEoCzIcLm1vdGlmLkdsdWVWZXJ0aWNlc1N0YXRlbWVudEgAUgxnbHVlVmVydGljZX'
+    'MSOQoJcmVjdGFuZ2xlGBIgASgLMhkubW90aWYuUmVjdGFuZ2xlU3RhdGVtZW50SABSCXJlY3Rh'
+    'bmdsZRIzCgdwb2x5Z29uGBMgASgLMhcubW90aWYuUG9seWdvblN0YXRlbWVudEgAUgdwb2x5Z2'
+    '9uEjMKB2VsbGlwc2UYFCABKAsyFy5tb3RpZi5FbGxpcHNlU3RhdGVtZW50SABSB2VsbGlwc2US'
+    'OQoJY29udGFpbmVyGBUgASgLMhkubW90aWYuQ29udGFpbmVyU3RhdGVtZW50SABSCWNvbnRhaW'
+    '5lckIHCgV2YWx1ZQ==');
+
+@$core.Deprecated('Use u64Descriptor instead')
+const U64$json = {
+  '1': 'U64',
+  '2': [
+    {'1': 'hi', '3': 1, '4': 1, '5': 13, '10': 'hi'},
+    {'1': 'lo', '3': 2, '4': 1, '5': 13, '10': 'lo'},
+  ],
+};
+
+/// Descriptor for `U64`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List u64Descriptor = $convert
+    .base64Decode('CgNVNjQSDgoCaGkYASABKA1SAmhpEg4KAmxvGAIgASgNUgJsbw==');
+
+@$core.Deprecated('Use statementIdDescriptor instead')
+const StatementId$json = {
+  '1': 'StatementId',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 11, '6': '.motif.U64', '10': 'value'},
+  ],
+};
+
+/// Descriptor for `StatementId`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List statementIdDescriptor = $convert.base64Decode(
+    'CgtTdGF0ZW1lbnRJZBIgCgV2YWx1ZRgBIAEoCzIKLm1vdGlmLlU2NFIFdmFsdWU=');
+
+@$core.Deprecated('Use cellRefDescriptor instead')
+const CellRef$json = {
+  '1': 'CellRef',
+  '2': [
+    {
+      '1': 'namespace',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.U64',
+      '10': 'namespace'
+    },
+    {'1': 'tag', '3': 2, '4': 1, '5': 13, '10': 'tag'},
+    {'1': 'sub', '3': 3, '4': 1, '5': 13, '10': 'sub'},
+    {
+      '1': 'kind',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.CellKind',
+      '10': 'kind'
+    },
+  ],
+};
+
+/// Descriptor for `CellRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cellRefDescriptor = $convert.base64Decode(
+    'CgdDZWxsUmVmEigKCW5hbWVzcGFjZRgBIAEoCzIKLm1vdGlmLlU2NFIJbmFtZXNwYWNlEhAKA3'
+    'RhZxgCIAEoDVIDdGFnEhAKA3N1YhgDIAEoDVIDc3ViEiMKBGtpbmQYBCABKA4yDy5tb3RpZi5D'
+    'ZWxsS2luZFIEa2luZA==');
+
+@$core.Deprecated('Use zAnchorDescriptor instead')
+const ZAnchor$json = {
+  '1': 'ZAnchor',
+  '2': [
+    {'1': 'top', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'top'},
+    {'1': 'bottom', '3': 2, '4': 1, '5': 8, '9': 0, '10': 'bottom'},
+    {
+      '1': 'above',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'above'
+    },
+    {
+      '1': 'below',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'below'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `ZAnchor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List zAnchorDescriptor = $convert.base64Decode(
+    'CgdaQW5jaG9yEhIKA3RvcBgBIAEoCEgAUgN0b3ASGAoGYm90dG9tGAIgASgISABSBmJvdHRvbR'
+    'ImCgVhYm92ZRgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIFYWJvdmUSJgoFYmVsb3cYBCABKAsy'
+    'Di5tb3RpZi5DZWxsUmVmSABSBWJlbG93QgcKBXZhbHVl');
+
+@$core.Deprecated('Use zOrderEntryDescriptor instead')
+const ZOrderEntry$json = {
+  '1': 'ZOrderEntry',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZAnchor',
+      '10': 'value'
+    },
+  ],
+};
+
+/// Descriptor for `ZOrderEntry`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List zOrderEntryDescriptor = $convert.base64Decode(
+    'CgtaT3JkZXJFbnRyeRIgCgNyZWYYASABKAsyDi5tb3RpZi5DZWxsUmVmUgNyZWYSJAoFdmFsdW'
+    'UYAiABKAsyDi5tb3RpZi5aQW5jaG9yUgV2YWx1ZQ==');
+
+@$core.Deprecated('Use zOrderTableDescriptor instead')
+const ZOrderTable$json = {
+  '1': 'ZOrderTable',
+  '2': [
+    {
+      '1': 'entries',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.ZOrderEntry',
+      '10': 'entries'
+    },
+  ],
+};
+
+/// Descriptor for `ZOrderTable`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List zOrderTableDescriptor = $convert.base64Decode(
+    'CgtaT3JkZXJUYWJsZRIsCgdlbnRyaWVzGAEgAygLMhIubW90aWYuWk9yZGVyRW50cnlSB2VudH'
+    'JpZXM=');
+
+@$core.Deprecated('Use styleEntryDescriptor instead')
+const StyleEntry$json = {
+  '1': 'StyleEntry',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellStyle.Partial',
+      '10': 'value'
+    },
+  ],
+};
+
+/// Descriptor for `StyleEntry`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List styleEntryDescriptor = $convert.base64Decode(
+    'CgpTdHlsZUVudHJ5EiAKA3JlZhgBIAEoCzIOLm1vdGlmLkNlbGxSZWZSA3JlZhIuCgV2YWx1ZR'
+    'gCIAEoCzIYLm1vdGlmLkNlbGxTdHlsZS5QYXJ0aWFsUgV2YWx1ZQ==');
+
+@$core.Deprecated('Use styleTableDescriptor instead')
+const StyleTable$json = {
+  '1': 'StyleTable',
+  '2': [
+    {
+      '1': 'entries',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.StyleEntry',
+      '10': 'entries'
+    },
+  ],
+};
+
+/// Descriptor for `StyleTable`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List styleTableDescriptor = $convert.base64Decode(
+    'CgpTdHlsZVRhYmxlEisKB2VudHJpZXMYASADKAsyES5tb3RpZi5TdHlsZUVudHJ5UgdlbnRyaW'
+    'Vz');
+
+@$core.Deprecated('Use cellStyleDescriptor instead')
+const CellStyle$json = {
+  '1': 'CellStyle',
+  '2': [
+    {
+      '1': 'vertex',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '9': 0,
+      '10': 'vertex'
+    },
+    {
+      '1': 'edge',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '9': 0,
+      '10': 'edge'
+    },
+    {
+      '1': 'face',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '9': 0,
+      '10': 'face'
+    },
+  ],
+  '3': [CellStyle_Partial$json],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+@$core.Deprecated('Use cellStyleDescriptor instead')
+const CellStyle_Partial$json = {
+  '1': 'Partial',
+  '2': [
+    {
+      '1': 'vertex',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle.Partial',
+      '9': 0,
+      '10': 'vertex'
+    },
+    {
+      '1': 'edge',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle.Partial',
+      '9': 0,
+      '10': 'edge'
+    },
+    {
+      '1': 'face',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle.Partial',
+      '9': 0,
+      '10': 'face'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `CellStyle`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cellStyleDescriptor = $convert.base64Decode(
+    'CglDZWxsU3R5bGUSLAoGdmVydGV4GAEgASgLMhIubW90aWYuVmVydGV4U3R5bGVIAFIGdmVydG'
+    'V4EiYKBGVkZ2UYAiABKAsyEC5tb3RpZi5FZGdlU3R5bGVIAFIEZWRnZRImCgRmYWNlGAMgASgL'
+    'MhAubW90aWYuRmFjZVN0eWxlSABSBGZhY2UaqAEKB1BhcnRpYWwSNAoGdmVydGV4GAEgASgLMh'
+    'oubW90aWYuVmVydGV4U3R5bGUuUGFydGlhbEgAUgZ2ZXJ0ZXgSLgoEZWRnZRgCIAEoCzIYLm1v'
+    'dGlmLkVkZ2VTdHlsZS5QYXJ0aWFsSABSBGVkZ2USLgoEZmFjZRgDIAEoCzIYLm1vdGlmLkZhY2'
+    'VTdHlsZS5QYXJ0aWFsSABSBGZhY2VCBwoFdmFsdWVCBwoFdmFsdWU=');
+
+@$core.Deprecated('Use vertexStyleDescriptor instead')
+const VertexStyle$json = {
+  '1': 'VertexStyle',
+  '2': [
+    {'1': 'radius', '3': 1, '4': 1, '5': 1, '10': 'radius'},
+    {
+      '1': 'color',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '10': 'color'
+    },
+  ],
+  '3': [VertexStyle_Partial$json],
+};
+
+@$core.Deprecated('Use vertexStyleDescriptor instead')
+const VertexStyle_Partial$json = {
+  '1': 'Partial',
+  '2': [
+    {'1': 'radius', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'radius', '17': true},
+    {
+      '1': 'color',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 1,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_radius'},
+    {'1': '_color'},
+  ],
+};
+
+/// Descriptor for `VertexStyle`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List vertexStyleDescriptor = $convert.base64Decode(
+    'CgtWZXJ0ZXhTdHlsZRIWCgZyYWRpdXMYASABKAFSBnJhZGl1cxImCgVjb2xvchgCIAEoCzIQLm'
+    '1vdGlmLkNvbG9yRGF0YVIFY29sb3IaaAoHUGFydGlhbBIbCgZyYWRpdXMYASABKAFIAFIGcmFk'
+    'aXVziAEBEisKBWNvbG9yGAIgASgLMhAubW90aWYuQ29sb3JEYXRhSAFSBWNvbG9yiAEBQgkKB1'
+    '9yYWRpdXNCCAoGX2NvbG9y');
+
+@$core.Deprecated('Use edgeStyleDescriptor instead')
+const EdgeStyle$json = {
+  '1': 'EdgeStyle',
+  '2': [
+    {'1': 'width', '3': 1, '4': 1, '5': 1, '10': 'width'},
+    {
+      '1': 'color',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '10': 'color'
+    },
+  ],
+  '3': [EdgeStyle_Partial$json],
+};
+
+@$core.Deprecated('Use edgeStyleDescriptor instead')
+const EdgeStyle_Partial$json = {
+  '1': 'Partial',
+  '2': [
+    {'1': 'width', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'width', '17': true},
+    {
+      '1': 'color',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 1,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_width'},
+    {'1': '_color'},
+  ],
+};
+
+/// Descriptor for `EdgeStyle`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List edgeStyleDescriptor = $convert.base64Decode(
+    'CglFZGdlU3R5bGUSFAoFd2lkdGgYASABKAFSBXdpZHRoEiYKBWNvbG9yGAIgASgLMhAubW90aW'
+    'YuQ29sb3JEYXRhUgVjb2xvchplCgdQYXJ0aWFsEhkKBXdpZHRoGAEgASgBSABSBXdpZHRoiAEB'
+    'EisKBWNvbG9yGAIgASgLMhAubW90aWYuQ29sb3JEYXRhSAFSBWNvbG9yiAEBQggKBl93aWR0aE'
+    'IICgZfY29sb3I=');
+
+@$core.Deprecated('Use faceStyleDescriptor instead')
+const FaceStyle$json = {
+  '1': 'FaceStyle',
+  '2': [
+    {
+      '1': 'color',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '10': 'color'
+    },
+  ],
+  '3': [FaceStyle_Partial$json],
+};
+
+@$core.Deprecated('Use faceStyleDescriptor instead')
+const FaceStyle_Partial$json = {
+  '1': 'Partial',
+  '2': [
+    {
+      '1': 'color',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 0,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_color'},
+  ],
+};
+
+/// Descriptor for `FaceStyle`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List faceStyleDescriptor = $convert.base64Decode(
+    'CglGYWNlU3R5bGUSJgoFY29sb3IYASABKAsyEC5tb3RpZi5Db2xvckRhdGFSBWNvbG9yGkAKB1'
+    'BhcnRpYWwSKwoFY29sb3IYASABKAsyEC5tb3RpZi5Db2xvckRhdGFIAFIFY29sb3KIAQFCCAoG'
+    'X2NvbG9y');
+
+@$core.Deprecated('Use cellSelectorDescriptor instead')
+const CellSelector$json = {
+  '1': 'CellSelector',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+  ],
+};
+
+/// Descriptor for `CellSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cellSelectorDescriptor = $convert.base64Decode(
+    'CgxDZWxsU2VsZWN0b3ISIAoDcmVmGAEgASgLMg4ubW90aWYuQ2VsbFJlZlIDcmVm');
+
+@$core.Deprecated('Use productsSelectorDescriptor instead')
+const ProductsSelector$json = {
+  '1': 'ProductsSelector',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+    {
+      '1': 'kind',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.CellKind',
+      '9': 0,
+      '10': 'kind',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_kind'},
+  ],
+};
+
+/// Descriptor for `ProductsSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List productsSelectorDescriptor = $convert.base64Decode(
+    'ChBQcm9kdWN0c1NlbGVjdG9yEiIKAmlkGAEgASgLMhIubW90aWYuU3RhdGVtZW50SWRSAmlkEi'
+    'gKBGtpbmQYAiABKA4yDy5tb3RpZi5DZWxsS2luZEgAUgRraW5kiAEBQgcKBV9raW5k');
+
+@$core.Deprecated('Use chainSelectorDescriptor instead')
+const ChainSelector$json = {
+  '1': 'ChainSelector',
+  '2': [
+    {
+      '1': 'edges',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '10': 'edges'
+    },
+  ],
+};
+
+/// Descriptor for `ChainSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chainSelectorDescriptor = $convert.base64Decode(
+    'Cg1DaGFpblNlbGVjdG9yEiQKBWVkZ2VzGAEgAygLMg4ubW90aWYuQ2VsbFJlZlIFZWRnZXM=');
+
+@$core.Deprecated('Use dissolveSelectorDescriptor instead')
+const DissolveSelector$json = {
+  '1': 'DissolveSelector',
+  '2': [
+    {'1': 'refs', '3': 1, '4': 3, '5': 11, '6': '.motif.CellRef', '10': 'refs'},
+  ],
+};
+
+/// Descriptor for `DissolveSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dissolveSelectorDescriptor = $convert.base64Decode(
+    'ChBEaXNzb2x2ZVNlbGVjdG9yEiIKBHJlZnMYASADKAsyDi5tb3RpZi5DZWxsUmVmUgRyZWZz');
+
+@$core.Deprecated('Use fragmentSelectorDescriptor instead')
+const FragmentSelector$json = {
+  '1': 'FragmentSelector',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+  ],
+};
+
+/// Descriptor for `FragmentSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List fragmentSelectorDescriptor = $convert.base64Decode(
+    'ChBGcmFnbWVudFNlbGVjdG9yEiIKAmlkGAEgASgLMhIubW90aWYuU3RhdGVtZW50SWRSAmlk');
+
+@$core.Deprecated('Use selectorDescriptor instead')
+const Selector$json = {
+  '1': 'Selector',
+  '2': [
+    {
+      '1': 'cell',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellSelector',
+      '9': 0,
+      '10': 'cell'
+    },
+    {
+      '1': 'products',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ProductsSelector',
+      '9': 0,
+      '10': 'products'
+    },
+    {
+      '1': 'chain',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ChainSelector',
+      '9': 0,
+      '10': 'chain'
+    },
+    {
+      '1': 'dissolve',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.DissolveSelector',
+      '9': 0,
+      '10': 'dissolve'
+    },
+    {
+      '1': 'fragment',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FragmentSelector',
+      '9': 0,
+      '10': 'fragment'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `Selector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List selectorDescriptor = $convert.base64Decode(
+    'CghTZWxlY3RvchIpCgRjZWxsGAEgASgLMhMubW90aWYuQ2VsbFNlbGVjdG9ySABSBGNlbGwSNQ'
+    'oIcHJvZHVjdHMYAiABKAsyFy5tb3RpZi5Qcm9kdWN0c1NlbGVjdG9ySABSCHByb2R1Y3RzEiwK'
+    'BWNoYWluGAMgASgLMhQubW90aWYuQ2hhaW5TZWxlY3RvckgAUgVjaGFpbhI1CghkaXNzb2x2ZR'
+    'gEIAEoCzIXLm1vdGlmLkRpc3NvbHZlU2VsZWN0b3JIAFIIZGlzc29sdmUSNQoIZnJhZ21lbnQY'
+    'BSABKAsyFy5tb3RpZi5GcmFnbWVudFNlbGVjdG9ySABSCGZyYWdtZW50QgcKBXZhbHVl');
+
+@$core.Deprecated('Use singleSelectorDescriptor instead')
+const SingleSelector$json = {
+  '1': 'SingleSelector',
+  '2': [
+    {
+      '1': 'cell',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellSelector',
+      '9': 0,
+      '10': 'cell'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `SingleSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List singleSelectorDescriptor = $convert.base64Decode(
+    'Cg5TaW5nbGVTZWxlY3RvchIpCgRjZWxsGAEgASgLMhMubW90aWYuQ2VsbFNlbGVjdG9ySABSBG'
+    'NlbGxCBwoFdmFsdWU=');
+
+@$core.Deprecated('Use frameStatementDescriptor instead')
+const FrameStatement$json = {
+  '1': 'FrameStatement',
+  '2': [
+    {
+      '1': 'transform',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'size',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Size2',
+      '9': 0,
+      '10': 'size',
+      '17': true
+    },
+    {
+      '1': 'parent',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 1,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_size'},
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `FrameStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List frameStatementDescriptor = $convert.base64Decode(
+    'Cg5GcmFtZVN0YXRlbWVudBIpCgl0cmFuc2Zvcm0YASABKAsyCy5tb3RpZi5NYXQ0Ugl0cmFuc2'
+    'Zvcm0SJQoEc2l6ZRgCIAEoCzIMLm1vdGlmLlNpemUySABSBHNpemWIAQESKwoGcGFyZW50GAMg'
+    'ASgLMg4ubW90aWYuQ2VsbFJlZkgBUgZwYXJlbnSIAQFCBwoFX3NpemVCCQoHX3BhcmVudA==');
+
+@$core.Deprecated('Use vertexStatementDescriptor instead')
+const VertexStatement$json = {
+  '1': 'VertexStatement',
+  '2': [
+    {
+      '1': 'position',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '10': 'position'
+    },
+    {
+      '1': 'style',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'style'
+    },
+    {
+      '1': 'parent',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `VertexStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List vertexStatementDescriptor = $convert.base64Decode(
+    'Cg9WZXJ0ZXhTdGF0ZW1lbnQSJwoIcG9zaXRpb24YASABKAsyCy5tb3RpZi5WZWMyUghwb3NpdG'
+    'lvbhIoCgVzdHlsZRgCIAEoCzISLm1vdGlmLlZlcnRleFN0eWxlUgVzdHlsZRIrCgZwYXJlbnQY'
+    'AyABKAsyDi5tb3RpZi5DZWxsUmVmSABSBnBhcmVudIgBAUIJCgdfcGFyZW50');
+
+@$core.Deprecated('Use edgeStatementDescriptor instead')
+const EdgeStatement$json = {
+  '1': 'EdgeStatement',
+  '2': [
+    {
+      '1': 'start',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'start'
+    },
+    {
+      '1': 'end',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'end'
+    },
+    {
+      '1': 'start_tangent',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'startTangent',
+      '17': true
+    },
+    {
+      '1': 'end_tangent',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 1,
+      '10': 'endTangent',
+      '17': true
+    },
+    {
+      '1': 'style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'style'
+    },
+    {
+      '1': 'parent',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 2,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_start_tangent'},
+    {'1': '_end_tangent'},
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `EdgeStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List edgeStatementDescriptor = $convert.base64Decode(
+    'Cg1FZGdlU3RhdGVtZW50EisKBXN0YXJ0GAEgASgLMhUubW90aWYuU2luZ2xlU2VsZWN0b3JSBX'
+    'N0YXJ0EicKA2VuZBgCIAEoCzIVLm1vdGlmLlNpbmdsZVNlbGVjdG9yUgNlbmQSNQoNc3RhcnRf'
+    'dGFuZ2VudBgDIAEoCzILLm1vdGlmLlZlYzJIAFIMc3RhcnRUYW5nZW50iAEBEjEKC2VuZF90YW'
+    '5nZW50GAQgASgLMgsubW90aWYuVmVjMkgBUgplbmRUYW5nZW50iAEBEiYKBXN0eWxlGAUgASgL'
+    'MhAubW90aWYuRWRnZVN0eWxlUgVzdHlsZRIrCgZwYXJlbnQYBiABKAsyDi5tb3RpZi5DZWxsUm'
+    'VmSAJSBnBhcmVudIgBAUIQCg5fc3RhcnRfdGFuZ2VudEIOCgxfZW5kX3RhbmdlbnRCCQoHX3Bh'
+    'cmVudA==');
+
+@$core.Deprecated('Use faceStatementDescriptor instead')
+const FaceStatement$json = {
+  '1': 'FaceStatement',
+  '2': [
+    {
+      '1': 'outer',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ChainSelector',
+      '10': 'outer'
+    },
+    {
+      '1': 'holes',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.ChainSelector',
+      '10': 'holes'
+    },
+    {
+      '1': 'style',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'style'
+    },
+    {
+      '1': 'parent',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `FaceStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List faceStatementDescriptor = $convert.base64Decode(
+    'Cg1GYWNlU3RhdGVtZW50EioKBW91dGVyGAEgASgLMhQubW90aWYuQ2hhaW5TZWxlY3RvclIFb3'
+    'V0ZXISKgoFaG9sZXMYAiADKAsyFC5tb3RpZi5DaGFpblNlbGVjdG9yUgVob2xlcxImCgVzdHls'
+    'ZRgDIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIFc3R5bGUSKwoGcGFyZW50GAQgASgLMg4ubW90aW'
+    'YuQ2VsbFJlZkgAUgZwYXJlbnSIAQFCCQoHX3BhcmVudA==');
+
+@$core.Deprecated('Use cutEdgeStatementDescriptor instead')
+const CutEdgeStatement$json = {
+  '1': 'CutEdgeStatement',
+  '2': [
+    {
+      '1': 'target',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'target'
+    },
+    {'1': 't', '3': 2, '4': 1, '5': 1, '10': 't'},
+  ],
+};
+
+/// Descriptor for `CutEdgeStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cutEdgeStatementDescriptor = $convert.base64Decode(
+    'ChBDdXRFZGdlU3RhdGVtZW50Ei0KBnRhcmdldBgBIAEoCzIVLm1vdGlmLlNpbmdsZVNlbGVjdG'
+    '9yUgZ0YXJnZXQSDAoBdBgCIAEoAVIBdA==');
+
+@$core.Deprecated('Use dissolveStatementDescriptor instead')
+const DissolveStatement$json = {
+  '1': 'DissolveStatement',
+  '2': [
+    {
+      '1': 'selector',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.DissolveSelector',
+      '10': 'selector'
+    },
+    {
+      '1': 'keep',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.DissolveStatement.KeepEntry',
+      '10': 'keep'
+    },
+  ],
+  '3': [DissolveStatement_KeepEntry$json],
+};
+
+@$core.Deprecated('Use dissolveStatementDescriptor instead')
+const DissolveStatement_KeepEntry$json = {
+  '1': 'KeepEntry',
+  '2': [
+    {
+      '1': 'target',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellSelector',
+      '10': 'target'
+    },
+    {
+      '1': 'frame',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '9': 0,
+      '10': 'frame',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_frame'},
+  ],
+};
+
+/// Descriptor for `DissolveStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dissolveStatementDescriptor = $convert.base64Decode(
+    'ChFEaXNzb2x2ZVN0YXRlbWVudBIzCghzZWxlY3RvchgBIAEoCzIXLm1vdGlmLkRpc3NvbHZlU2'
+    'VsZWN0b3JSCHNlbGVjdG9yEjYKBGtlZXAYAiADKAsyIi5tb3RpZi5EaXNzb2x2ZVN0YXRlbWVu'
+    'dC5LZWVwRW50cnlSBGtlZXAadAoJS2VlcEVudHJ5EisKBnRhcmdldBgBIAEoCzITLm1vdGlmLk'
+    'NlbGxTZWxlY3RvclIGdGFyZ2V0EjAKBWZyYW1lGAIgASgLMhUubW90aWYuU2luZ2xlU2VsZWN0'
+    'b3JIAFIFZnJhbWWIAQFCCAoGX2ZyYW1l');
+
+@$core.Deprecated('Use filletFaceStatementDescriptor instead')
+const FilletFaceStatement$json = {
+  '1': 'FilletFaceStatement',
+  '2': [
+    {
+      '1': 'face',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'face'
+    },
+    {
+      '1': 'corners',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.FilletFaceStatement.CornerEntry',
+      '10': 'corners'
+    },
+    {
+      '1': 'radius',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '9': 0,
+      '10': 'radius',
+      '17': true
+    },
+  ],
+  '3': [FilletFaceStatement_CornerEntry$json],
+  '8': [
+    {'1': '_radius'},
+  ],
+};
+
+@$core.Deprecated('Use filletFaceStatementDescriptor instead')
+const FilletFaceStatement_CornerEntry$json = {
+  '1': 'CornerEntry',
+  '2': [
+    {
+      '1': 'vertex',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'vertex'
+    },
+    {
+      '1': 'radius',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '10': 'radius'
+    },
+  ],
+};
+
+/// Descriptor for `FilletFaceStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List filletFaceStatementDescriptor = $convert.base64Decode(
+    'ChNGaWxsZXRGYWNlU3RhdGVtZW50EikKBGZhY2UYASABKAsyFS5tb3RpZi5TaW5nbGVTZWxlY3'
+    'RvclIEZmFjZRJACgdjb3JuZXJzGAIgAygLMiYubW90aWYuRmlsbGV0RmFjZVN0YXRlbWVudC5D'
+    'b3JuZXJFbnRyeVIHY29ybmVycxIwCgZyYWRpdXMYAyABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdX'
+    'NIAFIGcmFkaXVziAEBGmkKC0Nvcm5lckVudHJ5Ei0KBnZlcnRleBgBIAEoCzIVLm1vdGlmLlNp'
+    'bmdsZVNlbGVjdG9yUgZ2ZXJ0ZXgSKwoGcmFkaXVzGAIgASgLMhMubW90aWYuQ29ybmVyUmFkaX'
+    'VzUgZyYWRpdXNCCQoHX3JhZGl1cw==');
+
+@$core.Deprecated('Use glueVerticesStatementDescriptor instead')
+const GlueVerticesStatement$json = {
+  '1': 'GlueVerticesStatement',
+  '2': [
+    {
+      '1': 'vertices',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.SingleSelector',
+      '10': 'vertices'
+    },
+    {
+      '1': 'position',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.GlueVerticesStatement.Position',
+      '10': 'position'
+    },
+  ],
+  '4': [GlueVerticesStatement_Position$json],
+};
+
+@$core.Deprecated('Use glueVerticesStatementDescriptor instead')
+const GlueVerticesStatement_Position$json = {
+  '1': 'Position',
+  '2': [
+    {'1': 'GLUE_VERTICES_STATEMENT_POSITION_FIRST', '2': 0},
+    {'1': 'GLUE_VERTICES_STATEMENT_POSITION_CENTROID', '2': 1},
+  ],
+};
+
+/// Descriptor for `GlueVerticesStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List glueVerticesStatementDescriptor = $convert.base64Decode(
+    'ChVHbHVlVmVydGljZXNTdGF0ZW1lbnQSMQoIdmVydGljZXMYASADKAsyFS5tb3RpZi5TaW5nbG'
+    'VTZWxlY3RvclIIdmVydGljZXMSQQoIcG9zaXRpb24YAiABKA4yJS5tb3RpZi5HbHVlVmVydGlj'
+    'ZXNTdGF0ZW1lbnQuUG9zaXRpb25SCHBvc2l0aW9uImUKCFBvc2l0aW9uEioKJkdMVUVfVkVSVE'
+    'lDRVNfU1RBVEVNRU5UX1BPU0lUSU9OX0ZJUlNUEAASLQopR0xVRV9WRVJUSUNFU19TVEFURU1F'
+    'TlRfUE9TSVRJT05fQ0VOVFJPSUQQAQ==');
+
+@$core.Deprecated('Use rectangleStatementDescriptor instead')
+const RectangleStatement$json = {
+  '1': 'RectangleStatement',
+  '2': [
+    {
+      '1': 'size',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Rectangle',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `RectangleStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List rectangleStatementDescriptor = $convert.base64Decode(
+    'ChJSZWN0YW5nbGVTdGF0ZW1lbnQSJQoEc2l6ZRgBIAEoCzIRLm1vdGlmLkxheW91dFNpemVSBH'
+    'NpemUSKQoJdHJhbnNmb3JtGAIgASgLMgsubW90aWYuTWF0NFIJdHJhbnNmb3JtEjIKBXNoYXBl'
+    'GAMgASgLMhwubW90aWYuT2JqZWN0U2hhcGUuUmVjdGFuZ2xlUgVzaGFwZRI1Cgx2ZXJ0ZXhfc3'
+    'R5bGUYBCABKAsyEi5tb3RpZi5WZXJ0ZXhTdHlsZVILdmVydGV4U3R5bGUSLwoKZWRnZV9zdHls'
+    'ZRgFIAEoCzIQLm1vdGlmLkVkZ2VTdHlsZVIJZWRnZVN0eWxlEi8KCmZhY2Vfc3R5bGUYBiABKA'
+    'syEC5tb3RpZi5GYWNlU3R5bGVSCWZhY2VTdHlsZRIrCgZwYXJlbnQYByABKAsyDi5tb3RpZi5D'
+    'ZWxsUmVmSABSBnBhcmVudIgBAUIJCgdfcGFyZW50');
+
+@$core.Deprecated('Use polygonStatementDescriptor instead')
+const PolygonStatement$json = {
+  '1': 'PolygonStatement',
+  '2': [
+    {
+      '1': 'size',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Polygon',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `PolygonStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List polygonStatementDescriptor = $convert.base64Decode(
+    'ChBQb2x5Z29uU3RhdGVtZW50EiUKBHNpemUYASABKAsyES5tb3RpZi5MYXlvdXRTaXplUgRzaX'
+    'plEikKCXRyYW5zZm9ybRgCIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybRIwCgVzaGFwZRgD'
+    'IAEoCzIaLm1vdGlmLk9iamVjdFNoYXBlLlBvbHlnb25SBXNoYXBlEjUKDHZlcnRleF9zdHlsZR'
+    'gEIAEoCzISLm1vdGlmLlZlcnRleFN0eWxlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAUg'
+    'ASgLMhAubW90aWYuRWRnZVN0eWxlUgllZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgGIAEoCzIQLm'
+    '1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0eWxlEisKBnBhcmVudBgHIAEoCzIOLm1vdGlmLkNlbGxS'
+    'ZWZIAFIGcGFyZW50iAEBQgkKB19wYXJlbnQ=');
+
+@$core.Deprecated('Use ellipseStatementDescriptor instead')
+const EllipseStatement$json = {
+  '1': 'EllipseStatement',
+  '2': [
+    {
+      '1': 'size',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Ellipse',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `EllipseStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List ellipseStatementDescriptor = $convert.base64Decode(
+    'ChBFbGxpcHNlU3RhdGVtZW50EiUKBHNpemUYASABKAsyES5tb3RpZi5MYXlvdXRTaXplUgRzaX'
+    'plEikKCXRyYW5zZm9ybRgCIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybRIwCgVzaGFwZRgD'
+    'IAEoCzIaLm1vdGlmLk9iamVjdFNoYXBlLkVsbGlwc2VSBXNoYXBlEjUKDHZlcnRleF9zdHlsZR'
+    'gEIAEoCzISLm1vdGlmLlZlcnRleFN0eWxlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAUg'
+    'ASgLMhAubW90aWYuRWRnZVN0eWxlUgllZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgGIAEoCzIQLm'
+    '1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0eWxlEisKBnBhcmVudBgHIAEoCzIOLm1vdGlmLkNlbGxS'
+    'ZWZIAFIGcGFyZW50iAEBQgkKB19wYXJlbnQ=');
+
+@$core.Deprecated('Use containerStatementDescriptor instead')
+const ContainerStatement$json = {
+  '1': 'ContainerStatement',
+  '2': [
+    {
+      '1': 'layout',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout',
+      '10': 'layout'
+    },
+    {
+      '1': 'size',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `ContainerStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List containerStatementDescriptor = $convert.base64Decode(
+    'ChJDb250YWluZXJTdGF0ZW1lbnQSJQoGbGF5b3V0GAEgASgLMg0ubW90aWYuTGF5b3V0UgZsYX'
+    'lvdXQSJQoEc2l6ZRgCIAEoCzIRLm1vdGlmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNmb3Jt'
+    'GAMgASgLMgsubW90aWYuTWF0NFIJdHJhbnNmb3JtEigKBXNoYXBlGAQgASgLMhIubW90aWYuT2'
+    'JqZWN0U2hhcGVSBXNoYXBlEjUKDHZlcnRleF9zdHlsZRgFIAEoCzISLm1vdGlmLlZlcnRleFN0'
+    'eWxlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAYgASgLMhAubW90aWYuRWRnZVN0eWxlUg'
+    'llZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgHIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0'
+    'eWxlEisKBnBhcmVudBgIIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB19wYX'
+    'JlbnQ=');
+
+@$core.Deprecated('Use objectShapeDescriptor instead')
+const ObjectShape$json = {
+  '1': 'ObjectShape',
+  '2': [
+    {
+      '1': 'rectangle',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Rectangle',
+      '9': 0,
+      '10': 'rectangle'
+    },
+    {
+      '1': 'polygon',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Polygon',
+      '9': 0,
+      '10': 'polygon'
+    },
+    {
+      '1': 'ellipse',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape.Ellipse',
+      '9': 0,
+      '10': 'ellipse'
+    },
+  ],
+  '3': [
+    ObjectShape_Rectangle$json,
+    ObjectShape_Polygon$json,
+    ObjectShape_Ellipse$json
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+@$core.Deprecated('Use objectShapeDescriptor instead')
+const ObjectShape_Rectangle$json = {
+  '1': 'Rectangle',
+};
+
+@$core.Deprecated('Use objectShapeDescriptor instead')
+const ObjectShape_Polygon$json = {
+  '1': 'Polygon',
+  '2': [
+    {'1': 'sides', '3': 1, '4': 1, '5': 5, '10': 'sides'},
+  ],
+};
+
+@$core.Deprecated('Use objectShapeDescriptor instead')
+const ObjectShape_Ellipse$json = {
+  '1': 'Ellipse',
+};
+
+/// Descriptor for `ObjectShape`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List objectShapeDescriptor = $convert.base64Decode(
+    'CgtPYmplY3RTaGFwZRI8CglyZWN0YW5nbGUYASABKAsyHC5tb3RpZi5PYmplY3RTaGFwZS5SZW'
+    'N0YW5nbGVIAFIJcmVjdGFuZ2xlEjYKB3BvbHlnb24YAiABKAsyGi5tb3RpZi5PYmplY3RTaGFw'
+    'ZS5Qb2x5Z29uSABSB3BvbHlnb24SNgoHZWxsaXBzZRgDIAEoCzIaLm1vdGlmLk9iamVjdFNoYX'
+    'BlLkVsbGlwc2VIAFIHZWxsaXBzZRoLCglSZWN0YW5nbGUaHwoHUG9seWdvbhIUCgVzaWRlcxgB'
+    'IAEoBVIFc2lkZXMaCQoHRWxsaXBzZUIHCgV2YWx1ZQ==');
+
+@$core.Deprecated('Use layoutSizeDescriptor instead')
+const LayoutSize$json = {
+  '1': 'LayoutSize',
+  '2': [
+    {
+      '1': 'width',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutDimension',
+      '10': 'width'
+    },
+    {
+      '1': 'height',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutDimension',
+      '10': 'height'
+    },
+  ],
+};
+
+/// Descriptor for `LayoutSize`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List layoutSizeDescriptor = $convert.base64Decode(
+    'CgpMYXlvdXRTaXplEiwKBXdpZHRoGAEgASgLMhYubW90aWYuTGF5b3V0RGltZW5zaW9uUgV3aW'
+    'R0aBIuCgZoZWlnaHQYAiABKAsyFi5tb3RpZi5MYXlvdXREaW1lbnNpb25SBmhlaWdodA==');
+
+@$core.Deprecated('Use layoutDimensionDescriptor instead')
+const LayoutDimension$json = {
+  '1': 'LayoutDimension',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+    {
+      '1': 'type',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.LayoutDimension.Type',
+      '10': 'type'
+    },
+    {
+      '1': 'range',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutDimension.Range',
+      '10': 'range'
+    },
+  ],
+  '3': [LayoutDimension_Range$json],
+  '4': [LayoutDimension_Type$json],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use layoutDimensionDescriptor instead')
+const LayoutDimension_Range$json = {
+  '1': 'Range',
+  '2': [
+    {'1': 'min', '3': 1, '4': 1, '5': 1, '10': 'min'},
+    {'1': 'max', '3': 2, '4': 1, '5': 1, '10': 'max'},
+  ],
+};
+
+@$core.Deprecated('Use layoutDimensionDescriptor instead')
+const LayoutDimension_Type$json = {
+  '1': 'Type',
+  '2': [
+    {'1': 'LAYOUT_DIMENSION_TYPE_FIXED', '2': 0},
+    {'1': 'LAYOUT_DIMENSION_TYPE_EXPAND', '2': 1},
+    {'1': 'LAYOUT_DIMENSION_TYPE_CONTAIN', '2': 2},
+  ],
+};
+
+/// Descriptor for `LayoutDimension`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List layoutDimensionDescriptor = $convert.base64Decode(
+    'Cg9MYXlvdXREaW1lbnNpb24SGQoFdmFsdWUYASABKAFIAFIFdmFsdWWIAQESLwoEdHlwZRgCIA'
+    'EoDjIbLm1vdGlmLkxheW91dERpbWVuc2lvbi5UeXBlUgR0eXBlEjIKBXJhbmdlGAMgASgLMhwu'
+    'bW90aWYuTGF5b3V0RGltZW5zaW9uLlJhbmdlUgVyYW5nZRorCgVSYW5nZRIQCgNtaW4YASABKA'
+    'FSA21pbhIQCgNtYXgYAiABKAFSA21heCJsCgRUeXBlEh8KG0xBWU9VVF9ESU1FTlNJT05fVFlQ'
+    'RV9GSVhFRBAAEiAKHExBWU9VVF9ESU1FTlNJT05fVFlQRV9FWFBBTkQQARIhCh1MQVlPVVRfRE'
+    'lNRU5TSU9OX1RZUEVfQ09OVEFJThACQggKBl92YWx1ZQ==');
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout$json = {
+  '1': 'Layout',
+  '2': [
+    {
+      '1': 'stack',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout.Stack',
+      '9': 0,
+      '10': 'stack'
+    },
+    {
+      '1': 'flex',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout.Flex',
+      '9': 0,
+      '10': 'flex'
+    },
+  ],
+  '3': [Layout_Insets$json, Layout_Stack$json, Layout_Flex$json],
+  '4': [Layout_Align$json, Layout_Justify$json],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Insets$json = {
+  '1': 'Insets',
+  '2': [
+    {'1': 'top', '3': 1, '4': 1, '5': 1, '10': 'top'},
+    {'1': 'right', '3': 2, '4': 1, '5': 1, '10': 'right'},
+    {'1': 'bottom', '3': 3, '4': 1, '5': 1, '10': 'bottom'},
+    {'1': 'left', '3': 4, '4': 1, '5': 1, '10': 'left'},
+  ],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Stack$json = {
+  '1': 'Stack',
+  '2': [
+    {
+      '1': 'align_horizontal',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.Layout.Align',
+      '9': 0,
+      '10': 'alignHorizontal',
+      '17': true
+    },
+    {
+      '1': 'align_vertical',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.Layout.Align',
+      '9': 1,
+      '10': 'alignVertical',
+      '17': true
+    },
+    {
+      '1': 'padding',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout.Insets',
+      '10': 'padding'
+    },
+  ],
+  '8': [
+    {'1': '_align_horizontal'},
+    {'1': '_align_vertical'},
+  ],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Flex$json = {
+  '1': 'Flex',
+  '2': [
+    {
+      '1': 'direction',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.Layout.Flex.Direction',
+      '10': 'direction'
+    },
+    {
+      '1': 'justify',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.Layout.Justify',
+      '10': 'justify'
+    },
+    {
+      '1': 'cross_align',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.Layout.Align',
+      '10': 'crossAlign'
+    },
+    {'1': 'gap', '3': 4, '4': 1, '5': 1, '10': 'gap'},
+    {
+      '1': 'padding',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout.Insets',
+      '10': 'padding'
+    },
+  ],
+  '4': [Layout_Flex_Direction$json],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Flex_Direction$json = {
+  '1': 'Direction',
+  '2': [
+    {'1': 'LAYOUT_FLEX_DIRECTION_ROW', '2': 0},
+    {'1': 'LAYOUT_FLEX_DIRECTION_COLUMN', '2': 1},
+  ],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Align$json = {
+  '1': 'Align',
+  '2': [
+    {'1': 'LAYOUT_ALIGN_START', '2': 0},
+    {'1': 'LAYOUT_ALIGN_CENTER', '2': 1},
+    {'1': 'LAYOUT_ALIGN_END', '2': 2},
+  ],
+};
+
+@$core.Deprecated('Use layoutDescriptor instead')
+const Layout_Justify$json = {
+  '1': 'Justify',
+  '2': [
+    {'1': 'LAYOUT_JUSTIFY_START', '2': 0},
+    {'1': 'LAYOUT_JUSTIFY_CENTER', '2': 1},
+    {'1': 'LAYOUT_JUSTIFY_END', '2': 2},
+    {'1': 'LAYOUT_JUSTIFY_SPACE_BETWEEN', '2': 3},
+  ],
+};
+
+/// Descriptor for `Layout`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List layoutDescriptor = $convert.base64Decode(
+    'CgZMYXlvdXQSKwoFc3RhY2sYASABKAsyEy5tb3RpZi5MYXlvdXQuU3RhY2tIAFIFc3RhY2sSKA'
+    'oEZmxleBgCIAEoCzISLm1vdGlmLkxheW91dC5GbGV4SABSBGZsZXgaXAoGSW5zZXRzEhAKA3Rv'
+    'cBgBIAEoAVIDdG9wEhQKBXJpZ2h0GAIgASgBUgVyaWdodBIWCgZib3R0b20YAyABKAFSBmJvdH'
+    'RvbRISCgRsZWZ0GAQgASgBUgRsZWZ0GuUBCgVTdGFjaxJDChBhbGlnbl9ob3Jpem9udGFsGAEg'
+    'ASgOMhMubW90aWYuTGF5b3V0LkFsaWduSABSD2FsaWduSG9yaXpvbnRhbIgBARI/Cg5hbGlnbl'
+    '92ZXJ0aWNhbBgCIAEoDjITLm1vdGlmLkxheW91dC5BbGlnbkgBUg1hbGlnblZlcnRpY2FsiAEB'
+    'Ei4KB3BhZGRpbmcYBSABKAsyFC5tb3RpZi5MYXlvdXQuSW5zZXRzUgdwYWRkaW5nQhMKEV9hbG'
+    'lnbl9ob3Jpem9udGFsQhEKD19hbGlnbl92ZXJ0aWNhbBq5AgoERmxleBI6CglkaXJlY3Rpb24Y'
+    'ASABKA4yHC5tb3RpZi5MYXlvdXQuRmxleC5EaXJlY3Rpb25SCWRpcmVjdGlvbhIvCgdqdXN0aW'
+    'Z5GAIgASgOMhUubW90aWYuTGF5b3V0Lkp1c3RpZnlSB2p1c3RpZnkSNAoLY3Jvc3NfYWxpZ24Y'
+    'AyABKA4yEy5tb3RpZi5MYXlvdXQuQWxpZ25SCmNyb3NzQWxpZ24SEAoDZ2FwGAQgASgBUgNnYX'
+    'ASLgoHcGFkZGluZxgFIAEoCzIULm1vdGlmLkxheW91dC5JbnNldHNSB3BhZGRpbmciTAoJRGly'
+    'ZWN0aW9uEh0KGUxBWU9VVF9GTEVYX0RJUkVDVElPTl9ST1cQABIgChxMQVlPVVRfRkxFWF9ESV'
+    'JFQ1RJT05fQ09MVU1OEAEiTgoFQWxpZ24SFgoSTEFZT1VUX0FMSUdOX1NUQVJUEAASFwoTTEFZ'
+    'T1VUX0FMSUdOX0NFTlRFUhABEhQKEExBWU9VVF9BTElHTl9FTkQQAiJ4CgdKdXN0aWZ5EhgKFE'
+    'xBWU9VVF9KVVNUSUZZX1NUQVJUEAASGQoVTEFZT1VUX0pVU1RJRllfQ0VOVEVSEAESFgoSTEFZ'
+    'T1VUX0pVU1RJRllfRU5EEAISIAocTEFZT1VUX0pVU1RJRllfU1BBQ0VfQkVUV0VFThADQgcKBX'
+    'ZhbHVl');
+
+@$core.Deprecated('Use nodeIdDescriptor instead')
+const NodeId$json = {
+  '1': 'NodeId',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 4, '10': 'value'},
+  ],
+};
+
+/// Descriptor for `NodeId`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List nodeIdDescriptor =
+    $convert.base64Decode('CgZOb2RlSWQSFAoFdmFsdWUYASABKARSBXZhbHVl');
+
+@$core.Deprecated('Use mat4Descriptor instead')
+const Mat4$json = {
+  '1': 'Mat4',
+  '2': [
+    {'1': 'm00', '3': 1, '4': 1, '5': 1, '10': 'm00'},
+    {'1': 'm01', '3': 2, '4': 1, '5': 1, '10': 'm01'},
+    {'1': 'm02', '3': 3, '4': 1, '5': 1, '10': 'm02'},
+    {'1': 'm03', '3': 4, '4': 1, '5': 1, '10': 'm03'},
+    {'1': 'm10', '3': 5, '4': 1, '5': 1, '10': 'm10'},
+    {'1': 'm11', '3': 6, '4': 1, '5': 1, '10': 'm11'},
+    {'1': 'm12', '3': 7, '4': 1, '5': 1, '10': 'm12'},
+    {'1': 'm13', '3': 8, '4': 1, '5': 1, '10': 'm13'},
+    {'1': 'm20', '3': 9, '4': 1, '5': 1, '10': 'm20'},
+    {'1': 'm21', '3': 10, '4': 1, '5': 1, '10': 'm21'},
+    {'1': 'm22', '3': 11, '4': 1, '5': 1, '10': 'm22'},
+    {'1': 'm23', '3': 12, '4': 1, '5': 1, '10': 'm23'},
+    {'1': 'm30', '3': 13, '4': 1, '5': 1, '10': 'm30'},
+    {'1': 'm31', '3': 14, '4': 1, '5': 1, '10': 'm31'},
+    {'1': 'm32', '3': 15, '4': 1, '5': 1, '10': 'm32'},
+    {'1': 'm33', '3': 16, '4': 1, '5': 1, '10': 'm33'},
+  ],
+};
+
+/// Descriptor for `Mat4`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List mat4Descriptor = $convert.base64Decode(
+    'CgRNYXQ0EhAKA20wMBgBIAEoAVIDbTAwEhAKA20wMRgCIAEoAVIDbTAxEhAKA20wMhgDIAEoAV'
+    'IDbTAyEhAKA20wMxgEIAEoAVIDbTAzEhAKA20xMBgFIAEoAVIDbTEwEhAKA20xMRgGIAEoAVID'
+    'bTExEhAKA20xMhgHIAEoAVIDbTEyEhAKA20xMxgIIAEoAVIDbTEzEhAKA20yMBgJIAEoAVIDbT'
+    'IwEhAKA20yMRgKIAEoAVIDbTIxEhAKA20yMhgLIAEoAVIDbTIyEhAKA20yMxgMIAEoAVIDbTIz'
+    'EhAKA20zMBgNIAEoAVIDbTMwEhAKA20zMRgOIAEoAVIDbTMxEhAKA20zMhgPIAEoAVIDbTMyEh'
+    'AKA20zMxgQIAEoAVIDbTMz');
+
+@$core.Deprecated('Use vec2Descriptor instead')
+const Vec2$json = {
+  '1': 'Vec2',
+  '2': [
+    {'1': 'x', '3': 1, '4': 1, '5': 1, '10': 'x'},
+    {'1': 'y', '3': 2, '4': 1, '5': 1, '10': 'y'},
+  ],
+};
+
+/// Descriptor for `Vec2`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List vec2Descriptor =
+    $convert.base64Decode('CgRWZWMyEgwKAXgYASABKAFSAXgSDAoBeRgCIAEoAVIBeQ==');
+
+@$core.Deprecated('Use size2Descriptor instead')
+const Size2$json = {
+  '1': 'Size2',
+  '2': [
+    {'1': 'width', '3': 1, '4': 1, '5': 1, '10': 'width'},
+    {'1': 'height', '3': 2, '4': 1, '5': 1, '10': 'height'},
+  ],
+};
+
+/// Descriptor for `Size2`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List size2Descriptor = $convert.base64Decode(
+    'CgVTaXplMhIUCgV3aWR0aBgBIAEoAVIFd2lkdGgSFgoGaGVpZ2h0GAIgASgBUgZoZWlnaHQ=');
+
+@$core.Deprecated('Use cornerRadiusDescriptor instead')
+const CornerRadius$json = {
+  '1': 'CornerRadius',
+  '2': [
+    {'1': 'x', '3': 1, '4': 1, '5': 1, '10': 'x'},
+    {'1': 'y', '3': 2, '4': 1, '5': 1, '10': 'y'},
+  ],
+};
+
+/// Descriptor for `CornerRadius`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cornerRadiusDescriptor = $convert
+    .base64Decode('CgxDb3JuZXJSYWRpdXMSDAoBeBgBIAEoAVIBeBIMCgF5GAIgASgBUgF5');
+
+@$core.Deprecated('Use colorDataDescriptor instead')
+const ColorData$json = {
+  '1': 'ColorData',
+  '2': [
+    {
+      '1': 'hsv',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData.Hsv',
+      '9': 0,
+      '10': 'hsv'
+    },
+    {'1': 'alpha', '3': 5, '4': 1, '5': 1, '10': 'alpha'},
+  ],
+  '3': [ColorData_Hsv$json],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+@$core.Deprecated('Use colorDataDescriptor instead')
+const ColorData_Hsv$json = {
+  '1': 'Hsv',
+  '2': [
+    {'1': 'h', '3': 1, '4': 1, '5': 1, '10': 'h'},
+    {'1': 's', '3': 2, '4': 1, '5': 1, '10': 's'},
+    {'1': 'v', '3': 3, '4': 1, '5': 1, '10': 'v'},
+  ],
+};
+
+/// Descriptor for `ColorData`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List colorDataDescriptor = $convert.base64Decode(
+    'CglDb2xvckRhdGESKAoDaHN2GAEgASgLMhQubW90aWYuQ29sb3JEYXRhLkhzdkgAUgNoc3YSFA'
+    'oFYWxwaGEYBSABKAFSBWFscGhhGi8KA0hzdhIMCgFoGAEgASgBUgFoEgwKAXMYAiABKAFSAXMS'
+    'DAoBdhgDIAEoAVIBdkIHCgV2YWx1ZQ==');

@@ -19,8 +19,8 @@ class CopySelectionAction extends CommandAction<CopySelectionIntent> {
 
     if (selection.isEmpty) return;
 
-    // final slice = editor.scene.slice(selection.statements);
-    // final data = base64Encode(slice.encode().writeToBuffer());
-    // Clipboard.setData(.new(text: data));
+    final slice = editor.scene.evaluation.routeSlice(selection.refs.cells);
+    final data = base64Encode(slice.encode().writeToBuffer());
+    Clipboard.setData(.new(text: data));
   }
 }

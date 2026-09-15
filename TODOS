@@ -2,8 +2,10 @@
 - [?] RMB context menu
 - [?] Global fill/stroke color
 - [x] Commander interface
-- [ ] Serialization, load/save, etc
-- [ ] Slices - data (pb), copy/paste
+- [?] Serialization, load/save, etc     (Missing: load/save)
+- [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
+- [ ] Commander arguments
+- [ ] Commander search - clean up code
 - [ ] Editor tabs (generators, variables)
 - [ ] Cubic-cubic intersections
 - [ ] Pencil tool

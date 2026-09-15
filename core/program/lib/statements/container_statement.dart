@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-final class ContainerStatement extends ShapeStatement<RectangleObjectShape> implements LayoutContainer {
+final class ContainerStatement extends ShapeStatement implements LayoutContainer {
   ContainerStatement({
     this.layout = .default_,
     super.size,

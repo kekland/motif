@@ -7,4 +7,13 @@ environment:
 
 dependencies:
   protobuf: ^6.0.0
-  grpc: ^5.1.0
+  fixnum: ^1.1.1
+
+  u64:
+  color:
+  geometry:
+  kernel:
+  program:
+
+dev_dependencies:
+  protoc_plugin: ^25.1.0

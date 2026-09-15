@@ -2,13 +2,13 @@ part of '../program.dart';
 
 final class CutEdgeStatement extends Statement {
   new(
-    Selector<EdgeRef> target, {
+    EdgeSelector target, {
     required this.t,
     super.id,
     super.enabled,
   }) : target = target.clone();
 
-  final Selector<EdgeRef> target;
+  final EdgeSelector target;
   final double t;
 
   @override
@@ -27,7 +27,7 @@ final class CutEdgeStatement extends Statement {
   CutEdgeStatement copyWith({
     StatementId? id,
     bool? enabled,
-    Selector<EdgeRef>? target,
+    EdgeSelector? target,
     double? t,
   }) => .new(
     target ?? this.target,

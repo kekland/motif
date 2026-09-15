@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:color/color.dart';
@@ -7,6 +8,8 @@ import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
 import 'package:u64/u64.dart';
+import 'package:schema/codec.dart' as codec;
+import 'package:schema/program.dart' as gen;
 
 import 'generator/generator.dart';
 export 'generator/generator.dart';
@@ -17,13 +20,14 @@ part 'evaluation.dart';
 part 'errors.dart';
 part 'delta.dart';
 part 'slice.dart';
-part 'table.dart';
 part 'tree.dart';
+part 'serializer.dart';
 
 part 'delta/anchor.dart';
 part 'delta/op.dart';
 
 part 'style/style.dart';
+part 'style/style_table.dart';
 part 'style/vertex_style.dart';
 part 'style/edge_style.dart';
 part 'style/face_style.dart';
@@ -94,12 +98,14 @@ part 'utils/remap.dart';
 final class Program {
   Program(
     this._statements, {
-    CellTable<CellStylePartial>? styles,
+    StyleTable? styles,
     ZOrderTable? zOrders,
-  }) : styles = styles ?? .new(),
-       zOrders = zOrders ?? .new() {
+  }) : styles = styles ?? .empty(),
+       zOrders = zOrders ?? .empty() {
     _reindex(0, _statements.length);
   }
+
+  factory Program.decode(gen.Program program) => ProgramCodec.decodeProgram(program);
 
   Program.empty() : this([]);
 
@@ -107,7 +113,7 @@ final class Program {
   Iterable<Statement> get statements => _statements;
   final _statementIndex = <StatementId, int>{};
 
-  final CellTable<CellStylePartial> styles;
+  final StyleTable styles;
   final ZOrderTable zOrders;
 
   int get length => _statements.length;

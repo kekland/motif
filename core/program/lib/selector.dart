@@ -7,7 +7,7 @@ sealed class Selector<T> {
   Iterable<CellRef> resolved(EvalContext context);
 
   Iterable<CellRef> get refs;
-  Iterable<StatementId> get dependencies => [for (final r in refs) ._(r.namespace)];
+  Iterable<StatementId> get dependencies => [for (final r in refs) .raw(r.namespace)];
 
   Selector<T> clone();
   RemapResult _remap(Remap remap);

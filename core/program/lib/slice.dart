@@ -4,6 +4,16 @@ final class ProgramSlice {
   new({required this.statements});
   ProgramSlice.empty() : statements = const [];
 
+  factory ProgramSlice.decode(gen.ProgramSlice program) => ProgramCodec.decodeProgramSlice(program);
+  static ProgramSlice? decodeRaw(Uint8List data) {
+    try {
+      final program = gen.ProgramSlice.fromBuffer(data);
+      return ProgramSlice.decode(program);
+    } catch (e) {
+      return null;
+    }
+  }
+
   factory ProgramSlice.merged(Iterable<ProgramSlice> slices, {required int Function(StatementId) indexOf}) {
     final seen = <StatementId>{};
     final statements = <Statement>[];

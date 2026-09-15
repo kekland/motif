@@ -16,20 +16,20 @@ class PasteAction extends CommandAction<PasteIntent> {
 
   @override
   void performInvoke(BuildContext context, PasteIntent intent) async {
-    // final editor = context!.editor;
+    final editor = context.editor;
 
-    // final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-    // if (clipboardData == null || clipboardData.text == null) return;
+    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+    if (clipboardData == null || clipboardData.text == null) return;
 
-    // final slice = SceneSlice.decodeRaw(base64Decode(clipboardData.text!));
-    // if (slice == null) return;
+    final slice = ProgramSlice.decodeRaw(base64Decode(clipboardData.text!));
+    if (slice == null) return;
 
-    // final remapped = slice.remap();
-    // editor.edit((txn) {
-    //   for (final s in remapped.statements) txn.insert(s);
-    //   for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
-    // });
+    final remapped = slice.materialize((s) => .allocate());
+    editor.edit((txn) {
+      for (final s in remapped.statements) txn.insert(s);
+      // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
+    });
 
-    // editor.selection.setStatements(remapped.statements.map((s) => s.id));
+    editor.selection.setStatements(remapped.statements.map((s) => s.id));
   }
 }

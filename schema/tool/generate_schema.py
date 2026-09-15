@@ -18,4 +18,5 @@ def exec_cmd(cmd, cwd=None):
     print(e)
     raise
 
-exec_cmd(f'protoc --dart_out="grpc:{out}" --proto_path={proto_path} schema.proto scene.proto')
+exec_cmd(f'protoc --dart_out="grpc:{out}" --proto_path={proto_path} program.proto')
+exec_cmd(f'protoc --descriptor_set_out={out}/program.desc --proto_path={proto_path} program.proto')

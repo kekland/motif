@@ -1,14 +1,14 @@
 part of 'program.dart';
 
-extension type const StatementId._(U64 value) implements Object {
-  static StatementId allocate() => ._(.of(0, _seq++));
+extension type const StatementId.raw(U64 value) implements Object {
+  static StatementId allocate() => .raw(.of(0, _seq++));
   static int _seq = 1;
 
   static const _derived = 0x40000000;
   bool get isDerived => value.hi & _derived != 0;
   static StatementId derived(StatementId base, U64 key) {
     final m = Mix64.mix(base.value, key);
-    return ._(.of(m.hi | _derived, m.lo));
+    return .raw(.of(m.hi | _derived, m.lo));
   }
 
   U64 get namespace => value;
@@ -21,13 +21,13 @@ extension type const StatementId._(U64 value) implements Object {
 }
 
 extension StatementIdCellRefExt on CellRef {
-  StatementId get statementId => ._(namespace);
+  StatementId get statementId => .raw(namespace);
 }
 
 extension StatementIdRefExt on Ref {
   StatementId get statementId => switch (this) {
-    CellRef r => ._(r.namespace),
-    CovertexRef r => ._(r.edge.namespace),
+    CellRef r => .raw(r.namespace),
+    CovertexRef r => .raw(r.edge.namespace),
   };
 
   CellRef get cell => switch (this) {

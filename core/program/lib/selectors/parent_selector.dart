@@ -6,6 +6,7 @@ final class ParentSelector(super.ref) extends CellSelector<FrameHandle> {
 
   static ParentSelector? of(CellRef<FrameHandle>? ref) {
     if (ref == null) return null;
+    if (ref.namespace.isZero) return null;
     return .new(ref);
   }
 

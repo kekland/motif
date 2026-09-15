@@ -11,6 +11,31 @@ extension type const Mat4._(Float64x2List storage) {
   Mat4.view(Float64x2List storage) : this._(storage);
   Mat4.viewFloat64(Float64List storage) : this._(storage.buffer.asFloat64x2List());
 
+  // dart format off
+  factory Mat4.from(
+    double m00, double m01, double m02, double m03,
+    double m10, double m11, double m12, double m13,
+    double m20, double m21, double m22, double m23,
+    double m30, double m31, double m32, double m33,
+  ) {
+    final s = Float64x2List(8);
+    s[0] = Float64x2(m00, m01);
+    s[1] = Float64x2(m02, m03);
+    s[2] = Float64x2(m10, m11);
+    s[3] = Float64x2(m12, m13);
+    s[4] = Float64x2(m20, m21);
+    s[5] = Float64x2(m22, m23);
+    s[6] = Float64x2(m30, m31);
+    s[7] = Float64x2(m32, m33);
+    return Mat4._(s);
+  }
+
+  double get m00 => storage[0].x; double get m01 => storage[0].y; double get m02 => storage[1].x; double get m03 => storage[1].y;
+  double get m10 => storage[2].x; double get m11 => storage[2].y; double get m12 => storage[3].x; double get m13 => storage[3].y;
+  double get m20 => storage[4].x; double get m21 => storage[4].y; double get m22 => storage[5].x; double get m23 => storage[5].y;
+  double get m30 => storage[6].x; double get m31 => storage[6].y; double get m32 => storage[7].x; double get m33 => storage[7].y;
+  // dart format on
+
   factory Mat4.identity() {
     final s = Float64x2List(8);
     s[0] = Float64x2(1, 0);

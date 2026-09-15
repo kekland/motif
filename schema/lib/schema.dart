@@ -1,8 +1,8 @@
-export 'gen/schema.pb.dart';
-export 'gen/schema.pbenum.dart';
-export 'gen/schema.pbjson.dart';
-export 'gen/schema.pbgrpc.dart';
+// export 'gen_old/schema.pb.dart';
+// export 'gen_old/schema.pbenum.dart';
+// export 'gen_old/schema.pbjson.dart';
+// export 'gen_old/schema.pbgrpc.dart';
 
-export 'gen/scene.pb.dart';
-export 'gen/scene.pbenum.dart';
-export 'gen/scene.pbjson.dart';
+// export 'gen_old/scene.pb.dart';
+// export 'gen_old/scene.pbenum.dart';
+// export 'gen_old/scene.pbjson.dart';

@@ -9,4 +9,6 @@ extension type const U64._(int value) implements Object {
 
   int get hash32 => Mix64.hash32(hi, lo);
   int compareTo(U64 other) => value.compareTo(other.value);
+  
+  bool get isZero => value == 0;
 }

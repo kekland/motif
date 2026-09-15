@@ -1,0 +1,427 @@
+syntax = "proto3";
+
+package motif;
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Program, statements, ids, etc
+// ---------------------------------------------------------------------------------------------------------------------
+
+message Program {
+  repeated Statement statements = 1;
+  StyleTable         style      = 2;
+  ZOrderTable        z_order    = 3;
+}
+
+message ProgramSlice {
+  repeated Statement statements = 1;
+  StyleTable         style      = 2;
+  ZOrderTable        z_order    = 3;
+}
+
+message Statement {
+  StatementId id      = 1;
+  bool        enabled = 2;
+
+  oneof value {
+    FrameStatement        frame         = 10;
+    VertexStatement       vertex        = 11;
+    EdgeStatement         edge          = 12;
+    FaceStatement         face          = 13;
+    CutEdgeStatement      cut_edge      = 14;
+    DissolveStatement     dissolve      = 15;
+    FilletFaceStatement   fillet_face   = 16;
+    GlueVerticesStatement glue_vertices = 17;
+    RectangleStatement    rectangle     = 18;
+    PolygonStatement      polygon       = 19;
+    EllipseStatement      ellipse       = 20;
+    ContainerStatement    container     = 21;
+  }
+}
+
+message U64 {
+  uint32 hi = 1;
+  uint32 lo = 2;
+}
+
+message StatementId {
+  U64 value = 1;
+}
+
+enum CellKind {
+  CELL_KIND_FRAME  = 0;
+  CELL_KIND_VERTEX = 1;
+  CELL_KIND_EDGE   = 2;
+  CELL_KIND_FACE   = 3;
+}
+
+message CellRef {
+  U64      namespace = 1;
+  uint32   tag       = 2;
+  uint32   sub       = 3;
+  CellKind kind      = 4;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Z-order
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ZAnchor {
+  oneof value {
+    bool    top    = 1;
+    bool    bottom = 2;
+    CellRef above  = 3;
+    CellRef below  = 4;
+  }
+}
+
+message ZOrderEntry {
+  CellRef ref   = 1;
+  ZAnchor value = 2;
+}
+
+message ZOrderTable {
+  repeated ZOrderEntry entries = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Style
+// ---------------------------------------------------------------------------------------------------------------------
+
+message StyleEntry {
+  CellRef           ref   = 1;
+  CellStyle.Partial value = 2;
+}
+
+message StyleTable {
+  repeated StyleEntry entries = 1;
+}
+
+message CellStyle {
+  message Partial {
+    oneof value {
+      VertexStyle.Partial vertex = 1;
+      EdgeStyle.Partial   edge   = 2;
+      FaceStyle.Partial   face   = 3;
+    }
+  }
+
+  oneof value {
+    VertexStyle vertex = 1;
+    EdgeStyle   edge   = 2;
+    FaceStyle   face   = 3;
+  }
+}
+
+message VertexStyle {
+  message Partial {
+    optional double    radius = 1;
+    optional ColorData color  = 2;
+  }
+
+  double    radius = 1;
+  ColorData color  = 2;
+}
+
+message EdgeStyle {
+  message Partial {
+    optional double    width = 1;
+    optional ColorData color = 2;
+  }
+
+  double    width = 1;
+  ColorData color = 2;
+}
+
+message FaceStyle {
+  message Partial {
+    optional ColorData color = 1;
+  }
+
+  ColorData color = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Selectors
+// ---------------------------------------------------------------------------------------------------------------------
+
+message CellSelector {
+  CellRef ref = 1;
+}
+
+message ProductsSelector {
+  StatementId       id   = 1;
+  optional CellKind kind = 2;
+}
+
+message ChainSelector {
+  repeated CellRef edges = 1;
+}
+
+message DissolveSelector {
+  repeated CellRef refs = 1;
+}
+
+message FragmentSelector {
+  StatementId id = 1;
+}
+
+message Selector {
+  oneof value {
+    CellSelector     cell     = 1;
+    ProductsSelector products = 2;
+    ChainSelector    chain    = 3;
+    DissolveSelector dissolve = 4;
+    FragmentSelector fragment = 5;
+  }
+}
+
+message SingleSelector {
+  oneof value {
+    CellSelector cell = 1;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Statements
+// ---------------------------------------------------------------------------------------------------------------------
+
+message FrameStatement {
+  Mat4             transform = 1;
+  optional Size2   size      = 2;
+  optional CellRef parent    = 3;
+}
+
+message VertexStatement {
+  Vec2             position = 1;
+  VertexStyle      style    = 2;
+  optional CellRef parent   = 3;
+}
+
+message EdgeStatement {
+  SingleSelector   start         = 1;
+  SingleSelector   end           = 2;
+  optional Vec2    start_tangent = 3;
+  optional Vec2    end_tangent   = 4;
+  EdgeStyle        style         = 5;
+  optional CellRef parent        = 6;
+}
+
+message FaceStatement {
+  ChainSelector          outer  = 1;
+  repeated ChainSelector holes  = 2;
+  FaceStyle              style  = 3;
+  optional CellRef       parent = 4;
+}
+
+message CutEdgeStatement {
+  SingleSelector target = 1;
+  double         t      = 2;
+}
+
+message DissolveStatement {
+  message KeepEntry {
+    CellSelector            target = 1;
+    optional SingleSelector frame  = 2;
+  }
+
+  DissolveSelector   selector = 1;
+  repeated KeepEntry keep     = 2;
+}
+
+message FilletFaceStatement {
+  message CornerEntry {
+    SingleSelector vertex = 1;
+    CornerRadius   radius = 2;
+  }
+
+  SingleSelector        face    = 1;
+  repeated CornerEntry  corners = 2;
+  optional CornerRadius radius  = 3;
+}
+
+message GlueVerticesStatement {
+  enum Position {
+    GLUE_VERTICES_STATEMENT_POSITION_FIRST    = 0;
+    GLUE_VERTICES_STATEMENT_POSITION_CENTROID = 1;
+  }
+
+  repeated SingleSelector vertices = 1;
+  Position                position = 2;
+}
+
+message RectangleStatement {
+  LayoutSize            size         = 1;
+  Mat4                  transform    = 2;
+  ObjectShape.Rectangle shape        = 3;
+  VertexStyle           vertex_style = 4;
+  EdgeStyle             edge_style   = 5;
+  FaceStyle             face_style   = 6;
+  optional CellRef      parent       = 7;
+}
+
+message PolygonStatement {
+  LayoutSize          size         = 1;
+  Mat4                transform    = 2;
+  ObjectShape.Polygon shape        = 3;
+  VertexStyle         vertex_style = 4;
+  EdgeStyle           edge_style   = 5;
+  FaceStyle           face_style   = 6;
+  optional CellRef    parent       = 7;
+}
+
+message EllipseStatement {
+  LayoutSize          size         = 1;
+  Mat4                transform    = 2;
+  ObjectShape.Ellipse shape        = 3;
+  VertexStyle         vertex_style = 4;
+  EdgeStyle           edge_style   = 5;
+  FaceStyle           face_style   = 6;
+  optional CellRef    parent       = 7;
+}
+
+message ContainerStatement {
+  Layout           layout       = 1;
+  LayoutSize       size         = 2;
+  Mat4             transform    = 3;
+  ObjectShape      shape        = 4;
+  VertexStyle      vertex_style = 5;
+  EdgeStyle        edge_style   = 6;
+  FaceStyle        face_style   = 7;
+  optional CellRef parent       = 8;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Shapes
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ObjectShape {
+  message Rectangle {}
+  message Polygon { int32 sides = 1; }
+  message Ellipse {}
+
+  oneof value {
+    Rectangle rectangle = 1;
+    Polygon   polygon   = 2;
+    Ellipse   ellipse   = 3;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------------------------------------------------
+
+message LayoutSize {
+  LayoutDimension width  = 1;
+  LayoutDimension height = 2;
+}
+
+message LayoutDimension {
+  enum Type {
+    LAYOUT_DIMENSION_TYPE_FIXED   = 0;
+    LAYOUT_DIMENSION_TYPE_EXPAND  = 1;
+    LAYOUT_DIMENSION_TYPE_CONTAIN = 2;
+  }
+
+  message Range {
+    double min = 1;
+    double max = 2;
+  }
+
+  optional double value = 1;
+  Type            type  = 2;
+  Range           range = 3;
+}
+
+message Layout {
+  enum Align {
+    LAYOUT_ALIGN_START  = 0;
+    LAYOUT_ALIGN_CENTER = 1;
+    LAYOUT_ALIGN_END    = 2;
+  }
+
+  enum Justify {
+    LAYOUT_JUSTIFY_START         = 0;
+    LAYOUT_JUSTIFY_CENTER        = 1;
+    LAYOUT_JUSTIFY_END           = 2;
+    LAYOUT_JUSTIFY_SPACE_BETWEEN = 3;
+  }
+
+  message Insets {
+    double top    = 1;
+    double right  = 2;
+    double bottom = 3;
+    double left   = 4;
+  }
+
+  message Stack {
+    optional Align align_horizontal = 1;
+    optional Align align_vertical   = 2;
+    Insets         padding          = 5;
+  }
+
+  message Flex {
+    enum Direction {
+      LAYOUT_FLEX_DIRECTION_ROW    = 0;
+      LAYOUT_FLEX_DIRECTION_COLUMN = 1;
+    }
+
+    Direction direction   = 1;
+    Justify   justify     = 2;
+    Align     cross_align = 3;
+    double    gap         = 4;
+    Insets    padding     = 5;
+  }
+
+  oneof value {
+    Stack stack = 1;
+    Flex  flex  = 2;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Generator nodes
+// ---------------------------------------------------------------------------------------------------------------------
+
+message NodeId {
+  uint64 value = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Other types
+// ---------------------------------------------------------------------------------------------------------------------
+
+message Mat4 {
+  double m00 = 1; double m01 = 2; double m02 = 3; double m03 = 4;
+  double m10 = 5; double m11 = 6; double m12 = 7; double m13 = 8;
+  double m20 = 9; double m21 = 10; double m22 = 11; double m23 = 12;
+  double m30 = 13; double m31 = 14; double m32 = 15; double m33 = 16;
+}
+
+message Vec2 {
+  double x = 1;
+  double y = 2;
+}
+
+message Size2 {
+  double width  = 1;
+  double height = 2;
+}
+
+message CornerRadius {
+  double x = 1;
+  double y = 2;
+}
+
+message ColorData {
+  message Hsv {
+    double h = 1;
+    double s = 2;
+    double v = 3;
+  }
+
+  oneof value {
+    Hsv hsv = 1;
+  }
+
+  double alpha = 5;
+}

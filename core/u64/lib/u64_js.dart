@@ -19,4 +19,6 @@ final class U64 implements Comparable<U64> {
 
   @override
   String toString() => 'U64(${hi.toRadixString(16)}:${lo.toRadixString(16)})';
+
+  bool get isZero => hi == 0 && lo == 0;
 }
