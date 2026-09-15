@@ -15,6 +15,12 @@ mixin KeyboardListenerDragActivity on DragActivity {
     super.onEnd(details);
   }
 
+  @override
+  void onCancel() {
+    HardwareKeyboard.instance.removeHandler(_handler);
+    super.onCancel();
+  }
+
   bool isKeyPressed(Set<LogicalKeyboardKey> keys) => keys.any((k) => HardwareKeyboard.instance.isLogicalKeyPressed(k));
   bool get isShiftPressed => HardwareKeyboard.instance.isShiftPressed;
   bool get isControlPressed => HardwareKeyboard.instance.isControlPressed;
