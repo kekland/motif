@@ -31,6 +31,9 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     reverseCurve: animationStyle.reverseCurve,
   );
 
+  late final _focusScopeNode = FocusScopeNode();
+  late final _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,8 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
   void dispose() {
     _animationController.dispose();
     _animation.dispose();
+    _focusScopeNode.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -82,7 +87,23 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
               ),
             ),
           ],
-          child,
+          FocusScope(
+            node: _focusScopeNode,
+            autofocus: true,
+            onKeyEvent: (_, event) {
+              if (entry.isModal && event is KeyDownEvent && event.logicalKey == .escape) {
+                entry.pop();
+                return .handled;
+              }
+
+              return .ignored;
+            },
+            child: Focus(
+              focusNode: _focusNode,
+              autofocus: true,
+              child: child,
+            ),
+          ),
         ],
       ),
     );

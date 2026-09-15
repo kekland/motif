@@ -79,6 +79,12 @@ class CommanderOverlay extends HookWidget {
       },
     );
 
+    void submit(CommandAction action) {
+      final intent = action.descriptor.build(outerContext, []);
+      outerContext.invoke(intent);
+      Navigator.pop(context);
+    }
+
     return FocusScope(
       node: focusScopeNode,
       autofocus: true,
@@ -131,11 +137,7 @@ class CommanderOverlay extends HookWidget {
                     focusNode: focusNode,
                     onSubmitted: () {
                       final action = selected.value;
-                      if (action != null) {
-                        final intent = action.descriptor.build(outerContext, []);
-                        outerContext.invoke(intent);
-                        Navigator.pop(context);
-                      }
+                      if (action != null) submit(action);
                     },
                   ),
                   Divider(),
@@ -147,6 +149,7 @@ class CommanderOverlay extends HookWidget {
                       return CommandSuggestionWidget(
                         action: action,
                         isSelected: action == selected.value,
+                        onTap: () => submit(action),
                       );
                     },
                     separatorBuilder: (context, i) => Divider(
@@ -206,10 +209,12 @@ class CommandSuggestionWidget extends StatelessWidget {
     super.key,
     required this.action,
     this.isSelected = false,
+    this.onTap,
   });
 
   final CommandAction action;
   final bool isSelected;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +229,7 @@ class CommandSuggestionWidget extends StatelessWidget {
       color: context.colors.surface.secondary,
       child: ListItem(
         isSelected: isSelected,
-        onTap: () {},
+        onTap: onTap,
         title: Text(
           command,
           style: context.typography.body,

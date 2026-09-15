@@ -25,6 +25,7 @@ class _FillToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
+    final bundle = editor.bundle;
     final selection = editor.selection;
     useListenable(selection);
 
@@ -39,7 +40,6 @@ class _FillToolOverlay extends HookWidget {
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
-          final bundle = editor.bundle;
           final result = bundle.arrangement.regionAt(editor.globalToScene(e.position));
           hoveredRegion.value = result;
         },

@@ -1,19 +1,25 @@
 - [x] Text field tab traversal
-- [?] RMB context menu
+- [x] RMB context menu
 - [?] Global fill/stroke color
 - [x] Commander interface
 - [?] Serialization, load/save, etc     (Missing: load/save)
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
 - [ ] Commander arguments
+- [ ] Variables and variable binding
+
+Wed
 - [ ] Commander search - clean up code
-- [ ] Editor tabs (generators, variables)
+- [ ] Bend tool
 - [ ] Cubic-cubic intersections
 - [ ] Pencil tool
-- [ ] Bend tool
+- [ ] Debug arrangement generation
+
+Thu
 - [ ] Pre-dissolve on transform (e.g. cut edge, select inner tangents)
 - [ ] Fix generator statement dissolution
+- [ ] Editor tabs (generators, variables)
 - [ ] Generator statement nodes implementations
-- [ ] Debug arrangement generation
+
+Fri
 - [ ] Tree view
 - [ ] Move tool reparenting (transient transforms for locked transforms, etc)
-- [ ] Variables and variable binding

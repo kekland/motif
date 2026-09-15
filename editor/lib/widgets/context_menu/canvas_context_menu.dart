@@ -1,4 +1,4 @@
-import 'package:ui/ui.dart';
+import 'package:editor/imports.dart';
 
 class CanvasContextMenu extends HookWidget {
   const new({
@@ -12,7 +12,15 @@ class CanvasContextMenu extends HookWidget {
   Widget build(BuildContext context) {
     return ContextMenuDetector(
       onShow: (context, details) {
-        return [];
+        final hitTest = context.editor.hitTest(details.globalPosition);
+        if (hitTest.top != null) context.editor.selection.set(hitTest.top!.ref);
+
+        return [
+          CopySelectionAction(),
+          PasteAction(),
+          SetZOrderTopAction(),
+          SetZOrderBottomAction(),
+        ];
       },
       child: child,
     );
