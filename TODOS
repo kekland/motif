@@ -4,15 +4,17 @@
 - [x] Commander interface
 - [?] Serialization, load/save, etc     (Missing: load/save)
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
+- [ ] Rework window system to work with the portals
 - [ ] Commander arguments
 - [ ] Variables and variable binding
 
 Wed
-- [ ] Commander search - clean up code
-- [ ] Bend tool
 - [ ] Cubic-cubic intersections
+- [ ] Intersection cache
+- [ ] Bend tool
 - [ ] Pencil tool
 - [ ] Debug arrangement generation
+- [ ] Commander search - clean up code
 
 Thu
 - [ ] Pre-dissolve on transform (e.g. cut edge, select inner tangents)

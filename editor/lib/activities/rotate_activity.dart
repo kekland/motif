@@ -9,12 +9,17 @@ final class RotateActivity extends TransformActivity {
   RotateActivity(super.editor, super.cells, {required this.corner});
 
   final ui.Corner corner;
+  double? cursorAngle;
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight};
 
   @override
-  MouseCursor resolveCursor() => resolveRotatingCursor(Cursors.rotate, corner: corner);
+  MouseCursor resolveCursor() => resolveRotatingCursor(
+    Cursors.rotate,
+    corner: corner,
+    transform: cursorAngle != null ? .rotationZ(cursorAngle! + 3 * math.pi / 4) : null,
+  );
 
   late final Vec2 pivot;
   late final double initialAngle;
@@ -22,11 +27,12 @@ final class RotateActivity extends TransformActivity {
   @override
   void onStart(PositionedGestureDetails details) {
     super.onStart(details);
-
     pivot = spaceToWorld.transform2(initialHull.center);
 
     final start = editor.globalToScene(startDetails.globalPosition) - pivot;
     initialAngle = math.atan2(start.y, start.x);
+    cursorAngle = initialAngle;
+    updateCursor(cursor);
   }
 
   @override
@@ -40,6 +46,7 @@ final class RotateActivity extends TransformActivity {
     }
 
     session.rotateBy(angle, pivot: pivot);
+    cursorAngle = angle + initialAngle;
     super.onUpdate(details);
   }
 }
