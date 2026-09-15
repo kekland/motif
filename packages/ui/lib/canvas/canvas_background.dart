@@ -47,38 +47,34 @@ class _CanvasBackgroundPainter extends CustomPainter {
     final backgroundPaint = Paint()..color = backgroundColor;
     canvas.drawRect(Offset.zero & size, backgroundPaint);
 
-    final transform = controller.value;
+    final m = controller.value;
 
-    final scale = transform.getMaxScaleOnAxis();
-    final tx = transform.getTranslation().x;
-    final ty = transform.getTranslation().y;
+    final scale = math.sqrt(m[0] * m[0] + m[1] * m[1]);
+    final (level, crossfade) = _level(scale);
+    final half = baseSpacing / math.pow(2.0, level) / 2.0;
 
-    final zoom = math.log(scale) / math.ln2;
-    final zoomLevel = zoom.floor();
+    final inverse = Matrix4.inverted(m);
+    var minX = double.infinity, minY = double.infinity;
+    var maxX = double.negativeInfinity, maxY = double.negativeInfinity;
 
-    final crossfade = zoom - zoomLevel;
-
-    final step = baseSpacing / math.pow(2.0, zoomLevel);
-    final halfStep = step / 2.0;
-
-    final startX = -tx / scale;
-    final endX = (size.width - tx) / scale;
-    final startY = -ty / scale;
-    final endY = (size.height - ty) / scale;
-
-    final startIdxX = (startX / halfStep).floor();
-    final endIdxX = (endX / halfStep).ceil();
-    final startIdxY = (startY / halfStep).floor();
-    final endIdxY = (endY / halfStep).ceil();
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final points = [rect.topLeft, rect.topRight, rect.bottomRight, rect.bottomLeft];
+    for (final c in points) {
+      final w = MatrixUtils.transformPoint(inverse, c);
+      minX = math.min(minX, w.dx);
+      minY = math.min(minY, w.dy);
+      maxX = math.max(maxX, w.dx);
+      maxY = math.max(maxY, w.dy);
+    }
 
     final majorPoints = <Offset>[];
     final minorPoints = <Offset>[];
 
-    for (var i = startIdxX; i <= endIdxX; i++) {
-      for (var j = startIdxY; j <= endIdxY; j++) {
+    for (var i = (minX / half).floor(); i <= (maxX / half).ceil(); i++) {
+      for (var j = (minY / half).floor(); j <= (maxY / half).ceil(); j++) {
         final isMajor = i.isEven && j.isEven;
-        final x = (i * halfStep) * scale + tx;
-        final y = (j * halfStep) * scale + ty;
+        final x = i * half;
+        final y = j * half;
         final point = Offset(x, y);
 
         if (isMajor) {
@@ -92,13 +88,16 @@ class _CanvasBackgroundPainter extends CustomPainter {
     final maxOpacity = 0.6;
     final majorPaint = Paint()
       ..color = color.withScaledAlpha(maxOpacity)
-      ..strokeWidth = 2.0
+      ..strokeWidth = 2.0 / scale
       ..strokeCap = .round;
 
     final minorPaint = Paint()
       ..color = color.withScaledAlpha(maxOpacity * crossfade)
-      ..strokeWidth = 2.0
+      ..strokeWidth = 2.0 / scale
       ..strokeCap = .round;
+
+    canvas.save();
+    canvas.transform(m.storage);
 
     if (majorPoints.isNotEmpty) {
       canvas.drawPoints(.points, majorPoints, majorPaint);
@@ -107,6 +106,22 @@ class _CanvasBackgroundPainter extends CustomPainter {
     if (minorPoints.isNotEmpty && crossfade > 0.01) {
       canvas.drawPoints(.points, minorPoints, minorPaint);
     }
+
+    canvas.restore();
+  }
+
+  (int, double) _level(double scale) {
+    var level = 0;
+    var s = scale;
+    while (s < 1) {
+      s *= 2;
+      level--;
+    }
+    while (s >= 2) {
+      s /= 2;
+      level++;
+    }
+    return (level, math.log(s) / math.ln2);
   }
 
   @override
