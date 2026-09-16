@@ -8,3 +8,5 @@ export 'vector/vector_test.dart';
 export 'vm/vm_utils.dart';
 export 'utils/rotation.dart';
 export 'utils/constants.dart';
+export 'utils/intersection.dart';
+export 'line/line_segment.dart';

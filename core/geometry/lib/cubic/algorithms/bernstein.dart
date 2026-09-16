@@ -34,6 +34,11 @@ Vec2 _bernsteinTangentEvaluate(Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3, double t) {
   return .zero();
 }
 
+@pragma('vm:prefer-inline')
+Vec2 _bernsteinAccelerationEvaluate(Vec2 p0, Vec2 p1, Vec2 p2, Vec2 p3, double t) {
+  return (p2 - p1 * 2 + p0) * (6 * (1 - t)) + (p3 - p2 * 2 + p1) * (6 * t);
+}
+
 List<double> _bernsteinCubicRoots(double c0, double c1, double c2, double c3) {
   final out = <double>[];
   _findRoots([Vec2(0, c0), Vec2(1 / 3, c1), Vec2(2 / 3, c2), Vec2(1, c3)], 3, out, 0);

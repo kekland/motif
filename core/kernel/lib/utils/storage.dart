@@ -259,3 +259,19 @@ extension type const ObjectStorage<I extends ElementIndex, T extends Object>._(L
     return ._(List.filled(math.max(atLeast, storage.length * 2), null)..setRange(0, storage.length, storage));
   }
 }
+
+extension type const Aabb2Storage<I extends ElementIndex>._(Vec2List storage) {
+  Aabb2Storage() : this._(.new(_baseSize * 2));
+  Aabb2Storage.copyFrom(Aabb2Storage other) : this._(.fromList(other.storage));
+
+  Aabb2 operator [](I index) {
+    return .view(.sublistView(storage, index.i * 2, index.i * 2 + 2));
+  }
+
+  void operator []=(I index, Aabb2 value) {
+    storage.setRange(index.i * 2, index.i * 2 + 2, value.storage);
+  }
+
+  int get length => storage.length ~/ 2;
+  Aabb2Storage<I> grow(int atLeast) => ._(storage.grow(atLeast * 2));
+}

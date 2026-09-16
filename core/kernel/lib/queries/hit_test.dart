@@ -71,15 +71,17 @@ class HitResult {
   bool get isEmpty => entries.isEmpty;
 }
 
-sealed class const HitTestCovertexMode() {
-  static const all = HitTestCovertexModeAll();
-  const factory some(Set<CovertexRef> covertices) = HitTestCovertexModeSome;
-  static const none = HitTestCovertexModeNone();
-}
+final class HitTestCovertexMode {
+  const HitTestCovertexMode._(this.all, this.covertices, this.allowCollapsed);
 
-final class const HitTestCovertexModeAll() extends HitTestCovertexMode;
-final class const HitTestCovertexModeSome(final Set<CovertexRef> covertices) extends HitTestCovertexMode;
-final class const HitTestCovertexModeNone() extends HitTestCovertexMode;
+  const HitTestCovertexMode.all({this.allowCollapsed = false}) : all = true, covertices = null;
+  const HitTestCovertexMode.some(this.covertices, {this.allowCollapsed = false}) : all = false;
+  static const HitTestCovertexMode none = ._(false, null, false);
+
+  final bool all;
+  final Set<CovertexRef>? covertices;
+  final bool allowCollapsed;
+}
 
 extension HitTestQuery on TopologyQuery {
   HitResult hitTest(
@@ -129,15 +131,18 @@ extension HitTestQuery on TopologyQuery {
 
     walk(bundle.root);
 
-    final Iterable<Covertex?> cvs = switch (covertexMode) {
-      HitTestCovertexModeAll() => bundle.covertices,
-      HitTestCovertexModeSome(:final covertices) => covertices.map((r) => r.resolve(bundle)),
-      HitTestCovertexModeNone() || _ => const [],
-    };
+    final Iterable<Covertex?> cvs;
+    if (covertexMode.all) {
+      cvs = bundle.covertices;
+    } else if (covertexMode.covertices != null) {
+      cvs = covertexMode.covertices!.map((r) => r.resolve(bundle));
+    } else {
+      cvs = const [];
+    }
 
     for (final cv in cvs) {
       if (cv == null) continue;
-      final e = _hitTestCovertex(cv, p, tolerance);
+      final e = _hitTestCovertex(cv, p, tolerance, allowCollapsed: covertexMode.allowCollapsed);
       if (e != null) covertices.add(e);
     }
 
@@ -160,17 +165,24 @@ extension HitTestQuery on TopologyQuery {
     return .new(v.ref(bundle), distance: d);
   }
 
-  CovertexHitEntry? _hitTestCovertex(Covertex c, Vec2 p, double tolerance, {CovertexRef? ref}) {
-    if (bundle.covertexTangentCollapsed(c)) return null;
+  CovertexHitEntry? _hitTestCovertex(
+    Covertex c,
+    Vec2 p,
+    double tolerance, {
+    CovertexRef? ref,
+    bool allowCollapsed = false,
+  }) {
+    if (!allowCollapsed && bundle.covertexTangentCollapsed(c)) return null;
     final d = p.distanceTo(bundle.covertexPosition(c, space: .root));
     if (d > tolerance) return null;
     return .new(ref ?? c.ref(bundle), distance: d);
   }
 
   EdgeHitEntry? _hitTestEdge(EdgeHandle e, Vec2 p, double tolerance) {
-    final c = bundle.edgeCubic(e, space: .root);
-    if (c.bbox.distance2To(p) > tolerance * tolerance) return null;
+    final bbox = bundle.edgeBbox(e, space: .root);
+    if (bbox.distance2To(p) > tolerance * tolerance) return null;
 
+    final c = bundle.edgeCubic(e, space: .root);
     final r = c.closestPoint(p);
     if (r.distance > tolerance) return null;
     return .new(e.ref(bundle), distance: r.distance, t: r.t);

@@ -66,6 +66,9 @@ final class CellRef<H extends CellHandle> extends Ref {
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is CellRef && other.namespace == namespace && other.local == local;
+
+  @override
+  String toString() => 'CellRef<$kind>($namespace, $tag, $sub)';
 }
 
 typedef FrameRef = CellRef<FrameHandle>;

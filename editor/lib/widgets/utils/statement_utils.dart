@@ -11,6 +11,7 @@ extension StatementUtils on Statement {
     PolygonStatement() => 'Polygon',
     FrameStatement() => 'Frame',
     CutEdgeStatement() => 'Cut edge',
+    MultiCutEdgeStatement() => 'Multi-cut edge',
     GlueVerticesStatement() => 'Glue vertices',
     FilletFaceStatement() => 'Fillet face',
     DissolveStatement() => 'Dissolve',

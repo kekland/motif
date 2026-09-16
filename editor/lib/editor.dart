@@ -6,6 +6,7 @@ export 'widgets/editor_widget.dart';
 part 'editor/transform.dart';
 part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
+part 'editor/transient_stroke.dart';
 
 const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhost:8085');
 const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: false);
@@ -39,6 +40,7 @@ final class Editor extends Controller {
 
   late final tool = ToolController(initialToolset: toolset);
   late final transientEdges = TransientEdges(this);
+  late final transientStrokes = TransientStrokes(this);
 
   SceneTransaction beginTransaction() => scene.beginTransaction();
   T edit<T>(T Function(SceneTransaction txn) callback, {Object? mergeKey}) {

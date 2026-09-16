@@ -8,6 +8,7 @@ part 'algorithms/de_casteljau.dart';
 
 part 'methods/area.dart';
 part 'methods/bbox.dart';
+part 'methods/bend.dart';
 part 'methods/closest_point.dart';
 part 'methods/copy.dart';
 part 'methods/extrema.dart';
@@ -16,6 +17,10 @@ part 'methods/split.dart';
 part 'methods/utils.dart';
 part 'methods/winding.dart';
 part 'methods/arc_length.dart';
+part 'methods/monotonic.dart';
+part 'methods/flatness.dart';
+part 'methods/classify.dart';
+part 'methods/intersection.dart';
 
 extension type const Cubic2._(Vec2List storage) implements Object {
   Cubic2.zero() : storage = .new(4);
@@ -31,18 +36,6 @@ extension type const Cubic2._(Vec2List storage) implements Object {
 
   Cubic2.view(Vec2List storage) : storage = storage;
 
-  bool get isP1Collapsed => p0.equals(p1);
-  bool get isP2Collapsed => p2.equals(p3);
-  bool get isStraightLine {
-    if (isP1Collapsed && isP2Collapsed) return true;
-    final chord = p3 - p0;
-    final scale = chord.length;
-    if (scale < 1e-12) return false;
-
-    final eps = 1e-9 * scale;
-    return chord.cross(p1 - p0).abs() < eps && chord.cross(p2 - p0).abs() < eps;
-  }
-
   Vec2 get p0 => storage[0];
   Vec2 get p1 => storage[1];
   Vec2 get p2 => storage[2];
@@ -56,12 +49,24 @@ extension type const Cubic2._(Vec2List storage) implements Object {
   Vec2 point(double t) => _cubicEvaluate(this, t);
   Vec2 velocity(double t) => _cubicVelocity(this, t);
   Vec2 tangent(double t) => _cubicTangent(this, t);
+  Vec2 acceleration(double t) => _cubicAcceleration(this, t);
 
   (Cubic2, Cubic2) split(double t) => _cubicSplit(this, t);
   List<Cubic2> splitMultiple(List<double> ts) => _cubicSplitMultiple(this, ts);
+  Cubic2 piece(double t0, double t1) => _cubicPiece(this, t0, t1);
 
   List<double> get extrema => _cubicExtrema(this);
   List<Cubic2> get monotonePieces => _cubicMonotonePieces(this);
+  bool get isMonotonicInX => _cubicMonotonicInX(this);
+  bool get isMonotonicInY => _cubicMonotonicInY(this);
+  bool get isMonotone => _cubicIsMonotone(this);
+
+  double get flatness => _cubicFlatness(this);
+  bool isFlat({double? tolerance}) => _cubicIsFlat(this, tolerance: tolerance);
+
+  CubicClassification get classification => _cubicClassify(this);
+  Intersections intersect(Cubic2 other) => _cubicIntersect(this, other);
+  Intersection? selfIntersect() => _cubicSelfIntersection(this);
 
   Aabb2 get bbox => _cubicBbox(this);
   Aabb2 get bboxTight => _cubicBboxTight(this);
@@ -69,7 +74,6 @@ extension type const Cubic2._(Vec2List storage) implements Object {
   ClosestPointResult closestPoint(Vec2 q) => _cubicClosestPoint(this, q);
 
   CubicArcIndex get arcIndex => .of(this);
-
   double get arcLength => arcIndex.length;
   double arcLengthBetween(double t0, double t1) => arcIndex.distanceBetween(t0, t1);
   double distanceAtT(double t) => arcIndex.distanceAt(t);
@@ -84,6 +88,7 @@ extension type const Cubic2._(Vec2List storage) implements Object {
   void transform(Mat4 m) => _cubicTransform(this, m);
   Cubic2 reversed() => copy()..reverse();
   Cubic2 transformed(Mat4 m) => copy()..transform(m);
+  Cubic2 bend(double t, Vec2 q) => _cubicBend(this, t, q);
 
   Cubic2 copy() => .new(p0, p3, p1: p1, p2: p2);
 }

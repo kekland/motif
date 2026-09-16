@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
@@ -30,6 +31,7 @@ final class SceneHitResult {
   bool get isNotEmpty => entries.isNotEmpty;
 
   HitEntry? get top => isNotEmpty ? entries.first : null;
+  HitEntry? topWhere(bool Function(HitEntry e) test) => entries.firstWhereOrNull(test);
 }
 
 extension SceneHitTestQuery on SceneQuery {
@@ -70,7 +72,7 @@ extension SceneHitTestQuery on SceneQuery {
       p,
       tolerance: tolerance,
       covertexMode: covertexMode ?? .some(scene.selection.visibleCovertices),
-    );
+  );
 
     return _remapHitResult(p, result);
   }

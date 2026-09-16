@@ -83,6 +83,7 @@ part 'statements/vertex_statement.dart';
 part 'statements/edge_statement.dart';
 part 'statements/face_statement.dart';
 part 'statements/cut_edge_statement.dart';
+part 'statements/multi_cut_edge_statement.dart';
 part 'statements/fillet_face_statement.dart';
 part 'statements/dissolve_statement.dart';
 part 'statements/rectangle_statement.dart';

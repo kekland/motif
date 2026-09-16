@@ -1,7 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/handles/cell_handles_painters.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 
 class CellHandlesWidget extends LeafRenderObjectWidget {
   const CellHandlesWidget({

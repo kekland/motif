@@ -322,6 +322,24 @@ extension GeometryMethods on Bundle {
     return _edge.cubicArcIndex[e] ??= _edgeCubic(e).arcIndex;
   }
 
+  Aabb2 _edgeBbox(EdgeIndex e, {FrameIndex? space}) {
+    if (space == .root) {
+      final stale = _edge.bboxWorldVersion[e] != _edge.cubicVersion[e];
+      final moved = _edge.bboxWorldEpoch[e] != _worldEpoch;
+      if (stale || moved) {
+        final cubic = _edgeCubic(e, space: .root);
+        final bbox = cubic.bboxTight;
+        _edge.bboxWorld[e] = bbox;
+        _edge.bboxWorldVersion[e] = _edge.cubicVersion[e];
+        _edge.bboxWorldEpoch[e] = _worldEpoch;
+        return bbox;
+      }
+      return _edge.bboxWorld[e];
+    }
+
+    return _edgeCubic(e, space: space).bboxTight;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Cycle
   // -------------------------------------------------------------------------------------------------------------------

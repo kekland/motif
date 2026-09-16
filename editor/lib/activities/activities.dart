@@ -5,3 +5,5 @@ export 'move_activity.dart';
 export 'resize_activity.dart';
 export 'rotate_activity.dart';
 export 'select_rect_activity.dart';
+export 'bend_edge_activity.dart';
+export 'pencil_freehand_stroke_activity.dart';

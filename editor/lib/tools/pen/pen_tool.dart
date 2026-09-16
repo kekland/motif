@@ -56,7 +56,7 @@ class _PenToolOverlay extends HookWidget {
             onPointerHover: (e) {
               final result = editor.hitTest(
                 e.position,
-                covertexMode: transientEdge.value == null ? .all : .none,
+                covertexMode: transientEdge.value == null ? .all() : .none,
               );
 
               hoveredCell.value = result.top?.ref;
@@ -70,7 +70,7 @@ class _PenToolOverlay extends HookWidget {
               behavior: .translucent,
               activityFactory: (e) {
                 if (transientEdge.value == null) {
-                  final hitTest = editor.hitTest(e.position, covertexMode: .all);
+                  final hitTest = editor.hitTest(e.position, covertexMode: .all());
 
                   if (hitTest.top?.ref is CovertexRef) {
                     return MoveActivity(editor, {hitTest.top!.ref});

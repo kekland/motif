@@ -15,6 +15,9 @@ final class Bundle {
 
   final _changeTracker = ChangeTracker();
 
+  late final _intersections = IntersectionCache(this);
+  IntersectionCache get intersections => _intersections;
+
   late final _queries = TopologyQuery._(this);
   TopologyQuery get query => _queries;
 
@@ -217,6 +220,12 @@ final class Bundle {
     assert(_checkEdge(e));
     assert(space == null || _checkFrame(space));
     return _edgeCubicArcIndex(e.index, space: space?.index);
+  }
+
+  Aabb2 edgeBbox(EdgeHandle e, {FrameHandle? space}) {
+    assert(_checkEdge(e));
+    assert(space == null || _checkFrame(space));
+    return _edgeBbox(e.index, space: space?.index);
   }
 
   // -------------------------------------------------------------------------------------------------------------------

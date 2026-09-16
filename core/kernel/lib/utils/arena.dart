@@ -15,6 +15,17 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
   int get rowCount => top - _freeIndices.length;
   int get liveCount => _liveCount;
 
+  final _observers = <ArenaObserver<I>>[];
+  void observe(ArenaObserver<I> observer) => _observers.add(observer);
+
+  void _notifyTouched(I i) {
+    for (final o in _observers) o.onTouched(i);
+  }
+
+  void _notifyRetired(I i) {
+    for (final o in _observers) o.onRetired(i);
+  }
+
   Iterable<I> get liveIndices sync* {
     for (var i = 0; i < top; i++) {
       if (state[i] == _live) yield _wrapIndex(i);
@@ -37,24 +48,30 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
 
     state[i] = _live;
     _liveCount++;
-    return _wrapIndex(i);
+
+    final index = _wrapIndex(i);
+    _notifyTouched(index);
+    return index;
   }
 
   void touch(I index) {
     assert(state[index.i] != _free, 'touching a free index $index');
     version[index.i]++;
+    _notifyTouched(index);
   }
 
   void ghost(I index) {
     assert(state[index.i] == _live, 'ghosting a non-live index $index');
     state[index.i] = _ghost;
     _liveCount--;
+    _notifyRetired(index);
   }
 
   void relink(I index) {
     assert(state[index.i] == _ghost, 'relinking a non-ghost index $index');
     state[index.i] = _live;
     _liveCount++;
+    _notifyTouched(index);
   }
 
   void free(I index) {
@@ -63,6 +80,7 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
     gen[index.i]++;
     _freeIndices.add(index.i);
     _liveCount--;
+    _notifyRetired(index);
   }
 
   void grow(int atLeast) {
@@ -127,5 +145,32 @@ final class IdTable<R extends CellRef, I extends ElementIndex> {
     _slots.addAll(other._slots);
     _indexOf.clear();
     _indexOf.addAll(other._indexOf);
+  }
+}
+
+abstract interface class ArenaObserver<I extends ElementIndex> {
+  void onTouched(I index);
+  void onRetired(I index);
+}
+
+final class CacheArenaObserver<I extends ElementIndex> implements ArenaObserver<I> {
+  final _touched = HashSet<I>();
+  final _retired = HashSet<I>();
+
+  Set<I> get touched => _touched;
+  Set<I> get retired => _retired;
+
+  bool get isNotEmpty => _touched.isNotEmpty || _retired.isNotEmpty;
+  bool get isEmpty => _touched.isEmpty && _retired.isEmpty;
+
+  @override
+  void onTouched(I index) => _touched.add(index);
+
+  @override
+  void onRetired(I index) => _retired.add(index);
+
+  void clear() {
+    _touched.clear();
+    _retired.clear();
   }
 }

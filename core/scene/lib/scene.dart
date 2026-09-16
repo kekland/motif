@@ -15,6 +15,7 @@ part 'history.dart';
 part 'notifier.dart';
 
 part 'utils/embed_vertex.dart';
+part 'utils/embed_edge.dart';
 part 'utils/resolved_style.dart';
 part 'utils/transform_session.dart';
 part 'utils/covertices.dart';

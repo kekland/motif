@@ -22,6 +22,7 @@ dependencies:
   color:
   ui:
   schema:
+  ink_stroke_modeler:
   
   equatable: ^2.1.0
   web_socket_channel: ^3.0.3

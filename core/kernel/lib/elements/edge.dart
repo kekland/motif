@@ -24,6 +24,9 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
   var cubicWorldVersion = Int32Storage<EdgeIndex>();
   var cubicWorldEpoch = Int32Storage<EdgeIndex>();
   var cubicArcIndex = ObjectStorage<EdgeIndex, CubicArcIndex>();
+  var bboxWorld = Aabb2Storage<EdgeIndex>();
+  var bboxWorldVersion = Int32Storage<EdgeIndex>();
+  var bboxWorldEpoch = Int32Storage<EdgeIndex>();
   var parent = FrameIndexStorage<EdgeIndex>();
   var siblingPrev = CellIndexStorage<EdgeIndex>();
   var siblingNext = CellIndexStorage<EdgeIndex>();
@@ -47,6 +50,9 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
       cubicWorldVersion = cubicWorldVersion.grow(atLeast);
       cubicWorldEpoch = cubicWorldEpoch.grow(atLeast);
       cubicArcIndex = cubicArcIndex.grow(atLeast);
+      bboxWorld = bboxWorld.grow(atLeast);
+      bboxWorldVersion = bboxWorldVersion.grow(atLeast);
+      bboxWorldEpoch = bboxWorldEpoch.grow(atLeast);
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
@@ -69,6 +75,9 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
     cubicWorldVersion = .copyFrom(other.cubicWorldVersion);
     cubicWorldEpoch = .copyFrom(other.cubicWorldEpoch);
     cubicArcIndex = .copyFrom(other.cubicArcIndex);
+    bboxWorld = .copyFrom(other.bboxWorld);
+    bboxWorldVersion = .copyFrom(other.bboxWorldVersion);
+    bboxWorldEpoch = .copyFrom(other.bboxWorldEpoch);
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);

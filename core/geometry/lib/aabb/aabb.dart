@@ -3,29 +3,20 @@ import 'dart:typed_data';
 
 import 'package:geometry/geometry.dart';
 
-final class Aabb2 {
-  Aabb2(double left, double top, double right, double bottom)
-    : this.minMax(
-        .new(left, top),
-        .new(right, bottom),
-      );
+extension type const Aabb2._(Vec2List storage) {
+  Aabb2.minMax(Vec2 min, Vec2 max) : storage = .new(2) {
+    storage[0] = min;
+    storage[1] = max;
+  }
 
-  Aabb2.ltwh(double left, double top, double width, double height)
-    : this.minMax(
-        .new(left, top),
-        .new(left + width, top + height),
-      );
+  Aabb2.view(Vec2List storage) : storage = storage;
 
-  Aabb2.minMax(this._min, this._max);
+  Aabb2.invertedInfinity() : this.minMax(.new(.infinity, .infinity), .new(.negativeInfinity, .negativeInfinity));
   Aabb2.point(Vec2 p) : this.minMax(p, p);
-  Aabb2.copy(Aabb2 other) : this.minMax(other.min, other.max);
   Aabb2.empty() : this.minMax(.zero(), .zero());
-  Aabb2.invertedInfinity()
-    : this.minMax(
-        .new(.infinity, .infinity),
-        .new(.negativeInfinity, .negativeInfinity),
-      );
 
+  Aabb2(double left, double top, double right, double bottom) : this.minMax(.new(left, top), .new(right, bottom));
+  Aabb2.ltwh(double left, double top, double width, double height) : this(left, top, left + width, top + height);
   Aabb2.center(Vec2 center, double width, double height)
     : this.minMax(
         .new(center.x - width * 0.5, center.y - height * 0.5),
@@ -47,11 +38,11 @@ final class Aabb2 {
     .max(a, b),
   );
 
-  Vec2 _min;
-  Vec2 get min => _min;
+  Vec2 get min => storage[0];
+  Vec2 get max => storage[1];
 
-  Vec2 _max;
-  Vec2 get max => _max;
+  set _min(Vec2 value) => storage[0] = value;
+  set _max(Vec2 value) => storage[1] = value;
 
   void hull(Aabb2 other) {
     _min = min.min(other.min);
@@ -123,9 +114,5 @@ final class Aabb2 {
   Vec2 get center => .new((min.x + max.x) * 0.5, (min.y + max.y) * 0.5);
 
   Aabb2 copyWith({Vec2? min, Vec2? max}) => .minMax(min ?? this.min, max ?? this.max);
-
-  @override
-  String toString() {
-    return 'Aabb2(min: $min, max: $max)';
-  }
+  Aabb2 copy() => .minMax(min, max);
 }

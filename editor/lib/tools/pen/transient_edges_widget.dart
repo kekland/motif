@@ -75,6 +75,11 @@ class _TransientEdgePainter extends CustomPainter {
       paintCovertexHandle(canvas, p1, primaryColor, secondaryColor);
       paintCovertexHandle(canvas, p2, primaryColor, secondaryColor);
     }
+
+    for (final intersection in edge.intersections) {
+      final p = intersection.point.offset;
+      paintIntersectionHandle(canvas, MatrixUtils.transformPoint(transform, p), primaryColor, secondaryColor);
+    }
   }
 
   @override

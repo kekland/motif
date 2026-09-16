@@ -58,7 +58,8 @@ part 'ops/make_face.dart';
 part 'ops/reparent.dart';
 part 'ops/glue_vertices.dart';
 
-part 'arrangement/arrangement.dart';
+part 'cache/arrangement.dart';
+part 'cache/intersections.dart';
 
 part 'queries/nearest_vertex.dart';
 part 'queries/nearest_edge.dart';
@@ -67,3 +68,4 @@ part 'queries/frame_bounds.dart';
 part 'queries/hit_test.dart';
 part 'queries/hit_test_rect.dart';
 part 'queries/transform.dart';
+part 'queries/lca.dart';

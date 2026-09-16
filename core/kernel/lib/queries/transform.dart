@@ -21,4 +21,15 @@ extension TransformQueries on TopologyQuery {
     final parent = bundle.parentOf(handle)!;
     return bundle.frameTransform(parent.asFrame, space: .root);
   }
+
+  Mat4 worldToLocal(Ref ref) {
+    final handle = switch (ref) {
+      CellRef() => bundle.handle(ref)!,
+      CovertexRef() => bundle.handle(ref.resolveVertex(bundle))!,
+    };
+
+    if (handle.kind == .frame) return bundle.transformBetween(bundle.root, handle);
+    final parent = bundle.parentOf(handle)!;
+    return bundle.transformBetween(bundle.root, parent);
+  }
 }

@@ -26,10 +26,10 @@ class ToolbarTemplate extends StatelessWidget {
         return Flex(
           key: ValueKey(tool.key),
           direction: direction,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Tooltip(
-              tooltip: Text('${tool.key}'),
+              tooltip: Text(tool.key),
               shortcut: tool.shortcut,
               child: ToolbarButton(
                 key: ValueKey(tool.key),

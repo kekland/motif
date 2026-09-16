@@ -151,7 +151,6 @@ class RenderPortalPositioned extends RenderProxyBox {
       final a = anchor.alignment!;
       topLeft = a.withinRect(anchor.rect) - (-a).alongSize(childSize);
     } else {
-      print(anchor.rect);
       final below = anchor.rect.bottom + 8.0;
       final above = anchor.rect.top - 8.0 - childSize.height;
       final fitsBelow = below + childSize.height <= container.bottom;

@@ -1,0 +1,12 @@
+name: ink_stroke_modeler
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  geometry:
+
+dev_dependencies:
+  test: ^1.32.0

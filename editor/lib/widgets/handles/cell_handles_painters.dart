@@ -68,13 +68,8 @@ void paintEdgeHandle(
   Cubic2 cubic,
   Color color,
 ) {
-  final paint = Paint()
-    ..color = color
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.0;
-
   final path = _cubicPath(cubic);
-  canvas.drawPath(path, paint);
+  canvas.drawPath(path, _resolvePrimaryPaint(color));
 }
 
 Path _cubicPath(Cubic2 cubic) {
@@ -82,4 +77,8 @@ Path _cubicPath(Cubic2 cubic) {
   path.moveTo(cubic.p0.x, cubic.p0.y);
   path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y);
   return path;
+}
+
+void paintIntersectionHandle(Canvas canvas, Offset position, Color primaryColor, Color secondaryColor) {
+  paintVertexHandle(canvas, position, primaryColor, secondaryColor);
 }

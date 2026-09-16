@@ -344,6 +344,7 @@ extension TopologyMethods on Bundle {
     _edge.radialStart[i] = .none;
     _edge.cubicVersion[i] = -1;
     _edge.cubicWorldVersion[i] = -1;
+    _edge.bboxWorldVersion[i] = -1;
     _edge.crossStart[i] = .none;
 
     _edgeLink(i, frame);

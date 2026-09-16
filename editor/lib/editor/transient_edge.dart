@@ -46,38 +46,34 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
   List<EdgeRef> _performCommit(SceneHitResult? endHitTest) {
     if (_end == null) return [];
 
-    late final VertexRef endVertex;
-    if (endHitTest != null) {
-      endVertex = editor.edit((txn) => txn.embedVertex(endHitTest), mergeKey: mergeKey);
-    } else {
-      endVertex = editor.edit((txn) => txn.insert(VertexStatement(end!)), mergeKey: mergeKey).ref;
-    }
+    return editor.edit((txn) {
+      late final VertexRef endVertex;
+      if (endHitTest != null) {
+        endVertex = txn.embedVertex(endHitTest);
+      } else {
+        endVertex = txn.insert(VertexStatement(end!)).ref;
+      }
 
-    final startHandle = editor.handleOf(startVertex)!;
-    final endHandle = editor.handleOf(endVertex)!;
-
-    final parentHandle = editor.bundle.lca(startHandle, endHandle);
-    final parentRef = editor.bundle.frameRef(parentHandle);
-    final transform = editor.bundle.frameTransform(parentHandle, space: .root);
-    final transformedCubic = cubic.transformed(transform);
-
-    final startTransform = editor.bundle.query.localToWorld(startVertex);
-    final endTransform = editor.bundle.query.localToWorld(endVertex);
-
-    final statement = EdgeStatement(
-      startVertex.selector(),
-      endVertex.selector(),
-      parent: parentRef,
-      startTangent: startTransform.transformDelta2(transformedCubic.p1 - transformedCubic.p0),
-      endTangent: endTransform.transformDelta2(transformedCubic.p2 - transformedCubic.p3),
-    );
-
-    editor.edit((txn) => txn.insert(statement), mergeKey: mergeKey);
-    return [statement.ref];
+      final result = txn.embedEdge(startVertex, endVertex, cubic);
+      return result;
+    }, mergeKey: mergeKey);
   }
 
   TransientEdge? commit({SceneHitResult? endHitTest, bool startNewEdge = false}) {
     return editor.transientEdges.commit(this, endHitTest: endHitTest, startNewEdge: startNewEdge);
+  }
+
+  List<Intersection> get intersections {
+    if (_end == null) return [];
+    final cubic = this.cubic;
+
+    final selfIntersection = cubic.selfIntersect();
+
+    final intersections = editor.bundle.intersections.withCubic(cubic);
+    return [
+      ?selfIntersection,
+      ...intersections.values.expand((e) => e.intersections),
+    ];
   }
 
   void remove() {

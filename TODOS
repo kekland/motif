@@ -9,15 +9,18 @@
 - [ ] Variables and variable binding
 
 Wed
-- [ ] Cubic-cubic intersections
-- [ ] Intersection cache
-- [ ] Bend tool
-- [ ] Pencil tool
+- [x] Cubic-cubic intersections
+- [x] Intersection cache
+- [x] Embed edge method
+- [x] Bend tool
+- [?] Pencil tool        (Missing: Schneider fitter)
 - [ ] Debug arrangement generation
 - [ ] Commander search - clean up code
+- [ ] Transient edge ctrl+z
 
 Thu
 - [ ] Pre-dissolve on transform (e.g. cut edge, select inner tangents)
+- [ ] Topological/non-destructive switch on pen/pencil
 - [ ] Fix generator statement dissolution
 - [ ] Editor tabs (generators, variables)
 - [ ] Generator statement nodes implementations
@@ -25,3 +28,7 @@ Thu
 Fri
 - [ ] Tree view
 - [ ] Move tool reparenting (transient transforms for locked transforms, etc)
+- [ ] Pen tool: shift/alt, pencil, bend, etc
+- [ ] Move tool: covertex tangent auto-alignment
+- [ ] Move/pen/etc: snap to pixel grid
+- [ ] Canvas: max zoom and pixel grid view

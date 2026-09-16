@@ -14,9 +14,9 @@ final class CutEdgeStatement extends Statement {
   @override
   Iterable<Selector> get selectors => [target];
 
-  VertexRef get vertex => id.cell(.vertex, 0);
-  EdgeRef get edge0 => id.cell(.edge, 1);
-  EdgeRef get edge1 => id.cell(.edge, 2);
+  VertexRef get vertex => id.cell(.vertex, 0, 0);
+  EdgeRef get edge0 => id.cell(.edge, 0, 1);
+  EdgeRef get edge1 => id.cell(.edge, 0, 2);
 
   @override
   Iterable<Op> execute(EvalContext context) sync* {
@@ -37,13 +37,15 @@ final class CutEdgeStatement extends Statement {
   );
 
   @override
-  TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
-    CellRef c when c == vertex => .absorb,
-    CellRef(kind: .edge) => .forward([context.resolve(this.target)]),
-    CovertexRef c when c.edge == edge0 && c.isStart => .forward([CovertexRef.start(context.resolve(this.target))]),
-    CovertexRef c when c.edge == edge1 && c.isEnd => .forward([CovertexRef.end(context.resolve(this.target))]),
-    _ => .refuse,
-  };
+  TransformRoute routeTransform(EvalContext context, Ref target) {
+    return switch (target) {
+      CellRef c when c == vertex => .absorb,
+      CellRef(kind: .edge) => .forward([context.resolve(this.target)]),
+      CovertexRef c when c.edge == edge0 && c.isStart => .forward([CovertexRef.start(context.resolve(this.target))]),
+      CovertexRef c when c.edge == edge1 && c.isEnd => .forward([CovertexRef.end(context.resolve(this.target))]),
+      _ => .refuse,
+    };
+  }
 
   @override
   TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {

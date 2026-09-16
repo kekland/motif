@@ -23,7 +23,7 @@ extension FrameBoundsQuery on TopologyQuery {
   Aabb2? _cellBbox(CellHandle handle, {FrameHandle? space}) {
     return switch (handle.kind) {
       .vertex => .point(bundle.vertexPosition(handle.asVertex, space: space)),
-      .edge => bundle.edgeCubic(handle.asEdge, space: space).bboxTight,
+      .edge => bundle.edgeBbox(handle.asEdge, space: space),
       .frame => _frameBbox(handle.asFrame, space: space),
       .face => _faceBbox(handle.asFace, space: space),
     };
@@ -44,7 +44,7 @@ extension FrameBoundsQuery on TopologyQuery {
     final hull = Aabb2.invertedInfinity();
     for (final cycle in bundle.faceBoundary(h)) {
       for (final coedge in cycle) {
-        final edgeBbox = bundle.edgeCubic(coedge.edge, space: _space).bboxTight;
+        final edgeBbox = bundle.edgeBbox(coedge.edge, space: _space);
         hull.hull(edgeBbox);
       }
     }
@@ -62,7 +62,7 @@ extension FrameBoundsQuery on TopologyQuery {
 
     void hull(Aabb2 b) {
       if (out == null) {
-        out = Aabb2.copy(b);
+        out = b.copy();
       } else {
         out!.hull(b);
       }

@@ -63,6 +63,18 @@ extension GetterMethods on Bundle {
     for (var c = _frame.dependentStart[f]; c != .none; c = _coframe.dependentNext[c]) yield c;
   }
 
+  Iterable<CellIndex> _frameDependentCells(FrameIndex f, {CellKind? kind}) sync* {
+    for (final cf in _frameDependents(f)) {
+      final cell = _coframe.cell[cf];
+
+      if (cell.kind == .frame) {
+        yield* _frameDependentCells(cell.asFrame, kind: kind);
+      } else if (kind == null || cell.kind == kind) {
+        yield cell;
+      }
+    }
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Coframe
   // -------------------------------------------------------------------------------------------------------------------
