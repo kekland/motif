@@ -29,7 +29,7 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     transaction!.commit(mergeKey: mergeKey);
     super.onEnd(details);
   }

@@ -7,7 +7,7 @@ import 'package:color/color.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:listen/listen.dart';
-import 'package:u64/u64.dart';
+import 'package:shared/shared.dart';
 import 'package:schema/codec.dart' as codec;
 import 'package:schema/program.dart' as gen;
 
@@ -61,6 +61,7 @@ part 'routers/bake_router.dart';
 part 'routers/transform_router.dart';
 part 'routers/slice_router.dart';
 part 'routers/zorder_router.dart';
+part 'routers/flatten_router.dart';
 
 part 'layout/shape.dart';
 part 'layout/size.dart';
@@ -77,6 +78,7 @@ part 'layout/shapes/polygon_shape.dart';
 part 'statements/base/placed_statement.dart';
 part 'statements/base/layout_box_statement.dart';
 part 'statements/base/shape_statement.dart';
+part 'statements/base/generating_statement.dart';
 
 part 'statements/frame_statement.dart';
 part 'statements/vertex_statement.dart';

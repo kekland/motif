@@ -1,3 +1,4 @@
+import 'package:color/color_flutter.dart';
 import 'package:editor/imports.dart';
 
 class TransientStrokesWidget extends HookWidget {
@@ -61,12 +62,14 @@ class _TransientStrokePainter extends CustomPainter {
       path.lineTo(pi.x, pi.y);
     }
 
+    final strokeWidth = stroke.style.width * transform.getMaxScaleOnAxis();
+
     canvas.drawPath(
       path.transform(transform.storage),
       Paint()
-        ..color = const Color(0xFFFFFFFF)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0,
+        ..color = stroke.style.color.toUiColor()
+        ..strokeWidth = strokeWidth
+        ..style = .stroke,
     );
 
     path.reset();

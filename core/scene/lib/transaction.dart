@@ -128,6 +128,15 @@ final class SceneTransaction {
     for (final r in router.remove) remove(r);
   }
 
+  Remap flatten(Iterable<StatementId> targets) {
+    _checkOpen();
+    flush();
+    final router = evaluation.routeFlatten(targets);
+    for (final entry in router.replace.entries) replace(entry.key, entry.value);
+    for (final r in router.remove) remove(r);
+    return router.remap;
+  }
+
   // void embed(ProgramSlice slice) {
   //   _checkOpen();
   //   final anchor = program.resolveEmbeddingAnchor(slice);

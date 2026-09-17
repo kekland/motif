@@ -8,6 +8,9 @@ class const EllipseTool() extends ShapeTool {
   String get key => 'ellipse';
 
   @override
+  String resolveName(BuildContext context) => 'Ellipse';
+
+  @override
   CreateShapeActivity Function(Editor editor) get activityFactory => CreateEllipseActivity.new;
 
   @override

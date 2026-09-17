@@ -1,5 +1,7 @@
 import 'package:editor/imports.dart';
 
+export 'options.dart';
+
 export 'cursor/cursor_tool.dart';
 export 'marquee/marquee_tool.dart';
 export 'fill/fill_tool.dart';

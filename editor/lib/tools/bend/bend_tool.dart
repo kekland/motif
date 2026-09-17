@@ -8,19 +8,31 @@ class BendTool extends Tool {
   String get key => 'bend';
 
   @override
+  String resolveName(BuildContext context) => 'Bend';
+
+  @override
   Widget buildIcon(BuildContext context) => Icons.bend();
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _BendToolOverlay(info: info);
+  Widget buildViewportOverlay(
+    BuildContext context,
+    OverlayChildLayoutInfo info,
+    BendTool tool,
+  ) => _BendToolOverlay(info: info, tool: tool);
 
   @override
   SingleActivator? get shortcut => .new(.keyB);
 }
 
 class _BendToolOverlay extends HookWidget {
-  const _BendToolOverlay({super.key, required this.info});
+  const _BendToolOverlay({
+    super.key,
+    required this.info,
+    required this.tool,
+  });
 
   final OverlayChildLayoutInfo info;
+  final BendTool tool;
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-import 'package:u64/mix.dart';
+import 'mix.dart';
 
 final class U64 implements Comparable<U64> {
   U64.of(this.hi, this.lo) : hashCode = Mix64.hash32(hi, lo);

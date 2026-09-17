@@ -15,7 +15,10 @@ class const Header({
       onTap: onTap,
       color: context.colors.surface.secondary,
       leading: leading,
-      title: title,
+      title: DefaultForegroundStyle(
+        style: context.typography.subtitle.secondary,
+        child: title,
+      ),
       footnote: footnote,
       trailing: trailing,
       padding: padding,

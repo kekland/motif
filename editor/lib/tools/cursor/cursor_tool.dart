@@ -9,19 +9,34 @@ class CursorTool extends Tool {
   String get key => 'cursor';
 
   @override
+  String resolveName(BuildContext context) => 'Cursor';
+
+  @override
   Widget buildIcon(BuildContext context) => Icons.cursor();
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _CursorToolOverlay(info: info);
+  Widget buildViewportOverlay(
+    BuildContext context,
+    OverlayChildLayoutInfo info,
+    CursorTool tool,
+  ) => _CursorToolOverlay(
+    info: info,
+    tool: tool,
+  );
 
   @override
   SingleActivator? get shortcut => .new(.keyV);
 }
 
 class _CursorToolOverlay extends HookWidget {
-  const _CursorToolOverlay({super.key, required this.info});
+  const _CursorToolOverlay({
+    super.key,
+    required this.info,
+    required this.tool,
+  });
 
   final OverlayChildLayoutInfo info;
+  final CursorTool tool;
 
   @override
   Widget build(BuildContext context) {

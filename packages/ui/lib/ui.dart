@@ -44,6 +44,7 @@ export 'ui/display/single_activator_widget.dart';
 export 'ui/form/text_field.dart';
 export 'ui/form/expression_input.dart';
 export 'ui/form/text_form_field.dart';
+export 'ui/form/checkbox.dart';
 export 'ui/color/color_input_window.dart';
 export 'ui/default_gesture_reaction.dart';
 export 'ui/divider.dart';

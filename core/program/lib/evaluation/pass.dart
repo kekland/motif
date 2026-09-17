@@ -289,7 +289,7 @@ extension EvaluationPassImpl on Evaluation {
   }
 
   void _expand(EvaluationPass pass, int i, Statement s) {
-    if (s is! GeneratorStatement) return;
+    if (s is! GeneratingStatement) return;
     final generated = s.enabled ? s.generate(_contextFor(s.id)).toList() : const <Statement>[];
     _reconcile(pass, i + 1, _orderEnd(i), generated);
   }

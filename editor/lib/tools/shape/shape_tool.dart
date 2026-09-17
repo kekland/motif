@@ -7,10 +7,15 @@ abstract class ShapeTool extends Tool {
   MouseCursor get cursor;
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _ShapeToolOverlay(
+  Widget buildViewportOverlay(
+    BuildContext context,
+    OverlayChildLayoutInfo info,
+    ShapeTool tool,
+  ) => _ShapeToolOverlay(
     info: info,
     activityFactory: activityFactory,
     cursor: cursor,
+    tool: tool,
   );
 }
 
@@ -20,11 +25,13 @@ class _ShapeToolOverlay extends HookWidget {
     required this.info,
     required this.activityFactory,
     required this.cursor,
+    required this.tool,
   });
 
   final OverlayChildLayoutInfo info;
   final CreateShapeActivity Function(Editor edito) activityFactory;
   final MouseCursor cursor;
+  final ShapeTool tool;
 
   @override
   Widget build(BuildContext context) {

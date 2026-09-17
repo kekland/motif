@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
-import 'package:u64/u64.dart';
+import 'package:shared/shared.dart';
 
 import 'key/handle.dart';
 export 'key/handle.dart';

@@ -9,10 +9,14 @@ var _random = math.Random();
 var _seed = 33;
 Color get color => colors[_random.nextInt(colors.length)];
 
-class BundlePainter extends CustomPainter {
-  BundlePainter({required this.bundle});
+class DebugBundlePainter extends CustomPainter {
+  DebugBundlePainter({
+    required this.bundle,
+    this.arrangement = false,
+  });
 
   final Bundle bundle;
+  final bool arrangement;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -22,8 +26,29 @@ class BundlePainter extends CustomPainter {
     _random = math.Random(_seed);
     canvas.save();
     canvas.transform(inverse.storage);
-    _paintFrame(canvas, bundle.root, transform, 0);
+
+    if (arrangement) {
+      _paintArrangement(canvas, transform);
+    } else {
+      _paintFrame(canvas, bundle.root, transform, 0);
+    }
+
     canvas.restore();
+  }
+
+  void _paintArrangement(Canvas canvas, Matrix4 transform) {
+    final arrangement = bundle.arrangement;
+
+    for (final region in arrangement.regions) {
+      final path = _cyclePath(bundle, [region.outer, ...region.holes], space: .root);
+      canvas.drawPath(
+        path.transform(transform.storage),
+        Paint()
+          ..color = color.withValues(alpha: 0.5)
+          ..style = PaintingStyle.fill
+          ..strokeWidth = 1.0,
+      );
+    }
   }
 
   void _paintFrame(Canvas canvas, FrameHandle frame, Matrix4 parent, int depth) {
@@ -107,10 +132,13 @@ Path _cubicPath(Cubic2 cubic) {
 }
 
 Path _facePath(Bundle bundle, FaceHandle f) {
-  final path = Path()..fillType = .nonZero;
-  final space = bundle.parentOf(f)!;
+  return _cyclePath(bundle, bundle.faceBoundary(f));
+}
 
-  for (final cycle in bundle.faceBoundary(f)) {
+Path _cyclePath(Bundle bundle, List<Cycle> cycles, {FrameHandle? space}) {
+  final path = Path()..fillType = .nonZero;
+
+  for (final cycle in cycles) {
     var first = true;
     for (final u in cycle) {
       var cubic = bundle.edgeCubic(u.edge, space: space);

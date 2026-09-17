@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:schema/program.dart' as gen;
-import 'package:u64/u64.dart';
+import 'package:shared/shared.dart';
 import 'package:color/color.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';

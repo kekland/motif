@@ -4,10 +4,12 @@ final class DeleteRouter {
   new({
     required this.remove,
     required this.replace,
+    required this.remap,
   });
 
   final Set<StatementId> remove;
   final Map<StatementId, List<Statement>> replace;
+  final Remap remap;
 }
 
 extension RouteDelete on Evaluation {
@@ -47,30 +49,7 @@ extension RouteDelete on Evaluation {
 
     final baked = routeBake(bake, gone: gone);
     remap.add(baked.remap);
-
-    final remove = <StatementId>{};
-    final replace = <StatementId, List<Statement>>{};
-    StatementId? placement;
-
-    for (final s in dead) {
-      remove.add(s);
-      if (placement == null || indexOf(s)! < indexOf(placement)!) placement = s;
-    }
-
-    if (placement != null && baked.statements.isNotEmpty) {
-      remove.remove(placement);
-      replace[placement] = baked.statements;
-    }
-
-    for (final h in graph.targeting(remap.keys)) {
-      if (dead.contains(h)) continue;
-      final s = statement(h)!;
-      final remapped = s.remap(remap);
-      if (remapped == null) throw StateError('failed to remap statement $s');
-      if (!identical(s, remapped)) replace[h] = [remapped];
-    }
-
-    return .new(remove: remove, replace: replace);
+    return _routeRetire(dead, baked.statements, remap);
   }
 
   FrameRef? _survivingFrame(CellRef r, Set<CellRef> gone) {
@@ -79,5 +58,40 @@ extension RouteDelete on Evaluation {
       if (!gone.contains(ref)) return ref;
     }
     return null;
+  }
+
+  DeleteRouter _routeRetire(Set<StatementId> dead, List<Statement> baked, Remap remap) {
+    if (dead.isEmpty) return .new(remove: const {}, replace: const {}, remap: remap);
+
+    final remove = <StatementId>{...dead};
+    final replace = <StatementId, List<Statement>>{};
+
+    final placement = dead.reduce((a, b) => indexOf(a)! > indexOf(b)! ? a : b);
+    final block = [...baked];
+
+    final moved = <(int, Statement)>[];
+    for (final h in graph.targeting(remap.keys)) {
+      if (dead.contains(h)) continue;
+      final s = statement(h)!;
+      final remapped = s.remap(remap);
+      if (remapped == null) throw StateError('failed to remap statement $s');
+      final i = indexOf(h)!;
+      if (i < indexOf(placement)!) {
+        remove.add(h);
+        moved.add((i, remapped));
+      } else if (!identical(s, remapped)) {
+        replace[h] = [remapped];
+      }
+    }
+
+    moved.sort((a, b) => a.$1.compareTo(b.$1));
+    block.addAll(moved.map((e) => e.$2));
+
+    if (block.isNotEmpty) {
+      remove.remove(placement);
+      replace[placement] = block;
+    }
+
+    return .new(remove: remove, replace: replace, remap: remap);
   }
 }

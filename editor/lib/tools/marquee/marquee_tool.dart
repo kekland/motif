@@ -8,10 +8,17 @@ class MarqueeTool extends Tool {
   Widget buildIcon(BuildContext context) => Icons.marquee();
 
   @override
+  String resolveName(BuildContext context) => 'Marquee';
+
+  @override
   String get key => 'marquee';
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _MarqueeToolOverlay(info: info);
+  Widget buildViewportOverlay(
+    BuildContext context,
+    OverlayChildLayoutInfo info,
+    MarqueeTool tool,
+  ) => _MarqueeToolOverlay(info: info, tool: tool);
 
   @override
   SingleActivator? get shortcut => .new(.keyM);
@@ -21,9 +28,11 @@ class _MarqueeToolOverlay extends HookWidget {
   const _MarqueeToolOverlay({
     super.key,
     required this.info,
+    required this.tool,
   });
 
   final OverlayChildLayoutInfo info;
+  final MarqueeTool tool;
 
   @override
   Widget build(BuildContext context) {

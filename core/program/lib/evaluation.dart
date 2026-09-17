@@ -41,6 +41,11 @@ class Evaluation {
     return _order[index];
   }
 
+  @pragma('vm:prefer-inline')
+  Statement? rootStatement(StatementId id) {
+    return statement(rootOf(id));
+  }
+
   Iterable<Statement> _groupOf(StatementId id) {
     final start = indexOf(id);
     if (start == null) return .empty();
@@ -58,6 +63,14 @@ class Evaluation {
       final commit = _commits[s.id];
       if (commit == null) continue;
       yield* commit.added;
+    }
+  }
+
+  Iterable<CellRef> consumedOf(StatementId id) sync* {
+    for (final s in _groupOf(id)) {
+      final commit = _commits[s.id];
+      if (commit == null) continue;
+      yield* commit.deleted;
     }
   }
 

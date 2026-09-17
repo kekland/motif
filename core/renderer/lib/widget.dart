@@ -8,10 +8,12 @@ class SceneWidget extends StatefulWidget {
     super.key,
     required this.scene,
     this.debug = false,
+    this.debugArrangement = false,
   });
 
   final Scene scene;
   final bool debug;
+  final bool debugArrangement;
 
   @override
   State<SceneWidget> createState() => _SceneWidgetState();
@@ -59,7 +61,14 @@ class _SceneWidgetState extends State<SceneWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.debug) return CustomPaint(painter: BundlePainter(bundle: scene.bundle));
+    if (widget.debug) {
+      return CustomPaint(
+        painter: DebugBundlePainter(
+          bundle: scene.bundle,
+          arrangement: widget.debugArrangement,
+        ),
+      );
+    }
 
     return CustomPaint(
       painter: _ProgramPainter(renderer: renderer!),

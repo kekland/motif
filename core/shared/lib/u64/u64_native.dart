@@ -1,4 +1,4 @@
-import 'package:u64/u64.dart';
+import '../shared.dart';
 
 extension type const U64._(int value) implements Object {
   const U64.of(int hi, int lo) : this._((hi << 32) | lo);

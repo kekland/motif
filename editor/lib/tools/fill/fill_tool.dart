@@ -8,19 +8,28 @@ class FillTool extends Tool {
   String get key => 'fill';
 
   @override
+  String resolveName(BuildContext context) => 'Fill';
+
+  @override
   Widget buildIcon(BuildContext context) => Icons.fill();
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info) => _FillToolOverlay(info: info);
+  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info, FillTool tool) =>
+      _FillToolOverlay(info: info, tool: tool);
 
   @override
   SingleActivator? get shortcut => .new(.keyG);
 }
 
 class _FillToolOverlay extends HookWidget {
-  const _FillToolOverlay({super.key, required this.info});
+  const _FillToolOverlay({
+    super.key,
+    required this.info,
+    required this.tool,
+  });
 
   final OverlayChildLayoutInfo info;
+  final FillTool tool;
 
   @override
   Widget build(BuildContext context) {

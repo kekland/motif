@@ -8,6 +8,9 @@ class const ContainerTool() extends ShapeTool {
   String get key => 'container';
 
   @override
+  String resolveName(BuildContext context) => 'Container';
+
+  @override
   CreateShapeActivity Function(Editor editor) get activityFactory => CreateContainerActivity.new;
 
   @override

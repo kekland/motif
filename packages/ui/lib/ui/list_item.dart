@@ -29,6 +29,7 @@ class const ListItem({
           if (leading != null) ...[
             DefaultForegroundStyle(
               color: iconColor,
+              iconSize: 18.0,
               child: leading!,
             ),
             const SizedBox(width: 4.0),
@@ -39,7 +40,7 @@ class const ListItem({
               crossAxisAlignment: .baseline,
               children: [
                 DefaultForegroundStyle(
-                  style: context.typography.subtitle.copyWith(color: titleColor),
+                  style: context.typography.body.copyWith(color: titleColor),
                   child: title,
                 ),
                 if (footnote != null) ...[
@@ -61,6 +62,29 @@ class const ListItem({
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class const CheckboxListItem({
+  super.key,
+  required final Widget title,
+  final Widget? leading,
+  final Widget? footnote,
+  required final ReadonlySignal<bool> value,
+  final ValueChanged<bool>? onChanged,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListItem(
+      onTap: onChanged != null ? () => onChanged!(!value()) : null,
+      title: title,
+      leading: leading,
+      footnote: footnote,
+      trailing: Checkbox(
+        value: value,
+        onChanged: onChanged,
       ),
     );
   }

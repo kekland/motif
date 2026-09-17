@@ -10,7 +10,7 @@ mixin KeyboardListenerDragActivity on DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     HardwareKeyboard.instance.removeHandler(_handler);
     super.onEnd(details);
   }
@@ -55,7 +55,7 @@ mixin ExclusiveCursorDragActivity on DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     _release();
     super.onEnd(details);
   }

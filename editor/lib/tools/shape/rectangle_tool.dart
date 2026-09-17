@@ -8,6 +8,9 @@ class const RectangleTool() extends ShapeTool {
   String get key => 'rectangle';
 
   @override
+  String resolveName(BuildContext context) => 'Rectangle';
+
+  @override
   CreateShapeActivity Function(Editor editor) get activityFactory => CreateRectangleActivity.new;
 
   @override

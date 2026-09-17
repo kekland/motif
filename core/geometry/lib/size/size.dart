@@ -8,6 +8,9 @@ extension type Size2._(Vec2 vec) {
   double get width => vec.x;
   double get height => vec.y;
 
+  double get longest => width > height ? width : height;
+  double get shortest => width > height ? height : width;
+
   Size2 operator +(Size2 other) => ._(vec + other.vec);
   Size2 operator -(Size2 other) => ._(vec - other.vec);
   Size2 operator *(double scalar) => ._(vec * scalar);

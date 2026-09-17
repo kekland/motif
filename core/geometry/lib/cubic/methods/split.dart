@@ -28,7 +28,7 @@ List<double> _sortAndValidateSplitsList(List<double> v, double min, double max, 
 
   for (var i = 1; i < sorted.length; i++) {
     if ((sorted[i] - sorted[i - 1]).abs() < tolerance) {
-      throw ArgumentError.value(sorted, 'v', 'values must be unique (also not near-coincident)');
+      throw ArgumentError.value(sorted.join(', '), 'v', 'values must be unique (also not near-coincident)');
     }
   }
 

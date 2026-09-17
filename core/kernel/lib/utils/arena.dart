@@ -1,6 +1,6 @@
 part of '../kernel.dart';
 
-const int _baseSize = _arenaListBaseSize;
+const int _baseSize = storageBaseSize;
 
 abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStorage<I, THandle, T>> {
   var gen = Uint32List(_baseSize);

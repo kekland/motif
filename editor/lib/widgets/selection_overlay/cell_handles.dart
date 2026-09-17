@@ -104,12 +104,16 @@ class CellHandlesRenderObject extends RenderBox {
         final kind = ref.kind;
 
         if (kind == .vertex) {
-          final handle = bundle.vertex(ref.asVertex)!;
+          final handle = bundle.vertex(ref.asVertex);
+          if (handle == null) continue;
+
           extendedRefs.add(ref);
           final covertices = bundle.vertexUses(handle).map((cv) => cv.ref(bundle));
           extendedRefs.addAll(covertices);
         } else if (kind == .edge) {
-          final handle = bundle.edge(ref.asEdge)!;
+          final handle = bundle.edge(ref.asEdge);
+          if (handle == null) continue;
+
           extendedRefs.add(ref);
           extendedRefs.addAll(bundle.cellDependencies(ref));
           final covertices = bundle.edgeCovertices(handle).map((cv) => cv.ref(bundle));
@@ -118,7 +122,9 @@ class CellHandlesRenderObject extends RenderBox {
           extendedRefs.add(ref);
           extendedRefs.addAll(bundle.cellDependencies(ref));
         } else {
-          final handle = bundle.frame(ref.asFrame)!;
+          final handle = bundle.frame(ref.asFrame);
+          if (handle == null) continue;
+
           final children = bundle.frameChildren(handle).where((c) => c.kind != .frame);
           final childRefs = children.map((c) => c.ref(bundle));
           for (final r in childRefs) {

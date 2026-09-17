@@ -1,6 +1,6 @@
 part of '../program.dart';
 
-final class GeneratorStatement extends Statement {
+final class GeneratorStatement extends Statement with GeneratingStatement {
   new({
     required List<FragmentSelector> selectors,
     required this.generator,
@@ -27,6 +27,7 @@ final class GeneratorStatement extends Statement {
     }
   }
 
+  @override
   Iterable<Statement> generate(EvalContext context) {
     final inputs = selectors.map((s) => context.resolve(s)).toList();
     final input = ProgramSlice.merged(

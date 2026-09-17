@@ -101,11 +101,11 @@ class ConnectSocketActivity extends DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     super.onEnd(details);
     editor.transientConnections.remove(connection);
 
-    final endHitTest = editor.hitTestSockets(details?.globalPosition ?? lastUpdateDetails!.globalPosition);
+    final endHitTest = editor.hitTestSockets(details.globalPosition);
     for (final hit in endHitTest) {
       editor.connect(targetSocket.ref, hit.socket.ref);
       break;

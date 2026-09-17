@@ -8,6 +8,9 @@ class const PolygonTool() extends ShapeTool {
   String get key => 'polygon';
 
   @override
+  String resolveName(BuildContext context) => 'Polygon';
+
+  @override
   CreateShapeActivity Function(Editor editor) get activityFactory => CreatePolygonActivity.new;
 
   @override

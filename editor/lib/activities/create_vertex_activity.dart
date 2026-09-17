@@ -6,10 +6,16 @@ class CreateVertexActivity extends DragActivity {
     required this.editor,
     required this.onTransientEdgeCreated,
     required this.onTransientEdgeCompleted,
+    required this.edgeStyle,
     this.existingTransientEdge,
+    this.topological = true,
+    this.destructive = true,
   });
 
   final Editor editor;
+  final bool topological;
+  final bool destructive;
+  final EdgeStyle edgeStyle;
 
   final TransientEdge? existingTransientEdge;
   final ValueChanged<TransientEdge> onTransientEdgeCreated;
@@ -28,10 +34,23 @@ class CreateVertexActivity extends DragActivity {
     if (existingTransientEdge != null) {
       transientEdge = existingTransientEdge!;
 
-      final endVertex = editor.edit((txn) => txn.embedVertex(hitTest), mergeKey: mergeKey);
+      final endVertex = editor.edit(
+        (txn) => txn.embedVertex(
+          hitTest,
+          topological: topological,
+          destructive: destructive,
+        ),
+        mergeKey: mergeKey,
+      );
+
       transientEdge.end = editor.bundle.vertexPosition(editor.handleOf(endVertex)!, space: .root);
     } else {
-      transientEdge = editor.transientEdges.createWithHitTest(hitTest);
+      transientEdge = editor.transientEdges.createWithHitTest(
+        hitTest,
+        topological: topological,
+        destructive: destructive,
+      );
+
       onTransientEdgeCreated(transientEdge);
     }
   }
@@ -56,7 +75,7 @@ class CreateVertexActivity extends DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     super.onEnd(details);
 
     if (!didPassThreshold) {
@@ -71,7 +90,14 @@ class CreateVertexActivity extends DragActivity {
       // Commit the transient edge.
       final endPosition = transientEdge.end!;
       final endHitTest = editor.hitTestScene(endPosition);
-      final newTransient = transientEdge.commit(endHitTest: endHitTest, startNewEdge: true);
+      final newTransient = transientEdge.commit(
+        endHitTest: endHitTest,
+        startNewEdge: true,
+        topological: topological,
+        destructive: destructive,
+        edgeStyle: edgeStyle,
+      );
+
       onTransientEdgeCompleted(transientEdge);
       if (newTransient != null) onTransientEdgeCreated(newTransient);
     }

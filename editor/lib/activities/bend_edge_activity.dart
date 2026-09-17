@@ -70,7 +70,7 @@ final class BendEdgeActivity extends DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     _transaction?.commit(mergeKey: mergeKey);
     super.onEnd(details);
   }

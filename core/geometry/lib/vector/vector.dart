@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:geometry/geometry.dart';
+import 'package:shared/shared.dart';
 
 extension type Vec2List._(Float64x2List value) implements Float64x2List {
   Vec2List(int length) : this._(Float64x2List(length));
@@ -23,6 +24,7 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
   Vec2.zero() : this._(.zero());
   Vec2.min(Vec2 a, Vec2 b) : this._(a.value.min(b.value));
   Vec2.max(Vec2 a, Vec2 b) : this._(a.value.max(b.value));
+  Vec2.lerp(Vec2 a, Vec2 b, double t) : this._(.new(lerp(a.x, b.x, t), lerp(a.y, b.y, t)));
 
   Vec2 operator +(Vec2 other) => .from(value + other);
   Vec2 operator -(Vec2 other) => .from(value - other);

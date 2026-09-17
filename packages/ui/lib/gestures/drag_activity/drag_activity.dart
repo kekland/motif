@@ -41,7 +41,7 @@ abstract class DragActivity {
   }
 
   @mustCallSuper
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     _onEnd?.call();
   }
 

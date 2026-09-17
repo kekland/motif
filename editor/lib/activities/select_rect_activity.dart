@@ -40,7 +40,7 @@ class SelectRectActivity extends DragActivity {
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     onRectChanged(null);
     super.onEnd(details);
   }

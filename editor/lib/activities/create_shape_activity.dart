@@ -64,7 +64,7 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
   }
 
   @override
-  void onEnd(DragEndDetails? details) {
+  void onEnd(DragEndDetails details) {
     transaction!.commit(mergeKey: mergeKey);
     editor.tool.activeTool = tools.cursor;
     super.onEnd(details);

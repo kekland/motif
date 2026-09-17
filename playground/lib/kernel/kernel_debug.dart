@@ -70,7 +70,7 @@ class KernelDebug extends StatelessWidget {
         child: Center(
           child: bundle != null
               ? CustomPaint(
-                  painter: BundlePainter(bundle: bundle),
+                  painter: DebugBundlePainter(bundle: bundle),
                   size: .square(1.0),
                 )
               : Text(error ?? 'Unknown error'),

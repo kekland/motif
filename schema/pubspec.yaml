@@ -9,7 +9,7 @@ dependencies:
   protobuf: ^6.0.0
   fixnum: ^1.1.1
 
-  u64:
+  shared:
   color:
   geometry:
   kernel:

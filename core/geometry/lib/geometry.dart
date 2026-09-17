@@ -10,3 +10,4 @@ export 'utils/rotation.dart';
 export 'utils/constants.dart';
 export 'utils/intersection.dart';
 export 'line/line_segment.dart';
+export 'stroke/stroke.dart';

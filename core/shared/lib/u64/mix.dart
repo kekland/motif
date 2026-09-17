@@ -1,4 +1,4 @@
-import 'package:u64/u64.dart';
+import '../shared.dart';
 
 abstract final class Mix64 {
   static const _two32 = 0x100000000;

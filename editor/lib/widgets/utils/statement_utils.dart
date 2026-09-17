@@ -16,6 +16,7 @@ extension StatementUtils on Statement {
     FilletFaceStatement() => 'Fillet face',
     DissolveStatement() => 'Dissolve',
     GeneratorStatement() => 'Generator',
+    GeneratingStatement() => unreachable(),
     PlacedStatement() => unreachable(),
   };
 

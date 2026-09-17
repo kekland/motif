@@ -19,7 +19,7 @@ class ToolOverlay extends HookWidget {
       controller: overlayController,
       overlayChildBuilder: (context, info) {
         if (tool == null) return const SizedBox.shrink();
-        return tool!.buildViewportOverlay(context, info);
+        return tool!.buildViewportOverlay(context, info, tool!);
       },
       child: child,
     );

@@ -2,9 +2,14 @@ import 'package:editor/imports.dart';
 import 'package:editor/widgets/handles/cell_handles_painters.dart';
 
 class TransientEdgesWidget extends HookWidget {
-  const TransientEdgesWidget({super.key, required this.transform});
+  const TransientEdgesWidget({
+    super.key,
+    required this.transform,
+    this.topological = true,
+  });
 
   final Matrix4 transform;
+  final bool topological;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class TransientEdgesWidget extends HookWidget {
           _TransientEdgeWidget(
             edge: edge,
             transform: transform,
+            topological: topological,
           ),
       ],
     );
@@ -24,10 +30,16 @@ class TransientEdgesWidget extends HookWidget {
 }
 
 class _TransientEdgeWidget extends HookWidget {
-  const _TransientEdgeWidget({super.key, required this.edge, required this.transform});
+  const _TransientEdgeWidget({
+    super.key,
+    required this.edge,
+    required this.transform,
+    required this.topological,
+  });
 
   final TransientEdge edge;
   final Matrix4 transform;
+  final bool topological;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +51,7 @@ class _TransientEdgeWidget extends HookWidget {
         transform: transform,
         primaryColor: context.colors.selection.primary,
         secondaryColor: context.colors.selection.secondary,
+        topological: topological,
       ),
     );
   }
@@ -50,12 +63,14 @@ class _TransientEdgePainter extends CustomPainter {
     required this.transform,
     required this.primaryColor,
     required this.secondaryColor,
+    required this.topological,
   });
 
   final TransientEdge edge;
   final Matrix4 transform;
   final Color primaryColor;
   final Color secondaryColor;
+  final bool topological;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -76,9 +91,11 @@ class _TransientEdgePainter extends CustomPainter {
       paintCovertexHandle(canvas, p2, primaryColor, secondaryColor);
     }
 
-    for (final intersection in edge.intersections) {
-      final p = intersection.point.offset;
-      paintIntersectionHandle(canvas, MatrixUtils.transformPoint(transform, p), primaryColor, secondaryColor);
+    if (topological) {
+      for (final intersection in edge.intersections) {
+        final p = intersection.point.offset;
+        paintIntersectionHandle(canvas, MatrixUtils.transformPoint(transform, p), primaryColor, secondaryColor);
+      }
     }
   }
 
@@ -87,5 +104,6 @@ class _TransientEdgePainter extends CustomPainter {
       oldDelegate.edge != edge ||
       oldDelegate.primaryColor != primaryColor ||
       oldDelegate.secondaryColor != secondaryColor ||
-      oldDelegate.transform != transform;
+      oldDelegate.transform != transform ||
+      oldDelegate.topological != topological;
 }

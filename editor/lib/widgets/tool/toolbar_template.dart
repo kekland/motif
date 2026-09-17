@@ -29,7 +29,7 @@ class ToolbarTemplate extends StatelessWidget {
           mainAxisSize: .min,
           children: [
             Tooltip(
-              tooltip: Text(tool.key),
+              tooltip: Text(tool.resolveName(context)),
               shortcut: tool.shortcut,
               child: ToolbarButton(
                 key: ValueKey(tool.key),

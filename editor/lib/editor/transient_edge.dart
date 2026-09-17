@@ -43,24 +43,51 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
 
   Cubic2 get cubic => Cubic2(start, end ?? start, p1: cStart, p2: cEnd);
 
-  List<EdgeRef> _performCommit(SceneHitResult? endHitTest) {
+  List<EdgeRef> _performCommit(
+    SceneHitResult? endHitTest, {
+    bool topological = true,
+    bool destructive = true,
+    EdgeStyle edgeStyle = .default_,
+  }) {
     if (_end == null) return [];
 
     return editor.edit((txn) {
       late final VertexRef endVertex;
       if (endHitTest != null) {
-        endVertex = txn.embedVertex(endHitTest);
+        endVertex = txn.embedVertex(endHitTest, topological: topological, destructive: destructive);
       } else {
         endVertex = txn.insert(VertexStatement(end!)).ref;
       }
 
-      final result = txn.embedEdge(startVertex, endVertex, cubic);
+      txn.flush();
+      final result = txn.embedEdge(
+        startVertex,
+        endVertex,
+        cubic,
+        topological: topological,
+        destructive: destructive,
+        style: edgeStyle,
+      );
+
       return result;
     }, mergeKey: mergeKey);
   }
 
-  TransientEdge? commit({SceneHitResult? endHitTest, bool startNewEdge = false}) {
-    return editor.transientEdges.commit(this, endHitTest: endHitTest, startNewEdge: startNewEdge);
+  TransientEdge? commit({
+    SceneHitResult? endHitTest,
+    bool startNewEdge = false,
+    bool topological = true,
+    bool destructive = true,
+    EdgeStyle edgeStyle = .default_,
+  }) {
+    return editor.transientEdges.commit(
+      this,
+      endHitTest: endHitTest,
+      startNewEdge: startNewEdge,
+      topological: topological,
+      destructive: destructive,
+      edgeStyle: edgeStyle,
+    );
   }
 
   List<Intersection> get intersections {
@@ -94,14 +121,39 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     return edge;
   }
 
-  TransientEdge createWithHitTest(SceneHitResult hitTest, {Vec2? cStart}) {
+  TransientEdge createWithHitTest(
+    SceneHitResult hitTest, {
+    Vec2? cStart,
+    bool topological = true,
+    bool destructive = true,
+  }) {
     final mergeKey = Object();
-    final ref = editor.edit((txn) => txn.embedVertex(hitTest), mergeKey: mergeKey);
+    final ref = editor.edit(
+      (txn) => txn.embedVertex(
+        hitTest,
+        topological: topological,
+        destructive: destructive,
+      ),
+      mergeKey: mergeKey,
+    );
+
     return create(ref, cStart: cStart, mergeKey: mergeKey);
   }
 
-  TransientEdge? commit(TransientEdge edge, {SceneHitResult? endHitTest, bool startNewEdge = false}) {
-    final newEdges = edge._performCommit(endHitTest);
+  TransientEdge? commit(
+    TransientEdge edge, {
+    SceneHitResult? endHitTest,
+    bool startNewEdge = false,
+    bool topological = true,
+    bool destructive = true,
+    EdgeStyle edgeStyle = .default_,
+  }) {
+    final newEdges = edge._performCommit(
+      endHitTest,
+      topological: topological,
+      destructive: destructive,
+      edgeStyle: edgeStyle,
+    );
     remove(edge);
 
     if (startNewEdge && newEdges.isNotEmpty) {

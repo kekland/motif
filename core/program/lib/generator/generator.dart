@@ -1,7 +1,7 @@
 import 'package:blueprint/core.dart';
 import 'package:geometry/geometry.dart';
 import 'package:program/program.dart';
-import 'package:u64/u64.dart';
+import 'package:shared/shared.dart';
 
 import 'generator.g.dart';
 

@@ -28,7 +28,7 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
     onCancel = () {
       if (_currentActivity == null) return;
-      _releaseActivity(null, cancel: true);
+      _releaseActivity(null);
     };
   }
 
@@ -43,8 +43,8 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
     currentActivity?._pointerEvent = _lastPointerEvent;
   }
 
-  void _releaseActivity(DragEndDetails? details, {bool cancel = false}) {
-    if (!cancel) {
+  void _releaseActivity(DragEndDetails? details) {
+    if (details != null) {
       _currentActivity?.onEnd(details);
     } else {
       _currentActivity?.onCancel();
@@ -68,7 +68,7 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
     if (!activity.shouldAcceptPanZoom(event)) {
       resolvePointer(event.pointer, .rejected);
-      _releaseActivity(null, cancel: true);
+      _releaseActivity(null);
       return;
     }
 
@@ -88,7 +88,7 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
     if (!activity.shouldAccept(event)) {
       resolvePointer(event.pointer, .rejected);
-      _releaseActivity(null, cancel: true);
+      _releaseActivity(null);
       return;
     }
 
@@ -109,7 +109,7 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
       }
 
       _trackedPointers.clear();
-      _releaseActivity(null, cancel: true);
+      _releaseActivity(null);
       return;
     }
 
