@@ -10,17 +10,38 @@ class CanvasContextMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContextMenuDetector(
-      onShow: (context, details) {
+    return GestureDetector(
+      onSecondaryTapDown: (details) async {
         final hitTest = context.editor.hitTest(details.globalPosition);
         if (hitTest.top != null) context.editor.selection.set(hitTest.top!.ref);
 
-        return [
+        final actions = <CommandAction>[
           CopySelectionAction(),
           PasteAction(),
           SetZOrderTopAction(),
           SetZOrderBottomAction(),
         ];
+
+        final items = actions
+            .map(
+              (a) => ContextMenuItem(
+                a,
+                label: a.descriptor.command,
+                shortcut: a.descriptor.resolveShortcut(context).firstOrNull,
+              ),
+            )
+            .toList();
+
+        final action = await ContextMenu.push<CommandAction?>(
+          context,
+          ContextMenu(items),
+          details: details,
+        );
+
+        if (action != null && context.mounted) {
+          final intent = action.descriptor.build(context, []);
+          context.invoke(intent);
+        }
       },
       child: child,
     );

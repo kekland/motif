@@ -12,10 +12,7 @@ class const StatementWidget({
 
     return ListItem(
       onTap: () {
-        final editor = context.editor;
-        final products = editor.productsOf(statement.id);
-        final selection = editor.selection;
-        selection.setMultiple(products);
+        context.editor.selection.setStatement(statement.id);
       },
       leading: icon,
       title: Text(name),

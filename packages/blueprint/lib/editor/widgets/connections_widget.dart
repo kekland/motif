@@ -194,10 +194,22 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
 
     return result;
   }
+
+  List<NodeHitTestEntry> hitTestNodes(Offset position) {
+    final result = BoxHitTestResult();
+    hitTest(result, position: position);
+    return result.path.whereType<NodeHitTestEntry>().toList();
+  }
 }
 
 class SocketHitTestEntry extends BoxHitTestEntry {
   SocketHitTestEntry(super.target, super.localPosition, {required this.socket});
 
   final Socket socket;
+}
+
+class NodeHitTestEntry extends BoxHitTestEntry {
+  NodeHitTestEntry(super.target, super.localPosition, {required this.node});
+
+  final Node node;
 }

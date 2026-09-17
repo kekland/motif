@@ -7,6 +7,7 @@
 - [ ] Rework window system to work with the portals
 - [ ] Commander arguments
 - [ ] Variables and variable binding
+- [ ] Color data partials
 
 Wed
 - [x] Cubic-cubic intersections
@@ -21,9 +22,10 @@ Wed
 Thu
 - [x] Tool panel
 - [x] Topological/non-destructive switch on pen/pencil
-- [ ] Editor tabs (generators, variables)
+- [?] Proper modifiers section      (Add done, missing: properties, display)
+- [x] Global context menu manager
+- [x] Editor tabs (generators, variables)
 - [ ] Generator statement nodes implementations
-- [ ] Proper modifiers section
 - [ ] Fix generator statement dissolution/deletion
 
 Fri

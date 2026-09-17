@@ -3,15 +3,15 @@ part of '../prop.dart';
 final class ModifierStackWidget extends StatelessWidget {
   const new({
     super.key,
-    required this.id,
+    required this.statements,
   });
 
-  final StatementId id;
+  final List<Statement> statements;
 
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final modifiers = editor.scene.evaluation.stackOf(id);
+    final modifiers = editor.scene.evaluation.stackOf(statements.first.id);
 
     return Column(
       children: [
@@ -26,13 +26,8 @@ final class ModifierStackWidget extends StatelessWidget {
                 onTap: () {},
                 child: Icons.visibility(),
               ),
-              IconButton(
-                isFilled: false,
-                onTap: () {
-                  final modifier = GeneratorStatement(selectors: [.new(id)], generator: .empty());
-                  context.editor.edit((txn) => txn.attach(id, modifier));
-                },
-                child: Icons.add(),
+              ModifierAddButton(
+                statements: statements,
               ),
             ],
           ),
@@ -64,6 +59,42 @@ final class ModifierStackWidget extends StatelessWidget {
           ],
         ],
       ],
+    );
+  }
+}
+
+class ModifierAddButton extends StatelessWidget {
+  const new({
+    super.key,
+    required this.statements,
+  });
+
+  final List<Statement> statements;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      isFilled: false,
+      child: Icons.add(),
+      onTap: () async {
+        final possibleModifiers = context.editor.evaluation.possibleModifiersFor(statements);
+        final items = possibleModifiers.map(
+          (f) => ContextMenuItem(
+            f,
+            label: f.type.name(context),
+            icon: f.type.icon(context),
+          ),
+        );
+
+        final result = await ContextMenu.push<ModifierFactory>(
+          context,
+          .new(items.toList()),
+        );
+
+        if (result != null && context.mounted) {
+          context.editor.edit((txn) => result.apply(txn));
+        }
+      },
     );
   }
 }

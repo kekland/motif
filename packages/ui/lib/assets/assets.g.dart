@@ -448,6 +448,7 @@ class Icons extends _BaseIcon {
   const Icons.variable({super.key, super.size, super.color}): super.iconData(icon: Symbols.style_rounded);
   const Icons.checkbox({super.key, super.size, super.color}): super.iconData(icon: Symbols.check_box_outline_blank_rounded);
   const Icons.checkbox_checked({super.key, super.size, super.color}): super.iconData(icon: Symbols.check_box_rounded);
+  const Icons.fillet({super.key, super.size, super.color}): super.iconData(icon: Symbols.rounded_corner_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

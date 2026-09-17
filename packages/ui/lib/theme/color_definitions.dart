@@ -44,6 +44,7 @@ typedef AppColors = ({
   AppAccentColors accent,
   AppDangerColors danger,
   AppSelectionColors selection,
+  AppSelectionColors selectionAlt,
   Color divider,
   Color tint,
   Color normal,

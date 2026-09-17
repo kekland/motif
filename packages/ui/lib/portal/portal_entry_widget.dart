@@ -43,6 +43,10 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     } else {
       _animationController.value = 1.0;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_focusNode.hasFocus) _focusNode.requestFocus();
+    });
   }
 
   Future<void> onPop() async {
@@ -83,7 +87,9 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
             Positioned.fill(
               child: Listener(
                 behavior: .opaque,
-                onPointerDown: (_) => entry.pop(),
+                onPointerDown: (_) {
+                  entry.pop();
+                },
               ),
             ),
           ],
@@ -98,11 +104,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
 
               return .ignored;
             },
-            child: Focus(
-              focusNode: _focusNode,
-              autofocus: true,
-              child: child,
-            ),
+            child: child,
           ),
         ],
       ),
@@ -112,7 +114,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
 
 Widget _defaultAnchorBuilder(BuildContext context, PortalAnchor? anchor, Widget child) {
   return PortalPositioned(
-    edgePadding: const EdgeInsets.all(16.0),
+    edgePadding: const EdgeInsets.all(8.0),
     anchor: anchor,
     child: child,
   );

@@ -11,4 +11,5 @@ export 'actions/_intents.dart';
 export 'activities/activities.dart';
 export 'editor.dart';
 export 'tools/tools.dart';
+export 'modifiers/modifiers.dart';
 export 'widgets/widgets.dart';

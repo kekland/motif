@@ -42,6 +42,12 @@ class Evaluation {
   }
 
   @pragma('vm:prefer-inline')
+  Statement statementAt(int i) {
+    if (i < 0 || i >= _order.length) throw RangeError.index(i, _order, 'i');
+    return _order[i];
+  }
+
+  @pragma('vm:prefer-inline')
   Statement? rootStatement(StatementId id) {
     return statement(rootOf(id));
   }

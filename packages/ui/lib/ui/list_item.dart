@@ -45,9 +45,13 @@ class const ListItem({
                 ),
                 if (footnote != null) ...[
                   const SizedBox(width: 4.0),
-                  DefaultForegroundStyle(
-                    style: context.typography.footnote.tertiary,
-                    child: footnote!,
+                  Flexible(
+                    child: DefaultForegroundStyle(
+                      style: context.typography.footnote.tertiary,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      child: footnote!,
+                    ),
                   ),
                 ],
               ],

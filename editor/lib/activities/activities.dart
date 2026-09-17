@@ -7,3 +7,4 @@ export 'rotate_activity.dart';
 export 'select_rect_activity.dart';
 export 'bend_edge_activity.dart';
 export 'pencil_freehand_stroke_activity.dart';
+export 'marquee_activity.dart';

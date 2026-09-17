@@ -55,6 +55,7 @@ Future<void> main() async {
     .new('variable', 'Symbols.style_rounded'),
     .new('checkbox', 'Symbols.check_box_outline_blank_rounded'),
     .new('checkbox_checked', 'Symbols.check_box_rounded'),
+    .new('fillet', 'Symbols.rounded_corner_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

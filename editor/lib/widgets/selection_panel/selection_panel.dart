@@ -34,7 +34,7 @@ class SelectionPanel extends HookWidget {
             CellPanel(refs: selectedCells.toList()),
             Divider(),
           ],
-          StatementPanel(statements: selectedStatements.toList()),
+          StatementPanel(statementIds: selectedStatements.toList()),
         ],
       ),
     );

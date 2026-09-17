@@ -9,11 +9,12 @@ part 'drag_activity_mixins.dart';
 part 'drag_activity_recognizer.dart';
 
 abstract class DragActivity {
-  DragActivity({this._onStart, this._onUpdate, this._onEnd});
+  DragActivity({this._onStart, this._onUpdate, this._onEnd, this._onCancel});
 
   final VoidCallback? _onStart;
   final VoidCallback? _onUpdate;
   final VoidCallback? _onEnd;
+  final VoidCallback? _onCancel;
 
   late final PositionedGestureDetails startDetails;
   DragUpdateDetails? _lastUpdateDetails;
@@ -45,7 +46,8 @@ abstract class DragActivity {
     _onEnd?.call();
   }
 
+  @mustCallSuper
   void onCancel() {
-    _onEnd?.call();
+    _onCancel?.call();
   }
 }

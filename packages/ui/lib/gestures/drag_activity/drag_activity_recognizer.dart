@@ -30,6 +30,8 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
       if (_currentActivity == null) return;
       _releaseActivity(null);
     };
+
+    HardwareKeyboard.instance.addHandler(_keyboardListener);
   }
 
   DragActivityFactory<T> factory;
@@ -51,6 +53,15 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
     }
 
     _currentActivity = null;
+  }
+
+  bool _keyboardListener(KeyEvent event) {
+    if (event is KeyDownEvent && event.logicalKey == .escape) {
+      _releaseActivity(null);
+      return true;
+    }
+
+    return false;
   }
 
   final Set<int> _trackedPointers = <int>{};
@@ -133,6 +144,8 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(_keyboardListener);
+
     final activity = _currentActivity;
     _currentActivity = null;
     _trackedPointers.clear();

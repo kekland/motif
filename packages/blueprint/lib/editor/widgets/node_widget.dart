@@ -18,40 +18,43 @@ class NodeWidget extends HookWidget {
 
     final color = context.watch<BlueprintColorResolvers>();
 
-    final child = Surface(
-      width: 160.0,
-      color: context.colors.surface.primary,
-      borderSide: .new(color: context.colors.divider),
-      clipBehavior: .none,
-      shadows: context.shadows.small,
-      borderRadius: .circular(4.0),
-      child: Column(
-        mainAxisSize: .min,
-        children: [
-          SizedBox(
-            width: .infinity,
-            height: 24.0,
-            child: Surface(
-              color: color.resolve(node.category) ?? context.colors.surface.secondary,
-              borderRadius: .vertical(top: .circular(4.0)),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    node.name,
-                    style: context.typography.body,
+    final child = _NodeWidget(
+      node: node,
+      child: Surface(
+        width: 160.0,
+        color: context.colors.surface.primary,
+        borderSide: .new(color: context.colors.divider),
+        clipBehavior: .none,
+        shadows: context.shadows.small,
+        borderRadius: .circular(4.0),
+        child: Column(
+          mainAxisSize: .min,
+          children: [
+            SizedBox(
+              width: .infinity,
+              height: 24.0,
+              child: Surface(
+                color: color.resolve(node.category) ?? context.colors.surface.secondary,
+                borderRadius: .vertical(top: .circular(4.0)),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      node.name,
+                      style: context.typography.body,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Divider(),
-          const SizedBox(height: 4.0),
-          for (final input in node.inputs) NodeInputSocketWidget(editor: editor, socket: input),
-          for (final output in node.outputs) NodeOutputSocketWidget(socket: output),
-          const SizedBox(height: 4.0),
-        ],
+            Divider(),
+            const SizedBox(height: 4.0),
+            for (final input in node.inputs) NodeInputSocketWidget(editor: editor, socket: input),
+            for (final output in node.outputs) NodeOutputSocketWidget(socket: output),
+            const SizedBox(height: 4.0),
+          ],
+        ),
       ),
     );
 
@@ -160,5 +163,47 @@ class NodeOutputSocketWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _NodeWidget extends SingleChildRenderObjectWidget {
+  const _NodeWidget({
+    super.key,
+    required this.node,
+    super.child,
+  });
+
+  final Node node;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return NodeRenderObject(node: node);
+  }
+
+  @override
+  void updateRenderObject(BuildContext context, NodeRenderObject renderObject) {
+    renderObject.node = node;
+  }
+}
+
+class NodeRenderObject extends RenderProxyBox {
+  NodeRenderObject({required this._node});
+
+  Node _node;
+  Node get node => _node;
+  set node(Node value) {
+    _node = value;
+    markNeedsLayout();
+  }
+
+  @override
+  bool hitTest(BoxHitTestResult result, {required Offset position}) {
+    if (size.contains(position)) {
+      if (hitTestChildren(result, position: position) || hitTestSelf(position)) {
+        result.add(NodeHitTestEntry(this, position, node: node));
+        return true;
+      }
+    }
+    return false;
   }
 }

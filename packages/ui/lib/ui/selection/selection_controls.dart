@@ -12,8 +12,10 @@ class SelectionControls extends StatelessWidget {
     this.onRotate,
     this.childSize,
     this.padding = 0.0,
+    this.showHandles = true,
     this.transform,
     this.trailing,
+    this.colors,
   });
 
   final Mat4? transform;
@@ -22,6 +24,8 @@ class SelectionControls extends StatelessWidget {
   final DragActivity Function(Side)? onSideResize;
   final DragActivity Function(Corner)? onCornerResize;
   final DragActivity Function(Corner)? onRotate;
+  final bool showHandles;
+  final AppSelectionColors? colors;
   final Size? childSize;
   final double padding;
   final Widget? trailing;
@@ -153,7 +157,7 @@ class SelectionControls extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: context.colors.selection.primary,
+                  color: colors?.primary ?? context.colors.selection.primary,
                   width: 1.0,
                   strokeAlign: BorderSide.strokeAlignCenter,
                 ),
@@ -184,14 +188,16 @@ class SelectionControls extends StatelessWidget {
           ),
         ),
 
-        for (final p in quad)
-          Positioned(
-            left: p.x - 4.0,
-            top: p.y - 4.0,
-            child: IgnorePointer(child: SelectionCornerResizeHandleIcon()),
-          ),
+        if (showHandles) ...[
+          for (final p in quad)
+            Positioned(
+              left: p.x - 4.0,
+              top: p.y - 4.0,
+              child: IgnorePointer(child: SelectionCornerResizeHandleIcon(colors: colors)),
+            ),
+        ],
 
-        if (trailing != null || childSize != null)
+        if (showHandles && (trailing != null || childSize != null))
           Positioned(
             left: minQuadEdgeCenter.x,
             top: minQuadEdgeCenter.y,
@@ -202,7 +208,12 @@ class SelectionControls extends StatelessWidget {
                 child: OverflowHitTestableSizedOverflowBox(
                   size: .zero,
                   alignment: .topCenter,
-                  child: trailing ?? SelectionSizeInfoBox(size: childSize!),
+                  child:
+                      trailing ??
+                      SelectionSizeInfoBox(
+                        size: childSize!,
+                        colors: colors,
+                      ),
                 ),
               ),
             ),

@@ -15,18 +15,18 @@ PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create) {
   return ref.value!;
 }
 
-class PortalEntryManager<T> {
-  PortalEntry<T>? _entry;
-  PortalEntry<T>? get entry => _entry;
+class PortalEntryManager {
+  PortalEntry? _entry;
+  PortalEntry? get entry => _entry;
 
   bool get isActive => _entry?.isActive ?? false;
 
-  void push(BuildContext context, PortalEntry<T> entry, {PortalAnchor? anchor}) {
+  Future<T?> push<T>(BuildContext context, PortalEntry<T> entry, {PortalAnchor? anchor}) {
     if (_entry != null && _entry!.isActive) {
       _entry!.pop(force: true);
     }
     _entry = entry;
-    _entry!.push(context, anchor: anchor);
+    return entry.push(context, anchor: anchor);
   }
 
   void pop({bool force = false}) {
@@ -35,13 +35,17 @@ class PortalEntryManager<T> {
     }
     _entry = null;
   }
+
+  void dispose() {
+    pop(force: true);
+  }
 }
 
-PortalEntryManager<T> usePortalEntryManager<T>() {
-  final ref = useRef(PortalEntryManager<T>());
+PortalEntryManager usePortalEntryManager() {
+  final ref = useRef(PortalEntryManager());
 
   useEffect(() {
-    return () => ref.value.pop(force: true);
+    return () => ref.value.dispose();
   }, const []);
 
   return ref.value;

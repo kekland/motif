@@ -92,6 +92,10 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
       primary: scheme.primaryContainer,
       secondary: _mixColor(surfaceColors.tertiary.background, scheme.primaryContainer, 0.25),
     ),
+    selectionAlt: (
+      primary: scheme.tertiaryContainer,
+      secondary: _mixColor(surfaceColors.tertiary.background, scheme.tertiaryContainer, 0.25),
+    ),
     divider: divider,
     tint: scheme.surfaceTint,
     shadow: scheme.shadow,

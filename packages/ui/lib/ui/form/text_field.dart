@@ -112,7 +112,6 @@ class TextField extends HookWidget {
     );
 
     final hadFocus = useRef(false);
-
     final fieldFocusNode = useFocusNode(skipTraversal: true);
 
     useListenerEffect(

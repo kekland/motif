@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:shared/shared.dart';
 import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';

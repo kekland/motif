@@ -45,7 +45,7 @@ class _CursorToolOverlay extends HookWidget {
     useListenable(selection);
 
     final hoveredCell = useState<Ref?>(null);
-    final marqueeRect = useState<(Rect, HitTestRectMode)?>(null);
+    final marqueeRect = useState<MarqueeValue?>(null);
     final shouldUpdateSelectionOnUp = useRef(true);
     final isSelectionMove = useRef(false);
 
@@ -57,6 +57,9 @@ class _CursorToolOverlay extends HookWidget {
         isSelectionMove.value = false;
         if (!shouldUpdateSelectionOnUp.value || clicked == null) return;
         context.invoke(intents.selectRef(clicked));
+      },
+      onCancel: () {
+        isSelectionMove.value = false;
       },
     );
 
@@ -111,12 +114,12 @@ class _CursorToolOverlay extends HookWidget {
                 } else {
                   return SelectRectActivity(
                     editor: editor,
-                    onRectChanged: (r) => marqueeRect.value = r,
+                    onLocalRectChanged: (r) => marqueeRect.value = r,
                   );
                 }
               },
             ),
-            SelectRectOverlay(rect: marqueeRect.value?.$1, mode: marqueeRect.value?.$2),
+            MarqueeOverlay(rect: marqueeRect.value?.$1, mode: marqueeRect.value?.$2),
             CellSelectionOverlay(
               editor: editor,
               childPaintTransform: info.childPaintTransform,

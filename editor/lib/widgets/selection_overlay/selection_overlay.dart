@@ -48,12 +48,16 @@ class CellSelectionGroupOverlay extends HookWidget {
     required this.editor,
     required this.childPaintTransform,
     this.onMove,
+    this.showHandles = true,
+    this.colors,
   });
 
   final Iterable<Ref> refs;
   final Editor editor;
   final Matrix4 childPaintTransform;
   final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
+  final AppSelectionColors? colors;
+  final bool showHandles;
 
   @override
   Widget build(BuildContext context) {
@@ -74,18 +78,18 @@ class CellSelectionGroupOverlay extends HookWidget {
     }) {
       final isZero = childSize.width == 0.0 || childSize.height == 0.0;
 
-      final onMove = this.onMove ?? (_, refs) => MoveActivity(editor, refs);
-
       return SelectionControls(
         key: ValueKey(refHash),
         transform: transform,
         layoutSize: layoutSize,
-        onMove: (e) => onMove(e, refs),
+        onMove: (e) => onMove?.call(e, refs),
         onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s),
         onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c),
         onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c),
         padding: gesturePadding,
         childSize: childSize,
+        colors: colors,
+        showHandles: showHandles,
         // trailing: SelectionOverlayTrailing(editor: editor, nodes: nodes),
       );
     }

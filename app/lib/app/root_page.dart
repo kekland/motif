@@ -11,18 +11,20 @@ class RootPage extends HookWidget {
     return TooltipManager(
       child: PortalRoot(
         anchorResolver: (context) => .compute(context),
-        child: WindowNavigator(
-          child: Scaffold(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(width: double.infinity, child: RootNavigationBar()),
-                    Divider(height: 1.0),
-                    Expanded(child: EditorWidget(editor: editor)),
-                  ],
-                ),
-              ],
+        child: ContextMenuRoot(
+          child: WindowNavigator(
+            child: Scaffold(
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(width: double.infinity, child: RootNavigationBar()),
+                      Divider(height: 1.0),
+                      Expanded(child: EditorWidget(editor: editor)),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

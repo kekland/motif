@@ -10,8 +10,7 @@ class PortalAnchor {
     Alignment? alignment,
     Axis axis = .vertical,
   }) {
-    final root = context.findAncestorStateOfType<PortalRootState>()!;
-    final rootBox = root.context.findRenderObject() as RenderBox;
+    final rootBox = Portal.renderOf(context);
     final renderBox = context.findRenderObject() as RenderBox;
 
     final localRect = rect ?? (Offset.zero & renderBox.size);

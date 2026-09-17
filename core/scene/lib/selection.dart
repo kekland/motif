@@ -4,86 +4,125 @@ final class SceneSelection with ChangeNotifier {
   SceneSelection(this.scene);
   final Scene scene;
 
-  final _selected = <Ref>{};
-  final _selectedStatements = <StatementId>{};
+  final _refSources = <Ref>{};
+  final _statementSources = <StatementId>{};
+
+  final _refs = <Ref>{};
   final _cells = <CellRef>{};
+  final _statements = <StatementId>{};
   var _visibleCovertices = <CovertexRef>{};
   var _stamp = 0;
 
-  Set<Ref> get refs => _selected;
+  Set<Ref> get refs => _refs;
   Set<CellRef> get cells => _cells;
-  bool get isEmpty => _selected.isEmpty;
-  bool get isNotEmpty => _selected.isNotEmpty;
-
-  Iterable<StatementId> get statements => _selectedStatements;
+  Set<StatementId> get statements => _statements;
   Set<CovertexRef> get visibleCovertices => _visibleCovertices;
 
+  bool get isEmpty => _refs.isEmpty && _statements.isEmpty;
+  bool get isNotEmpty => !isEmpty;
+
+  void _clear() {
+    _refSources.clear();
+    _statementSources.clear();
+  }
+
   void set(Ref ref) {
-    _selected.clear();
-    _selected.add(ref);
-    _onUpdated();
-  }
-
-  void setStatement(StatementId id) {
-    final statement = scene.statement(id);
-    if (statement == null) return;
-    setMultiple(scene.evaluation.productsOf(statement.id));
-  }
-
-  void setStatements(Iterable<StatementId> ids) {
-    _selected.clear();
-    for (final id in ids) {
-      final statement = scene.statement(id);
-      if (statement == null) return;
-      _selected.addAll(scene.productsOf(statement.id));
-    }
+    _clear();
+    _refSources.add(ref);
     _onUpdated();
   }
 
   void setMultiple(Iterable<Ref> refs) {
-    _selected.clear();
-    _selected.addAll(refs);
+    _clear();
+    _refSources.addAll(refs);
     _onUpdated();
   }
 
   void add(Ref ref) {
-    _selected.add(ref);
+    _refSources.add(ref);
+    _onUpdated();
+  }
+
+  void setStatement(StatementId id) {
+    _clear();
+    _statementSources.add(id);
+    _onUpdated();
+  }
+
+  void setStatements(Iterable<StatementId> ids) {
+    _clear();
+    _statementSources.addAll(ids);
+    _onUpdated();
+  }
+
+  void addStatement(StatementId id) {
+    _statementSources.add(id);
     _onUpdated();
   }
 
   void clear() {
-    _selected.clear();
+    _clear();
     _onUpdated();
   }
 
   void _onUpdated() {
-    final stmts = _selected.map((ref) => scene.evaluation.rootOf(ref.statementId)).toSet();
-    _selectedStatements.clear();
-    _selectedStatements.addAll(stmts);
+    final e = scene.evaluation;
+
+    _refs.clear();
+    for (final r in _refSources) _refs.addAll(e.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
+    _statements.clear();
+    _statements.addAll(_statementSources.where((s) => e.statement(s) != null));
+    _statements.addAll(_refs.map((ref) => e.rootOf(ref.statementId)));
+    for (final s in _statementSources) _refs.addAll(e.productsOf(s).where(e.bundle.isLive));
 
     _cells.clear();
-    for (final r in _selected) {
+    for (final r in _refs) {
       if (r is CellRef) _cells.add(r);
       if (r is CovertexRef) _cells.add(r.edge);
     }
 
     _resolveVisibleCovertices();
-    notifyListeners();
+
     _stamp++;
+    notifyListeners();
   }
 
   void _resolveVisibleCovertices() {
-    _visibleCovertices = resolveDisplayCovertices(scene.bundle, _selected);
+    _visibleCovertices = resolveDisplayCovertices(scene.bundle, _cells);
   }
 
   void _onEvaluated() {
     final e = scene.evaluation;
-    final next = <Ref>{};
-    for (final r in _selected) next.addAll(e.descendantsOf(r));
 
-    if (!(const SetEquality()).equals(next, _selected)) {
-      _selected.clear();
-      _selected.addAll(next);
+    final nextStatements = <StatementId>{};
+    final nextRefs = <Ref>{};
+    final nextProducts = <Ref>{};
+    for (final s in _statementSources) {
+      if (e.statement(s) != null) nextStatements.add(s);
+    }
+
+    for (final r in _refSources) {
+      nextRefs.addAll(e.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
+    }
+
+    for (final s in nextStatements) {
+      nextProducts.addAll(e.productsOf(s).where(e.bundle.isLive));
+    }
+
+    var updated = false;
+    if (!setEquals(nextStatements, _statementSources)) {
+      _statementSources.clear();
+      _statementSources.addAll(nextStatements);
+      updated = true;
+    }
+
+    if (!setEquals(nextRefs, _refSources)) {
+      _refSources.clear();
+      _refSources.addAll(nextRefs);
+      updated = true;
+    }
+
+    if (updated || !setEquals({...nextRefs, ...nextProducts}, _refs)) {
       _onUpdated();
     } else {
       _resolveVisibleCovertices();

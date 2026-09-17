@@ -3,7 +3,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 abstract class TransformActivity extends DragActivity with ExclusiveCursorDragActivity, KeyboardListenerDragActivity {
-  TransformActivity(this.editor, this.refs, {super.onStart, super.onUpdate, super.onEnd});
+  TransformActivity(
+    this.editor,
+    this.refs, {
+    super.onStart,
+    super.onUpdate,
+    super.onEnd,
+    super.onCancel,
+  });
 
   final Editor editor;
   Scene get scene => editor.scene;
@@ -48,7 +55,7 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
     if (transform != null) totalTransform.multiply(transform.asVM());
     return cursor.resolveRaw(totalTransform, side: side, corner: corner);
   }
-  
+
   @override
   MouseCursor get cursor {
     if (session.isEmpty) return Cursors.toolCursorForbidden;

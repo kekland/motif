@@ -29,11 +29,24 @@ extension StatementUtils on Statement {
     EllipseStatement() => Icons.circle(),
     PolygonStatement() => Icons.polygon(),
     FrameStatement _ => Icons.frame(),
+    FilletFaceStatement() => Icons.fillet(),
     // GlueVerticesStatement() => Icons.glue_vertices(),
     // CutEdgeStatement() => Icons.cut_edge(),
     // _ => Icons.statement(),
     GeneratorStatement() => Icons.generator(),
     PlacedStatement() => unreachable(),
     _ => Icons.s(),
+  };
+}
+
+extension ModifierUtils on Modifier {
+  String name(BuildContext context) => switch (this) {
+    .generator => 'Generator',
+    .filletFace => 'Fillet',
+  };
+
+  Widget icon(BuildContext context) => switch (this) {
+    .generator => Icons.generator(),
+    .filletFace => Icons.fillet(),
   };
 }

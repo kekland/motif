@@ -1,5 +1,6 @@
 import 'package:editor/client/client.dart';
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/tabs/tab_bar.dart';
 
 export 'widgets/editor_widget.dart';
 
@@ -16,6 +17,18 @@ final class Editor extends Controller {
     // logger.info('Editor initialized with sync URL: $_syncUrl (enabled: $_syncEnabled)');
     // sync = _syncEnabled ? SceneSync(this.scene, uri: Uri.parse(_syncUrl)) : null;
     // sync?.connect();
+
+    $effect(() {
+      final tab = this.tab.value;
+      if (rootPanelsKey.currentState == null) return;
+
+      if (tab == null) {
+        panels.collapse(.tab);
+      } else {
+        print('expand!');
+        panels.expand(.tab);
+      }
+    });
   }
 
   static Editor of(BuildContext context) => context.read<Editor>();
@@ -28,6 +41,7 @@ final class Editor extends Controller {
   SceneHistory get history => scene.history;
   SceneQuery get query => scene.query;
   SceneSelection get selection => scene.selection;
+  Evaluation get evaluation => scene.evaluation;
 
   CellRef<H>? refOf<H extends CellHandle>(H cell) => scene.refOf(cell);
   H? handleOf<H extends CellHandle>(CellRef<H> ref) => scene.handleOf(ref);
@@ -37,6 +51,11 @@ final class Editor extends Controller {
 
   final sceneKey = GlobalKey();
   RenderBox get renderScene => sceneKey.currentContext!.findRenderObject() as RenderBox;
+
+  final rootPanelsKey = GlobalKey<PanelsState<EditorPanel>>();
+  PanelsState<EditorPanel> get panels => rootPanelsKey.currentState!;
+
+  late final tab = $signal<EditorTab?>(null);
 
   late final tool = ToolController(initialToolset: toolset);
   late final transientEdges = TransientEdges(this);

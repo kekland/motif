@@ -16,12 +16,14 @@ class InteractiveCanvas extends StatefulWidget {
     this.transformationController,
     this.overlayBuilders = const [],
     this.centerOrigin = true,
+    this.backgroundColor,
     required this.child,
   });
 
   final TransformationController? transformationController;
   final List<Widget Function(BuildContext context, Widget child)> overlayBuilders;
   final bool centerOrigin;
+  final Color? backgroundColor;
   final Widget child;
 
   @override
@@ -80,7 +82,7 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
                 Positioned.fill(
                   child: CanvasBackground(
                     transformationController: controller,
-                    backgroundColor: context.colors.surface.canvas.background,
+                    backgroundColor: widget.backgroundColor ?? context.colors.surface.canvas.background,
                     dotColor: context.colors.surface.canvas.foreground,
                     baseSpacing: 50.0,
                   ),

@@ -15,6 +15,11 @@ class GeneratorEditor extends HookWidget {
   Widget build(BuildContext context) {
     return BlueprintEditorWidget(
       editor: editor,
+      nodeFactories: [
+        .new(name: 'Array', create: () => ArrayNode()),
+        .new(name: 'Fillet', create: () => FilletNode()),
+        .new(name: 'Vertex', create: () => VertexNode()),
+      ],
       colorResolvers: .new(
         (category) => switch (category) {
           #int => context.colors.blueprint.int,

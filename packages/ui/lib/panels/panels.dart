@@ -30,13 +30,14 @@ class RatioPanelConstraints extends PanelConstraints {
 }
 
 class Panel {
-  const Panel({required this.constraints, required this.child});
+  const Panel({required this.key, required this.constraints, required this.child});
 
+  final Object key;
   final PanelConstraints constraints;
   final Widget child;
 }
 
-class Panels extends StatefulWidget {
+class Panels<T extends Object> extends StatefulWidget {
   const Panels({
     super.key,
     required this.direction,
@@ -46,11 +47,76 @@ class Panels extends StatefulWidget {
   final Axis direction;
   final List<Panel> panels;
 
+  static PanelsState? maybeOf(BuildContext context) => context.findAncestorStateOfType<PanelsState>();
+  static PanelsState of(BuildContext context) => maybeOf(context)!;
+
   @override
-  State<Panels> createState() => _PanelsState();
+  State<Panels<T>> createState() => PanelsState<T>();
 }
 
-class _PanelsState extends State<Panels> {
+class PanelsState<T extends Object> extends State<Panels<T>> {
+  PanelsState? parent;
+  List<PanelsState> children = [];
+
+  void attachChild(PanelsState child) {
+    child.parent = this;
+    children.add(child);
+  }
+
+  void detachChild(PanelsState child) {
+    child.parent = null;
+    children.remove(child);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Panels.maybeOf(context)?.attachChild(this);
+  }
+
+  @override
+  void dispose() {
+    parent?.detachChild(this);
+    super.dispose();
+  }
+
+  int? panelIndexByKey(Object key) {
+    final index = widget.panels.indexWhere((panel) => panel.key == key);
+    if (index == -1) return null;
+    return index;
+  }
+
+  void expand(T key) {
+    final index = panelIndexByKey(key);
+    if (index != null) {
+      _setPanelSize(index, _getPanelMinMax(index).$2);
+    } else {
+      for (final c in children) c.expand(key);
+    }
+  }
+
+  void collapse(T key) {
+    final index = panelIndexByKey(key);
+    if (index != null) {
+      _setPanelSize(index, _getPanelMinMax(index).$1);
+    } else {
+      for (final c in children) c.collapse(key);
+    }
+  }
+
+  void toggle(T key) {
+    final index = panelIndexByKey(key);
+    if (index != null) {
+      if (_panelSizes![index] > 0) {
+        expand(key);
+      } else {
+        collapse(key);
+      }
+    } else {
+      for (final c in children) c.toggle(key);
+    }
+  }
+
   BoxConstraints? _constraints;
   List<double>? _panelSizes;
 
@@ -60,7 +126,7 @@ class _PanelsState extends State<Panels> {
   };
 
   @override
-  void didUpdateWidget(covariant Panels oldWidget) {
+  void didUpdateWidget(covariant Panels<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.panels.length != widget.panels.length) _panelSizes = null;
   }
@@ -106,8 +172,7 @@ class _PanelsState extends State<Panels> {
     } else if (constraints is RatioPanelConstraints) {
       final maxExtent = effectiveConstraints.$2;
       return (constraints.min * maxExtent, constraints.max * maxExtent);
-    }
-    else if (constraints is FlexPanelConstraints) {
+    } else if (constraints is FlexPanelConstraints) {
       return (0.0, double.infinity);
     }
 
@@ -138,6 +203,35 @@ class _PanelsState extends State<Panels> {
     Axis.vertical => SystemMouseCursors.resizeUp,
   };
 
+  void _setPanelSize(int index, double size) {
+    final sizes = _panelSizes;
+    if (sizes == null || !size.isFinite) return;
+    var remaining = size - sizes[index];
+    if (index + 1 < widget.panels.length) {
+      remaining -= _moveDivider(index, remaining, sizes);
+    }
+
+    if (remaining.abs() > 1e-6 && index > 0) {
+      remaining += _moveDivider(index - 1, -remaining, sizes);
+    }
+
+    setState(() {});
+  }
+
+  double _moveDivider(int index, double delta, List<double> startSizes) {
+    final a0 = startSizes[index];
+    final b0 = startSizes[index + 1];
+    var clamped = _clampPanel(index, a0 + delta);
+    var effective = clamped - a0;
+    final b = _clampPanel(index + 1, b0 - effective);
+    effective = b0 - b;
+    clamped = a0 + effective;
+
+    _panelSizes![index] = clamped;
+    _panelSizes![index + 1] = b;
+    return effective;
+  }
+
   void _onDragStart(int index, DragStartDetails details) {
     if (_activeDragIndex != null) return;
 
@@ -164,19 +258,7 @@ class _PanelsState extends State<Panels> {
       Axis.vertical => deltaOffset.dy,
     };
 
-    final startPanelSize = _dragStartPanelSizes![index];
-    var panelSize = _dragStartPanelSizes![index] + delta;
-    panelSize = _clampPanel(index, panelSize);
-    var effectiveDelta = panelSize - startPanelSize;
-
-    var nextPanelSize = _dragStartPanelSizes![index + 1] - effectiveDelta;
-    nextPanelSize = _clampPanel(index + 1, nextPanelSize);
-    effectiveDelta = _dragStartPanelSizes![index + 1] - nextPanelSize;
-    panelSize = startPanelSize + effectiveDelta;
-
-    _panelSizes![index] = panelSize;
-    _panelSizes![index + 1] = nextPanelSize;
-
+    _moveDivider(index, delta, _dragStartPanelSizes!);
     _updateMouseCursor();
     setState(() {});
   }
@@ -187,7 +269,7 @@ class _PanelsState extends State<Panels> {
 
     final panelSize = _panelSizes![index];
     final nextPanelSize = _panelSizes![index + 1];
-    
+
     const epsilon = 1e-3;
     bool isClose(double a, double b) => (a - b).abs() < epsilon;
 
@@ -229,12 +311,16 @@ class _PanelsState extends State<Panels> {
 
     for (var i = 0; i < widget.panels.length - 1; i++) {
       acc += _panelSizes![i];
+
+      final minMax = _getPanelMinMax(i + 1);
+      final isLocked = minMax.$1 == minMax.$2;
+
       result.add(
         Positioned(
-          left: widget.direction == Axis.horizontal ? acc - halfDivider : null,
-          top: widget.direction == Axis.vertical ? acc - halfDivider : null,
-          width: widget.direction == Axis.horizontal ? dividerExtent : _constraints!.maxWidth,
-          height: widget.direction == Axis.vertical ? dividerExtent : _constraints!.maxHeight,
+          left: widget.direction == .horizontal ? acc - halfDivider : null,
+          top: widget.direction == .vertical ? acc - halfDivider : null,
+          width: widget.direction == .horizontal ? dividerExtent : _constraints!.maxWidth,
+          height: widget.direction == .vertical ? dividerExtent : _constraints!.maxHeight,
           child: _PanelDivider(
             direction: widget.direction,
             cursor: _getMouseCursorFor(i),
@@ -242,6 +328,7 @@ class _PanelsState extends State<Panels> {
             onDragStart: (details) => _onDragStart(i, details),
             onDragUpdate: (details) => _onDragUpdate(i, details),
             onDragEnd: (details) => _onDragEnd(i, details),
+            interactable: !isLocked,
           ),
         ),
       );
@@ -296,6 +383,7 @@ class _PanelDivider extends StatelessWidget {
     this.onDragStart,
     this.onDragUpdate,
     this.onDragEnd,
+    this.interactable = true,
   });
 
   static const double extent = 8.0;
@@ -304,6 +392,7 @@ class _PanelDivider extends StatelessWidget {
   final int index;
 
   final MouseCursor cursor;
+  final bool interactable;
 
   final GestureDragStartCallback? onDragStart;
   final GestureDragUpdateCallback? onDragUpdate;
@@ -311,6 +400,13 @@ class _PanelDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final divider = switch (direction) {
+      Axis.horizontal => VerticalDivider(width: extent),
+      Axis.vertical => Divider(height: extent),
+    };
+
+    if (!interactable) return divider;
+
     return GestureDetector(
       onHorizontalDragStart: direction == Axis.horizontal ? onDragStart : null,
       onHorizontalDragUpdate: direction == Axis.horizontal ? onDragUpdate : null,
@@ -320,10 +416,7 @@ class _PanelDivider extends StatelessWidget {
       onVerticalDragEnd: direction == Axis.vertical ? onDragEnd : null,
       child: MouseRegion(
         cursor: cursor,
-        child: switch (direction) {
-          Axis.horizontal => VerticalDivider(width: extent),
-          Axis.vertical => Divider(height: extent),
-        },
+        child: divider,
       ),
     );
   }

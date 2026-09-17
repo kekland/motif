@@ -3,28 +3,30 @@ import 'package:editor/widgets/selection_panel/props/prop.dart';
 
 class const StatementPanel({
   super.key,
-  required final List<StatementId> statements,
+  required final List<StatementId> statementIds,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
+    final statements = <Statement>[];
     final rawProps = <List<PropSource>>[];
-    for (final id in statements) {
+    for (final id in statementIds) {
       final statement = editor.statement(id);
-      rawProps.add(statement!.props.toList());
+      statements.add(statement!);
+      rawProps.add(statement.props.toList());
     }
 
     final props = Prop.intersect(rawProps);
 
     late final Widget? icon, title, footnote;
-    if (statements.length == 1) {
-      final statement = context.editor.statement(statements.single)!;
+    if (statementIds.length == 1) {
+      final statement = context.editor.statement(statementIds.single)!;
       icon = statement.icon(context);
       title = Text(statement.name(context));
       footnote = Text(statement.id.toString());
     } else {
       icon = Icons.stacks();
-      title = Text('${statements.length} statements');
+      title = Text('${statementIds.length} statements');
       footnote = null;
     }
 
@@ -42,7 +44,7 @@ class const StatementPanel({
         ),
         Divider(),
         ModifierStackWidget(
-          id: statements.first,
+          statements: statements,
         ),
         Divider(),
       ],

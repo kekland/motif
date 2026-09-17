@@ -19,7 +19,7 @@ class PortalRootState extends State<PortalRoot> {
   final _entryKeys = <PortalEntry, GlobalKey<PortalEntryWidgetState>>{};
   final _overlayKey = GlobalKey<OverlayState>();
   OverlayState get overlay => _overlayKey.currentState!;
-  RenderObject get overlayRenderObject => overlay.context.findRenderObject()!;
+  RenderBox get overlayRenderObject => overlay.context.findRenderObject()! as RenderBox;
 
   void push(BuildContext srcContext, PortalEntry entry, {PortalAnchor? anchor}) {
     final key = GlobalKey<PortalEntryWidgetState>();

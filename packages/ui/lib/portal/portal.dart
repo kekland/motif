@@ -13,8 +13,9 @@ part 'portal_anchor.dart';
 part 'portal_hooks.dart';
 
 class Portal {
-  static PortalRootState of(BuildContext context) => maybeOf(context)!;
   static PortalRootState? maybeOf(BuildContext context) => context.findAncestorStateOfType<PortalRootState>();
+  static PortalRootState of(BuildContext context) => maybeOf(context)!;
+  static RenderBox renderOf(BuildContext context) => of(context).overlayRenderObject;
 
   static Future<T?> push<T>(BuildContext context, PortalEntry<T> entry) => entry.push(context);
 }

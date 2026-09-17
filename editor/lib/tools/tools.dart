@@ -12,6 +12,7 @@ export 'shape/rectangle_tool.dart';
 export 'shape/ellipse_tool.dart';
 export 'shape/polygon_tool.dart';
 export 'bend/bend_tool.dart';
+export 'generator/generator_tool.dart';
 export 'pencil/pencil_tool.dart';
 
 const toolset = <Tool>[
@@ -25,6 +26,7 @@ const toolset = <Tool>[
   RectangleTool(),
   EllipseTool(),
   PolygonTool(),
+  GeneratorTool(),
 ];
 
 const tools = (
@@ -38,4 +40,5 @@ const tools = (
   rectangle: RectangleTool(),
   ellipse: EllipseTool(),
   polygon: PolygonTool(),
+  generator: GeneratorTool(),
 );

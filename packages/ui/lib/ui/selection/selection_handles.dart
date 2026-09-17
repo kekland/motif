@@ -120,8 +120,13 @@ class SelectionSideResizeHandle extends StatelessWidget {
 }
 
 class SelectionCornerResizeHandleIcon extends StatelessWidget {
-  const SelectionCornerResizeHandleIcon({super.key});
+  const SelectionCornerResizeHandleIcon({
+    super.key,
+    this.colors,
+  });
+
   static const size = 8.0;
+  final AppSelectionColors? colors;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +138,7 @@ class SelectionCornerResizeHandleIcon extends StatelessWidget {
         border: Border.all(
           width: 1.0,
           strokeAlign: BorderSide.strokeAlignCenter,
-          color: context.colors.selection.primary,
+          color: colors?.primary ?? context.colors.selection.primary,
         ),
       ),
     );

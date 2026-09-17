@@ -60,8 +60,14 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   RenderConnections get render => renderKey.currentContext?.findRenderObject() as RenderConnections;
 
   Offset globalToLocal(Offset globalPosition) => render.globalToLocal(globalPosition);
-  List<SocketHitTestEntry> hitTestSockets(Offset globalPosition) =>
-      render.hitTestSockets(globalToLocal(globalPosition));
+
+  List<SocketHitTestEntry> hitTestSockets(Offset globalPosition) {
+    return render.hitTestSockets(globalToLocal(globalPosition));
+  }
+
+  List<NodeHitTestEntry> hitTestNodes(Offset globalPosition) {
+    return render.hitTestNodes(globalToLocal(globalPosition));
+  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Edits

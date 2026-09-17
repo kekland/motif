@@ -80,6 +80,19 @@ final class SceneTransaction {
     insert(modifier, anchor: .after(last));
   }
 
+  void attachAfter(List<StatementId> targets, Statement modifier) {
+    _checkOpen();
+    flush();
+
+    var lastIndex = evaluation.indexOf(evaluation.rootOf(targets.first))!;
+    for (final id in targets) {
+      final index = evaluation.indexOf(evaluation.rootOf(id))!;
+      if (index > lastIndex) lastIndex = index;
+    }
+
+    attach(evaluation.statementAt(lastIndex).id, modifier);
+  }
+
   void decorate(CellRef ref, CellStylePartial decoration) {
     _checkOpen();
     final before = program.styles.of(ref);

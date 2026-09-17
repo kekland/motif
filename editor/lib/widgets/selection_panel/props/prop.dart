@@ -11,7 +11,7 @@ part 'props.dart';
 part 'cell_props.dart';
 part 'statement_props.dart';
 part 'widgets/builder.dart';
-part 'widgets/modifier_stack.dart';
+part 'widgets/modifier_stack_widget.dart';
 part 'widgets/widgets.dart';
 
 abstract class PropSource<G, S> {
