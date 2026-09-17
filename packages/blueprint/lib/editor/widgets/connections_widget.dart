@@ -118,8 +118,9 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
     double startDx = -1.0,
     double endDx = 1.0,
   }) {
-    final cp1 = Offset(start.dx + startDx * 50.0, start.dy);
-    final cp2 = Offset(end.dx + endDx * 50.0, end.dy);
+    final extDistance = (end.dx - start.dx).abs() * 0.5;
+    final cp1 = Offset(start.dx + startDx * extDistance, start.dy);
+    final cp2 = Offset(end.dx + endDx * extDistance, end.dy);
 
     final path = Path()
       ..moveTo(start.dx, start.dy)

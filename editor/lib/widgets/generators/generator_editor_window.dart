@@ -91,7 +91,7 @@ class GeneratorAddNodeWindow extends StatelessWidget {
     final nodes = <String, Node>{
       'Array': ArrayNode(),
       'Fillet': FilletNode(),
-      'Vertex': VertexNode(),
+      'Vertices': VerticesNode(),
     };
 
     return WindowScaffold(

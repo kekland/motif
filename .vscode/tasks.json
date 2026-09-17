@@ -13,5 +13,11 @@
       "command": "./packages/native/tool/ffigen.py",
       "problemMatcher": [],
     },
+    {
+      "label": "core/program/generate_blueprint",
+      "type": "shell",
+      "command": "./core/program/tool/generate_blueprint.dart",
+      "problemMatcher": []
+    }
   ],
 }

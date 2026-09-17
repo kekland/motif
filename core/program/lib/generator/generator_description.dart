@@ -24,19 +24,19 @@ final float = SocketDescription(
   category: 'float',
   defaultValue: '0.0',
 );
-
-final rotation = SocketDescription(
-  name: 'Rotation',
-  type: 'Angle2',
-  category: 'float',
-  defaultValue: '.zero',
-);
-
 final programSlice = SocketDescription(
   name: 'ProgramSlice',
   type: 'ProgramSlice',
   category: 'geometry',
   defaultValue: '.empty()',
+);
+
+final programSliceList = SocketDescription(
+  name: 'ProgramSliceList',
+  type: 'ProgramSlice',
+  category: 'geometry',
+  defaultValue: '[]',
+  multi: true,
 );
 
 final boolean = SocketDescription(
@@ -83,7 +83,7 @@ final outputNode = NodeDescription(
   name: 'GeneratorOutput',
   category: 'geometry',
   inputs: [
-    .new(name: 'slice', type: programSlice),
+    .new(name: 'slices', type: programSliceList),
   ],
 );
 
@@ -105,22 +105,108 @@ final filletNode = NodeDescription(
   category: 'geometry',
   inputs: [
     .new(name: 'slice', type: programSlice),
-    .new(name: 'radius', type: vec2),
+    .new(name: 'radius', type: vec2, socketType: .dynamic),
   ],
   outputs: [
     .new(name: 'slice', type: programSlice),
   ],
 );
+final numberNode = NodeDescription(
+  name: 'Number',
+  category: 'value',
+  inputs: [.new(name: 'value', type: float)],
+  outputs: [.new(name: 'value', type: float)],
+);
 
-final vertexNode = NodeDescription(
-  name: 'Vertex',
+final vectorNode = NodeDescription(
+  name: 'Vector',
+  category: 'value',
+  inputs: [.new(name: 'value', type: vec2)],
+  outputs: [.new(name: 'value', type: vec2)],
+);
+
+final verticesNode = NodeDescription(
+  name: 'Vertices',
   category: 'primitive',
   inputs: [
-    .new(name: 'position', type: vec2),
+    .new(name: 'count', type: integer),
+    .new(name: 'position', type: vec2, socketType: .dynamic),
+  ],
+  outputs: [.new(name: 'slice', type: programSlice)],
+);
+
+final randomVectorNode = NodeDescription(
+  name: 'RandomVector',
+  category: 'value',
+  inputs: [
+    .new(name: 'seed', type: integer),
+    .new(name: 'min', type: vec2, socketType: .dynamic),
+    .new(name: 'max', type: vec2, socketType: .dynamic),
   ],
   outputs: [
-    .new(name: 'slice', type: programSlice),
+    .new(name: 'value', type: vec2, socketType: .dynamic),
   ],
+);
+
+final indexNode = NodeDescription(
+  name: 'Index',
+  category: 'value',
+  outputs: [.new(name: 'value', type: integer, socketType: .dynamic)],
+);
+
+final scaleVectorNode = NodeDescription(
+  name: 'ScaleVector',
+  category: 'value',
+  inputs: [
+    .new(name: 'vector', type: vec2, socketType: .dynamic),
+    .new(name: 'factor', type: float, socketType: .dynamic),
+  ],
+  outputs: [.new(name: 'value', type: vec2, socketType: .dynamic)],
+);
+
+final connectVerticesNode = NodeDescription(
+  name: 'ConnectVertices',
+  category: 'geometry',
+  inputs: [
+    .new(name: 'slice', type: programSlice),
+    .new(name: 'closed', type: boolean),
+  ],
+  outputs: [.new(name: 'slice', type: programSlice)],
+);
+
+final faceNode = NodeDescription(
+  name: 'Face',
+  category: 'geometry',
+  inputs: [.new(name: 'slice', type: programSlice)],
+  outputs: [.new(name: 'slice', type: programSlice)],
+);
+
+final polarNode = NodeDescription(
+  name: 'Polar',
+  category: 'math',
+  inputs: [
+    .new(name: 'radius', type: float, socketType: .dynamic),
+    .new(name: 'angle', type: float, socketType: .dynamic),
+  ],
+  outputs: [
+    .new(name: 'value', type: vec2, socketType: .dynamic),
+  ],
+);
+
+final piNode = NodeDescription(
+  name: 'Pi',
+  category: 'math',
+  outputs: [.new(name: 'value', type: float, socketType: .constant)],
+);
+
+final divideNode = NodeDescription(
+  name: 'Divide',
+  category: 'math',
+  inputs: [
+    .new(name: 'numerator', type: float, socketType: .dynamic),
+    .new(name: 'denominator', type: float, socketType: .dynamic),
+  ],
+  outputs: [.new(name: 'value', type: float, socketType: .dynamic)],
 );
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -131,7 +217,6 @@ final sockets = [
   vec2,
   integer,
   float,
-  rotation,
   programSlice,
   boolean,
   color,
@@ -144,5 +229,15 @@ final nodes = [
   outputNode,
   arrayNode,
   filletNode,
-  vertexNode,
+  numberNode,
+  vectorNode,
+  verticesNode,
+  randomVectorNode,
+  indexNode,
+  scaleVectorNode,
+  connectVerticesNode,
+  faceNode,
+  polarNode,
+  piNode,
+  divideNode,
 ];

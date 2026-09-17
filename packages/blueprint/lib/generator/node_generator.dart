@@ -5,7 +5,7 @@ List<String> generateNode(NodeDescription description) {
   var className = description.baseClassName;
   className += 'Base';
 
-    final inline = [for (final i in description.inputs) if (!i.type.isList) i];
+    final inline = [for (final i in description.inputs) if (!i.type.multi) i];
 
   code.add('abstract class $className extends bp.Node {');
   code.add('  $className({');
@@ -22,7 +22,7 @@ List<String> generateNode(NodeDescription description) {
   if (description.inputs.isNotEmpty) {
     code.add('    inputs: [');
     for (final input in description.inputs) {
-      final args = input.type.isList ? '' : ', inlineValue: ${input.name}';
+      final args = input.type.multi ? '' : ', inlineValue: ${input.name}';
       code.add('      ${input.ioClassName}(name: \'${input.name}\'$args),');
     }
     code.add('    ],');
@@ -75,7 +75,7 @@ List<String> generateNode(NodeDescription description) {
   code.add('  @override');
   code.add('  ${description.baseClassName} copyWithInline(int index, Object? value) => switch(index) {');
   for (final (i, input) in description.inputs.indexed) {
-    if (input.type.isList) continue;
+    if (input.type.multi) continue;
     code.add('    $i => copyWith(${input.name}: value as ${input.type.type}),');
   }
   code.add('    _ => throw RangeError.index(index, inputs),');

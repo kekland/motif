@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:blueprint/core.dart';
 import 'package:geometry/geometry.dart';
 import 'package:program/program.dart';
@@ -6,10 +8,13 @@ import 'package:shared/shared.dart';
 import 'generator.g.dart';
 
 part 'nodes/array.dart';
+part 'nodes/fields.dart';
 part 'nodes/generator_input.dart';
 part 'nodes/generator_output.dart';
 part 'nodes/fillet.dart';
 part 'nodes/primitives.dart';
+part 'nodes/values.dart';
+part 'nodes/math.dart';
 
 class Generator extends Blueprint<Generator> {
   Generator({super.nodes, super.connections, super.positions, super.fixed}) {
@@ -22,7 +27,7 @@ class Generator extends Blueprint<Generator> {
     final outputNode = GeneratorOutputNode();
     final generator = Generator(
       nodes: [inputNode, outputNode],
-      connections: [.new(inputNode.o.slice.ref, outputNode.i.slice.ref)],
+      connections: [.new(inputNode.o.slice.ref, outputNode.i.slices.ref)],
       fixed: {inputNode.id, outputNode.id},
       positions: {inputNode.id: .new(0.0, 0.0), outputNode.id: .new(200.0, 0.0)},
     );
@@ -59,12 +64,37 @@ class Generator extends Blueprint<Generator> {
   );
 }
 
-extension GeneratorNode on BlueprintExecution {
+extension GeneratorBlueprintExecution on BlueprintExecution {
   EvalContext get evalContext => environment<EvalContext>();
 
-  StatementId derive(Node node, int k, {StatementId? source}) {
+  StatementId derive(Node node, FieldContext context) {
     final base = U64.of(0, node.id.value);
-    final key = Mix64.mixWithKey(source == null? base : Mix64.mix(base, source.value), k);
-    return evalContext.derive(key, origin: this);
+    final key = Mix64.mix(base, context.id!);
+    return evalContext.derive(key, origin: node);
   }
+
+  StatementId deriveFor(Node node, Statement source, {int index = 0}) {
+    final base = U64.of(0, node.id.value);
+    final key = Mix64.mixWithKey(Mix64.mix(base, source.id.value), index);
+    return evalContext.derive(key, origin: node);
+  }
+
+  Iterable<FieldContext> sliceContext(ProgramSlice slice) sync* {
+    for (var i = 0; i < slice.length; i++) {
+      final s = slice.statements[i];
+      yield FieldContext(this, index: i, id: s.id.value, element: s);
+    }
+  }
+
+  Iterable<FieldContext> freshContext(Node node, {required int count}) sync* {
+    final base = U64.of(0, node.id.value);
+    for (var i = 0; i < count; i++) {
+      final key = Mix64.mixWithKey(base, i);
+      yield FieldContext(this, index: i, id: key, element: null);
+    }
+  }
+}
+
+extension GeneratorFieldContext on FieldContext {
+  Statement get statement => element as Statement;
 }

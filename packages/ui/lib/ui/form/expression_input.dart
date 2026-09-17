@@ -67,6 +67,38 @@ class ExpressionInputField<T> extends HookWidget {
   }
 }
 
+class IntExpressionInputField extends StatelessWidget {
+  const IntExpressionInputField({
+    super.key,
+    required this.value,
+    this.onChanged,
+    this.supportedDevices,
+    this.options = const .new(),
+  });
+
+  final ReadonlySignal<int?> value;
+  final ValueChanged<int>? onChanged;
+  final Set<PointerDeviceKind>? supportedDevices;
+  final TextFieldOptions options;
+
+  String _valueToString(int? value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpressionInputField<int>(
+      value: value,
+      onChanged: onChanged,
+      valueToString: _valueToString,
+      supportedDevices: supportedDevices,
+      evaluateExpression: (s) => evaluateExpression<num>(s).toInt(),
+      options: options,
+    );
+  }
+}
+
 class DoubleExpressionInputField extends StatelessWidget {
   const DoubleExpressionInputField({
     super.key,

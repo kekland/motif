@@ -2,7 +2,7 @@ part of 'generator.dart';
 
 List<String> generateSocket(SocketDescription description) {
   final code = <String>[];
-  final isList = description.isList;
+  final isList = description.multi;
 
   var type = description.type;
   if (isList) {

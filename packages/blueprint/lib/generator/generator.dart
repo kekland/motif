@@ -12,14 +12,14 @@ class SocketDescription {
     required this.type,
     required this.category,
     required this.defaultValue,
-    this.isList = false,
+    this.multi = false,
   });
 
   final String name;
   final String type;
   final String category;
   final String defaultValue;
-  final bool isList;
+  final bool multi;
 
   String get baseClassName => '${name}Socket';
   String get inputClassName => '${name}InputSocket';

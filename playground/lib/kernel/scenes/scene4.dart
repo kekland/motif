@@ -3,7 +3,7 @@ import 'package:debug/kernel/scenes/simulation.dart';
 final class SceneSimulationGenerators extends SceneSimulation {
   Generator produceGenerator(double x, double y) {
     var generator = Generator();
-    generator.disconnect(generator.inputNode.o.slice.ref, generator.outputNode.i.slice.ref);
+    generator.disconnect(generator.inputNode.o.slice.ref, generator.outputNode.i.slices.ref);
     final array = ArrayNode(
       count: .new(x.toDouble(), y.toDouble()),
       offset: .new(200, 200),
@@ -11,7 +11,7 @@ final class SceneSimulationGenerators extends SceneSimulation {
 
     generator = generator.add(ArrayNode());
     generator = generator.connect(generator.inputNode.o.slice.ref, array.i.slice.ref);
-    generator = generator.connect(array.o.slice.ref, generator.outputNode.i.slice.ref);
+    generator = generator.connect(array.o.slice.ref, generator.outputNode.i.slices.ref);
     return generator;
   }
 

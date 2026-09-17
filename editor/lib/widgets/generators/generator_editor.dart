@@ -18,7 +18,17 @@ class GeneratorEditor extends HookWidget {
       nodeFactories: [
         .new(name: 'Array', create: () => ArrayNode()),
         .new(name: 'Fillet', create: () => FilletNode()),
-        .new(name: 'Vertex', create: () => VertexNode()),
+        .new(name: 'Vertices', create: () => VerticesNode()),
+        .new(name: 'Random vector', create: () => RandomVectorNode()),
+        .new(name: 'Connect vertices', create: () => ConnectVerticesNode()),
+        .new(name: 'Number', create: () => NumberNode()),
+        .new(name: 'Vector', create: () => VectorNode()),
+        .new(name: 'Scale vector', create: () => ScaleVectorNode()),
+        .new(name: 'Index', create: () => IndexNode()),
+        .new(name: 'Face', create: () => FaceNode()),
+        .new(name: 'Polar', create: () => PolarNode()),
+        .new(name: 'Pi', create: () => PiNode()),
+        .new(name: 'Divide', create: () => DivideNode()),
       ],
       colorResolvers: .new(
         (category) => switch (category) {
@@ -27,32 +37,61 @@ class GeneratorEditor extends HookWidget {
           #vector => context.colors.blueprint.vector,
           #geometry => context.colors.blueprint.geometry,
           #math => context.colors.blueprint.math,
+          #value => context.colors.blueprint.math,
           _ => null,
         },
       ),
       socketValueBuilders: [
-        _Angle2SocketValueBuilder(),
+        _BoolSocketValueBuilder(),
+        _IntegerSocketValueBuilder(),
+        _DoubleSocketValueBuilder(),
         _Vector22SocketValueBuilder(),
       ],
     );
   }
 }
 
-class _Angle2SocketValueBuilder extends BlueprintSocketValueBuilder<Angle2> {
+class _IntegerSocketValueBuilder extends BlueprintSocketValueBuilder<int> {
   @override
   Widget build(
     BuildContext context,
-    InputSocket<Angle2> socket,
+    InputSocket<int> socket,
     ReadonlySignal<Object?> value,
-    void Function(Angle2 value)? onChanged,
+    void Function(int value)? onChanged,
+  ) {
+    return IntExpressionInputField(
+      value: useComputed(() => value() as int?),
+      onChanged: (v) => onChanged?.call(v),
+    );
+  }
+}
+
+class _BoolSocketValueBuilder extends BlueprintSocketValueBuilder<bool> {
+  @override
+  Widget build(
+    BuildContext context,
+    InputSocket<bool> socket,
+    ReadonlySignal<Object?> value,
+    void Function(bool value)? onChanged,
+  ) {
+    return Checkbox(
+      value: useComputed(() => value() as bool? ?? false),
+      onChanged: (v) => onChanged?.call(v),
+    );
+  }
+}
+
+class _DoubleSocketValueBuilder extends BlueprintSocketValueBuilder<double> {
+  @override
+  Widget build(
+    BuildContext context,
+    InputSocket<double> socket,
+    ReadonlySignal<Object?> value,
+    void Function(double value)? onChanged,
   ) {
     return DoubleExpressionInputField(
-      value: useComputed(() => (value() as Angle2?)?.valueDegrees),
-      onChanged: (v) => onChanged?.call(.degrees(v)),
-      options: .new(
-        leading: Icons.angle(),
-        trailing: Text('°'),
-      ),
+      value: useComputed(() => value() as double?),
+      onChanged: (v) => onChanged?.call(v),
     );
   }
 }

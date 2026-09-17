@@ -2,7 +2,7 @@ part of 'program.dart';
 
 final class ProgramSlice {
   new({required this.statements});
-  ProgramSlice.empty() : statements = const [];
+  ProgramSlice.empty() : statements = [];
 
   factory ProgramSlice.decode(gen.ProgramSlice program) => ProgramCodec.decodeProgramSlice(program);
   static ProgramSlice? decodeRaw(Uint8List data) {
@@ -14,7 +14,7 @@ final class ProgramSlice {
     }
   }
 
-  factory ProgramSlice.merged(Iterable<ProgramSlice> slices, {required int Function(StatementId) indexOf}) {
+  factory ProgramSlice.merged(Iterable<ProgramSlice> slices, {int Function(StatementId)? indexOf}) {
     final seen = <StatementId>{};
     final statements = <Statement>[];
     for (final s in slices) {
@@ -25,11 +25,15 @@ final class ProgramSlice {
       }
     }
 
-    statements.sort((a, b) => indexOf(a.id).compareTo(indexOf(b.id)));
+    if (indexOf != null) {
+      statements.sort((a, b) => indexOf(a.id).compareTo(indexOf(b.id)));
+    }
+
     return .new(statements: statements);
   }
 
   final List<Statement> statements;
+  int get length => statements.length;
 
   ProgramSlice materialize(StatementId Function(Statement) idOf) {
     final idMap = <StatementId, StatementId>{};
@@ -45,5 +49,5 @@ final class ProgramSlice {
     );
   }
 
-  ProgramSlice extend(List<Statement> newStatements) => .new(statements: [...statements, ...newStatements]);
+  ProgramSlice extend(ProgramSlice other) => .new(statements: [...statements, ...other.statements]);
 }

@@ -9,6 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared:
   geometry:
   canvas:
   state:

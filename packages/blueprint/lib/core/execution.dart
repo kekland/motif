@@ -7,6 +7,8 @@ final class BlueprintExecution {
   final Map<Type, Object> _environment;
   final _values = <SocketRef, Field>{};
 
+  FieldContext get scalar => FieldContext(this);
+
   T environment<T extends Object>() => _environment[T]! as T;
 
   Field<T> resolve<T>(InputSocket<T> input) {
@@ -14,20 +16,25 @@ final class BlueprintExecution {
     if (incoming.isEmpty) return .constant(input.inlineValue);
 
     if (input is ListInputSocket) {
-      final results = [for (final o in incoming) _valueOf(o)];
-      if (results.every((f) => f is ConstantField)) {
-        return .constant(results.map((f) => (f as ConstantField).value).toList() as T);
+      final list = input as ListInputSocket;
+      final result = Field.zip<T>([for (final o in incoming) _valueOf(o)], (values) => list._castList(values) as T);
+      if (input.isConstant && result is! ConstantField) {
+        throw StateError('dynamic field passed to a constant input socket');
       }
-
-      if (input.isConstant) throw StateError('dynamic field passed to a constant input socket');
-      return .dynamic((c) => results.map((f) => f.evaluate(c)).toList() as T);
+      return result;
     }
 
     final result = _valueOf(incoming.single);
     if (input.isConstant && result is! ConstantField) {
       throw StateError('dynamic field passed to a constant input socket');
     }
+
+    if (T == double && result is Field<int>) return result.map((v) => v.toDouble()) as Field<T>;
     return result as Field<T>;
+  }
+
+  T evaluateScalar<T>(InputSocket<T> input) {
+    return resolve(input).evaluate(scalar);
   }
 
   void set<T>(OutputSocket<T> socket, Field<T> value) {
@@ -38,10 +45,18 @@ final class BlueprintExecution {
     _values[socket.ref] = value;
   }
 
+  void setConstant<T>(OutputSocket<T> socket, T value) {
+    _values[socket.ref] = Field<T>.constant(value);
+  }
+
   Field _valueOf(OutputSocket output) {
     final cached = _values[output.ref];
     if (cached != null) return cached;
+    return _execute(output);
+  }
+
+  Field _execute(OutputSocket output) {
     output.node.execute(this);
-    return _values[output.ref]!;
+    return _values[output.ref] ?? (throw StateError('${output.node.name} did not set ${output.name}'));
   }
 }

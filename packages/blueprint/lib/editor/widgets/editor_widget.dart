@@ -63,7 +63,7 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
     final children = <Widget>[];
 
     for (final node in editor.nodes) {
-      children.add(NodeWidget(editor: editor, id: node.id));
+      children.add(NodeWidget(key: ValueKey(node.id), editor: editor, id: node.id));
     }
 
     return Provider.value(

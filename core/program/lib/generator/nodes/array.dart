@@ -9,24 +9,24 @@ final class ArrayNode extends ArrayNodeBase {
   }) : super(id: id ?? .generate());
 
   @override
-  void execute(BlueprintExecution context) {
-    final input = context.resolve(i.slice).evaluate(context);
-    final count = context.resolve(i.count).evaluate(context);
-    final offset = context.resolve(i.offset).evaluate(context);
+  void execute(BlueprintExecution execution) {
+    final input = execution.evaluateScalar(i.slice);
+    final count = execution.evaluateScalar(i.count);
+    final offset = execution.evaluateScalar(i.offset);
 
-    final out = <Statement>[];
+    final out = ProgramSlice.empty();
     var index = 0;
     for (var x = 0; x < count.x.floor(); x++) {
       for (var y = 0; y < count.y.floor(); y++) {
-        final copy = input.materialize((s) => context.derive(this, index, source: s.id));
+        final copy = input.materialize((s) => execution.deriveFor(this, s, index: index));
         final inside = {for (final s in copy.statements) s.id};
         final shift = Vec2(offset.x * x, offset.y * y);
-        for (final s in copy.statements) out.add(_shifted(s, shift, inside));
+        for (final s in copy.statements) out.statements.add(_shifted(s, shift, inside));
         index++;
       }
     }
 
-    context.set<ProgramSlice>(o.slice, .constant(.new(statements: out)));
+    execution.setConstant(o.slice, out);
   }
 
   static Statement _shifted(Statement s, Vec2 d, Set<StatementId> inside) {

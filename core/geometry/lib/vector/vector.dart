@@ -25,6 +25,7 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
   Vec2.min(Vec2 a, Vec2 b) : this._(a.value.min(b.value));
   Vec2.max(Vec2 a, Vec2 b) : this._(a.value.max(b.value));
   Vec2.lerp(Vec2 a, Vec2 b, double t) : this._(.new(lerp(a.x, b.x, t), lerp(a.y, b.y, t)));
+  Vec2.rotation(double angleRad) : this._(.new(math.cos(angleRad), math.sin(angleRad)));
 
   Vec2 operator +(Vec2 other) => .from(value + other);
   Vec2 operator -(Vec2 other) => .from(value - other);

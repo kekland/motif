@@ -1,4 +1,5 @@
 import 'package:geometry/geometry.dart';
+import 'package:shared/shared.dart';
 
 part 'socket.dart';
 part 'node.dart';

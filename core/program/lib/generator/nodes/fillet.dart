@@ -8,28 +8,29 @@ final class FilletNode extends FilletNodeBase {
   }) : super(id: id ?? .generate());
 
   @override
-  void execute(BlueprintExecution context) {
-    final input = context.resolve(i.slice).evaluate(context);
-    final r = context.resolve(i.radius).evaluate(context);
+  void execute(BlueprintExecution execution) {
+    final input = execution.evaluateScalar(i.slice);
+    final radius = execution.resolve(i.radius);
 
-    final out = <Statement>[];
-    for (final s in input.statements) {
-      final face = switch (s) {
-        FaceStatement() => s.ref,
-        ShapeStatement() => s.face,
+    final out = ProgramSlice.empty();
+
+    for (final context in execution.sliceContext(input)) {
+      final face = switch (context.statement) {
+        FaceStatement s => s.ref,
+        ShapeStatement s => s.face,
         _ => null,
       };
 
       if (face == null) continue;
-      out.add(
+      out.statements.add(
         FilletFaceStatement(
           face.selector(),
-          id: context.derive(this, 0, source: s.id),
-          radius: .vec(r),
+          id: execution.derive(this, context),
+          radius: .vec(radius.evaluate(context)),
         ),
       );
     }
 
-    context.set(o.slice, .constant(input.extend(out)));
+    execution.setConstant(o.slice, input.extend(out));
   }
 }

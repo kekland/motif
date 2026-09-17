@@ -24,5 +24,5 @@ abstract class Node {
   Node copyWith({NodeId? id});
   Node copyWithInline(int index, Object? value);
 
-  void execute(BlueprintExecution context);
+  void execute(BlueprintExecution execution);
 }

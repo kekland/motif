@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:geometry/geometry.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 extension type const Angle2._(double _angleRad) implements double {
@@ -8,4 +11,6 @@ extension type const Angle2._(double _angleRad) implements double {
 
   double get value => this;
   double get valueDegrees => this * radians2Degrees;
+
+  Vec2 asVector() => Vec2(cos(_angleRad), sin(_angleRad));
 }
