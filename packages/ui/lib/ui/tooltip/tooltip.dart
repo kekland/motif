@@ -4,16 +4,21 @@ import 'package:ui/ui.dart';
 
 part 'tooltip_manager.dart';
 
+extension type const TooltipData._((String label, SingleActivator? shortcut) _) {
+  const TooltipData(String label, {SingleActivator? shortcut}) : this._((label, shortcut));
+
+  String get label => _.$1;
+  SingleActivator? get shortcut => _.$2;
+}
+
 class Tooltip extends HookWidget {
   const new({
     super.key,
     required this.tooltip,
-    this.shortcut,
     required this.child,
   });
 
-  final Widget tooltip;
-  final SingleActivator? shortcut;
+  final TooltipData? tooltip;
   final Widget child;
 
   @override
@@ -21,23 +26,24 @@ class Tooltip extends HookWidget {
     final manager = TooltipManager.of(context);
     final timer = useRef<Timer?>(null);
     final suppressed = useRef(false);
+    final enabled = tooltip != null;
 
     final portal = usePortalEntry(
       () => PortalEntry(
-        builder: (context) => TooltipOverlay(
-          tooltip: tooltip,
-          shortcut: shortcut,
-        ),
+        builder: (context) => TooltipOverlay(tooltip: tooltip!),
       ),
+      [tooltip],
     );
 
     void show() {
+      if (!enabled) return;
       if (suppressed.value) return;
       portal.push(context, anchor: .compute(context, axis: .horizontal));
       manager.onShow();
     }
 
     void hide() {
+      if (!enabled) return;
       timer.value?.cancel();
       timer.value = null;
       if (portal.isActive) {
@@ -47,6 +53,7 @@ class Tooltip extends HookWidget {
     }
 
     void schedule() {
+      if (!enabled) return;
       timer.value?.cancel();
       if (manager.isWarm) {
         show();
@@ -80,14 +87,15 @@ class TooltipOverlay extends StatelessWidget {
   const new({
     super.key,
     required this.tooltip,
-    this.shortcut,
   });
 
-  final SingleActivator? shortcut;
-  final Widget tooltip;
+  final TooltipData tooltip;
 
   @override
   Widget build(BuildContext context) {
+    final label = tooltip.label;
+    final shortcut = tooltip.shortcut;
+
     return IgnorePointer(
       child: Surface(
         color: context.colors.surface.secondary,
@@ -103,7 +111,7 @@ class TooltipOverlay extends StatelessWidget {
             ],
             DefaultForegroundStyle(
               style: context.typography.body.primary,
-              child: tooltip,
+              child: Text(label),
             ),
           ],
         ),

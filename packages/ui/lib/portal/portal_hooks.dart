@@ -1,6 +1,6 @@
 part of 'portal.dart';
 
-PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create) {
+PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create, [List<Object?>? keys]) {
   final ref = useRef<PortalEntry<T>?>(create());
 
   useEffect(() {
@@ -11,6 +11,15 @@ PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create) {
       }
     };
   }, const []);
+
+  useEffect(
+    () {
+      ref.value?.pop(force: true);
+      ref.value = create();
+      return null;
+    },
+    keys ?? const [],
+  );
 
   return ref.value!;
 }

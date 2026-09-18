@@ -1,32 +1,63 @@
 part of 'command.dart';
 
-class CommanderWidget extends HookWidget {
-  const CommanderWidget({super.key, required this.child});
+class CommanderRoot extends StatefulWidget {
+  const CommanderRoot({super.key, required this.child});
+
+  static CommanderRootState? maybeOf(BuildContext context) => context.findAncestorStateOfType<CommanderRootState>();
+  static CommanderRootState of(BuildContext context) => context.findAncestorStateOfType<CommanderRootState>()!;
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final entry = usePortalEntry(
-      () => .new(
-        builder: (_) => CommanderOverlay(outerContext: context),
-        isModal: true,
-      ),
-    );
+  State<CommanderRoot> createState() => CommanderRootState();
+}
 
+class CommanderRootState extends State<CommanderRoot> {
+  late final isVisible = signal(false);
+  late final _entry = PortalEntry(
+    builder: (_) => CommanderOverlay(outerContext: context),
+    isModal: true,
+  );
+
+  void push(BuildContext context) {
+    _entry.push(context).then((_) => isVisible.value = false);
+    isVisible.value = true;
+  }
+
+  void pop() {
+    isVisible.value = false;
+    _entry.pop();
+  }
+
+  void toggle() {
+    if (isVisible.value) {
+      pop();
+    } else {
+      push(context);
+    }
+  }
+
+  @override
+  void dispose() {
+    _entry.pop(force: true);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Focus(
       canRequestFocus: false,
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent) {
-          if (event.logicalKey == .slash && !entry.isActive) {
-            entry.push(context);
+          if (event.logicalKey == .slash && !_entry.isActive) {
+            push(context);
             return .handled;
           }
         }
 
         return .ignored;
       },
-      child: child,
+      child: widget.child,
     );
   }
 }

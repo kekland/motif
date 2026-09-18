@@ -16,7 +16,8 @@ class EditorCanvas extends HookWidget {
       child: EditorShortcuts(
         child: ToolShortcuts(
           controller: editor.tool,
-          child: CommanderWidget(
+          child: CommanderRoot(
+            key: editor.commanderRootKey,
             child: CanvasContextMenu(
               child: InteractiveCanvasFocus(
                 child: Overlay.wrap(

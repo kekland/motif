@@ -11,7 +11,22 @@ class IconButton extends StatelessWidget {
     this.foregroundColor,
     this.borderRadius,
     this.isFilled = true,
+    this.isSelected = false,
+    this.tooltip,
   });
+
+  const IconButton.flat({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.size = 32.0,
+    this.iconSize = 18.0,
+    this.borderRadius,
+    this.isSelected = false,
+    this.tooltip,
+  }) : isFilled = false,
+       color = null,
+       foregroundColor = null;
 
   final VoidCallback? onTap;
   final Color? color;
@@ -20,7 +35,9 @@ class IconButton extends StatelessWidget {
   final double size;
   final double iconSize;
   final BorderRadius? borderRadius;
+  final TooltipData? tooltip;
   final bool isFilled;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +45,28 @@ class IconButton extends StatelessWidget {
 
     if (this.color != null) {
       color = this.color!;
+    } else if (isSelected) {
+      color = context.colors.accent.secondary;
     } else if (isFilled) {
       color = context.colors.surface.secondary;
     } else {
       color = Surface.maybeColorOf(context);
     }
 
-    return GestureSurface(
-      onTap: onTap,
-      width: size,
-      height: size,
-      color: color,
-      foregroundColor: foregroundColor,
-      borderSide: isFilled ? .new(color: context.colors.divider, width: 1.0) : null,
-      borderRadius: borderRadius ?? BorderRadius.circular(4.0),
-      child: DefaultForegroundStyle(
-        iconSize: iconSize,
-        child: Center(child: child),
+    return Tooltip(
+      tooltip: tooltip,
+      child: GestureSurface(
+        onTap: onTap,
+        width: size,
+        height: size,
+        color: color,
+        foregroundColor: foregroundColor,
+        borderSide: isFilled ? .new(color: context.colors.divider, width: 1.0) : null,
+        borderRadius: borderRadius ?? BorderRadius.circular(4.0),
+        child: DefaultForegroundStyle(
+          iconSize: iconSize,
+          child: Center(child: child),
+        ),
       ),
     );
   }

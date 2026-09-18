@@ -20,9 +20,16 @@ class ProgramPanel extends HookWidget {
           child: Column(
             mainAxisSize: .min,
             children: [
-              Header(
-                // leading: Icons.stacks(),
-                title: Text('Program'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Header(title: Text('Program')),
+                  ),
+                  VerticalDivider(),
+                  Expanded(
+                    child: Header(title: Text('Tree')),
+                  ),
+                ],
               ),
               Divider(),
             ],

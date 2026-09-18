@@ -27,32 +27,50 @@ class EditorTabBar extends HookWidget {
     final selectedTab = useExistingSignal(tabSignal).value;
 
     return Surface(
-      child: ListView.builder(
-        scrollDirection: .horizontal,
-        itemCount: EditorTab.values.length,
-        itemBuilder: (context, i) {
-          final tab = EditorTab.values[i];
-          return Row(
-            children: [
-              ListItem(
-                isSelected: selectedTab == tab,
-                onTap: () {
-                  if (context.editor.tab.value == tab) {
-                    tabSignal.value = null;
-                    context.editor.panels.collapse(.tab);
-                  } else {
-                    context.editor.tab.value = tab;
-                    context.editor.panels.expand(.tab);
-                  }
-                },
-                width: 160.0,
-                leading: tab.icon(context),
-                title: Text(tab.name(context)),
-              ),
-              VerticalDivider(),
-            ],
-          );
-        },
+      child: Row(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: .horizontal,
+              itemCount: EditorTab.values.length,
+              itemBuilder: (context, i) {
+                final tab = EditorTab.values[i];
+                return Row(
+                  children: [
+                    ListItem(
+                      isSelected: selectedTab == tab,
+                      onTap: () {
+                        if (context.editor.tab.value == tab) {
+                          tabSignal.value = null;
+                          context.editor.panels.collapse(.tab);
+                        } else {
+                          context.editor.tab.value = tab;
+                          context.editor.panels.expand(.tab);
+                        }
+                      },
+                      width: 160.0,
+                      leading: tab.icon(context),
+                      title: Text(tab.name(context)),
+                    ),
+                    VerticalDivider(),
+                  ],
+                );
+              },
+            ),
+          ),
+          SignalBuilder(
+            builder: (context) {
+              final isVisible = context.editor.commander.isVisible.value;
+              return IconButton.flat(
+                tooltip: .new('Command palette', shortcut: .new(.slash)),
+                isSelected: isVisible,
+                onTap: () => context.editor.commander.push(context),
+                child: Icons.commander(),
+              );
+            },
+          ),
+          const SizedBox(width: 2.0),
+        ],
       ),
     );
   }

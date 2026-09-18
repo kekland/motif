@@ -32,7 +32,7 @@ class EditorWidget extends StatelessWidget {
         return Provider.value(
           value: editor,
           child: Panels<EditorPanel>(
-            key: editor.rootPanelsKey,
+            key: editor.panelsRootKey,
             direction: .horizontal,
             panels: [
               Panel(

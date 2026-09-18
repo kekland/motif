@@ -20,12 +20,11 @@ final class Editor extends Controller {
 
     $effect(() {
       final tab = this.tab.value;
-      if (rootPanelsKey.currentState == null) return;
+      if (panelsRootKey.currentState == null) return;
 
       if (tab == null) {
         panels.collapse(.tab);
       } else {
-        print('expand!');
         panels.expand(.tab);
       }
     });
@@ -52,8 +51,11 @@ final class Editor extends Controller {
   final sceneKey = GlobalKey();
   RenderBox get renderScene => sceneKey.currentContext!.findRenderObject() as RenderBox;
 
-  final rootPanelsKey = GlobalKey<PanelsState<EditorPanel>>();
-  PanelsState<EditorPanel> get panels => rootPanelsKey.currentState!;
+  final panelsRootKey = GlobalKey<PanelsState<EditorPanel>>();
+  PanelsState<EditorPanel> get panels => panelsRootKey.currentState!;
+
+  final commanderRootKey = GlobalKey<CommanderRootState>();
+  CommanderRootState get commander => commanderRootKey.currentState!;
 
   late final tab = $signal<EditorTab?>(null);
 
