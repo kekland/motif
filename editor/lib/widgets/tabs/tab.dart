@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/tabs/animation_tab.dart';
 import 'package:editor/widgets/tabs/generators_tab.dart';
 import 'package:editor/widgets/tabs/variables_tab.dart';
 
@@ -22,11 +23,12 @@ class EditorTabWidget extends HookWidget {
             child: switch (selectedTab) {
               .generators => GeneratorsTab(),
               .variables => VariablesTab(),
-              _ => Container(),
+              .animation => AnimationTab(),
+              null => SizedBox.shrink(),
             },
           ),
         );
-      }
+      },
     );
   }
 }

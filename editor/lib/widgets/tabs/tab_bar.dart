@@ -2,16 +2,19 @@ import 'package:editor/imports.dart';
 
 enum EditorTab {
   generators,
-  variables;
+  variables,
+  animation;
 
   Widget icon(BuildContext context) => switch (this) {
     .generators => Icons.generator(),
     .variables => Icons.variable(),
+    .animation => Icons.animation(),
   };
 
   String name(BuildContext context) => switch (this) {
     .generators => 'Generators',
     .variables => 'Variables',
+    .animation => 'Animation',
   };
 }
 

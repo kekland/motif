@@ -25,7 +25,7 @@ Thu
 - [?] Proper modifiers section      (Add done, missing: properties, display)
 - [x] Global context menu manager
 - [x] Editor tabs (generators, variables)
-- [ ] Generator statement nodes implementations
+- [x] Generator statement nodes implementations (Need more, but it's fine)
 - [ ] Fix generator statement dissolution/deletion
 
 Fri

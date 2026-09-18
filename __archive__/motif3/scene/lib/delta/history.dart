@@ -27,7 +27,7 @@ final class SceneHistory {
       if (merged != null) {
         if (merged.isEmpty) {
           _entries.removeAt(_cursor - 1);
-          _cursor--;
+          _cursor--; 
           _mergeKey = null;
         } else {
           _entries[_cursor - 1] = merged;
