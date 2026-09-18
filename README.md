@@ -2,9 +2,9 @@
 
 <!-- Badges -->
 
-![GitHub License](https://img.shields.io/github/license/kekland/motif)
+[![GitHub License](https://img.shields.io/github/license/kekland/motif)](https://github.com/kekland/motif/blob/main/LICENSE)
 [![Kofi](https://img.shields.io/badge/Kofi-F16061.svg?logo=ko-fi&logoColor=white)](https://ko-fi.com/kekland)
-![GitHub Repo stars](https://img.shields.io/github/stars/kekland/motif)
+[![GitHub Repo stars](https://img.shields.io/github/stars/kekland/motif)](https://github.com/kekland/motif/stargazers)
 
 
 An open-source vector graphics, design, and animation tool.
