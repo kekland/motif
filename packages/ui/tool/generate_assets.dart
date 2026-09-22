@@ -8,7 +8,7 @@ Future<void> main() async {
   final icons = <IconData>[
     .new('square', 'Symbols.square_rounded'),
     .new('circle', 'Symbols.circle_rounded'),
-    .new('container', 'Symbols.border_all_rounded'),
+    .new('container', 'Symbols.cards_rounded'),
     .new('chevronLeft', 'Symbols.chevron_left_rounded'),
     .new('chevronRight', 'Symbols.chevron_right_rounded'),
     .new('chevronUp', 'Symbols.keyboard_arrow_up_rounded'),
@@ -57,6 +57,9 @@ Future<void> main() async {
     .new('checkbox_checked', 'Symbols.check_box_rounded'),
     .new('fillet', 'Symbols.rounded_corner_rounded'),
     .new('commander', 'Symbols.call_to_action_rounded'),
+    .new('group', 'Symbols.folder_rounded'),
+    .new('tree', 'Symbols.account_tree_rounded'),
+    .new('program', 'Symbols.code_blocks_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

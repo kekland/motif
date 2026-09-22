@@ -98,6 +98,6 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     transform[i] = .identity();
     worldTransform[i] = .identity();
     inverseWorldTransform[i] = .identity();
-    id.assign(i, .frame(namespace: .zero, tag: 0));
+    id.assign(i, .frame(namespace: .zero, op: 0));
   }
 }

@@ -75,7 +75,14 @@ final class StrokeWidthProp(super.sources) extends Prop<double?, double> {
   PropType get type => .strokeWidth;
 }
 
-final class StrokeColorProp(super.sources) extends Prop<ColorData?, ColorData> {
+abstract class ColorProp(super.sources) extends Prop<ColorDataPartial?, ColorDataPartial> {
+  @override
+  Mixed<ColorDataPartial?> resolveMixed(List<ColorDataPartial?> values) {
+    return .new(.fromPartialList(values.nonNulls));
+  }
+}
+
+final class StrokeColorProp(super.sources) extends ColorProp {
   @override
   PropType get type => .strokeColor;
 }
@@ -89,11 +96,15 @@ final class EdgeStyleProp(super.sources) extends Prop<EdgeStylePartial, EdgeStyl
   );
 
   late final StrokeColorProp color = .new(
-    sources.remap(.strokeColor, (v) => v.color, (p, v) => p.copyWith(color: v)),
+    sources.remap(
+      .strokeColor,
+      (v) => v.color?.partial,
+      (p, v) => p.copyWith(color: p.color != null ? v.apply(p.color!) : null),
+    ),
   );
 }
 
-final class FillColorProp(super.sources) extends Prop<ColorData?, ColorData> {
+final class FillColorProp(super.sources) extends ColorProp {
   @override
   PropType get type => .fillColor;
 }
@@ -103,7 +114,11 @@ final class FaceStyleProp(super.sources) extends Prop<FaceStylePartial, FaceStyl
   PropType get type => .faceStyle;
 
   late final FillColorProp color = .new(
-    sources.remap(.fillColor, (v) => v.color, (p, v) => p.copyWith(color: v)),
+    sources.remap(
+      .fillColor,
+      (v) => v.color?.partial,
+      (p, v) => p.copyWith(color: p.color != null ? v.apply(p.color!) : null),
+    ),
   );
 }
 

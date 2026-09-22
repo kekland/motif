@@ -43,42 +43,4 @@ extension OpsUtils on Transaction {
   void markVertexMoved(VertexHandle v) => bundle._changeTracker.add(bundle, bundle._vertex, v);
   void markEdgeMoved(EdgeHandle e) => bundle._changeTracker.add(bundle, bundle._edge, e);
   void markFaceMoved(FaceHandle f) => bundle._changeTracker.add(bundle, bundle._face, f);
-
-  // void markEdgeEndpointsMoved(EdgeHandle e) {
-  //   delta.markMoved(bundle.edgeStart(e).ref(bundle));
-  //   delta.markMoved(bundle.edgeEnd(e).ref(bundle));
-  // }
-
-  // void markCycleMoved(CycleRef c) {
-  //   for (final c in c.coedges) delta.markMoved(.edge(c.edge));
-  // }
-
-  // CompositeOp<P, C> composite<P, C>(Composite<P, C> definition, P params) {
-  //   final mark = ops.length;
-  //   final cells = definition.topology(this, params);
-
-  //   final topology = ops.sublist(mark).cast<TopologyOp>();
-  //   definition.geometry(this, params, cells);
-
-  //   final geometry = ops.sublist(mark + topology.length).cast<GeometryOp>();
-  //   final op = CompositeOp(definition, params, cells, topology, geometry);
-  //   ops.replaceRange(mark, ops.length, [op]);
-
-  //   return op;
-  // }
-
-  // CompositeOp<P, C>? reshape<P, C>(CompositeOp<P, C> op, P params) {
-  //   if (!op.definition.topologyEquals(op.params, params)) return null;
-  //   final mark = ops.length;
-  //   op.definition.geometry(this, params, op.cells);
-  //   return op.withGeometry(ops.sublist(mark).cast<GeometryOp>());
-  // }
 }
-
-// final class CellIdFactory {
-//   new(this.namespace);
-//   final int namespace;
-
-//   var _tag = 0;
-//   CellId next() => .make(namespace: namespace, tag: _tag++);
-// }

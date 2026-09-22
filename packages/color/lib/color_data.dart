@@ -1,4 +1,7 @@
+import 'package:shared/shared.dart';
 import 'package:css/color.dart' as css_color;
+
+part 'color_data_partial.dart';
 
 enum ColorType {
   hsv,
@@ -6,6 +9,19 @@ enum ColorType {
 
 sealed class ColorData {
   const ColorData(this._v1, this._v2, this._v3, {this.alpha = 1.0});
+
+  factory ColorData.fromCss(css_color.ColorData css) {
+    if (css is css_color.HsvColorData) {
+      return ColorData.hsv(
+        h: css.h,
+        s: css.s / 100.0,
+        v: css.v / 100.0,
+        alpha: css.alpha,
+      );
+    }
+
+    return .fromCss(css.convertTo(.hsv));
+  }
 
   static const ColorData transparent = .hsv(alpha: 0.0);
   static const ColorData red = .hsv(h: 0.0, s: 1.0, v: 1.0);
@@ -25,6 +41,15 @@ sealed class ColorData {
 
   css_color.ColorData get cssColor;
   ColorData withAlpha(double alpha);
+
+  ColorData convertTo(ColorType type) {
+    if (type == this.type) return this;
+    final converted = cssColor.convertTo(switch (type) {
+      .hsv => .hsv,
+    });
+
+    return .fromCss(converted);
+  }
 
   double get v1 => _v1;
   double get v2 => _v2;

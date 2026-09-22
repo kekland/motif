@@ -22,7 +22,7 @@ final class SceneNotifier with ChangeNotifier, ChangeNotifierDisposable {
     return _refNotifiers[ref]!;
   }
 
-  void _update(EvaluationPass pass) {
+  void _update(EvalPass pass) {
     final movedFrames = pass.movedFrames.map((r) => scene.bundle.frame(r)).nonNulls.toList();
 
     for (final entry in _refNotifiers.entries) {

@@ -25,7 +25,7 @@ class SelectRectDetector extends HookWidget {
   Widget build(BuildContext context) {
     return MarqueeDetector(
       activityFactory: (onLocalRectChanged) => SelectRectActivity(
-        editor: Editor.watch(context),
+        editor: Editor.of(context),
         onLocalRectChanged: onLocalRectChanged,
       ),
     );

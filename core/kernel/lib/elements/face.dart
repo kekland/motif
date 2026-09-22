@@ -11,6 +11,8 @@ extension type const FaceHandle.raw(CellHandle h) implements CellHandle {
   FaceRef ref(Bundle bundle) => bundle.ref(this);
 }
 
+typedef FaceCorner = ({VertexHandle v, EdgeHandle a, EdgeHandle b});
+
 final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage> {
   var boundary = BoundaryListStorage<FaceIndex>();
   var parent = FrameIndexStorage<FaceIndex>();

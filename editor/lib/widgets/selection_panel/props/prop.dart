@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/generators/generator_editor_window.dart';
 import 'package:editor/widgets/selection_panel/widgets.dart';
 import 'package:equatable/equatable.dart';
 
@@ -94,17 +93,17 @@ final class DelegatedPropSource<G, S> extends PropSource<G, S> {
 sealed class PropValue<T> {
   const PropValue();
 
-  const factory PropValue.uniform(T value) = Uniform<T>;
-  const factory PropValue.mixed() = Mixed<T>;
+  const factory uniform(T value) = Uniform<T>;
+  const factory mixed(T? value) = Mixed<T>;
 
   T? get() => switch (this) {
     Uniform(:final value) => value,
-    Mixed() => null,
+    Mixed(:final value) => value,
   };
 }
 
 final class const Uniform<T>(final T value) extends PropValue<T>;
-final class const Mixed<T>() extends PropValue<T>;
+final class const Mixed<T>(final T? value) extends PropValue<T>;
 
 sealed class Prop<G, S> {
   Prop(this.sources);
@@ -155,11 +154,13 @@ sealed class Prop<G, S> {
 
     for (final source in sources.skip(1)) {
       final v = source.value(scene);
-      if (!compare(first, v)) return const .mixed();
+      if (!compare(first, v)) return resolveMixed(sources.map((s) => s.value(scene)).toList());
     }
 
     return .uniform(first);
   }
+
+  Mixed<G> resolveMixed(List<G> values) => const .new(null);
 
   void set(SceneTransaction txn, S value) {
     for (final source in sources) source.set(txn, value);

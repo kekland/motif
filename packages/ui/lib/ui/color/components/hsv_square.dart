@@ -7,20 +7,19 @@ class _HSVSquare extends HookWidget {
     this.onChanged,
   });
 
-  final ColorData? value;
-  final ValueChanged<ColorData>? onChanged;
+  final HsvColorDataPartial? value;
+  final ValueChanged<ColorDataPartial>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final panHue = useRef<double?>(null);
-    final hsvColor = value as HsvColorData;
-    var hue = hsvColor.h;
-    var x = hsvColor.s;
-    var y = hsvColor.v;
+    var hue = value?.h;
+    var x = value?.s;
+    var y = value?.v;
 
-    if (hue.isNaN) hue = 0.0;
-    if (x.isNaN) x = 0.0;
-    if (y.isNaN) y = 0.0;
+    if (hue?.isNaN == true) hue = null;
+    if (x?.isNaN == true) x = null;
+    if (y?.isNaN == true) y = null;
 
     void _updateSv(Offset localPosition) {
       final totalSize = context.size!;
@@ -33,8 +32,7 @@ class _HSVSquare extends HookWidget {
       final position = localPosition - const Offset(dragHandleSize, dragHandleSize) / 2;
       final newS = clampDouble(position.dx / adjustedSize.width, 0.0, 1.0);
       final newV = clampDouble(1.0 - position.dy / adjustedSize.height, 0.0, 1.0);
-      final newColor = hsvColor.copyWith(s: newS, v: newV);
-      if (onChanged != null) onChanged!(newColor);
+      if (onChanged != null) onChanged!(.hsv(s: newS, v: newV));
     }
 
     return GestureDetector(
@@ -47,7 +45,7 @@ class _HSVSquare extends HookWidget {
         if (details.kind == .trackpad) {
           final delta = details.delta.dx / size.width;
           final newHue = ((panHue.value! + delta * 360.0) % 360.0 + 360.0) % 360.0;
-          if (onChanged != null) onChanged!(hsvColor.copyWith(h: newHue));
+          if (onChanged != null) onChanged!(.hsv(h: newHue));
           panHue.value = newHue;
         } else {
           _updateSv(details.localPosition);
@@ -62,7 +60,11 @@ class _HSVSquare extends HookWidget {
             child: Stack(
               children: [
                 // Hue layer
-                Positioned.fill(child: ColoredBox(color: HSVColor.fromAHSV(1.0, hue, 1.0, 1.0).toColor())),
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: HSVColor.fromAHSV(1.0, hue ?? 0.0, 1.0, 1.0).toColor(),
+                  ),
+                ),
 
                 // Saturation layer
                 Positioned.fill(
@@ -94,12 +96,15 @@ class _HSVSquare extends HookWidget {
           ),
 
           // Drag handle
-          Align(
-            alignment: FractionalOffset(x, 1.0 - y),
-            child: _DragHandle(
-              innerColor: value?.toUiColor().withValues(alpha: 1.0),
+          if (x != null || y != null)
+            Align(
+              alignment: FractionalOffset(x ?? 0.0, 1.0 - (y ?? 0.0)),
+              child: _DragHandle(
+                innerColor: HsvColorData(h: hue ?? 0.0, s: x ?? 1.0, v: y ?? 1.0).toUiColor(),
+                expandWidth: x == null,
+                expandHeight: y == null,
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -1,48 +1,38 @@
 part of 'kernel.dart';
 
-extension type const TransactionMark._((int ops, int added, int deleted, int moved, int lineage) _) {
-  static const zero = TransactionMark._((0, 0, 0, 0, 0));
-
-  int get ops => _.$1;
-  int get added => _.$2;
-  int get deleted => _.$3;
-  int get moved => _.$4;
-  int get lineage => _.$5;
-}
-
 enum TransactionMode {
   topology,
   geometry,
 }
 
 final class Transaction {
-  Transaction(this.bundle, {this._namespace}) {
+  Transaction(this.bundle, {required this.namespace}) {
     bundle._lockTransaction();
     bundle._changeTracker.begin();
   }
 
   final Bundle bundle;
-  final U64? _namespace;
+  final U64 namespace;
 
   final delta = Delta();
-
   var _committed = false;
   void _checkOpen() {
     if (_committed) throw StateError('transaction has already been committed');
   }
 
-  var _tag = 0;
+  var _opIndex = 0;
+  var _subIndex = 0;
+  var _captureIndex = 0;
 
   TransactionMode? _mode;
   TransactionMode get mode => _mode!;
 
   OpRecord? _record;
-  var _sub = 0;
 
   void _bind(OpRecord record) {
     assert(_record == null);
     _record = record;
-    _sub = 0;
+    _subIndex = 0;
   }
 
   void _unbind(OpRecord record) {
@@ -52,7 +42,7 @@ final class Transaction {
 
   OpRecord<O> apply<O extends Op>(O op) {
     _checkOpen();
-    final record = OpRecord<O>(op, _tag++);
+    final record = OpRecord<O>(op, namespace, _opIndex++);
     _run(record, mode: .topology);
     delta.actions.add(.applied(record));
     return record;
@@ -83,20 +73,11 @@ final class Transaction {
 
   R _applyWithResult<R, O extends Op>(O op) {
     _checkOpen();
-    final record = OpRecord<O>(op, _tag++);
+    final record = OpRecord<O>(op, namespace, _opIndex++);
     final result = _run(record, mode: .topology, produceResult: true) as R;
     delta.actions.add(.applied(record));
     return result;
   }
-
-  // T _cache<T>(CellHandle h, Object key, T Function() compute) {
-  //   final ref = h.ref(bundle), version = 1;
-  //   final hit = _record!._cache[(ref, key)];
-  //   if (hit != null && hit.$1 == version) return hit.$2 as T;
-  //   final value = compute();
-  //   _record!._cache[(ref, key)] = (version, value);
-  //   return value;
-  // }
 
   Object? _run(OpRecord record, {required TransactionMode mode, bool produceResult = false}) {
     assert(_mode == null);
@@ -106,9 +87,9 @@ final class Transaction {
     final result = record.def._execute(this, produceResult);
 
     if (mode == .topology) {
-      record._subCount = _sub;
+      record._subCount = _subIndex;
     } else {
-      assert(_sub == record._subCount);
+      assert(_subIndex == record._subCount);
     }
 
     _unbind(record);
@@ -127,7 +108,23 @@ final class Transaction {
   }
 
   CellRef<H> _ref<H extends CellHandle>(CellKind kind) {
-    return .make(namespace: _namespace!, tag: _record!.tag, sub: _sub++, kind: kind);
+    return .make(
+      namespace: _record!.namespace,
+      op: _record!.index,
+      sub: _subIndex++,
+      kind: kind,
+    );
+  }
+
+  T _capture<T>(T Function() resolve) {
+    final record = _record!;
+    if (mode == .topology) {
+      final value = resolve();
+      record._captured.add(value);
+      return value;
+    }
+
+    return record._captured[_captureIndex++] as T;
   }
 
   M _recordMutation<M extends Mutation>(M m) {
@@ -139,7 +136,7 @@ final class Transaction {
     if (mode == .geometry) return;
 
     final ref = h.ref(bundle);
-    if (ref.namespace != _namespace || ref.tag != _record!.tag) {
+    if (ref.namespace != _record!.namespace || ref.op != _record!.index) {
       _record!._geometry.putIfAbsent(ref, () => .of(bundle, h));
     }
   }

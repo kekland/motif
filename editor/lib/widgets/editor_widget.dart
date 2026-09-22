@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/canvas.dart';
-import 'package:editor/widgets/program_panel/program_panel.dart';
+import 'package:editor/widgets/scene_panel.dart';
 import 'package:editor/widgets/sidebar.dart';
 import 'package:editor/widgets/tabs/tab.dart';
 import 'package:editor/widgets/tabs/tab_bar.dart';
@@ -8,7 +8,7 @@ import 'package:editor/widgets/toolbar.dart';
 
 enum EditorPanel {
   toolbar,
-  program,
+  scene,
   main,
   canvas,
   tab,
@@ -41,9 +41,9 @@ class EditorWidget extends StatelessWidget {
                 child: EditorToolbar(),
               ),
               Panel(
-                key: EditorPanel.program,
+                key: EditorPanel.scene,
                 constraints: .pixels(0.0, 384.0, initial: 200.0),
-                child: ProgramPanel(),
+                child: ScenePanel(),
               ),
               Panel(
                 key: EditorPanel.main,

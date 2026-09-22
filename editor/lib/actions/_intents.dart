@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:editor/imports.dart';
 import 'package:flutter/services.dart';
 
 part 'select_ref.dart';
+part 'select_statement.dart';
 part 'select_all.dart';
 part 'clear_selection.dart';
 part 'undo.dart';
@@ -14,9 +13,11 @@ part 'paste.dart';
 part 'set_z_order_top.dart';
 part 'set_z_order_bottom.dart';
 part 'glue_selected_vertices.dart';
+part 'group_selection.dart';
 
 final intents = (
   selectRef: SelectRefIntent.new,
+  selectStatement: SelectStatementIntent.new,
   selectAll: SelectAllIntent.new,
   clearSelection: ClearSelectionIntent.new,
   undo: UndoIntent.new,
@@ -28,10 +29,12 @@ final intents = (
   setZOrderTop: SetZOrderTopIntent.new,
   setZOrderBottom: SetZOrderBottomIntent.new,
   glueSelectedVertices: GlueSelectedVerticesIntent.new,
+  groupSelection: GroupSelectionIntent.new,
 );
 
 final actions = <Type, Action>{
   SelectRefIntent: SelectRefAction(),
+  SelectStatementIntent: SelectStatementAction(),
   SelectAllIntent: SelectAllAction(),
   ClearSelectionIntent: ClearSelectionAction(),
   UndoIntent: UndoAction(),
@@ -42,6 +45,7 @@ final actions = <Type, Action>{
   SetZOrderTopIntent: SetZOrderTopAction(),
   SetZOrderBottomIntent: SetZOrderBottomAction(),
   GlueSelectedVerticesIntent: GlueSelectedVerticesAction(),
+  GroupSelectionIntent: GroupSelectionAction(),
 };
 
 Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {

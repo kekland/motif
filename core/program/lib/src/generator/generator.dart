@@ -1,0 +1,100 @@
+import 'dart:math' as math;
+
+import 'package:blueprint/core.dart';
+import 'package:geometry/geometry.dart';
+import 'package:program/program.dart';
+import 'package:shared/shared.dart';
+
+import 'generator.g.dart';
+
+part 'nodes/array.dart';
+part 'nodes/fields.dart';
+part 'nodes/generator_input.dart';
+part 'nodes/generator_output.dart';
+part 'nodes/fillet.dart';
+part 'nodes/primitives.dart';
+part 'nodes/values.dart';
+part 'nodes/math.dart';
+
+class Generator extends Blueprint<Generator> {
+  Generator({super.nodes, super.connections, super.positions, super.fixed}) {
+    inputNode = nodes.singleWhere((n) => n is GeneratorInputNode) as GeneratorInputNode;
+    outputNode = nodes.singleWhere((n) => n is GeneratorOutputNode) as GeneratorOutputNode;
+  }
+
+  factory Generator.empty() {
+    final inputNode = GeneratorInputNode();
+    final outputNode = GeneratorOutputNode();
+    final generator = Generator(
+      nodes: [inputNode, outputNode],
+      connections: [.new(inputNode.o.slice.ref, outputNode.i.slices.ref)],
+      fixed: {inputNode.id, outputNode.id},
+      positions: {inputNode.id: .new(0.0, 0.0), outputNode.id: .new(200.0, 0.0)},
+    );
+
+    return generator;
+  }
+
+  late final GeneratorInputNode inputNode;
+  late final GeneratorOutputNode outputNode;
+
+  ProgramSlice execute(EvalContext context, ProgramSlice input) {
+    final execution = BlueprintExecution(
+      blueprint: this,
+      environment: {
+        EvalContext: context,
+        ProgramSlice: input,
+      },
+    );
+
+    return outputNode.execute(execution);
+  }
+
+  @override
+  Generator copyWith({
+    List<Node>? nodes,
+    List<Connection>? connections,
+    Map<NodeId, Vec2>? positions,
+    Set<NodeId>? fixed,
+  }) => .new(
+    nodes: nodes ?? this.nodes,
+    connections: connections ?? this.connections,
+    positions: positions ?? this.positions,
+    fixed: fixed ?? this.fixed,
+  );
+}
+
+extension GeneratorBlueprintExecution on BlueprintExecution {
+  EvalContext get evalContext => environment<EvalContext>();
+
+  StatementId derive(Node node, FieldContext context) {
+    final base = U64.of(0, node.id.value);
+    final key = Mix64.mix(base, context.id!);
+    return evalContext.derive(key, origin: node);
+  }
+
+  StatementId deriveFor(Node node, Statement source, {int index = 0}) {
+    final base = U64.of(0, node.id.value);
+    final key = Mix64.mixWithKey(Mix64.mix(base, source.id.value), index);
+    return evalContext.derive(key, origin: node);
+  }
+
+  Iterable<FieldContext> sliceContext(ProgramSlice slice) sync* {
+    for (var i = 0; i < slice.length; i++) {
+      final s = slice.statements[i];
+      yield FieldContext(this, index: i, id: s.id.value, element: s);
+    }
+  }
+
+  Iterable<FieldContext> freshContext(Node node, {required int count}) sync* {
+    final base = U64.of(0, node.id.value);
+    for (var i = 0; i < count; i++) {
+      final key = Mix64.mixWithKey(base, i);
+      yield FieldContext(this, index: i, id: key, element: null);
+    }
+  }
+}
+
+extension GeneratorFieldContext on FieldContext {
+  Statement get statement => element as Statement;
+}

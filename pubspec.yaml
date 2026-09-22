@@ -10,8 +10,6 @@ workspace:
   - server
   - editor
 
-  - playground
-
   - core/geometry
   - core/shared
   - core/kernel
@@ -22,7 +20,6 @@ workspace:
   - packages/native
   - packages/blueprint
   - packages/genie
-  - packages/log
   - packages/mouse_cursor
   - packages/bindings
   - packages/state

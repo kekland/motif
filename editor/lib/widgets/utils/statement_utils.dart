@@ -9,15 +9,16 @@ extension StatementUtils on Statement {
     RectangleStatement() => 'Rectangle',
     EllipseStatement() => 'Ellipse',
     PolygonStatement() => 'Polygon',
-    FrameStatement() => 'Frame',
     CutEdgeStatement() => 'Cut edge',
     MultiCutEdgeStatement() => 'Multi-cut edge',
     GlueVerticesStatement() => 'Glue vertices',
     FilletFaceStatement() => 'Fillet face',
-    DissolveStatement() => 'Dissolve',
     GeneratorStatement() => 'Generator',
+    GroupStatement() => 'Group',
     GeneratingStatement() => unreachable(),
     PlacedStatement() => unreachable(),
+    FacedStatement() => unreachable(),
+    FramedStatement() => unreachable(),
   };
 
   Widget icon(BuildContext context) => switch (this) {
@@ -28,25 +29,29 @@ extension StatementUtils on Statement {
     RectangleStatement() => Icons.square(),
     EllipseStatement() => Icons.circle(),
     PolygonStatement() => Icons.polygon(),
-    FrameStatement _ => Icons.frame(),
     FilletFaceStatement() => Icons.fillet(),
+    GroupStatement() => Icons.group(),
     // GlueVerticesStatement() => Icons.glue_vertices(),
     // CutEdgeStatement() => Icons.cut_edge(),
     // _ => Icons.statement(),
     GeneratorStatement() => Icons.generator(),
     PlacedStatement() => unreachable(),
+    FacedStatement() => unreachable(),
     _ => Icons.s(),
   };
 }
 
 extension ModifierUtils on Modifier {
+  String name(BuildContext context) => kind.name(context);
+  Widget icon(BuildContext context) => kind.icon(context);
+}
+
+extension ModifierKindUtils on ModifierKind {
   String name(BuildContext context) => switch (this) {
-    .generator => 'Generator',
-    .filletFace => 'Fillet',
+    .fillet => 'Fillet',
   };
 
   Widget icon(BuildContext context) => switch (this) {
-    .generator => Icons.generator(),
-    .filletFace => Icons.fillet(),
+    .fillet => Icons.fillet(),
   };
 }

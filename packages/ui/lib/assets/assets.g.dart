@@ -401,7 +401,7 @@ class Icons extends _BaseIcon {
   const Icons.faceFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.faceFill, filledLoader: null, autocolor: true);
   const Icons.square({super.key, super.size, super.color}): super.iconData(icon: Symbols.square_rounded);
   const Icons.circle({super.key, super.size, super.color}): super.iconData(icon: Symbols.circle_rounded);
-  const Icons.container({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_all_rounded);
+  const Icons.container({super.key, super.size, super.color}): super.iconData(icon: Symbols.cards_rounded);
   const Icons.chevronLeft({super.key, super.size, super.color}): super.iconData(icon: Symbols.chevron_left_rounded);
   const Icons.chevronRight({super.key, super.size, super.color}): super.iconData(icon: Symbols.chevron_right_rounded);
   const Icons.chevronUp({super.key, super.size, super.color}): super.iconData(icon: Symbols.keyboard_arrow_up_rounded);
@@ -450,6 +450,9 @@ class Icons extends _BaseIcon {
   const Icons.checkbox_checked({super.key, super.size, super.color}): super.iconData(icon: Symbols.check_box_rounded);
   const Icons.fillet({super.key, super.size, super.color}): super.iconData(icon: Symbols.rounded_corner_rounded);
   const Icons.commander({super.key, super.size, super.color}): super.iconData(icon: Symbols.call_to_action_rounded);
+  const Icons.group({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_rounded);
+  const Icons.tree({super.key, super.size, super.color}): super.iconData(icon: Symbols.account_tree_rounded);
+  const Icons.program({super.key, super.size, super.color}): super.iconData(icon: Symbols.code_blocks_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

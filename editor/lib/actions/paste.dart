@@ -21,19 +21,19 @@ class PasteAction extends CommandAction<PasteIntent> {
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     if (clipboardData == null || clipboardData.text == null) return;
 
-    try {
-      final slice = ProgramSlice.decodeRaw(base64Decode(clipboardData.text!));
-      if (slice == null) return;
+    // try {
+    //   final slice = ProgramSlice.decodeRaw(base64Decode(clipboardData.text!));
+    //   if (slice == null) return;
 
-      final remapped = slice.materialize((s) => .allocate());
-      editor.edit((txn) {
-        for (final s in remapped.statements) txn.insert(s);
-        // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
-      });
+    //   final remapped = slice.materialize((s) => .allocate());
+    //   editor.edit((txn) {
+    //     for (final s in remapped.statements) txn.insert(s);
+    //     // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
+    //   });
 
-      editor.selection.setStatements(remapped.statements.map((s) => s.id));
-    } catch (e) {
-      print('Failed to paste: $e');
-    }
+    //   editor.selection.setStatements(remapped.statements.map((s) => s.id));
+    // } catch (e) {
+    //   print('Failed to paste: $e');
+    // }
   }
 }

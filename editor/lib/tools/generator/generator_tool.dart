@@ -34,8 +34,8 @@ class _GeneratorToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final selectedStatements = useState<List<StatementId>>([]);
-    final selectedRefs = useState<Set<Ref>>({});
+    final selectedStatements = useState<Set<StatementId>>({});
+    final selectedRefs = useState<Set<CellRef>>({});
 
     return Stack(
       fit: .expand,
@@ -54,28 +54,22 @@ class _GeneratorToolOverlay extends HookWidget {
             final (rect, mode) = v;
             final hitTestResult = editor.hitTestRect(rect, mode: mode);
             final statements = hitTestResult.statements;
-            selectedStatements.value = hitTestResult.statements;
+            selectedStatements.value = statements.toSet();
 
-            final refs = <Ref>{};
+            final refs = <CellRef>{};
             for (final s in statements) refs.addAll(editor.productsOf(s));
             selectedRefs.value = refs;
           },
           onEnd: () {
-            final statements = selectedStatements.value.toList();
-            selectedStatements.value = [];
+            final targets = selectedStatements.value.toList();
             selectedRefs.value = {};
+            selectedStatements.value = {};
 
-            final generator = GeneratorStatement(
-              selectors: statements.map((id) => FragmentSelector(id)).toList(),
-              generator: .empty(),
-            );
-
-            editor.edit((txn) => txn.insert(generator));
+            final generator = editor.edit((txn) => txn.wrapGenerator(targets));
             editor.selection.setStatement(generator.id);
             editor.tab.value = .generators;
           },
           onCancel: () {
-            selectedStatements.value = [];
             selectedRefs.value = {};
           },
         ),

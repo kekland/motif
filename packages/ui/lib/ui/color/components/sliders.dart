@@ -7,13 +7,11 @@ class _HueSlider extends StatelessWidget {
     this.onChanged,
   });
 
-  final ColorData? value;
-  final ValueChanged<ColorData>? onChanged;
+  final double? value;
+  final ValueChanged<double>? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final value = this.value as HsvColorData;
-
     const colors = <Color>[
       .new(0xFFFF0000),
       .new(0xFFFFFF00),
@@ -28,10 +26,10 @@ class _HueSlider extends StatelessWidget {
       leading: Icons.h(),
       stops: colors.length,
       stopsGenerator: (v) => colors[(v * (colors.length - 1)).round()],
-      onChanged: (v) => onChanged?.call(value.copyWith(h: v * 360.0)),
-      value: value.h / 360.0,
+      onChanged: (v) => onChanged?.call(v * 360.0),
+      value: value != null ? value! / 360.0 : null,
       isCircular: true,
-      color: value.copyWith(s: 1.0, v: 1.0).toUiColor(),
+      color: value != null ? HsvColorData(h: value!, s: 1.0, v: 1.0).toUiColor() : null,
     );
   }
 }
@@ -41,21 +39,23 @@ class _SaturationSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.color,
   });
 
-  final ColorData? value;
-  final ValueChanged<ColorData>? onChanged;
+  final double? value;
+  final ValueChanged<double>? onChanged;
+  final HsvColorData? color;
 
   @override
   Widget build(BuildContext context) {
-    final value = this.value as HsvColorData;
+    final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 0.0, v: 1.0);
 
     return _Slider(
       leading: Icons.s(),
-      stopsGenerator: (s) => value.copyWith(s: s, alpha: 1.0).toUiColor(),
-      onChanged: (s) => onChanged?.call(value.copyWith(s: s)),
-      value: value.s,
-      color: value.toUiColor(),
+      stopsGenerator: (s) => stopsColor.copyWith(s: s).toUiColor(),
+      onChanged: (s) => onChanged?.call(s),
+      value: value,
+      color: stopsColor.copyWith(s: value).toUiColor(),
     );
   }
 }
@@ -65,21 +65,23 @@ class _ValueSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.color,
   });
 
-  final ColorData? value;
-  final ValueChanged<ColorData>? onChanged;
+  final double? value;
+  final ValueChanged<double>? onChanged;
+  final HsvColorData? color;
 
   @override
   Widget build(BuildContext context) {
-    final value = this.value as HsvColorData;
+    final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 1.0, v: 0.0);
 
     return _Slider(
       leading: Icons.v(),
-      stopsGenerator: (v) => value.copyWith(v: v, alpha: 1.0).toUiColor(),
-      onChanged: (v) => onChanged?.call(value.copyWith(v: v)),
-      value: value.v,
-      color: value.toUiColor(),
+      stopsGenerator: (v) => stopsColor.copyWith(v: v).toUiColor(),
+      onChanged: (v) => onChanged?.call(v),
+      value: value,
+      color: stopsColor.copyWith(v: value).toUiColor(),
     );
   }
 }
@@ -89,15 +91,15 @@ class _AlphaSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.color,
   });
 
-  final ColorData? value;
-  final ValueChanged<ColorData>? onChanged;
+  final double? value;
+  final ValueChanged<double>? onChanged;
+  final HsvColorData? color;
 
   @override
   Widget build(BuildContext context) {
-    final value = this.value as HsvColorData;
-
     final transparencyColors = switch (context.brightness) {
       .light => const (Color(0xFFCCCCCC), Color(0xFFFFFFFF)),
       .dark => const (Color(0xFF333333), Color(0xFF000000)),
@@ -113,14 +115,16 @@ class _AlphaSlider extends StatelessWidget {
       ),
     );
 
+    final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 1.0, v: 1.0);
+
     return _Slider(
       leading: Icons.a(),
       background: background,
       stops: 2,
-      stopsGenerator: (a) => value.copyWith(alpha: a).toUiColor(),
-      onChanged: (a) => onChanged?.call(value.copyWith(alpha: a)),
-      value: value.alpha,
-      color: value.toUiColor(),
+      stopsGenerator: (a) => stopsColor.copyWith(alpha: a).toUiColor(),
+      onChanged: (a) => onChanged?.call(a),
+      value: value,
+      color: stopsColor.copyWith(alpha: value).toUiColor(),
     );
   }
 }

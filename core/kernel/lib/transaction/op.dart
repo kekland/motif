@@ -9,16 +9,17 @@ sealed class Op<R> {
 }
 
 final class OpRecord<O extends Op> {
-  OpRecord(this.def, this.tag);
+  OpRecord(this.def, this.namespace, this.index);
 
   O def;
-  final int tag;
+  final U64 namespace;
+  final int index;
   var _subCount = 0;
 
   final _created = <CellHandle>[];
+  final _captured = <Object?>[];
   final _mutations = <Mutation>[];
   final _geometry = <CellRef, CellGeometry>{};
-  // final _cache = <(CellRef, Object), (int, Object?)>{};
 
   void _reshape(O def) {
     this.def = def;

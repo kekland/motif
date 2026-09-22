@@ -15,4 +15,7 @@ class const ContainerTool() extends ShapeTool {
 
   @override
   MouseCursor get cursor => Cursors.toolContainer;
+
+  @override
+  SingleActivator? get shortcut => .new(.keyC);
 }

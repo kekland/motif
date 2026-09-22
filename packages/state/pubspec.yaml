@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  log:
+  shared:
 
   # Core
   async: ^2.13.1

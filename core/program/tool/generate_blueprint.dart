@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:blueprint/generator.dart';
-import 'package:program/generator/generator_description.dart';
+import 'package:program/src/generator/generator_description.dart';
 
 void main() {
   final root = Directory.fromUri(Platform.script.resolve('..'));

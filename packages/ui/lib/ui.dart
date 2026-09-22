@@ -1,4 +1,5 @@
-export 'package:flutter/foundation.dart' hide VoidCallback, Listenable, ChangeNotifier, ValueNotifier, ValueListenable;
+export 'package:flutter/foundation.dart'
+    hide VoidCallback, Listenable, ChangeNotifier, ValueNotifier, ValueListenable, setEquals, listEquals, mapEquals;
 export 'package:flutter/material.dart'
     hide
         Scaffold,

@@ -46,7 +46,7 @@ Computed<PropValue<G>> usePropComputed<G, S>(Scene scene, Prop<G, S> prop) {
     try {
       return prop.value(scene);
     } catch (e) {
-      return PropValue<G>.mixed();
+      return PropValue<G>.mixed(null);
     }
   }, keys: [scene, prop]);
 

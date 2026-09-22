@@ -8,5 +8,6 @@ environment:
 dependencies:
   grpc: ^5.1.0
 
+  shared:
   schema:
-  log:
+  

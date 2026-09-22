@@ -276,9 +276,14 @@ final class Bundle {
   }
 
   int faceWinding(FaceHandle f, Vec2 p, {FrameHandle? space}) {
-    assert(_checkFace(f));
+  assert(_checkFace(f));
     assert(space == null || _checkFrame(space));
     return _faceWinding(f.index, p, space: space?.index);
+  }
+
+  List<FaceCorner> faceCorners(FaceHandle f) {
+    assert(_checkFace(f));
+    return _faceCorners(f.index);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -289,6 +294,10 @@ final class Bundle {
     assert(_checkCell(h));
     final p = _treeParentOf(h.cellIndex);
     return p.isNone ? null : _frame.handleFor(p);
+  }
+
+  Iterable<FrameHandle> ancestorsOf(CellHandle h) sync* {
+    for (var f = parentOf(h); f != null; f = parentOf(f)) yield f;
   }
 
   CellHandle? siblingPrevOf(CellHandle h) {
@@ -381,8 +390,10 @@ final class Bundle {
   }
 
   FrameHandle lcaMany(Iterable<CellHandle> cells) {
-    var lca = root;
-    for (final c in cells) {
+    if (cells.isEmpty) return .root;
+
+    var lca = _frame.handleFor(_treeSpaceOf(cells.first.cellIndex));
+    for (final c in cells.skip(1)) {
       assert(_checkCell(c));
       lca = _frame.handleFor(_treeLca(lca.cellIndex, c.cellIndex));
     }
@@ -400,7 +411,7 @@ final class Bundle {
 
   var _hasTransaction = false;
 
-  Transaction beginTransaction({U64? namespace}) => Transaction(this, namespace: namespace);
+  Transaction beginTransaction({required U64 namespace}) => Transaction(this, namespace: namespace);
 
   void _lockTransaction() {
     if (_hasTransaction) throw StateError('transaction already in progress');

@@ -28,7 +28,7 @@ final class Delta {
   var moved = <CellRef>[];
   var movedFrames = <FrameRef>{};
 
-  late final writes = {...added, ...deleted, ...moved};
+  Iterable<CellRef> get writes => added.followedBy(deleted).followedBy(moved);
 
   final lineage = <Lineage>[];
 

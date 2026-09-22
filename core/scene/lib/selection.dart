@@ -69,7 +69,7 @@ final class SceneSelection with ChangeNotifier {
     final e = scene.evaluation;
 
     _refs.clear();
-    for (final r in _refSources) _refs.addAll(e.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
+    for (final r in _refSources) _refs.addAll(e.lineage.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
     _statements.clear();
     _statements.addAll(_statementSources.where((s) => e.statement(s) != null));
     _statements.addAll(_refs.map((ref) => e.rootOf(ref.statementId)));
@@ -102,7 +102,7 @@ final class SceneSelection with ChangeNotifier {
     }
 
     for (final r in _refSources) {
-      nextRefs.addAll(e.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
+      nextRefs.addAll(e.lineage.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
     }
 
     for (final s in nextStatements) {

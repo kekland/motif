@@ -9,17 +9,17 @@ final class ColorField extends HookWidget {
     this.options = const TextFieldOptions(),
   });
 
-  final ReadonlySignal<ColorData?> value;
-  final ValueChanged<ColorData>? onChanged;
+  final ReadonlySignal<ColorDataPartial> value;
+  final ValueChanged<ColorDataPartial>? onChanged;
   final TextFieldOptions options;
 
   @override
   Widget build(BuildContext context) {
     final value = this.value;
     final alpha = useComputed(() {
-      final color = value();
-      if (color == null) return null;
-      return color.alpha * 100.0;
+      final alpha = value().alpha;
+      if (alpha == null) return null;
+      return alpha * 100.0;
     }, keys: [value]);
 
     final (createEntry, hasEntry) = useCreateWindowEntry(
@@ -29,7 +29,11 @@ final class ColorField extends HookWidget {
     final leading = HookBuilder(
       builder: (context) {
         final iconTheme = IconTheme.of(context);
-        final color = useComputed(() => value()?.toUiColor(colorSpace: .sRGB), keys: [value]).value;
+        final color = useComputed(() {
+          final partial = value();
+          if (!partial.canConstruct) return null;
+          return partial.construct().toUiColor();
+        }, keys: [value]).value;
 
         return GestureSurface(
           onTap: () => createEntry(context),
@@ -42,10 +46,10 @@ final class ColorField extends HookWidget {
       },
     );
 
-    final colorInput = ExpressionInputField<ColorData>(
+    final colorInput = ExpressionInputField<ColorDataPartial>(
       value: value,
       onChanged: onChanged,
-      valueToString: (color) => color?.withAlpha(1.0).toString() ?? '',
+      valueToString: (value) => value?.canConstruct == true ? value!.apply(.black).toString() : 'Mixed',
       supportedDevices: {.mouse, .trackpad},
       evaluateExpression: (str) => null,
       options: options.merge(
@@ -62,7 +66,7 @@ final class ColorField extends HookWidget {
       value: alpha,
       fractionDigits: 1,
       supportedDevices: {.mouse, .trackpad},
-      onChanged: (a) => onChanged?.call((value.value ?? .black).withAlpha(a / 100)),
+      onChanged: (a) => onChanged?.call(.withAlpha(a / 100)),
       options: .new(
         hintText: '0',
         trailing: Text('%'),

@@ -228,6 +228,20 @@ extension GetterMethods on Bundle {
 
   List<CoedgeIndex> _faceBoundary(FaceIndex f) => _face.boundary[f].storage;
 
+  List<FaceCorner> _faceCorners(FaceIndex f) {
+    final out = <FaceCorner>[];
+    for (final cycle in _faceBoundary(f)) {
+      final coedges = _cycleCoedges(cycle);
+      for (var i = 0; i < coedges.length; i++) {
+        final a = _coedgeFor(coedges[i]);
+        final b = _coedgeFor(coedges[(i + 1) % coedges.length]);
+        final v = a.forward ? edgeEnd(a.edge) : edgeStart(a.edge);
+        out.add((v: v, a: a.edge, b: b.edge));
+      }
+    }
+    return out;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Cell
   // -------------------------------------------------------------------------------------------------------------------

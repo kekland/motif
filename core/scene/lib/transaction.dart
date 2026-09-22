@@ -9,27 +9,29 @@ final class SceneTransaction {
 
   var _closed = false;
   var _dirty = false;
-  final _entries = <ProgramOp>[];
+  final _entries = <ProgramChange>[];
   late final _pass = evaluation.beginPass();
 
   // -------------------------------------------------------------------------------------------------------------------
   // Base ops
   // -------------------------------------------------------------------------------------------------------------------
 
-  void _recordStatementOp(
-    ProgramAnchor anchor, {
-    required List<Statement> inserted,
-    required List<Statement> removed,
-  }) {
-    final index = anchor.resolve(program);
-    if (index == null) throw StateError('anchor $anchor does not resolve for program');
-
-    final ProgramAnchor resolvedAnchor = index == 0 ? .start() : .after(program[index - 1].id);
-    final resolvedOp = StatementOp(anchor: resolvedAnchor, inserted: inserted, removed: removed);
-    resolvedOp.reapply(_pass);
-    _entries.add(resolvedOp);
+  void apply(ProgramEdit edit) {
+    _checkOpen();
+    for (final change in edit.resolve(program).changes) {
+      change.reapply(_pass);
+      _entries.add(change);
+    }
     _dirty = true;
   }
+
+  T _route<T>(T Function() route) {
+    _checkOpen();
+    flush();
+    return route();
+  }
+
+  void _edit(void Function(ProgramEditBuilder) build) => apply(.build(evaluation, build));
 
   T _resolveStatement<T extends Statement>(StatementId id) {
     final index = program.indexOf(id);
@@ -37,25 +39,21 @@ final class SceneTransaction {
     return program[index] as T;
   }
 
-  T insert<T extends Statement>(T statement, {ProgramAnchor anchor = const .end()}) {
-    _checkOpen();
-    _recordStatementOp(anchor, inserted: [statement], removed: []);
+  T insert<T extends Statement>(T statement, {ProgramAnchor at = .end}) {
+    _edit((b) => b.insert([statement], at: at));
     return statement;
   }
 
-  void insertAll(List<Statement> statements, {ProgramAnchor anchor = const .end()}) {
-    _checkOpen();
-    _recordStatementOp(anchor, inserted: statements, removed: []);
+  void insertAll(List<Statement> statements, {ProgramAnchor at = .end}) {
+    _edit((b) => b.insert(statements, at: at));
   }
 
   void remove(StatementId id) {
-    _checkOpen();
-    _recordStatementOp(.at(id), inserted: [], removed: [_resolveStatement(id)]);
+    _edit((b) => b.remove(id));
   }
 
   void replace(StatementId target, List<Statement> statements) {
-    _checkOpen();
-    _recordStatementOp(.at(target), inserted: statements, removed: [_resolveStatement(target)]);
+    _edit((b) => b.replace(target, statements));
   }
 
   T update<T extends Statement>(StatementId target, T Function(T) update) {
@@ -68,55 +66,33 @@ final class SceneTransaction {
     return updated;
   }
 
-  void toggle(StatementId target, {bool? enabled}) {
-    update<Statement>(target, (s) => s.copyWith(enabled: enabled ?? !s.enabled));
-  }
+  // -------------------------------------------------------------------------------------------------------------------
+  // Modifiers
+  // -------------------------------------------------------------------------------------------------------------------
 
-  void attach(StatementId host, Statement modifier) {
+  void attach(StatementId host, Modifier modifier) {
     _checkOpen();
-    flush();
-    var last = evaluation.rootOf(host);
-    for (final s in evaluation.stackOf(last)) last = s.id;
-    insert(modifier, anchor: .after(last));
+    update<Statement>(host, (s) => s.copyWith(modifiers: [...s.modifiers, modifier]));
   }
 
-  void attachAfter(List<StatementId> targets, Statement modifier) {
+  void detach(StatementId host, Modifier modifier) {
     _checkOpen();
-    flush();
-
-    var lastIndex = evaluation.indexOf(evaluation.rootOf(targets.first))!;
-    for (final id in targets) {
-      final index = evaluation.indexOf(evaluation.rootOf(id))!;
-      if (index > lastIndex) lastIndex = index;
-    }
-
-    attach(evaluation.statementAt(lastIndex).id, modifier);
+    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.where((m) => m != modifier).toList()));
   }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Style/z-order
+  // -------------------------------------------------------------------------------------------------------------------
 
   void decorate(CellRef ref, CellStylePartial decoration) {
-    _checkOpen();
-    final before = program.styles.of(ref);
-    if (before == decoration) return;
-
-    final op = StyleOp(ref, before: before, after: decoration);
-    _entries.add(op);
-    op.reapply(_pass);
-    _dirty = true;
+    if (program.styles.of(ref) == decoration) return;
+    _edit((b) => b.restyle(ref, decoration));
   }
 
   bool reorder(CellRef ref, ZAnchor anchor) {
-    _checkOpen();
-
-    final resolvedRef = evaluation.routeZOrder(ref);
-    if (resolvedRef == null) return false;
-
-    final before = program.zOrders.of(resolvedRef);
-    if (before == anchor) return false;
-
-    final op = ZOrderOp(resolvedRef, before: before, after: anchor);
-    _entries.add(op);
-    op.reapply(_pass);
-    _dirty = true;
+    final edit = _route(() => evaluation.routeReorder(ref, anchor));
+    if (edit == null) return false;
+    apply(edit);
     return true;
   }
 
@@ -124,30 +100,48 @@ final class SceneTransaction {
   // High-level ops
   // -------------------------------------------------------------------------------------------------------------------
 
-  void dissolve(Iterable<CellRef> targets) {
-    _checkOpen();
-    flush();
-    final router = evaluation.routeDissolve(targets);
-    if (router.isEmpty) return;
-    final statement = DissolveStatement(.new(router.deleted));
-    insert(statement);
-  }
+  // void dissolve(Iterable<CellRef> targets) {
+  //   _checkOpen();
+  //   flush();
+  //   final router = evaluation.routeDissolve(targets);
+  //   if (router.isEmpty) return;
+  //   final statement = DissolveStatement(.new(router.deleted));
+  //   insert(statement);
+  // }
 
   void delete(Iterable<CellRef> targets) {
-    _checkOpen();
-    flush();
-    final router = evaluation.routeDelete(targets);
-    for (final entry in router.replace.entries) replace(entry.key, entry.value);
-    for (final r in router.remove) remove(r);
+    final edit = _route(() => evaluation.routeDelete(targets));
+    apply(edit);
+  }
+
+  ReparentResult group(Iterable<CellRef> targets) {
+    return _reparent(() => evaluation.routeGroup(targets));
+  }
+
+  void ungroup(StatementId group) {
+    return apply(_route(() => evaluation.routeUngroup(group)));
   }
 
   Remap flatten(Iterable<StatementId> targets) {
-    _checkOpen();
-    flush();
-    final router = evaluation.routeFlatten(targets);
-    for (final entry in router.replace.entries) replace(entry.key, entry.value);
-    for (final r in router.remove) remove(r);
-    return router.remap;
+    final edit = _route(() => evaluation.routeFlatten(targets));
+    apply(edit);
+    return edit.remap;
+  }
+
+  ReparentResult reparent(Iterable<CellRef> targets, FrameRef into, {StatementId? after}) {
+    return _reparent(() => evaluation.routeReparent(targets, into, after: after));
+  }
+
+  ReparentResult _reparent(ReparentResult Function() route) {
+    final result = _route(route);
+    if (result case ReparentSuccess(:final edit)) apply(edit);
+    return result;
+  }
+
+  GeneratorStatement wrapGenerator(List<StatementId> ids, {Generator? generator}) {
+    final edit = _route(() => evaluation.routeGenerate(ids, generator ?? .empty()));
+    apply(edit);
+    return edit.created.single as GeneratorStatement;
   }
 
   // void embed(ProgramSlice slice) {
@@ -176,7 +170,7 @@ final class SceneTransaction {
 
   void flush() {
     if (!_dirty) return;
-    evaluation.drain(_pass);
+    _pass.drain();
     _dirty = false;
   }
 
@@ -188,9 +182,9 @@ final class SceneTransaction {
   }
 
   void _rollback() {
-    for (final op in _entries.reversed) op.unapply(_pass);
+    for (final change in _entries.reversed) change.unapply(_pass);
     _entries.clear();
-    evaluation.drain(_pass);
+    _pass.drain();
     _pass.reset();
     _dirty = false;
   }

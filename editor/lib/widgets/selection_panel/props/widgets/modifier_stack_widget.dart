@@ -10,8 +10,7 @@ final class ModifierStackWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = context.editor;
-    final modifiers = editor.scene.evaluation.stackOf(statements.first.id);
+    final modifiers = statements.first.modifiers;
 
     return Column(
       children: [
@@ -38,25 +37,25 @@ final class ModifierStackWidget extends StatelessWidget {
             modifier.name(context),
             style: context.typography.body.tertiary,
           ),
-          if (modifier is GeneratorStatement) ...[
-            Button(
-              onTap: () {
-                WindowNavigator.pushUnique(
-                  context,
-                  GeneratorEditorWindow.createEntry(
-                    context,
-                    generator: modifier.generator,
-                    onChanged: (g) {
-                      editor.edit(
-                        (txn) => txn.update<GeneratorStatement>(modifier.id, (m) => m.copyWith(generator: g)),
-                      );
-                    },
-                  ),
-                );
-              },
-              child: Text('Show'),
-            ),
-          ],
+          // if (modifier is GeneratorStatement) ...[
+          //   Button(
+          //     onTap: () {
+          //       WindowNavigator.pushUnique(
+          //         context,
+          //         GeneratorEditorWindow.createEntry(
+          //           context,
+          //           generator: (modifier as GeneratorStatement).generator,
+          //           onChanged: (g) {
+          //             editor.edit(
+          //               (txn) => txn.update<GeneratorStatement>(modifier.id, (m) => m.copyWith(generator: g)),
+          //             );
+          //           },
+          //         ),
+          //       );
+          //     },
+          //     child: Text('Show'),
+          //   ),
+          // ],
         ],
       ],
     );
@@ -77,18 +76,26 @@ class ModifierAddButton extends StatelessWidget {
       isFilled: false,
       child: Icons.add(),
       onTap: () async {
-        final possibleModifiers = context.editor.evaluation.possibleModifiersFor(statements);
+        final ids = statements.map((s) => s.id).toList();
+        final possibleModifiers = ModifierFactory.forStatements(statements);
         final items = possibleModifiers.map(
           (f) => ContextMenuItem(
             f,
-            label: f.type.name(context),
-            icon: f.type.icon(context),
+            label: f.kind!.name(context),
+            icon: f.kind!.icon(context),
           ),
         );
 
         final result = await ContextMenu.push<ModifierFactory>(
           context,
-          .new(items.toList()),
+          .new([
+            .item(
+              ModifierFactory(null, (txn) => txn.wrapGenerator(ids)),
+              label: 'Generator',
+              icon: Icons.generator(),
+            ),
+            ...items,
+          ]),
         );
 
         if (result != null && context.mounted) {
@@ -96,5 +103,29 @@ class ModifierAddButton extends StatelessWidget {
         }
       },
     );
+  }
+}
+
+final class ModifierFactory {
+  const ModifierFactory(this.kind, this.apply);
+
+  final ModifierKind? kind;
+  final void Function(SceneTransaction txn) apply;
+
+  static List<ModifierFactory> forStatements(List<Statement> statements) {
+    final ids = statements.map((s) => s.id).toList();
+    final applicable = ModifierKind.values.where((k) => statements.every(k.appliesTo)).toList();
+
+    return [
+      for (final kind in applicable)
+        switch (kind) {
+          .fillet => ModifierFactory(
+            kind,
+            (txn) {
+              for (final id in ids) txn.attach(id, FilletModifier(radius: .new(16, 16)));
+            },
+          ),
+        },
+    ];
   }
 }

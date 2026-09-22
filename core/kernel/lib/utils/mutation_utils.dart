@@ -3,7 +3,7 @@ part of '../kernel.dart';
 extension MutationUtils on Transaction {
   H _cell<H extends CellHandle>() {
     assert(mode == .geometry);
-    return _record!._created[_sub++] as H;
+    return _record!._created[_subIndex++] as H;
   }
 
   H _addCell<H extends CellHandle>(

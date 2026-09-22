@@ -54,8 +54,8 @@ final class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
         children: [
           Text('Stroke', style: context.typography.body.secondary),
           ColorField(
-            value: useMemoComputed(() => value().color),
-            onChanged: (v) => onChanged(value().copyWith(color: v)),
+            value: useMemoComputed(() => value().color.partial),
+            onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
           ),
           DoubleExpressionInputField(
             value: useMemoComputed(() => value().width),

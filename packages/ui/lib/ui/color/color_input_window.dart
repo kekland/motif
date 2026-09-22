@@ -9,13 +9,13 @@ part 'components/sliders.dart';
 class ColorInputWindow extends HookWidget {
   const new({super.key, required this.value, this.onChanged});
 
-  final ReadonlySignal<ColorData?> value;
-  final ValueChanged<ColorData>? onChanged;
+  final ReadonlySignal<ColorDataPartial> value;
+  final ValueChanged<ColorDataPartial>? onChanged;
 
   static WindowEntry createEntry(
     BuildContext context, {
-    required ReadonlySignal<ColorData?> value,
-    ValueChanged<ColorData>? onChanged,
+    required ReadonlySignal<ColorDataPartial> value,
+    ValueChanged<ColorDataPartial>? onChanged,
   }) => WindowEntry.withContextAnchor(
     context,
     isModal: true,
@@ -31,13 +31,15 @@ class ColorInputWindow extends HookWidget {
       child: Column(
         spacing: 8.0,
         children: [
-          AspectRatio(
-            aspectRatio: 1.0,
-            child: _HSVSquare(
-              value: color,
-              onChanged: onChanged,
+          if (color is HsvColorDataPartial) ...[
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: _HSVSquare(
+                value: color,
+                onChanged: onChanged,
+              ),
             ),
-          ),
+          ],
           Row(
             children: [
               IconButton(
@@ -48,22 +50,24 @@ class ColorInputWindow extends HookWidget {
               // DropdownButton(),
             ],
           ),
-          _HueSlider(
-            value: color,
-            onChanged: onChanged,
-          ),
-          _SaturationSlider(
-            value: color,
-            onChanged: onChanged,
-          ),
-          _ValueSlider(
-            value: color,
-            onChanged: onChanged,
-          ),
-          _AlphaSlider(
-            value: color,
-            onChanged: onChanged,
-          ),
+          if (color is HsvColorDataPartial) ...[
+            _HueSlider(
+              value: color.h,
+              onChanged: (h) => onChanged?.call(.hsv(h: h)),
+            ),
+            _SaturationSlider(
+              value: color.s,
+              onChanged: (s) => onChanged?.call(.hsv(s: s)),
+            ),
+            _ValueSlider(
+              value: color.v,
+              onChanged: (v) => onChanged?.call(.hsv(v: v)),
+            ),
+            _AlphaSlider(
+              value: color.alpha,
+              onChanged: (a) => onChanged?.call(.hsv(alpha: a)),
+            ),
+          ],
           ColorField(
             value: value,
             onChanged: onChanged,

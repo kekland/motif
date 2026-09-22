@@ -16,25 +16,6 @@ class ProgramPanel extends HookWidget {
 
     return CustomScrollView(
       slivers: [
-        PinnedHeaderSliver(
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Header(title: Text('Program')),
-                  ),
-                  VerticalDivider(),
-                  Expanded(
-                    child: Header(title: Text('Tree')),
-                  ),
-                ],
-              ),
-              Divider(),
-            ],
-          ),
-        ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, i) => StatementWidget(

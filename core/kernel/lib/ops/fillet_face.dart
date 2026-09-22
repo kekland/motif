@@ -1,33 +1,20 @@
 part of '../kernel.dart';
 
-extension type const CornerRadius._(Vec2 _v) {
-  CornerRadius(double x, double y) : _v = .new(x, y);
-  CornerRadius.vec(Vec2 v) : _v = v;
-
-  static final zero = CornerRadius._(.zero());
-
-  double get x => _v.x;
-  double get y => _v.y;
-}
-
-typedef FilletCorner = ({VertexRef v, EdgeRef a, EdgeRef b});
 typedef FilletFaceResult = Map<VertexHandle, FilletVertexResult>;
 
 final class FilletFaceOp extends Op<FilletFaceResult> {
   new(
     this.face, {
-    required this.corners,
     this.radius,
-    this.radii = const {},
+    this.corners = const {},
   });
 
   final FaceRef face;
-  final List<FilletCorner> corners;
   final CornerRadius? radius;
-  final Map<VertexRef, CornerRadius> radii;
+  final Map<int, CornerRadius> corners;
 
-  CornerRadius? radiusOf(FilletCorner c) {
-    final r = radii[c.v] ?? radius;
+  CornerRadius? radiusOf(int i) {
+    final r = corners[i] ?? radius;
     if (r == null || (r.x <= 0 && r.y <= 0)) return null;
     return r;
   }
@@ -36,15 +23,15 @@ final class FilletFaceOp extends Op<FilletFaceResult> {
   FilletFaceResult? _execute(Transaction t, bool produceResult) {
     final bundle = t.bundle;
 
+    final corners = t._capture(
+      () => [
+        for (final (i, c) in bundle.faceCorners(t.faceFor(face)).indexed)
+          if (radiusOf(i) != null) (i: i, v: c.v, a: c.a, b: c.b),
+      ],
+    );
+
     final resolved = [
-      for (final c in corners)
-        if (radiusOf(c) case final radius?)
-          (
-            v: t.vertexFor(c.v),
-            a: t.edgeFor(c.a),
-            b: t.edgeFor(c.b),
-            radius: radius,
-          ),
+      for (final c in corners) (i: c.i, v: c.v, a: c.a, b: c.b, radius: radiusOf(c.i)!),
     ];
 
     final setbacks = <Vec2>[];
@@ -157,16 +144,9 @@ final class FilletFaceOp extends Op<FilletFaceResult> {
   bool topologyEquals(Op other) {
     if (other is! FilletFaceOp) return false;
     if (other.face != face) return false;
-    if (!identical(corners, other.corners)) {
-      if (other.corners.length != corners.length) return false;
-      for (final (i, c) in corners.indexed) {
-        final o = other.corners[i];
-        if (o.v != c.v || o.a != c.a || o.b != c.b) return false;
-      }
-    }
-
-    for (final c in corners) {
-      if ((radiusOf(c) == null) != (other.radiusOf(c) == null)) return false;
+    if ((radiusOf(-1) == null) != (other.radiusOf(-1) == null)) return false;
+    for (final i in {...corners.keys, ...other.corners.keys}) {
+      if ((radiusOf(i) == null) != (other.radiusOf(i) == null)) return false;
     }
 
     return true;
@@ -175,16 +155,14 @@ final class FilletFaceOp extends Op<FilletFaceResult> {
 
 extension FilletFaceTransaction on Transaction {
   FilletFaceResult filletFace(
-    FaceHandle face,
-    List<(VertexHandle v, EdgeHandle a, EdgeHandle b)> corners, {
+    FaceHandle face, {
     CornerRadius? radius,
-    Map<VertexHandle, CornerRadius> radii = const {},
+    Map<int, CornerRadius> corners = const {},
   }) => _applyWithResult(
     FilletFaceOp(
       face.ref(bundle),
-      corners: [for (final (v, a, b) in corners) (v: v.ref(bundle), a: a.ref(bundle), b: b.ref(bundle))],
+      corners: corners,
       radius: radius,
-      radii: {for (final MapEntry(:key, :value) in radii.entries) key.ref(bundle): value},
     ),
   );
 }

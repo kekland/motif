@@ -119,14 +119,14 @@ final class EdgeStylePropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = usePropComputed(scene, prop.width);
     final color = usePropComputed(scene, prop.color);
+    final width = usePropComputed(scene, prop.width);
 
     return Column(
       spacing: 8.0,
       children: [
         ColorField(
-          value: useMemoComputed(() => color.value.get(), keys: [color]),
+          value: useMemoComputed(() => color.value.get()!, keys: [color]),
           onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
           options: .new(hintText: 'Mixed'),
         ),
@@ -161,7 +161,7 @@ final class FaceStylePropWidget extends PropWidget {
     final color = usePropComputed(scene, prop.color);
 
     return ColorField(
-      value: useMemoComputed(() => color.value.get(), keys: [color]),
+      value: useMemoComputed(() => color.value.get()!, keys: [color]),
       onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
       options: .new(hintText: 'Mixed'),
     );

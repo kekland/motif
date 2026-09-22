@@ -16,7 +16,7 @@ final class ProgramRenderer {
   Bundle get bundle => evaluation.bundle;
   final _cache = <FrameRef, List<DrawEntry>>{};
 
-  void _onEvaluationUpdate(EvaluationPass pass) {
+  void _onEvaluationUpdate(EvalPass pass) {
     final stale = <FrameRef>{...pass.movedFrames};
     void mark(CellRef r) {
       final f = pass.frameOf(r);
