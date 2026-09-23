@@ -18,4 +18,4 @@ jobs:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
-          customArgs: --dart-define="SERVER_URL=http://motif.kz"
+          customArgs: --dart-define="SERVER_URL=https://motif.kz"

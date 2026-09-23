@@ -37,8 +37,8 @@ final class SceneStorage {
   }
 
   void dispose() {
-    _select.close();
-    _upsert.close();
-    _db.close();
+    _select.dispose();
+    _upsert.dispose();
+    _db.dispose();
   }
 }
