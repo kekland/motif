@@ -76,6 +76,16 @@ T useDisposable<T extends Disposable>(T Function() create, [List<Object?> keys =
   return disposable;
 }
 
+T? useMaybeDisposable<T extends Disposable>(T? Function() create, [List<Object?> keys = const []]) {
+  final disposable = useMemoized(create, keys);
+
+  useEffect(() {
+    return disposable?.dispose;
+  }, [disposable]);
+
+  return disposable;
+}
+
 void useCallOnce(VoidCallback callback) {
   useEffect(() {
     callback();

@@ -805,6 +805,109 @@ final _filletModifierCodec = _codec<FilletModifier, gen.FilletModifier>(
   ),
 );
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Deltas/changes
+// ---------------------------------------------------------------------------------------------------------------------
+
+extension _ProgramDeltaEncode on ProgramDelta { gen.ProgramDelta encode() => programDeltaCodec.encode(this); }
+extension _ProgramDeltaDecode on gen.ProgramDelta { ProgramDelta decode() => programDeltaCodec.decode(this); }
+
+final programDeltaCodec = _codec<ProgramDelta, gen.ProgramDelta>(
+  decoder: (v) => .new(
+    v.changes.map((e) => e.decode()).toList(),
+  ),
+  encoder: (v) => .new(
+    changes: v.changes.map((e) => e.encode()).toList(),
+  ),
+);
+
+extension _ProgramChangeEncode on ProgramChange { gen.ProgramChange encode() => _programChangeCodec.encode(this); }
+extension _ProgramChangeDecode on gen.ProgramChange { ProgramChange decode() => _programChangeCodec.decode(this); }
+
+final _programChangeCodec = _codec<ProgramChange, gen.ProgramChange>(
+  decoder: (v) => switch(v.whichValue()) {
+    .statement => v.statement.decode(),
+    .style => v.style.decode(),
+    .zOrder => v.zOrder.decode(),
+    .empty => .empty(),
+    .notSet => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    StatementChange v => .new(statement: v.encode()),
+    StyleChange v => .new(style: v.encode()),
+    ZOrderChange v => .new(zOrder: v.encode()),
+    EmptyChange() => .new(empty: true),
+  },
+);
+
+extension _ZOrderChangeEncode on ZOrderChange { gen.ZOrderChange encode() => _zOrderChangeCodec.encode(this); }
+extension _ZOrderChangeDecode on gen.ZOrderChange { ZOrderChange decode() => _zOrderChangeCodec.decode(this); }
+
+final _zOrderChangeCodec = _codec<ZOrderChange, gen.ZOrderChange>(
+  decoder: (v) => .new(
+    v.ref.decode(),
+    before: _opt(v.hasBefore, () => v.before.decode()),
+    after: _opt(v.hasAfter, () => v.after.decode()),
+  ),
+  encoder: (v) => .new(
+    ref: v.ref.encode(),
+    before: v.before?.encode(),
+    after: v.after?.encode(),
+  ),
+);
+
+extension _StyleChangeEncode on StyleChange { gen.StyleChange encode() => _styleChangeCodec.encode(this); }
+extension _StyleChangeDecode on gen.StyleChange { StyleChange decode() => _styleChangeCodec.decode(this); }
+
+final _styleChangeCodec = _codec<StyleChange, gen.StyleChange>(
+  decoder: (v) => .new(
+    v.ref.decode(),
+    before: _opt(v.hasBefore, () => v.before.decode()),
+    after: _opt(v.hasAfter, () => v.after.decode()),
+  ),
+  encoder: (v) => .new(
+    ref: v.ref.encode(),
+    before: v.before?.encode(),
+    after: v.after?.encode(),
+  ),
+);
+
+extension _StatementChangeEncode on StatementChange { gen.StatementChange encode() => _statementChangeCodec.encode(this); }
+extension _StatementChangeDecode on gen.StatementChange { StatementChange decode() => _statementChangeCodec.decode(this); }
+
+final _statementChangeCodec = _codec<StatementChange, gen.StatementChange>(
+  decoder: (v) => .new(
+    anchor: v.anchor.decode(),
+    removed: v.removed.map((e) => e.decode()).toList(),
+    inserted: v.inserted.map((e) => e.decode()).toList(),
+  ),
+  encoder: (v) => .new(
+    anchor: v.anchor.encode(),
+    removed: v.removed.map((e) => e.encode()).toList(),
+    inserted: v.inserted.map((e) => e.encode()).toList(),
+  ),
+);
+
+extension _ProgramAnchorEncode on ProgramAnchor { gen.ProgramAnchor encode() => _programAnchorCodec.encode(this); }
+extension _ProgramAnchorDecode on gen.ProgramAnchor { ProgramAnchor decode() => _programAnchorCodec.decode(this); }
+
+final _programAnchorCodec = _codec<ProgramAnchor, gen.ProgramAnchor>(
+  decoder: (v) => switch(v.whichValue()) {
+    .start => .start,
+    .end => .end,
+    .at => .at(v.at.decode()),
+    .after => .after(v.after.decode()),
+    .notSet => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    StartAnchor() => .new(start: true),
+    EndAnchor() => .new(end: true),
+    AtAnchor a => .new(at: a.id.encode()),
+    AfterAnchor a => .new(after: a.id.encode()),
+  },
+);
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Layout
 // ---------------------------------------------------------------------------------------------------------------------

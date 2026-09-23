@@ -29,6 +29,7 @@ final class SceneHistory {
         _entries[_cursor - 1] = merged;
       }
 
+      _streamController.add(delta);
       return;
     }
 

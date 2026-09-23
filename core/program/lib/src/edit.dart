@@ -52,14 +52,14 @@ final class ProgramEdit {
   }
 
   StyleChange _resolveStyleChange(Program projection, StyleChange c) {
-    final before = projection.styles.of(c.key);
-    projection.styles.set(c.key, c.after);
+    final before = projection.styles.of(c.ref);
+    projection.styles.set(c.ref, c.after);
     return c.copyWith(before: before);
   }
 
   ZOrderChange _resolveZOrderChange(Program projection, ZOrderChange c) {
-    final before = projection.zOrders.of(c.key);
-    projection.zOrders.set(c.key, c.after);
+    final before = projection.zOrders.of(c.ref);
+    projection.zOrders.set(c.ref, c.after);
     return c.copyWith(before: before);
   }
 

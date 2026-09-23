@@ -48,10 +48,16 @@ extension ContextDialog on BuildContext {
 }
 
 class DialogScaffold extends StatelessWidget {
-  const new({super.key, required this.child, this.title});
+  const new({
+    super.key,
+    required this.child,
+    this.title,
+    this.actions,
+  });
 
   final Widget? title;
   final Widget child;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +78,13 @@ class DialogScaffold extends StatelessWidget {
           ),
           Divider(),
           child,
+          if (actions != null) ...[
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ButtonRow(buttons: actions!),
+            ),
+          ],
         ],
       ),
     );

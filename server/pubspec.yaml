@@ -6,8 +6,15 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
-  grpc: ^5.1.0
+  protobuf: ^6.1.0
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  shelf_web_socket: ^3.0.0
+  sqlite3: ^3.6.0
+  uuid: ^4.6.0
+  web_socket_channel: ^3.0.3
 
   shared:
   schema:
+  program:
   

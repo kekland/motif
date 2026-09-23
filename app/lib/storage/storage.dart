@@ -25,6 +25,8 @@ final class SceneStorage {
   static final _info = stringMapStoreFactory.store('info');
   static final _data = StoreRef<String, Blob>('data');
 
+  static final _remote = stringMapStoreFactory.store('remote');
+
   Future<void> _persistProgram(String id, Program program) {
     return _db.transaction((txn) async {
       final bytes = program.encode().writeToBuffer();
@@ -63,5 +65,22 @@ final class SceneStorage {
   Future<List<String>> listScenes() async {
     final records = await _info.find(_db);
     return records.map((record) => record.key).toList();
+  }
+
+  Future<void> persistRemoteScene(String id) {
+    return _db.transaction((txn) async {
+      await _remote.record(id).put(txn, {});
+    });
+  }
+
+  Future<List<String>> listRemoteScenes() async {
+    final records = await _remote.find(_db);
+    return records.map((record) => record.key).toList();
+  }
+
+  Future<void> deleteRemoteScene(String id) {
+    return _db.transaction((txn) async {
+      await _remote.record(id).delete(txn);
+    });
   }
 }

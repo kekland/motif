@@ -4697,6 +4697,539 @@ class FilletModifier extends $pb.GeneratedMessage {
   $pb.PbList<FilletModifier_Corner> get corners => $_getList(1);
 }
 
+class ProgramDelta extends $pb.GeneratedMessage {
+  factory ProgramDelta({
+    $core.Iterable<ProgramChange>? changes,
+  }) {
+    final result = create();
+    if (changes != null) result.changes.addAll(changes);
+    return result;
+  }
+
+  ProgramDelta._();
+
+  factory ProgramDelta.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProgramDelta.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProgramDelta',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..pPM<ProgramChange>(1, _omitFieldNames ? '' : 'changes',
+        subBuilder: ProgramChange.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramDelta clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramDelta copyWith(void Function(ProgramDelta) updates) =>
+      super.copyWith((message) => updates(message as ProgramDelta))
+          as ProgramDelta;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProgramDelta create() => ProgramDelta._();
+  @$core.override
+  ProgramDelta createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProgramDelta getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProgramDelta>(create);
+  static ProgramDelta? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ProgramChange> get changes => $_getList(0);
+}
+
+enum ProgramAnchor_Value { start, end, at, after, notSet }
+
+class ProgramAnchor extends $pb.GeneratedMessage {
+  factory ProgramAnchor({
+    $core.bool? start,
+    $core.bool? end,
+    StatementId? at,
+    StatementId? after,
+  }) {
+    final result = create();
+    if (start != null) result.start = start;
+    if (end != null) result.end = end;
+    if (at != null) result.at = at;
+    if (after != null) result.after = after;
+    return result;
+  }
+
+  ProgramAnchor._();
+
+  factory ProgramAnchor.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProgramAnchor.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProgramAnchor_Value>
+      _ProgramAnchor_ValueByTag = {
+    1: ProgramAnchor_Value.start,
+    2: ProgramAnchor_Value.end,
+    3: ProgramAnchor_Value.at,
+    4: ProgramAnchor_Value.after,
+    0: ProgramAnchor_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProgramAnchor',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4])
+    ..aOB(1, _omitFieldNames ? '' : 'start')
+    ..aOB(2, _omitFieldNames ? '' : 'end')
+    ..aOM<StatementId>(3, _omitFieldNames ? '' : 'at',
+        subBuilder: StatementId.create)
+    ..aOM<StatementId>(4, _omitFieldNames ? '' : 'after',
+        subBuilder: StatementId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramAnchor clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramAnchor copyWith(void Function(ProgramAnchor) updates) =>
+      super.copyWith((message) => updates(message as ProgramAnchor))
+          as ProgramAnchor;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProgramAnchor create() => ProgramAnchor._();
+  @$core.override
+  ProgramAnchor createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProgramAnchor getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProgramAnchor>(create);
+  static ProgramAnchor? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  ProgramAnchor_Value whichValue() =>
+      _ProgramAnchor_ValueByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  void clearValue() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.bool get start => $_getBF(0);
+  @$pb.TagNumber(1)
+  set start($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStart() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStart() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.bool get end => $_getBF(1);
+  @$pb.TagNumber(2)
+  set end($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEnd() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnd() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  StatementId get at => $_getN(2);
+  @$pb.TagNumber(3)
+  set at(StatementId value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  StatementId ensureAt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  StatementId get after => $_getN(3);
+  @$pb.TagNumber(4)
+  set after(StatementId value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAfter() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAfter() => $_clearField(4);
+  @$pb.TagNumber(4)
+  StatementId ensureAfter() => $_ensure(3);
+}
+
+class StatementChange extends $pb.GeneratedMessage {
+  factory StatementChange({
+    ProgramAnchor? anchor,
+    $core.Iterable<Statement>? removed,
+    $core.Iterable<Statement>? inserted,
+  }) {
+    final result = create();
+    if (anchor != null) result.anchor = anchor;
+    if (removed != null) result.removed.addAll(removed);
+    if (inserted != null) result.inserted.addAll(inserted);
+    return result;
+  }
+
+  StatementChange._();
+
+  factory StatementChange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StatementChange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StatementChange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ProgramAnchor>(1, _omitFieldNames ? '' : 'anchor',
+        subBuilder: ProgramAnchor.create)
+    ..pPM<Statement>(2, _omitFieldNames ? '' : 'removed',
+        subBuilder: Statement.create)
+    ..pPM<Statement>(3, _omitFieldNames ? '' : 'inserted',
+        subBuilder: Statement.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementChange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementChange copyWith(void Function(StatementChange) updates) =>
+      super.copyWith((message) => updates(message as StatementChange))
+          as StatementChange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StatementChange create() => StatementChange._();
+  @$core.override
+  StatementChange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StatementChange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StatementChange>(create);
+  static StatementChange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ProgramAnchor get anchor => $_getN(0);
+  @$pb.TagNumber(1)
+  set anchor(ProgramAnchor value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAnchor() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAnchor() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ProgramAnchor ensureAnchor() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<Statement> get removed => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<Statement> get inserted => $_getList(2);
+}
+
+class StyleChange extends $pb.GeneratedMessage {
+  factory StyleChange({
+    CellRef? ref,
+    CellStyle_Partial? before,
+    CellStyle_Partial? after,
+  }) {
+    final result = create();
+    if (ref != null) result.ref = ref;
+    if (before != null) result.before = before;
+    if (after != null) result.after = after;
+    return result;
+  }
+
+  StyleChange._();
+
+  factory StyleChange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StyleChange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StyleChange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'ref', subBuilder: CellRef.create)
+    ..aOM<CellStyle_Partial>(2, _omitFieldNames ? '' : 'before',
+        subBuilder: CellStyle_Partial.create)
+    ..aOM<CellStyle_Partial>(3, _omitFieldNames ? '' : 'after',
+        subBuilder: CellStyle_Partial.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleChange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StyleChange copyWith(void Function(StyleChange) updates) =>
+      super.copyWith((message) => updates(message as StyleChange))
+          as StyleChange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StyleChange create() => StyleChange._();
+  @$core.override
+  StyleChange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StyleChange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StyleChange>(create);
+  static StyleChange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CellRef get ref => $_getN(0);
+  @$pb.TagNumber(1)
+  set ref(CellRef value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRef() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRef() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CellRef ensureRef() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  CellStyle_Partial get before => $_getN(1);
+  @$pb.TagNumber(2)
+  set before(CellStyle_Partial value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBefore() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBefore() => $_clearField(2);
+  @$pb.TagNumber(2)
+  CellStyle_Partial ensureBefore() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  CellStyle_Partial get after => $_getN(2);
+  @$pb.TagNumber(3)
+  set after(CellStyle_Partial value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAfter() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAfter() => $_clearField(3);
+  @$pb.TagNumber(3)
+  CellStyle_Partial ensureAfter() => $_ensure(2);
+}
+
+class ZOrderChange extends $pb.GeneratedMessage {
+  factory ZOrderChange({
+    CellRef? ref,
+    ZAnchor? before,
+    ZAnchor? after,
+  }) {
+    final result = create();
+    if (ref != null) result.ref = ref;
+    if (before != null) result.before = before;
+    if (after != null) result.after = after;
+    return result;
+  }
+
+  ZOrderChange._();
+
+  factory ZOrderChange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ZOrderChange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ZOrderChange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'ref', subBuilder: CellRef.create)
+    ..aOM<ZAnchor>(2, _omitFieldNames ? '' : 'before',
+        subBuilder: ZAnchor.create)
+    ..aOM<ZAnchor>(3, _omitFieldNames ? '' : 'after',
+        subBuilder: ZAnchor.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ZOrderChange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ZOrderChange copyWith(void Function(ZOrderChange) updates) =>
+      super.copyWith((message) => updates(message as ZOrderChange))
+          as ZOrderChange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ZOrderChange create() => ZOrderChange._();
+  @$core.override
+  ZOrderChange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ZOrderChange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ZOrderChange>(create);
+  static ZOrderChange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CellRef get ref => $_getN(0);
+  @$pb.TagNumber(1)
+  set ref(CellRef value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRef() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRef() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CellRef ensureRef() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ZAnchor get before => $_getN(1);
+  @$pb.TagNumber(2)
+  set before(ZAnchor value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBefore() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBefore() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ZAnchor ensureBefore() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  ZAnchor get after => $_getN(2);
+  @$pb.TagNumber(3)
+  set after(ZAnchor value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAfter() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAfter() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ZAnchor ensureAfter() => $_ensure(2);
+}
+
+enum ProgramChange_Value { statement, style, zOrder, empty, notSet }
+
+class ProgramChange extends $pb.GeneratedMessage {
+  factory ProgramChange({
+    StatementChange? statement,
+    StyleChange? style,
+    ZOrderChange? zOrder,
+    $core.bool? empty,
+  }) {
+    final result = create();
+    if (statement != null) result.statement = statement;
+    if (style != null) result.style = style;
+    if (zOrder != null) result.zOrder = zOrder;
+    if (empty != null) result.empty = empty;
+    return result;
+  }
+
+  ProgramChange._();
+
+  factory ProgramChange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProgramChange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProgramChange_Value>
+      _ProgramChange_ValueByTag = {
+    1: ProgramChange_Value.statement,
+    2: ProgramChange_Value.style,
+    3: ProgramChange_Value.zOrder,
+    4: ProgramChange_Value.empty,
+    0: ProgramChange_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProgramChange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4])
+    ..aOM<StatementChange>(1, _omitFieldNames ? '' : 'statement',
+        subBuilder: StatementChange.create)
+    ..aOM<StyleChange>(2, _omitFieldNames ? '' : 'style',
+        subBuilder: StyleChange.create)
+    ..aOM<ZOrderChange>(3, _omitFieldNames ? '' : 'zOrder',
+        subBuilder: ZOrderChange.create)
+    ..aOB(4, _omitFieldNames ? '' : 'empty')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramChange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramChange copyWith(void Function(ProgramChange) updates) =>
+      super.copyWith((message) => updates(message as ProgramChange))
+          as ProgramChange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProgramChange create() => ProgramChange._();
+  @$core.override
+  ProgramChange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProgramChange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProgramChange>(create);
+  static ProgramChange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  ProgramChange_Value whichValue() =>
+      _ProgramChange_ValueByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  void clearValue() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  StatementChange get statement => $_getN(0);
+  @$pb.TagNumber(1)
+  set statement(StatementChange value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStatement() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStatement() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StatementChange ensureStatement() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  StyleChange get style => $_getN(1);
+  @$pb.TagNumber(2)
+  set style(StyleChange value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStyle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStyle() => $_clearField(2);
+  @$pb.TagNumber(2)
+  StyleChange ensureStyle() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  ZOrderChange get zOrder => $_getN(2);
+  @$pb.TagNumber(3)
+  set zOrder(ZOrderChange value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasZOrder() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearZOrder() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ZOrderChange ensureZOrder() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get empty => $_getBF(3);
+  @$pb.TagNumber(4)
+  set empty($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEmpty() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEmpty() => $_clearField(4);
+}
+
 class Mat4 extends $pb.GeneratedMessage {
   factory Mat4({
     $core.double? m00,

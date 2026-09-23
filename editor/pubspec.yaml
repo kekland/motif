@@ -23,6 +23,9 @@ dependencies:
   ui:
   schema:
   ink_stroke_modeler:
-  
+
   equatable: ^2.1.0
   web_socket_channel: ^3.0.3
+  flutter_boring_avatars: ^2.1.0
+  uuid: ^4.6.0
+  http: ^1.6.0

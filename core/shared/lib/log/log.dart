@@ -23,7 +23,8 @@ Frame? getTraceAtLevel([int level = 0, Type? runtimeType]) {
 }
 
 var _lastLogTime = DateTime.now();
-void logColorized(LogRecord record) {
+
+(String, LogRecord) _prepareLog(LogRecord record) {
   var message = Colorize(record.message);
   message = switch (record.level) {
     Level.FINEST => message.black().dark(),
@@ -63,14 +64,27 @@ void logColorized(LogRecord record) {
   }
   str += ' $timeDifferenceString';
 
+  return (str, record);
+}
+
+void logColorized(LogRecord record) {
+  final (str, preparedRecord) = _prepareLog(record);
+
   developer.log(
     str,
-    time: record.time,
-    level: record.level.value,
-    name: record.loggerName,
-    error: record.error,
-    stackTrace: record.stackTrace,
+    time: preparedRecord.time,
+    level: preparedRecord.level.value,
+    name: preparedRecord.loggerName,
+    error: preparedRecord.error,
+    stackTrace: preparedRecord.stackTrace,
   );
+}
+
+void logColorizedStdout(LogRecord record) {
+  final (str, preparedRecord) = _prepareLog(record);
+
+  // ignore: avoid_print
+  print(str);
 }
 
 extension WrapExtension on Logger {

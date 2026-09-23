@@ -142,12 +142,12 @@ final class StatementChange extends ProgramChange {
 
 final class StyleChange extends ProgramChange {
   new(
-    this.key, {
+    this.ref, {
     this.before,
     required this.after,
   });
 
-  final CellRef key;
+  final CellRef ref;
   final CellStylePartial? before;
   final CellStylePartial? after;
 
@@ -156,37 +156,37 @@ final class StyleChange extends ProgramChange {
 
   @override
   void reapply(EvalPass pass) {
-    pass.program.styles.set(key, after);
-    pass.restyle(key);
+    pass.program.styles.set(ref, after);
+    pass.restyle(ref);
   }
 
   @override
   void unapply(EvalPass pass) {
-    pass.program.styles.set(key, before);
-    pass.restyle(key);
+    pass.program.styles.set(ref, before);
+    pass.restyle(ref);
   }
 
   @override
   ProgramChange? coalesce(ProgramChange next) {
     if (next is! StyleChange) return null;
-    if (next.key != key) return null;
+    if (next.ref != ref) return null;
     if (before == next.after) return .empty();
-    return .style(key, before: before, after: next.after);
+    return .style(ref, before: before, after: next.after);
   }
 
   @override
   bool commutesWith(ProgramChange other) => switch (other) {
-    StyleChange d => d.key != key,
+    StyleChange d => d.ref != ref,
     ZOrderChange _ => true,
     StatementChange _ => true,
     EmptyChange _ => true,
   };
 
   @override
-  StyleChange invert() => .new(key, before: after, after: before);
+  StyleChange invert() => .new(ref, before: after, after: before);
 
-  StyleChange copyWith({CellRef? key, CellStylePartial? before, CellStylePartial? after}) => .new(
-    key ?? this.key,
+  StyleChange copyWith({CellRef? ref, CellStylePartial? before, CellStylePartial? after}) => .new(
+    ref ?? this.ref,
     before: before ?? this.before,
     after: after ?? this.after,
   );
@@ -194,12 +194,12 @@ final class StyleChange extends ProgramChange {
 
 final class ZOrderChange extends ProgramChange {
   new(
-    this.key, {
+    this.ref, {
     this.before,
     required this.after,
   });
 
-  final CellRef key;
+  final CellRef ref;
   final ZAnchor? before;
   final ZAnchor? after;
 
@@ -208,37 +208,37 @@ final class ZOrderChange extends ProgramChange {
 
   @override
   void reapply(EvalPass pass) {
-    pass.program.zOrders.set(key, after);
-    pass.reorder(key);
+    pass.program.zOrders.set(ref, after);
+    pass.reorder(ref);
   }
 
   @override
   void unapply(EvalPass pass) {
-    pass.program.zOrders.set(key, before);
-    pass.reorder(key);
+    pass.program.zOrders.set(ref, before);
+    pass.reorder(ref);
   }
 
   @override
   ProgramChange? coalesce(ProgramChange next) {
     if (next is! ZOrderChange) return null;
-    if (next.key != key) return null;
+    if (next.ref != ref) return null;
     if (before == next.after) return .empty();
-    return .zOrder(key, before: before, after: next.after);
+    return .zOrder(ref, before: before, after: next.after);
   }
 
   @override
   bool commutesWith(ProgramChange other) => switch (other) {
-    ZOrderChange d => d.key != key,
+    ZOrderChange d => d.ref != ref,
     StyleChange _ => true,
     StatementChange _ => true,
     EmptyChange _ => true,
   };
 
   @override
-  ZOrderChange invert() => .new(key, before: after, after: before);
+  ZOrderChange invert() => .new(ref, before: after, after: before);
 
-  ZOrderChange copyWith({CellRef? key, ZAnchor? before, ZAnchor? after}) => .new(
-    key ?? this.key,
+  ZOrderChange copyWith({CellRef? ref, ZAnchor? before, ZAnchor? after}) => .new(
+    ref ?? this.ref,
     before: before ?? this.before,
     after: after ?? this.after,
   );

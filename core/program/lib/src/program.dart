@@ -20,14 +20,7 @@ final class Program {
   }
 
   factory Program.decode(gen.Program program) => ProgramCodec.decodeProgram(program);
-  static Program? decodeRaw(Uint8List data) {
-    try {
-      final program = gen.Program.fromBuffer(data);
-      return Program.decode(program);
-    } catch (e) {
-      return null;
-    }
-  }
+  static Program? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
 
   Program.empty() : _statements = [], styles = .empty(), zOrders = .empty();
 
@@ -71,6 +64,4 @@ final class Program {
     styles: styles.clone(),
     zOrders: zOrders.clone(),
   );
-
-  gen.Program encode() => ProgramCodec.encodeProgram(this);
 }

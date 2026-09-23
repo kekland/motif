@@ -25,6 +25,7 @@ export 'package:flutter/material.dart'
 export 'package:state/state.dart';
 
 export 'package:defer_pointer/defer_pointer.dart';
+export 'package:vector_graphics/vector_graphics.dart';
 
 export 'slate.dart';
 

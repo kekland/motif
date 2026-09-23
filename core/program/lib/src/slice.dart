@@ -5,14 +5,7 @@ final class ProgramSlice {
   ProgramSlice.empty() : statements = [];
 
   factory ProgramSlice.decode(gen.ProgramSlice program) => ProgramCodec.decodeProgramSlice(program);
-  static ProgramSlice? decodeRaw(Uint8List data) {
-    try {
-      final program = gen.ProgramSlice.fromBuffer(data);
-      return ProgramSlice.decode(program);
-    } catch (e) {
-      return null;
-    }
-  }
+  static ProgramSlice? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
 
   factory ProgramSlice.merged(Iterable<ProgramSlice> slices, {int Function(StatementId)? indexOf}) {
     final seen = <StatementId>{};
@@ -50,6 +43,4 @@ final class ProgramSlice {
   }
 
   ProgramSlice extend(ProgramSlice other) => .new(statements: [...statements, ...other.statements]);
-
-  gen.ProgramSlice encode() => ProgramCodec.encodeProgramSlice(this);
 }

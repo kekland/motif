@@ -8,16 +8,13 @@ part 'editor/transform.dart';
 part 'editor/transient_edge.dart';
 part 'editor/hit_test.dart';
 part 'editor/transient_stroke.dart';
-
-const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhost:8085');
-const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: false);
+part 'editor/clients.dart';
 
 final class Editor extends Controller {
-  Editor({required this.scene}) : super(logger: Logger('editor')) {
-    // logger.info('Editor initialized with sync URL: $_syncUrl (enabled: $_syncEnabled)');
-    // sync = _syncEnabled ? SceneSync(this.scene, uri: Uri.parse(_syncUrl)) : null;
-    // sync?.connect();
-
+  Editor({
+    required this.scene,
+    this.onPointerChanged,
+  }) : super(logger: Logger('editor')) {
     $effect(() {
       final tab = this.tab.value;
       if (panelsRootKey.currentState == null) return;
@@ -34,6 +31,7 @@ final class Editor extends Controller {
   static Editor watch(BuildContext context) => context.watch<Editor>();
 
   final Scene scene;
+  final PointerChangedCallback? onPointerChanged;
   // late final SceneSync? sync;
   Program get program => scene.program;
   Bundle get bundle => scene.bundle;
@@ -62,6 +60,7 @@ final class Editor extends Controller {
   late final tool = ToolController(initialToolset: toolset);
   late final transientEdges = TransientEdges(this);
   late final transientStrokes = TransientStrokes(this);
+  late final clients = EditorClients();
 
   SceneTransaction beginTransaction() => scene.beginTransaction();
   T edit<T>(T Function(SceneTransaction txn) callback, {Object? mergeKey}) {

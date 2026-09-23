@@ -459,6 +459,7 @@ class Icons extends _BaseIcon {
   const Icons.folder({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_rounded);
   const Icons.cloud({super.key, super.size, super.color}): super.iconData(icon: Symbols.cloud_rounded);
   const Icons.refresh({super.key, super.size, super.color}): super.iconData(icon: Symbols.refresh_rounded);
+  const Icons.copy({super.key, super.size, super.color}): super.iconData(icon: Symbols.content_copy_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

@@ -1,6 +1,7 @@
+import 'package:editor/imports.dart';
 import 'package:editor/widgets/program_panel/program_panel.dart';
 import 'package:editor/widgets/tree_panel/tree_panel.dart';
-import 'package:ui/ui.dart';
+import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
 
 enum ScenePanelMode {
   program,
@@ -13,6 +14,7 @@ class ScenePanel extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final mode = useState(ScenePanelMode.tree);
+    final clients = useListenable(context.editor.clients).clients;
 
     return Column(
       mainAxisSize: .max,
@@ -46,6 +48,42 @@ class ScenePanel extends HookWidget {
             .tree => TreePanel(),
             .program => ProgramPanel(),
           },
+        ),
+        Divider(),
+        SizedBox(
+          height: 36.0,
+          child: ListView.separated(
+            scrollDirection: .horizontal,
+            itemCount: 1 + clients.length,
+            padding: const .symmetric(horizontal: 8.0),
+            separatorBuilder: (context, i) => SizedBox(width: 8.0),
+            itemBuilder: (context, i) {
+              if (i == 0) {
+                return SizedBox(
+                  width: 24.0,
+                  height: 24.0,
+                  child: BoringAvatar(
+                    name: context.editor.clients.ownId ?? '',
+                    palette: .new(Colors.primaries),
+                    shape: CircleBorder(),
+                    type: .marble,
+                  ),
+                );
+              }
+
+              final client = clients[i - 1];
+              return SizedBox(
+                width: 24.0,
+                height: 24.0,
+                child: BoringAvatar(
+                  name: client.id,
+                  palette: .new(Colors.primaries),
+                  shape: CircleBorder(),
+                  type: .marble,
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

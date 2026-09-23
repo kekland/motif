@@ -411,6 +411,50 @@ message FilletModifier {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Deltas/changes
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ProgramDelta {
+  repeated ProgramChange changes = 1;
+}
+
+message ProgramAnchor {
+  oneof value {
+    bool        start = 1;
+    bool        end   = 2;
+    StatementId at    = 3;
+    StatementId after = 4;
+  }
+}
+
+message StatementChange {
+  ProgramAnchor      anchor   = 1;
+  repeated Statement removed  = 2;
+  repeated Statement inserted = 3;
+}
+
+message StyleChange {
+  CellRef                    ref    = 1;
+  optional CellStyle.Partial before = 2;
+  optional CellStyle.Partial after  = 3;
+}
+
+message ZOrderChange {
+  CellRef          ref    = 1;
+  optional ZAnchor before = 2;
+  optional ZAnchor after  = 3;
+}
+
+message ProgramChange {
+  oneof value {
+    StatementChange statement = 1;
+    StyleChange     style     = 2;
+    ZOrderChange    z_order   = 3;
+    bool            empty     = 4;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Other types
 // ---------------------------------------------------------------------------------------------------------------------
 

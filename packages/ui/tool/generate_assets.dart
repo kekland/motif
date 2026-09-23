@@ -66,6 +66,7 @@ Future<void> main() async {
     .new('folder', 'Symbols.folder_rounded'),
     .new('cloud', 'Symbols.cloud_rounded'),
     .new('refresh', 'Symbols.refresh_rounded'),
+    .new('copy', 'Symbols.content_copy_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

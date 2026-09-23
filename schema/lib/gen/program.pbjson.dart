@@ -1974,6 +1974,221 @@ final $typed_data.Uint8List filletModifierDescriptor = $convert.base64Decode(
     'ZXJSB2Nvcm5lcnMaSwoGQ29ybmVyEhQKBWluZGV4GAEgASgFUgVpbmRleBIrCgZyYWRpdXMYAi'
     'ABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdXNSBnJhZGl1c0IJCgdfcmFkaXVz');
 
+@$core.Deprecated('Use programDeltaDescriptor instead')
+const ProgramDelta$json = {
+  '1': 'ProgramDelta',
+  '2': [
+    {
+      '1': 'changes',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.ProgramChange',
+      '10': 'changes'
+    },
+  ],
+};
+
+/// Descriptor for `ProgramDelta`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programDeltaDescriptor = $convert.base64Decode(
+    'CgxQcm9ncmFtRGVsdGESLgoHY2hhbmdlcxgBIAMoCzIULm1vdGlmLlByb2dyYW1DaGFuZ2VSB2'
+    'NoYW5nZXM=');
+
+@$core.Deprecated('Use programAnchorDescriptor instead')
+const ProgramAnchor$json = {
+  '1': 'ProgramAnchor',
+  '2': [
+    {'1': 'start', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'start'},
+    {'1': 'end', '3': 2, '4': 1, '5': 8, '9': 0, '10': 'end'},
+    {
+      '1': 'at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementId',
+      '9': 0,
+      '10': 'at'
+    },
+    {
+      '1': 'after',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementId',
+      '9': 0,
+      '10': 'after'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `ProgramAnchor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programAnchorDescriptor = $convert.base64Decode(
+    'Cg1Qcm9ncmFtQW5jaG9yEhYKBXN0YXJ0GAEgASgISABSBXN0YXJ0EhIKA2VuZBgCIAEoCEgAUg'
+    'NlbmQSJAoCYXQYAyABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZEgAUgJhdBIqCgVhZnRlchgEIAEo'
+    'CzISLm1vdGlmLlN0YXRlbWVudElkSABSBWFmdGVyQgcKBXZhbHVl');
+
+@$core.Deprecated('Use statementChangeDescriptor instead')
+const StatementChange$json = {
+  '1': 'StatementChange',
+  '2': [
+    {
+      '1': 'anchor',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ProgramAnchor',
+      '10': 'anchor'
+    },
+    {
+      '1': 'removed',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.Statement',
+      '10': 'removed'
+    },
+    {
+      '1': 'inserted',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.Statement',
+      '10': 'inserted'
+    },
+  ],
+};
+
+/// Descriptor for `StatementChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List statementChangeDescriptor = $convert.base64Decode(
+    'Cg9TdGF0ZW1lbnRDaGFuZ2USLAoGYW5jaG9yGAEgASgLMhQubW90aWYuUHJvZ3JhbUFuY2hvcl'
+    'IGYW5jaG9yEioKB3JlbW92ZWQYAiADKAsyEC5tb3RpZi5TdGF0ZW1lbnRSB3JlbW92ZWQSLAoI'
+    'aW5zZXJ0ZWQYAyADKAsyEC5tb3RpZi5TdGF0ZW1lbnRSCGluc2VydGVk');
+
+@$core.Deprecated('Use styleChangeDescriptor instead')
+const StyleChange$json = {
+  '1': 'StyleChange',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+    {
+      '1': 'before',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellStyle.Partial',
+      '9': 0,
+      '10': 'before',
+      '17': true
+    },
+    {
+      '1': 'after',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellStyle.Partial',
+      '9': 1,
+      '10': 'after',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_before'},
+    {'1': '_after'},
+  ],
+};
+
+/// Descriptor for `StyleChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List styleChangeDescriptor = $convert.base64Decode(
+    'CgtTdHlsZUNoYW5nZRIgCgNyZWYYASABKAsyDi5tb3RpZi5DZWxsUmVmUgNyZWYSNQoGYmVmb3'
+    'JlGAIgASgLMhgubW90aWYuQ2VsbFN0eWxlLlBhcnRpYWxIAFIGYmVmb3JliAEBEjMKBWFmdGVy'
+    'GAMgASgLMhgubW90aWYuQ2VsbFN0eWxlLlBhcnRpYWxIAVIFYWZ0ZXKIAQFCCQoHX2JlZm9yZU'
+    'IICgZfYWZ0ZXI=');
+
+@$core.Deprecated('Use zOrderChangeDescriptor instead')
+const ZOrderChange$json = {
+  '1': 'ZOrderChange',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+    {
+      '1': 'before',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZAnchor',
+      '9': 0,
+      '10': 'before',
+      '17': true
+    },
+    {
+      '1': 'after',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZAnchor',
+      '9': 1,
+      '10': 'after',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_before'},
+    {'1': '_after'},
+  ],
+};
+
+/// Descriptor for `ZOrderChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List zOrderChangeDescriptor = $convert.base64Decode(
+    'CgxaT3JkZXJDaGFuZ2USIAoDcmVmGAEgASgLMg4ubW90aWYuQ2VsbFJlZlIDcmVmEisKBmJlZm'
+    '9yZRgCIAEoCzIOLm1vdGlmLlpBbmNob3JIAFIGYmVmb3JliAEBEikKBWFmdGVyGAMgASgLMg4u'
+    'bW90aWYuWkFuY2hvckgBUgVhZnRlcogBAUIJCgdfYmVmb3JlQggKBl9hZnRlcg==');
+
+@$core.Deprecated('Use programChangeDescriptor instead')
+const ProgramChange$json = {
+  '1': 'ProgramChange',
+  '2': [
+    {
+      '1': 'statement',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementChange',
+      '9': 0,
+      '10': 'statement'
+    },
+    {
+      '1': 'style',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StyleChange',
+      '9': 0,
+      '10': 'style'
+    },
+    {
+      '1': 'z_order',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ZOrderChange',
+      '9': 0,
+      '10': 'zOrder'
+    },
+    {'1': 'empty', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'empty'},
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `ProgramChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programChangeDescriptor = $convert.base64Decode(
+    'Cg1Qcm9ncmFtQ2hhbmdlEjYKCXN0YXRlbWVudBgBIAEoCzIWLm1vdGlmLlN0YXRlbWVudENoYW'
+    '5nZUgAUglzdGF0ZW1lbnQSKgoFc3R5bGUYAiABKAsyEi5tb3RpZi5TdHlsZUNoYW5nZUgAUgVz'
+    'dHlsZRIuCgd6X29yZGVyGAMgASgLMhMubW90aWYuWk9yZGVyQ2hhbmdlSABSBnpPcmRlchIWCg'
+    'VlbXB0eRgEIAEoCEgAUgVlbXB0eUIHCgV2YWx1ZQ==');
+
 @$core.Deprecated('Use mat4Descriptor instead')
 const Mat4$json = {
   '1': 'Mat4',

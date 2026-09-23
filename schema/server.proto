@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package motif;
+
+import "program.proto";
+
+message Client {
+  string id = 1;
+}
+
+message CreateSceneRequest {
+  Program program = 1;
+}
+
+message CreateSceneResponse {
+  string  id      = 1;
+  Program program = 2;
+}
+
+message GetSceneRequest {
+  string id = 1;
+}
+
+message GetSceneResponse {
+  Program program = 1;
+}
+
+message ClientPresence {
+  Client          client           = 1;
+  optional Vec2   pointer_position = 2;
+  optional string pointer_type     = 3;
+}
+
+message ClientDelta {
+  ProgramDelta delta  = 1;
+  Client       client = 2;
+}
+
+message Snapshot {
+  Program                 program = 1;
+  repeated ClientPresence clients = 2;
+}
+
+message ClientEvent {
+  oneof event {
+    ClientPresence presence = 1;
+    ClientDelta    delta    = 2;
+  }
+}
+
+message ServerEvent {
+  oneof event {
+    Snapshot       snapshot = 1;
+    ClientPresence presence = 2;
+    ClientDelta    delta    = 3;
+    Client         left     = 4;
+  }
+}

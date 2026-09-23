@@ -45,13 +45,19 @@ class Button extends StatelessWidget {
 }
 
 class ButtonRow extends StatelessWidget {
-  const new({super.key, required this.buttons});
+  const new({
+    super.key,
+    required this.buttons,
+    this.alignment = .start,
+  });
 
+  final MainAxisAlignment alignment;
   final List<Widget> buttons;
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: alignment,
       spacing: 8.0,
       children: buttons,
     );

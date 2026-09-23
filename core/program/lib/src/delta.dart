@@ -5,7 +5,10 @@ final class ProgramDelta {
   ProgramDelta.single(ProgramChange change) : this([change]);
   ProgramDelta.empty() : this([]);
 
-  factory ProgramDelta.coalesced(Iterable<ProgramDelta> deltas) {
+  factory decode(gen.ProgramDelta program) => ProgramCodec.decodeProgramDelta(program);
+  static ProgramDelta? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
+
+  factory coalesced(Iterable<ProgramDelta> deltas) {
     final out = <ProgramChange>[];
     for (final d in deltas) {
       for (final op in d.changes) _fold(out, op);

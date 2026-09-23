@@ -1,5 +1,6 @@
 import 'package:editor/widgets/actions.dart';
 import 'package:editor/widgets/context_menu/canvas_context_menu.dart';
+import 'package:editor/widgets/editor_canvas_clients.dart';
 import 'package:renderer/renderer.dart';
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tool/tool_overlay.dart';
@@ -23,17 +24,20 @@ class EditorCanvas extends HookWidget {
                 child: Overlay.wrap(
                   child: Surface(
                     color: context.colors.surface.canvas,
-                    child: InteractiveCanvas(
-                      centerOrigin: true,
-                      overlayBuilders: [
-                        (context, transform) => CanvasPixelGrid(transform: transform),
-                        (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
-                      ],
-                      child: SceneWidget(
-                        key: editor.sceneKey,
-                        scene: editor.scene,
-                        debug: false,
-                        debugArrangement: true,
+                    child: EditorCanvasPointerUpdateWidget(
+                      child: InteractiveCanvas(
+                        centerOrigin: true,
+                        overlayBuilders: [
+                          (context, transform) => CanvasPixelGrid(transform: transform),
+                          (context, transform) => EditorCanvasClientsPointersWidget(transform: transform),
+                          (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
+                        ],
+                        child: SceneWidget(
+                          key: editor.sceneKey,
+                          scene: editor.scene,
+                          debug: false,
+                          debugArrangement: true,
+                        ),
                       ),
                     ),
                   ),
