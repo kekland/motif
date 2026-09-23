@@ -16,7 +16,7 @@ class const StatementWidget({
       },
       leading: icon,
       title: Text(name),
-      footnote: Text(statement.id.toString()),
+      subtitle: Text(statement.id.toString()),
       isSelected: isSelected,
     );
   }

@@ -1,13 +1,12 @@
 part of '../slate.dart';
 
-typedef GestureRegionDetectorBuilder =
-    Widget Function(
-      BuildContext context,
-      HitTestBehavior behavior,
-      Set<PointerDeviceKind>? supportedDevices,
-      GestureCallbackBundle callbacks,
-      Widget child,
-    );
+typedef GestureRegionDetectorBuilder = Widget Function(
+  BuildContext context,
+  HitTestBehavior behavior,
+  Set<PointerDeviceKind>? supportedDevices,
+  GestureCallbackBundle callbacks,
+  Widget child,
+);
 
 class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
   const GestureRegion({
@@ -36,6 +35,7 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
     this.onPanUpdate,
     this.onPanEnd,
     this.onPanCancel,
+    this.ignoreDisabled = false,
   });
 
   GestureRegion.fromSurface({
@@ -68,6 +68,7 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
          onPanEnd: surface.onPanEnd,
          onPanCancel: surface.onPanCancel,
          detectorBuilder: detectorBuilder,
+         ignoreDisabled: surface.ignoreDisabled,
          builder: builder,
        );
 
@@ -76,6 +77,7 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
   final Widget Function(BuildContext context, Set<WidgetState> states)? builder;
   final MouseCursor cursor;
   final Set<PointerDeviceKind>? supportedDevices;
+  final bool ignoreDisabled;
 
   // dart format off
   @override final GestureTapDownCallback? onTapDown;
@@ -125,6 +127,8 @@ class _GestureRegionState extends State<GestureRegion> {
     _hoverState = {};
   }
 
+  bool get blocksParentHover => _hasTapCallbacks || widget.ignoreDisabled;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -133,7 +137,7 @@ class _GestureRegionState extends State<GestureRegion> {
 
     final newParent = context.findAncestorStateOfType<_GestureRegionState>();
     if (_parent != newParent) {
-      if (_isDirectlyHovered) {
+      if (_isDirectlyHovered && blocksParentHover) {
         _parent?._onChildHoverChanged(false);
         newParent?._onChildHoverChanged(true);
       }
@@ -144,7 +148,7 @@ class _GestureRegionState extends State<GestureRegion> {
   @override
   void didUpdateWidget(covariant GestureRegion oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _onOnTapChanged();
+    _onOnTapChanged(fromUpdate: true);
   }
 
   @override
@@ -156,14 +160,14 @@ class _GestureRegionState extends State<GestureRegion> {
     super.dispose();
   }
 
-  void _onOnTapChanged() {
+  void _onOnTapChanged({bool fromUpdate = false}) {
     if (!_hasTapCallbacks) {
       _gestureDetectorState = {WidgetState.disabled};
     } else if (_gestureDetectorState.contains(WidgetState.disabled)) {
       _gestureDetectorState = {};
     }
 
-    _updateHoverState();
+    _updateHoverState(fromUpdate: fromUpdate);
   }
 
   void _onTapStart(BuildContext context) {
@@ -191,12 +195,15 @@ class _GestureRegionState extends State<GestureRegion> {
     setState(() => _gestureDetectorState = _hasTapCallbacks ? {} : {WidgetState.disabled});
   }
 
-  void _updateHoverState() {
+  bool _updateHoverState({bool fromUpdate = false}) {
     final isHovered = _isDirectlyHovered && _hoveredChildCount == 0 && _hasTapCallbacks;
 
     if (_hoverState.contains(WidgetState.hovered) != isHovered) {
       setState(() => _hoverState = isHovered ? {WidgetState.hovered} : {});
     }
+
+    if (!fromUpdate && blocksParentHover) _parent?._onChildHoverChanged(isHovered);
+    return isHovered;
   }
 
   void _onChildHoverChanged(bool isHovered) {
@@ -214,7 +221,6 @@ class _GestureRegionState extends State<GestureRegion> {
     if (e.down) return;
 
     _isDirectlyHovered = true;
-    _parent?._onChildHoverChanged(true);
     _updateHoverState();
   }
 
@@ -223,7 +229,6 @@ class _GestureRegionState extends State<GestureRegion> {
     if (!_isDirectlyHovered) return;
 
     _isDirectlyHovered = false;
-    _parent?._onChildHoverChanged(false);
     _updateHoverState();
   }
 

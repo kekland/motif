@@ -22,8 +22,8 @@ part 'utils/covertices.dart';
 
 final _log = Logger('scene');
 
-final class Scene with ChangeNotifier {
-  new({required this.program}) {
+final class Scene with ChangeNotifier, ChangeNotifierDisposable {
+  new({required this.id, required this.program}) {
     evaluation = .new(program);
     selection = .new(this);
     query = .new(this);
@@ -39,8 +39,9 @@ final class Scene with ChangeNotifier {
     });
   }
 
-  Scene.empty() : this(program: .empty());
+  Scene.empty(String id) : this(id: id, program: .empty());
 
+  final String id;
   final Program program;
 
   late final Evaluation evaluation;
@@ -101,4 +102,6 @@ final class Scene with ChangeNotifier {
     tree.dispose();
     super.dispose();
   }
+
+  Scene clone() => .new(id: id, program: program.clone());
 }

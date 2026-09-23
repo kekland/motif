@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'animations.dart';
 import 'color_definitions.dart';
 import 'typography_definitions.dart';
-import 'color.dart';
+import 'colors.dart';
 import 'typography.dart';
 import 'shadows.dart';
 
 export 'animations.dart';
 export 'augmentations.dart';
 export 'color_definitions.dart';
-export 'color.dart';
+export 'colors.dart';
 export 'typography_definitions.dart';
 export 'typography.dart';
 export 'utils.dart';

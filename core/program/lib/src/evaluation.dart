@@ -127,7 +127,7 @@ final class Evaluation {
 
   void _initialPass() {
     final pass = beginPass();
-    pass.edit(0, [], program._statements);
+    pass.edit(0, [], program._statements, initialPass: true);
     pass.drain();
   }
 }

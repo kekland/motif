@@ -5,7 +5,7 @@ class IconButton extends StatelessWidget {
     super.key,
     required this.child,
     this.onTap,
-    this.size = 32.0,
+    this.size = 24.0,
     this.iconSize = 18.0,
     this.color,
     this.foregroundColor,
@@ -19,7 +19,7 @@ class IconButton extends StatelessWidget {
     super.key,
     required this.child,
     this.onTap,
-    this.size = 32.0,
+    this.size = 24.0,
     this.iconSize = 18.0,
     this.borderRadius,
     this.isSelected = false,
@@ -50,7 +50,7 @@ class IconButton extends StatelessWidget {
     } else if (isFilled) {
       color = context.colors.surface.secondary;
     } else {
-      color = Surface.maybeColorOf(context);
+      color = null;
     }
 
     return Tooltip(

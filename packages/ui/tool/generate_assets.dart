@@ -37,7 +37,7 @@ Future<void> main() async {
     .new('topology', 'Symbols.hub_rounded'),
     .new('squiggly', 'Symbols.gesture_rounded'),
     .new('tune', 'Symbols.tune_rounded'),
-    .new('add', 'Symbols.add_rounded'),
+    .new('add', 'Symbols.add_2_rounded'),
     .new('wrench', 'Symbols.build_rounded'),
     .new('applyModifier', 'Symbols.shape_line_rounded'),
     .new('visibility', 'Symbols.visibility_rounded'),
@@ -60,6 +60,12 @@ Future<void> main() async {
     .new('group', 'Symbols.folder_rounded'),
     .new('tree', 'Symbols.account_tree_rounded'),
     .new('program', 'Symbols.code_blocks_rounded'),
+    .new('open', 'Symbols.folder_open_rounded'),
+    .new('document', 'Symbols.design_services_rounded'),
+    .new('join', 'Symbols.link_2_rounded'),
+    .new('folder', 'Symbols.folder_rounded'),
+    .new('cloud', 'Symbols.cloud_rounded'),
+    .new('refresh', 'Symbols.refresh_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

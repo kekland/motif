@@ -179,53 +179,56 @@ class ProgramSlice extends $pb.GeneratedMessage {
 }
 
 enum Statement_Value {
-  frame,
   vertex,
   edge,
   face,
   cutEdge,
-  dissolve,
+  multiCutEdge,
   filletFace,
   glueVertices,
   rectangle,
   polygon,
   ellipse,
   container,
+  group,
+  generator,
   notSet
 }
 
 class Statement extends $pb.GeneratedMessage {
   factory Statement({
     StatementId? id,
-    $core.bool? enabled,
-    FrameStatement? frame,
+    $core.Iterable<Modifier>? modifiers,
     VertexStatement? vertex,
     EdgeStatement? edge,
     FaceStatement? face,
     CutEdgeStatement? cutEdge,
-    DissolveStatement? dissolve,
+    MultiCutEdgeStatement? multiCutEdge,
     FilletFaceStatement? filletFace,
     GlueVerticesStatement? glueVertices,
     RectangleStatement? rectangle,
     PolygonStatement? polygon,
     EllipseStatement? ellipse,
     ContainerStatement? container,
+    GroupStatement? group,
+    GeneratorStatement? generator,
   }) {
     final result = create();
     if (id != null) result.id = id;
-    if (enabled != null) result.enabled = enabled;
-    if (frame != null) result.frame = frame;
+    if (modifiers != null) result.modifiers.addAll(modifiers);
     if (vertex != null) result.vertex = vertex;
     if (edge != null) result.edge = edge;
     if (face != null) result.face = face;
     if (cutEdge != null) result.cutEdge = cutEdge;
-    if (dissolve != null) result.dissolve = dissolve;
+    if (multiCutEdge != null) result.multiCutEdge = multiCutEdge;
     if (filletFace != null) result.filletFace = filletFace;
     if (glueVertices != null) result.glueVertices = glueVertices;
     if (rectangle != null) result.rectangle = rectangle;
     if (polygon != null) result.polygon = polygon;
     if (ellipse != null) result.ellipse = ellipse;
     if (container != null) result.container = container;
+    if (group != null) result.group = group;
+    if (generator != null) result.generator = generator;
     return result;
   }
 
@@ -239,52 +242,56 @@ class Statement extends $pb.GeneratedMessage {
       create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Statement_Value> _Statement_ValueByTag = {
-    10: Statement_Value.frame,
-    11: Statement_Value.vertex,
-    12: Statement_Value.edge,
-    13: Statement_Value.face,
-    14: Statement_Value.cutEdge,
-    15: Statement_Value.dissolve,
-    16: Statement_Value.filletFace,
-    17: Statement_Value.glueVertices,
-    18: Statement_Value.rectangle,
-    19: Statement_Value.polygon,
-    20: Statement_Value.ellipse,
-    21: Statement_Value.container,
+    10: Statement_Value.vertex,
+    11: Statement_Value.edge,
+    12: Statement_Value.face,
+    13: Statement_Value.cutEdge,
+    14: Statement_Value.multiCutEdge,
+    15: Statement_Value.filletFace,
+    16: Statement_Value.glueVertices,
+    17: Statement_Value.rectangle,
+    18: Statement_Value.polygon,
+    19: Statement_Value.ellipse,
+    20: Statement_Value.container,
+    21: Statement_Value.group,
+    22: Statement_Value.generator,
     0: Statement_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Statement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
+    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
-    ..aOB(2, _omitFieldNames ? '' : 'enabled')
-    ..aOM<FrameStatement>(10, _omitFieldNames ? '' : 'frame',
-        subBuilder: FrameStatement.create)
-    ..aOM<VertexStatement>(11, _omitFieldNames ? '' : 'vertex',
+    ..pPM<Modifier>(2, _omitFieldNames ? '' : 'modifiers',
+        subBuilder: Modifier.create)
+    ..aOM<VertexStatement>(10, _omitFieldNames ? '' : 'vertex',
         subBuilder: VertexStatement.create)
-    ..aOM<EdgeStatement>(12, _omitFieldNames ? '' : 'edge',
+    ..aOM<EdgeStatement>(11, _omitFieldNames ? '' : 'edge',
         subBuilder: EdgeStatement.create)
-    ..aOM<FaceStatement>(13, _omitFieldNames ? '' : 'face',
+    ..aOM<FaceStatement>(12, _omitFieldNames ? '' : 'face',
         subBuilder: FaceStatement.create)
-    ..aOM<CutEdgeStatement>(14, _omitFieldNames ? '' : 'cutEdge',
+    ..aOM<CutEdgeStatement>(13, _omitFieldNames ? '' : 'cutEdge',
         subBuilder: CutEdgeStatement.create)
-    ..aOM<DissolveStatement>(15, _omitFieldNames ? '' : 'dissolve',
-        subBuilder: DissolveStatement.create)
-    ..aOM<FilletFaceStatement>(16, _omitFieldNames ? '' : 'filletFace',
+    ..aOM<MultiCutEdgeStatement>(14, _omitFieldNames ? '' : 'multiCutEdge',
+        subBuilder: MultiCutEdgeStatement.create)
+    ..aOM<FilletFaceStatement>(15, _omitFieldNames ? '' : 'filletFace',
         subBuilder: FilletFaceStatement.create)
-    ..aOM<GlueVerticesStatement>(17, _omitFieldNames ? '' : 'glueVertices',
+    ..aOM<GlueVerticesStatement>(16, _omitFieldNames ? '' : 'glueVertices',
         subBuilder: GlueVerticesStatement.create)
-    ..aOM<RectangleStatement>(18, _omitFieldNames ? '' : 'rectangle',
+    ..aOM<RectangleStatement>(17, _omitFieldNames ? '' : 'rectangle',
         subBuilder: RectangleStatement.create)
-    ..aOM<PolygonStatement>(19, _omitFieldNames ? '' : 'polygon',
+    ..aOM<PolygonStatement>(18, _omitFieldNames ? '' : 'polygon',
         subBuilder: PolygonStatement.create)
-    ..aOM<EllipseStatement>(20, _omitFieldNames ? '' : 'ellipse',
+    ..aOM<EllipseStatement>(19, _omitFieldNames ? '' : 'ellipse',
         subBuilder: EllipseStatement.create)
-    ..aOM<ContainerStatement>(21, _omitFieldNames ? '' : 'container',
+    ..aOM<ContainerStatement>(20, _omitFieldNames ? '' : 'container',
         subBuilder: ContainerStatement.create)
+    ..aOM<GroupStatement>(21, _omitFieldNames ? '' : 'group',
+        subBuilder: GroupStatement.create)
+    ..aOM<GeneratorStatement>(22, _omitFieldNames ? '' : 'generator',
+        subBuilder: GeneratorStatement.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -317,6 +324,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
+  @$pb.TagNumber(22)
   Statement_Value whichValue() => _Statement_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -330,6 +338,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
+  @$pb.TagNumber(22)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -344,145 +353,150 @@ class Statement extends $pb.GeneratedMessage {
   StatementId ensureId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.bool get enabled => $_getBF(1);
-  @$pb.TagNumber(2)
-  set enabled($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasEnabled() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearEnabled() => $_clearField(2);
+  $pb.PbList<Modifier> get modifiers => $_getList(1);
 
   @$pb.TagNumber(10)
-  FrameStatement get frame => $_getN(2);
+  VertexStatement get vertex => $_getN(2);
   @$pb.TagNumber(10)
-  set frame(FrameStatement value) => $_setField(10, value);
+  set vertex(VertexStatement value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasFrame() => $_has(2);
+  $core.bool hasVertex() => $_has(2);
   @$pb.TagNumber(10)
-  void clearFrame() => $_clearField(10);
+  void clearVertex() => $_clearField(10);
   @$pb.TagNumber(10)
-  FrameStatement ensureFrame() => $_ensure(2);
+  VertexStatement ensureVertex() => $_ensure(2);
 
   @$pb.TagNumber(11)
-  VertexStatement get vertex => $_getN(3);
+  EdgeStatement get edge => $_getN(3);
   @$pb.TagNumber(11)
-  set vertex(VertexStatement value) => $_setField(11, value);
+  set edge(EdgeStatement value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasVertex() => $_has(3);
+  $core.bool hasEdge() => $_has(3);
   @$pb.TagNumber(11)
-  void clearVertex() => $_clearField(11);
+  void clearEdge() => $_clearField(11);
   @$pb.TagNumber(11)
-  VertexStatement ensureVertex() => $_ensure(3);
+  EdgeStatement ensureEdge() => $_ensure(3);
 
   @$pb.TagNumber(12)
-  EdgeStatement get edge => $_getN(4);
+  FaceStatement get face => $_getN(4);
   @$pb.TagNumber(12)
-  set edge(EdgeStatement value) => $_setField(12, value);
+  set face(FaceStatement value) => $_setField(12, value);
   @$pb.TagNumber(12)
-  $core.bool hasEdge() => $_has(4);
+  $core.bool hasFace() => $_has(4);
   @$pb.TagNumber(12)
-  void clearEdge() => $_clearField(12);
+  void clearFace() => $_clearField(12);
   @$pb.TagNumber(12)
-  EdgeStatement ensureEdge() => $_ensure(4);
+  FaceStatement ensureFace() => $_ensure(4);
 
   @$pb.TagNumber(13)
-  FaceStatement get face => $_getN(5);
+  CutEdgeStatement get cutEdge => $_getN(5);
   @$pb.TagNumber(13)
-  set face(FaceStatement value) => $_setField(13, value);
+  set cutEdge(CutEdgeStatement value) => $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasFace() => $_has(5);
+  $core.bool hasCutEdge() => $_has(5);
   @$pb.TagNumber(13)
-  void clearFace() => $_clearField(13);
+  void clearCutEdge() => $_clearField(13);
   @$pb.TagNumber(13)
-  FaceStatement ensureFace() => $_ensure(5);
+  CutEdgeStatement ensureCutEdge() => $_ensure(5);
 
   @$pb.TagNumber(14)
-  CutEdgeStatement get cutEdge => $_getN(6);
+  MultiCutEdgeStatement get multiCutEdge => $_getN(6);
   @$pb.TagNumber(14)
-  set cutEdge(CutEdgeStatement value) => $_setField(14, value);
+  set multiCutEdge(MultiCutEdgeStatement value) => $_setField(14, value);
   @$pb.TagNumber(14)
-  $core.bool hasCutEdge() => $_has(6);
+  $core.bool hasMultiCutEdge() => $_has(6);
   @$pb.TagNumber(14)
-  void clearCutEdge() => $_clearField(14);
+  void clearMultiCutEdge() => $_clearField(14);
   @$pb.TagNumber(14)
-  CutEdgeStatement ensureCutEdge() => $_ensure(6);
+  MultiCutEdgeStatement ensureMultiCutEdge() => $_ensure(6);
 
   @$pb.TagNumber(15)
-  DissolveStatement get dissolve => $_getN(7);
+  FilletFaceStatement get filletFace => $_getN(7);
   @$pb.TagNumber(15)
-  set dissolve(DissolveStatement value) => $_setField(15, value);
+  set filletFace(FilletFaceStatement value) => $_setField(15, value);
   @$pb.TagNumber(15)
-  $core.bool hasDissolve() => $_has(7);
+  $core.bool hasFilletFace() => $_has(7);
   @$pb.TagNumber(15)
-  void clearDissolve() => $_clearField(15);
+  void clearFilletFace() => $_clearField(15);
   @$pb.TagNumber(15)
-  DissolveStatement ensureDissolve() => $_ensure(7);
+  FilletFaceStatement ensureFilletFace() => $_ensure(7);
 
   @$pb.TagNumber(16)
-  FilletFaceStatement get filletFace => $_getN(8);
+  GlueVerticesStatement get glueVertices => $_getN(8);
   @$pb.TagNumber(16)
-  set filletFace(FilletFaceStatement value) => $_setField(16, value);
+  set glueVertices(GlueVerticesStatement value) => $_setField(16, value);
   @$pb.TagNumber(16)
-  $core.bool hasFilletFace() => $_has(8);
+  $core.bool hasGlueVertices() => $_has(8);
   @$pb.TagNumber(16)
-  void clearFilletFace() => $_clearField(16);
+  void clearGlueVertices() => $_clearField(16);
   @$pb.TagNumber(16)
-  FilletFaceStatement ensureFilletFace() => $_ensure(8);
+  GlueVerticesStatement ensureGlueVertices() => $_ensure(8);
 
   @$pb.TagNumber(17)
-  GlueVerticesStatement get glueVertices => $_getN(9);
+  RectangleStatement get rectangle => $_getN(9);
   @$pb.TagNumber(17)
-  set glueVertices(GlueVerticesStatement value) => $_setField(17, value);
+  set rectangle(RectangleStatement value) => $_setField(17, value);
   @$pb.TagNumber(17)
-  $core.bool hasGlueVertices() => $_has(9);
+  $core.bool hasRectangle() => $_has(9);
   @$pb.TagNumber(17)
-  void clearGlueVertices() => $_clearField(17);
+  void clearRectangle() => $_clearField(17);
   @$pb.TagNumber(17)
-  GlueVerticesStatement ensureGlueVertices() => $_ensure(9);
+  RectangleStatement ensureRectangle() => $_ensure(9);
 
   @$pb.TagNumber(18)
-  RectangleStatement get rectangle => $_getN(10);
+  PolygonStatement get polygon => $_getN(10);
   @$pb.TagNumber(18)
-  set rectangle(RectangleStatement value) => $_setField(18, value);
+  set polygon(PolygonStatement value) => $_setField(18, value);
   @$pb.TagNumber(18)
-  $core.bool hasRectangle() => $_has(10);
+  $core.bool hasPolygon() => $_has(10);
   @$pb.TagNumber(18)
-  void clearRectangle() => $_clearField(18);
+  void clearPolygon() => $_clearField(18);
   @$pb.TagNumber(18)
-  RectangleStatement ensureRectangle() => $_ensure(10);
+  PolygonStatement ensurePolygon() => $_ensure(10);
 
   @$pb.TagNumber(19)
-  PolygonStatement get polygon => $_getN(11);
+  EllipseStatement get ellipse => $_getN(11);
   @$pb.TagNumber(19)
-  set polygon(PolygonStatement value) => $_setField(19, value);
+  set ellipse(EllipseStatement value) => $_setField(19, value);
   @$pb.TagNumber(19)
-  $core.bool hasPolygon() => $_has(11);
+  $core.bool hasEllipse() => $_has(11);
   @$pb.TagNumber(19)
-  void clearPolygon() => $_clearField(19);
+  void clearEllipse() => $_clearField(19);
   @$pb.TagNumber(19)
-  PolygonStatement ensurePolygon() => $_ensure(11);
+  EllipseStatement ensureEllipse() => $_ensure(11);
 
   @$pb.TagNumber(20)
-  EllipseStatement get ellipse => $_getN(12);
+  ContainerStatement get container => $_getN(12);
   @$pb.TagNumber(20)
-  set ellipse(EllipseStatement value) => $_setField(20, value);
+  set container(ContainerStatement value) => $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasEllipse() => $_has(12);
+  $core.bool hasContainer() => $_has(12);
   @$pb.TagNumber(20)
-  void clearEllipse() => $_clearField(20);
+  void clearContainer() => $_clearField(20);
   @$pb.TagNumber(20)
-  EllipseStatement ensureEllipse() => $_ensure(12);
+  ContainerStatement ensureContainer() => $_ensure(12);
 
   @$pb.TagNumber(21)
-  ContainerStatement get container => $_getN(13);
+  GroupStatement get group => $_getN(13);
   @$pb.TagNumber(21)
-  set container(ContainerStatement value) => $_setField(21, value);
+  set group(GroupStatement value) => $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasContainer() => $_has(13);
+  $core.bool hasGroup() => $_has(13);
   @$pb.TagNumber(21)
-  void clearContainer() => $_clearField(21);
+  void clearGroup() => $_clearField(21);
   @$pb.TagNumber(21)
-  ContainerStatement ensureContainer() => $_ensure(13);
+  GroupStatement ensureGroup() => $_ensure(13);
+
+  @$pb.TagNumber(22)
+  GeneratorStatement get generator => $_getN(14);
+  @$pb.TagNumber(22)
+  set generator(GeneratorStatement value) => $_setField(22, value);
+  @$pb.TagNumber(22)
+  $core.bool hasGenerator() => $_has(14);
+  @$pb.TagNumber(22)
+  void clearGenerator() => $_clearField(22);
+  @$pb.TagNumber(22)
+  GeneratorStatement ensureGenerator() => $_ensure(14);
 }
 
 class U64 extends $pb.GeneratedMessage {
@@ -1707,76 +1721,6 @@ class CellSelector extends $pb.GeneratedMessage {
   CellRef ensureRef() => $_ensure(0);
 }
 
-class ProductsSelector extends $pb.GeneratedMessage {
-  factory ProductsSelector({
-    StatementId? id,
-    CellKind? kind,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (kind != null) result.kind = kind;
-    return result;
-  }
-
-  ProductsSelector._();
-
-  factory ProductsSelector.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ProductsSelector.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ProductsSelector',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
-        subBuilder: StatementId.create)
-    ..aE<CellKind>(2, _omitFieldNames ? '' : 'kind',
-        enumValues: CellKind.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ProductsSelector clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ProductsSelector copyWith(void Function(ProductsSelector) updates) =>
-      super.copyWith((message) => updates(message as ProductsSelector))
-          as ProductsSelector;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ProductsSelector create() => ProductsSelector._();
-  @$core.override
-  ProductsSelector createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ProductsSelector getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ProductsSelector>(create);
-  static ProductsSelector? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  StatementId get id => $_getN(0);
-  @$pb.TagNumber(1)
-  set id(StatementId value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-  @$pb.TagNumber(1)
-  StatementId ensureId() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  CellKind get kind => $_getN(1);
-  @$pb.TagNumber(2)
-  set kind(CellKind value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasKind() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearKind() => $_clearField(2);
-}
-
 class ChainSelector extends $pb.GeneratedMessage {
   factory ChainSelector({
     $core.Iterable<CellRef>? edges,
@@ -1826,60 +1770,14 @@ class ChainSelector extends $pb.GeneratedMessage {
   $pb.PbList<CellRef> get edges => $_getList(0);
 }
 
-class DissolveSelector extends $pb.GeneratedMessage {
-  factory DissolveSelector({
-    $core.Iterable<CellRef>? refs,
-  }) {
-    final result = create();
-    if (refs != null) result.refs.addAll(refs);
-    return result;
-  }
-
-  DissolveSelector._();
-
-  factory DissolveSelector.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory DissolveSelector.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DissolveSelector',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..pPM<CellRef>(1, _omitFieldNames ? '' : 'refs', subBuilder: CellRef.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveSelector clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveSelector copyWith(void Function(DissolveSelector) updates) =>
-      super.copyWith((message) => updates(message as DissolveSelector))
-          as DissolveSelector;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static DissolveSelector create() => DissolveSelector._();
-  @$core.override
-  DissolveSelector createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static DissolveSelector getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DissolveSelector>(create);
-  static DissolveSelector? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<CellRef> get refs => $_getList(0);
-}
-
 class FragmentSelector extends $pb.GeneratedMessage {
   factory FragmentSelector({
     StatementId? id,
+    $core.int? modifierIndex,
   }) {
     final result = create();
     if (id != null) result.id = id;
+    if (modifierIndex != null) result.modifierIndex = modifierIndex;
     return result;
   }
 
@@ -1898,6 +1796,7 @@ class FragmentSelector extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
+    ..aI(2, _omitFieldNames ? '' : 'modifierIndex', protoName: 'modifierIndex')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1929,23 +1828,86 @@ class FragmentSelector extends $pb.GeneratedMessage {
   void clearId() => $_clearField(1);
   @$pb.TagNumber(1)
   StatementId ensureId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.int get modifierIndex => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set modifierIndex($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasModifierIndex() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearModifierIndex() => $_clearField(2);
 }
 
-enum Selector_Value { cell, products, chain, dissolve, fragment, notSet }
+class ParentSelector extends $pb.GeneratedMessage {
+  factory ParentSelector({
+    CellRef? ref,
+  }) {
+    final result = create();
+    if (ref != null) result.ref = ref;
+    return result;
+  }
+
+  ParentSelector._();
+
+  factory ParentSelector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ParentSelector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ParentSelector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'ref', subBuilder: CellRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ParentSelector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ParentSelector copyWith(void Function(ParentSelector) updates) =>
+      super.copyWith((message) => updates(message as ParentSelector))
+          as ParentSelector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ParentSelector create() => ParentSelector._();
+  @$core.override
+  ParentSelector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ParentSelector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ParentSelector>(create);
+  static ParentSelector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CellRef get ref => $_getN(0);
+  @$pb.TagNumber(1)
+  set ref(CellRef value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRef() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRef() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CellRef ensureRef() => $_ensure(0);
+}
+
+enum Selector_Value { cell, parent, chain, fragment, notSet }
 
 class Selector extends $pb.GeneratedMessage {
   factory Selector({
     CellSelector? cell,
-    ProductsSelector? products,
+    ParentSelector? parent,
     ChainSelector? chain,
-    DissolveSelector? dissolve,
     FragmentSelector? fragment,
   }) {
     final result = create();
     if (cell != null) result.cell = cell;
-    if (products != null) result.products = products;
+    if (parent != null) result.parent = parent;
     if (chain != null) result.chain = chain;
-    if (dissolve != null) result.dissolve = dissolve;
     if (fragment != null) result.fragment = fragment;
     return result;
   }
@@ -1961,26 +1923,23 @@ class Selector extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, Selector_Value> _Selector_ValueByTag = {
     1: Selector_Value.cell,
-    2: Selector_Value.products,
+    2: Selector_Value.parent,
     3: Selector_Value.chain,
-    4: Selector_Value.dissolve,
-    5: Selector_Value.fragment,
+    4: Selector_Value.fragment,
     0: Selector_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Selector',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5])
+    ..oo(0, [1, 2, 3, 4])
     ..aOM<CellSelector>(1, _omitFieldNames ? '' : 'cell',
         subBuilder: CellSelector.create)
-    ..aOM<ProductsSelector>(2, _omitFieldNames ? '' : 'products',
-        subBuilder: ProductsSelector.create)
+    ..aOM<ParentSelector>(2, _omitFieldNames ? '' : 'parent',
+        subBuilder: ParentSelector.create)
     ..aOM<ChainSelector>(3, _omitFieldNames ? '' : 'chain',
         subBuilder: ChainSelector.create)
-    ..aOM<DissolveSelector>(4, _omitFieldNames ? '' : 'dissolve',
-        subBuilder: DissolveSelector.create)
-    ..aOM<FragmentSelector>(5, _omitFieldNames ? '' : 'fragment',
+    ..aOM<FragmentSelector>(4, _omitFieldNames ? '' : 'fragment',
         subBuilder: FragmentSelector.create)
     ..hasRequiredFields = false;
 
@@ -2006,13 +1965,11 @@ class Selector extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
   Selector_Value whichValue() => _Selector_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -2027,15 +1984,15 @@ class Selector extends $pb.GeneratedMessage {
   CellSelector ensureCell() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  ProductsSelector get products => $_getN(1);
+  ParentSelector get parent => $_getN(1);
   @$pb.TagNumber(2)
-  set products(ProductsSelector value) => $_setField(2, value);
+  set parent(ParentSelector value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasProducts() => $_has(1);
+  $core.bool hasParent() => $_has(1);
   @$pb.TagNumber(2)
-  void clearProducts() => $_clearField(2);
+  void clearParent() => $_clearField(2);
   @$pb.TagNumber(2)
-  ProductsSelector ensureProducts() => $_ensure(1);
+  ParentSelector ensureParent() => $_ensure(1);
 
   @$pb.TagNumber(3)
   ChainSelector get chain => $_getN(2);
@@ -2049,26 +2006,15 @@ class Selector extends $pb.GeneratedMessage {
   ChainSelector ensureChain() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  DissolveSelector get dissolve => $_getN(3);
+  FragmentSelector get fragment => $_getN(3);
   @$pb.TagNumber(4)
-  set dissolve(DissolveSelector value) => $_setField(4, value);
+  set fragment(FragmentSelector value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasDissolve() => $_has(3);
+  $core.bool hasFragment() => $_has(3);
   @$pb.TagNumber(4)
-  void clearDissolve() => $_clearField(4);
+  void clearFragment() => $_clearField(4);
   @$pb.TagNumber(4)
-  DissolveSelector ensureDissolve() => $_ensure(3);
-
-  @$pb.TagNumber(5)
-  FragmentSelector get fragment => $_getN(4);
-  @$pb.TagNumber(5)
-  set fragment(FragmentSelector value) => $_setField(5, value);
-  @$pb.TagNumber(5)
-  $core.bool hasFragment() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearFragment() => $_clearField(5);
-  @$pb.TagNumber(5)
-  FragmentSelector ensureFragment() => $_ensure(4);
+  FragmentSelector ensureFragment() => $_ensure(3);
 }
 
 enum SingleSelector_Value { cell, notSet }
@@ -2607,152 +2553,77 @@ class CutEdgeStatement extends $pb.GeneratedMessage {
   void clearT() => $_clearField(2);
 }
 
-class DissolveStatement_KeepEntry extends $pb.GeneratedMessage {
-  factory DissolveStatement_KeepEntry({
-    CellSelector? target,
-    SingleSelector? frame,
+class MultiCutEdgeStatement extends $pb.GeneratedMessage {
+  factory MultiCutEdgeStatement({
+    SingleSelector? target,
+    $core.Iterable<$core.double>? ts,
   }) {
     final result = create();
     if (target != null) result.target = target;
-    if (frame != null) result.frame = frame;
+    if (ts != null) result.ts.addAll(ts);
     return result;
   }
 
-  DissolveStatement_KeepEntry._();
+  MultiCutEdgeStatement._();
 
-  factory DissolveStatement_KeepEntry.fromBuffer($core.List<$core.int> data,
+  factory MultiCutEdgeStatement.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DissolveStatement_KeepEntry.fromJson($core.String json,
+  factory MultiCutEdgeStatement.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DissolveStatement.KeepEntry',
+      _omitMessageNames ? '' : 'MultiCutEdgeStatement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<CellSelector>(1, _omitFieldNames ? '' : 'target',
-        subBuilder: CellSelector.create)
-    ..aOM<SingleSelector>(2, _omitFieldNames ? '' : 'frame',
+    ..aOM<SingleSelector>(1, _omitFieldNames ? '' : 'target',
         subBuilder: SingleSelector.create)
+    ..p<$core.double>(2, _omitFieldNames ? '' : 'ts', $pb.PbFieldType.KD)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveStatement_KeepEntry clone() => deepCopy();
+  MultiCutEdgeStatement clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveStatement_KeepEntry copyWith(
-          void Function(DissolveStatement_KeepEntry) updates) =>
-      super.copyWith(
-              (message) => updates(message as DissolveStatement_KeepEntry))
-          as DissolveStatement_KeepEntry;
+  MultiCutEdgeStatement copyWith(
+          void Function(MultiCutEdgeStatement) updates) =>
+      super.copyWith((message) => updates(message as MultiCutEdgeStatement))
+          as MultiCutEdgeStatement;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DissolveStatement_KeepEntry create() =>
-      DissolveStatement_KeepEntry._();
+  static MultiCutEdgeStatement create() => MultiCutEdgeStatement._();
   @$core.override
-  DissolveStatement_KeepEntry createEmptyInstance() => create();
+  MultiCutEdgeStatement createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DissolveStatement_KeepEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DissolveStatement_KeepEntry>(create);
-  static DissolveStatement_KeepEntry? _defaultInstance;
+  static MultiCutEdgeStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MultiCutEdgeStatement>(create);
+  static MultiCutEdgeStatement? _defaultInstance;
 
   @$pb.TagNumber(1)
-  CellSelector get target => $_getN(0);
+  SingleSelector get target => $_getN(0);
   @$pb.TagNumber(1)
-  set target(CellSelector value) => $_setField(1, value);
+  set target(SingleSelector value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasTarget() => $_has(0);
   @$pb.TagNumber(1)
   void clearTarget() => $_clearField(1);
   @$pb.TagNumber(1)
-  CellSelector ensureTarget() => $_ensure(0);
+  SingleSelector ensureTarget() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  SingleSelector get frame => $_getN(1);
-  @$pb.TagNumber(2)
-  set frame(SingleSelector value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasFrame() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearFrame() => $_clearField(2);
-  @$pb.TagNumber(2)
-  SingleSelector ensureFrame() => $_ensure(1);
-}
-
-class DissolveStatement extends $pb.GeneratedMessage {
-  factory DissolveStatement({
-    DissolveSelector? selector,
-    $core.Iterable<DissolveStatement_KeepEntry>? keep,
-  }) {
-    final result = create();
-    if (selector != null) result.selector = selector;
-    if (keep != null) result.keep.addAll(keep);
-    return result;
-  }
-
-  DissolveStatement._();
-
-  factory DissolveStatement.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory DissolveStatement.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DissolveStatement',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<DissolveSelector>(1, _omitFieldNames ? '' : 'selector',
-        subBuilder: DissolveSelector.create)
-    ..pPM<DissolveStatement_KeepEntry>(2, _omitFieldNames ? '' : 'keep',
-        subBuilder: DissolveStatement_KeepEntry.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveStatement clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DissolveStatement copyWith(void Function(DissolveStatement) updates) =>
-      super.copyWith((message) => updates(message as DissolveStatement))
-          as DissolveStatement;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static DissolveStatement create() => DissolveStatement._();
-  @$core.override
-  DissolveStatement createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static DissolveStatement getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DissolveStatement>(create);
-  static DissolveStatement? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  DissolveSelector get selector => $_getN(0);
-  @$pb.TagNumber(1)
-  set selector(DissolveSelector value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasSelector() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSelector() => $_clearField(1);
-  @$pb.TagNumber(1)
-  DissolveSelector ensureSelector() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $pb.PbList<DissolveStatement_KeepEntry> get keep => $_getList(1);
+  $pb.PbList<$core.double> get ts => $_getList(1);
 }
 
 class FilletFaceStatement_CornerEntry extends $pb.GeneratedMessage {
   factory FilletFaceStatement_CornerEntry({
-    SingleSelector? vertex,
+    $core.int? index,
     CornerRadius? radius,
   }) {
     final result = create();
-    if (vertex != null) result.vertex = vertex;
+    if (index != null) result.index = index;
     if (radius != null) result.radius = radius;
     return result;
   }
@@ -2770,8 +2641,7 @@ class FilletFaceStatement_CornerEntry extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FilletFaceStatement.CornerEntry',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<SingleSelector>(1, _omitFieldNames ? '' : 'vertex',
-        subBuilder: SingleSelector.create)
+    ..aI(1, _omitFieldNames ? '' : 'index')
     ..aOM<CornerRadius>(2, _omitFieldNames ? '' : 'radius',
         subBuilder: CornerRadius.create)
     ..hasRequiredFields = false;
@@ -2800,15 +2670,13 @@ class FilletFaceStatement_CornerEntry extends $pb.GeneratedMessage {
   static FilletFaceStatement_CornerEntry? _defaultInstance;
 
   @$pb.TagNumber(1)
-  SingleSelector get vertex => $_getN(0);
+  $core.int get index => $_getIZ(0);
   @$pb.TagNumber(1)
-  set vertex(SingleSelector value) => $_setField(1, value);
+  set index($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasVertex() => $_has(0);
+  $core.bool hasIndex() => $_has(0);
   @$pb.TagNumber(1)
-  void clearVertex() => $_clearField(1);
-  @$pb.TagNumber(1)
-  SingleSelector ensureVertex() => $_ensure(0);
+  void clearIndex() => $_clearField(1);
 
   @$pb.TagNumber(2)
   CornerRadius get radius => $_getN(1);
@@ -3560,6 +3428,156 @@ class ContainerStatement extends $pb.GeneratedMessage {
   void clearParent() => $_clearField(8);
   @$pb.TagNumber(8)
   CellRef ensureParent() => $_ensure(7);
+}
+
+class GroupStatement extends $pb.GeneratedMessage {
+  factory GroupStatement({
+    CellRef? parent,
+  }) {
+    final result = create();
+    if (parent != null) result.parent = parent;
+    return result;
+  }
+
+  GroupStatement._();
+
+  factory GroupStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GroupStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GroupStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'parent',
+        subBuilder: CellRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GroupStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GroupStatement copyWith(void Function(GroupStatement) updates) =>
+      super.copyWith((message) => updates(message as GroupStatement))
+          as GroupStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GroupStatement create() => GroupStatement._();
+  @$core.override
+  GroupStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GroupStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GroupStatement>(create);
+  static GroupStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CellRef get parent => $_getN(0);
+  @$pb.TagNumber(1)
+  set parent(CellRef value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CellRef ensureParent() => $_ensure(0);
+}
+
+class GeneratorStatement extends $pb.GeneratedMessage {
+  factory GeneratorStatement({
+    Generator? generator,
+    $core.Iterable<FragmentSelector>? inputs,
+    CellRef? parent,
+    Mat4? transform,
+  }) {
+    final result = create();
+    if (generator != null) result.generator = generator;
+    if (inputs != null) result.inputs.addAll(inputs);
+    if (parent != null) result.parent = parent;
+    if (transform != null) result.transform = transform;
+    return result;
+  }
+
+  GeneratorStatement._();
+
+  factory GeneratorStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GeneratorStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratorStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Generator>(1, _omitFieldNames ? '' : 'generator',
+        subBuilder: Generator.create)
+    ..pPM<FragmentSelector>(2, _omitFieldNames ? '' : 'inputs',
+        subBuilder: FragmentSelector.create)
+    ..aOM<CellRef>(3, _omitFieldNames ? '' : 'parent',
+        subBuilder: CellRef.create)
+    ..aOM<Mat4>(4, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorStatement copyWith(void Function(GeneratorStatement) updates) =>
+      super.copyWith((message) => updates(message as GeneratorStatement))
+          as GeneratorStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GeneratorStatement create() => GeneratorStatement._();
+  @$core.override
+  GeneratorStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GeneratorStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratorStatement>(create);
+  static GeneratorStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Generator get generator => $_getN(0);
+  @$pb.TagNumber(1)
+  set generator(Generator value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGenerator() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGenerator() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Generator ensureGenerator() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<FragmentSelector> get inputs => $_getList(1);
+
+  @$pb.TagNumber(3)
+  CellRef get parent => $_getN(2);
+  @$pb.TagNumber(3)
+  set parent(CellRef value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasParent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearParent() => $_clearField(3);
+  @$pb.TagNumber(3)
+  CellRef ensureParent() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  Mat4 get transform => $_getN(3);
+  @$pb.TagNumber(4)
+  set transform(Mat4 value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTransform() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTransform() => $_clearField(4);
+  @$pb.TagNumber(4)
+  Mat4 ensureTransform() => $_ensure(3);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {
@@ -4438,6 +4456,245 @@ class NodeId extends $pb.GeneratedMessage {
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
   void clearValue() => $_clearField(1);
+}
+
+class Generator extends $pb.GeneratedMessage {
+  factory Generator() => create();
+
+  Generator._();
+
+  factory Generator.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Generator.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Generator',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Generator clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Generator copyWith(void Function(Generator) updates) =>
+      super.copyWith((message) => updates(message as Generator)) as Generator;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Generator create() => Generator._();
+  @$core.override
+  Generator createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Generator getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Generator>(create);
+  static Generator? _defaultInstance;
+}
+
+enum Modifier_Value { fillet, notSet }
+
+class Modifier extends $pb.GeneratedMessage {
+  factory Modifier({
+    FilletModifier? fillet,
+  }) {
+    final result = create();
+    if (fillet != null) result.fillet = fillet;
+    return result;
+  }
+
+  Modifier._();
+
+  factory Modifier.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Modifier.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, Modifier_Value> _Modifier_ValueByTag = {
+    1: Modifier_Value.fillet,
+    0: Modifier_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Modifier',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..oo(0, [1])
+    ..aOM<FilletModifier>(1, _omitFieldNames ? '' : 'fillet',
+        subBuilder: FilletModifier.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Modifier clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Modifier copyWith(void Function(Modifier) updates) =>
+      super.copyWith((message) => updates(message as Modifier)) as Modifier;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Modifier create() => Modifier._();
+  @$core.override
+  Modifier createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Modifier getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Modifier>(create);
+  static Modifier? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Modifier_Value whichValue() => _Modifier_ValueByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  FilletModifier get fillet => $_getN(0);
+  @$pb.TagNumber(1)
+  set fillet(FilletModifier value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFillet() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFillet() => $_clearField(1);
+  @$pb.TagNumber(1)
+  FilletModifier ensureFillet() => $_ensure(0);
+}
+
+class FilletModifier_Corner extends $pb.GeneratedMessage {
+  factory FilletModifier_Corner({
+    $core.int? index,
+    CornerRadius? radius,
+  }) {
+    final result = create();
+    if (index != null) result.index = index;
+    if (radius != null) result.radius = radius;
+    return result;
+  }
+
+  FilletModifier_Corner._();
+
+  factory FilletModifier_Corner.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FilletModifier_Corner.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FilletModifier.Corner',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'index')
+    ..aOM<CornerRadius>(2, _omitFieldNames ? '' : 'radius',
+        subBuilder: CornerRadius.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FilletModifier_Corner clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FilletModifier_Corner copyWith(
+          void Function(FilletModifier_Corner) updates) =>
+      super.copyWith((message) => updates(message as FilletModifier_Corner))
+          as FilletModifier_Corner;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FilletModifier_Corner create() => FilletModifier_Corner._();
+  @$core.override
+  FilletModifier_Corner createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FilletModifier_Corner getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FilletModifier_Corner>(create);
+  static FilletModifier_Corner? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get index => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set index($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasIndex() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearIndex() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  CornerRadius get radius => $_getN(1);
+  @$pb.TagNumber(2)
+  set radius(CornerRadius value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRadius() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRadius() => $_clearField(2);
+  @$pb.TagNumber(2)
+  CornerRadius ensureRadius() => $_ensure(1);
+}
+
+class FilletModifier extends $pb.GeneratedMessage {
+  factory FilletModifier({
+    CornerRadius? radius,
+    $core.Iterable<FilletModifier_Corner>? corners,
+  }) {
+    final result = create();
+    if (radius != null) result.radius = radius;
+    if (corners != null) result.corners.addAll(corners);
+    return result;
+  }
+
+  FilletModifier._();
+
+  factory FilletModifier.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FilletModifier.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FilletModifier',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CornerRadius>(1, _omitFieldNames ? '' : 'radius',
+        subBuilder: CornerRadius.create)
+    ..pPM<FilletModifier_Corner>(2, _omitFieldNames ? '' : 'corners',
+        subBuilder: FilletModifier_Corner.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FilletModifier clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FilletModifier copyWith(void Function(FilletModifier) updates) =>
+      super.copyWith((message) => updates(message as FilletModifier))
+          as FilletModifier;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FilletModifier create() => FilletModifier._();
+  @$core.override
+  FilletModifier createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static FilletModifier getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FilletModifier>(create);
+  static FilletModifier? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CornerRadius get radius => $_getN(0);
+  @$pb.TagNumber(1)
+  set radius(CornerRadius value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRadius() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRadius() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CornerRadius ensureRadius() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<FilletModifier_Corner> get corners => $_getList(1);
 }
 
 class Mat4 extends $pb.GeneratedMessage {

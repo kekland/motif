@@ -15,8 +15,8 @@ AppTypography generateMaterialTypography(AppColors colors) {
     largeTitle: .from(
       base.copyWith(
         fontWeight: FontWeight.bold,
-        fontSize: 34.0,
-        height: 41.0 / 34.0,
+        fontSize: 26.0,
+        height: 32.0 / 26.0,
         letterSpacing: 0.0,
       ),
       colors.display,
@@ -83,9 +83,9 @@ AppTypography generateCupertinoTypography(AppColors colors) {
     largeTitle: .from(
       base.copyWith(
         fontWeight: FontWeight.bold,
-        fontSize: 34.0,
-        height: 41.0 / 34.0,
-        letterSpacing: 0.0,
+        fontSize: 26.0,
+        height: 32.0 / 26.0,
+        letterSpacing: -0.6,
       ),
       colors.display,
     ),

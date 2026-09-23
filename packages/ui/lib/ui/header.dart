@@ -15,11 +15,27 @@ class const Header({
       onTap: onTap,
       color: context.colors.surface.secondary,
       leading: leading,
-      title: DefaultForegroundStyle(
-        style: context.typography.subtitle.secondary,
-        child: title,
+      title: Row(
+        crossAxisAlignment: .baseline,
+        textBaseline: .alphabetic,
+        children: [
+          DefaultForegroundStyle(
+            style: context.typography.subtitle.secondary,
+            child: title,
+          ),
+          if (footnote != null) ...[
+            const SizedBox(width: 4.0),
+            Flexible(
+              child: DefaultForegroundStyle(
+                style: context.typography.footnote.tertiary,
+                maxLines: 1,
+                overflow: .ellipsis,
+                child: footnote!,
+              ),
+            ),
+          ],
+        ],
       ),
-      footnote: footnote,
       trailing: trailing,
       padding: padding,
       height: 36.0,

@@ -1,9 +1,5 @@
 import 'package:state/state.dart';
 
-Never unreachable() {
-  throw StateError('should be unreachable');
-}
-
 class ObjectSignal<T> extends Signal<T> {
   ObjectSignal(this.object) : super(object);
 

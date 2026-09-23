@@ -28,7 +28,10 @@ class WindowTitlebar extends StatelessWidget {
       return _MacosTitlebar(
         preferredHeight: preferredHeight,
         trafficLightsHorizontalOffset: trafficLightsHorizontalOffset,
-        child: child,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 1.0),
+          child: child,
+        ),
       );
     }
 

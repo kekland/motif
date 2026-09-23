@@ -5,7 +5,7 @@ extension Evaluator on EvalPass {
   // Main entrypoints
   // -------------------------------------------------------------------------------------------------------------------
 
-  void edit(int index, List<Statement> removed, List<Statement> inserted) {
+  void edit(int index, List<Statement> removed, List<Statement> inserted, {bool initialPass = false}) {
     final incoming = inserted.map((s) => s.id).toList();
     for (final s in removed.reversed) {
       for (final r in graph.dependents([s.id])) {
@@ -22,7 +22,7 @@ extension Evaluator on EvalPass {
       queue.remove(s.id);
     }
 
-    program._replace(index, removed, inserted);
+    if (!initialPass) program._replace(index, removed, inserted);
     for (final s in inserted) queue.add(s.id);
   }
 

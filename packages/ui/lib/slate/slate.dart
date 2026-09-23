@@ -9,6 +9,8 @@ export 'form/form_field.dart';
 export 'form/text_form_field.dart';
 export 'form/formatters.dart';
 
+export 'utils/sliver_spacer.dart';
+
 part 'surface.dart';
 part 'surface_color.dart';
 part 'scaffold.dart';

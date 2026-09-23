@@ -13,7 +13,7 @@ const _syncUrl = String.fromEnvironment('SYNC_URL', defaultValue: 'ws://localhos
 const _syncEnabled = bool.fromEnvironment('SYNC_ENABLED', defaultValue: false);
 
 final class Editor extends Controller {
-  Editor({Scene? scene}) : scene = scene ?? Scene(program: .new([])), super(logger: Logger('editor')) {
+  Editor({required this.scene}) : super(logger: Logger('editor')) {
     // logger.info('Editor initialized with sync URL: $_syncUrl (enabled: $_syncEnabled)');
     // sync = _syncEnabled ? SceneSync(this.scene, uri: Uri.parse(_syncUrl)) : null;
     // sync?.connect();

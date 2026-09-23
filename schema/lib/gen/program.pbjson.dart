@@ -110,19 +110,17 @@ const Statement$json = {
   '1': 'Statement',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
-    {'1': 'enabled', '3': 2, '4': 1, '5': 8, '10': 'enabled'},
     {
-      '1': 'frame',
-      '3': 10,
-      '4': 1,
+      '1': 'modifiers',
+      '3': 2,
+      '4': 3,
       '5': 11,
-      '6': '.motif.FrameStatement',
-      '9': 0,
-      '10': 'frame'
+      '6': '.motif.Modifier',
+      '10': 'modifiers'
     },
     {
       '1': 'vertex',
-      '3': 11,
+      '3': 10,
       '4': 1,
       '5': 11,
       '6': '.motif.VertexStatement',
@@ -131,7 +129,7 @@ const Statement$json = {
     },
     {
       '1': 'edge',
-      '3': 12,
+      '3': 11,
       '4': 1,
       '5': 11,
       '6': '.motif.EdgeStatement',
@@ -140,7 +138,7 @@ const Statement$json = {
     },
     {
       '1': 'face',
-      '3': 13,
+      '3': 12,
       '4': 1,
       '5': 11,
       '6': '.motif.FaceStatement',
@@ -149,7 +147,7 @@ const Statement$json = {
     },
     {
       '1': 'cut_edge',
-      '3': 14,
+      '3': 13,
       '4': 1,
       '5': 11,
       '6': '.motif.CutEdgeStatement',
@@ -157,17 +155,17 @@ const Statement$json = {
       '10': 'cutEdge'
     },
     {
-      '1': 'dissolve',
-      '3': 15,
+      '1': 'multi_cut_edge',
+      '3': 14,
       '4': 1,
       '5': 11,
-      '6': '.motif.DissolveStatement',
+      '6': '.motif.MultiCutEdgeStatement',
       '9': 0,
-      '10': 'dissolve'
+      '10': 'multiCutEdge'
     },
     {
       '1': 'fillet_face',
-      '3': 16,
+      '3': 15,
       '4': 1,
       '5': 11,
       '6': '.motif.FilletFaceStatement',
@@ -176,7 +174,7 @@ const Statement$json = {
     },
     {
       '1': 'glue_vertices',
-      '3': 17,
+      '3': 16,
       '4': 1,
       '5': 11,
       '6': '.motif.GlueVerticesStatement',
@@ -185,7 +183,7 @@ const Statement$json = {
     },
     {
       '1': 'rectangle',
-      '3': 18,
+      '3': 17,
       '4': 1,
       '5': 11,
       '6': '.motif.RectangleStatement',
@@ -194,7 +192,7 @@ const Statement$json = {
     },
     {
       '1': 'polygon',
-      '3': 19,
+      '3': 18,
       '4': 1,
       '5': 11,
       '6': '.motif.PolygonStatement',
@@ -203,7 +201,7 @@ const Statement$json = {
     },
     {
       '1': 'ellipse',
-      '3': 20,
+      '3': 19,
       '4': 1,
       '5': 11,
       '6': '.motif.EllipseStatement',
@@ -212,12 +210,30 @@ const Statement$json = {
     },
     {
       '1': 'container',
-      '3': 21,
+      '3': 20,
       '4': 1,
       '5': 11,
       '6': '.motif.ContainerStatement',
       '9': 0,
       '10': 'container'
+    },
+    {
+      '1': 'group',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.GroupStatement',
+      '9': 0,
+      '10': 'group'
+    },
+    {
+      '1': 'generator',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.GeneratorStatement',
+      '9': 0,
+      '10': 'generator'
     },
   ],
   '8': [
@@ -227,20 +243,21 @@ const Statement$json = {
 
 /// Descriptor for `Statement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
-    'CglTdGF0ZW1lbnQSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSGAoHZW5hYm'
-    'xlZBgCIAEoCFIHZW5hYmxlZBItCgVmcmFtZRgKIAEoCzIVLm1vdGlmLkZyYW1lU3RhdGVtZW50'
-    'SABSBWZyYW1lEjAKBnZlcnRleBgLIAEoCzIWLm1vdGlmLlZlcnRleFN0YXRlbWVudEgAUgZ2ZX'
-    'J0ZXgSKgoEZWRnZRgMIAEoCzIULm1vdGlmLkVkZ2VTdGF0ZW1lbnRIAFIEZWRnZRIqCgRmYWNl'
-    'GA0gASgLMhQubW90aWYuRmFjZVN0YXRlbWVudEgAUgRmYWNlEjQKCGN1dF9lZGdlGA4gASgLMh'
-    'cubW90aWYuQ3V0RWRnZVN0YXRlbWVudEgAUgdjdXRFZGdlEjYKCGRpc3NvbHZlGA8gASgLMhgu'
-    'bW90aWYuRGlzc29sdmVTdGF0ZW1lbnRIAFIIZGlzc29sdmUSPQoLZmlsbGV0X2ZhY2UYECABKA'
-    'syGi5tb3RpZi5GaWxsZXRGYWNlU3RhdGVtZW50SABSCmZpbGxldEZhY2USQwoNZ2x1ZV92ZXJ0'
-    'aWNlcxgRIAEoCzIcLm1vdGlmLkdsdWVWZXJ0aWNlc1N0YXRlbWVudEgAUgxnbHVlVmVydGljZX'
-    'MSOQoJcmVjdGFuZ2xlGBIgASgLMhkubW90aWYuUmVjdGFuZ2xlU3RhdGVtZW50SABSCXJlY3Rh'
-    'bmdsZRIzCgdwb2x5Z29uGBMgASgLMhcubW90aWYuUG9seWdvblN0YXRlbWVudEgAUgdwb2x5Z2'
-    '9uEjMKB2VsbGlwc2UYFCABKAsyFy5tb3RpZi5FbGxpcHNlU3RhdGVtZW50SABSB2VsbGlwc2US'
-    'OQoJY29udGFpbmVyGBUgASgLMhkubW90aWYuQ29udGFpbmVyU3RhdGVtZW50SABSCWNvbnRhaW'
-    '5lckIHCgV2YWx1ZQ==');
+    'CglTdGF0ZW1lbnQSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSLQoJbW9kaW'
+    'ZpZXJzGAIgAygLMg8ubW90aWYuTW9kaWZpZXJSCW1vZGlmaWVycxIwCgZ2ZXJ0ZXgYCiABKAsy'
+    'Fi5tb3RpZi5WZXJ0ZXhTdGF0ZW1lbnRIAFIGdmVydGV4EioKBGVkZ2UYCyABKAsyFC5tb3RpZi'
+    '5FZGdlU3RhdGVtZW50SABSBGVkZ2USKgoEZmFjZRgMIAEoCzIULm1vdGlmLkZhY2VTdGF0ZW1l'
+    'bnRIAFIEZmFjZRI0CghjdXRfZWRnZRgNIAEoCzIXLm1vdGlmLkN1dEVkZ2VTdGF0ZW1lbnRIAF'
+    'IHY3V0RWRnZRJECg5tdWx0aV9jdXRfZWRnZRgOIAEoCzIcLm1vdGlmLk11bHRpQ3V0RWRnZVN0'
+    'YXRlbWVudEgAUgxtdWx0aUN1dEVkZ2USPQoLZmlsbGV0X2ZhY2UYDyABKAsyGi5tb3RpZi5GaW'
+    'xsZXRGYWNlU3RhdGVtZW50SABSCmZpbGxldEZhY2USQwoNZ2x1ZV92ZXJ0aWNlcxgQIAEoCzIc'
+    'Lm1vdGlmLkdsdWVWZXJ0aWNlc1N0YXRlbWVudEgAUgxnbHVlVmVydGljZXMSOQoJcmVjdGFuZ2'
+    'xlGBEgASgLMhkubW90aWYuUmVjdGFuZ2xlU3RhdGVtZW50SABSCXJlY3RhbmdsZRIzCgdwb2x5'
+    'Z29uGBIgASgLMhcubW90aWYuUG9seWdvblN0YXRlbWVudEgAUgdwb2x5Z29uEjMKB2VsbGlwc2'
+    'UYEyABKAsyFy5tb3RpZi5FbGxpcHNlU3RhdGVtZW50SABSB2VsbGlwc2USOQoJY29udGFpbmVy'
+    'GBQgASgLMhkubW90aWYuQ29udGFpbmVyU3RhdGVtZW50SABSCWNvbnRhaW5lchItCgVncm91cB'
+    'gVIAEoCzIVLm1vdGlmLkdyb3VwU3RhdGVtZW50SABSBWdyb3VwEjkKCWdlbmVyYXRvchgWIAEo'
+    'CzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbWVudEgAUglnZW5lcmF0b3JCBwoFdmFsdWU=');
 
 @$core.Deprecated('Use u64Descriptor instead')
 const U64$json = {
@@ -646,32 +663,6 @@ const CellSelector$json = {
 final $typed_data.Uint8List cellSelectorDescriptor = $convert.base64Decode(
     'CgxDZWxsU2VsZWN0b3ISIAoDcmVmGAEgASgLMg4ubW90aWYuQ2VsbFJlZlIDcmVm');
 
-@$core.Deprecated('Use productsSelectorDescriptor instead')
-const ProductsSelector$json = {
-  '1': 'ProductsSelector',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
-    {
-      '1': 'kind',
-      '3': 2,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.CellKind',
-      '9': 0,
-      '10': 'kind',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_kind'},
-  ],
-};
-
-/// Descriptor for `ProductsSelector`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List productsSelectorDescriptor = $convert.base64Decode(
-    'ChBQcm9kdWN0c1NlbGVjdG9yEiIKAmlkGAEgASgLMhIubW90aWYuU3RhdGVtZW50SWRSAmlkEi'
-    'gKBGtpbmQYAiABKA4yDy5tb3RpZi5DZWxsS2luZEgAUgRraW5kiAEBQgcKBV9raW5k');
-
 @$core.Deprecated('Use chainSelectorDescriptor instead')
 const ChainSelector$json = {
   '1': 'ChainSelector',
@@ -691,29 +682,43 @@ const ChainSelector$json = {
 final $typed_data.Uint8List chainSelectorDescriptor = $convert.base64Decode(
     'Cg1DaGFpblNlbGVjdG9yEiQKBWVkZ2VzGAEgAygLMg4ubW90aWYuQ2VsbFJlZlIFZWRnZXM=');
 
-@$core.Deprecated('Use dissolveSelectorDescriptor instead')
-const DissolveSelector$json = {
-  '1': 'DissolveSelector',
-  '2': [
-    {'1': 'refs', '3': 1, '4': 3, '5': 11, '6': '.motif.CellRef', '10': 'refs'},
-  ],
-};
-
-/// Descriptor for `DissolveSelector`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List dissolveSelectorDescriptor = $convert.base64Decode(
-    'ChBEaXNzb2x2ZVNlbGVjdG9yEiIKBHJlZnMYASADKAsyDi5tb3RpZi5DZWxsUmVmUgRyZWZz');
-
 @$core.Deprecated('Use fragmentSelectorDescriptor instead')
 const FragmentSelector$json = {
   '1': 'FragmentSelector',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+    {
+      '1': 'modifierIndex',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '9': 0,
+      '10': 'modifierIndex',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_modifierIndex'},
   ],
 };
 
 /// Descriptor for `FragmentSelector`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List fragmentSelectorDescriptor = $convert.base64Decode(
-    'ChBGcmFnbWVudFNlbGVjdG9yEiIKAmlkGAEgASgLMhIubW90aWYuU3RhdGVtZW50SWRSAmlk');
+    'ChBGcmFnbWVudFNlbGVjdG9yEiIKAmlkGAEgASgLMhIubW90aWYuU3RhdGVtZW50SWRSAmlkEi'
+    'kKDW1vZGlmaWVySW5kZXgYAiABKAVIAFINbW9kaWZpZXJJbmRleIgBAUIQCg5fbW9kaWZpZXJJ'
+    'bmRleA==');
+
+@$core.Deprecated('Use parentSelectorDescriptor instead')
+const ParentSelector$json = {
+  '1': 'ParentSelector',
+  '2': [
+    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
+  ],
+};
+
+/// Descriptor for `ParentSelector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List parentSelectorDescriptor = $convert.base64Decode(
+    'Cg5QYXJlbnRTZWxlY3RvchIgCgNyZWYYASABKAsyDi5tb3RpZi5DZWxsUmVmUgNyZWY=');
 
 @$core.Deprecated('Use selectorDescriptor instead')
 const Selector$json = {
@@ -729,13 +734,13 @@ const Selector$json = {
       '10': 'cell'
     },
     {
-      '1': 'products',
+      '1': 'parent',
       '3': 2,
       '4': 1,
       '5': 11,
-      '6': '.motif.ProductsSelector',
+      '6': '.motif.ParentSelector',
       '9': 0,
-      '10': 'products'
+      '10': 'parent'
     },
     {
       '1': 'chain',
@@ -747,17 +752,8 @@ const Selector$json = {
       '10': 'chain'
     },
     {
-      '1': 'dissolve',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.DissolveSelector',
-      '9': 0,
-      '10': 'dissolve'
-    },
-    {
       '1': 'fragment',
-      '3': 5,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.motif.FragmentSelector',
@@ -772,11 +768,10 @@ const Selector$json = {
 
 /// Descriptor for `Selector`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List selectorDescriptor = $convert.base64Decode(
-    'CghTZWxlY3RvchIpCgRjZWxsGAEgASgLMhMubW90aWYuQ2VsbFNlbGVjdG9ySABSBGNlbGwSNQ'
-    'oIcHJvZHVjdHMYAiABKAsyFy5tb3RpZi5Qcm9kdWN0c1NlbGVjdG9ySABSCHByb2R1Y3RzEiwK'
-    'BWNoYWluGAMgASgLMhQubW90aWYuQ2hhaW5TZWxlY3RvckgAUgVjaGFpbhI1CghkaXNzb2x2ZR'
-    'gEIAEoCzIXLm1vdGlmLkRpc3NvbHZlU2VsZWN0b3JIAFIIZGlzc29sdmUSNQoIZnJhZ21lbnQY'
-    'BSABKAsyFy5tb3RpZi5GcmFnbWVudFNlbGVjdG9ySABSCGZyYWdtZW50QgcKBXZhbHVl');
+    'CghTZWxlY3RvchIpCgRjZWxsGAEgASgLMhMubW90aWYuQ2VsbFNlbGVjdG9ySABSBGNlbGwSLw'
+    'oGcGFyZW50GAIgASgLMhUubW90aWYuUGFyZW50U2VsZWN0b3JIAFIGcGFyZW50EiwKBWNoYWlu'
+    'GAMgASgLMhQubW90aWYuQ2hhaW5TZWxlY3RvckgAUgVjaGFpbhI1CghmcmFnbWVudBgEIAEoCz'
+    'IXLm1vdGlmLkZyYWdtZW50U2VsZWN0b3JIAFIIZnJhZ21lbnRCBwoFdmFsdWU=');
 
 @$core.Deprecated('Use singleSelectorDescriptor instead')
 const SingleSelector$json = {
@@ -1037,65 +1032,26 @@ final $typed_data.Uint8List cutEdgeStatementDescriptor = $convert.base64Decode(
     'ChBDdXRFZGdlU3RhdGVtZW50Ei0KBnRhcmdldBgBIAEoCzIVLm1vdGlmLlNpbmdsZVNlbGVjdG'
     '9yUgZ0YXJnZXQSDAoBdBgCIAEoAVIBdA==');
 
-@$core.Deprecated('Use dissolveStatementDescriptor instead')
-const DissolveStatement$json = {
-  '1': 'DissolveStatement',
-  '2': [
-    {
-      '1': 'selector',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.DissolveSelector',
-      '10': 'selector'
-    },
-    {
-      '1': 'keep',
-      '3': 2,
-      '4': 3,
-      '5': 11,
-      '6': '.motif.DissolveStatement.KeepEntry',
-      '10': 'keep'
-    },
-  ],
-  '3': [DissolveStatement_KeepEntry$json],
-};
-
-@$core.Deprecated('Use dissolveStatementDescriptor instead')
-const DissolveStatement_KeepEntry$json = {
-  '1': 'KeepEntry',
+@$core.Deprecated('Use multiCutEdgeStatementDescriptor instead')
+const MultiCutEdgeStatement$json = {
+  '1': 'MultiCutEdgeStatement',
   '2': [
     {
       '1': 'target',
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.motif.CellSelector',
+      '6': '.motif.SingleSelector',
       '10': 'target'
     },
-    {
-      '1': 'frame',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.SingleSelector',
-      '9': 0,
-      '10': 'frame',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_frame'},
+    {'1': 'ts', '3': 2, '4': 3, '5': 1, '10': 'ts'},
   ],
 };
 
-/// Descriptor for `DissolveStatement`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List dissolveStatementDescriptor = $convert.base64Decode(
-    'ChFEaXNzb2x2ZVN0YXRlbWVudBIzCghzZWxlY3RvchgBIAEoCzIXLm1vdGlmLkRpc3NvbHZlU2'
-    'VsZWN0b3JSCHNlbGVjdG9yEjYKBGtlZXAYAiADKAsyIi5tb3RpZi5EaXNzb2x2ZVN0YXRlbWVu'
-    'dC5LZWVwRW50cnlSBGtlZXAadAoJS2VlcEVudHJ5EisKBnRhcmdldBgBIAEoCzITLm1vdGlmLk'
-    'NlbGxTZWxlY3RvclIGdGFyZ2V0EjAKBWZyYW1lGAIgASgLMhUubW90aWYuU2luZ2xlU2VsZWN0'
-    'b3JIAFIFZnJhbWWIAQFCCAoGX2ZyYW1l');
+/// Descriptor for `MultiCutEdgeStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List multiCutEdgeStatementDescriptor = $convert.base64Decode(
+    'ChVNdWx0aUN1dEVkZ2VTdGF0ZW1lbnQSLQoGdGFyZ2V0GAEgASgLMhUubW90aWYuU2luZ2xlU2'
+    'VsZWN0b3JSBnRhcmdldBIOCgJ0cxgCIAMoAVICdHM=');
 
 @$core.Deprecated('Use filletFaceStatementDescriptor instead')
 const FilletFaceStatement$json = {
@@ -1138,14 +1094,7 @@ const FilletFaceStatement$json = {
 const FilletFaceStatement_CornerEntry$json = {
   '1': 'CornerEntry',
   '2': [
-    {
-      '1': 'vertex',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.SingleSelector',
-      '10': 'vertex'
-    },
+    {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
     {
       '1': 'radius',
       '3': 2,
@@ -1162,9 +1111,8 @@ final $typed_data.Uint8List filletFaceStatementDescriptor = $convert.base64Decod
     'ChNGaWxsZXRGYWNlU3RhdGVtZW50EikKBGZhY2UYASABKAsyFS5tb3RpZi5TaW5nbGVTZWxlY3'
     'RvclIEZmFjZRJACgdjb3JuZXJzGAIgAygLMiYubW90aWYuRmlsbGV0RmFjZVN0YXRlbWVudC5D'
     'b3JuZXJFbnRyeVIHY29ybmVycxIwCgZyYWRpdXMYAyABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdX'
-    'NIAFIGcmFkaXVziAEBGmkKC0Nvcm5lckVudHJ5Ei0KBnZlcnRleBgBIAEoCzIVLm1vdGlmLlNp'
-    'bmdsZVNlbGVjdG9yUgZ2ZXJ0ZXgSKwoGcmFkaXVzGAIgASgLMhMubW90aWYuQ29ybmVyUmFkaX'
-    'VzUgZyYWRpdXNCCQoHX3JhZGl1cw==');
+    'NIAFIGcmFkaXVziAEBGlAKC0Nvcm5lckVudHJ5EhQKBWluZGV4GAEgASgFUgVpbmRleBIrCgZy'
+    'YWRpdXMYAiABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdXNSBnJhZGl1c0IJCgdfcmFkaXVz');
 
 @$core.Deprecated('Use glueVerticesStatementDescriptor instead')
 const GlueVerticesStatement$json = {
@@ -1528,6 +1476,82 @@ final $typed_data.Uint8List containerStatementDescriptor = $convert.base64Decode
     'eWxlEisKBnBhcmVudBgIIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB19wYX'
     'JlbnQ=');
 
+@$core.Deprecated('Use groupStatementDescriptor instead')
+const GroupStatement$json = {
+  '1': 'GroupStatement',
+  '2': [
+    {
+      '1': 'parent',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `GroupStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List groupStatementDescriptor = $convert.base64Decode(
+    'Cg5Hcm91cFN0YXRlbWVudBIrCgZwYXJlbnQYASABKAsyDi5tb3RpZi5DZWxsUmVmSABSBnBhcm'
+    'VudIgBAUIJCgdfcGFyZW50');
+
+@$core.Deprecated('Use generatorStatementDescriptor instead')
+const GeneratorStatement$json = {
+  '1': 'GeneratorStatement',
+  '2': [
+    {
+      '1': 'generator',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Generator',
+      '10': 'generator'
+    },
+    {
+      '1': 'inputs',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.FragmentSelector',
+      '10': 'inputs'
+    },
+    {
+      '1': 'parent',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+    {
+      '1': 'transform',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `GeneratorStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generatorStatementDescriptor = $convert.base64Decode(
+    'ChJHZW5lcmF0b3JTdGF0ZW1lbnQSLgoJZ2VuZXJhdG9yGAEgASgLMhAubW90aWYuR2VuZXJhdG'
+    '9yUglnZW5lcmF0b3ISLwoGaW5wdXRzGAIgAygLMhcubW90aWYuRnJhZ21lbnRTZWxlY3RvclIG'
+    'aW5wdXRzEisKBnBhcmVudBgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEikKCX'
+    'RyYW5zZm9ybRgEIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybUIJCgdfcGFyZW50');
+
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {
   '1': 'ObjectShape',
@@ -1864,6 +1888,91 @@ const NodeId$json = {
 /// Descriptor for `NodeId`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List nodeIdDescriptor =
     $convert.base64Decode('CgZOb2RlSWQSFAoFdmFsdWUYASABKARSBXZhbHVl');
+
+@$core.Deprecated('Use generatorDescriptor instead')
+const Generator$json = {
+  '1': 'Generator',
+};
+
+/// Descriptor for `Generator`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generatorDescriptor =
+    $convert.base64Decode('CglHZW5lcmF0b3I=');
+
+@$core.Deprecated('Use modifierDescriptor instead')
+const Modifier$json = {
+  '1': 'Modifier',
+  '2': [
+    {
+      '1': 'fillet',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FilletModifier',
+      '9': 0,
+      '10': 'fillet'
+    },
+  ],
+  '8': [
+    {'1': 'value'},
+  ],
+};
+
+/// Descriptor for `Modifier`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List modifierDescriptor = $convert.base64Decode(
+    'CghNb2RpZmllchIvCgZmaWxsZXQYASABKAsyFS5tb3RpZi5GaWxsZXRNb2RpZmllckgAUgZmaW'
+    'xsZXRCBwoFdmFsdWU=');
+
+@$core.Deprecated('Use filletModifierDescriptor instead')
+const FilletModifier$json = {
+  '1': 'FilletModifier',
+  '2': [
+    {
+      '1': 'radius',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '9': 0,
+      '10': 'radius',
+      '17': true
+    },
+    {
+      '1': 'corners',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.FilletModifier.Corner',
+      '10': 'corners'
+    },
+  ],
+  '3': [FilletModifier_Corner$json],
+  '8': [
+    {'1': '_radius'},
+  ],
+};
+
+@$core.Deprecated('Use filletModifierDescriptor instead')
+const FilletModifier_Corner$json = {
+  '1': 'Corner',
+  '2': [
+    {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
+    {
+      '1': 'radius',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '10': 'radius'
+    },
+  ],
+};
+
+/// Descriptor for `FilletModifier`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List filletModifierDescriptor = $convert.base64Decode(
+    'Cg5GaWxsZXRNb2RpZmllchIwCgZyYWRpdXMYASABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdXNIAF'
+    'IGcmFkaXVziAEBEjYKB2Nvcm5lcnMYAiADKAsyHC5tb3RpZi5GaWxsZXRNb2RpZmllci5Db3Ju'
+    'ZXJSB2Nvcm5lcnMaSwoGQ29ybmVyEhQKBWluZGV4GAEgASgFUgVpbmRleBIrCgZyYWRpdXMYAi'
+    'ABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdXNSBnJhZGl1c0IJCgdfcmFkaXVz');
 
 @$core.Deprecated('Use mat4Descriptor instead')
 const Mat4$json = {

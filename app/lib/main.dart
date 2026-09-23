@@ -1,9 +1,7 @@
-import 'package:app/app/app.dart';
+import 'package:app/imports.dart';
 import 'package:bindings/bindings.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
-void main() {
+Future<void> main() async {
   if (kIsWeb) {
     final isRunningWithWasm = identical(double.nan, double.nan);
 
@@ -12,5 +10,7 @@ void main() {
   }
 
   AugmentedWidgetsFlutterBinding.ensureInitialized();
+  await SceneStorage.initialize();
+
   runApp(App());
 }

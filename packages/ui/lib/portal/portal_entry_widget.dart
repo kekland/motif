@@ -79,10 +79,13 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     final anchorBuilder = entry.anchorBuilder ?? _defaultAnchorBuilder;
     child = anchorBuilder(context, anchor, child);
 
+    final scrim = entry.scrimBuilder?.call(context, _animation) ?? const SizedBox.expand();
+
     return Material(
       type: .transparency,
       child: Stack(
         children: [
+          Positioned.fill(child: scrim),
           if (entry.isModal) ...[
             Positioned.fill(
               child: Listener(

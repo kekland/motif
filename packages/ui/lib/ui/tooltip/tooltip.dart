@@ -106,7 +106,7 @@ class TooltipOverlay extends StatelessWidget {
           mainAxisSize: .min,
           children: [
             if (shortcut != null) ...[
-              SingleActivatorWidget(value: shortcut!),
+              SingleActivatorWidget(value: shortcut),
               const SizedBox(width: 8.0),
             ],
             DefaultForegroundStyle(

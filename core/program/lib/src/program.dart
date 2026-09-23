@@ -11,9 +11,25 @@ final class Program {
     : styles = styles ?? .empty(),
       zOrders = zOrders ?? .empty() {
     _reindex(0, length);
+
+    final seqs = _statements.map((s) => s.id).where((id) => !id.isDerived).map((id) => id.value.lo);
+    if (seqs.isNotEmpty) {
+      final maxId = seqs.reduce(math.max);
+      StatementId._seq = math.max(StatementId._seq, maxId + 1);
+    }
   }
 
-  Program.empty() : _statements = const [], styles = .empty(), zOrders = .empty();
+  factory Program.decode(gen.Program program) => ProgramCodec.decodeProgram(program);
+  static Program? decodeRaw(Uint8List data) {
+    try {
+      final program = gen.Program.fromBuffer(data);
+      return Program.decode(program);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Program.empty() : _statements = [], styles = .empty(), zOrders = .empty();
 
   final List<Statement> _statements;
   Iterable<Statement> get statements => _statements;
@@ -55,4 +71,6 @@ final class Program {
     styles: styles.clone(),
     zOrders: zOrders.clone(),
   );
+
+  gen.Program encode() => ProgramCodec.encodeProgram(this);
 }

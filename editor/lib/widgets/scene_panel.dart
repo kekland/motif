@@ -1,6 +1,5 @@
 import 'package:editor/widgets/program_panel/program_panel.dart';
 import 'package:editor/widgets/tree_panel/tree_panel.dart';
-import 'package:flutter/widgets.dart';
 import 'package:ui/ui.dart';
 
 enum ScenePanelMode {

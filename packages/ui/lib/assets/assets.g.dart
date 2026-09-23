@@ -430,7 +430,7 @@ class Icons extends _BaseIcon {
   const Icons.topology({super.key, super.size, super.color}): super.iconData(icon: Symbols.hub_rounded);
   const Icons.squiggly({super.key, super.size, super.color}): super.iconData(icon: Symbols.gesture_rounded);
   const Icons.tune({super.key, super.size, super.color}): super.iconData(icon: Symbols.tune_rounded);
-  const Icons.add({super.key, super.size, super.color}): super.iconData(icon: Symbols.add_rounded);
+  const Icons.add({super.key, super.size, super.color}): super.iconData(icon: Symbols.add_2_rounded);
   const Icons.wrench({super.key, super.size, super.color}): super.iconData(icon: Symbols.build_rounded);
   const Icons.applyModifier({super.key, super.size, super.color}): super.iconData(icon: Symbols.shape_line_rounded);
   const Icons.visibility({super.key, super.size, super.color}): super.iconData(icon: Symbols.visibility_rounded);
@@ -453,6 +453,12 @@ class Icons extends _BaseIcon {
   const Icons.group({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_rounded);
   const Icons.tree({super.key, super.size, super.color}): super.iconData(icon: Symbols.account_tree_rounded);
   const Icons.program({super.key, super.size, super.color}): super.iconData(icon: Symbols.code_blocks_rounded);
+  const Icons.open({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_open_rounded);
+  const Icons.document({super.key, super.size, super.color}): super.iconData(icon: Symbols.design_services_rounded);
+  const Icons.join({super.key, super.size, super.color}): super.iconData(icon: Symbols.link_2_rounded);
+  const Icons.folder({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_rounded);
+  const Icons.cloud({super.key, super.size, super.color}): super.iconData(icon: Symbols.cloud_rounded);
+  const Icons.refresh({super.key, super.size, super.color}): super.iconData(icon: Symbols.refresh_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

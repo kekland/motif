@@ -12,6 +12,7 @@ Widget gestureSurfaceTintEffect(BuildContext context, GestureSurface surface) {
         state: state,
         padding: .zero,
         child: _TintEffectAnimator(
+          ignoreDisabled: surface.ignoreDisabled,
           state: state,
           child: Padding(
             padding: surface.padding ?? .zero,
@@ -25,10 +26,12 @@ Widget gestureSurfaceTintEffect(BuildContext context, GestureSurface surface) {
 
 class _TintEffectAnimator extends StatefulWidget {
   const _TintEffectAnimator({
+    required this.ignoreDisabled,
     required this.state,
     required this.child,
   });
 
+  final bool ignoreDisabled;
   final Set<WidgetState> state;
   final Widget child;
 
@@ -47,23 +50,21 @@ class _TintEffectAnimatorState extends State<_TintEffectAnimator> {
     final isHovered = state.contains(WidgetState.hovered);
     final isPressed = state.contains(WidgetState.pressed);
 
-    final double tint;
-    if (isPressed) {
-      tint = 0.08;
-    } else if (isHovered) {
-      tint = 0.04;
-    } else if (isSelected || isFocused) {
-      tint = 0.02;
-    } else {
-      tint = 0.0;
-    }
+    final double tint = switch (isPressed) {
+      true => 0.08,
+      false when isHovered => 0.04,
+      false when isSelected || isFocused => 0.02,
+      false => 0.0,
+    };
 
-    return ColoredBox(
+    return AnimatedContainer(
+      duration: context.animations.effectFast.duration!,
+      curve: context.animations.effectFast.curve!,
       color: color.tint?.withScaledAlpha(tint) ?? Colors.transparent,
       child: DefaultForegroundStyle(
-        animationStyle: .noAnimation,
+        animationStyle: context.animations.effectFast,
         iconWeight: 200.0,
-        iconFill: isSelected || isFocused ? 1.0 : 0.0,
+        iconFill: isSelected || isHovered || isFocused ? 1.0 : 0.0,
         iconGrade: isPressed || isHovered || isSelected || isFocused ? 0.0 : 0.0,
         color: isPressed ? context.colors.accent.primary : null,
         child: widget.child,

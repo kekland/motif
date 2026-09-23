@@ -24,6 +24,11 @@ typedef PortalEntryBuilder = Widget Function(
   BuildContext context,
 );
 
+typedef PortalScrimBuilder = Widget Function(
+  BuildContext context,
+  Animation<double> animation,
+);
+
 typedef PortalAnchorBuilder = Widget Function(
   BuildContext context,
   PortalAnchor? anchor,
@@ -40,6 +45,7 @@ class PortalEntry<T> {
   new({
     required this.builder,
     this.anchorBuilder,
+    this.scrimBuilder,
     this.animationStyle = .noAnimation,
     this.transitionBuilder,
     this.isModal = false,
@@ -47,6 +53,7 @@ class PortalEntry<T> {
 
   final PortalEntryBuilder builder;
   final AnimationStyle animationStyle;
+  final PortalScrimBuilder? scrimBuilder;
   final PortalAnchorBuilder? anchorBuilder;
   final PortalEntryTransitionBuilder? transitionBuilder;
   final bool isModal;

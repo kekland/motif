@@ -45,6 +45,7 @@ typedef AppColors = ({
   AppDangerColors danger,
   AppSelectionColors selection,
   AppSelectionColors selectionAlt,
+  Color modalScrim,
   Color divider,
   Color tint,
   Color normal,

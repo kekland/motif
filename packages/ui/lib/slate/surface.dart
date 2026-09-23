@@ -66,7 +66,7 @@ class Surface extends StatelessWidget {
     } else if (surfaceColor != null) {
       foregroundColor = surfaceColor.foreground;
     } else {
-      foregroundColor = inheritedTextStyle.style.color!;
+      foregroundColor = inheritedTextStyle.style.color ?? context.colors.display.primary;
     }
 
     return SurfaceColor(

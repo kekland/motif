@@ -1,11 +1,15 @@
 import 'dart:collection';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:listen/listen.dart';
 import 'package:shared/shared.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:color/color.dart';
+
+import 'package:schema/codec.dart' as codec;
+import 'package:schema/program.dart' as gen;
 
 import 'generator/generator.dart';
 export 'generator/generator.dart';

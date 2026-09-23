@@ -14,7 +14,7 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
     seedColor: seedColor,
     brightness: brightness,
     dynamicSchemeVariant: dynamicSchemeVariant ?? .content,
-    contrastLevel: contrastLevel ?? 0.6,
+    contrastLevel: contrastLevel ?? 0.5,
   );
 
   final divider = _mixColor(scheme.surface, scheme.onSurface, 0.12);
@@ -40,7 +40,7 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
       divider: divider,
     ),
     tertiary: .new(
-      background: scheme.surfaceDim,
+      background: scheme.surfaceContainerLowest,
       foreground: displayColors.primary,
       tint: scheme.surfaceTint,
       divider: divider,
@@ -97,6 +97,7 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
       secondary: _mixColor(surfaceColors.tertiary.background, scheme.tertiaryContainer, 0.25),
     ),
     divider: divider,
+    modalScrim: scheme.scrim.withValues(alpha: 0.33),
     tint: scheme.surfaceTint,
     shadow: scheme.shadow,
     normal: switch (brightness) {

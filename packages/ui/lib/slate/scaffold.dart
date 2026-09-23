@@ -16,7 +16,7 @@ class Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = PrimaryScrollController.of(context);
+    final scrollController = PrimaryScrollController.maybeOf(context);
     final viewInsets = MediaQuery.viewInsetsOf(context);
 
     Widget child;
@@ -61,7 +61,7 @@ class Scaffold extends StatelessWidget {
           ),
 
           // Only add the tap-to-scroll-to-top area on iOS when we're guaranteed that the scaffold is full-screen
-          if (isFullScreen && !kIsWeb && Platform.isIOS)
+          if (scrollController != null && isFullScreen && !kIsWeb && Platform.isIOS)
             ListenableBuilder(
               listenable: scrollController,
               builder: (context, child) {

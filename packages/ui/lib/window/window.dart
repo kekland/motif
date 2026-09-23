@@ -69,10 +69,9 @@ class WindowScaffold extends StatelessWidget {
                   color: context.colors.display.tertiary,
                   child: Header(
                     leading: leading,
-                    padding: const EdgeInsets.only(left: 8.0),
-                    trailing: IconButton(
+                    padding: const EdgeInsets.only(left: 8.0, right: 2.0),
+                    trailing: IconButton.flat(
                       onTap: () => Navigator.of(context).maybePop(),
-                      isFilled: false,
                       child: Icons.close(),
                     ),
                     title: title ?? const SizedBox.shrink(),

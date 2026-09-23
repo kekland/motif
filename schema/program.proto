@@ -19,22 +19,23 @@ message ProgramSlice {
 }
 
 message Statement {
-  StatementId id      = 1;
-  bool        enabled = 2;
+  StatementId       id        = 1;
+  repeated Modifier modifiers = 2;
 
   oneof value {
-    FrameStatement        frame         = 10;
-    VertexStatement       vertex        = 11;
-    EdgeStatement         edge          = 12;
-    FaceStatement         face          = 13;
-    CutEdgeStatement      cut_edge      = 14;
-    DissolveStatement     dissolve      = 15;
-    FilletFaceStatement   fillet_face   = 16;
-    GlueVerticesStatement glue_vertices = 17;
-    RectangleStatement    rectangle     = 18;
-    PolygonStatement      polygon       = 19;
-    EllipseStatement      ellipse       = 20;
-    ContainerStatement    container     = 21;
+    VertexStatement       vertex         = 10;
+    EdgeStatement         edge           = 11;
+    FaceStatement         face           = 12;
+    CutEdgeStatement      cut_edge       = 13;
+    MultiCutEdgeStatement multi_cut_edge = 14;
+    FilletFaceStatement   fillet_face    = 15;
+    GlueVerticesStatement glue_vertices  = 16;
+    RectangleStatement    rectangle      = 17;
+    PolygonStatement      polygon        = 18;
+    EllipseStatement      ellipse        = 19;
+    ContainerStatement    container      = 20;
+    GroupStatement        group          = 21;
+    GeneratorStatement    generator      = 22;
   }
 }
 
@@ -148,30 +149,25 @@ message CellSelector {
   CellRef ref = 1;
 }
 
-message ProductsSelector {
-  StatementId       id   = 1;
-  optional CellKind kind = 2;
-}
-
 message ChainSelector {
   repeated CellRef edges = 1;
 }
 
-message DissolveSelector {
-  repeated CellRef refs = 1;
+message FragmentSelector {
+  StatementId    id            = 1;
+  optional int32 modifierIndex = 2;
 }
 
-message FragmentSelector {
-  StatementId id = 1;
+message ParentSelector {
+  CellRef ref = 1;
 }
 
 message Selector {
   oneof value {
     CellSelector     cell     = 1;
-    ProductsSelector products = 2;
+    ParentSelector   parent   = 2;
     ChainSelector    chain    = 3;
-    DissolveSelector dissolve = 4;
-    FragmentSelector fragment = 5;
+    FragmentSelector fragment = 4;
   }
 }
 
@@ -218,20 +214,15 @@ message CutEdgeStatement {
   double         t      = 2;
 }
 
-message DissolveStatement {
-  message KeepEntry {
-    CellSelector            target = 1;
-    optional SingleSelector frame  = 2;
-  }
-
-  DissolveSelector   selector = 1;
-  repeated KeepEntry keep     = 2;
+message MultiCutEdgeStatement {
+  SingleSelector  target = 1;
+  repeated double ts     = 2;
 }
 
 message FilletFaceStatement {
   message CornerEntry {
-    SingleSelector vertex = 1;
-    CornerRadius   radius = 2;
+    int32        index  = 1;
+    CornerRadius radius = 2;
   }
 
   SingleSelector        face    = 1;
@@ -288,6 +279,17 @@ message ContainerStatement {
   EdgeStyle        edge_style   = 6;
   FaceStyle        face_style   = 7;
   optional CellRef parent       = 8;
+}
+
+message GroupStatement {
+  optional CellRef parent = 1;
+}
+
+message GeneratorStatement {
+  Generator                 generator = 1;
+  repeated FragmentSelector inputs    = 2;
+  optional CellRef          parent    = 3;
+  Mat4                      transform = 4;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -384,6 +386,28 @@ message Layout {
 
 message NodeId {
   uint64 value = 1;
+}
+
+message Generator {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Modifiers
+// ---------------------------------------------------------------------------------------------------------------------
+
+message Modifier {
+  oneof value {
+    FilletModifier fillet = 1;
+  }
+}
+
+message FilletModifier {
+  message Corner {
+    int32        index  = 1;
+    CornerRadius radius = 2;
+  }
+
+  optional CornerRadius radius  = 1;
+  repeated Corner       corners = 2;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

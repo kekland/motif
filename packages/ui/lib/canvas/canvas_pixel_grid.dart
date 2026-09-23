@@ -1,7 +1,4 @@
 import 'dart:math' as math;
-import 'dart:typed_data';
-
-import 'package:flutter/widgets.dart';
 import 'package:ui/ui.dart';
 
 class CanvasPixelGrid extends StatelessWidget {

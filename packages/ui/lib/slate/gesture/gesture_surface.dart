@@ -111,9 +111,7 @@ class GestureSurface extends Surface with GestureCallbackBundleMixin {
   @override
   Widget build(BuildContext context) {
     final GestureSurfaceEffectBuilder effectBuilder;
-
     effectBuilder = gestureSurfaceTintEffect;
-
     return effectBuilder(context, this);
   }
 }

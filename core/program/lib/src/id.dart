@@ -13,6 +13,8 @@ extension type const StatementId.raw(U64 value) implements Object {
     return .raw(.of(m.hi | _derivedBit, m.lo));
   }
 
+  bool get isDerived => (value.hi & _derivedBit) != 0;
+
   /// Namespace of a cell that would be produced from this statement.
   U64 get namespace => value;
 
@@ -40,3 +42,10 @@ extension StatementIdRefExt on Ref {
     CovertexRef r => r.edge,
   };
 }
+
+// final class StatementIdAllocator {
+//   StatementIdAllocator();
+//   int _seq = 1;
+
+//   StatementId allocate() => .raw(.of(0, _seq++));
+// }
