@@ -11,7 +11,7 @@ Urgent (in order):
 - [x] Canvas: max zoom and pixel grid view
 - [ ] Color/props undo/redo coalescing
 
-- [?] Serialization, load/save, etc     (Missing: load/save)
+- [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
 - [ ] Commander arguments
 - [ ] Variables and variable binding
