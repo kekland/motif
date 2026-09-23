@@ -86,7 +86,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
           if (entry.isModal) ...[
             Positioned.fill(
               child: Listener(
-                behavior: .opaque,
+                behavior: .translucent,
                 onPointerDown: (_) {
                   entry.pop();
                 },

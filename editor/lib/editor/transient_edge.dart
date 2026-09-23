@@ -126,6 +126,7 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     Vec2? cStart,
     bool topological = true,
     bool destructive = true,
+    bool snapToPixel = false,
   }) {
     final mergeKey = Object();
     final ref = editor.edit(
@@ -133,6 +134,7 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
         hitTest,
         topological: topological,
         destructive: destructive,
+        snapToPixel: snapToPixel,
       ),
       mergeKey: mergeKey,
     );

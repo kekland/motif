@@ -6,10 +6,12 @@ class TransientEdgesWidget extends HookWidget {
     super.key,
     required this.transform,
     this.topological = true,
+    this.startPosition,
   });
 
   final Matrix4 transform;
   final bool topological;
+  final Vec2? startPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,10 @@ class TransientEdgesWidget extends HookWidget {
 
     return Stack(
       children: [
+        _StartPositionWidget(
+          startPosition: startPosition,
+          transform: transform,
+        ),
         for (final edge in transientEdges.instances)
           _TransientEdgeWidget(
             edge: edge,
@@ -106,4 +112,53 @@ class _TransientEdgePainter extends CustomPainter {
       oldDelegate.secondaryColor != secondaryColor ||
       oldDelegate.transform != transform ||
       oldDelegate.topological != topological;
+}
+
+class _StartPositionWidget extends StatelessWidget {
+  const new({
+    super.key,
+    this.startPosition,
+    required this.transform,
+  });
+
+  final Vec2? startPosition;
+  final Matrix4 transform;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _StartPositionPainter(
+        startPosition: startPosition,
+        transform: transform,
+        primaryColor: context.colors.selection.primary,
+        secondaryColor: context.colors.selection.secondary,
+      ),
+    );
+  }
+}
+
+class _StartPositionPainter extends CustomPainter {
+  _StartPositionPainter({
+    required this.startPosition,
+    required this.transform,
+    required this.primaryColor,
+    required this.secondaryColor,
+  });
+
+  final Vec2? startPosition;
+  final Matrix4 transform;
+  final Color primaryColor;
+  final Color secondaryColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (startPosition != null) {
+      final p = MatrixUtils.transformPoint(transform, startPosition!.offset);
+      paintVertexHandle(canvas, p, primaryColor, secondaryColor);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_StartPositionPainter oldDelegate) =>
+      oldDelegate.startPosition != startPosition || oldDelegate.transform != transform;
 }

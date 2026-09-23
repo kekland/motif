@@ -12,12 +12,14 @@ class PenTool extends Tool {
   List<ToolOption> get options => [
     TopologicalToolOption.entry,
     DestructiveToolOption.entry,
+    SnapToPixelToolOption.entry,
     EdgeStyleToolOption.entry,
   ];
 
   bool topological(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
   bool destructive(BuildContext context) => context.editor.tool.getOption(options[1].key).value;
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.getOption(options[2].key).value;
+  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[2].key).value;
+  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.getOption(options[3].key).value;
 
   @override
   String resolveName(BuildContext context) => 'Pen';
@@ -49,9 +51,11 @@ class _PenToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
+    final transientStartPosition = useState<Vec2?>(null);
     final transientEdge = useState<TransientEdge?>(null);
     final hoveredCell = useState<Ref?>(null);
     final topological = tool.topological(context);
+    final snapToPixel = tool.snapToPixel(context);
 
     useOnDispose(() {
       final edge = transientEdge.value;
@@ -63,6 +67,14 @@ class _PenToolOverlay extends HookWidget {
         SingleActivator(.escape): () {
           transientEdge.value?.remove();
           transientEdge.value = null;
+        },
+        PlatformSingleActivator(.keyZ, control: true): () {
+          if (transientEdge.value != null) {
+            transientEdge.value?.remove();
+            transientEdge.value = null;
+          } else {
+            context.invoke(intents.undo());
+          }
         },
       },
       child: Focus(
@@ -87,14 +99,20 @@ class _PenToolOverlay extends HookWidget {
 
               hoveredCell.value = result.top?.ref;
 
+              var position = editor.globalToScene(e.position);
+              if (snapToPixel) position = position.round();
               if (transientEdge.value != null) {
                 final edge = transientEdge.value!;
-                edge.end = editor.globalToScene(e.position);
+                edge.end = position;
+              } else {
+                transientStartPosition.value = position;
               }
             },
             child: DragActivityDetector(
               behavior: .translucent,
               activityFactory: (e) {
+                transientStartPosition.value = null;
+
                 if (transientEdge.value == null) {
                   final hitTest = editor.hitTest(e.position, covertexMode: .all());
 
@@ -106,6 +124,7 @@ class _PenToolOverlay extends HookWidget {
                 return CreateVertexActivity(
                   editor: editor,
                   topological: topological,
+                  snapToPixel: snapToPixel,
                   destructive: tool.destructive(context),
                   edgeStyle: tool.edgeStyle(context),
                   existingTransientEdge: transientEdge.value,
@@ -126,6 +145,7 @@ class _PenToolOverlay extends HookWidget {
                     },
                   ),
                   TransientEdgesWidget(
+                    startPosition: transientStartPosition.value,
                     transform: info.childPaintTransform,
                     topological: topological,
                   ),

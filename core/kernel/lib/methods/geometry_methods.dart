@@ -319,16 +319,16 @@ extension GeometryMethods on Bundle {
       return _edgeCubicIn(e, space: space).arcIndex;
     }
 
-    return _edge.cubicArcIndex[e] ??= _edgeCubic(e).arcIndex;
+    _edgeCubic(e);
+    return _edge.cubicArcIndex[e] ??= _edge.cubic[e].arcIndex;
   }
 
   Aabb2 _edgeBbox(EdgeIndex e, {FrameIndex? space}) {
     if (space == .root) {
-      final stale = _edge.bboxWorldVersion[e] != _edge.cubicVersion[e];
+      final stale = _edge.bboxWorldVersion[e] != _edge.version[e.i];
       final moved = _edge.bboxWorldEpoch[e] != _worldEpoch;
       if (stale || moved) {
-        final cubic = _edgeCubic(e, space: .root);
-        final bbox = cubic.bboxTight;
+        final bbox = _edgeCubic(e, space: .root).bboxTight;
         _edge.bboxWorld[e] = bbox;
         _edge.bboxWorldVersion[e] = _edge.cubicVersion[e];
         _edge.bboxWorldEpoch[e] = _worldEpoch;

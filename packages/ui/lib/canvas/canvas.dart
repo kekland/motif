@@ -4,6 +4,7 @@ import 'package:ui/ui.dart';
 
 export 'canvas_focus.dart';
 export 'canvas_background.dart';
+export 'canvas_pixel_grid.dart';
 
 /// An infinitely scrollable canvas widget.
 ///
@@ -17,13 +18,16 @@ class InteractiveCanvas extends StatefulWidget {
     this.overlayBuilders = const [],
     this.centerOrigin = true,
     this.backgroundColor,
+    this.minScale = 1 / 16.0,
+    this.maxScale = 256.0,
     required this.child,
   });
 
   final TransformationController? transformationController;
-  final List<Widget Function(BuildContext context, Widget child)> overlayBuilders;
+  final List<Widget Function(BuildContext context, Matrix4 transform)> overlayBuilders;
   final bool centerOrigin;
   final Color? backgroundColor;
+  final double minScale, maxScale;
   final Widget child;
 
   @override
@@ -48,8 +52,8 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
 
         return InteractiveViewer2(
           controller: controller,
-          minScale: 0.1,
-          maxScale: 100.0,
+          minScale: widget.minScale,
+          maxScale: widget.maxScale,
           builder: (context, rawTransform) {
             final translate = widget.centerOrigin
                 ? Matrix4.translationValues(size.width / 2, size.height / 2, 0.0)
@@ -71,7 +75,7 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
                 size: size,
                 child: Stack(
                   children: [
-                    for (final builder in widget.overlayBuilders) builder(context, const SizedBox.expand()),
+                    for (final builder in widget.overlayBuilders) builder(context, transform),
                   ],
                 ),
               ),

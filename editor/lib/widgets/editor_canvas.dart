@@ -26,7 +26,8 @@ class EditorCanvas extends HookWidget {
                     child: InteractiveCanvas(
                       centerOrigin: true,
                       overlayBuilders: [
-                        (context, child) => ToolOverlay(tool: tool, child: child),
+                        (context, transform) => CanvasPixelGrid(transform: transform),
+                        (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
                       ],
                       child: SceneWidget(
                         key: editor.sceneKey,

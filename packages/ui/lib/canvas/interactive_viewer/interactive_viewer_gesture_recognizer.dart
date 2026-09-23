@@ -30,6 +30,9 @@ extension type _PointersState(List<Offset> pointers) {
 class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   InteractiveViewerGestureRecognizer({
     required this.minAllowedPointerCount,
+    required this.minScale,
+    required this.maxScale,
+    required this.currentTransform,
     super.debugOwner,
     super.supportedDevices,
     super.allowedButtonsFilter,
@@ -39,6 +42,8 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   });
 
   final int minAllowedPointerCount;
+  final Matrix4 Function() currentTransform;
+  double minScale, maxScale;
   GestureTransformStartCallback? onStart;
   GestureTransformUpdateCallback? onUpdate;
   GestureTransformEndCallback? onEnd;
@@ -48,6 +53,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
 
   var _state = _TransformState.ready;
   var _transform = Matrix4.identity();
+  var _startScale = 1.0;
 
   _PointersState? _initialPointersState;
   _PointersState? _currentPointersState;
@@ -134,6 +140,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
 
   void _reconfigure() {
     _initialPointersState = _createPointersState();
+    _startScale = currentTransform().getMaxScaleOnAxis();
     if (_state == .started) {
       _onEnd();
       _state = .ready;
@@ -141,6 +148,10 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
       _transform = .identity();
       _rotationBaseAngle = null;
     }
+  }
+
+  double _limitScale(double delta) {
+    return (_startScale * delta).clamp(minScale, maxScale) / _startScale;
   }
 
   void _update(Duration timestamp) {
@@ -173,7 +184,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
       final b2 = currentPointers[1];
       final b = b2 - b1;
 
-      final scale = b.distance / a.distance;
+      final scale = _limitScale(b.distance / a.distance);
       var angle = math.atan2(
         b.dx * a.dy - b.dy * a.dx,
         b.dx * a.dx + b.dy * a.dy,
@@ -201,7 +212,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     var angle = event.rotation;
     angle = _applyRotationSnap(angle);
 
-    final scale = math.pow(event.scale, _kPanZoomScaleFactor).toDouble();
+    final scale = _limitScale(math.pow(event.scale, _kPanZoomScaleFactor).toDouble());
 
     _scaleFocalPoint = origin;
     _transform = Matrix4.identity()

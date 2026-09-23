@@ -126,7 +126,7 @@ final class EdgeStylePropWidget extends PropWidget {
       spacing: 8.0,
       children: [
         ColorField(
-          value: useMemoComputed(() => color.value.get()!, keys: [color]),
+          value: useMemoComputed(() => color.value.get() ?? .mixed, keys: [color]),
           onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
           options: .new(hintText: 'Mixed'),
         ),
@@ -161,7 +161,7 @@ final class FaceStylePropWidget extends PropWidget {
     final color = usePropComputed(scene, prop.color);
 
     return ColorField(
-      value: useMemoComputed(() => color.value.get()!, keys: [color]),
+      value: useMemoComputed(() => color.value.get() ?? .mixed, keys: [color]),
       onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
       options: .new(hintText: 'Mixed'),
     );
@@ -210,7 +210,7 @@ class LayoutPropWidget extends PropWidget {
   final LayoutProp prop;
 
   @override
-  String resolveHeader(BuildContext context) => 'Children';
+  String resolveHeader(BuildContext context) => 'Layout';
 
   @override
   Widget build(BuildContext context) {
@@ -257,49 +257,95 @@ class LayoutSizePropWidget extends PropWidget {
     final width = usePropComputed(scene, prop.width);
     final height = usePropComputed(scene, prop.height);
 
-    final isWidthFixed = useComputed(() => width.value.get()?.dimension.isFixed ?? true, keys: [width]).value;
-    final isHeightFixed = useComputed(() => height.value.get()?.dimension.isFixed ?? true, keys: [height]).value;
-
-    final widthValue = useMemoComputed(() {
-      final w = width.value.get();
-      if (w?.overridden != null) return w?.overridden!;
-      if (w?.dimension.isFixed == true) return w?.dimension.value;
-      return null;
-    }, keys: [width]);
-
-    final heightValue = useMemoComputed(() {
-      final h = height.value.get();
-      if (h?.overridden != null) return h?.overridden!;
-      if (h?.dimension.isFixed == true) return h?.dimension.value;
-      return null;
-    }, keys: [height]);
-
     return Row(
       spacing: 4.0,
       children: [
         Expanded(
-          child: DoubleExpressionInputField(
-            value: widthValue,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(width: .fixed(v)))),
-            options: .new(
-              leading: Icons.w(),
-              textStyle: isWidthFixed ? null : context.typography.body.tertiary,
-              hintText: 'Mixed',
-            ),
+          child: LayoutDimensionInputField(
+            value: width,
+            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(width: v))),
+            isWidth: true,
           ),
         ),
         Expanded(
-          child: DoubleExpressionInputField(
-            value: heightValue,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(height: .fixed(v)))),
-            options: .new(
-              leading: Icons.h(),
-              textStyle: isHeightFixed ? null : context.typography.body.tertiary,
-              hintText: 'Mixed',
-            ),
+          child: LayoutDimensionInputField(
+            value: height,
+            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(height: v))),
+            isWidth: false,
           ),
         ),
       ],
+    );
+  }
+}
+
+class LayoutDimensionInputField extends HookWidget {
+  const new({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.isWidth,
+  });
+
+  final bool isWidth;
+  final ReadonlySignal<PropValue<ResolvedLayoutDimension?>> value;
+  final ValueChanged<LayoutDimension> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = useMemoComputed(() {
+      final v = this.value().get();
+      if (v?.overridden != null) return v?.overridden!;
+      if (v?.dimension.isFixed == true) return v?.dimension.value;
+      return null;
+    }, keys: [this.value]);
+
+    final type = useComputed(() => this.value().get()?.dimension.type, keys: [this.value]).value;
+    final isOverridden = type == null || type != .fixed;
+    final turns = isWidth ? 0 : 1;
+
+    return DoubleExpressionInputField(
+      value: value,
+      onChanged: (v) => onChanged(.fixed(v)),
+      options: .new(
+        leading: isWidth ? Icons.w() : Icons.h(),
+        textStyle: isOverridden ? context.typography.body.tertiary : null,
+        hintText: 'Mixed',
+        padding: .zero,
+        builder: (context, child) => Column(
+          children: [
+            Padding(
+              padding: .symmetric(horizontal: 6.0),
+              child: child,
+            ),
+            Divider(),
+            ToggleableButtonRow(
+              borderRadius: .vertical(bottom: .circular(4.0)),
+              height: 28.0,
+              children: [
+                ToggleableButton(
+                  isActive: type == .fixed,
+                  onChanged: (v) => onChanged(.fixed(value.get() ?? 0.0)),
+                  iconSize: 16.0,
+                  child: type == .fixed ? Icons.layoutSizeFixed() : Icons.layoutSizeNonFixed(),
+                ),
+                ToggleableButton(
+                  isActive: type == .contain,
+                  onChanged: (v) => onChanged(.contain()),
+                  iconSize: 16.0,
+                  child: RotatedBox(quarterTurns: turns + 1, child: Icons.layoutSizeContain()),
+                ),
+                ToggleableButton(
+                  isActive: type == .expand,
+                  onChanged: (v) => onChanged(.expand()),
+                  iconSize: 16.0,
+                  child: RotatedBox(quarterTurns: turns + 1, child: Icons.layoutSizeExpand()),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

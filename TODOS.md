@@ -1,19 +1,23 @@
-- [?] Serialization, load/save, etc     (Missing: load/save)
-- [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
-- [ ] Rework window system to work with the portals
-- [ ] Commander arguments
-- [ ] Variables and variable binding
-- [?] Color data partials (Works, but looks ugly!)
-- [?] Pencil tool        (Cleanup slop filter code)
-- [ ] Debug arrangement generation
-- [ ] Commander search - clean up code
-- [ ] Transient edge ctrl+z
-- [?] Proper modifiers section      (Add done, missing: properties, display)
-- [?] Tree view
+Urgent (in order):
+- [x] Rework window system to work with the portals
+- [x] Transient edge ctrl+z
+- [x] Face movement frame lag
+- [x] Layout size - contain/expand/fixed
+- [ ] Generator dissolution: baker should preserve statements
 - [ ] Move tool reparenting (transient transforms for locked transforms, etc)
 - [ ] Pen tool: shift/alt: pencil, bend, etc
 - [ ] Move tool: covertex tangent auto-alignment
 - [ ] Move/pen/etc: snap to pixel grid
-- [ ] Canvas: max zoom and pixel grid view
-- [ ] Face movement frame lag
-- [ ] Generator dissolution: baker should preserve statements
+- [x] Canvas: max zoom and pixel grid view
+- [ ] Color/props undo/redo coalescing
+
+- [?] Serialization, load/save, etc     (Missing: load/save)
+- [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
+- [ ] Commander arguments
+- [ ] Variables and variable binding
+- [x] Color data partials
+- [?] Pencil tool        (Cleanup slop filter code)
+- [ ] Debug arrangement generation
+- [ ] Commander search - clean up code
+- [?] Proper modifiers section      (Add done, missing: properties, display)
+- [?] Tree view

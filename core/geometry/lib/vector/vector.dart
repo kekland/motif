@@ -72,4 +72,8 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
 
   Aabb2 aabb(Vec2 other) => Aabb2.bbox2(this, other);
   Aabb2 operator &(Size2 size) => Aabb2.ltwh(x, y, size.width, size.height);
+
+  Vec2 round() => .new(x.roundToDouble(), y.roundToDouble());
+  Vec2 floor() => .new(x.floorToDouble(), y.floorToDouble());
+  Vec2 ceil() => .new(x.ceilToDouble(), y.ceilToDouble());
 }

@@ -61,7 +61,7 @@ final class Scene with ChangeNotifier {
   H? handleOf<H extends CellHandle>(CellRef<H> ref) => bundle.handle<H>(ref);
 
   Placement? layoutOf(StatementId id) => evaluation.layout.of(id);
-  CellStyle<H> styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.style.of<H>(ref)!;
+  CellStyle<H>? styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.style.of<H>(ref);
 
   // -------------------------------------------------------------------------------------------------------------------
   // Transaction

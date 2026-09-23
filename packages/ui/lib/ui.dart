@@ -37,7 +37,7 @@ export 'utils/utils.dart';
 export 'portal/portal.dart';
 export 'command/command.dart';
 export 'tool/tool.dart';
-export 'window/window.dart' show WindowNavigator;
+export 'window/window.dart';
 
 export 'ui/window/window.dart';
 

@@ -5,6 +5,7 @@ extension EmbedVertexTransaction on SceneTransaction {
     SceneHitResult hitTest, {
     bool topological = true,
     bool destructive = true,
+    bool snapToPixel = false,
   }) {
     if (topological && hitTest.vertices.isNotEmpty) return hitTest.vertices.first.ref;
     if (topological && hitTest.edges.isNotEmpty) {
@@ -21,9 +22,12 @@ extension EmbedVertexTransaction on SceneTransaction {
     }
     if (hitTest.frames.isNotEmpty) {
       final frame = hitTest.frames.last;
-      return insert(VertexStatement(frame.point, parent: frame.ref)).ref;
+      final point = snapToPixel ? frame.point.round() : frame.point;
+
+      return insert(VertexStatement(point, parent: frame.ref)).ref;
     }
 
-    return insert(VertexStatement(hitTest.position)).ref;
+    final point = snapToPixel ? hitTest.position.round() : hitTest.position;
+    return insert(VertexStatement(point)).ref;
   }
 }

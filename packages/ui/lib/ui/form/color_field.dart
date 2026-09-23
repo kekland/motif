@@ -22,21 +22,27 @@ final class ColorField extends HookWidget {
       return alpha * 100.0;
     }, keys: [value]);
 
-    final (createEntry, hasEntry) = useCreateWindowEntry(
-      (context) => ColorInputWindow.createEntry(context, value: value, onChanged: onChanged),
+    final window = usePortalEntry(
+      () => WindowEntry(
+        builder: (context) => ColorInputWindow(value: value, onChanged: onChanged),
+        isModal: true,
+      ),
     );
 
     final leading = HookBuilder(
       builder: (context) {
         final iconTheme = IconTheme.of(context);
-        final color = useComputed(() {
-          final partial = value();
-          if (!partial.canConstruct) return null;
-          return partial.construct().toUiColor();
-        }, keys: [value]).value;
+        final color = useComputed(
+          () {
+            final partial = value();
+            if (!partial.canConstruct) return null;
+            return partial.construct().toUiColor();
+          },
+          keys: [value],
+        ).value;
 
         return GestureSurface(
-          onTap: () => createEntry(context),
+          onTap: () => window.push(context),
           borderRadius: BorderRadius.circular(4.0),
           borderSide: BorderSide(color: context.colors.inverse.withScaledAlpha(0.05)),
           width: iconTheme.size ?? 16.0,
@@ -91,7 +97,7 @@ final class ColorField extends HookWidget {
           child: SizedBox(height: 32.0, child: VerticalDivider()),
         ),
         GestureSurface(
-          onTap: () => createEntry(context),
+          onTap: () => window.push(context),
           supportedDevices: {.stylus, .touch},
           borderRadius: .circular(4.0),
           child: Row(

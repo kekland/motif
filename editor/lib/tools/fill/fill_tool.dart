@@ -62,9 +62,12 @@ class _FillToolOverlay extends HookWidget {
             holes.add(hole.coedges.map((c) => editor.refOf(c.edge)!).toList());
           }
 
+          final lca = bundle.query.lcaMany([...outer, ...holes.expand((h) => h)]);
+
           final statement = FaceStatement(
             .new(outer),
             holes: holes.map((e) => ChainSelector(e)).toList(),
+            parent: lca,
           );
 
           editor.edit((txn) => txn.insert(statement));

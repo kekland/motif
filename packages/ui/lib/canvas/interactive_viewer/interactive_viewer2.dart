@@ -25,9 +25,19 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
   late final _translationFlingAnimationController = AnimationController(vsync: this);
   late final _scaleFlingAnimationController = AnimationController(vsync: this);
   late final _recognizer = InteractiveViewerGestureRecognizer(
+    minScale: widget.minScale,
+    maxScale: widget.maxScale,
     minAllowedPointerCount: 1,
+    currentTransform: () => _totalTransform,
     supportedDevices: {.trackpad, .touch},
   );
+
+  @override
+  void didUpdateWidget(covariant InteractiveViewer2 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _recognizer.minScale = widget.minScale;
+    _recognizer.maxScale = widget.maxScale;
+  }
 
   Animation<Offset>? _translationFlingAnimation;
   Offset? _scaleFocalPoint;

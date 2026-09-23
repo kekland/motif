@@ -9,9 +9,14 @@ abstract interface class LayoutBox {
   Size2 get intrinsicSize;
 
   static bool compareLayout(LayoutBox a, LayoutBox b) {
+    if (a.runtimeType != b.runtimeType) return false;
     if (!a.transform.equals(b.transform)) return false;
     if (!a.intrinsicSize.equals(b.intrinsicSize)) return false;
     if (a.size != b.size) return false;
+    if (a is LayoutContainer && b is LayoutContainer) {
+      if (a.layout != b.layout) return false;
+    }
+
     return true;
   }
 }

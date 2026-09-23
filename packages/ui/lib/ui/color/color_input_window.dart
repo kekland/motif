@@ -12,22 +12,12 @@ class ColorInputWindow extends HookWidget {
   final ReadonlySignal<ColorDataPartial> value;
   final ValueChanged<ColorDataPartial>? onChanged;
 
-  static WindowEntry createEntry(
-    BuildContext context, {
-    required ReadonlySignal<ColorDataPartial> value,
-    ValueChanged<ColorDataPartial>? onChanged,
-  }) => WindowEntry.withContextAnchor(
-    context,
-    isModal: true,
-    builder: (_) => ColorInputWindow(value: value, onChanged: onChanged),
-  );
-
   @override
   Widget build(BuildContext context) {
     final color = useComputedValue(() => value.value);
 
     Widget child = SizedBox(
-      width: 192.0,
+      width: 240.0,
       child: Column(
         spacing: 8.0,
         children: [

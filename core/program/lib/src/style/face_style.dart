@@ -29,8 +29,8 @@ final class const FaceStyle({
 final class const FaceStylePartial({
   final ColorData? color,
 }) extends CellStylePartial<FaceHandle> {
-  factory FaceStylePartial.from(FaceStyle style) => .new(
-    color: style.color,
+  factory FaceStylePartial.from(FaceStyle? style) => .new(
+    color: style?.color,
   );
 
   factory FaceStylePartial.fromList(Iterable<FaceStyle> styles) {

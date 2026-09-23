@@ -8,12 +8,14 @@ class CreateVertexActivity extends DragActivity {
     required this.onTransientEdgeCompleted,
     required this.edgeStyle,
     this.existingTransientEdge,
+    this.snapToPixel = false,
     this.topological = true,
     this.destructive = true,
   });
 
   final Editor editor;
   final bool topological;
+  final bool snapToPixel;
   final bool destructive;
   final EdgeStyle edgeStyle;
 
@@ -39,6 +41,7 @@ class CreateVertexActivity extends DragActivity {
           hitTest,
           topological: topological,
           destructive: destructive,
+          snapToPixel: snapToPixel,
         ),
         mergeKey: mergeKey,
       );
@@ -49,6 +52,7 @@ class CreateVertexActivity extends DragActivity {
         hitTest,
         topological: topological,
         destructive: destructive,
+        snapToPixel: snapToPixel,
       );
 
       onTransientEdgeCreated(transientEdge);
@@ -57,7 +61,8 @@ class CreateVertexActivity extends DragActivity {
 
   @override
   void onUpdate(DragUpdateDetails details) {
-    final position = editor.globalToScene(details.globalPosition);
+    var position = editor.globalToScene(details.globalPosition);
+    if (snapToPixel) position = position.round();
 
     if (!didPassThreshold) {
       final delta = (details.globalPosition - startDetails.globalPosition).distance;

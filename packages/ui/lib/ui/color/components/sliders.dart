@@ -28,7 +28,6 @@ class _HueSlider extends StatelessWidget {
       stopsGenerator: (v) => colors[(v * (colors.length - 1)).round()],
       onChanged: (v) => onChanged?.call(v * 360.0),
       value: value != null ? value! / 360.0 : null,
-      isCircular: true,
       color: value != null ? HsvColorData(h: value!, s: 1.0, v: 1.0).toUiColor() : null,
     );
   }

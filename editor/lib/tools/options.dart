@@ -36,6 +36,24 @@ final class DestructiveToolOption extends ToolOption<bool> {
   }
 }
 
+final class SnapToPixelToolOption extends ToolOption<bool> {
+  SnapToPixelToolOption({bool? value}) : super('snapToPixel', value ?? true);
+
+  static final entry = SnapToPixelToolOption();
+
+  @override
+  SnapToPixelToolOption copyWith({bool? value}) => .new(value: value);
+
+  @override
+  Widget performBuild(BuildContext context, ReadonlySignal<bool> value, ValueChanged<bool> onChanged) {
+    return CheckboxListItem(
+      title: Text('Snap to pixel grid'),
+      value: value,
+      onChanged: onChanged,
+    );
+  }
+}
+
 final class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
   EdgeStyleToolOption({EdgeStyle? value}) : super('edgeStyle', value ?? .default_);
 

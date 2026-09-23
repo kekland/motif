@@ -14,6 +14,8 @@ sealed class ColorDataPartial extends Partial<ColorData> {
   bool get canConstruct => false;
   ColorData construct() => throw UnimplementedError();
 
+  static const mixed = MixedColorDataPartial();
+
   factory ColorDataPartial.fromPartialList(Iterable<ColorDataPartial> partials) {
     final type = partials.map((c) => c.type).toSet().singleOrNull;
 

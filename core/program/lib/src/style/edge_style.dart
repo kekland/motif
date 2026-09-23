@@ -35,9 +35,9 @@ final class const EdgeStylePartial({
   final double? width,
   final ColorData? color,
 }) extends CellStylePartial<EdgeHandle> {
-  factory EdgeStylePartial.from(EdgeStyle style) => EdgeStylePartial(
-    width: style.width,
-    color: style.color,
+  factory EdgeStylePartial.from(EdgeStyle? style) => EdgeStylePartial(
+    width: style?.width,
+    color: style?.color,
   );
 
   factory EdgeStylePartial.fromList(Iterable<EdgeStyle> styles) {

@@ -1,5 +1,5 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/canvas.dart';
+import 'package:editor/widgets/editor_canvas.dart';
 import 'package:editor/widgets/scene_panel.dart';
 import 'package:editor/widgets/sidebar.dart';
 import 'package:editor/widgets/tabs/tab.dart';
