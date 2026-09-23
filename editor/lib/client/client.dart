@@ -238,7 +238,7 @@ final class SceneConnection with Disposable {
       pointerType: type,
     );
 
-    _presenceTimer ??= Timer(const Duration(milliseconds: 33), () {
+    _presenceTimer ??= Timer(const Duration(milliseconds: 50), () {
       _presenceTimer = null;
       final presence = _presence;
       if (presence == null || status.value != .connected) return;

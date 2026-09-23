@@ -56,7 +56,7 @@ class ScenePanel extends HookWidget {
             scrollDirection: .horizontal,
             itemCount: 1 + clients.length,
             padding: const .symmetric(horizontal: 8.0),
-            separatorBuilder: (context, i) => SizedBox(width: 8.0),
+            separatorBuilder: (context, i) => SizedBox(width: 2.0),
             itemBuilder: (context, i) {
               if (i == 0) {
                 return SizedBox(
