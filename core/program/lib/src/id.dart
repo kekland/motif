@@ -1,9 +1,10 @@
 part of '_program.dart';
 
+final _random = math.Random();
+
 /// A unique identifier for a statement within the program.
 extension type const StatementId.raw(U64 value) implements Object {
-  static StatementId allocate() => .raw(.of(0, _seq++));
-  static int _seq = 1;
+  static StatementId allocate() => .raw(.of(_random.nextInt(0x80000000), _random.nextInt(0x100000000)));
 
   static const _derivedBit = 0x80000000;
 
