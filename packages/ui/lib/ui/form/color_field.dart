@@ -27,6 +27,7 @@ final class ColorField extends HookWidget {
         builder: (context) => ColorInputWindow(value: value, onChanged: onChanged),
         isModal: true,
       ),
+      [value],
     );
 
     final leading = HookBuilder(

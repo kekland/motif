@@ -5,6 +5,7 @@ Urgent (in order):
 - [x] Layout size - contain/expand/fixed
 - [ ] Generator dissolution: baker should preserve statements
 - [x] Move tool reparenting (transient transforms for locked transforms, etc)
+- [x] Color prop attaching to a wrong selection
 - [ ] Pen tool: shift/alt: pencil, bend, etc
 - [ ] Move tool: covertex tangent auto-alignment
 - [ ] Move/pen/etc: snap to pixel grid
