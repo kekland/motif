@@ -4,12 +4,22 @@ import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
 sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity with KeyboardListenerDragActivity {
-  CreateShapeActivity(this.editor);
+  CreateShapeActivity(
+    this.editor, {
+    this.edgeStyle = .default_,
+    this.faceStyle = .default_,
+    this.snapToPixel = false,
+  });
 
   final Editor editor;
-  SceneTransaction? transaction;
+  final EdgeStyle edgeStyle;
+  final FaceStyle faceStyle;
+  final bool snapToPixel;
+
+  late final Vec2 startPosition;
   late final S statement;
 
+  SceneTransaction? transaction;
   final mergeKey = Object();
 
   S create(Vec2 position, FrameRef? parent);
@@ -31,9 +41,11 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
       }
     }
 
-    final localPosition = editor.globalToLocal(parent, details.globalPosition);
-    statement = create(localPosition, parent);
+    var localPosition = editor.globalToLocal(parent, details.globalPosition);
+    if (snapToPixel) localPosition = localPosition.round();
+    startPosition = localPosition;
 
+    statement = create(startPosition, parent);
     transaction!.insert(statement);
     transaction!.flush();
     editor.selection.set(statement.frame);
@@ -44,8 +56,9 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
     super.onUpdate(details);
 
     final parent = statement.parent?.ref;
-    final a = editor.globalToLocal(parent, startDetails.globalPosition);
+    final a = startPosition;
     var d = editor.globalToLocal(parent, details.globalPosition) - a;
+    if (snapToPixel) d = d.round();
 
     if (isShiftPressed) {
       final side = math.max(d.x.abs(), d.y.abs());
@@ -78,41 +91,61 @@ sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity 
 }
 
 final class CreateContainerActivity(
-  super.editor,
-) extends CreateShapeActivity<ContainerStatement> {
+  super.editor, {
+  super.snapToPixel,
+  super.edgeStyle,
+  super.faceStyle,
+}) extends CreateShapeActivity<ContainerStatement> {
   @override
   ContainerStatement create(Vec2 position, FrameRef? parent) => ContainerStatement(
     transform: .translation2(position),
     parent: parent,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
   );
 }
 
 final class CreateRectangleActivity(
-  super.editor,
-) extends CreateShapeActivity<RectangleStatement> {
+  super.editor, {
+  super.snapToPixel,
+  super.edgeStyle,
+  super.faceStyle,
+}) extends CreateShapeActivity<RectangleStatement> {
   @override
   RectangleStatement create(Vec2 position, FrameRef? parent) => RectangleStatement(
     transform: .translation2(position),
     parent: parent,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
   );
 }
 
 final class CreateEllipseActivity(
-  super.editor,
-) extends CreateShapeActivity<EllipseStatement> {
+  super.editor, {
+  super.snapToPixel,
+  super.edgeStyle,
+  super.faceStyle,
+}) extends CreateShapeActivity<EllipseStatement> {
   @override
   EllipseStatement create(Vec2 position, FrameRef? parent) => EllipseStatement(
     transform: .translation2(position),
     parent: parent,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
   );
 }
 
 final class CreatePolygonActivity(
-  super.editor,
-) extends CreateShapeActivity<PolygonStatement> {
+  super.editor, {
+  super.snapToPixel,
+  super.edgeStyle,
+  super.faceStyle,
+}) extends CreateShapeActivity<PolygonStatement> {
   @override
   PolygonStatement create(Vec2 position, FrameRef? parent) => PolygonStatement(
     transform: .translation2(position),
     parent: parent,
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
   );
 }

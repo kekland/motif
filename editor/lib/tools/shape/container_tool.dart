@@ -11,7 +11,7 @@ class const ContainerTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Container';
 
   @override
-  CreateShapeActivity Function(Editor editor) get activityFactory => CreateContainerActivity.new;
+  CreateShapeActivityFactory get activityFactory => CreateContainerActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.toolContainer;

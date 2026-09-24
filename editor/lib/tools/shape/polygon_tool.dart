@@ -11,7 +11,7 @@ class const PolygonTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Polygon';
 
   @override
-  CreateShapeActivity Function(Editor editor) get activityFactory => CreatePolygonActivity.new;
+  CreateShapeActivityFactory get activityFactory => CreatePolygonActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.precise;

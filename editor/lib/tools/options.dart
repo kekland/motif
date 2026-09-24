@@ -85,3 +85,30 @@ final class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
     );
   }
 }
+
+final class FaceStyleToolOption extends ToolOption<FaceStyle> {
+  FaceStyleToolOption({FaceStyle? value}) : super('faceStyle', value ?? .default_);
+
+  static final entry = FaceStyleToolOption();
+
+  @override
+  FaceStyleToolOption copyWith({FaceStyle? value}) => .new(value: value);
+
+  @override
+  Widget performBuild(BuildContext context, ReadonlySignal<FaceStyle> value, ValueChanged<FaceStyle> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        spacing: 8.0,
+        crossAxisAlignment: .start,
+        children: [
+          Text('Fill', style: context.typography.body.secondary),
+          ColorField(
+            value: useMemoComputed(() => value().color.partial),
+            onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
+          ),
+        ],
+      ),
+    );
+  }
+}

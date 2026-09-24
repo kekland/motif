@@ -11,7 +11,7 @@ class const RectangleTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Rectangle';
 
   @override
-  CreateShapeActivity Function(Editor editor) get activityFactory => CreateRectangleActivity.new;
+  CreateShapeActivityFactory get activityFactory => CreateRectangleActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.toolRectangle;

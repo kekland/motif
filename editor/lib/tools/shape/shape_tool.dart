@@ -3,8 +3,19 @@ import 'package:editor/imports.dart';
 abstract class ShapeTool extends Tool {
   const ShapeTool();
 
-  CreateShapeActivity Function(Editor editor) get activityFactory;
+  CreateShapeActivityFactory get activityFactory;
   MouseCursor get cursor;
+
+  @override
+  List<ToolOption> get options => [
+    SnapToPixelToolOption.entry,
+    EdgeStyleToolOption.entry,
+    FaceStyleToolOption.entry,
+  ];
+
+  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.getOption(options[1].key).value;
+  FaceStyle faceStyle(BuildContext context) => context.editor.tool.getOption(options[2].key).value;
 
   @override
   Widget buildViewportOverlay(
@@ -19,6 +30,13 @@ abstract class ShapeTool extends Tool {
   );
 }
 
+typedef CreateShapeActivityFactory = CreateShapeActivity Function(
+  Editor editor, {
+  EdgeStyle edgeStyle,
+  FaceStyle faceStyle,
+  bool snapToPixel,
+});
+
 class _ShapeToolOverlay extends HookWidget {
   const _ShapeToolOverlay({
     super.key,
@@ -29,7 +47,8 @@ class _ShapeToolOverlay extends HookWidget {
   });
 
   final OverlayChildLayoutInfo info;
-  final CreateShapeActivity Function(Editor edito) activityFactory;
+  final CreateShapeActivityFactory activityFactory;
+
   final MouseCursor cursor;
   final ShapeTool tool;
 
@@ -41,7 +60,12 @@ class _ShapeToolOverlay extends HookWidget {
       hitTestBehavior: .translucent,
       cursor: cursor,
       child: DragActivityDetector(
-        activityFactory: (_) => activityFactory(editor),
+        activityFactory: (_) => activityFactory(
+          editor,
+          edgeStyle: tool.edgeStyle(context),
+          faceStyle: tool.faceStyle(context),
+          snapToPixel: tool.snapToPixel(context),
+        ),
       ),
     );
   }

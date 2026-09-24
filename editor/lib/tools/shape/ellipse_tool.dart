@@ -11,7 +11,7 @@ class const EllipseTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Ellipse';
 
   @override
-  CreateShapeActivity Function(Editor editor) get activityFactory => CreateEllipseActivity.new;
+  CreateShapeActivityFactory get activityFactory => CreateEllipseActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.precise;
