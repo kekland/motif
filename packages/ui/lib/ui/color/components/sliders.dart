@@ -4,11 +4,15 @@ class _HueSlider extends StatelessWidget {
   const _HueSlider({
     super.key,
     required this.value,
+    this.onStartChanging,
+    this.onEndChanging,
     this.onChanged,
   });
 
   final double? value;
   final ValueChanged<double>? onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,8 @@ class _HueSlider extends StatelessWidget {
       stops: colors.length,
       stopsGenerator: (v) => colors[(v * (colors.length - 1)).round()],
       onChanged: (v) => onChanged?.call(v * 360.0),
+      onStartChanging: onStartChanging,
+      onEndChanging: onEndChanging,
       value: value != null ? value! / 360.0 : null,
       color: value != null ? HsvColorData(h: value!, s: 1.0, v: 1.0).toUiColor() : null,
     );
@@ -38,11 +44,15 @@ class _SaturationSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
     this.color,
   });
 
   final double? value;
   final ValueChanged<double>? onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final HsvColorData? color;
 
   @override
@@ -53,6 +63,8 @@ class _SaturationSlider extends StatelessWidget {
       leading: Icons.s(),
       stopsGenerator: (s) => stopsColor.copyWith(s: s).toUiColor(),
       onChanged: (s) => onChanged?.call(s),
+      onStartChanging: onStartChanging,
+      onEndChanging: onEndChanging,
       value: value,
       color: stopsColor.copyWith(s: value).toUiColor(),
     );
@@ -64,11 +76,15 @@ class _ValueSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
     this.color,
   });
 
   final double? value;
   final ValueChanged<double>? onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final HsvColorData? color;
 
   @override
@@ -79,6 +95,8 @@ class _ValueSlider extends StatelessWidget {
       leading: Icons.v(),
       stopsGenerator: (v) => stopsColor.copyWith(v: v).toUiColor(),
       onChanged: (v) => onChanged?.call(v),
+      onStartChanging: onStartChanging,
+      onEndChanging: onEndChanging,
       value: value,
       color: stopsColor.copyWith(v: value).toUiColor(),
     );
@@ -90,11 +108,15 @@ class _AlphaSlider extends StatelessWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
     this.color,
   });
 
   final double? value;
   final ValueChanged<double>? onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final HsvColorData? color;
 
   @override
@@ -122,6 +144,8 @@ class _AlphaSlider extends StatelessWidget {
       stops: 2,
       stopsGenerator: (a) => stopsColor.copyWith(alpha: a).toUiColor(),
       onChanged: (a) => onChanged?.call(a),
+      onStartChanging: onStartChanging,
+      onEndChanging: onEndChanging,
       value: value,
       color: stopsColor.copyWith(alpha: value).toUiColor(),
     );

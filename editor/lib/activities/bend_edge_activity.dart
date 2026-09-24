@@ -8,10 +8,12 @@ final class BendEdgeActivity extends DragActivity {
     super.onStart,
     super.onUpdate,
     super.onEnd,
+    this.snapToPixel = false,
   });
 
   final Editor editor;
   final EdgeRef edge;
+  final bool snapToPixel;
 
   static const _grabRange = (0.05, 0.95);
   final mergeKey = Object();
@@ -53,7 +55,12 @@ final class BendEdgeActivity extends DragActivity {
     final statement = _statement;
     if (statement != null) {
       final delta = editor.globalToScene(details.globalPosition) - editor.globalToScene(startDetails.globalPosition);
-      final bent = _initial.bend(_t, _grabPosition + delta);
+      var bent = _initial.bend(_t, _grabPosition + delta);
+
+      if (snapToPixel) {
+        bent.p2 = bent.p2.round();
+        bent.p1 = bent.p1.round();
+      }
 
       _transaction!.update<EdgeStatement>(
         _statement!.id,

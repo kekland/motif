@@ -7,9 +7,17 @@ part 'components/slider.dart';
 part 'components/sliders.dart';
 
 class ColorInputWindow extends HookWidget {
-  const new({super.key, required this.value, this.onChanged});
+  const new({
+    super.key,
+    required this.value,
+    this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
+  });
 
   final ReadonlySignal<ColorDataPartial> value;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final ValueChanged<ColorDataPartial>? onChanged;
 
   @override
@@ -27,6 +35,8 @@ class ColorInputWindow extends HookWidget {
               child: _HSVSquare(
                 value: color,
                 onChanged: onChanged,
+                onStartChanging: onStartChanging,
+                onEndChanging: onEndChanging,
               ),
             ),
           ],
@@ -44,23 +54,33 @@ class ColorInputWindow extends HookWidget {
             _HueSlider(
               value: color.h,
               onChanged: (h) => onChanged?.call(.hsv(h: h)),
+              onStartChanging: onStartChanging,
+              onEndChanging: onEndChanging,
             ),
             _SaturationSlider(
               value: color.s,
               onChanged: (s) => onChanged?.call(.hsv(s: s)),
+              onStartChanging: onStartChanging,
+              onEndChanging: onEndChanging,
             ),
             _ValueSlider(
               value: color.v,
               onChanged: (v) => onChanged?.call(.hsv(v: v)),
+              onStartChanging: onStartChanging,
+              onEndChanging: onEndChanging,
             ),
             _AlphaSlider(
               value: color.alpha,
               onChanged: (a) => onChanged?.call(.hsv(alpha: a)),
+              onStartChanging: onStartChanging,
+              onEndChanging: onEndChanging,
             ),
           ],
           ColorField(
             value: value,
             onChanged: onChanged,
+            onStartChanging: onStartChanging,
+            onEndChanging: onEndChanging,
           ),
         ],
       ),

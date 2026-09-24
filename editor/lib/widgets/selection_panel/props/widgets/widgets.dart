@@ -21,6 +21,9 @@ class PositionPropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final xTxn = usePropTransaction(scene, [prop]);
+    final yTxn = usePropTransaction(scene, [prop]);
+
     final xProp = usePropComputed(scene, prop.x);
     final yProp = usePropComputed(scene, prop.y);
 
@@ -36,7 +39,9 @@ class PositionPropWidget extends PropWidget {
         Expanded(
           child: DoubleExpressionInputField(
             value: xValue,
-            onChanged: (v) => scene.edit((txn) => prop.x.set(txn, .new(v))),
+            onChanged: (v) => xTxn.edit((txn) => prop.x.set(txn, .new(v))),
+            onStartChanging: xTxn.onStartChanging,
+            onEndChanging: xTxn.onEndChanging,
             options: .new(
               leading: Icons.x(),
               textStyle: isXOverriden ? context.typography.body.tertiary : null,
@@ -47,7 +52,9 @@ class PositionPropWidget extends PropWidget {
         Expanded(
           child: DoubleExpressionInputField(
             value: yValue,
-            onChanged: (v) => scene.edit((txn) => prop.y.set(txn, .new(v))),
+            onChanged: (v) => yTxn.edit((txn) => prop.y.set(txn, .new(v))),
+            onStartChanging: yTxn.onStartChanging,
+            onEndChanging: yTxn.onEndChanging,
             options: .new(
               leading: Icons.y(),
               textStyle: isYOverriden ? context.typography.body.tertiary : null,
@@ -75,6 +82,8 @@ final class RotationPropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final txn = usePropTransaction(scene, [prop]);
+
     final rotation = usePropComputed(scene, prop);
     final value = useMemoComputed(() {
       final value = rotation.value.get();
@@ -88,7 +97,9 @@ final class RotationPropWidget extends PropWidget {
         Expanded(
           child: DoubleExpressionInputField(
             value: value,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, v * deg2Rad)),
+            onChanged: (v) => txn.edit((txn) => prop.set(txn, v * deg2Rad)),
+            onStartChanging: txn.onStartChanging,
+            onEndChanging: txn.onEndChanging,
             options: .new(
               leading: Icons.angle(),
               hintText: 'Mixed',
@@ -96,7 +107,7 @@ final class RotationPropWidget extends PropWidget {
           ),
         ),
         IconButton(
-          onTap: () => scene.edit((txn) => prop.alter(txn, (r) => r + (pi / 2))),
+          onTap: () => txn.edit((txn) => prop.alter(txn, (r) => r + (pi / 2))),
           child: Icons.rotateCw(),
         ),
       ],
@@ -119,6 +130,9 @@ final class EdgeStylePropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTxn = usePropTransaction(scene, [prop.color]);
+    final widthTxn = usePropTransaction(scene, [prop.width]);
+
     final color = usePropComputed(scene, prop.color);
     final width = usePropComputed(scene, prop.width);
 
@@ -127,12 +141,16 @@ final class EdgeStylePropWidget extends PropWidget {
       children: [
         ColorField(
           value: useMemoComputed(() => color.value.get() ?? .mixed, keys: [color]),
-          onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
+          onChanged: (color) => colorTxn.edit((txn) => prop.color.set(txn, color)),
+          onStartChanging: colorTxn.onStartChanging,
+          onEndChanging: colorTxn.onEndChanging,
           options: .new(hintText: 'Mixed'),
         ),
         DoubleExpressionInputField(
           value: useMemoComputed(() => width.value.get(), keys: [width]),
-          onChanged: (width) => scene.edit((txn) => prop.width.set(txn, width)),
+          onChanged: (width) => widthTxn.edit((txn) => prop.width.set(txn, width)),
+          onStartChanging: widthTxn.onStartChanging,
+          onEndChanging: widthTxn.onEndChanging,
           options: .new(
             leading: Icons.weight(),
             hintText: 'Mixed',
@@ -158,11 +176,14 @@ final class FaceStylePropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTxn = usePropTransaction(scene, [prop.color]);
     final color = usePropComputed(scene, prop.color);
 
     return ColorField(
       value: useMemoComputed(() => color.value.get() ?? .mixed, keys: [color]),
-      onChanged: (color) => scene.edit((txn) => prop.color.set(txn, color)),
+      onChanged: (color) => colorTxn.edit((txn) => prop.color.set(txn, color)),
+      onStartChanging: colorTxn.onStartChanging,
+      onEndChanging: colorTxn.onEndChanging,
       options: .new(hintText: 'Mixed'),
     );
   }
@@ -214,23 +235,24 @@ class LayoutPropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final txn = usePropTransaction(scene, [this.prop]);
     final prop = usePropComputed(scene, this.prop);
     final layout = useComputed(() => prop.value.get(), keys: [prop]).value;
 
     return ToggleableButtonRow(
       children: [
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .stack())),
+          onChanged: (v) => txn.edit((txn) => this.prop.set(txn, .stack())),
           isActive: layout is StackLayout,
           child: Icons.layoutStack(),
         ),
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .row))),
+          onChanged: (v) => txn.edit((txn) => this.prop.set(txn, .flex(direction: .row))),
           isActive: layout is FlexLayout && layout.direction == .row,
           child: Icons.layoutRow(),
         ),
         ToggleableButton(
-          onChanged: (v) => scene.edit((txn) => this.prop.set(txn, .flex(direction: .column))),
+          onChanged: (v) => txn.edit((txn) => this.prop.set(txn, .flex(direction: .column))),
           isActive: layout is FlexLayout && layout.direction == .column,
           child: Icons.layoutColumn(),
         ),
@@ -254,6 +276,9 @@ class LayoutSizePropWidget extends PropWidget {
 
   @override
   Widget build(BuildContext context) {
+    final widthTxn = usePropTransaction(scene, [prop.width]);
+    final heightTxn = usePropTransaction(scene, [prop.height]);
+
     final width = usePropComputed(scene, prop.width);
     final height = usePropComputed(scene, prop.height);
 
@@ -263,14 +288,18 @@ class LayoutSizePropWidget extends PropWidget {
         Expanded(
           child: LayoutDimensionInputField(
             value: width,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(width: v))),
+            onChanged: (v) => widthTxn.edit((txn) => prop.set(txn, .new(width: v))),
+            onStartChanging: widthTxn.onStartChanging,
+            onEndChanging: widthTxn.onEndChanging,
             isWidth: true,
           ),
         ),
         Expanded(
           child: LayoutDimensionInputField(
             value: height,
-            onChanged: (v) => scene.edit((txn) => prop.set(txn, .new(height: v))),
+            onChanged: (v) => heightTxn.edit((txn) => prop.set(txn, .new(height: v))),
+            onStartChanging: heightTxn.onStartChanging,
+            onEndChanging: heightTxn.onEndChanging,
             isWidth: false,
           ),
         ),
@@ -285,11 +314,15 @@ class LayoutDimensionInputField extends HookWidget {
     required this.value,
     required this.onChanged,
     required this.isWidth,
+    this.onStartChanging,
+    this.onEndChanging,
   });
 
   final bool isWidth;
   final ReadonlySignal<PropValue<ResolvedLayoutDimension?>> value;
   final ValueChanged<LayoutDimension> onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
 
   @override
   Widget build(BuildContext context) {
@@ -307,6 +340,8 @@ class LayoutDimensionInputField extends HookWidget {
     return DoubleExpressionInputField(
       value: value,
       onChanged: (v) => onChanged(.fixed(v)),
+      onStartChanging: onStartChanging,
+      onEndChanging: onEndChanging,
       options: .new(
         leading: isWidth ? Icons.w() : Icons.h(),
         textStyle: isOverridden ? context.typography.body.tertiary : null,

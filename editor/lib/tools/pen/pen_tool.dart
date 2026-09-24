@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:editor/imports.dart';
 import 'package:editor/tools/pen/transient_edges_widget.dart';
 import 'package:editor/widgets/selection_overlay/cell_handles.dart';
+import 'package:flutter/services.dart';
 
 class PenTool extends Tool {
   const PenTool();
@@ -99,11 +102,17 @@ class _PenToolOverlay extends HookWidget {
 
               hoveredCell.value = result.top?.ref;
 
-              var position = editor.globalToScene(e.position);
-              if (snapToPixel) position = position.round();
+              final position = CreateVertexActivity.computePosition(
+                editor,
+                e.position,
+                startPosition: transientEdge.value?.start,
+                isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
+                topological: topological,
+                snapToPixel: snapToPixel,
+              );
+
               if (transientEdge.value != null) {
-                final edge = transientEdge.value!;
-                edge.end = position;
+                transientEdge.value!.end = position;
               } else {
                 transientStartPosition.value = position;
               }

@@ -84,4 +84,20 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
       return Vec2(0, y);
     }
   }
+
+  Vec2 snappedToAngle(double angleRad) {
+    if (angleRad == 0.0) return this;
+    final length = this.length;
+    if (length == 0) return this;
+
+    final currentAngle = math.atan2(y, x);
+    final snappedAngle = (currentAngle / angleRad).round() * angleRad;
+    final delta = snappedAngle - currentAngle;
+    if (delta == 0.0) return this;
+
+    final cosD = math.cos(delta);
+    final sinD = math.sin(delta);
+
+    return .new(x * cosD - y * sinD, x * sinD + y * cosD);
+  }
 }

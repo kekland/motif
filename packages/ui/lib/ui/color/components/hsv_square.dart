@@ -5,10 +5,14 @@ class _HSVSquare extends HookWidget {
     super.key,
     required this.value,
     this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
   });
 
   final HsvColorDataPartial? value;
   final ValueChanged<ColorDataPartial>? onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,10 @@ class _HSVSquare extends HookWidget {
     }
 
     return GestureDetector(
-      onPanStart: (_) => panHue.value = hue,
+      onPanStart: (_) {
+        onStartChanging?.call();
+        panHue.value = hue;
+      },
       onTapUp: (details) => _updateSv(details.localPosition),
       onPanUpdate: (details) {
         final size = context.size!;
@@ -51,6 +58,8 @@ class _HSVSquare extends HookWidget {
           _updateSv(details.localPosition);
         }
       },
+      onPanEnd: (_) => onEndChanging?.call(),
+      onPanCancel: () => onEndChanging?.call(),
       child: Stack(
         clipBehavior: .none,
         children: [

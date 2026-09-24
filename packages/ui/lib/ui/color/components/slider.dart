@@ -5,6 +5,8 @@ class _Slider extends HookWidget {
     super.key,
     required this.stopsGenerator,
     required this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
     this.value,
     this.color,
     this.leading,
@@ -16,6 +18,8 @@ class _Slider extends HookWidget {
   final int stops;
   final Color Function(double t) stopsGenerator;
   final ValueChanged<double> onChanged;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final double? value;
   final Color? color;
   final Widget? leading;
@@ -88,12 +92,16 @@ class _Slider extends HookWidget {
                   final size = context.size!;
                   onChanged(_clamp(position.dx / size.width));
                 },
+                onPanStart: (details) => onStartChanging?.call(),
                 onPanUpdate: (details) {
                   final position = details.localPosition;
                   final size = context.size!;
                   onChanged(_clamp(position.dx / size.width));
                 },
+                onPanEnd: (details) => onEndChanging?.call(),
+                onPanCancel: () => onEndChanging?.call(),
                 onHorizontalDragStart: (details) {
+                  onStartChanging?.call();
                   dragValue.value = value;
                 },
                 onHorizontalDragUpdate: (details) {
@@ -110,6 +118,12 @@ class _Slider extends HookWidget {
 
                   onChanged(newValue);
                   dragValue.value = newValue;
+                },
+                onHorizontalDragEnd: (details) {
+                  onEndChanging?.call();
+                },
+                onHorizontalDragCancel: () {
+                  onEndChanging?.call();
                 },
                 child: body,
               );

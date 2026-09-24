@@ -6,10 +6,14 @@ final class ColorField extends HookWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.onStartChanging,
+    this.onEndChanging,
     this.options = const TextFieldOptions(),
   });
 
   final ReadonlySignal<ColorDataPartial> value;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final ValueChanged<ColorDataPartial>? onChanged;
   final TextFieldOptions options;
 
@@ -24,7 +28,12 @@ final class ColorField extends HookWidget {
 
     final window = usePortalEntry(
       () => WindowEntry(
-        builder: (context) => ColorInputWindow(value: value, onChanged: onChanged),
+        builder: (context) => ColorInputWindow(
+          value: value,
+          onChanged: onChanged,
+          onStartChanging: onStartChanging,
+          onEndChanging: onEndChanging,
+        ),
         isModal: true,
       ),
       [value],

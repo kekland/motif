@@ -14,6 +14,13 @@ class BendTool extends Tool {
   Widget buildIcon(BuildContext context) => Icons.bend();
 
   @override
+  List<ToolOption> get options => [
+    SnapToPixelToolOption.entry,
+  ];
+
+  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+
+  @override
   Widget buildViewportOverlay(
     BuildContext context,
     OverlayChildLayoutInfo info,
@@ -67,7 +74,11 @@ class _BendToolOverlay extends HookWidget {
               if (hovered is CovertexRef) {
                 return MoveActivity(editor, {hitTest.top!.ref});
               } else if (hovered is EdgeRef) {
-                return BendEdgeActivity(editor, hovered);
+                return BendEdgeActivity(
+                  editor,
+                  hovered,
+                  snapToPixel: tool.snapToPixel(context),
+                );
               } else {
                 return null;
               }

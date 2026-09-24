@@ -52,3 +52,39 @@ Computed<PropValue<G>> usePropComputed<G, S>(Scene scene, Prop<G, S> prop) {
 
   return computed;
 }
+
+PropTransaction usePropTransaction(Scene scene, [List<Object?> keys = const []]) {
+  final txn = useMemoized(() => PropTransaction(scene), keys);
+  useEffect(() => txn.dispose, [txn]);
+  return txn;
+}
+
+final class PropTransaction {
+  PropTransaction(this.scene);
+
+  final Scene scene;
+  SceneTransaction? _transaction;
+
+  void onStartChanging() {
+    if (_transaction != null) throw StateError('Transaction already started');
+    _transaction = scene.beginTransaction();
+  }
+
+  void onEndChanging() {
+    _transaction!.commit();
+    _transaction = null;
+  }
+
+  void edit(void Function(SceneTransaction) fn) {
+    final isOneOff = _transaction == null;
+    if (isOneOff) onStartChanging();
+    fn(_transaction!);
+    _transaction!.flush();
+    if (isOneOff) onEndChanging();
+  }
+
+  void dispose() {
+    _transaction?.commit();
+    _transaction = null;
+  }
+}

@@ -80,8 +80,16 @@ class _TransientEdgePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cubic = edge.cubic.transformed(.fromListFloat64(transform.storage));
+    final t = Mat4.fromListFloat64(transform.storage);
+    final cubic = edge.cubic.transformed(t);
     final p0 = cubic.p0.offset, p1 = cubic.p1.offset, p2 = cubic.p2.offset, p3 = cubic.p3.offset;
+    final Offset nextP1;
+
+    if (edge.nextCStart != null) {
+      nextP1 = t.transform2(edge.nextCStart!).offset;
+    } else {
+      nextP1 = p3 + (p3 - p2);
+    }
 
     if (edge.end == null) {
       paintCovertexTangent(canvas, p0, p1, secondaryColor);
@@ -90,11 +98,13 @@ class _TransientEdgePainter extends CustomPainter {
     } else {
       paintCovertexTangent(canvas, p0, p1, secondaryColor);
       paintCovertexTangent(canvas, p3, p2, secondaryColor);
+      paintCovertexTangent(canvas, p3, nextP1, secondaryColor);
       paintEdgeHandle(canvas, cubic, primaryColor);
       paintVertexHandle(canvas, p0, primaryColor, secondaryColor);
       paintVertexHandle(canvas, p3, primaryColor, secondaryColor);
       paintCovertexHandle(canvas, p1, primaryColor, secondaryColor);
       paintCovertexHandle(canvas, p2, primaryColor, secondaryColor);
+      paintCovertexHandle(canvas, nextP1, primaryColor, secondaryColor);
     }
 
     if (topological) {

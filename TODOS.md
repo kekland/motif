@@ -6,11 +6,12 @@ Urgent (in order):
 - [ ] Generator dissolution: baker should preserve statements
 - [x] Move tool reparenting (transient transforms for locked transforms, etc)
 - [x] Color prop attaching to a wrong selection
-- [ ] Pen tool: shift/alt: pencil, bend, etc
+- [x] Pen tool: shift/alt: bend, etc
 - [ ] Move tool: covertex tangent auto-alignment
-- [ ] Move/pen/etc: snap to pixel grid
+- [ ] Move tool: snap to pixel grid
+- [x] Pen/bend: snap to pixel grid
 - [x] Canvas: max zoom and pixel grid view
-- [ ] Color/props undo/redo coalescing
+- [x] Color/props undo/redo coalescing
 - [ ] Fillet face: paint a filletted edge bug
 - [ ] Debug arrangement generation
 - [x] Protobuf schema: implement generators

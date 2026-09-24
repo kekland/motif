@@ -41,6 +41,14 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     notifyListeners();
   }
 
+  Vec2? _nextCStart;
+  Vec2? get nextCStart => _nextCStart;
+  set nextCStart(Vec2? value) {
+    if (_nextCStart == value) return;
+    _nextCStart = value;
+    notifyListeners();
+  }
+
   Cubic2 get cubic => Cubic2(start, end ?? start, p1: cStart, p2: cEnd);
 
   List<EdgeRef> _performCommit(
@@ -121,27 +129,6 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     return edge;
   }
 
-  TransientEdge createWithHitTest(
-    SceneHitResult hitTest, {
-    Vec2? cStart,
-    bool topological = true,
-    bool destructive = true,
-    bool snapToPixel = false,
-  }) {
-    final mergeKey = Object();
-    final ref = editor.edit(
-      (txn) => txn.embedVertex(
-        hitTest,
-        topological: topological,
-        destructive: destructive,
-        snapToPixel: snapToPixel,
-      ),
-      mergeKey: mergeKey,
-    );
-
-    return create(ref, cStart: cStart, mergeKey: mergeKey);
-  }
-
   TransientEdge? commit(
     TransientEdge edge, {
     SceneHitResult? endHitTest,
@@ -159,14 +146,10 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     remove(edge);
 
     if (startNewEdge && newEdges.isNotEmpty) {
-      final edge = newEdges.last;
-      final edgeHandle = editor.handleOf(edge);
-      final endHandle = editor.bundle.edgeEnd(edgeHandle!);
-      final end = editor.refOf(endHandle)!;
-      final endPosition = editor.bundle.vertexPosition(endHandle, space: .root);
-      final endTangent = editor.bundle.edgeEndTangent(edgeHandle, space: .root);
-      final cStart = endPosition - endTangent;
-
+      final committedEdge = newEdges.last;
+      final end = editor.bundle.edgeEnd(editor.handleOf(committedEdge)!).ref(editor.bundle);
+      final cEnd = edge.cEnd ?? .zero();
+      final cStart = edge.nextCStart ?? cEnd.pointReflect(edge.end!);
       return create(end, cStart: cStart, mergeKey: Object());
     }
 

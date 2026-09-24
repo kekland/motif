@@ -103,6 +103,8 @@ class DoubleExpressionInputField extends StatelessWidget {
   const DoubleExpressionInputField({
     super.key,
     required this.value,
+    this.onStartChanging,
+    this.onEndChanging,
     this.onChanged,
     this.fractionDigits = 3,
     this.supportedDevices,
@@ -110,6 +112,8 @@ class DoubleExpressionInputField extends StatelessWidget {
   });
 
   final ReadonlySignal<double?> value;
+  final VoidCallback? onStartChanging;
+  final VoidCallback? onEndChanging;
   final ValueChanged<double>? onChanged;
   final int fractionDigits;
   final Set<PointerDeviceKind>? supportedDevices;
@@ -129,7 +133,7 @@ class DoubleExpressionInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpressionInputField<double>(
       value: value,
-      onChanged: onChanged,
+      onChanged: (v) => onChanged?.call(v),
       valueToString: _valueToString,
       supportedDevices: supportedDevices,
       evaluateExpression: (s) => evaluateExpression<num>(s).toDouble(),
