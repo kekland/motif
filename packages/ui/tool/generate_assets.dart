@@ -62,11 +62,12 @@ Future<void> main() async {
     .new('program', 'Symbols.code_blocks_rounded'),
     .new('open', 'Symbols.folder_open_rounded'),
     .new('document', 'Symbols.design_services_rounded'),
-    .new('join', 'Symbols.link_2_rounded'),
+    .new('link', 'Symbols.link_2_rounded'),
     .new('folder', 'Symbols.folder_rounded'),
     .new('cloud', 'Symbols.cloud_rounded'),
     .new('refresh', 'Symbols.refresh_rounded'),
     .new('copy', 'Symbols.content_copy_rounded'),
+    .new('settings', 'Symbols.settings_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

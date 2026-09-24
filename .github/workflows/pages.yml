@@ -2,8 +2,8 @@ name: Deploy app to GitHub Pages
 
 on:
   push:
-    branches: [main]
-
+    tags:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,4 +18,4 @@ jobs:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
-          customArgs: --dart-define="SERVER_URL=https://motif.kz"
+          customArgs: --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ github.ref_name }} --build-number=${{ github.run_number }}

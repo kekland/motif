@@ -20,29 +20,12 @@ class const ListItem({
     final iconColor = isSelected ? null : context.colors.display.tertiary;
     final titleColor = isSelected ? null : context.colors.display.secondary;
 
-    Widget body = Row(
-      mainAxisSize: .min,
-      children: [
-        if (title != null)
-          Flexible(
-            fit: expands ? .tight : .loose,
-            child: DefaultForegroundStyle(
-              style: context.typography.body.copyWith(color: titleColor),
-              iconSize: 18.0,
-              maxLines: 1,
-              overflow: .ellipsis,
-              child: title!,
-            ),
-          ),
-        if (trailing != null) ...[
-          const SizedBox(width: 4.0),
-          DefaultForegroundStyle(
-            color: context.colors.display.tertiary,
-            style: context.typography.caption.tertiary,
-            child: trailing!,
-          ),
-        ],
-      ],
+    Widget body = DefaultForegroundStyle(
+      style: context.typography.body.copyWith(color: titleColor),
+      iconSize: 18.0,
+      maxLines: 1,
+      overflow: .ellipsis,
+      child: title ?? SizedBox.shrink(),
     );
 
     if (subtitle != null) {
@@ -60,9 +43,9 @@ class const ListItem({
       );
     }
 
-    if (leading != null) {
+    if (leading != null || trailing != null) {
       body = Row(
-        mainAxisSize: .min,
+        mainAxisSize: expands ? .max : .min,
         children: [
           if (leading != null) ...[
             DefaultForegroundStyle(
@@ -71,7 +54,18 @@ class const ListItem({
               child: leading!,
             ),
             if (title != null) const SizedBox(width: 6.0),
-            Flexible(child: body),
+          ],
+          Flexible(
+            fit: expands ? .tight : .loose,
+            child: body,
+          ),
+          if (trailing != null) ...[
+            const SizedBox(width: 6.0),
+            DefaultForegroundStyle(
+              color: context.colors.display.tertiary,
+              style: context.typography.caption.tertiary,
+              child: trailing!,
+            ),
           ],
         ],
       );
@@ -86,7 +80,7 @@ class const ListItem({
 
     final EdgeInsets defaultPadding = switch (trailing) {
       null => const .symmetric(horizontal: 8.0),
-      _ => const .only(left: 8.0, right: 4.0),
+      _ => const .only(left: 8.0, right: 6.0),
     };
 
     if (onTap == null) {
@@ -95,8 +89,8 @@ class const ListItem({
         padding: padding ?? defaultPadding,
         width: width,
         height: height ?? defaultHeight,
-        child: Center(
-          widthFactor: 1.0,
+        child: Align(
+          alignment: .centerLeft,
           child: body,
         ),
       );
@@ -110,8 +104,8 @@ class const ListItem({
       width: width,
       height: height ?? defaultHeight,
       state: isSelected ? {.selected} : {},
-      child: Center(
-        widthFactor: 1.0,
+      child: Align(
+        alignment: .centerLeft,
         child: body,
       ),
     );

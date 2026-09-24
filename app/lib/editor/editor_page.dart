@@ -32,7 +32,7 @@ class RemoteEditorPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final connection = useDisposable(() => SceneConnection(server: Uri.parse(serverUrl), id: id));
+    final connection = useDisposable(() => SceneConnection(server: env.serverUri, id: id));
     final status = useListenable(connection.status);
     final scene = useListenable(connection.scene).value;
 

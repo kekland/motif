@@ -6,6 +6,4 @@ export 'package:ui/ui.dart';
 
 export 'app/app.dart';
 export 'storage/storage.dart';
-
-const serverUrl = String.fromEnvironment('SERVER_URL', defaultValue: 'http://localhost:8085');
-final Uri serverUri = Uri.parse(serverUrl);
+export 'env.dart';

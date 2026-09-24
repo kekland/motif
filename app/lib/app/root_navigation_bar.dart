@@ -1,4 +1,5 @@
 import 'package:app/imports.dart';
+import 'package:app/settings/settings_page.dart';
 import 'package:native/native.dart';
 
 class AppNavigationBar extends StatelessWidget {
@@ -36,6 +37,11 @@ class AppNavigationBar extends StatelessWidget {
                   onTabClosed: onTabClosed,
                 ),
               ),
+              IconButton.flat(
+                onTap: () => context.pushDialog((_) => SettingsDialog()),
+                child: Icons.settings(),
+              ),
+              const SizedBox(width: 6.0),
             ],
           ),
         ),

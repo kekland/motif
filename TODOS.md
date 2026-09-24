@@ -10,6 +10,8 @@ Urgent (in order):
 - [ ] Move/pen/etc: snap to pixel grid
 - [x] Canvas: max zoom and pixel grid view
 - [ ] Color/props undo/redo coalescing
+- [ ] Fillet face: paint a filletted edge bug
+- [ ] Debug arrangement generation
 
 - [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
@@ -17,7 +19,6 @@ Urgent (in order):
 - [ ] Variables and variable binding
 - [x] Color data partials
 - [?] Pencil tool        (Cleanup slop filter code)
-- [ ] Debug arrangement generation
 - [ ] Commander search - clean up code
 - [?] Proper modifiers section      (Add done, missing: properties, display)
 - [?] Tree view

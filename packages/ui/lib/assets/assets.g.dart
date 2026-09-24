@@ -455,11 +455,12 @@ class Icons extends _BaseIcon {
   const Icons.program({super.key, super.size, super.color}): super.iconData(icon: Symbols.code_blocks_rounded);
   const Icons.open({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_open_rounded);
   const Icons.document({super.key, super.size, super.color}): super.iconData(icon: Symbols.design_services_rounded);
-  const Icons.join({super.key, super.size, super.color}): super.iconData(icon: Symbols.link_2_rounded);
+  const Icons.link({super.key, super.size, super.color}): super.iconData(icon: Symbols.link_2_rounded);
   const Icons.folder({super.key, super.size, super.color}): super.iconData(icon: Symbols.folder_rounded);
   const Icons.cloud({super.key, super.size, super.color}): super.iconData(icon: Symbols.cloud_rounded);
   const Icons.refresh({super.key, super.size, super.color}): super.iconData(icon: Symbols.refresh_rounded);
   const Icons.copy({super.key, super.size, super.color}): super.iconData(icon: Symbols.content_copy_rounded);
+  const Icons.settings({super.key, super.size, super.color}): super.iconData(icon: Symbols.settings_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

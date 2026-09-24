@@ -69,7 +69,6 @@ class DialogScaffold extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Header(
-            padding: const EdgeInsets.only(left: 8.0, right: 2.0),
             trailing: IconButton.flat(
               onTap: () => Navigator.of(context).maybePop(),
               child: Icons.close(),

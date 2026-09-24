@@ -16,7 +16,7 @@ class HomePage extends HookWidget {
       if (id != null) {
         resolvedId = id;
       } else {
-        resolvedId = await SceneConnection.create(serverUri, .empty());
+        resolvedId = await SceneConnection.create(env.serverUri, .empty());
       }
 
       await storage.persistRemoteScene(resolvedId);
@@ -100,14 +100,9 @@ class HomePage extends HookWidget {
                         await pushEditorTab(context, result, isRemote: true);
                       }
                     },
-                    leading: Icons.join(),
+                    leading: Icons.link(),
                     child: Text('Join'),
                   ),
-                  // Button(
-                  //   onTap: () {},
-                  //   leading: Icons.open(),
-                  //   child: Text('Open'),
-                  // ),
                   Button(
                     onTap: () => loadDocuments(),
                     leading: Icons.refresh(),
