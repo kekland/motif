@@ -11,7 +11,7 @@ class PencilTool extends Tool {
   List<ToolOption> get options => [
     TopologicalToolOption.entry,
     DestructiveToolOption.entry,
-    EdgeStyleToolOption.entry,
+    PenEdgeStyleToolOption.entry,
   ];
 
   bool topological(BuildContext context) => context.editor.tool.getOption(options[0].key).value;

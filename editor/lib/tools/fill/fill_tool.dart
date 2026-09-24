@@ -8,6 +8,13 @@ class FillTool extends Tool {
   String get key => 'fill';
 
   @override
+  List<ToolOption> get options => [
+    FaceStyleToolOption.entry,
+  ];
+
+  FaceStyle faceStyle(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+
+  @override
   String resolveName(BuildContext context) => 'Fill';
 
   @override
@@ -67,6 +74,7 @@ class _FillToolOverlay extends HookWidget {
           final statement = FaceStatement(
             .new(outer),
             holes: holes.map((e) => ChainSelector(e)).toList(),
+            style: tool.faceStyle(context),
             parent: lca,
           );
 

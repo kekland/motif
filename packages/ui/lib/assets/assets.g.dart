@@ -461,6 +461,7 @@ class Icons extends _BaseIcon {
   const Icons.refresh({super.key, super.size, super.color}): super.iconData(icon: Symbols.refresh_rounded);
   const Icons.copy({super.key, super.size, super.color}): super.iconData(icon: Symbols.content_copy_rounded);
   const Icons.settings({super.key, super.size, super.color}): super.iconData(icon: Symbols.settings_rounded);
+  const Icons.knife({super.key, super.size, super.color}): super.iconData(icon: Symbols.surgical_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

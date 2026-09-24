@@ -12,12 +12,15 @@ Urgent (in order):
 - [x] Pen/bend: snap to pixel grid
 - [x] Canvas: max zoom and pixel grid view
 - [x] Color/props undo/redo coalescing
-- [ ] Fillet face: paint a filletted edge bug
-- [ ] Debug arrangement generation
+- [x] Fillet face: paint a filletted edge bug
+- [x] Separate pen edge style from shape edge style
+- [x] Add fill style to the fill tool
+- [ ] Debug planar arrangement generation
 - [x] Protobuf schema: implement generators
 - [ ] Improve mouse interaction in canvas
 - [ ] Knife tool
 - [ ] Text tool
+- [ ] Compress props panel
 
 - [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)

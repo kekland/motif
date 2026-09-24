@@ -1,4 +1,5 @@
 import 'package:editor/imports.dart';
+import 'package:editor/tools/knife/knife_tool.dart';
 
 export 'options.dart';
 
@@ -21,6 +22,7 @@ const toolset = <Tool>[
   PenTool(),
   PencilTool(),
   BendTool(),
+  KnifeTool(),
   FillTool(),
   ContainerTool(),
   RectangleTool(),
@@ -35,6 +37,7 @@ const tools = (
   pen: PenTool(),
   pencil: PencilTool(),
   bend: BendTool(),
+  knife: KnifeTool(),
   fill: FillTool(),
   container: ContainerTool(),
   rectangle: RectangleTool(),

@@ -9,7 +9,7 @@ abstract class ShapeTool extends Tool {
   @override
   List<ToolOption> get options => [
     SnapToPixelToolOption.entry,
-    EdgeStyleToolOption.entry,
+    ShapeEdgeStyleToolOption.entry,
     FaceStyleToolOption.entry,
   ];
 

@@ -71,7 +71,7 @@ final class PropTransaction {
   }
 
   void onEndChanging() {
-    _transaction!.commit();
+    _transaction?.commit();
     _transaction = null;
   }
 

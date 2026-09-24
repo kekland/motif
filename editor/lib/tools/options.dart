@@ -54,13 +54,8 @@ final class SnapToPixelToolOption extends ToolOption<bool> {
   }
 }
 
-final class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
-  EdgeStyleToolOption({EdgeStyle? value}) : super('edgeStyle', value ?? .default_);
-
-  static final entry = EdgeStyleToolOption();
-
-  @override
-  EdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
+abstract class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
+  EdgeStyleToolOption(super.id, super.value);
 
   @override
   Widget performBuild(BuildContext context, ReadonlySignal<EdgeStyle> value, ValueChanged<EdgeStyle> onChanged) {
@@ -84,6 +79,24 @@ final class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
       ),
     );
   }
+}
+
+final class PenEdgeStyleToolOption extends EdgeStyleToolOption {
+  PenEdgeStyleToolOption({EdgeStyle? value}) : super('penEdgeStyle', value ?? .default_);
+
+  static final entry = PenEdgeStyleToolOption();
+
+  @override
+  PenEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
+}
+
+final class ShapeEdgeStyleToolOption extends EdgeStyleToolOption {
+  ShapeEdgeStyleToolOption({EdgeStyle? value}) : super('shapeEdgeStyle', value ?? .new(width: 0.0, color: .white));
+
+  static final entry = ShapeEdgeStyleToolOption();
+
+  @override
+  ShapeEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
 }
 
 final class FaceStyleToolOption extends ToolOption<FaceStyle> {

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:editor/imports.dart';
 import 'package:editor/tools/pen/transient_edges_widget.dart';
 import 'package:editor/widgets/selection_overlay/cell_handles.dart';
@@ -16,7 +14,7 @@ class PenTool extends Tool {
     TopologicalToolOption.entry,
     DestructiveToolOption.entry,
     SnapToPixelToolOption.entry,
-    EdgeStyleToolOption.entry,
+    PenEdgeStyleToolOption.entry,
   ];
 
   bool topological(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
