@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
@@ -19,6 +21,8 @@ part 'utils/embed_edge.dart';
 part 'utils/resolved_style.dart';
 part 'utils/transform_session.dart';
 part 'utils/covertices.dart';
+part 'utils/ticker_provider.dart';
+part 'utils/transient_transform_animator.dart';
 
 final _log = Logger('scene');
 
@@ -30,6 +34,8 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     history = .new(this);
     notifier = .new(this);
     tree = .new(this);
+    tickerProviderKey = .new();
+    transientTransformAnimator = .new(this);
 
     evaluation.addUpdateListener((pass) {
       selection._onEvaluated();
@@ -44,12 +50,14 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   final String id;
   final Program program;
 
+  late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final Evaluation evaluation;
   late final SceneSelection selection;
   late final SceneQuery query;
   late final SceneHistory history;
   late final SceneNotifier notifier;
   late final SceneTree tree;
+  late final TransientTransformAnimator transientTransformAnimator;
 
   late final signal = Signal(this);
 
@@ -61,7 +69,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   CellRef<H> refOf<H extends CellHandle>(H handle) => bundle.ref<H>(handle);
   H? handleOf<H extends CellHandle>(CellRef<H> ref) => bundle.handle<H>(ref);
 
-  Placement? layoutOf(StatementId id) => evaluation.layout.of(id);
+  Placement? layoutOf(StatementId id) => evaluation.layout.placementOf(id);
   CellStyle<H>? styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.style.of<H>(ref);
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -80,6 +88,19 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     _activeTransaction = null;
   }
 
+  void _editTransient(void Function(EvalPass) fn) {
+    if (_activeTransaction != null) {
+      final pass = _activeTransaction!._pass;
+      fn(pass);
+      _activeTransaction!._dirty = true;
+      _activeTransaction!.flush();
+    } else {
+      final pass = evaluation.beginPass();
+      fn(pass);
+      pass.drain();
+    }
+  }
+
   T edit<T>(T Function(SceneTransaction txn) fn, {Object? mergeKey}) {
     final txn = beginTransaction();
     try {
@@ -95,6 +116,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
 
   @override
   void dispose() {
+    transientTransformAnimator.dispose();
     notifier.dispose();
     evaluation.dispose();
     selection.dispose();

@@ -4,7 +4,7 @@ Urgent (in order):
 - [x] Face movement frame lag
 - [x] Layout size - contain/expand/fixed
 - [ ] Generator dissolution: baker should preserve statements
-- [ ] Move tool reparenting (transient transforms for locked transforms, etc)
+- [x] Move tool reparenting (transient transforms for locked transforms, etc)
 - [ ] Pen tool: shift/alt: pencil, bend, etc
 - [ ] Move tool: covertex tangent auto-alignment
 - [ ] Move/pen/etc: snap to pixel grid

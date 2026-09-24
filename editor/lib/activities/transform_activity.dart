@@ -14,36 +14,54 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
 
   final Editor editor;
   Scene get scene => editor.scene;
+  Evaluation get evaluation => scene.evaluation;
 
   final Iterable<Ref> refs;
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight, .altLeft, .altRight};
 
-  SceneTransaction? transaction;
-  late final TransformSession session;
+  SceneTransaction? txn;
+  late TransformSession session;
   final mergeKey = Object();
 
   Mat4 get worldToSpace => session.worldToSpace;
   Mat4 get spaceToWorld => session.spaceToWorld;
   Aabb2 get initialHull => session.initialHull;
 
+  bool get hasLayoutBoxes => layoutBoxIds != null && layoutBoxIds!.isNotEmpty;
+  int get layoutBoxCount => layoutBoxIds?.length ?? 0;
+  List<StatementId>? layoutBoxIds;
+  Iterable<LayoutBoxStatement> get layoutBoxes =>
+      layoutBoxIds!.map((id) => evaluation.statement<LayoutBoxStatement>(id)!);
+
+  List<StatementId> _resolveSelectedLayoutBoxes() {
+    final statements = <StatementId>{};
+    for (final id in session.absorbers) {
+      final statement = evaluation.statement(id);
+      if (statement is LayoutBox) statements.add(id);
+    }
+    return statements.toList()..sort(evaluation.evalOrder);
+  }
+
   @override
   void onStart(PositionedGestureDetails details) {
-    transaction = scene.beginTransaction();
-    session = .of(editor.scene, refs, transaction: transaction);
+    txn = scene.beginTransaction();
+    session = .of(editor.scene, refs, transaction: txn, mergeKey: mergeKey);
+    layoutBoxIds = _resolveSelectedLayoutBoxes();
+
     super.onStart(details);
   }
 
   @override
   void onEnd(DragEndDetails details) {
-    transaction!.commit(mergeKey: mergeKey);
+    txn!.commit(mergeKey: mergeKey);
     super.onEnd(details);
   }
 
   @override
   void onCancel() {
-    transaction?.cancel();
+    txn?.cancel();
     super.onCancel();
   }
 

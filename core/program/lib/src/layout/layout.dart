@@ -25,8 +25,6 @@ abstract interface class LayoutContainer extends LayoutBox {
   Layout get layout;
 }
 
-// enum LayoutJustify { start, center, end, spaceBetween }
-
 sealed class Layout {
   const Layout({this.padding = .zero});
 

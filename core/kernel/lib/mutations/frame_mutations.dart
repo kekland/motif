@@ -139,6 +139,5 @@ extension FrameMutationTransaction on Transaction {
     }
 
     _recordMutation(CellReparent(h.ref(bundle), .from(bundle, from), .from(bundle, to))).reapply(this);
-    markMoved(h);
   }
 }

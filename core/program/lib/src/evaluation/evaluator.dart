@@ -163,21 +163,18 @@ extension Evaluator on EvalPass {
     restyled.addAll(evaluation.style.attach(commit));
     added.addAll(commit.added);
     deleted.addAll(commit.deleted);
-    for (final r in commit.added.followedBy(commit.deleted)) evaluation.drawOrder.invalidateFrame(frameOf(r));
   }
 
   void _uninstall(EvalNode node) {
     final commit = node.commit!;
     node.commit = null;
     node.markDirty();
-    _rememberFrames(commit.added);
     evaluation.lineage.detach(commit);
     evaluation.graph.detach(commit);
     evaluation.live.detach(commit);
     evaluation.style.detach(commit);
     deleted.addAll(commit.added);
     added.addAll(commit.deleted);
-    for (final r in commit.added.followedBy(commit.deleted)) evaluation.drawOrder.invalidateFrame(frameOf(r));
     _unapply(commit);
   }
 
@@ -219,7 +216,7 @@ extension Evaluator on EvalPass {
 
   /// Performs an incremental refresh of a statement. Returns a list of updated refs if successful, or `null` if the
   /// refresh failed.
-  List<CellRef>? _refresh(EvalNode node) {
+  Set<CellRef>? _refresh(EvalNode node) {
     final id = node.id;
     final statement = node.statement;
     final commit = node.commit!;
@@ -264,7 +261,7 @@ extension Evaluator on EvalPass {
     if (commit.ops.isEmpty) return;
     final txn = bundle.beginTransaction(namespace: commit.statement.id.namespace);
     for (final op in commit.ops.reversed) txn.revert(op);
-    txn.commit();
+    _onDelta(txn.commit());
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -273,6 +270,7 @@ extension Evaluator on EvalPass {
 
   void _onDelta(Delta delta) {
     movedFrames.addAll(delta.movedFrames);
+    for (final f in delta.movedFrames) evaluation.drawOrder.invalidateFrame(f);
   }
 
   void _onMoved(Iterable<CellRef> cells) {
@@ -309,5 +307,29 @@ extension Evaluator on EvalPass {
       if (next != null && node.root == next.root && !tree.isAfter(next, node)) continue;
       queue.add(node.root.id);
     }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Local (unsynced) changes
+  // -------------------------------------------------------------------------------------------------------------------
+
+  bool setLocalTransientTransform(StatementId id, Mat4? m) {
+    if (!evaluation.transientTransform.setLocalTransient(id, m)) return false;
+
+    final node = tree[id];
+    if (node == null) return false;
+    node.markDirty();
+    queue.add(node.root.id);
+    return true;
+  }
+
+  bool setGlobalTransientTransform(StatementId id, Mat4? m) {
+    if (!evaluation.transientTransform.setGlobalTransient(id, m)) return false;
+
+    final node = tree[id];
+    if (node == null) return false;
+    node.markDirty();
+    queue.add(node.root.id);
+    return true;
   }
 }

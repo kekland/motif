@@ -128,8 +128,8 @@ final class SceneTransaction {
     return edit.remap;
   }
 
-  ReparentResult reparent(Iterable<CellRef> targets, FrameRef into, {StatementId? after}) {
-    return _reparent(() => evaluation.routeReparent(targets, into, after: after));
+  ReparentResult reparent(Iterable<CellRef> targets, FrameRef into, {StatementId? before}) {
+    return _reparent(() => evaluation.routeReparent(targets, into, before: before));
   }
 
   ReparentResult _reparent(ReparentResult Function() route) {
@@ -149,6 +149,18 @@ final class SceneTransaction {
   //   final anchor = program.resolveEmbeddingAnchor(slice);
   //   insertAll(slice.statements, anchor: anchor);
   // }
+
+  void setLocalTransientTransform(StatementId id, Mat4? transform) {
+    _checkOpen();
+    if (!_pass.setLocalTransientTransform(id, transform)) return;
+    _dirty = true;
+  }
+
+  void setGlobalTransientTransform(StatementId id, Mat4? transform) {
+    _checkOpen();
+    if (!_pass.setGlobalTransientTransform(id, transform)) return;
+    _dirty = true;
+  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Lifecycle

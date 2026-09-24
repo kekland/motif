@@ -24,24 +24,13 @@ final class EvalPass {
   final relayouted = HashSet<StatementId>();
   final restyled = HashSet<CellRef>();
   final reordered = HashSet<CellRef>();
-  final _frameOf = <CellRef, FrameRef?>{};
 
   FrameRef? frameOf(CellRef r) {
-    if (_frameOf.containsKey(r)) return _frameOf[r];
     final h = bundle.handle(r);
     if (h == null) return null;
 
     final f = bundle.parentOf(h);
     return f == null ? null : bundle.frameRef(f);
-  }
-
-  void _rememberFrames(Iterable<CellRef> cells) {
-    final bundle = evaluation.bundle;
-    for (final r in cells) {
-      final h = bundle.handle(r);
-      if (h == null) continue;
-      _frameOf[r] = bundle.parentOf(h)?.ref(bundle);
-    }
   }
 
   void reset() {
@@ -55,6 +44,5 @@ final class EvalPass {
     relayouted.clear();
     restyled.clear();
     reordered.clear();
-    _frameOf.clear();
   }
 }

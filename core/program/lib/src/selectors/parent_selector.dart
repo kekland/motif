@@ -11,6 +11,24 @@ final class ParentSelector(super.ref) extends CellSelector<FrameHandle> {
   }
 
   @override
+  RemapResult _remap(Remap remap) {
+    final cells = remap.cell(_ref);
+    if (cells == null) return .unchanged;
+
+    if (cells.isEmpty) {
+      if (_ref == .root) return .unchanged;
+      _ref = .root;
+      return .changed;
+    } else if (cells.length == 1) {
+      if (_ref == cells.single) return .unchanged;
+      _ref = cells.single.asFrame;
+      return .changed;
+    }
+
+    return .refused;
+  }
+
+  @override
   int get hashCode => Object.hash(runtimeType, ref.hashCode);
 
   @override

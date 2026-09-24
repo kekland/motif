@@ -26,6 +26,7 @@ extension TopologyMethods on Bundle {
     _treeSetSiblingNext(t, head);
     if (head.isNotNone) _treeSetSiblingPrev(head, t);
     _frame.childHead[frame] = t;
+    _changeTracker.markFrameChildrenChanged(frame);
   }
 
   void _treeSiblingUnlink(CellIndex t) {
@@ -41,6 +42,7 @@ extension TopologyMethods on Bundle {
     if (n.isNotNone) _treeSetSiblingPrev(n, p);
     _treeSetSiblingPrev(t, .none);
     _treeSetSiblingNext(t, .none);
+    _changeTracker.markFrameChildrenChanged(frame);
   }
 
   void _treeSetParent(CellHandle h, FrameHandle parent) {
@@ -50,6 +52,7 @@ extension TopologyMethods on Bundle {
     final t = h.cellIndex;
     final p = parent.index;
     if (_treeParentOf(t) == p) return;
+    _changeTracker.add(this, _arenaOf(h.kind), h);
 
     _treeSiblingUnlink(t);
     _treeParentStorage(t.kind)[t.index] = p;

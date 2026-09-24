@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 
@@ -13,6 +14,7 @@ final class ProgramRenderer {
   }
 
   final Evaluation evaluation;
+
   Bundle get bundle => evaluation.bundle;
   final _cache = <FrameRef, List<DrawEntry>>{};
 
@@ -50,18 +52,20 @@ final class ProgramRenderer {
   }
 
   void paint(ui.Canvas canvas) {
-    _paintFrame(canvas, bundle.root, 0);
+    _paintFrame(canvas, bundle.root, 0, .identity());
   }
 
-  void _paintFrame(ui.Canvas canvas, FrameHandle frame, int depth) {
+  void _paintFrame(ui.Canvas canvas, FrameHandle frame, int depth, Mat4 parentToWorld) {
+    final transform = bundle.frameTransform(frame);
+
     canvas.save();
-    canvas.transform(bundle.frameTransform(frame).storage64);
+    canvas.transform(transform.storage64);
 
     final entries = _cache.putIfAbsent(frame.ref(bundle), () => painter.paintFrame(evaluation, frame, depth));
     for (final e in entries) {
       final _ = switch (e) {
         DrawPicture(:final picture) => canvas.drawPicture(picture),
-        DrawFrame(:final frame) => _paintFrame(canvas, frame, depth + 1),
+        DrawFrame(:final frame) => _paintFrame(canvas, frame, depth + 1, parentToWorld * transform),
       };
     }
 

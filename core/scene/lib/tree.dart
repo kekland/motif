@@ -17,8 +17,6 @@ sealed class SceneNode {
 
   List<SceneNode> get children => expands ? (_children ??= tree._build(this)) : const [];
   List<SceneNode>? _children;
-
-  void _invalidate() => _children = null;
 }
 
 final class RootSceneNode extends SceneNode {
@@ -111,19 +109,29 @@ final class SceneTree with ChangeNotifier {
   }
 
   void _update(EvalPass pass) {
-    if (pass.added.isEmpty && pass.deleted.isEmpty && pass.reordered.isEmpty) return;
+    final frames = <FrameRef>{
+      ...pass.movedFrames,
+      for (final r in pass.reordered) pass.frameOf(r) ?? .root,
+    };
 
-    final changedFrames = <FrameRef>{};
-    void markChanged(CellRef r) => changedFrames.add(pass.frameOf(r) ?? .root);
-    pass.added.forEach(markChanged);
-    pass.deleted.forEach(markChanged);
-    pass.reordered.forEach(markChanged);
+    if (pass.deleted.isNotEmpty) {
+      _byId.removeWhere((id, _) => !evaluation.hasNode(id));
+      _byFrame.removeWhere((f, n) => n is ObjectSceneNode && !evaluation.hasNode(n.id));
+    }
 
-    for (final f in changedFrames) _byFrame[f]?._invalidate();
-    _byId.removeWhere((id, _) => evaluation.tree[id] == null);
-    _byFrame.removeWhere((f, n) => n is ObjectSceneNode && evaluation.tree[n.id] == null);
+    var changed = pass.deleted.isNotEmpty;
+    for (final f in frames) {
+      final node = _byFrame[f];
+      final before = node?._children;
+      if (node == null || before == null) continue;
+
+      final after = _build(node);
+      node._children = after;
+      if (!listEquals(before, after)) changed = true;
+    }
+
+    if (!changed) return;
     _flattened = null;
-
     notifyListeners();
   }
 

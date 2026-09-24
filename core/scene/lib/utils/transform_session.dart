@@ -7,8 +7,10 @@ final class TransformSession {
     this.router,
     this.refs,
     this.spaceToWorld,
-    this.initialHull,
-  ) : worldToSpace = .inverse(spaceToWorld);
+    this.initialHull, {
+    Object? mergeKey,
+  }) : mergeKey = mergeKey ?? Object(),
+       worldToSpace = .inverse(spaceToWorld);
 
   final Scene scene;
   final SceneTransaction? transaction;
@@ -20,14 +22,13 @@ final class TransformSession {
   final Mat4 worldToSpace;
   final Aabb2 initialHull;
 
-  final mergeKey = Object();
+  final Object mergeKey;
 
-  factory TransformSession.statement(Scene scene, StatementId id, {SceneTransaction? transaction}) {
-    final first = scene.productsOf(id).first;
-    return .of(scene, [first], transaction: transaction);
+  factory TransformSession.statement(Scene scene, StatementId id, {SceneTransaction? transaction, Object? mergeKey}) {
+    return .of(scene, scene.productsOf(id), transaction: transaction, mergeKey: mergeKey);
   }
 
-  factory TransformSession.of(Scene scene, Iterable<Ref> refs, {SceneTransaction? transaction}) {
+  factory TransformSession.of(Scene scene, Iterable<Ref> refs, {SceneTransaction? transaction, Object? mergeKey}) {
     final bundle = scene.bundle;
     final router = scene.evaluation.routeTransform(refs);
 
@@ -47,7 +48,7 @@ final class TransformSession {
       initialHull = worldHull;
     }
 
-    return ._(scene, transaction, router, refs.toList(), spaceToWorld, initialHull);
+    return ._(scene, transaction, router, refs.toList(), spaceToWorld, initialHull, mergeKey: mergeKey);
   }
 
   Vec2 get worldPivot => spaceToWorld.transform2(initialHull.center);

@@ -76,4 +76,12 @@ extension type Vec2._(Float64x2 value) implements Float64x2 {
   Vec2 round() => .new(x.roundToDouble(), y.roundToDouble());
   Vec2 floor() => .new(x.floorToDouble(), y.floorToDouble());
   Vec2 ceil() => .new(x.ceilToDouble(), y.ceilToDouble());
+
+  Vec2 snappedToAxis() {
+    if (x.abs() > y.abs()) {
+      return Vec2(x, 0);
+    } else {
+      return Vec2(0, y);
+    }
+  }
 }

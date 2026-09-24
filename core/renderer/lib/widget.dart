@@ -61,20 +61,24 @@ class _SceneWidgetState extends State<SceneWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final Widget child;
+
     if (widget.debug) {
-      return CustomPaint(
+      child = CustomPaint(
         painter: DebugBundlePainter(
           bundle: scene.bundle,
           arrangement: widget.debugArrangement,
         ),
       );
+    } else {
+      child = CustomPaint(
+        painter: _ProgramPainter(renderer: renderer!),
+        isComplex: false,
+        willChange: true,
+      );
     }
 
-    return CustomPaint(
-      painter: _ProgramPainter(renderer: renderer!),
-      isComplex: false,
-      willChange: true,
-    );
+    return SceneTickerProvider(scene: scene, child: child);
   }
 }
 

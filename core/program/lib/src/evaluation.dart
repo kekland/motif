@@ -13,6 +13,7 @@ final class Evaluation {
     drawOrder = .new(this);
     tree = .new(this);
     layout = .new(this);
+    transientTransform = .new();
     _initialPass();
   }
 
@@ -24,6 +25,7 @@ final class Evaluation {
   late final StyleIndex style;
   late final DrawOrderIndex drawOrder;
   late final LayoutTree layout;
+  late final TransientTransforms transientTransform;
 
   // -------------------------------------------------------------------------------------------------------------------
   // State
@@ -33,6 +35,9 @@ final class Evaluation {
 
   /// Returns the evaluation node of the statement.
   EvalNode? nodeOf(StatementId id) => tree[id];
+
+  /// Returns whether the evaluation node exists for a statement.
+  bool hasNode(StatementId id) => tree[id] != null;
 
   /// Returns the commit associated with the statement.
   Commit? commitOf(StatementId id) => tree[id]?.commit;

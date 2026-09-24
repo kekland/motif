@@ -1,6 +1,8 @@
 part of '../../_program.dart';
 
-mixin LayoutBoxStatement on PlacedStatement implements LayoutBox {
+mixin LayoutBoxStatement on PlacedStatement, FramedStatement implements LayoutBox {
+  // Mat4? get transientTransform;
+
   @override
   StatementId? get parentId {
     final p = parent;

@@ -29,7 +29,9 @@ class EvalContext {
 
   void style(CellRef ref, CellStyle style) => _styles[ref] = style;
   CellStyle styleOf(CellRef ref) => _evaluation.style.of(ref)!;
-  Placement placementOf(StatementId id) => _evaluation.layout.of(id)!;
+  Placement placementOf(StatementId id) => _evaluation.layout.placementOf(id)!;
+
+  Mat4 worldToLocal(FrameRef ref) => bundle.query.worldToLocal(ref);
 }
 
 class ModifierEvalContext<B extends Statement> extends EvalContext {

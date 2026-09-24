@@ -46,6 +46,7 @@ part 'evaluation/indexes/lineage.dart';
 part 'evaluation/indexes/live.dart';
 part 'evaluation/indexes/style.dart';
 part 'evaluation/indexes/zorder.dart';
+part 'evaluation/indexes/transient_transform.dart';
 
 part 'layout/shape.dart';
 part 'layout/size.dart';

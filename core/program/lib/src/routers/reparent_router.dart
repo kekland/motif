@@ -31,13 +31,15 @@ extension RouteReparent on Evaluation {
 
     final parents = [for (final r in accepted.values) bundle.parentOf(bundle.handle(r)!) ?? .root];
     final lca = bundle.lcaMany(parents);
-    final group = GroupStatement(parent: lca == .root ? null : lca.ref(bundle));
+    final space = lca.ref(bundle);
+    final group = GroupStatement(parent: lca == .root ? null : space);
 
     return .success(
       .build(this, (edit) {
         edit.insert([group], at: .at(program[placement].id));
         for (final m in members) {
-          edit.replace(m, [statement(m)!.absorbReparent(group.frame, .identity())]);
+          edit.replace(m, [statement(m)!.absorbReparent(group.frame, _reparentDelta(m, accepted[m]!, space))]);
+          for (final m in members) edit.reorder(accepted[m]!, null);
         }
       }),
     );
@@ -54,7 +56,7 @@ extension RouteReparent on Evaluation {
     });
   }
 
-  ReparentResult routeReparent(Iterable<CellRef> targets, FrameRef into, {StatementId? after}) {
+  ReparentResult routeReparent(Iterable<CellRef> targets, FrameRef into, {StatementId? before}) {
     final destination = bundle.handle(into)?.asFrame;
     if (destination == null) throw StateError('destination frame $into does not exist');
 
@@ -72,13 +74,13 @@ extension RouteReparent on Evaluation {
     final members = accepted.keys.toSet();
     int placement;
 
-    if (after != null) {
+    if (before != null) {
       assert(() {
-        final s = statement<PlacedStatement>(after)!;
+        final s = statement<PlacedStatement>(before)!;
         return (s.parent?.ref ?? .root) == into;
-      }(), 'after must be a child of the destination frame');
+      }(), 'before must be a child of the destination frame');
 
-      placement = indexOf(after)!;
+      placement = indexOf(before)! - 1;
     } else if (into == .root) {
       placement = program.length - 1;
     } else {
@@ -98,8 +100,7 @@ extension RouteReparent on Evaluation {
     final insertions = <Statement>[];
     for (final o in moving) {
       if (members.contains(o)) {
-        // insertions.add(statement(o)!.absorbReparent(bundle, into)); TODO
-        insertions.add(statement(o)!.absorbReparent(into, .identity()));
+        insertions.add(statement(o)!.absorbReparent(into, _reparentDelta(o, accepted[o]!, into)));
       } else {
         insertions.add(statement(o)!);
       }
@@ -107,7 +108,8 @@ extension RouteReparent on Evaluation {
 
     return .success(
       .build(this, (edit) {
-        edit.insert(insertions, at: .after(program[placement].id));
+        edit.insert(insertions, at: placement < 0 ? .start : .after(program[placement].id));
+        for (final m in members) edit.reorder(accepted[m]!, null);
       }),
     );
   }
@@ -145,5 +147,17 @@ extension RouteReparent on Evaluation {
     }
 
     return last;
+  }
+
+  Mat4 _reparentDelta(StatementId id, CellRef ref, FrameRef into) {
+    final worldToInto = bundle.query.worldToLocal(into);
+
+    final stmt = statement(id);
+    if (stmt is LayoutBoxStatement) {
+      final placed = bundle.query.localToWorld(stmt.frame);
+      return worldToInto * placed * Mat4.inverse(stmt.transform);
+    }
+
+    return worldToInto * bundle.query.localToWorld(ref);
   }
 }

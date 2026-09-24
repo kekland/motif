@@ -41,6 +41,9 @@ enum FlexDirection {
   double main(double x, double y) => isRow ? x : y;
   double cross(double x, double y) => isRow ? y : x;
 
+  double mainOfVector(Vec2 vec) => isRow ? vec.x : vec.y;
+  double crossOfVector(Vec2 vec) => isRow ? vec.y : vec.x;
+
   double mainOfSize(Size2 size) => isRow ? size.width : size.height;
   double crossOfSize(Size2 size) => isRow ? size.height : size.width;
 

@@ -4,11 +4,11 @@ import 'package:editor/widgets/tabs/tab_bar.dart';
 
 export 'widgets/editor_widget.dart';
 
+part 'editor/clients.dart';
+part 'editor/hit_test.dart';
 part 'editor/transform.dart';
 part 'editor/transient_edge.dart';
-part 'editor/hit_test.dart';
 part 'editor/transient_stroke.dart';
-part 'editor/clients.dart';
 
 final class Editor extends Controller {
   Editor({
@@ -39,6 +39,7 @@ final class Editor extends Controller {
   SceneQuery get query => scene.query;
   SceneSelection get selection => scene.selection;
   Evaluation get evaluation => scene.evaluation;
+  // SceneTransientTransforms get transientTransforms => scene.transientTransforms;
 
   CellRef<H>? refOf<H extends CellHandle>(H cell) => scene.refOf(cell);
   H? handleOf<H extends CellHandle>(CellRef<H> ref) => scene.handleOf(ref);

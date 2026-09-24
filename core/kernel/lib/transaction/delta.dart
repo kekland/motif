@@ -25,7 +25,7 @@ final class Delta {
 
   final added = HashSet<CellRef>();
   final deleted = HashSet<CellRef>();
-  var moved = <CellRef>[];
+  var moved = <CellRef>{};
   var movedFrames = <FrameRef>{};
 
   Iterable<CellRef> get writes => added.followedBy(deleted).followedBy(moved);

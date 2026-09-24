@@ -9,7 +9,13 @@ final class LayoutTree {
   final _dirty = <_LayoutNode>{};
   bool get isDirty => _dirty.isNotEmpty;
 
-  Placement? of(StatementId id) => _nodes[id]?.placement;
+  Layout? layoutOf(StatementId id) {
+    final box = _nodes[id]?.box;
+    if (box is! LayoutContainer) return null;
+    return box.layout;
+  }
+
+  Placement? placementOf(StatementId id) => _nodes[id]?.placement;
 
   _LayoutNode? _parentOf(_LayoutNode n) {
     final p = n.box.parentId;
@@ -21,12 +27,29 @@ final class LayoutTree {
     return parent;
   }
 
+  Iterable<StatementId> ancestorsOf(StatementId id) sync* {
+    var current = _nodes[id];
+    while (current != null) {
+      final parent = _parentOf(current);
+      if (parent == null) break;
+      yield parent.box.id;
+      current = parent;
+    }
+  }
+
   @pragma('vm:prefer-inline')
   int compare(StatementId a, StatementId b) => _evaluation.evalOrder(a, b);
 
   List<_LayoutNode> _childrenOf(_LayoutNode n) {
     assert(n.box is LayoutContainer, 'node ${n.box.id} is not a container');
     return _children[n.box.id] ?? const [];
+  }
+
+  StatementId? parentOf(StatementId id) => _parentOf(_nodes[id]!)?.box.id;
+
+  Iterable<StatementId> childrenOf(StatementId parent) {
+    if (!_children.containsKey(parent)) return const [];
+    return _children[parent]!.map((n) => n.box.id);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -75,6 +98,15 @@ final class LayoutTree {
 
     final oldBox = n.box;
     n.box = box;
+
+    final parent = box.parentId;
+    if (parent != null) {
+      final siblings = _children[parent]!;
+      final before = siblings.indexOf(n);
+      siblings.removeAt(before);
+      _insertChild(parent, n);
+      if (siblings.indexOf(n) != before) _dirtyParent(n);
+    }
 
     if (!LayoutBox.compareLayout(oldBox, box)) {
       _dirty.add(n);

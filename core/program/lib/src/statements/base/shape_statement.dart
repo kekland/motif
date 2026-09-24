@@ -1,7 +1,7 @@
 part of '../../_program.dart';
 
 sealed class ShapeStatement<S extends ObjectShape> extends Statement
-    with PlacedStatement, LayoutBoxStatement, FacedStatement, FramedStatement {
+    with PlacedStatement, FramedStatement, LayoutBoxStatement, FacedStatement {
   ShapeStatement({
     required this.shape,
     LayoutSize? size,
@@ -46,7 +46,8 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
 
   @override
   Iterable<Op> execute(EvalContext context) {
-    final (transform, size) = resolveBox(context);
+    var (transform, size) = resolveBox(context);
+    transform = frameTransformOf(context, transform, parent: parent?.ref);
 
     return shape.execute(
       context,
