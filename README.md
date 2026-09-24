@@ -12,7 +12,7 @@ An open-source vector graphics, design, and animation tool.
 Feel free to [try it out now](https://kekland.github.io/motif) in your browser!
 
 > [!WARNING]
-> This project is still in its pre-alpha stage. Expect things to be buggy and incomplete.
+> This project is still in its pre-alpha stage. Expect things to be buggy and incomplete. Feel free to check [TODOS](./TODOS.md) for a list of known issues, and if there's an issue that is not listed, please open a new issue on GitHub.
 
 > [!TIP]
 > I'm constantly working on improving the project and welcome any feedback or contributions. If you would like to support the project financially, see the [Support](#support) section below.

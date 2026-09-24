@@ -12,6 +12,8 @@ Urgent (in order):
 - [ ] Color/props undo/redo coalescing
 - [ ] Fillet face: paint a filletted edge bug
 - [ ] Debug arrangement generation
+- [ ] Protobuf schema: implement generators
+- [ ] Improve mouse interaction in canvas
 
 - [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
