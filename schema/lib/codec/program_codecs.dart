@@ -8,6 +8,7 @@ import 'package:color/color.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:geometry/geometry.dart';
+import 'package:blueprint/core.dart' as bp;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Setup
@@ -710,8 +711,7 @@ final _generatorStatementCodec = _codec<GeneratorStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
-    // generator: v.generator.decode(),
-    generator: .empty(),
+    generator: v.generator.generator.decode(),
     inputs: _map(v.generator.inputs, (e) => e.decode()),
     parent: _opt(v.generator.hasParent, () => v.generator.parent.decode()),
     transform: _opt(v.generator.hasTransform, () => v.generator.transform.decode()),
@@ -720,8 +720,7 @@ final _generatorStatementCodec = _codec<GeneratorStatement, gen.Statement>(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
     generator: .new(
-      // generator: v.generator.encode(),
-      generator: null,
+      generator: v.generator.encode(),
       inputs: _map(v.inputs, (e) => e.encode()),
       parent: v.parent?.ref.encode(),
       transform: v.transform.encode(),
@@ -1086,6 +1085,287 @@ final _layoutCodec = _codec<Layout, gen.Layout>(
 // ---------------------------------------------------------------------------------------------------------------------
 // Generator nodes
 // ---------------------------------------------------------------------------------------------------------------------
+
+extension _GeneratorEncode on Generator { gen.Generator encode() => _generatorCodec.encode(this); }
+extension _GeneratorDecode on gen.Generator { Generator decode() => _generatorCodec.decode(this); }
+
+final _generatorCodec = _codec<Generator, gen.Generator>(
+  decoder: (v) => .new(
+    nodes: _map(v.nodes, (e) => e.decode()),
+    connections: _map(v.connections, (e) => e.decode()),
+    positions: .fromEntries(_map(v.positions, (e) => MapEntry(e.node.decode(), e.position.decode()))),
+    fixed: _map(v.fixed, (e) => e.decode()).toSet(),
+  ),
+  encoder: (v) => .new(
+    nodes: _map(v.nodes, (e) => e.encode()),
+    connections: _map(v.connections, (e) => e.encode()),
+    positions: _map(v.positions.entries, (e) => .new(node: e.key.encode(), position: e.value.encode())),
+    fixed: _map(v.fixed, (e) => e.encode()).toList(),
+  ),
+);
+
+extension _NodeIdEncode on bp.NodeId { gen.NodeId encode() => _nodeIdCodec.encode(this); }
+extension _NodeIdDecode on gen.NodeId { bp.NodeId decode() => _nodeIdCodec.decode(this); }
+
+final _nodeIdCodec = _codec<bp.NodeId, gen.NodeId>(
+  decoder: (v) => .new(v.value),
+  encoder: (v) => .new(value: v.value),
+);
+
+extension _SocketRefEncode on bp.SocketRef { gen.SocketRef encode() => _socketRefCodec.encode(this); }
+extension _SocketRefDecode on gen.SocketRef { bp.SocketRef decode() => _socketRefCodec.decode(this); }
+
+final _socketRefCodec = _codec<bp.SocketRef, gen.SocketRef>(
+  decoder: (v) => .new(v.node.decode(), v.index),
+  encoder: (v) => .new(node: v.node.encode(), index: v.index),
+);
+
+extension _ConnectionEncode on bp.Connection { gen.Connection encode() => _connectionCodec.encode(this); }
+extension _ConnectionDecode on gen.Connection { bp.Connection decode() => _connectionCodec.decode(this); }
+
+final _connectionCodec = _codec<bp.Connection, gen.Connection>(
+  decoder: (v) => .new(
+    v.output.decode(),
+    v.input.decode(),
+  ),
+  encoder: (v) => .new(
+    output: v.output.encode(),
+    input: v.input.encode(),
+  ),
+);
+
+extension _NodeEncode on bp.Node { gen.Node encode() => _nodeCodec.encode(this); }
+extension _NodeDecode on gen.Node { bp.Node decode() => _nodeCodec.decode(this); }
+
+final _nodeCodec = _codec<bp.Node, gen.Node>(
+  decoder: (v) => switch(v.whichKind()) {
+    .array => _arrayNodeCodec.decode(v),
+    .randomVector => _randomVectorNodeCodec.decode(v),
+    .fillet => _filletNodeCodec.decode(v),
+    .generatorInput => _generatorInputNodeCodec.decode(v),
+    .generatorOutput => _generatorOutputNodeCodec.decode(v),
+    .polar => _polarNodeCodec.decode(v),
+    .pi => _piNodeCodec.decode(v),
+    .divide => _divideNodeCodec.decode(v),
+    .vertices => _verticesNodeCodec.decode(v),
+    .connectVertices => _connectVerticesNodeCodec.decode(v),
+    .face => _faceNodeCodec.decode(v),
+    .number => _numberNodeCodec.decode(v),
+    .vector => _vectorNodeCodec.decode(v),
+    .index_ => _indexNodeCodec.decode(v),
+    .scaleVector => _scaleVectorNodeCodec.decode(v),
+    .notSet => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    ArrayNode v => _arrayNodeCodec.encode(v),
+    RandomVectorNode v => _randomVectorNodeCodec.encode(v),
+    FilletNode v => _filletNodeCodec.encode(v),
+    GeneratorInputNode v => _generatorInputNodeCodec.encode(v),
+    GeneratorOutputNode v => _generatorOutputNodeCodec.encode(v),
+    PolarNode v => _polarNodeCodec.encode(v),
+    PiNode v => _piNodeCodec.encode(v),
+    DivideNode v => _divideNodeCodec.encode(v),
+    VerticesNode v => _verticesNodeCodec.encode(v),
+    ConnectVerticesNode v => _connectVerticesNodeCodec.encode(v),
+    FaceNode v => _faceNodeCodec.encode(v),
+    NumberNode v => _numberNodeCodec.encode(v),
+    VectorNode v => _vectorNodeCodec.encode(v),
+    IndexNode v => _indexNodeCodec.encode(v),
+    ScaleVectorNode v => _scaleVectorNodeCodec.encode(v),
+    _ => throw ArgumentError(),
+  },
+);
+
+final _arrayNodeCodec = _codec<ArrayNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    count: _opt(v.array.hasCount, () => v.array.count.decode()),
+    offset: _opt(v.array.hasOffset, () => v.array.offset.decode()),
+    slice: _opt(v.array.hasSlice, () => .decode(v.array.slice)),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    array: .new(
+      count: v.i.count.inlineValue.encode(),
+      offset: v.i.offset.inlineValue.encode(),
+      slice: v.i.slice.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _randomVectorNodeCodec = _codec<RandomVectorNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    seed: _opt(v.randomVector.hasSeed, () => v.randomVector.seed),
+    min: _opt(v.randomVector.hasMin, () => v.randomVector.min.decode()),
+    max: _opt(v.randomVector.hasMax, () => v.randomVector.max.decode()),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    randomVector: .new(
+      seed: v.i.seed.inlineValue,
+      min: v.i.min.inlineValue.encode(),
+      max: v.i.max.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _filletNodeCodec = _codec<FilletNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    radius: _opt(v.fillet.hasRadius, () => v.fillet.radius.decode()),
+    slice: _opt(v.fillet.hasSlice, () => .decode(v.fillet.slice)),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    fillet: .new(
+      radius: v.i.radius.inlineValue.encode(),
+      slice: v.i.slice.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _generatorInputNodeCodec = _codec<GeneratorInputNode, gen.Node>(
+  decoder: (v) => .new(id: v.id.decode()),
+  encoder: (v) => .new(id: v.id.encode()),
+);
+
+final _generatorOutputNodeCodec = _codec<GeneratorOutputNode, gen.Node>(
+  decoder: (v) => .new(id: v.id.decode()),
+  encoder: (v) => .new(id: v.id.encode()),
+);
+
+final _polarNodeCodec = _codec<PolarNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    angle: _opt(v.polar.hasAngle, () => v.polar.angle),
+    radius: _opt(v.polar.hasRadius, () => v.polar.radius),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    polar: .new(
+      angle: v.i.angle.inlineValue,
+      radius: v.i.radius.inlineValue,
+    ),
+  ),
+);
+
+final _piNodeCodec = _codec<PiNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+  ),
+);
+
+final _divideNodeCodec = _codec<DivideNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    denominator: _opt(v.divide.hasDenominator, () => v.divide.denominator),
+    numerator: _opt(v.divide.hasNumerator, () => v.divide.numerator),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    divide: .new(
+      denominator: v.i.denominator.inlineValue,
+      numerator: v.i.numerator.inlineValue,
+    ),
+  ),
+);
+
+final _verticesNodeCodec = _codec<VerticesNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    count: _opt(v.vertices.hasCount, () => v.vertices.count),
+    position: _opt(v.vertices.hasPosition, () => v.vertices.position.decode()),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    vertices: .new(
+      count: v.i.count.inlineValue,
+      position: v.i.position.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _connectVerticesNodeCodec = _codec<ConnectVerticesNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    slice: _opt(v.connectVertices.hasSlice, () => .decode(v.connectVertices.slice)),
+    closed: _opt(v.connectVertices.hasClosed, () => v.connectVertices.closed),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    connectVertices: .new(
+      slice: v.i.slice.inlineValue.encode(),
+      closed: v.i.closed.inlineValue,
+    ),
+  ),
+);
+
+final _faceNodeCodec = _codec<FaceNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    slice: _opt(v.face.hasSlice, () => .decode(v.face.slice)),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    face: .new(
+      slice: v.i.slice.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _numberNodeCodec = _codec<NumberNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    value: _opt(v.number.hasValue, () => v.number.value),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    number: .new(
+      value: v.i.value.inlineValue,
+    ),
+  ),
+);
+
+final _vectorNodeCodec = _codec<VectorNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    value: _opt(v.vector.hasValue, () => v.vector.value.decode()),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    vector: .new(
+      value: v.i.value.inlineValue.encode(),
+    ),
+  ),
+);
+
+final _indexNodeCodec = _codec<IndexNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+  ),
+);
+
+final _scaleVectorNodeCodec = _codec<ScaleVectorNode, gen.Node>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    vector: _opt(v.scaleVector.hasVector, () => v.scaleVector.vector.decode()),
+    factor: _opt(v.scaleVector.hasFactor, () => v.scaleVector.factor),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    scaleVector: .new(
+      vector: v.i.vector.inlineValue.encode(),
+      factor: v.i.factor.inlineValue,
+    ),
+  ),
+);
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Other types

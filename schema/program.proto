@@ -385,10 +385,113 @@ message Layout {
 // ---------------------------------------------------------------------------------------------------------------------
 
 message NodeId {
-  uint64 value = 1;
+  uint32 value = 1;
 }
 
-message Generator {}
+message SocketRef {
+  NodeId node  = 1;
+  uint32 index = 2;
+}
+
+message Node {
+  NodeId id = 1;
+
+  message Array {
+    optional Vec2         count  = 1;
+    optional Vec2         offset = 2;
+    optional ProgramSlice slice  = 3;
+  }
+
+  message RandomVector {
+    optional int32 seed = 1;
+    optional Vec2  min  = 2;
+    optional Vec2  max  = 3;
+  }
+
+  message Fillet {
+    optional Vec2         radius = 1;
+    optional ProgramSlice slice  = 2;
+  }
+
+  message GeneratorInput {}
+  message GeneratorOutput {}
+
+  message Polar {
+    optional double angle  = 1;
+    optional double radius = 2;
+  }
+
+  message Pi {}
+
+  message Divide {
+    optional double numerator   = 1;
+    optional double denominator = 2;
+  }
+
+  message Vertices {
+    optional int32 count    = 1;
+    optional Vec2  position = 2;
+  }
+
+  message ConnectVertices {
+    optional ProgramSlice slice  = 1;
+    optional bool         closed = 2;
+  }
+
+  message Face {
+    optional ProgramSlice slice = 1;
+  }
+
+  message Number {
+    optional double value = 1;
+  }
+
+  message Vector {
+    optional Vec2 value = 2;
+  }
+
+  message Index {}
+
+  message ScaleVector {
+    optional Vec2   vector = 1;
+    optional double factor = 2;
+  }
+
+  oneof kind {
+    Array           array            = 10;
+    RandomVector    random_vector    = 11;
+    Fillet          fillet           = 12;
+    GeneratorInput  generator_input  = 13;
+    GeneratorOutput generator_output = 14;
+    Polar           polar            = 15;
+    Pi              pi               = 16;
+    Divide          divide           = 17;
+    Vertices        vertices         = 18;
+    ConnectVertices connect_vertices = 19;
+    Face            face             = 20;
+    Number          number           = 21;
+    Vector          vector           = 22;
+    Index           index            = 23;
+    ScaleVector     scale_vector     = 24;
+  }
+}
+
+message Connection {
+  SocketRef output = 1;
+  SocketRef input  = 2;
+}
+
+message Generator {
+  message PositionEntry {
+    NodeId node     = 1;
+    Vec2   position = 2;
+  }
+
+  repeated Node          nodes       = 1;
+  repeated Connection    connections = 2;
+  repeated PositionEntry positions   = 3;
+  repeated NodeId        fixed       = 4;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Modifiers
