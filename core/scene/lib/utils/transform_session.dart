@@ -58,7 +58,9 @@ final class TransformSession {
 
   void _apply(SceneTransaction txn, Mat4 transform, bool snapToPixel) {
     final result = router.apply(transform, snapToPixel: snapToPixel);
-    for (final entry in result.entries) txn.replace(entry.key, [entry.value]);
+    for (final entry in result.entries) {
+      txn.replace(entry.key, [entry.value]);
+    }
   }
 
   void apply(Mat4 transform, {bool snapToPixel = false}) {

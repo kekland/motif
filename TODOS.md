@@ -15,7 +15,7 @@ Urgent (in order):
 - [x] Fillet face: paint a filletted edge bug
 - [x] Separate pen edge style from shape edge style
 - [x] Add fill style to the fill tool
-- [ ] Debug planar arrangement generation
+- [ ] Debug planar arrangement genesration
 - [x] Protobuf schema: implement generators
 - [ ] Improve mouse interaction in canvas
 - [ ] Knife tool

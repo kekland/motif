@@ -10,13 +10,15 @@ final class const AbsorbTransformRoute() extends TransformRoute;
 final class const ForwardTransformRoute(final List<Ref> to) extends TransformRoute;
 final class const RefuseTransformRoute() extends TransformRoute;
 
+typedef TransformAbsorbFunction = Statement Function(Mat4 local, bool snapToPixel);
+
 final class TransformAbsorb(
-  final Statement Function(Mat4 local, bool snapToPixel) absorb, {
+  final TransformAbsorbFunction absorb, {
   required final CellRef cell,
 });
 
 final class TransformAbsorber(
-  final Statement Function(Mat4 local, bool snapToPixel) absorb,
+  final TransformAbsorbFunction absorb,
   final Mat4 spaceToWorld,
   final Mat4 worldToSpace,
   final Aabb2 hull,
@@ -29,7 +31,10 @@ final class TransformRouter._(
   bool get isEmpty => absorbers.isEmpty;
 
   Map<StatementId, Statement> apply(Mat4 transform, {bool snapToPixel = false}) => absorbers.map(
-    (k, v) => .new(k, v.absorb(v.worldToSpace * transform * v.spaceToWorld, snapToPixel)),
+    (k, v) {
+      final m = v.worldToSpace * transform * v.spaceToWorld;
+      return .new(k, v.absorb(m, snapToPixel));
+    },
   );
 }
 

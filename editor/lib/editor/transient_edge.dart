@@ -148,7 +148,7 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     if (startNewEdge && newEdges.isNotEmpty) {
       final committedEdge = newEdges.last;
       final end = editor.bundle.edgeEnd(editor.handleOf(committedEdge)!).ref(editor.bundle);
-      final cEnd = edge.cEnd ?? .zero();
+      final cEnd = edge.cEnd ?? edge.end!;
       final cStart = edge.nextCStart ?? cEnd.pointReflect(edge.end!);
       return create(end, cStart: cStart, mergeKey: Object());
     }
