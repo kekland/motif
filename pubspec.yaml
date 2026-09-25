@@ -27,6 +27,7 @@ workspace:
   - packages/color
   - packages/css
   - packages/ink_stroke_modeler
+  - packages/skia
   
   - vendor/stack_assets
 

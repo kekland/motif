@@ -35,3 +35,4 @@ Urgent (in order):
 - [ ] Commander search - clean up code
 - [?] Proper modifiers section      (Add done, missing: properties, display)
 - [?] Tree view
+- [ ] Prefabs

@@ -8,6 +8,7 @@ analyzer:
 
   exclude:
     - __archive__/**
+    - packages/skia/build/**
     - vendor/stack_assets/lib/src/templates/base_icon.dart
 
 formatter:

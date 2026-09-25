@@ -18,7 +18,8 @@
     // "**/pubspec.lock": true,
     "build": true,
     "**/__pycache__": true,
-    "**/.flutter-plugins-dependencies": true
+    "**/.flutter-plugins-dependencies": true,
+    "packages/skia/build/skia": true,
   },
   "search.exclude": {
     "**/node_modules": true,
@@ -26,7 +27,7 @@
     "**/*.code-search": true,
     "**/.dart_tool": true,
     "packages/skia/build/skia": true,
-    "__archive__/**": true
+    "__archive__/**": true,
   },
   "files.watcherExclude": {
     ".git/objects/**": true,
@@ -38,6 +39,11 @@
     "**/.dart_tool": true,
     "packages/skia/build/skia": true,
     "__archive__/**": true
+  },
+  "C_Cpp.files.exclude": {
+    "**/.vscode": true,
+    "**/.vs": true,
+    "packages/skia/build/skia": true
   },
   "dart.flutterSdkPath": ".fvm/versions/master",
   "editor.rulers": [

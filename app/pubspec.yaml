@@ -12,6 +12,7 @@ dependencies:
   bindings:
   state:
   native:
+  skia:
 
   program:
   scene:

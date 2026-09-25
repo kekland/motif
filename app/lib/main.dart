@@ -1,16 +1,10 @@
 import 'package:app/imports.dart';
 import 'package:bindings/bindings.dart';
+import 'main_native.dart' if (dart.library.js_interop) 'main_web.dart';
 
 Future<void> main() async {
-  if (kIsWeb) {
-    final isRunningWithWasm = identical(double.nan, double.nan);
-
-    // ignore: avoid_print
-    print('wasm: $isRunningWithWasm');
-  }
-
+  await initializePlatform();
   AugmentedWidgetsFlutterBinding.ensureInitialized();
   await SceneStorage.initialize();
-
   runApp(App());
 }

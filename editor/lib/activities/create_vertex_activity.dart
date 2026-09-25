@@ -51,7 +51,11 @@ class CreateVertexActivity extends DragActivity with KeyboardListenerDragActivit
       }
     }
 
-    if (snapToPixel) position = position.round();
+    if (snapToPixel) {
+      position = position.round();
+      if (startPosition != null) startPosition = startPosition.round();
+    }
+
     if (startPosition != null && isShiftPressed) {
       var delta = position - startPosition;
       delta = delta.snappedToAngle(math.pi / 4);

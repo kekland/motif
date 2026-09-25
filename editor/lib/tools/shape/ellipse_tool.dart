@@ -15,4 +15,7 @@ class const EllipseTool() extends ShapeTool {
 
   @override
   MouseCursor get cursor => Cursors.precise;
+
+  @override
+  SingleActivator? get shortcut => .new(.keyE);
 }
