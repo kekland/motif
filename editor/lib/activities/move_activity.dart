@@ -9,12 +9,14 @@ final class MoveActivity extends TransformActivity {
     super.onUpdate,
     super.onEnd,
     super.onCancel,
+    this.snapToPixel = false,
   });
 
   late final Vec2 startPosition;
   late final Map<StatementId, Mat4> startWorld;
   late final StatementId grabbed;
   late final Vec2 grabOffset;
+  final bool snapToPixel;
   Vec2 _bakedDelta = .zero();
 
   @override
@@ -44,7 +46,7 @@ final class MoveActivity extends TransformActivity {
     var delta = current - start;
     if (snapToAxis) delta = delta.snappedToAxis();
 
-    session.translateBy(delta - _bakedDelta);
+    session.translateBy(delta - _bakedDelta, snapToPixel: snapToPixel);
     _updateTransients(delta);
 
     if (_rearrange(current)) {

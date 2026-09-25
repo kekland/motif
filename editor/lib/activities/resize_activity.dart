@@ -2,19 +2,20 @@ import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
 class ResizeActivity {
-  static DragActivity side(Editor editor, Iterable<Ref> refs, {required Side side}) {
-    return _SideResizeActivity(editor, refs, side);
+  static DragActivity side(Editor editor, Iterable<Ref> refs, {required Side side, bool snapToPixel = false}) {
+    return _SideResizeActivity(editor, refs, side, snapToPixel: snapToPixel);
   }
 
-  static DragActivity corner(Editor editor, Iterable<Ref> refs, {required Corner corner}) {
-    return _CornerResizeActivity(editor, refs, corner);
+  static DragActivity corner(Editor editor, Iterable<Ref> refs, {required Corner corner, bool snapToPixel = false}) {
+    return _CornerResizeActivity(editor, refs, corner, snapToPixel: snapToPixel);
   }
 }
 
 abstract class _BaseResizeActivity extends TransformActivity {
-  _BaseResizeActivity(super.editor, super.cells);
+  _BaseResizeActivity(super.editor, super.cells, {this.snapToPixel = false});
 
   late final Aabb2 selectionHull;
+  final bool snapToPixel;
 
   ResizeResult applyResize(Aabb2 initial, Vec2 delta, bool symmetric, bool keepAspectRatio);
 
@@ -37,7 +38,7 @@ abstract class _BaseResizeActivity extends TransformActivity {
       ..scale(scale.x, scale.y)
       ..translate(-anchor.x, -anchor.y);
 
-    session.apply(spaceToWorld * transform * worldToSpace);
+    session.apply(spaceToWorld * transform * worldToSpace, snapToPixel: snapToPixel);
     super.onUpdate(details);
   }
 
@@ -51,8 +52,9 @@ final class _SideResizeActivity extends _BaseResizeActivity {
   _SideResizeActivity(
     super.editor,
     super.cells,
-    this.side,
-  );
+    this.side, {
+    super.snapToPixel,
+  });
 
   final Side side;
   late final Side effectiveSide;
@@ -76,8 +78,9 @@ final class _CornerResizeActivity extends _BaseResizeActivity {
   _CornerResizeActivity(
     super.editor,
     super.cells,
-    this.corner,
-  );
+    this.corner, {
+    super.snapToPixel,
+  });
 
   final Corner corner;
   late final Corner effectiveCorner;

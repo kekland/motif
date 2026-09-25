@@ -8,7 +8,7 @@ Urgent (in order):
 - [x] Color prop attaching to a wrong selection
 - [x] Pen tool: shift/alt: bend, etc
 - [ ] Move tool: covertex tangent auto-alignment
-- [ ] Move tool: snap to pixel grid
+- [x] Move tool: snap to pixel grid
 - [x] Pen/bend: snap to pixel grid
 - [x] Canvas: max zoom and pixel grid view
 - [x] Color/props undo/redo coalescing

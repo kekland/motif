@@ -6,10 +6,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 
 final class RotateActivity extends TransformActivity {
-  RotateActivity(super.editor, super.cells, {required this.corner});
+  RotateActivity(
+    super.editor,
+    super.cells, {
+    required this.corner,
+    this.snapToPixel = false,
+  });
 
   final ui.Corner corner;
   double? cursorAngle;
+  final bool snapToPixel;
 
   @override
   Set<LogicalKeyboardKey> get keysToListen => {.shiftLeft, .shiftRight};

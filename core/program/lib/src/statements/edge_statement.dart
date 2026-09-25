@@ -91,10 +91,18 @@ final class EdgeStatement extends Statement with PlacedStatement {
     }
 
     return .new(
-      (m) => copyWith(
-        startTangent: moveStart ? moved(m, ps, ts, startVertexMoves) : null,
-        endTangent: moveEnd ? moved(m, pe, te, endVertexMoves) : null,
-      ),
+      (m, snapToPixel) {
+        var newStartTangent = moveStart ? moved(m, ps, ts, startVertexMoves) : null;
+        var newEndTangent = moveEnd ? moved(m, pe, te, endVertexMoves) : null;
+
+        if (snapToPixel) newStartTangent = newStartTangent?.round();
+        if (snapToPixel) newEndTangent = newEndTangent?.round();
+
+        return copyWith(
+          startTangent: newStartTangent,
+          endTangent: newEndTangent,
+        );
+      },
       cell: ref,
     );
   }

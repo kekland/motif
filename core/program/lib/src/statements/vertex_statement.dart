@@ -48,7 +48,11 @@ final class VertexStatement extends Statement with PlacedStatement {
 
   @override
   TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) => .new(
-    (m) => copyWith(position: m.transform2(position)),
+    (m, snapToPixel) {
+      var newPosition = m.transform2(position);
+      if (snapToPixel) newPosition = newPosition.round();
+      return copyWith(position: newPosition);
+    },
     cell: ref,
   );
 

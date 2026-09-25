@@ -85,7 +85,19 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
 
   @override
   TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
-    return .new((m) => copyWith(transform: m * transform), cell: frame);
+    return .new(
+      (m, snapToPixel) {
+        final newTransform = m * transform;
+
+        if (snapToPixel) {
+          final translation = transform.translation2.round();
+          transform.setTranslation(translation.x, translation.y);
+        }
+
+        return copyWith(transform: newTransform);
+      },
+      cell: frame,
+    );
   }
 
   @override

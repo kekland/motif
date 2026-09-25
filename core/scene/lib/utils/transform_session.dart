@@ -56,29 +56,32 @@ final class TransformSession {
   Set<Ref> get refused => router.refused;
   bool get isEmpty => router.isEmpty;
 
-  void _apply(SceneTransaction txn, Mat4 transform) {
-    final result = router.apply(transform);
+  void _apply(SceneTransaction txn, Mat4 transform, bool snapToPixel) {
+    final result = router.apply(transform, snapToPixel: snapToPixel);
     for (final entry in result.entries) txn.replace(entry.key, [entry.value]);
   }
 
-  void apply(Mat4 transform) {
+  void apply(Mat4 transform, {bool snapToPixel = false}) {
     if (transaction != null) {
-      _apply(transaction!, transform);
+      _apply(transaction!, transform, snapToPixel);
       transaction!.flush();
     } else {
-      scene.edit((txn) => _apply(txn, transform), mergeKey: mergeKey);
+      scene.edit((txn) => _apply(txn, transform, snapToPixel), mergeKey: mergeKey);
     }
   }
 
-  void translateBy(Vec2 delta) => apply(Mat4.translation2(delta));
-  void rotateBy(double deltaRad, {Vec2? pivot}) {
+  void translateBy(Vec2 delta, {bool snapToPixel = false}) {
+    apply(Mat4.translation2(delta), snapToPixel: snapToPixel);
+  }
+
+  void rotateBy(double deltaRad, {Vec2? pivot, bool snapToPixel = false}) {
     final anchor = pivot ?? worldPivot;
     final transform = Mat4.identity()
       ..translate2(anchor)
       ..rotateZ(deltaRad)
       ..translate2(-anchor);
 
-    apply(transform);
+    apply(transform, snapToPixel: snapToPixel);
   }
 
   LayoutBox? get _single {

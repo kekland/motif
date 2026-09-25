@@ -111,14 +111,22 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
     if (x.min && x.max && y.min && y.max) return _absorbWhole(context, oldSize);
 
     return .new(
-      (m) {
+      (m, snapToPixel) {
         final to = <Vec2>[];
         for (final p in points) to.add(m.transform2(p));
         final toX = to.map((p) => p.x).toList();
         final toY = to.map((p) => p.y).toList();
 
-        final (w, dx) = x.solve(pointsX, toX, oldSize.width);
-        final (h, dy) = y.solve(pointsY, toY, oldSize.height);
+        var (w, dx) = x.solve(pointsX, toX, oldSize.width);
+        var (h, dy) = y.solve(pointsY, toY, oldSize.height);
+
+        if (snapToPixel) {
+          w = w.roundToDouble();
+          h = h.roundToDouble();
+          dx = dx.roundToDouble();
+          dy = dy.roundToDouble();
+        }
+
         return copyWith(
           transform: transform.translated(dx, dy),
           size: .fixed(w, h),
@@ -130,10 +138,17 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
 
   TransformAbsorb _absorbWhole(EvalContext context, Size2 oldSize) {
     return .new(
-      (m) {
+      (m, snapToPixel) {
         final placement = this.transform * m.unmirrored(oldSize);
-        final transform = placement.withNormalizedScale();
-        final size = oldSize.scale(placement.scaleX, placement.scaleY);
+        var transform = placement.withNormalizedScale();
+        var size = oldSize.scale(placement.scaleX, placement.scaleY);
+
+        if (snapToPixel) {
+          final translation = transform.translation2.round();
+          transform.setTranslation(translation.x, translation.y);
+          size = size.round();
+        }
+
         return copyWith(transform: transform, size: .fixed(size.width, size.height));
       },
       cell: frame,

@@ -15,6 +15,13 @@ class CursorTool extends Tool {
   Widget buildIcon(BuildContext context) => Icons.cursor();
 
   @override
+  List<ToolOption> get options => [
+    SnapToPixelToolOption.entry,
+  ];
+
+  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+
+  @override
   Widget buildViewportOverlay(
     BuildContext context,
     OverlayChildLayoutInfo info,
@@ -48,6 +55,7 @@ class _CursorToolOverlay extends HookWidget {
     final marqueeRect = useState<MarqueeValue?>(null);
     final shouldUpdateSelectionOnUp = useRef(true);
     final isSelectionMove = useRef(false);
+    final snapToPixel = tool.snapToPixel(context);
 
     DragActivity _move(Iterable<Ref> refs, {Ref? clicked}) => MoveActivity(
       editor,
@@ -61,6 +69,7 @@ class _CursorToolOverlay extends HookWidget {
       onCancel: () {
         isSelectionMove.value = false;
       },
+      snapToPixel: snapToPixel,
     );
 
     List<Ref>? _refsToMove(PointerEvent e) {
@@ -123,6 +132,7 @@ class _CursorToolOverlay extends HookWidget {
             CellSelectionOverlay(
               editor: editor,
               childPaintTransform: info.childPaintTransform,
+              snapToPixel: snapToPixel,
               onMove: (e, refs) {
                 final refsToMove = _refsToMove(e);
                 if (refsToMove == null) return null;

@@ -52,7 +52,7 @@ final class CutEdgeStatement extends Statement {
     final cubic = context.bundle.edgeCubic(context.handle(context.resolve(target)));
 
     return .new(
-      (m) {
+      (m, snapToPixel) {
         final t = cubic.closestPoint(m.transform2(p0)).t.clamp(1e-6, 1 - 1e-6);
         return copyWith(t: t);
       },

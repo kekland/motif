@@ -7,11 +7,13 @@ class CellSelectionOverlay extends HookWidget {
     required this.editor,
     required this.childPaintTransform,
     this.onMove,
+    this.snapToPixel = false,
   });
 
   final Editor editor;
   final Matrix4 childPaintTransform;
   final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
+  final bool snapToPixel;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class CellSelectionOverlay extends HookWidget {
             editor: editor,
             childPaintTransform: childPaintTransform,
             onMove: onMove,
+            snapToPixel: snapToPixel,
           ),
         ],
       ],
@@ -49,6 +52,7 @@ class CellSelectionGroupOverlay extends HookWidget {
     required this.childPaintTransform,
     this.onMove,
     this.showHandles = true,
+    this.snapToPixel = false,
     this.colors,
   });
 
@@ -58,6 +62,7 @@ class CellSelectionGroupOverlay extends HookWidget {
   final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
   final AppSelectionColors? colors;
   final bool showHandles;
+  final bool snapToPixel;
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +88,9 @@ class CellSelectionGroupOverlay extends HookWidget {
         transform: transform,
         layoutSize: layoutSize,
         onMove: (e) => onMove?.call(e, refs),
-        onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s),
-        onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c),
-        onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c),
+        onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s, snapToPixel: snapToPixel),
+        onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c, snapToPixel: snapToPixel),
+        onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c, snapToPixel: snapToPixel),
         padding: gesturePadding,
         childSize: childSize,
         colors: colors,
