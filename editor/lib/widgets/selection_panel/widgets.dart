@@ -29,13 +29,13 @@ class PropertiesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: .start,
         spacing: 8.0,
         children: [
           DefaultForegroundStyle(
-            style: context.typography.body.secondary,
+            style: context.typography.caption.secondary,
             child: title,
           ),
           child,

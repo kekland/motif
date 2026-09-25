@@ -15,13 +15,17 @@ Urgent (in order):
 - [x] Fillet face: paint a filletted edge bug
 - [x] Separate pen edge style from shape edge style
 - [x] Add fill style to the fill tool
-- [ ] Debug planar arrangement genesration
+- [ ] Debug planar arrangement generation
 - [x] Protobuf schema: implement generators
-- [ ] Improve mouse interaction in canvas
+- [x] Improve mouse interaction in canvas
+  - [x] MMB to grab
+  - [x] Invert scroll
+  - [x] Arrows to move
+
 - [ ] Knife tool
-- [ ] Text tool
 - [ ] Compress props panel
 
+- [ ] Text tool
 - [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
 - [ ] Commander arguments

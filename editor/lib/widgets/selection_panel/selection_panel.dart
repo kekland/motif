@@ -13,7 +13,7 @@ class SelectionPanel extends HookWidget {
     final selection = editor.selection;
     useListenable(selection);
 
-    var selectedCells = selection.refs.cells.toSet();
+    var selectedCells = selection.refSources.cells.toSet();
     final selectedStatements = selection.statements;
 
     if (selection.isEmpty) {
@@ -22,10 +22,16 @@ class SelectionPanel extends HookWidget {
       );
     }
 
-    // if (selectedStatements.length == 1) {
-    //   final products = editor.scene.productsOf(selectedStatements.single);
-    //   selectedCells.removeAll(products);
-    // }
+    for (final id in selectedStatements) {
+      final statement = editor.statement(id);
+      if (statement is VertexStatement ||
+          statement is EdgeStatement ||
+          statement is FaceStatement ||
+          statement is ShapeStatement) {
+        final products = editor.scene.productsOf(id);
+        selectedCells.removeAll(products);
+      }
+    }
 
     return SingleChildScrollView(
       child: Column(

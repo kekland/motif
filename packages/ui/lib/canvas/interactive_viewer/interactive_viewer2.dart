@@ -29,7 +29,7 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
     maxScale: widget.maxScale,
     minAllowedPointerCount: 1,
     currentTransform: () => _totalTransform,
-    supportedDevices: {.trackpad, .touch},
+    supportedDevices: {.trackpad, .touch, .mouse},
   );
 
   @override
@@ -142,6 +142,8 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
 
   @override
   Widget build(BuildContext context) {
+    _recognizer.focusNode = FocusScope.of(context);
+
     return MouseRegion(
       hitTestBehavior: .translucent,
       onEnter: (e) {

@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mouse_cursor/mouse_cursor.dart';
 
 /// The minimum distance travelled by a pointer for the gesture to be
 /// considered a transform gesture.
@@ -35,11 +38,12 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     required this.currentTransform,
     super.debugOwner,
     super.supportedDevices,
-    super.allowedButtonsFilter,
     this.onStart,
     this.onUpdate,
     this.onEnd,
-  });
+  }) {
+    HardwareKeyboard.instance.addHandler(_onKeyboardEvent);
+  }
 
   final int minAllowedPointerCount;
   final Matrix4 Function() currentTransform;
@@ -65,6 +69,9 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   bool _isPanZoomEvent = false;
   PointerPanZoomUpdateEvent? _panZoomUpdateEvent;
 
+  bool _isGrabEvent = false;
+  bool _isGrabCursorActive = false;
+
   VelocityTracker? _scaleVelocityTracker;
 
   Offset? _scaleFocalPoint;
@@ -74,6 +81,14 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   int get _pointerCount => _pointerQueue.length;
   bool get _hasMinPointerCount => _pointerCount >= minAllowedPointerCount;
   Iterable<Offset> get _queuedLocalPositions => _pointerQueue.map((i) => _pointerLocalPositions[i]!);
+
+  FocusNode? _focusNode;
+  set focusNode(FocusNode? node) {
+    if (_focusNode == node) return;
+    _focusNode?.removeListener(_onFocusChanged);
+    _focusNode = node;
+    _focusNode?.addListener(_onFocusChanged);
+  }
 
   Velocity get _currentVelocity {
     final velocities = _velocityTrackers.values.map((t) => t.getVelocity());
@@ -94,6 +109,27 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   }
 
   @override
+  bool isPointerAllowed(PointerDownEvent event) {
+    if (event.kind == .mouse) {
+      if (event.buttons != kMiddleMouseButton) return false;
+    }
+
+    return super.isPointerAllowed(event);
+  }
+
+  void _activateGrabCursor() {
+    if (_isGrabCursorActive) return;
+    ExclusiveMouseCursor.instance.set(SystemMouseCursors.grab);
+    _isGrabCursorActive = true;
+  }
+
+  void _deactivateGrabCursor() {
+    if (!_isGrabCursorActive) return;
+    ExclusiveMouseCursor.instance.set(SystemMouseCursors.basic);
+    _isGrabCursorActive = false;
+  }
+
+  @override
   void handleEvent(PointerEvent event) {
     final pointerId = event.pointer;
     var didChangeConfiguration = false;
@@ -105,7 +141,9 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
       _scaleVelocityTracker = VelocityTracker.withKind(event.kind);
 
       didChangeConfiguration = true;
-      _isPanZoomEvent = true;
+      _isPanZoomEvent = event is PointerPanZoomStartEvent;
+      _isGrabEvent = event.kind == .mouse && event.buttons == kMiddleMouseButton;
+      _stopSmoothAnimation();
     } else if (event is PointerMoveEvent) {
       _pointerLocalPositions[pointerId] = event.localPosition;
       _velocityTrackers[pointerId]?.addPosition(event.timeStamp, event.position);
@@ -123,6 +161,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
       didChangeConfiguration = true;
       _panZoomUpdateEvent = null;
       _isPanZoomEvent = false;
+      _isGrabEvent = false;
     }
 
     if (didChangeConfiguration) _reconfigure();
@@ -258,6 +297,9 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
         _state = .started;
         _onStart();
         resolve(.accepted);
+        if (_isGrabEvent) {
+          _activateGrabCursor();
+        }
       }
     } else if (_state.index >= _TransformState.possible.index) {
       resolve(.accepted);
@@ -304,64 +346,178 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   void didStopTrackingLastPointer(int pointer) {
     if (_state == .ready) resolve(.rejected);
     _state = .ready;
+    _deactivateGrabCursor();
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_onKeyboardEvent);
+    _focusNode?.removeListener(_onFocusChanged);
+    _ticker?.dispose();
+    _deactivateGrabCursor();
+    super.dispose();
   }
 
   void onPointerSignal(PointerSignalEvent event) {
     if (_state == .started) return;
 
-    var handled = false;
-    var newTransform = Matrix4.identity();
-    Offset? scaleFocalPoint;
-
     if (event is PointerScaleEvent) {
+      _stopSmoothAnimation();
+
       final focalPoint = event.localPosition;
-      scaleFocalPoint = focalPoint;
       final scale = event.scale;
 
-      newTransform
+      final transform = Matrix4.identity()
         ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
         ..scaleByDouble(scale, scale, 1.0, 1.0)
         ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
 
-      handled = true;
+      onStart?.call(.new(pointerCount: 0, transform: .identity()));
+      onUpdate?.call(.new(pointerCount: 0, transform: transform));
+      onEnd?.call(.new(transform: transform));
     } else if (event is PointerScrollEvent) {
       final keyboard = HardwareKeyboard.instance;
       final isZoom = keyboard.isMetaPressed || keyboard.isControlPressed;
-
       final delta = event.scrollDelta;
 
       if (!isZoom) {
-        newTransform.translateByDouble(-delta.dx, -delta.dy, 0.0, 1.0);
+        _smoothPanRemaining -= delta;
       } else {
-        final focalPoint = event.localPosition;
-        scaleFocalPoint = focalPoint;
+        _smoothFocalPoint = event.localPosition;
 
-        final scale = 1.0 + delta.dy * 0.01;
+        final scaleMultiplier = math.exp(-delta.dy * 0.00175);
+        final currentTotalScale = currentTransform().getMaxScaleOnAxis();
+        final futureTotalScale = currentTotalScale * _smoothScaleRemaining;
+        final newFutureScale = (futureTotalScale * scaleMultiplier).clamp(minScale, maxScale);
 
-        newTransform
-          ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
-          ..scaleByDouble(scale, scale, 1.0, 1.0)
-          ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
+        _smoothScaleRemaining = newFutureScale / currentTotalScale;
       }
-      handled = true;
+
+      _startSmoothAnimationTicker();
     }
+  }
 
-    if (handled) {
-      _transform = newTransform;
+  // --
+  // Focus handling
+  // --
 
+  void _onFocusChanged() {
+    if (_focusNode?.hasFocus != true) {
+      _stopSmoothAnimation();
+    }
+  }
+
+  // --
+  // Smoothed discrete event animator
+  // --
+
+  Ticker? _ticker;
+  Duration? _lastTick;
+  Offset _smoothPanRemaining = Offset.zero;
+  double _smoothScaleRemaining = 1.0;
+  Offset? _smoothFocalPoint;
+  Matrix4 _smoothTotalTransform = .identity();
+
+  void _startSmoothAnimationTicker() {
+    if (_ticker?.isTicking == true) return;
+
+    _ticker ??= .new(_onSmoothAnimationTick);
+    if (!_ticker!.isTicking) {
+      _lastTick = null;
+      _ticker!.start();
       onStart?.call(.new(pointerCount: 0, transform: .identity()));
-      onUpdate?.call(.new(pointerCount: 0, transform: _transform));
-      onEnd?.call(
-        .new(
-          transform: _transform,
-          translationVelocity: .zero,
-          scaleVelocity: 0.0,
-          scaleFocalPoint: scaleFocalPoint,
-        ),
-      );
-
-      _transform = Matrix4.identity();
     }
+  }
+
+  void _onSmoothAnimationTick(Duration elapsed) {
+    if (_lastTick == null) {
+      _lastTick = elapsed;
+      return;
+    }
+
+    final deltaTime = (elapsed - _lastTick!).inMicroseconds / Duration.microsecondsPerSecond;
+    _lastTick = elapsed;
+
+    // -- Keyboard panning
+    const double panPixelsPerSecond = 1000.0;
+    final keys = HardwareKeyboard.instance.logicalKeysPressed;
+    var keyDelta = Offset.zero;
+    if (keys.contains(LogicalKeyboardKey.arrowLeft)) keyDelta += const Offset(1.0, 0.0);
+    if (keys.contains(LogicalKeyboardKey.arrowRight)) keyDelta += const Offset(-1.0, 0.0);
+    if (keys.contains(LogicalKeyboardKey.arrowUp)) keyDelta += const Offset(0.0, 1.0);
+    if (keys.contains(LogicalKeyboardKey.arrowDown)) keyDelta += const Offset(0.0, -1.0);
+
+    if (keyDelta != .zero) {
+      _smoothPanRemaining += keyDelta * panPixelsPerSecond * deltaTime;
+    }
+
+    final lerp = 1.0 - math.exp(-deltaTime * 40.0);
+    final scaleDiff = _smoothScaleRemaining - 1.0;
+
+    final panDone = _smoothPanRemaining.distanceSquared < 0.1;
+    final scaleDone = scaleDiff.abs() < 0.001;
+
+    if (panDone && scaleDone) {
+      _emitSmoothAnimationUpdate(scale: _smoothScaleRemaining, pan: _smoothPanRemaining);
+      _stopSmoothAnimation();
+      return;
+    }
+
+    final panStep = _smoothPanRemaining * lerp;
+    final scaleStep = 1.0 + scaleDiff * lerp;
+
+    _smoothPanRemaining -= panStep;
+    _smoothScaleRemaining /= scaleStep;
+    _emitSmoothAnimationUpdate(scale: scaleStep, pan: panStep);
+  }
+
+  void _emitSmoothAnimationUpdate({required double scale, required Offset pan}) {
+    final focalPoint = _smoothFocalPoint ?? .zero;
+    final deltaTransform = Matrix4.identity()
+      ..translateByDouble(pan.dx, pan.dy, 0.0, 1.0)
+      ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
+      ..scaleByDouble(scale, scale, 1.0, 1.0)
+      ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
+
+    _smoothTotalTransform = deltaTransform * _smoothTotalTransform;
+    onUpdate?.call(.new(pointerCount: 0, transform: _smoothTotalTransform));
+  }
+
+  void _stopSmoothAnimation() {
+    if (_ticker?.isTicking == true) {
+      _ticker!.stop();
+      _smoothScaleRemaining = 1.0;
+      _smoothPanRemaining = .zero;
+      _lastTick = null;
+      onEnd?.call(.new(transform: _smoothTotalTransform));
+      _smoothTotalTransform = .identity();
+    }
+  }
+
+  // --
+  // Keyboard arrows listener
+  // --
+
+  bool _onKeyboardEvent(KeyEvent e) {
+    if (_focusNode?.hasFocus != true) return false;
+
+    if (e is KeyDownEvent || e is KeyRepeatEvent) {
+      if (_arrowKeys.contains(e.logicalKey)) {
+        return _onArrowKeyEvent(e);
+      }
+    }
+
+    return false;
+  }
+
+  final _arrowKeys = <LogicalKeyboardKey>{.arrowLeft, .arrowRight, .arrowUp, .arrowDown};
+  bool _onArrowKeyEvent(KeyEvent e) {
+    if (e is KeyDownEvent) {
+      _startSmoothAnimationTicker();
+      return true;
+    }
+
+    return false;
   }
 }
 

@@ -14,8 +14,10 @@ final class SceneSelection with ChangeNotifier {
   var _stamp = 0;
 
   Set<Ref> get refs => _refs;
+  Set<Ref> get refSources => _refSources;
   Set<CellRef> get cells => _cells;
   Set<StatementId> get statements => _statements;
+  Set<StatementId> get statementSources => _statementSources;
   Set<CovertexRef> get visibleCovertices => _visibleCovertices;
 
   bool get isEmpty => _refs.isEmpty && _statements.isEmpty;
