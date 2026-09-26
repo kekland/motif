@@ -23,7 +23,17 @@ final class TextStatement extends Statement with PlacedStatement, FramedStatemen
   final Mat4 transform;
 
   @override
-  Size2 get intrinsicSize => .zero();
+  Size2 intrinsicSize(Evaluation e) {
+    final textStyle = skia.TextStyle(fontFamilies: e.fontProvider.families);
+    final paragraphStyle = skia.ParagraphStyle();
+    final paragraphBuilder = skia.ParagraphBuilder(paragraphStyle, e.fontProvider);
+    paragraphBuilder.pushStyle(textStyle);
+    paragraphBuilder.addText(text);
+    paragraphBuilder.popStyle();
+    final paragraph = paragraphBuilder.build();
+    paragraph.layout(double.infinity);
+    return Size2(paragraph.maxIntrinsicWidth, paragraph.height);
+  }
 
   @override
   final ParentSelector? parent;
@@ -65,7 +75,7 @@ final class TextStatement extends Statement with PlacedStatement, FramedStatemen
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
-  
+
   @override
   TransformAbsorb absorbTransform(EvalContext context, Set<Ref> absorbed, Set<Ref> all) {
     final oldSize = context.placementOf(id).size;
@@ -74,15 +84,19 @@ final class TextStatement extends Statement with PlacedStatement, FramedStatemen
       (m, snapToPixel) {
         final placement = this.transform * m.unmirrored(oldSize);
         var transform = placement.withNormalizedScale();
-        var size = oldSize.scale(placement.scaleX, placement.scaleY);
+        Size2? size = oldSize.scale(placement.scaleX, placement.scaleY);
+        if (oldSize.equals(size!)) size = null;
 
         if (snapToPixel) {
           final translation = transform.translation2.round();
           transform.setTranslation(translation.x, translation.y);
-          size = size.round();
+          size = size?.round();
         }
 
-        return copyWith(transform: transform, size: .fixed(size.width, size.height));
+        return copyWith(
+          transform: transform,
+          size: size != null ? .fixed(size.width, size.height) : null,
+        );
       },
       cell: frame,
     );

@@ -9,7 +9,7 @@ final deleteSelectionIntentDescriptor = CommandIntentDescriptor<DeleteSelectionI
   resolveShortcut: (context) => [.new(.delete), .new(.backspace)],
 );
 
-class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> {
+class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> with CanvasFocusAction {
   @override
   final descriptor = deleteSelectionIntentDescriptor;
 

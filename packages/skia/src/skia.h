@@ -73,6 +73,8 @@ FFI void motif_paragraph_destroy(paragraph_t p);
 FFI void motif_paragraph_layout(paragraph_t p, double width);
 FFI double motif_paragraph_get_height(paragraph_t p);
 FFI double motif_paragraph_get_longest_line(paragraph_t p);
+FFI double motif_paragraph_get_max_intrinsic_width(paragraph_t p);
+FFI double motif_paragraph_get_min_intrinsic_width(paragraph_t p);
 
 FFI size_t motif_paragraph_get_line_metrics_count(paragraph_t p);
 FFI const line_metrics* motif_paragraph_get_line_metrics(paragraph_t p);

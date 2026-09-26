@@ -17,11 +17,18 @@ class PortalRoot extends StatefulWidget {
 class PortalRootState extends State<PortalRoot> {
   final _entries = <PortalEntry, OverlayEntry>{};
   final _entryKeys = <PortalEntry, GlobalKey<PortalEntryWidgetState>>{};
+  final _entryUniqueKeys = <Object, PortalEntry>{};
   final _overlayKey = GlobalKey<OverlayState>();
   OverlayState get overlay => _overlayKey.currentState!;
   RenderBox get overlayRenderObject => overlay.context.findRenderObject()! as RenderBox;
 
-  void push(BuildContext srcContext, PortalEntry entry, {PortalAnchor? anchor}) {
+  void push(BuildContext srcContext, PortalEntry entry, {PortalAnchor? anchor, Object? uniqueKey}) {
+    if (uniqueKey != null) {
+      final existing = _entryUniqueKeys[uniqueKey];
+      if (existing != null) pop(existing, force: true);
+      _entryUniqueKeys[uniqueKey] = entry;
+    }
+
     final key = GlobalKey<PortalEntryWidgetState>();
     _entryKeys[entry] = key;
 
@@ -56,6 +63,7 @@ class PortalRootState extends State<PortalRoot> {
     if (_entries[entry] == overlayEntry) {
       _entries.remove(entry);
       _entryKeys.remove(entry);
+      _entryUniqueKeys.removeWhere((key, value) => value == entry);
     }
 
     overlayEntry.remove();

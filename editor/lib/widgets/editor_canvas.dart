@@ -17,10 +17,12 @@ class EditorCanvas extends HookWidget {
       child: EditorShortcuts(
         child: ToolShortcuts(
           controller: editor.tool,
+          canInvoke: (context) => editor.canvasHasPrimaryFocus,
           child: CommanderRoot(
             key: editor.commanderRootKey,
             child: CanvasContextMenu(
               child: InteractiveCanvasFocus(
+                focusScopeNode: editor.canvasFocusScopeNode,
                 child: Overlay.wrap(
                   child: Surface(
                     color: context.colors.surface.canvas,

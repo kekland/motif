@@ -81,6 +81,12 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
   external double _motif_paragraph_get_longest_line(
     paragraph_t p,
   );
+  external double _motif_paragraph_get_max_intrinsic_width(
+    paragraph_t p,
+  );
+  external double _motif_paragraph_get_min_intrinsic_width(
+    paragraph_t p,
+  );
   external size_t _motif_paragraph_get_line_metrics_count(
     paragraph_t p,
   );
@@ -267,6 +273,20 @@ double motif_paragraph_get_longest_line(
   Dartparagraph_t p,
 ) {
   final result = GeneratedBindings.instance._motif_paragraph_get_longest_line(p as Pointer<paragraph>);
+  return result;
+}
+
+double motif_paragraph_get_max_intrinsic_width(
+  Dartparagraph_t p,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_get_max_intrinsic_width(p as Pointer<paragraph>);
+  return result;
+}
+
+double motif_paragraph_get_min_intrinsic_width(
+  Dartparagraph_t p,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_get_min_intrinsic_width(p as Pointer<paragraph>);
   return result;
 }
 

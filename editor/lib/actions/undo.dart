@@ -8,7 +8,7 @@ final undoIntentDescriptor = CommandIntentDescriptor<UndoIntent>(
   resolveShortcut: (context) => [PlatformSingleActivator(.keyZ, control: true)],
 );
 
-class UndoAction extends CommandAction<UndoIntent> {
+class UndoAction extends CommandAction<UndoIntent> with CanvasFocusAction {
   @override
   final descriptor = undoIntentDescriptor;
 

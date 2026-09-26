@@ -131,6 +131,8 @@ FFI void motif_paragraph_layout(paragraph_t p, double width) {
 
 FFI double motif_paragraph_get_height(paragraph_t p) { return p->value->getHeight(); }
 FFI double motif_paragraph_get_longest_line(paragraph_t p) { return p->value->getLongestLine(); }
+FFI double motif_paragraph_get_max_intrinsic_width(paragraph_t p) { return p->value->getMaxIntrinsicWidth(); }
+FFI double motif_paragraph_get_min_intrinsic_width(paragraph_t p) { return p->value->getMinIntrinsicWidth(); }
 
 static void motif_paragraph_collect_metrics(paragraph& p) {
   if (p.collected) return;

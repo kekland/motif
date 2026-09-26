@@ -1,8 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 class InteractiveCanvasFocus extends StatefulWidget {
-  const InteractiveCanvasFocus({super.key, required this.child});
+  const InteractiveCanvasFocus({
+    super.key,
+    required this.focusScopeNode,
+    required this.child,
+  });
 
+  final FocusScopeNode focusScopeNode;
   final Widget child;
 
   @override
@@ -10,8 +15,6 @@ class InteractiveCanvasFocus extends StatefulWidget {
 }
 
 class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
-  late final focusNode = FocusScopeNode();
-
   @override
   void initState() {
     super.initState();
@@ -26,19 +29,18 @@ class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
       request = true;
     } else if (primaryFocus.ancestors.isEmpty) {
       request = true;
-    } else if (primaryFocus == focusNode.enclosingScope) {
+    } else if (primaryFocus == widget.focusScopeNode.enclosingScope) {
       request = true;
     }
 
     if (request) {
-      focusNode.requestFocus();
+      widget.focusScopeNode.requestFocus();
     }
   }
 
   @override
   void dispose() {
     FocusManager.instance.removeListener(_onPrimaryFocusChanged);
-    focusNode.dispose();
     super.dispose();
   }
 
@@ -54,7 +56,7 @@ class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
       autofocus: true,
       canRequestFocus: true,
       descendantsAreFocusable: true,
-      node: focusNode,
+      node: widget.focusScopeNode,
       child: widget.child,
     );
   }

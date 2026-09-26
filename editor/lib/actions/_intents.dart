@@ -66,3 +66,12 @@ Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {
 
   return shortcuts;
 }
+
+mixin CanvasFocusAction<T extends Intent> on ContextAction<T> {
+  @override
+  bool isEnabled(T intent, [BuildContext? context]) {
+    final editor = Editor.of(context!);
+    if (!editor.canvasHasPrimaryFocus) return false;
+    return super.isEnabled(intent, context);
+  }
+}

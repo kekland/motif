@@ -68,6 +68,8 @@ final class Paragraph extends NativeObject<gen.paragraph> {
 
   double get longestLine => gen.motif_paragraph_get_longest_line(ptr);
   double get height => gen.motif_paragraph_get_height(ptr);
+  double get minIntrinsicWidth => gen.motif_paragraph_get_min_intrinsic_width(ptr);
+  double get maxIntrinsicWidth => gen.motif_paragraph_get_max_intrinsic_width(ptr);
 
   Iterable<LineMetrics> get lineMetrics {
     final count = gen.motif_paragraph_get_line_metrics_count(ptr);

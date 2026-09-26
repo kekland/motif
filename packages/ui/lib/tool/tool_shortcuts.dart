@@ -6,14 +6,36 @@ class SelectToolIntent extends CommandIntent {
   final Tool tool;
 }
 
+class SelectToolAction extends ContextAction<SelectToolIntent> {
+  SelectToolAction(
+    this.controller, {
+    required this.canInvoke,
+  });
+  final ToolController controller;
+  final bool Function(BuildContext context) canInvoke;
+
+  @override
+  bool isEnabled(SelectToolIntent intent, [BuildContext? context]) {
+    if (context == null) return true;
+    return canInvoke(context);
+  }
+
+  @override
+  void invoke(SelectToolIntent intent, [BuildContext? context]) {
+    controller.activeTool = intent.tool;
+  }
+}
+
 class ToolShortcuts extends StatelessWidget {
   const ToolShortcuts({
     super.key,
     required this.controller,
+    required this.canInvoke,
     required this.child,
   });
 
   final ToolController controller;
+  final bool Function(BuildContext context) canInvoke;
   final Widget child;
 
   @override
@@ -27,9 +49,7 @@ class ToolShortcuts extends StatelessWidget {
 
     return Actions(
       actions: {
-        SelectToolIntent: CallbackAction<SelectToolIntent>(
-          onInvoke: (intent) => controller.activeTool = intent.tool,
-        ),
+        SelectToolIntent: SelectToolAction(controller, canInvoke: canInvoke),
       },
       child: Shortcuts(
         shortcuts: shortcuts,

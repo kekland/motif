@@ -11,7 +11,7 @@ final redoIntentDescriptor = CommandIntentDescriptor<RedoIntent>(
   ],
 );
 
-class RedoAction extends CommandAction<RedoIntent> {
+class RedoAction extends CommandAction<RedoIntent> with CanvasFocusAction {
   @override
   final descriptor = redoIntentDescriptor;
 

@@ -9,7 +9,7 @@ final setZOrderTopIntentDescriptor = CommandIntentDescriptor<SetZOrderTopIntent>
   resolveShortcut: (context) => [.new(.bracketRight)],
 );
 
-class SetZOrderTopAction extends CommandAction<SetZOrderTopIntent> {
+class SetZOrderTopAction extends CommandAction<SetZOrderTopIntent> with CanvasFocusAction {
   @override
   final descriptor = setZOrderTopIntentDescriptor;
 

@@ -402,7 +402,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   // --
 
   void _onFocusChanged() {
-    if (_focusNode?.hasFocus != true) {
+    if (_focusNode?.hasPrimaryFocus != true) {
       _stopSmoothAnimation();
     }
   }
@@ -499,7 +499,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
   // --
 
   bool _onKeyboardEvent(KeyEvent e) {
-    if (_focusNode?.hasFocus != true) return false;
+    if (_focusNode?.hasPrimaryFocus != true) return false;
 
     if (e is KeyDownEvent || e is KeyRepeatEvent) {
       if (_arrowKeys.contains(e.logicalKey)) {

@@ -25,7 +25,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
   final Mat4 transform;
 
   @override
-  Size2 get intrinsicSize => .zero();
+  Size2 intrinsicSize(Evaluation e) => .zero();
 
   final VertexStyle vertexStyle;
   final EdgeStyle edgeStyle;

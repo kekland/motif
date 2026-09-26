@@ -49,6 +49,9 @@ final class Editor extends Controller {
 
   Iterable<CellRef> productsOf(StatementId id) => scene.productsOf(id);
 
+  late final canvasFocusScopeNode = $customDisposable(FocusScopeNode(), (n) => n.dispose());
+  bool get canvasHasPrimaryFocus => canvasFocusScopeNode.hasPrimaryFocus;
+
   final sceneKey = GlobalKey();
   RenderBox get renderScene => sceneKey.currentContext!.findRenderObject() as RenderBox;
 

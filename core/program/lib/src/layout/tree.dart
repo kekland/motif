@@ -108,7 +108,7 @@ final class LayoutTree {
       if (siblings.indexOf(n) != before) _dirtyParent(n);
     }
 
-    if (!LayoutBox.compareLayout(oldBox, box)) {
+    if (!LayoutBox.compareLayout(_evaluation, oldBox, box)) {
       _dirty.add(n);
       _dirtyParent(n);
     }
@@ -139,14 +139,15 @@ final class LayoutTree {
 
   Size2 _measure(_LayoutNode n) {
     final box = n.box;
-    if (box is! LayoutContainer) return box.size.fit(box.intrinsicSize, box.intrinsicSize);
+    final intrinsic = box.intrinsicSize(_evaluation);
+    if (box is! LayoutContainer) return box.size.fit(intrinsic, intrinsic);
 
     final layout = box.layout;
     final children = _childrenOf(n);
 
     final content = switch (layout) {
-      StackLayout l => _measureStack(children, n.box.intrinsicSize, l),
-      FlexLayout l => _measureFlex(children, n.box.intrinsicSize, l),
+      StackLayout l => _measureStack(children, intrinsic, l),
+      FlexLayout l => _measureFlex(children, intrinsic, l),
     };
 
     final own = content.inflate(layout.padding.horizontal, layout.padding.vertical);

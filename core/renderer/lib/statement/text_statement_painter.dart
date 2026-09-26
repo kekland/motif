@@ -5,6 +5,7 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
 
   @override
   ui.Picture paint(Evaluation e, TextStatement statement) {
+    final layoutSize = statement.size;
     final size = e.layout.placementOf(statement.id)!.size;
 
     final textStyle = skia.TextStyle(fontFamilies: e.fontProvider.families);
@@ -15,7 +16,7 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
     paragraphBuilder.popStyle();
 
     final paragraph = paragraphBuilder.build();
-    paragraph.layout(size.width);
+    paragraph.layout(layoutSize.width.isContain ? double.infinity : size.width);
 
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder);
@@ -23,11 +24,6 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
     final path = Path();
 
     for (final (i, metrics) in paragraph.glyphMetrics.indexed) {
-      canvas.drawRect(
-        Rect.fromLTWH(metrics.left, metrics.top, metrics.right - metrics.left, metrics.bottom - metrics.top),
-        ui.Paint()..color = const ui.Color(0x80FF0000),
-      );
-
       final glyphPath = paragraph.getGlyphPath(i);
       var point = 0;
       double _x() => glyphPath.points[point++] + metrics.x;

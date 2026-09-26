@@ -65,15 +65,15 @@ class PortalEntry<T> {
   PortalRootState? _root;
   Completer<T?>? _completer;
 
-  Future<T?> push(BuildContext context, {PortalAnchor? anchor}) {
-    _insert(context, anchor: anchor);
+  Future<T?> push(BuildContext context, {PortalAnchor? anchor, Object? uniqueKey}) {
+    _insert(context, anchor: anchor, uniqueKey: uniqueKey);
     return _completer!.future;
   }
 
-  void _insert(BuildContext context, {PortalAnchor? anchor}) {
+  void _insert(BuildContext context, {PortalAnchor? anchor, Object? uniqueKey}) {
     if (_isActive) return;
     _root = context.findAncestorStateOfType<PortalRootState>()!;
-    _root!.push(context, this, anchor: anchor);
+    _root!.push(context, this, anchor: anchor, uniqueKey: uniqueKey);
     _isActive = true;
     _completer = .new();
   }

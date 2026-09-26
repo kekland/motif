@@ -6,12 +6,12 @@ abstract interface class LayoutBox {
 
   Mat4 get transform;
   LayoutSize get size;
-  Size2 get intrinsicSize;
+  Size2 intrinsicSize(Evaluation evaluation);
 
-  static bool compareLayout(LayoutBox a, LayoutBox b) {
+  static bool compareLayout(Evaluation e,LayoutBox a, LayoutBox b) {
     if (a.runtimeType != b.runtimeType) return false;
     if (!a.transform.equals(b.transform)) return false;
-    if (!a.intrinsicSize.equals(b.intrinsicSize)) return false;
+    if (!a.intrinsicSize(e).equals(b.intrinsicSize(e))) return false;
     if (a.size != b.size) return false;
     if (a is LayoutContainer && b is LayoutContainer) {
       if (a.layout != b.layout) return false;

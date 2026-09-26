@@ -9,7 +9,7 @@ final setZOrderBottomIntentDescriptor = CommandIntentDescriptor<SetZOrderBottomI
   resolveShortcut: (context) => [.new(.bracketLeft)],
 );
 
-class SetZOrderBottomAction extends CommandAction<SetZOrderBottomIntent> {
+class SetZOrderBottomAction extends CommandAction<SetZOrderBottomIntent> with CanvasFocusAction {
   @override
   final descriptor = setZOrderBottomIntentDescriptor;
 

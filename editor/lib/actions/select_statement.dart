@@ -2,7 +2,7 @@ part of '_intents.dart';
 
 final class const SelectStatementIntent(final StatementId id) extends Intent;
 
-class SelectStatementAction extends ContextAction<SelectStatementIntent> {
+class SelectStatementAction extends ContextAction<SelectStatementIntent> with CanvasFocusAction {
   @override
   void invoke(SelectStatementIntent intent, [BuildContext? context]) {
     final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;

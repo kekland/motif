@@ -56,6 +56,7 @@ class _CursorToolOverlay extends HookWidget {
     final shouldUpdateSelectionOnUp = useRef(true);
     final isSelectionMove = useRef(false);
     final snapToPixel = tool.snapToPixel(context);
+    final textEditOverlay = useState<TextStatement?>(null);
 
     DragActivity _move(Iterable<Ref> refs, {Ref? clicked}) => MoveActivity(
       editor,
@@ -102,6 +103,22 @@ class _CursorToolOverlay extends HookWidget {
               ref: hoveredCell.value,
               childPaintTransform: info.childPaintTransform,
             ),
+            GestureDetector(
+              behavior: .translucent,
+              onDoubleTapDown: (details) {
+                final target = editor.hitTest(details.globalPosition).top;
+                if (target != null) {
+                  context.invoke(intents.selectRef(target.ref));
+                  final statement = editor.statement(target.statementId);
+                  if (statement is TextStatement) {
+                    textEditOverlay.value = statement;
+                  }
+                } else {
+                  context.invoke(intents.clearSelection());
+                }
+              },
+            ),
+
             DragActivityDetector(
               behavior: .translucent,
               activityFactory: (e) {
@@ -146,6 +163,15 @@ class _CursorToolOverlay extends HookWidget {
                 return _move(selection.refs, clicked: editor.hitTest(e.position).top?.ref);
               },
             ),
+            if (textEditOverlay.value != null)
+              TextStatementEditOverlay(
+                info: info,
+                statement: textEditOverlay.value!,
+                onClose: () {
+                  print('close!');
+                  textEditOverlay.value = null;
+                },
+              ),
           ],
         ),
       ),

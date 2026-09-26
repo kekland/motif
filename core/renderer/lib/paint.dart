@@ -10,7 +10,7 @@ import 'package:renderer/renderer.dart';
 import 'package:shared/shared.dart';
 import 'package:skia/skia.dart' as skia;
 
-part 'statement/text_statement.dart';
+part 'statement/text_statement_painter.dart';
 
 List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int depth) {
   final statement = e.statement(ref.statementId);
@@ -160,6 +160,11 @@ ui.Shader hatchShader({
     .repeated,
   );
 }
+
+bool isPaintedStatement(Statement? statement) => switch (statement) {
+  TextStatement _ => true,
+  _ => false,
+};
 
 ui.Picture? paintStatement(Evaluation e, Statement? statement) => switch (statement) {
   TextStatement s => const TextStatementPainter().paint(e, s),

@@ -113,6 +113,16 @@ external double motif_paragraph_get_longest_line(
   paragraph_t p,
 );
 
+@ffi.Native<ffi.Double Function(paragraph_t)>()
+external double motif_paragraph_get_max_intrinsic_width(
+  paragraph_t p,
+);
+
+@ffi.Native<ffi.Double Function(paragraph_t)>()
+external double motif_paragraph_get_min_intrinsic_width(
+  paragraph_t p,
+);
+
 @ffi.Native<ffi.Void Function(paragraph_t, ffi.Double)>()
 external void motif_paragraph_layout(
   paragraph_t p,

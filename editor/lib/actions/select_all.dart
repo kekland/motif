@@ -9,7 +9,7 @@ final selectAllIntentDescriptor = CommandIntentDescriptor<SelectAllIntent>(
   resolveShortcut: (context) => [PlatformSingleActivator(.keyA, control: true)],
 );
 
-class SelectAllAction extends CommandAction<SelectAllIntent> {
+class SelectAllAction extends CommandAction<SelectAllIntent> with CanvasFocusAction {
   @override
   final descriptor = selectAllIntentDescriptor;
 

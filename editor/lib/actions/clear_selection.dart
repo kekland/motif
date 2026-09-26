@@ -9,7 +9,7 @@ final clearSelectionIntentDescriptor = CommandIntentDescriptor<ClearSelectionInt
   resolveShortcut: (context) => [.new(.escape)],
 );
 
-class ClearSelectionAction extends CommandAction<ClearSelectionIntent> {
+class ClearSelectionAction extends CommandAction<ClearSelectionIntent> with CanvasFocusAction {
   @override
   final descriptor = clearSelectionIntentDescriptor;
 

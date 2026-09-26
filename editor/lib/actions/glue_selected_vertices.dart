@@ -8,7 +8,7 @@ final glueSelectedVerticesIntentDescriptor = CommandIntentDescriptor<GlueSelecte
   resolveDescription: (context) => 'Glue selected vertices',
 );
 
-class GlueSelectedVerticesAction extends CommandAction<GlueSelectedVerticesIntent> {
+class GlueSelectedVerticesAction extends CommandAction<GlueSelectedVerticesIntent> with CanvasFocusAction {
   @override
   final descriptor = glueSelectedVerticesIntentDescriptor;
 

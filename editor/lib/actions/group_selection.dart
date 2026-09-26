@@ -9,7 +9,7 @@ final groupSelectionIntentDescriptor = CommandIntentDescriptor<GroupSelectionInt
   resolveShortcut: (context) => [PlatformSingleActivator(.keyG, control: true)],
 );
 
-class GroupSelectionAction extends CommandAction<GroupSelectionIntent> {
+class GroupSelectionAction extends CommandAction<GroupSelectionIntent> with CanvasFocusAction {
   @override
   final descriptor = groupSelectionIntentDescriptor;
 

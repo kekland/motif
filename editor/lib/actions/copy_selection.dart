@@ -8,7 +8,7 @@ final copySelectionIntentDescriptor = CommandIntentDescriptor<CopySelectionInten
   resolveShortcut: (context) => [PlatformSingleActivator(.keyC, control: true)],
 );
 
-class CopySelectionAction extends CommandAction<CopySelectionIntent> {
+class CopySelectionAction extends CommandAction<CopySelectionIntent> with CanvasFocusAction {
   @override
   final descriptor = copySelectionIntentDescriptor;
 
