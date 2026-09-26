@@ -1,20 +1,19 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
 import 'package:server/imports.dart';
 import 'package:schema/program.dart' as pb;
-import 'package:program/program.dart';
 
 final class Room {
-  Room(this.id, pb.Program program, this._storage, {required this.onEmpty}) {
-    _evaluation = Evaluation(Program.decode(program));
+  Room(this.id, this.program, this._storage, {required this.onEmpty}) {
     _launchEmptyTimer();
   }
 
   final String id;
   final SceneStorage _storage;
   final void Function(Room room) onEmpty;
-  late final Evaluation _evaluation;
-  pb.Program get program => _evaluation.program.encode();
+  pb.Program program;
 
   final _clients = <WebSocketChannel, Client>{};
   final _presence = <String, ClientPresence>{};
@@ -48,7 +47,7 @@ final class Room {
     try {
       final event = ClientEvent.fromBuffer(data);
       final _ = switch (event.whichEvent()) {
-        .delta => _handleClientDelta(client, event.delta),
+        .delta => _handleClientDelta(from, client, event.delta),
         .presence => _handleClientPresence(client, event.presence),
         .notSet => null,
       };
@@ -57,13 +56,18 @@ final class Room {
     }
   }
 
-  void _handleClientDelta(Client client, ClientDelta delta) {
-    _apply(delta.delta);
-    _broadcast(
-      .new(
-        delta: .new(delta: delta.delta, client: client),
-      ),
-    );
+  void _handleClientDelta(WebSocketChannel from, Client client, ClientDelta delta) {
+    try {
+      _apply(delta.delta);
+      _broadcast(
+        .new(
+          delta: .new(delta: delta.delta, client: client),
+        ),
+      );
+    } catch (e, st) {
+      logger.warning('room $id: failed to apply delta from ${client.id}', e, st);
+      from.sink.add(ServerEvent(snapshot: Snapshot(program: program, clients: _presence.values)).writeToBuffer());
+    }
   }
 
   void _handleClientPresence(Client client, ClientPresence presence) {
@@ -94,7 +98,7 @@ final class Room {
   }
 
   void _apply(pb.ProgramDelta delta) {
-    _applyDelta(_evaluation, delta);
+    program = _applyDelta(program, delta);
     _dirty = true;
     _saveTimer?.cancel();
     _saveTimer = Timer(const Duration(seconds: 2), save);
@@ -118,7 +122,71 @@ final class Room {
   }
 }
 
-void _applyDelta(Evaluation evaluation, pb.ProgramDelta delta) {
-  final resolvedDelta = ProgramDelta.decode(delta);
-  resolvedDelta.reapply(evaluation);
+pb.Program _applyDelta(pb.Program program, pb.ProgramDelta delta) {
+  final copy = program.deepCopy();
+
+  void applyStatement(pb.StatementChange change) {
+    final anchor = change.anchor;
+    final index = switch (anchor.whichValue()) {
+      .start => 0,
+      .end => copy.statements.length,
+      .at => copy.statements.indexWhere((s) => s.id == anchor.at),
+      .after => copy.statements.indexWhere((s) => s.id == anchor.after) + 1,
+      .notSet => -1,
+    };
+
+    if (index < 0 || index + change.removed.length > copy.statements.length) {
+      throw StateError('invalid statement anchor: $anchor');
+    }
+
+    if (anchor.whichValue() == .after && index == 0) throw StateError('invalid statement anchor: $anchor');
+
+    for (var i = 0; i < change.removed.length; i++) {
+      if (copy.statements[index + i].id != change.removed[i].id) {
+        throw StateError('mismatched removed statement: ${change.removed[i].id} at index $i');
+      }
+    }
+
+    copy.statements.replaceRange(index, index + change.removed.length, change.inserted);
+  }
+
+  void applyStyle(pb.StyleChange change) {
+    if (!change.hasAfter()) {
+      copy.style.entries.removeWhere((e) => e.ref == change.ref);
+      return;
+    }
+
+    final entry = copy.style.entries.firstWhereOrNull((e) => e.ref == change.ref);
+    if (entry == null) {
+      copy.style.entries.add(.new(ref: change.ref, value: change.after));
+    } else {
+      entry.value = change.after;
+    }
+  }
+
+  void applyZOrder(pb.ZOrderChange change) {
+    if (!change.hasAfter()) {
+      copy.zOrder.entries.removeWhere((e) => e.ref == change.ref);
+      return;
+    }
+
+    final entry = copy.zOrder.entries.firstWhereOrNull((e) => e.ref == change.ref);
+    if (entry == null) {
+      copy.zOrder.entries.add(.new(ref: change.ref, value: change.after));
+    } else {
+      entry.value = change.after;
+    }
+  }
+
+  for (final change in delta.changes) {
+    final _ = switch (change.whichValue()) {
+      .statement => applyStatement(change.statement),
+      .style => applyStyle(change.style),
+      .zOrder => applyZOrder(change.zOrder),
+      .empty => null,
+      .notSet => throw StateError('invalid change: $change'),
+    };
+  }
+
+  return copy;
 }

@@ -11,7 +11,7 @@ final class ExternalEnv extends Env {
 
 final class DevelopmentEnv extends Env {
   @override
-  Uri get serverUri => Uri.parse('http://localhost:8080');
+  Uri get serverUri => Uri.parse('http://localhost:8085');
 }
 
 Env? envOverride;

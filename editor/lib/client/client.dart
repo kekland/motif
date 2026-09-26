@@ -20,12 +20,14 @@ final class SceneConnection with Disposable {
   new({
     required this.server,
     required this.id,
+    this.assetResolver,
   }) {
     _connect();
   }
 
   final Uri server;
   final String id;
+  final AssetResolver? assetResolver;
 
   late String ownId;
 
@@ -111,7 +113,7 @@ final class SceneConnection with Disposable {
     _history?.cancel();
     _pending.clear();
 
-    final next = Scene(id: id, program: Program.decode(snapshot.program));
+    final next = Scene(id: id, program: Program.decode(snapshot.program), assetResolver: assetResolver);
     _history = next.history.stream.listen(_send);
 
     final previous = scene.value;

@@ -9,5 +9,9 @@ Future<void> main() async {
   await skia.Skia.initialize();
   await SceneStorage.initialize();
 
+  if (kDebugMode) {
+    envOverride = DevelopmentEnv();
+  }
+
   runApp(App());
 }

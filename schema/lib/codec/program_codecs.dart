@@ -1250,12 +1250,12 @@ final _filletNodeCodec = _codec<FilletNode, gen.Node>(
 
 final _generatorInputNodeCodec = _codec<GeneratorInputNode, gen.Node>(
   decoder: (v) => .new(id: v.id.decode()),
-  encoder: (v) => .new(id: v.id.encode()),
+  encoder: (v) => .new(id: v.id.encode(), generatorInput: .new()),
 );
 
 final _generatorOutputNodeCodec = _codec<GeneratorOutputNode, gen.Node>(
   decoder: (v) => .new(id: v.id.decode()),
-  encoder: (v) => .new(id: v.id.encode()),
+  encoder: (v) => .new(id: v.id.encode(), generatorOutput: .new()),
 );
 
 final _polarNodeCodec = _codec<PolarNode, gen.Node>(
@@ -1279,6 +1279,7 @@ final _piNodeCodec = _codec<PiNode, gen.Node>(
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
+    pi: .new(),
   ),
 );
 
@@ -1372,6 +1373,7 @@ final _indexNodeCodec = _codec<IndexNode, gen.Node>(
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
+    index: .new(),
   ),
 );
 

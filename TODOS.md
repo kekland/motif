@@ -28,8 +28,8 @@ Urgent (in order):
 - [ ] Text tool
   - [x] Skia builds
   - [x] Can create/layout paragraphs
-  - [ ] Text statement
-  - [ ] Text rendering
+  - [x] Text statement
+  - [x] Text rendering
 
 - [x] Serialization, load/save, etc
 - [?] Slices - data (pb), copy/paste    (Missing: slice z-order and style)
