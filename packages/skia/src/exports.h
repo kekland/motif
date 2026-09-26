@@ -1,7 +1,10 @@
 #ifndef EXPORTS_H
 #define EXPORTS_H
 
-#if defined(_WIN32)
+#if defined(__EMSCRIPTEN__)
+#include <emscripten/emscripten.h>
+#define EXPORT EMSCRIPTEN_KEEPALIVE
+#elif defined(_WIN32)
 #define EXPORT __declspec(dllexport)
 #else
 #define EXPORT __attribute__((__visibility__("default"))) __attribute__((__used__))

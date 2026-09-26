@@ -10,6 +10,14 @@ import 'skia_bindings_web.g.dart';
 
 int sizeOf<T extends jsgen.NativeType>() {
   return switch (T) {
+    const (font_provider) => 0,
+    const (paragraph_style) => 0,
+    const (text_style) => 0,
+    const (paragraph) => 0,
+    const (line_metrics) => 32,
+    const (glyph_metrics) => 28,
+    const (glyph_path) => 16,
+    const (paragraph_builder) => 0,
     _ => jsgen.sizeOf<T>(),
   };
 }

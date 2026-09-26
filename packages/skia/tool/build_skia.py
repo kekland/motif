@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import time
+import json
 from pathlib import Path
 
 ###################################
@@ -67,6 +68,7 @@ skia_use_libwebp_decode = false
 skia_use_libwebp_encode = false
 skia_use_libjpeg_turbo_decode = false
 skia_use_libjpeg_turbo_encode = false
+skia_use_no_png_encode = true
 skia_use_no_jpeg_encode = true
 skia_use_no_webp_encode = true
 skia_use_libheif = false
@@ -285,6 +287,9 @@ def collect_public_headers():
 
   for d in PUBLIC_HEADER_DIRS:
     src = SKIA_SRC / d
+    rel_src = SKIA_SRC
+    if d == 'include': rel_src = SKIA_SRC / d
+
     if not src.exists():
       print(f'Warning: public header directory not found: {d}')
       continue
@@ -293,8 +298,9 @@ def collect_public_headers():
       for f in files:
         if not f.endswith('.h'): continue
         p = Path(root) / f
-        rel = p.relative_to(src)
+        rel = p.relative_to(rel_src)
         dst = dst_root / rel
+
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(p, dst)
         print(f'  {rel}')
@@ -335,6 +341,21 @@ def collect_icu_data():
   dst.parent.mkdir(parents=True, exist_ok=True)
   shutil.copy2(src, dst)
   print(f'copied icudtl.dat ({_file_human_size(dst)})')
+
+
+def collect_defines(platform: str, config: str):
+  result = subprocess.run(
+    [str(GN), 'desc', str(tmp_dir(platform, config)), '//:skia', 'defines', '--format=json'],
+    cwd=SKIA_SRC, check=True, capture_output=True, text=True
+  )
+
+  defines = next(iter(json.loads(result.stdout).values())).get('defines', [])
+  defines = [d for d in defines if not d.startswith('SKIA_IMPLEMENTATION')]
+
+  out_file = lib_dir(platform, config) / 'defines.json'
+  out_file.parent.mkdir(parents=True, exist_ok=True)
+  out_file.write_text(json.dumps(defines, indent=2))
+  print(f'collected defines to {out_file.relative_to(ROOT)}')
 
 
 def clean():
@@ -388,6 +409,7 @@ def main():
   ninja_build(args.platform, config)
 
   collect_libs(args.platform, config)
+  collect_defines(args.platform, config)
   collect_public_headers()
   collect_private_headers()
   collect_icu_data()

@@ -6,13 +6,15 @@ import re
 import shutil
 import subprocess
 import sys
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / 'build'
-WASM_LIB_DIR = BUILD / 'wasm' / 'Release'
+OUT_DIR = ROOT / 'out'
+WASM_LIB_DIR = OUT_DIR / 'lib' / 'wasm' / 'Release'
 INCLUDE_DIRS = [ROOT / 'include', ROOT]
-ICU_DATA = BUILD / 'share' / 'icudtl.dat'
+ICU_DATA = OUT_DIR / 'share' / 'icudtl.dat'
 
 OUT_DIR = ROOT / 'out'
 
@@ -46,10 +48,15 @@ def find_emcc() -> str:
   return str(emcc)
 
 
-def collect_package_sources() -> tuple[list[Path], list[Path], list[Path]]:
+def skia_defines() -> list[str]:
+  path = WASM_LIB_DIR / 'defines.json'
+  if not path.exists(): raise Exception(f'Defines file not found: {path} (rebuild Skia)')
+  return json.loads(path.read_text())
+
+
+def collect_package_sources() -> tuple[list[Path], list[Path]]:
   sources: list[Path] = []
   headers: list[Path] = []
-  include_dirs: list[Path] = []
 
   for p in SRC_DIR.rglob('*'):
     if not p.is_file(): continue
@@ -60,8 +67,7 @@ def collect_package_sources() -> tuple[list[Path], list[Path], list[Path]]:
 
   sources.sort()
   headers.sort()
-  include_dirs.sort()
-  return sources, headers, include_dirs
+  return sources, headers
 
 
 def parse_exports(headers: list[Path]) -> list[str]:
@@ -83,7 +89,7 @@ def parse_exports(headers: list[Path]) -> list[str]:
   return sorted('_' + e for e in exports)
 
 
-def run_emcc(emcc: str, sources: list[Path], include_dirs: list[Path], exports: list[str], debug: bool):
+def run_emcc(emcc: str, sources: list[Path], exports: list[str], debug: bool):
   if not WASM_LIB_DIR.exists():
     raise Exception(f'WASM library directory not found: {WASM_LIB_DIR}')
 
@@ -99,18 +105,16 @@ def run_emcc(emcc: str, sources: list[Path], include_dirs: list[Path], exports: 
 
   cmd += [
     '-std=c++17',
-    '-fno-rtti',
+    '-frtti',
     '-fvisibility=hidden',
     '-fvisibility-inlines-hidden',
   ]
 
+  cmd += [f'-D{d}' for d in skia_defines()]
   cmd += ['-O0', '-g3'] if debug else ['-O3']
 
   for d in INCLUDE_DIRS:
     if d.exists(): cmd += ['-I', str(d)]
-
-  for d in include_dirs:
-    cmd += ['-I', str(d)]
 
   cmd += [str(s) for s in sources]
   cmd += [str(WASM_LIB_DIR / f'lib{lib}.a') for lib in SKIA_LIBS]
@@ -125,10 +129,6 @@ def run_emcc(emcc: str, sources: list[Path], include_dirs: list[Path], exports: 
     '-s', 'DYNAMIC_EXECUTION=0',
     '-s', 'EXPORTED_RUNTIME_METHODS=' + str([
       'ccall', 'cwrap',
-      'HEAP8', 'HEAPU8',
-      'HEAP16', 'HEAPU16',
-      'HEAP32', 'HEAPU32',
-      'HEAPF32', 'HEAPF64',
       'getValue', 'setValue',
       'lengthBytesUTF8', 'stringToUTF8', 'UTF8ToString',
     ]).replace("'", '"'),
@@ -167,13 +167,13 @@ def main():
     return
 
   emcc = find_emcc()
-  sources, headers, include_dirs = collect_package_sources()
+  sources, headers = collect_package_sources()
   if not sources:
     print('No source files found. Nothing to build.')
     return
 
   exports = parse_exports(headers)
-  run_emcc(emcc, sources, include_dirs, exports, args.debug)
+  run_emcc(emcc, sources, exports, args.debug)
 
   # copy to app/web
   shutil.copytree(WEB_OUT_DIR, WEB_OUT_DIR_APP, dirs_exist_ok=True)

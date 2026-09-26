@@ -12,14 +12,16 @@ void main() {
   final sizesTable = <String, int>{};
 
   final srcDir = root.resolve('src');
-  final outFile = root.resolve('lib/gen/skia_bindings.g.dart');
-  final outFfiFile = root.resolve('lib/gen/skia_bindings_native.g.dart');
-  final outJsFile = root.resolve('lib/gen/skia_bindings_web.g.dart');
-  final outSizesFile = root.resolve('lib/gen/skia_bindings_sizes.g.dart');
+  final outFile = root.resolve('lib/src/gen/skia_bindings.g.dart');
+  final outFfiFile = root.resolve('lib/src/gen/skia_bindings_native.g.dart');
+  final outJsFile = root.resolve('lib/src/gen/skia_bindings_web.g.dart');
+  final outSizesFile = root.resolve('lib/src/gen/skia_bindings_sizes.g.dart');
 
   final dir = Directory.fromUri(srcDir);
 
   final headers = dir.listSync(recursive: true).whereType<File>().where((f) => f.path.endsWith('.h')).toList();
+  headers.removeWhere((f) => f.path.endsWith('exports.h'));
+
   if (headers.isEmpty) {
     print('no header files found in $srcDir');
     return;
@@ -34,7 +36,11 @@ void main() {
     headers: .new(
       entryPoints: headers.map((f) => f.uri).toList(),
     ),
-    functions: .includeAll,
+    typedefs: .includeAll,
+    functions: .new(
+      include: (decl) => true,
+      includeSymbolAddress: (decl) => decl.originalName.endsWith('_destroy'),
+    ),
     globals: .includeAll,
     enums: .includeAll,
     structs: .includeAll,
@@ -43,16 +49,41 @@ void main() {
 
   generator.generate();
 
+  final emsdk = root.resolve('build/skia/third_party/externals/emsdk/');
+  final clangInclude = Directory.fromUri(emsdk.resolve('upstream/lib/clang'))
+      .listSync()
+      .whereType<Directory>()
+      .single
+      .uri
+      .resolve('include')
+      .toFilePath();
+
+  final sysroot = emsdk.resolve('upstream/emscripten/cache/sysroot').toFilePath();
+
   ffigen_js.JSGen().run(
     .new(
       entryPoints: headers.map((f) => f.uri).toList(),
+      compilerOpts: [
+        '--target=wasm32-unknown-emscripten',
+        '--sysroot=$sysroot',
+        '-isystem',
+        clangInclude,
+      ],
       output: outJsFile,
-      functionDecl: .includeAll,
+      functionDecl: .new(
+        shouldInclude: (d) => d.usr.contains('motif'),
+        shouldIncludeSymbolPointer: (d) {
+          print(d.originalName);
+          return true;
+        },
+      ),
       // globals: .includeAll,
       // enumClassDecl: .includeAll,
       // structDecl: .includeAll,
       // unionDecl: .includeAll,
-      preamble: '// ignore_for_file: unused_import, unused_local_variable',
+      typedefs: .includeAll,
+      language: .c,
+      preamble: '// ignore_for_file: unused_import, unused_local_variable, unnecessary_cast',
     ),
   );
 
@@ -125,7 +156,8 @@ Map<String, int> _fixJsgenOutput(Uri file) {
     multiLine: true,
   );
 
-  final patched = src.replaceAllMapped(pattern, (m) {
+  var patched = src;
+  patched = patched.replaceAllMapped(pattern, (m) {
     final original = m.group(0)!;
     final name = m.group(1)!;
 
@@ -141,6 +173,33 @@ Map<String, int> _fixJsgenOutput(Uri file) {
     final closingBrace = original.lastIndexOf('}');
     return original.substring(0, closingBrace) + additionsStr + original.substring(closingBrace);
   });
+
+  // Remove `export 'package:ffigen_js/ffigen_js.dart';`
+  patched = patched.replaceAll("export 'package:ffigen_js/ffigen_js.dart';", '');
+
+  // Add symbol table for functions ending with _destroy
+  final functions = <String>[];
+  final destroyPattern = RegExp(r'void _(\w+_destroy)\(');
+  for (final m in destroyPattern.allMatches(src)) {
+    functions.add(m.group(1)!);
+  }
+
+  print(functions);
+
+  final symbolTable = [
+    'final addresses = _SymbolAddresses();',
+    '',
+    'class _SymbolAddresses {',
+    '  _SymbolAddresses();',
+    '',
+  ];
+
+  for (final fn in functions) {
+    symbolTable.add('  late final void Function(Pointer) $fn = (ptr) => GeneratedBindings.instance._$fn(ptr.cast());');
+  }
+  symbolTable.add('}');
+
+  patched = '$patched\n${symbolTable.join('\n')}';
 
   f.writeAsStringSync(patched);
   print('patched jsgen output: $file');
