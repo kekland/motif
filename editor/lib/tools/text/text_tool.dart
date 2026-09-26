@@ -1,5 +1,4 @@
 import 'package:editor/imports.dart';
-import 'package:flutter/gestures.dart';
 
 class const TextTool() extends LayoutBoxTool {
   @override
@@ -64,8 +63,6 @@ class TextStatementEditOverlay extends HookWidget {
     useListenerEffect(focusNode, () {
       if (!focusNode.hasFocus) onClose();
     });
-
-    debugPrintGestureArenaDiagnostics = true;
 
     return Transform(
       transform: info.childPaintTransform,
