@@ -17,4 +17,13 @@ mixin LayoutBoxStatement on PlacedStatement, FramedStatement implements LayoutBo
     if (offset != null) t.setTranslation(offset.x, offset.y);
     return (t, p.size);
   }
+
+  @override
+  LayoutBoxStatement copyWith({
+    StatementId? id,
+    List<Modifier>? modifiers,
+    FrameRef? parent,
+    LayoutSize? size,
+    Mat4? transform,
+  });
 }

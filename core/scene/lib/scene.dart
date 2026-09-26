@@ -27,7 +27,11 @@ part 'utils/transient_transform_animator.dart';
 final _log = Logger('scene');
 
 final class Scene with ChangeNotifier, ChangeNotifierDisposable {
-  new({required this.id, required this.program}) {
+  new({
+    required this.id,
+    required this.program,
+    this.assetResolver,
+  }) {
     evaluation = .new(program);
     selection = .new(this);
     query = .new(this);
@@ -43,12 +47,15 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
       notifier._update(pass);
       notifyListeners();
     });
+
+    program.assetResolver = assetResolver;
   }
 
   Scene.empty(String id) : this(id: id, program: .empty());
 
   final String id;
   final Program program;
+  final AssetResolver? assetResolver;
 
   late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final Evaluation evaluation;
@@ -71,6 +78,15 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
 
   Placement? layoutOf(StatementId id) => evaluation.layout.placementOf(id);
   CellStyle<H>? styleOf<H extends CellHandle>(CellRef<H> ref) => evaluation.style.of<H>(ref);
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Initialization
+  // -------------------------------------------------------------------------------------------------------------------
+
+  Future<void> prepare() async {
+    await evaluation.prepare();
+    evaluation.performInitialPass();
+  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Transaction

@@ -7,6 +7,7 @@ extension StatementProps on Statement {
     FaceStatement s => s.props,
     ContainerStatement s => s.props,
     ShapeStatement s => s.props,
+    LayoutBoxStatement s => s.props,
     CutEdgeStatement s => s.props,
     _ => [],
   };
@@ -38,6 +39,23 @@ extension FaceStatementProps on FaceStatement {
       id,
       get: (scene, s) => .from(s.style),
       set: (scene, s, value) => s.copyWith(style: value.apply(s.style)),
+    );
+  }
+}
+
+extension LayoutBoxStatementProps on LayoutBoxStatement {
+  Iterable<PropSource> get props sync* {
+    yield PropType.transform.transforming(
+      (txn) => TransformSession.statement(txn.scene, id, transaction: txn),
+      (scene) =>
+          .from(scene.statement<LayoutBoxStatement>(id)!.transform, translationOverride: scene.layoutOf(id)?.offset),
+      (session, current, value) => value.execute(session, current),
+    );
+
+    yield PropType.layoutSize.of<LayoutBoxStatement>(
+      id,
+      get: (scene, s) => .new(s.size, overridden: scene.layoutOf(id)?.size),
+      set: (scene, s, value) => s.copyWith(size: value.size),
     );
   }
 }

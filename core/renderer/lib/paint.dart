@@ -7,8 +7,18 @@ import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:renderer/renderer.dart';
+import 'package:shared/shared.dart';
+import 'package:skia/skia.dart' as skia;
 
-List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
+part 'statement/text_statement.dart';
+
+List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int depth) {
+  final statement = e.statement(ref.statementId);
+  final statementPicture = paintStatement(e, statement);
+  if (statementPicture != null) {
+    return [DrawPicture(statementPicture)];
+  }
+
   final bundle = e.bundle;
   final entries = <DrawEntry>[];
   final paints = <CellStyle, ui.Paint>{};
@@ -57,7 +67,7 @@ List<DrawEntry> paintFrame(Evaluation e, FrameHandle frame, int depth) {
         {
           flushStroke();
           flush();
-          entries.add(DrawFrame(h.asFrame));
+          entries.add(DrawFrame(ref.asFrame, h.asFrame));
         }
 
       case .vertex:
@@ -149,4 +159,15 @@ ui.Shader hatchShader({
     [0, math.max(0, on - f), math.min(1, on + f), 1 - f, 1],
     .repeated,
   );
+}
+
+ui.Picture? paintStatement(Evaluation e, Statement? statement) => switch (statement) {
+  TextStatement s => const TextStatementPainter().paint(e, s),
+  _ => null,
+};
+
+sealed class StatementPainter<S extends Statement> {
+  const StatementPainter();
+
+  ui.Picture paint(Evaluation e, S statement);
 }

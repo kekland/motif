@@ -1,5 +1,11 @@
 import 'package:app/imports.dart';
 import 'package:editor/client/client.dart';
+import 'package:flutter/services.dart';
+
+Future<Uint8List> _assetResolver(Program program, ProgramAsset asset) async {
+  final font = await rootBundle.load('packages/ui/assets/fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf');
+  return font.buffer.asUint8List();
+}
 
 class LocalEditorPage extends HookWidget {
   const new({
@@ -13,7 +19,7 @@ class LocalEditorPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scene = useDisposable(() => Scene(id: id, program: program));
+    final scene = useDisposable(() => Scene(id: id, program: program, assetResolver: _assetResolver));
     final editor = useDisposable(() => Editor(scene: scene));
 
     useListenerEffect(scene, () {

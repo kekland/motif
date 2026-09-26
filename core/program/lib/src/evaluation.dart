@@ -14,7 +14,7 @@ final class Evaluation {
     tree = .new(this);
     layout = .new(this);
     transientTransform = .new();
-    _initialPass();
+    fontProvider = .new();
   }
 
   final Program program;
@@ -26,6 +26,7 @@ final class Evaluation {
   late final DrawOrderIndex drawOrder;
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
+  late final skia.FontProvider fontProvider;
 
   // -------------------------------------------------------------------------------------------------------------------
   // State
@@ -130,10 +131,15 @@ final class Evaluation {
     _updateNotifier.dispose();
   }
 
-  void _initialPass() {
+  void performInitialPass() {
     final pass = beginPass();
     pass.edit(0, [], program._statements, initialPass: true);
     pass.drain();
+  }
+
+  Future<void> prepare() async {
+    final font = await program.assetResolver!(program, FontAsset(size: 0, family: '', weight: 0, italic: false));
+    fontProvider.add(font.buffer.asUint8List());
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:shared/shared.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:color/color.dart';
+import 'package:skia/skia.dart' as skia;
 
 import 'package:schema/codec.dart' as codec;
 import 'package:schema/program.dart' as gen;
@@ -87,6 +88,7 @@ part 'statements/multi_cut_edge_statement.dart';
 part 'statements/glue_vertices_statement.dart';
 part 'statements/fillet_face_statement.dart';
 part 'statements/generator_statement.dart';
+part 'statements/text_statement.dart';
 
 part 'modifiers/fillet_modifier.dart';
 
@@ -102,5 +104,8 @@ part 'routers/flatten_router.dart';
 part 'routers/reparent_router.dart';
 part 'routers/slice_router.dart';
 part 'routers/generator_router.dart';
+
+part 'assets/asset.dart';
+part 'assets/asset_manifest.dart';
 
 final _log = Logger('program');

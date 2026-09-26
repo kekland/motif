@@ -52,20 +52,20 @@ final class ProgramRenderer {
   }
 
   void paint(ui.Canvas canvas) {
-    _paintFrame(canvas, bundle.root, 0, .identity());
+    _paintFrame(canvas, .root, .root, 0, .identity());
   }
 
-  void _paintFrame(ui.Canvas canvas, FrameHandle frame, int depth, Mat4 parentToWorld) {
+  void _paintFrame(ui.Canvas canvas, FrameRef ref, FrameHandle frame, int depth, Mat4 parentToWorld) {
     final transform = bundle.frameTransform(frame);
 
     canvas.save();
     canvas.transform(transform.storage64);
 
-    final entries = _cache.putIfAbsent(frame.ref(bundle), () => painter.paintFrame(evaluation, frame, depth));
+    final entries = _cache.putIfAbsent(ref, () => painter.paintFrame(evaluation, ref, frame, depth));
     for (final e in entries) {
       final _ = switch (e) {
         DrawPicture(:final picture) => canvas.drawPicture(picture),
-        DrawFrame(:final frame) => _paintFrame(canvas, frame, depth + 1, parentToWorld * transform),
+        DrawFrame(:final ref, :final frame) => _paintFrame(canvas, ref, frame, depth + 1, parentToWorld * transform),
       };
     }
 
@@ -79,4 +79,4 @@ final class ProgramRenderer {
 
 sealed class DrawEntry();
 final class DrawPicture(final ui.Picture picture) extends DrawEntry;
-final class DrawFrame(final FrameHandle frame) extends DrawEntry;
+final class DrawFrame(final FrameRef ref, final FrameHandle frame) extends DrawEntry;

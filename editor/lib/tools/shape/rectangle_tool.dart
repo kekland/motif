@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 
-class const RectangleTool() extends ShapeTool {
+class const RectangleTool() extends LayoutBoxTool {
   @override
   Widget buildIcon(BuildContext context) => Icons.square();
 
@@ -11,7 +11,7 @@ class const RectangleTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Rectangle';
 
   @override
-  CreateShapeActivityFactory get activityFactory => CreateRectangleActivity.new;
+  CreateLayoutBoxActivityFactory get activityFactory => CreateRectangleActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.toolRectangle;

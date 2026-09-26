@@ -424,6 +424,7 @@ final _statementCodec = _codec<Statement, gen.Statement>(
     GroupStatement v => _groupStatementCodec.encode(v),
     MultiCutEdgeStatement v => _multiCutEdgeStatementCodec.encode(v),
     GeneratorStatement v => _generatorStatementCodec.encode(v),
+    TextStatement v => _textStatementCodec.encode(v),
     PlacedStatement() => unreachable(),
     GeneratingStatement() => unreachable(),
     FacedStatement() => unreachable(),
@@ -726,6 +727,11 @@ final _generatorStatementCodec = _codec<GeneratorStatement, gen.Statement>(
       transform: v.transform.encode(),
     ),
   ),
+);
+
+final _textStatementCodec = _codec<TextStatement, gen.Statement>(
+  decoder: (v) => throw UnimplementedError(),
+  encoder: (v) => .new(),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 
-class const PolygonTool() extends ShapeTool {
+class const PolygonTool() extends LayoutBoxTool {
   @override
   Widget buildIcon(BuildContext context) => Icons.polygon();
 
@@ -11,7 +11,7 @@ class const PolygonTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Polygon';
 
   @override
-  CreateShapeActivityFactory get activityFactory => CreatePolygonActivity.new;
+  CreateLayoutBoxActivityFactory get activityFactory => CreatePolygonActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.precise;

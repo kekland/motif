@@ -69,6 +69,7 @@ Future<void> main() async {
     .new('copy', 'Symbols.content_copy_rounded'),
     .new('settings', 'Symbols.settings_rounded'),
     .new('knife', 'Symbols.surgical_rounded'),
+    .new('text', 'Symbols.text_fields_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

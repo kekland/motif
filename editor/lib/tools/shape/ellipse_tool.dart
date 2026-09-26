@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 
-class const EllipseTool() extends ShapeTool {
+class const EllipseTool() extends LayoutBoxTool {
   @override
   Widget buildIcon(BuildContext context) => Icons.circle();
 
@@ -11,10 +11,10 @@ class const EllipseTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Ellipse';
 
   @override
-  CreateShapeActivityFactory get activityFactory => CreateEllipseActivity.new;
+  CreateLayoutBoxActivityFactory get activityFactory => CreateEllipseActivity.new;
 
   @override
-  MouseCursor get cursor => Cursors.precise;
+  MouseCursor get cursor => Cursors.toolEllipse;
 
   @override
   SingleActivator? get shortcut => .new(.keyE);

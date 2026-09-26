@@ -12,6 +12,7 @@ dependencies:
   color:
   blueprint:
   schema:
+  skia:
 
   collection: ^1.19.1
   listen: ^1.0.1

@@ -7,7 +7,7 @@ export 'cursor/cursor_tool.dart';
 export 'marquee/marquee_tool.dart';
 export 'fill/fill_tool.dart';
 export 'pen/pen_tool.dart';
-export 'shape/shape_tool.dart';
+export 'shape/layout_box_tool.dart';
 export 'shape/container_tool.dart';
 export 'shape/rectangle_tool.dart';
 export 'shape/ellipse_tool.dart';
@@ -15,6 +15,7 @@ export 'shape/polygon_tool.dart';
 export 'bend/bend_tool.dart';
 export 'generator/generator_tool.dart';
 export 'pencil/pencil_tool.dart';
+export 'text/text_tool.dart';
 
 const toolset = <Tool>[
   CursorTool(),
@@ -24,6 +25,7 @@ const toolset = <Tool>[
   BendTool(),
   KnifeTool(),
   FillTool(),
+  TextTool(),
   ContainerTool(),
   RectangleTool(),
   EllipseTool(),

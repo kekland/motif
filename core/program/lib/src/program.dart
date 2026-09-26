@@ -7,16 +7,27 @@ part of '_program.dart';
 ///
 /// To evaluate a program, an [Evaluation] is used.
 final class Program {
-  Program(this._statements, {StyleTable? styles, ZOrderTable? zOrders})
-    : styles = styles ?? .empty(),
-      zOrders = zOrders ?? .empty() {
+  Program(
+    this._statements, {
+    this.assetResolver,
+    StyleTable? styles,
+    ZOrderTable? zOrders,
+    AssetManifest? assets,
+  }) : styles = styles ?? .empty(),
+       zOrders = zOrders ?? .empty(),
+       assets = assets ?? .empty() {
     _reindex(0, length);
   }
 
   factory Program.decode(gen.Program program) => ProgramCodec.decodeProgram(program);
   static Program? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
 
-  Program.empty() : _statements = [], styles = .empty(), zOrders = .empty();
+  Program.empty({
+    this.assetResolver,
+  }) : _statements = [],
+       styles = .empty(),
+       zOrders = .empty(),
+       assets = .empty();
 
   final List<Statement> _statements;
   Iterable<Statement> get statements => _statements;
@@ -24,6 +35,8 @@ final class Program {
 
   final StyleTable styles;
   final ZOrderTable zOrders;
+  final AssetManifest assets;
+  AssetResolver? assetResolver;
 
   int get length => _statements.length;
   Statement operator [](int index) => _statements[index];
@@ -57,5 +70,7 @@ final class Program {
     _statements.toList(),
     styles: styles.clone(),
     zOrders: zOrders.clone(),
+    assets: assets,
+    assetResolver: assetResolver,
   );
 }

@@ -25,6 +25,8 @@ final class Editor extends Controller {
         panels.expand(.tab);
       }
     });
+
+    scene.prepare().then((_) => isLoaded.value = true);
   }
 
   static Editor of(BuildContext context) => context.read<Editor>();
@@ -57,6 +59,7 @@ final class Editor extends Controller {
   CommanderRootState get commander => commanderRootKey.currentState!;
 
   late final tab = $signal<EditorTab?>(null);
+  late final isLoaded = $signal<bool>(false);
 
   late final tool = ToolController(initialToolset: toolset);
   late final transientEdges = TransientEdges(this);

@@ -1,9 +1,9 @@
 import 'package:editor/imports.dart';
 
-abstract class ShapeTool extends Tool {
-  const ShapeTool();
+abstract class LayoutBoxTool extends Tool {
+  const LayoutBoxTool();
 
-  CreateShapeActivityFactory get activityFactory;
+  CreateLayoutBoxActivityFactory get activityFactory;
   MouseCursor get cursor;
 
   @override
@@ -21,8 +21,8 @@ abstract class ShapeTool extends Tool {
   Widget buildViewportOverlay(
     BuildContext context,
     OverlayChildLayoutInfo info,
-    ShapeTool tool,
-  ) => _ShapeToolOverlay(
+    LayoutBoxTool tool,
+  ) => _LayoutBoxToolOverlay(
     info: info,
     activityFactory: activityFactory,
     cursor: cursor,
@@ -30,15 +30,15 @@ abstract class ShapeTool extends Tool {
   );
 }
 
-typedef CreateShapeActivityFactory = CreateShapeActivity Function(
+typedef CreateLayoutBoxActivityFactory = CreateLayoutBoxActivity Function(
   Editor editor, {
   EdgeStyle edgeStyle,
   FaceStyle faceStyle,
   bool snapToPixel,
 });
 
-class _ShapeToolOverlay extends HookWidget {
-  const _ShapeToolOverlay({
+class _LayoutBoxToolOverlay extends HookWidget {
+  const _LayoutBoxToolOverlay({
     super.key,
     required this.info,
     required this.activityFactory,
@@ -47,10 +47,10 @@ class _ShapeToolOverlay extends HookWidget {
   });
 
   final OverlayChildLayoutInfo info;
-  final CreateShapeActivityFactory activityFactory;
+  final CreateLayoutBoxActivityFactory activityFactory;
 
   final MouseCursor cursor;
-  final ShapeTool tool;
+  final LayoutBoxTool tool;
 
   @override
   Widget build(BuildContext context) {

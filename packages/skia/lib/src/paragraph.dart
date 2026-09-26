@@ -34,12 +34,29 @@ final class GlyphMetrics {
   final int id, font;
 }
 
+extension type const PathVerb._(int value) {
+  static const move = PathVerb._(0);
+  static const line = PathVerb._(1);
+  static const quad = PathVerb._(2);
+  static const conic = PathVerb._(3);
+  static const cubic = PathVerb._(4);
+  static const close = PathVerb._(5);
+}
+
+extension type const PathVerbList._(Uint8List value) implements Uint8List {
+  const PathVerbList.fromList(Uint8List value) : this._(value);
+
+  int get length => value.length;
+  PathVerb operator [](int index) => PathVerb._(value[index]);
+  
+}
+
 final class GlyphPath {
   GlyphPath._(gen.glyph_path data)
     : verbs = .fromList(data.verbs.asTypedList(data.verb_count)),
-      points = .fromList(data.points.asTypedList(data.point_count));
+      points = .fromList(data.points.asTypedList(data.point_count * 2));
 
-  final Uint8List verbs;
+  final PathVerbList verbs;
   final Float32List points;
 }
 

@@ -9,10 +9,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared:
   geometry:
   kernel:
   program:
   scene:
   color:
+  skia:
 
   listen: ^1.0.1

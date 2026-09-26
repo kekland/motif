@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 
-class const ContainerTool() extends ShapeTool {
+class const ContainerTool() extends LayoutBoxTool {
   @override
   Widget buildIcon(BuildContext context) => Icons.container();
 
@@ -11,7 +11,7 @@ class const ContainerTool() extends ShapeTool {
   String resolveName(BuildContext context) => 'Container';
 
   @override
-  CreateShapeActivityFactory get activityFactory => CreateContainerActivity.new;
+  CreateLayoutBoxActivityFactory get activityFactory => CreateContainerActivity.new;
 
   @override
   MouseCursor get cursor => Cursors.toolContainer;

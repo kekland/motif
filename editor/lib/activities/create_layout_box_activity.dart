@@ -3,8 +3,9 @@ import 'dart:math' as math;
 import 'package:editor/imports.dart';
 import 'package:flutter/gestures.dart';
 
-sealed class CreateShapeActivity<S extends ShapeStatement> extends DragActivity with KeyboardListenerDragActivity {
-  CreateShapeActivity(
+sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragActivity
+    with KeyboardListenerDragActivity {
+  CreateLayoutBoxActivity(
     this.editor, {
     this.edgeStyle = .default_,
     this.faceStyle = .default_,
@@ -95,7 +96,7 @@ final class CreateContainerActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
-}) extends CreateShapeActivity<ContainerStatement> {
+}) extends CreateLayoutBoxActivity<ContainerStatement> {
   @override
   ContainerStatement create(Vec2 position, FrameRef? parent) => ContainerStatement(
     transform: .translation2(position),
@@ -110,7 +111,7 @@ final class CreateRectangleActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
-}) extends CreateShapeActivity<RectangleStatement> {
+}) extends CreateLayoutBoxActivity<RectangleStatement> {
   @override
   RectangleStatement create(Vec2 position, FrameRef? parent) => RectangleStatement(
     transform: .translation2(position),
@@ -125,7 +126,7 @@ final class CreateEllipseActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
-}) extends CreateShapeActivity<EllipseStatement> {
+}) extends CreateLayoutBoxActivity<EllipseStatement> {
   @override
   EllipseStatement create(Vec2 position, FrameRef? parent) => EllipseStatement(
     transform: .translation2(position),
@@ -140,12 +141,26 @@ final class CreatePolygonActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
-}) extends CreateShapeActivity<PolygonStatement> {
+}) extends CreateLayoutBoxActivity<PolygonStatement> {
   @override
   PolygonStatement create(Vec2 position, FrameRef? parent) => PolygonStatement(
     transform: .translation2(position),
     parent: parent,
     edgeStyle: edgeStyle,
     faceStyle: faceStyle,
+  );
+}
+
+final class CreateTextActivity(
+  super.editor, {
+  super.snapToPixel,
+  super.edgeStyle,
+  super.faceStyle,
+}) extends CreateLayoutBoxActivity<TextStatement> {
+  @override
+  TextStatement create(Vec2 position, FrameRef? parent) => TextStatement(
+    text: 'Hello, world!',
+    transform: .translation2(position),
+    parent: parent,
   );
 }

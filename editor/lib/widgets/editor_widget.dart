@@ -18,13 +18,16 @@ enum EditorPanel {
   tool,
 }
 
-class EditorWidget extends StatelessWidget {
+class EditorWidget extends HookWidget {
   const EditorWidget({super.key, required this.editor});
 
   final Editor editor;
 
   @override
   Widget build(BuildContext context) {
+    final isLoaded = useExistingSignal(editor.isLoaded).value;
+    if (!isLoaded) return const SizedBox.shrink();
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = constraints.maxHeight;
