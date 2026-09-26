@@ -235,6 +235,15 @@ const Statement$json = {
       '9': 0,
       '10': 'generator'
     },
+    {
+      '1': 'text',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.TextStatement',
+      '9': 0,
+      '10': 'text'
+    },
   ],
   '8': [
     {'1': 'value'},
@@ -257,7 +266,8 @@ final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
     'UYEyABKAsyFy5tb3RpZi5FbGxpcHNlU3RhdGVtZW50SABSB2VsbGlwc2USOQoJY29udGFpbmVy'
     'GBQgASgLMhkubW90aWYuQ29udGFpbmVyU3RhdGVtZW50SABSCWNvbnRhaW5lchItCgVncm91cB'
     'gVIAEoCzIVLm1vdGlmLkdyb3VwU3RhdGVtZW50SABSBWdyb3VwEjkKCWdlbmVyYXRvchgWIAEo'
-    'CzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbWVudEgAUglnZW5lcmF0b3JCBwoFdmFsdWU=');
+    'CzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbWVudEgAUglnZW5lcmF0b3ISKgoEdGV4dBgXIAEoCz'
+    'IULm1vdGlmLlRleHRTdGF0ZW1lbnRIAFIEdGV4dEIHCgV2YWx1ZQ==');
 
 @$core.Deprecated('Use u64Descriptor instead')
 const U64$json = {
@@ -1551,6 +1561,50 @@ final $typed_data.Uint8List generatorStatementDescriptor = $convert.base64Decode
     '9yUglnZW5lcmF0b3ISLwoGaW5wdXRzGAIgAygLMhcubW90aWYuRnJhZ21lbnRTZWxlY3RvclIG'
     'aW5wdXRzEisKBnBhcmVudBgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEikKCX'
     'RyYW5zZm9ybRgEIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybUIJCgdfcGFyZW50');
+
+@$core.Deprecated('Use textStatementDescriptor instead')
+const TextStatement$json = {
+  '1': 'TextStatement',
+  '2': [
+    {'1': 'text', '3': 1, '4': 1, '5': 9, '10': 'text'},
+    {
+      '1': 'size',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'parent',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `TextStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List textStatementDescriptor = $convert.base64Decode(
+    'Cg1UZXh0U3RhdGVtZW50EhIKBHRleHQYASABKAlSBHRleHQSJQoEc2l6ZRgCIAEoCzIRLm1vdG'
+    'lmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNmb3JtGAMgASgLMgsubW90aWYuTWF0NFIJdHJh'
+    'bnNmb3JtEisKBnBhcmVudBgEIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB1'
+    '9wYXJlbnQ=');
 
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {

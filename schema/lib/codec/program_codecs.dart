@@ -408,6 +408,7 @@ final _statementCodec = _codec<Statement, gen.Statement>(
     .group => _groupStatementCodec.decode(v),
     .multiCutEdge => _multiCutEdgeStatementCodec.decode(v),
     .generator => _generatorStatementCodec.decode(v),
+    .text => _textStatementCodec.decode(v),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
@@ -730,8 +731,24 @@ final _generatorStatementCodec = _codec<GeneratorStatement, gen.Statement>(
 );
 
 final _textStatementCodec = _codec<TextStatement, gen.Statement>(
-  decoder: (v) => throw UnimplementedError(),
-  encoder: (v) => .new(),
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    modifiers: v.modifiers.decode(),
+    text: v.text.text,
+    size: v.text.size.decode(),
+    transform: v.text.transform.decode(),
+    parent: _opt(v.text.hasParent, () => v.text.parent.decode()),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    modifiers: v.modifiers.encode(),
+    text: .new(
+      text: v.text,
+      size: v.size.encode(),
+      transform: v.transform?.encode(),
+      parent: v.parent?.ref.encode(),
+    ),
+  ),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------

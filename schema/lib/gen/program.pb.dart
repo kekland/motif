@@ -191,6 +191,7 @@ enum Statement_Value {
   container,
   group,
   generator,
+  text,
   notSet
 }
 
@@ -211,6 +212,7 @@ class Statement extends $pb.GeneratedMessage {
     ContainerStatement? container,
     GroupStatement? group,
     GeneratorStatement? generator,
+    TextStatement? text,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -228,6 +230,7 @@ class Statement extends $pb.GeneratedMessage {
     if (container != null) result.container = container;
     if (group != null) result.group = group;
     if (generator != null) result.generator = generator;
+    if (text != null) result.text = text;
     return result;
   }
 
@@ -254,13 +257,14 @@ class Statement extends $pb.GeneratedMessage {
     20: Statement_Value.container,
     21: Statement_Value.group,
     22: Statement_Value.generator,
+    23: Statement_Value.text,
     0: Statement_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Statement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
+    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
     ..pPM<Modifier>(2, _omitFieldNames ? '' : 'modifiers',
@@ -291,6 +295,8 @@ class Statement extends $pb.GeneratedMessage {
         subBuilder: GroupStatement.create)
     ..aOM<GeneratorStatement>(22, _omitFieldNames ? '' : 'generator',
         subBuilder: GeneratorStatement.create)
+    ..aOM<TextStatement>(23, _omitFieldNames ? '' : 'text',
+        subBuilder: TextStatement.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -324,6 +330,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
+  @$pb.TagNumber(23)
   Statement_Value whichValue() => _Statement_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -338,6 +345,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
+  @$pb.TagNumber(23)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -496,6 +504,17 @@ class Statement extends $pb.GeneratedMessage {
   void clearGenerator() => $_clearField(22);
   @$pb.TagNumber(22)
   GeneratorStatement ensureGenerator() => $_ensure(14);
+
+  @$pb.TagNumber(23)
+  TextStatement get text => $_getN(15);
+  @$pb.TagNumber(23)
+  set text(TextStatement value) => $_setField(23, value);
+  @$pb.TagNumber(23)
+  $core.bool hasText() => $_has(15);
+  @$pb.TagNumber(23)
+  void clearText() => $_clearField(23);
+  @$pb.TagNumber(23)
+  TextStatement ensureText() => $_ensure(15);
 }
 
 class U64 extends $pb.GeneratedMessage {
@@ -3577,6 +3596,104 @@ class GeneratorStatement extends $pb.GeneratedMessage {
   void clearTransform() => $_clearField(4);
   @$pb.TagNumber(4)
   Mat4 ensureTransform() => $_ensure(3);
+}
+
+class TextStatement extends $pb.GeneratedMessage {
+  factory TextStatement({
+    $core.String? text,
+    LayoutSize? size,
+    Mat4? transform,
+    CellRef? parent,
+  }) {
+    final result = create();
+    if (text != null) result.text = text;
+    if (size != null) result.size = size;
+    if (transform != null) result.transform = transform;
+    if (parent != null) result.parent = parent;
+    return result;
+  }
+
+  TextStatement._();
+
+  factory TextStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TextStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TextStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'text')
+    ..aOM<LayoutSize>(2, _omitFieldNames ? '' : 'size',
+        subBuilder: LayoutSize.create)
+    ..aOM<Mat4>(3, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
+    ..aOM<CellRef>(4, _omitFieldNames ? '' : 'parent',
+        subBuilder: CellRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextStatement copyWith(void Function(TextStatement) updates) =>
+      super.copyWith((message) => updates(message as TextStatement))
+          as TextStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TextStatement create() => TextStatement._();
+  @$core.override
+  TextStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TextStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TextStatement>(create);
+  static TextStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get text => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set text($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasText() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearText() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  LayoutSize get size => $_getN(1);
+  @$pb.TagNumber(2)
+  set size(LayoutSize value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSize() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSize() => $_clearField(2);
+  @$pb.TagNumber(2)
+  LayoutSize ensureSize() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  Mat4 get transform => $_getN(2);
+  @$pb.TagNumber(3)
+  set transform(Mat4 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTransform() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTransform() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Mat4 ensureTransform() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  CellRef get parent => $_getN(3);
+  @$pb.TagNumber(4)
+  set parent(CellRef value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasParent() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearParent() => $_clearField(4);
+  @$pb.TagNumber(4)
+  CellRef ensureParent() => $_ensure(3);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {

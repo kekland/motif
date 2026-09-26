@@ -36,6 +36,7 @@ message Statement {
     ContainerStatement    container      = 20;
     GroupStatement        group          = 21;
     GeneratorStatement    generator      = 22;
+    TextStatement         text           = 23;
   }
 }
 
@@ -290,6 +291,13 @@ message GeneratorStatement {
   repeated FragmentSelector inputs    = 2;
   optional CellRef          parent    = 3;
   Mat4                      transform = 4;
+}
+
+message TextStatement {
+  string           text      = 1;
+  LayoutSize       size      = 2;
+  Mat4             transform = 3;
+  optional CellRef parent    = 4;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
