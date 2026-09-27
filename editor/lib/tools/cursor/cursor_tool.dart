@@ -168,7 +168,6 @@ class _CursorToolOverlay extends HookWidget {
                 info: info,
                 statement: textEditOverlay.value!,
                 onClose: () {
-                  print('close!');
                   textEditOverlay.value = null;
                 },
               ),

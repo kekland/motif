@@ -1,5 +1,16 @@
 export 'package:flutter/foundation.dart'
-    hide VoidCallback, Listenable, ChangeNotifier, ValueNotifier, ValueListenable, setEquals, listEquals, mapEquals;
+    hide
+        VoidCallback,
+        Listenable,
+        ChangeNotifier,
+        ValueNotifier,
+        ValueListenable,
+        setEquals,
+        listEquals,
+        mapEquals,
+        binarySearch,
+        mergeSort;
+
 export 'package:flutter/material.dart'
     hide
         Scaffold,

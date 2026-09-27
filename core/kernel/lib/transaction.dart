@@ -154,6 +154,7 @@ final class Transaction {
     final (moved, movedFrames) = bundle._changeTracker.take(bundle);
     delta.moved = moved;
     delta.movedFrames = movedFrames;
+    bundle._changeTracker.clear();
     return delta;
   }
 

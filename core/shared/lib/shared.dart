@@ -1,3 +1,5 @@
+export 'package:collection/collection.dart';
+
 export 'log/log.dart';
 export 'storage/storage.dart';
 export 'u64/u64.dart';

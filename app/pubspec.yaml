@@ -13,6 +13,7 @@ dependencies:
   state:
   native:
   skia:
+  schema:
 
   program:
   scene:

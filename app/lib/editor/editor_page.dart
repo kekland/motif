@@ -22,10 +22,13 @@ class LocalEditorPage extends HookWidget {
     final scene = useDisposable(() => Scene(id: id, program: program, assetResolver: _assetResolver));
     final editor = useDisposable(() => Editor(scene: scene));
 
-    useListenerEffect(scene, () {
-      final program = scene.program;
-      storage.saveScene(id, program);
-    });
+    useEffect(() {
+      final sub = scene.history.stream.listen((delta) {
+        final encoded = delta.encode();
+        storage.applyDelta(id, encoded);
+      });
+      return sub.cancel;
+    }, [scene]);
 
     return Scaffold(child: EditorWidget(editor: editor));
   }
