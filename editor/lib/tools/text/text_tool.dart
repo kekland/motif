@@ -88,7 +88,7 @@ class TextStatementEditOverlay extends HookWidget {
                     package: 'ui',
                   ),
                   cursorColor: context.colors.selection.primary,
-                  cursorWidth: 2.0 / info.childPaintTransform.getMaxScaleOnAxis(),
+                  cursorWidth: 2.0 / info.childPaintTransform.getMaxScaleOnAxis2D(),
                   backgroundCursorColor: context.colors.selection.secondary.withScaledAlpha(0.5),
                   selectionColor: context.colors.selection.primary.withScaledAlpha(0.5),
                   rendererIgnoresPointer: true,

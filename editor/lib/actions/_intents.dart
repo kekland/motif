@@ -71,7 +71,7 @@ mixin CanvasFocusAction<T extends Intent> on ContextAction<T> {
   @override
   bool isEnabled(T intent, [BuildContext? context]) {
     final editor = Editor.of(context!);
-    if (!editor.canvasHasPrimaryFocus) return false;
+    if (!editor.areCanvasActionsEnabled) return false;
     return super.isEnabled(intent, context);
   }
 }

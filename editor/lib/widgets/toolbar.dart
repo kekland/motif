@@ -6,8 +6,11 @@ class EditorToolbar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useListenable(context.editor.tool);
+    final editor = context.editor;
+    final controller = useListenable(editor.tool);
     final activeTool = useComputedValue(() => controller.activeTool);
+
+    final isTablet = defaultTargetPlatform == .iOS || defaultTargetPlatform == .android;
 
     return SizedBox(
       width: 48.0,
@@ -21,7 +24,21 @@ class EditorToolbar extends HookWidget {
               direction: .vertical,
             ),
           ),
-          const SizedBox(height: 8.0),
+          if (isTablet) ...[
+            Divider(),
+            ToolbarButton(
+              onTap: () => editor.invoke(intents.deleteSelection()),
+              child: Icons.delete(),
+            ),
+            ToolbarButton(
+              onTap: () => editor.invoke(intents.undo()),
+              child: Icons.undo(),
+            ),
+            ToolbarButton(
+              onTap: () => editor.invoke(intents.redo()),
+              child: Icons.redo(),
+            ),
+          ],
         ],
       ),
     );

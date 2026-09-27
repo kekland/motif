@@ -3,7 +3,7 @@ part of '../editor.dart';
 extension EditorHitTest on Editor {
   SceneHitResult hitTest(Offset globalPosition, {HitTestCovertexMode? covertexMode}) {
     final transform = renderScene.getTransformTo(null);
-    final scale = transform.getMaxScaleOnAxis();
+    final scale = transform.getMaxScaleOnAxis2D();
     return scene.query.hitTest(
       globalToScene(globalPosition),
       tolerance: 8.0 / scale,
@@ -13,7 +13,7 @@ extension EditorHitTest on Editor {
 
   SceneHitResult hitTestScene(Vec2 scenePosition, {HitTestCovertexMode? covertexMode}) {
     final transform = renderScene.getTransformTo(null);
-    final scale = transform.getMaxScaleOnAxis();
+    final scale = transform.getMaxScaleOnAxis2D();
     return scene.query.hitTest(
       scenePosition,
       tolerance: 8.0 / scale,

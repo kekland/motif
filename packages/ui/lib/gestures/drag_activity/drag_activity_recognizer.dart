@@ -68,7 +68,10 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
   @override
   void addAllowedPointerPanZoom(PointerPanZoomStartEvent event) {
-    assert(_currentActivity == null);
+    if (_currentActivity != null) {
+      _releaseActivity(null);
+    }
+
     _currentActivity = factory(event);
     if (_currentActivity == null) {
       resolvePointer(event.pointer, .rejected);
@@ -88,7 +91,10 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    assert(_currentActivity == null);
+    if (_currentActivity != null) {
+      _releaseActivity(null);
+    }
+
     _currentActivity = factory(event);
     if (_currentActivity == null) {
       resolvePointer(event.pointer, .rejected);

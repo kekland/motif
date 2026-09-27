@@ -17,7 +17,7 @@ class EditorCanvas extends HookWidget {
       child: EditorShortcuts(
         child: ToolShortcuts(
           controller: editor.tool,
-          canInvoke: (context) => editor.canvasHasPrimaryFocus,
+          canInvoke: (context) => editor.areCanvasActionsEnabled,
           child: CommanderRoot(
             key: editor.commanderRootKey,
             child: CanvasContextMenu(

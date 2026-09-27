@@ -49,7 +49,7 @@ class EditorCanvasClientsPointersWidget extends HookWidget {
       left: position.x,
       top: position.y,
       child: Transform.scale(
-        scale: 1 / transform.getMaxScaleOnAxis(),
+        scale: 1 / transform.getMaxScaleOnAxis2D(),
         child: VectorGraphic(
           loader: assets.cursors.toolCursor,
           width: 32.0,

@@ -65,26 +65,33 @@ class DialogScaffold extends StatelessWidget {
       borderRadius: .circular(8.0),
       color: context.colors.surface.primary,
       borderSide: .new(color: context.colors.divider),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Header(
-            trailing: IconButton.flat(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Icons.close(),
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeBottom: true,
+        removeLeft: true,
+        removeRight: true,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Header(
+              trailing: IconButton.flat(
+                onTap: () => Navigator.of(context).maybePop(),
+                child: Icons.close(),
+              ),
+              title: title ?? const SizedBox.shrink(),
             ),
-            title: title ?? const SizedBox.shrink(),
-          ),
-          Divider(),
-          child,
-          if (actions != null) ...[
             Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ButtonRow(buttons: actions!),
-            ),
+            child,
+            if (actions != null) ...[
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ButtonRow(buttons: actions!),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

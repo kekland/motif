@@ -207,7 +207,7 @@ class InteractiveViewerGestureRecognizer extends OneSequenceGestureRecognizer {
     }
 
     final scale = _transform.getMaxScaleOnAxis();
-    _scaleVelocityTracker!.addPosition(timestamp, Offset(scale, 0.0));
+    _scaleVelocityTracker?.addPosition(timestamp, Offset(scale, 0.0));
   }
 
   void _updateWithPointersState() {

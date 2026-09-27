@@ -159,7 +159,7 @@ class CommanderOverlay extends HookWidget {
             borderSide: .new(color: context.colors.divider),
             borderRadius: .circular(4.0),
             child: ConstrainedBox(
-              constraints: .new(maxHeight: 400.0),
+              constraints: .new(maxHeight: 320.0),
               child: Column(
                 mainAxisSize: .min,
                 children: [
@@ -172,20 +172,23 @@ class CommanderOverlay extends HookWidget {
                     },
                   ),
                   Divider(),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: sorted.value.length,
-                    itemBuilder: (context, index) {
-                      final action = sorted.value[index];
-                      return CommandSuggestionWidget(
-                        action: action,
-                        isSelected: action == selected.value,
-                        onTap: () => submit(action),
-                      );
-                    },
-                    separatorBuilder: (context, i) => Divider(
-                      height: 1.0,
-                      color: context.colors.divider,
+                  Flexible(
+                    child: ListView.separated(
+                      padding: .zero,
+                      shrinkWrap: true,
+                      itemCount: sorted.value.length,
+                      itemBuilder: (context, index) {
+                        final action = sorted.value[index];
+                        return CommandSuggestionWidget(
+                          action: action,
+                          isSelected: action == selected.value,
+                          onTap: () => submit(action),
+                        );
+                      },
+                      separatorBuilder: (context, i) => Divider(
+                        height: 1.0,
+                        color: context.colors.divider,
+                      ),
                     ),
                   ),
                 ],

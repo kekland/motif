@@ -18,4 +18,4 @@ jobs:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
-          customArgs: --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ github.ref_name }} --build-number=${{ github.run_number }}
+          customArgs: --source-maps --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ github.ref_name }} --build-number=${{ github.run_number }}

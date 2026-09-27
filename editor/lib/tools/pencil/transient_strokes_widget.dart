@@ -55,14 +55,18 @@ class _TransientStrokePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final path = Path();
     final p0 = stroke.data.point(0);
+    var last = p0;
     path.moveTo(p0.x, p0.y);
 
     for (var i = 1; i < stroke.data.length; i++) {
       final pi = stroke.data.point(i);
+      last = pi;
       path.lineTo(pi.x, pi.y);
     }
 
-    final strokeWidth = stroke.style.width * transform.getMaxScaleOnAxis();
+    final scale = transform.getMaxScaleOnAxis2D();
+
+    final strokeWidth = stroke.style.width * scale;
 
     canvas.drawPath(
       path.transform(transform.storage),
@@ -73,11 +77,9 @@ class _TransientStrokePainter extends CustomPainter {
     );
 
     path.reset();
+    path.moveTo(last.x, last.y);
     if (stroke.predictions.isNotEmpty) {
-      final p0 = stroke.predictions.point(0);
-      path.moveTo(p0.x, p0.y);
-
-      for (var i = 1; i < stroke.predictions.length; i++) {
+      for (var i = 0; i < stroke.predictions.length; i++) {
         final pi = stroke.predictions.point(i);
         path.lineTo(pi.x, pi.y);
       }
@@ -85,9 +87,9 @@ class _TransientStrokePainter extends CustomPainter {
       canvas.drawPath(
         path.transform(transform.storage),
         Paint()
-          ..color = const Color(0x80FFFFFF)
+          ..color = stroke.style.color.toUiColor().withScaledAlpha(0.5)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.0,
+          ..strokeWidth = strokeWidth,
       );
     }
   }
