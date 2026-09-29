@@ -36,23 +36,23 @@ final class FrameDelete(
   );
 }
 
-final class CellReparent(
-  final CellRef cell,
-  final CellPlacement before,
-  final CellPlacement after,
-) extends Mutation {
-  @override
-  void reapply(Transaction txn) => txn.bundle._treeSetParent(
-    txn.cellFor(cell),
-    after.resolveParent(txn) ?? .root,
-  );
+// final class CellReparent(
+//   final CellRef cell,
+//   final CellPlacement before,
+//   final CellPlacement after,
+// ) extends Mutation {
+//   @override
+//   void reapply(Transaction txn) => txn.bundle._treeSetParent(
+//     txn.cellFor(cell),
+//     after.resolveParent(txn) ?? .root,
+//   );
 
-  @override
-  void unapply(Transaction txn) => txn.bundle._treeSetParent(
-    txn.cellFor(cell),
-    before.resolveParent(txn) ?? .root,
-  );
-}
+//   @override
+//   void unapply(Transaction txn) => txn.bundle._treeSetParent(
+//     txn.cellFor(cell),
+//     before.resolveParent(txn) ?? .root,
+//   );
+// }
 
 extension FrameMutationTransaction on Transaction {
   FrameHandle _addFrame({
@@ -120,24 +120,31 @@ extension FrameMutationTransaction on Transaction {
     markFrameMoved(f);
   }
 
-  void _reparent(CellHandle h, FrameHandle? parent) {
-    _checkOpen();
-    if (mode != .topology) return;
+  // void _reparent(CellHandle h, FrameHandle? parent) {
+  //   _checkOpen();
+  //   if (mode != .topology) return;
 
-    final from = bundle.parentOf(h) ?? .root;
-    final to = parent ?? .root;
-    if (from == to) return;
+  //   final from = bundle.parentOf(h) ?? .root;
+  //   final to = parent ?? .root;
+  //   if (from == to) return;
 
+  //   _recordGeometry(h);
+  //   final m = bundle.transformBetween(from, to);
+  //   if (h.kind == .frame) {
+  //     final transform = bundle.frameTransform(h.asFrame);
+  //     bundle._frameSetTransform(h.asFrame, m * transform);
+  //   } else if (h.kind == .vertex) {
+  //     final position = bundle.vertexPosition(h.asVertex);
+  //     bundle._vertexSetPosition(h.asVertex, m.transform2(position));
+  //   }
+
+  //   _recordMutation(CellReparent(h.ref(bundle), .from(bundle, from), .from(bundle, to))).reapply(this);
+  // }
+
+  void _reorder(CellHandle h, ZAnchor anchor) {
+    if (bundle.zAnchorOf(h) == anchor) return;
     _recordGeometry(h);
-    final m = bundle.transformBetween(from, to);
-    if (h.kind == .frame) {
-      final transform = bundle.frameTransform(h.asFrame);
-      bundle._frameSetTransform(h.asFrame, m * transform);
-    } else if (h.kind == .vertex) {
-      final position = bundle.vertexPosition(h.asVertex);
-      bundle._vertexSetPosition(h.asVertex, m.transform2(position));
-    }
-
-    _recordMutation(CellReparent(h.ref(bundle), .from(bundle, from), .from(bundle, to))).reapply(this);
+    bundle._treeReorder(h, anchor);
+    markMoved(h);
   }
 }

@@ -19,6 +19,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
   var siblingPrev = CellIndexStorage<FrameIndex>();
   var siblingNext = CellIndexStorage<FrameIndex>();
   var childHead = CellIndexStorage<FrameIndex>();
+  var childTail = CellIndexStorage<FrameIndex>();
   var transform = Mat4Storage<FrameIndex>();
   var size = Size2Storage<FrameIndex>();
   var hasSize = BoolStorage<FrameIndex>();
@@ -27,6 +28,8 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
   var clip = FaceIndexStorage<FrameIndex>();
   var composedAt = Int32Storage<FrameIndex>();
   var dependentStart = CoframeIndexStorage<FrameIndex>();
+  var zPlacement = Int32Storage<FrameIndex>();
+  var zSibling = CellIndexStorage<FrameIndex>();
 
   final id = IdTable<FrameRef, FrameIndex>('frame');
 
@@ -45,6 +48,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
       childHead = childHead.grow(atLeast);
+      childTail = childTail.grow(atLeast);
       transform = transform.grow(atLeast);
       size = size.grow(atLeast);
       hasSize = hasSize.grow(atLeast);
@@ -53,6 +57,8 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
       clip = clip.grow(atLeast);
       composedAt = composedAt.grow(atLeast);
       dependentStart = dependentStart.grow(atLeast);
+      zPlacement = zPlacement.grow(atLeast);
+      zSibling = zSibling.grow(atLeast);
     }
   }
 
@@ -63,6 +69,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
     childHead = .copyFrom(other.childHead);
+    childTail = .copyFrom(other.childTail);
     transform = .copyFrom(other.transform);
     size = .copyFrom(other.size);
     hasSize = .copyFrom(other.hasSize);
@@ -71,6 +78,8 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     clip = .copyFrom(other.clip);
     composedAt = .copyFrom(other.composedAt);
     dependentStart = .copyFrom(other.dependentStart);
+    zPlacement = .copyFrom(other.zPlacement);
+    zSibling = .copyFrom(other.zSibling);
     id.copyFrom(other.id);
   }
 
@@ -92,6 +101,7 @@ final class FrameStorage extends ArenaStorage<FrameIndex, FrameHandle, FrameStor
     siblingPrev[i] = .none;
     siblingNext[i] = .none;
     childHead[i] = .none;
+    childTail[i] = .none;
     size[i] = .zero();
     hasSize[i] = false;
     clip[i] = .none;

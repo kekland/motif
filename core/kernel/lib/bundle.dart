@@ -1,7 +1,9 @@
 part of 'kernel.dart';
 
+typedef CellOrderFn = int Function(CellRef a, CellRef b);
+
 final class Bundle {
-  Bundle() {
+  Bundle({this._order}) {
     _frame.allocRoot();
   }
 
@@ -12,6 +14,8 @@ final class Bundle {
   final _edge = EdgeStorage();
   final _coedge = CoedgeStorage();
   final _face = FaceStorage();
+
+  final CellOrderFn? _order;
 
   final _changeTracker = ChangeTracker();
 
@@ -46,9 +50,15 @@ final class Bundle {
     return _frameHasChildren(h.index);
   }
 
+  /// Children in paint order
   Iterable<CellHandle> frameChildren(FrameHandle h) sync* {
     assert(_checkFrame(h));
     for (final c in _frameChildren(h.index)) yield _cellHandle(c);
+  }
+
+  Iterable<CellHandle> frameChildrenReversed(FrameHandle h) sync* {
+    assert(_checkFrame(h));
+    for (final c in _frameChildrenReversed(h.index)) yield _cellHandle(c);
   }
 
   Iterable<CellHandle> frameSubtree(FrameHandle f) sync* {
@@ -61,6 +71,12 @@ final class Bundle {
   CellHandle? frameChildrenHead(FrameHandle h) {
     assert(_checkFrame(h));
     final c = _frameChildHead(h.index);
+    return c.isNone ? null : _cellHandle(c);
+  }
+
+  CellHandle? frameChildrenTail(FrameHandle h) {
+    assert(_checkFrame(h));
+    final c = _frameChildTail(h.index);
     return c.isNone ? null : _cellHandle(c);
   }
 
@@ -403,6 +419,11 @@ final class Bundle {
   bool isAncestorOf(CellHandle a, {required FrameHandle ancestor}) {
     assert(_checkCell(a) && _checkFrame(ancestor));
     return _treeIsAncestorOf(a.cellIndex, ancestor: ancestor.index);
+  }
+
+  ZAnchor? zAnchorOf(CellHandle h) {
+    assert(_checkCell(h));
+    return _treeZAnchorOf(h.cellIndex);
   }
 
   // -------------------------------------------------------------------------------------------------------------------

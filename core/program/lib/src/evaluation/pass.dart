@@ -23,7 +23,6 @@ final class EvalPass {
   final movedFrames = HashSet<FrameRef>();
   final relayouted = HashSet<StatementId>();
   final restyled = HashSet<CellRef>();
-  final reordered = HashSet<CellRef>();
 
   FrameRef? frameOf(CellRef r) {
     final h = bundle.handle(r);
@@ -43,6 +42,5 @@ final class EvalPass {
     movedFrames.clear();
     relayouted.clear();
     restyled.clear();
-    reordered.clear();
   }
 }

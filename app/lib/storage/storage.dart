@@ -146,25 +146,10 @@ pb.Program _applyDelta(pb.Program program, pb.ProgramDelta delta) {
     }
   }
 
-  void applyZOrder(pb.ZOrderChange change) {
-    if (!change.hasAfter()) {
-      copy.zOrder.entries.removeWhere((e) => e.ref == change.ref);
-      return;
-    }
-
-    final entry = copy.zOrder.entries.firstWhereOrNull((e) => e.ref == change.ref);
-    if (entry == null) {
-      copy.zOrder.entries.add(.new(ref: change.ref, value: change.after));
-    } else {
-      entry.value = change.after;
-    }
-  }
-
   for (final change in delta.changes) {
     final _ = switch (change.whichValue()) {
       .statement => applyStatement(change.statement),
       .style => applyStyle(change.style),
-      .zOrder => applyZOrder(change.zOrder),
       .empty => null,
       .notSet => throw StateError('invalid change: $change'),
     };

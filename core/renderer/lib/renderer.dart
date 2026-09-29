@@ -31,7 +31,6 @@ final class ProgramRenderer {
     }
 
     for (final r in pass.added) mark(r);
-    for (final r in pass.reordered) mark(r);
     for (final r in pass.restyled) mark(r);
     for (final r in pass.moved) {
       if (r.kind == .frame) {

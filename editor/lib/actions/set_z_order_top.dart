@@ -26,7 +26,8 @@ class SetZOrderTopAction extends CommandAction<SetZOrderTopIntent> with CanvasFo
 
     editor.edit((txn) {
       for (final ref in selection.cells) {
-        txn.reorder(ref, .top());
+        final top = editor.bundle.query.zAnchorTopForTarget(ref);
+        txn.reorder(ref, top);
       }
     });
   }

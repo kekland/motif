@@ -1,51 +1,6 @@
 part of '../kernel.dart';
 
 extension GetterMethods on Bundle {
-  // -------------------------------------------------------------------------------------------------------------------
-  // Tree
-  // -------------------------------------------------------------------------------------------------------------------
-
-  FrameIndexStorage _treeParentStorage(CellKind k) {
-    return switch (k) {
-      .vertex => _vertex.parent,
-      .edge => _edge.parent,
-      .face => _face.parent,
-      .frame => _frame.parent,
-    };
-  }
-
-  CellIndexStorage _treeSiblingPrevStorage(CellKind k) {
-    return switch (k) {
-      .vertex => _vertex.siblingPrev,
-      .edge => _edge.siblingPrev,
-      .face => _face.siblingPrev,
-      .frame => _frame.siblingPrev,
-    };
-  }
-
-  CellIndexStorage _treeSiblingNextStorage(CellKind k) {
-    return switch (k) {
-      .vertex => _vertex.siblingNext,
-      .edge => _edge.siblingNext,
-      .face => _face.siblingNext,
-      .frame => _frame.siblingNext,
-    };
-  }
-
-  CellIndex _treeSiblingPrev(CellIndex t) {
-    if (t.isNone) return .none;
-    return _treeSiblingPrevStorage(t.kind)[t.index];
-  }
-
-  CellIndex _treeSiblingNext(CellIndex t) {
-    if (t.isNone) return .none;
-    return _treeSiblingNextStorage(t.kind)[t.index];
-  }
-
-  FrameIndex _treeParentOf(CellIndex t) {
-    if (t.isNone) return .none;
-    return _treeParentStorage(t.kind)[t.index];
-  }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Frame
@@ -55,7 +10,12 @@ extension GetterMethods on Bundle {
     for (var c = _frame.childHead[f]; c != .none; c = _treeSiblingNext(c)) yield c;
   }
 
+  Iterable<CellIndex> _frameChildrenReversed(FrameIndex f) sync* {
+    for (var c = _frame.childTail[f]; c != .none; c = _treeSiblingPrev(c)) yield c;
+  }
+
   CellIndex _frameChildHead(FrameIndex f) => _frame.childHead[f];
+  CellIndex _frameChildTail(FrameIndex f) => _frame.childTail[f];
 
   bool _frameHasChildren(FrameIndex f) => _frame.childHead[f] != .none;
 

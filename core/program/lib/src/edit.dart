@@ -24,7 +24,6 @@ final class ProgramEdit {
   ProgramChange _resolveChange(Program projection, ProgramChange c) => switch (c) {
     StatementChange c => _resolveStatementChange(projection, c),
     StyleChange c => _resolveStyleChange(projection, c),
-    ZOrderChange c => _resolveZOrderChange(projection, c),
     EmptyChange() => c,
   };
 
@@ -54,12 +53,6 @@ final class ProgramEdit {
   StyleChange _resolveStyleChange(Program projection, StyleChange c) {
     final before = projection.styles.of(c.ref);
     projection.styles.set(c.ref, c.after);
-    return c.copyWith(before: before);
-  }
-
-  ZOrderChange _resolveZOrderChange(Program projection, ZOrderChange c) {
-    final before = projection.zOrders.of(c.ref);
-    projection.zOrders.set(c.ref, c.after);
     return c.copyWith(before: before);
   }
 
@@ -99,7 +92,10 @@ final class ProgramEditBuilder {
   void removeAll(Iterable<StatementId> ids) => _removed.addAll(ids);
 
   void restyle(CellRef ref, CellStylePartial? style) => _changes.add(.style(ref, after: style));
-  void reorder(CellRef ref, ZAnchor? after) => _changes.add(.zOrder(ref, after: after));
+  void reorder(CellRef ref, ZAnchor? anchor) {
+    final edit = _evaluation.routeReorder(ref, anchor);
+    if (edit != null) _pushEdit(edit);
+  }
 
   void remap(Remap remap) => _remap.add(remap);
 
@@ -177,4 +173,9 @@ final class ProgramEditBuilder {
 
   int _index(StatementId id) => _program.indexOf(id) ?? (throw StateError('$id not found in program'));
   Statement _statement(StatementId id) => _program[_index(id)];
+
+  void _pushEdit(ProgramEdit edit) {
+    _changes.addAll(edit.changes);
+    _remap.add(edit.remap);
+  }
 }

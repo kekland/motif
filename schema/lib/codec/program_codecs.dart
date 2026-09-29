@@ -54,12 +54,10 @@ final programCodec = _codec<Program, gen.Program>(
   decoder: (v) => .new(
     _map(v.statements, (v) => v.decode()),
     styles: v.style.decode(),
-    zOrders: v.zOrder.decode(),
   ),
   encoder: (v) => .new(
     statements: _map(v.statements, (v) => v.encode()),
     style: v.styles.encode(),
-    zOrder: v.zOrders.encode(),
   ),
 );
 
@@ -67,12 +65,10 @@ final programSliceCodec = _codec<ProgramSlice, gen.ProgramSlice>(
   decoder: (v) => .new(
     statements: _map(v.statements, (v) => v.decode()),
     // styles: v.style.decode(),
-    // zOrders: v.zOrder.decode(),
   ),
   encoder: (v) => .new(
     statements: _map(v.statements, (v) => v.encode()),
     // style: v.styles.encode(),
-    // zOrder: v.zOrders.encode(),
   ),
 );
 
@@ -143,34 +139,41 @@ final _cellRefCodec = _codec<CellRef, gen.CellRef>(
 // Z-order
 // ---------------------------------------------------------------------------------------------------------------------
 
-extension _ZOrderTableEncode on ZOrderTable { gen.ZOrderTable encode() => _zOrderTableCodec.encode(this); }
-extension _ZOrderTableDecode on gen.ZOrderTable { ZOrderTable decode() => _zOrderTableCodec.decode(this); }
-
-final _zOrderTableCodec = _codec<ZOrderTable, gen.ZOrderTable>(
-  decoder: (v) => .new({
-    for (final e in v.entries) e.ref.decode(): e.value.decode(),
-  }),
-  encoder: (v) => .new(entries: [
-    for (final e in v.entries) .new(ref: e.key.encode(), value: e.value.encode()),
-  ])
-);
-
 extension _ZAnchorEncode on ZAnchor { gen.ZAnchor encode() => _zAnchorCodec.encode(this); }
 extension _ZAnchorDecode on gen.ZAnchor { ZAnchor decode() => _zAnchorCodec.decode(this); }
 
 final _zAnchorCodec = _codec<ZAnchor, gen.ZAnchor>(
   decoder: (v) => switch(v.whichValue()) {
-    .top => ZAnchor.top(),
-    .bottom => ZAnchor.bottom(),
+    .top => ZAnchor.top(v.top),
+    .bottom => ZAnchor.bottom(v.bottom),
     .above => ZAnchor.above(v.above.decode()),
     .below => ZAnchor.below(v.below.decode()),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
-    ZTop() => .new(top: true),
-    ZBottom() => .new(bottom: true),
+    ZTop v => .new(top: v.rank),
+    ZBottom v => .new(bottom: v.rank),
     ZAbove v => .new(above: v.sibling.encode()),
     ZBelow v => .new(below: v.sibling.encode()),
+  },
+);
+
+extension _ZPlacementDecode on gen.ZPlacement { ZPlacement decode() => _zPlacementCodec.decode(this); }
+extension _ZPlacementEncode on ZPlacement { gen.ZPlacement encode() => _zPlacementCodec.encode(this); }
+
+final _zPlacementCodec = _codec<ZPlacement, gen.ZPlacement>(
+  decoder: (v) => switch(v) {
+    .Z_PLACEMENT_TOP => ZPlacement.top,
+    .Z_PLACEMENT_BOTTOM => ZPlacement.bottom,
+    .Z_PLACEMENT_ABOVE => ZPlacement.above,
+    .Z_PLACEMENT_BELOW => ZPlacement.below,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    ZPlacement.top => .Z_PLACEMENT_TOP,
+    ZPlacement.bottom => .Z_PLACEMENT_BOTTOM,
+    ZPlacement.above => .Z_PLACEMENT_ABOVE,
+    ZPlacement.below => .Z_PLACEMENT_BELOW,
   },
 );
 
@@ -409,6 +412,7 @@ final _statementCodec = _codec<Statement, gen.Statement>(
     .multiCutEdge => _multiCutEdgeStatementCodec.decode(v),
     .generator => _generatorStatementCodec.decode(v),
     .text => _textStatementCodec.decode(v),
+    .reorder => _reorderStatementCodec.decode(v),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
@@ -426,6 +430,7 @@ final _statementCodec = _codec<Statement, gen.Statement>(
     MultiCutEdgeStatement v => _multiCutEdgeStatementCodec.encode(v),
     GeneratorStatement v => _generatorStatementCodec.encode(v),
     TextStatement v => _textStatementCodec.encode(v),
+    ReorderStatement v => _reorderStatementCodec.encode(v),
     PlacedStatement() => unreachable(),
     GeneratingStatement() => unreachable(),
     FacedStatement() => unreachable(),
@@ -751,6 +756,27 @@ final _textStatementCodec = _codec<TextStatement, gen.Statement>(
   ),
 );
 
+final _reorderStatementCodec = _codec<ReorderStatement, gen.Statement>(
+  decoder: (v) => .new(
+    v.reorder.target.decode(),
+    id: v.id.decode(),
+    modifiers: v.modifiers.decode(),
+    placement: v.reorder.placement.decode(),
+    rank: _opt(v.reorder.hasRank, () => v.reorder.rank),
+    sibling: _opt(v.reorder.hasSibling, () => v.reorder.sibling.decode()),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    modifiers: v.modifiers.encode(),
+    reorder: .new(
+      target: v.target.encode(),
+      placement: v.placement.encode(),
+      rank: v.rank,
+      sibling: v.sibling?.encode(),
+    ),
+  ),
+);
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Shape
 // ---------------------------------------------------------------------------------------------------------------------
@@ -851,32 +877,14 @@ final _programChangeCodec = _codec<ProgramChange, gen.ProgramChange>(
   decoder: (v) => switch(v.whichValue()) {
     .statement => v.statement.decode(),
     .style => v.style.decode(),
-    .zOrder => v.zOrder.decode(),
     .empty => .empty(),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
     StatementChange v => .new(statement: v.encode()),
     StyleChange v => .new(style: v.encode()),
-    ZOrderChange v => .new(zOrder: v.encode()),
     EmptyChange() => .new(empty: true),
   },
-);
-
-extension _ZOrderChangeEncode on ZOrderChange { gen.ZOrderChange encode() => _zOrderChangeCodec.encode(this); }
-extension _ZOrderChangeDecode on gen.ZOrderChange { ZOrderChange decode() => _zOrderChangeCodec.decode(this); }
-
-final _zOrderChangeCodec = _codec<ZOrderChange, gen.ZOrderChange>(
-  decoder: (v) => .new(
-    v.ref.decode(),
-    before: _opt(v.hasBefore, () => v.before.decode()),
-    after: _opt(v.hasAfter, () => v.after.decode()),
-  ),
-  encoder: (v) => .new(
-    ref: v.ref.encode(),
-    before: v.before?.encode(),
-    after: v.after?.encode(),
-  ),
 );
 
 extension _StyleChangeEncode on StyleChange { gen.StyleChange encode() => _styleChangeCodec.encode(this); }

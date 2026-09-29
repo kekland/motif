@@ -78,7 +78,8 @@ final class SceneTree with ChangeNotifier {
   List<SceneNode> _build(SceneNode parent) {
     final frame = parent.frame!;
     final nodes = <StatementId, ObjectSceneNode>{};
-    for (final (ref, _) in evaluation.drawOrder.ofRef(frame)) {
+    for (final handle in bundle.frameChildren(bundle.frame(frame)!)) {
+      final ref = handle.ref(bundle);
       if (parent is ObjectSceneNode) {
         if (ref.statementId == parent.id) continue;
       }
@@ -109,10 +110,7 @@ final class SceneTree with ChangeNotifier {
   }
 
   void _update(EvalPass pass) {
-    final frames = <FrameRef>{
-      ...pass.movedFrames,
-      for (final r in pass.reordered) pass.frameOf(r) ?? .root,
-    };
+    final frames = pass.movedFrames;
 
     if (pass.deleted.isNotEmpty) {
       _byId.removeWhere((id, _) => !evaluation.hasNode(id));

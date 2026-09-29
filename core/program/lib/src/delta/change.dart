@@ -16,12 +16,6 @@ sealed class ProgramChange {
     required CellStylePartial? after,
   }) = StyleChange;
 
-  factory ProgramChange.zOrder(
-    CellRef ref, {
-    ZAnchor? before,
-    required ZAnchor? after,
-  }) = ZOrderChange;
-
   bool get isEmpty;
 
   void reapply(EvalPass pass);
@@ -122,7 +116,6 @@ final class StatementChange extends ProgramChange {
   bool commutesWith(ProgramChange other) => switch (other) {
     StyleChange _ => true,
     EmptyChange _ => true,
-    ZOrderChange _ => true,
     _ => false,
   };
 
@@ -177,7 +170,6 @@ final class StyleChange extends ProgramChange {
   @override
   bool commutesWith(ProgramChange other) => switch (other) {
     StyleChange d => d.ref != ref,
-    ZOrderChange _ => true,
     StatementChange _ => true,
     EmptyChange _ => true,
   };
@@ -186,58 +178,6 @@ final class StyleChange extends ProgramChange {
   StyleChange invert() => .new(ref, before: after, after: before);
 
   StyleChange copyWith({CellRef? ref, CellStylePartial? before, CellStylePartial? after}) => .new(
-    ref ?? this.ref,
-    before: before ?? this.before,
-    after: after ?? this.after,
-  );
-}
-
-final class ZOrderChange extends ProgramChange {
-  new(
-    this.ref, {
-    this.before,
-    required this.after,
-  });
-
-  final CellRef ref;
-  final ZAnchor? before;
-  final ZAnchor? after;
-
-  @override
-  bool get isEmpty => before == after;
-
-  @override
-  void reapply(EvalPass pass) {
-    pass.program.zOrders.set(ref, after);
-    pass.reorder(ref);
-  }
-
-  @override
-  void unapply(EvalPass pass) {
-    pass.program.zOrders.set(ref, before);
-    pass.reorder(ref);
-  }
-
-  @override
-  ProgramChange? coalesce(ProgramChange next) {
-    if (next is! ZOrderChange) return null;
-    if (next.ref != ref) return null;
-    if (before == next.after) return .empty();
-    return .zOrder(ref, before: before, after: next.after);
-  }
-
-  @override
-  bool commutesWith(ProgramChange other) => switch (other) {
-    ZOrderChange d => d.ref != ref,
-    StyleChange _ => true,
-    StatementChange _ => true,
-    EmptyChange _ => true,
-  };
-
-  @override
-  ZOrderChange invert() => .new(ref, before: after, after: before);
-
-  ZOrderChange copyWith({CellRef? ref, ZAnchor? before, ZAnchor? after}) => .new(
     ref ?? this.ref,
     before: before ?? this.before,
     after: after ?? this.after,

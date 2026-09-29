@@ -6,6 +6,8 @@ class ProgramPanel extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scrollController = useScrollController();
+
     final editor = context.editor;
     useListenable(editor.scene);
 
@@ -14,18 +16,22 @@ class ProgramPanel extends HookWidget {
 
     final program = editor.program;
 
-    return CustomScrollView(
-      slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, i) => StatementWidget(
-              statement: program[i],
-              isSelected: selection.statements.contains(program[i].id),
+    return Scrollbar(
+      controller: scrollController,
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, i) => StatementWidget(
+                statement: program[i],
+                isSelected: selection.statements.contains(program[i].id),
+              ),
+              childCount: program.length,
             ),
-            childCount: program.length,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

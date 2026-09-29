@@ -16,6 +16,7 @@ extension StatementUtils on Statement {
     GeneratorStatement() => 'Generator',
     GroupStatement() => 'Group',
     TextStatement() => 'Text',
+    ReorderStatement() => 'Reorder',
     GeneratingStatement() => unreachable(),
     PlacedStatement() => unreachable(),
     FacedStatement() => unreachable(),

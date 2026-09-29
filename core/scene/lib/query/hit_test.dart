@@ -46,11 +46,10 @@ extension SceneHitTestQuery on SceneQuery {
       CellRef(kind: .frame) => 4,
     };
 
-    final evaluation = scene.evaluation;
     entries.sort((a, b) {
       final pa = priority(a.ref), pb = priority(b.ref);
       if (pa != pb) return pa.compareTo(pb);
-      return evaluation.drawOrder.indexOf(b.ref.cell).compareTo(evaluation.drawOrder.indexOf(a.ref.cell));
+      return 0;
     });
 
     final statements = <StatementId>[];
@@ -72,7 +71,7 @@ extension SceneHitTestQuery on SceneQuery {
       p,
       tolerance: tolerance,
       covertexMode: covertexMode ?? .some(scene.selection.visibleCovertices),
-  );
+    );
 
     return _remapHitResult(p, result);
   }

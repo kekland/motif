@@ -9,13 +9,11 @@ package motif;
 message Program {
   repeated Statement statements = 1;
   StyleTable         style      = 2;
-  ZOrderTable        z_order    = 3;
 }
 
 message ProgramSlice {
   repeated Statement statements = 1;
   StyleTable         style      = 2;
-  ZOrderTable        z_order    = 3;
 }
 
 message Statement {
@@ -37,6 +35,7 @@ message Statement {
     GroupStatement        group          = 21;
     GeneratorStatement    generator      = 22;
     TextStatement         text           = 23;
+    ReorderStatement      reorder        = 24;
   }
 }
 
@@ -67,22 +66,20 @@ message CellRef {
 // Z-order
 // ---------------------------------------------------------------------------------------------------------------------
 
+enum ZPlacement {
+  Z_PLACEMENT_TOP    = 0;
+  Z_PLACEMENT_BOTTOM = 1;
+  Z_PLACEMENT_ABOVE  = 2;
+  Z_PLACEMENT_BELOW  = 3;
+}
+
 message ZAnchor {
   oneof value {
-    bool    top    = 1;
-    bool    bottom = 2;
+    int32   top    = 1;
+    int32   bottom = 2;
     CellRef above  = 3;
     CellRef below  = 4;
   }
-}
-
-message ZOrderEntry {
-  CellRef ref   = 1;
-  ZAnchor value = 2;
-}
-
-message ZOrderTable {
-  repeated ZOrderEntry entries = 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -298,6 +295,13 @@ message TextStatement {
   LayoutSize       size      = 2;
   Mat4             transform = 3;
   optional CellRef parent    = 4;
+}
+
+message ReorderStatement {
+  CellSelector          target    = 1;
+  ZPlacement            placement = 2;
+  optional int32        rank      = 3;
+  optional CellSelector sibling   = 4;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -550,18 +554,11 @@ message StyleChange {
   optional CellStyle.Partial after  = 3;
 }
 
-message ZOrderChange {
-  CellRef          ref    = 1;
-  optional ZAnchor before = 2;
-  optional ZAnchor after  = 3;
-}
-
 message ProgramChange {
   oneof value {
     StatementChange statement = 1;
     StyleChange     style     = 2;
-    ZOrderChange    z_order   = 3;
-    bool            empty     = 4;
+    bool            empty     = 3;
   }
 }
 

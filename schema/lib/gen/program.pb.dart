@@ -24,12 +24,10 @@ class Program extends $pb.GeneratedMessage {
   factory Program({
     $core.Iterable<Statement>? statements,
     StyleTable? style,
-    ZOrderTable? zOrder,
   }) {
     final result = create();
     if (statements != null) result.statements.addAll(statements);
     if (style != null) result.style = style;
-    if (zOrder != null) result.zOrder = zOrder;
     return result;
   }
 
@@ -50,8 +48,6 @@ class Program extends $pb.GeneratedMessage {
         subBuilder: Statement.create)
     ..aOM<StyleTable>(2, _omitFieldNames ? '' : 'style',
         subBuilder: StyleTable.create)
-    ..aOM<ZOrderTable>(3, _omitFieldNames ? '' : 'zOrder',
-        subBuilder: ZOrderTable.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -85,29 +81,16 @@ class Program extends $pb.GeneratedMessage {
   void clearStyle() => $_clearField(2);
   @$pb.TagNumber(2)
   StyleTable ensureStyle() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  ZOrderTable get zOrder => $_getN(2);
-  @$pb.TagNumber(3)
-  set zOrder(ZOrderTable value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasZOrder() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearZOrder() => $_clearField(3);
-  @$pb.TagNumber(3)
-  ZOrderTable ensureZOrder() => $_ensure(2);
 }
 
 class ProgramSlice extends $pb.GeneratedMessage {
   factory ProgramSlice({
     $core.Iterable<Statement>? statements,
     StyleTable? style,
-    ZOrderTable? zOrder,
   }) {
     final result = create();
     if (statements != null) result.statements.addAll(statements);
     if (style != null) result.style = style;
-    if (zOrder != null) result.zOrder = zOrder;
     return result;
   }
 
@@ -128,8 +111,6 @@ class ProgramSlice extends $pb.GeneratedMessage {
         subBuilder: Statement.create)
     ..aOM<StyleTable>(2, _omitFieldNames ? '' : 'style',
         subBuilder: StyleTable.create)
-    ..aOM<ZOrderTable>(3, _omitFieldNames ? '' : 'zOrder',
-        subBuilder: ZOrderTable.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -164,17 +145,6 @@ class ProgramSlice extends $pb.GeneratedMessage {
   void clearStyle() => $_clearField(2);
   @$pb.TagNumber(2)
   StyleTable ensureStyle() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  ZOrderTable get zOrder => $_getN(2);
-  @$pb.TagNumber(3)
-  set zOrder(ZOrderTable value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasZOrder() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearZOrder() => $_clearField(3);
-  @$pb.TagNumber(3)
-  ZOrderTable ensureZOrder() => $_ensure(2);
 }
 
 enum Statement_Value {
@@ -192,6 +162,7 @@ enum Statement_Value {
   group,
   generator,
   text,
+  reorder,
   notSet
 }
 
@@ -213,6 +184,7 @@ class Statement extends $pb.GeneratedMessage {
     GroupStatement? group,
     GeneratorStatement? generator,
     TextStatement? text,
+    ReorderStatement? reorder,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -231,6 +203,7 @@ class Statement extends $pb.GeneratedMessage {
     if (group != null) result.group = group;
     if (generator != null) result.generator = generator;
     if (text != null) result.text = text;
+    if (reorder != null) result.reorder = reorder;
     return result;
   }
 
@@ -258,13 +231,14 @@ class Statement extends $pb.GeneratedMessage {
     21: Statement_Value.group,
     22: Statement_Value.generator,
     23: Statement_Value.text,
+    24: Statement_Value.reorder,
     0: Statement_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Statement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
+    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
     ..pPM<Modifier>(2, _omitFieldNames ? '' : 'modifiers',
@@ -297,6 +271,8 @@ class Statement extends $pb.GeneratedMessage {
         subBuilder: GeneratorStatement.create)
     ..aOM<TextStatement>(23, _omitFieldNames ? '' : 'text',
         subBuilder: TextStatement.create)
+    ..aOM<ReorderStatement>(24, _omitFieldNames ? '' : 'reorder',
+        subBuilder: ReorderStatement.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -331,6 +307,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
   @$pb.TagNumber(23)
+  @$pb.TagNumber(24)
   Statement_Value whichValue() => _Statement_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -346,6 +323,7 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(22)
   @$pb.TagNumber(23)
+  @$pb.TagNumber(24)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -515,6 +493,17 @@ class Statement extends $pb.GeneratedMessage {
   void clearText() => $_clearField(23);
   @$pb.TagNumber(23)
   TextStatement ensureText() => $_ensure(15);
+
+  @$pb.TagNumber(24)
+  ReorderStatement get reorder => $_getN(16);
+  @$pb.TagNumber(24)
+  set reorder(ReorderStatement value) => $_setField(24, value);
+  @$pb.TagNumber(24)
+  $core.bool hasReorder() => $_has(16);
+  @$pb.TagNumber(24)
+  void clearReorder() => $_clearField(24);
+  @$pb.TagNumber(24)
+  ReorderStatement ensureReorder() => $_ensure(16);
 }
 
 class U64 extends $pb.GeneratedMessage {
@@ -734,8 +723,8 @@ enum ZAnchor_Value { top, bottom, above, below, notSet }
 
 class ZAnchor extends $pb.GeneratedMessage {
   factory ZAnchor({
-    $core.bool? top,
-    $core.bool? bottom,
+    $core.int? top,
+    $core.int? bottom,
     CellRef? above,
     CellRef? below,
   }) {
@@ -768,8 +757,8 @@ class ZAnchor extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..oo(0, [1, 2, 3, 4])
-    ..aOB(1, _omitFieldNames ? '' : 'top')
-    ..aOB(2, _omitFieldNames ? '' : 'bottom')
+    ..aI(1, _omitFieldNames ? '' : 'top')
+    ..aI(2, _omitFieldNames ? '' : 'bottom')
     ..aOM<CellRef>(3, _omitFieldNames ? '' : 'above',
         subBuilder: CellRef.create)
     ..aOM<CellRef>(4, _omitFieldNames ? '' : 'below',
@@ -806,18 +795,18 @@ class ZAnchor extends $pb.GeneratedMessage {
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  $core.bool get top => $_getBF(0);
+  $core.int get top => $_getIZ(0);
   @$pb.TagNumber(1)
-  set top($core.bool value) => $_setBool(0, value);
+  set top($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasTop() => $_has(0);
   @$pb.TagNumber(1)
   void clearTop() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get bottom => $_getBF(1);
+  $core.int get bottom => $_getIZ(1);
   @$pb.TagNumber(2)
-  set bottom($core.bool value) => $_setBool(1, value);
+  set bottom($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasBottom() => $_has(1);
   @$pb.TagNumber(2)
@@ -844,126 +833,6 @@ class ZAnchor extends $pb.GeneratedMessage {
   void clearBelow() => $_clearField(4);
   @$pb.TagNumber(4)
   CellRef ensureBelow() => $_ensure(3);
-}
-
-class ZOrderEntry extends $pb.GeneratedMessage {
-  factory ZOrderEntry({
-    CellRef? ref,
-    ZAnchor? value,
-  }) {
-    final result = create();
-    if (ref != null) result.ref = ref;
-    if (value != null) result.value = value;
-    return result;
-  }
-
-  ZOrderEntry._();
-
-  factory ZOrderEntry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ZOrderEntry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ZOrderEntry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'ref', subBuilder: CellRef.create)
-    ..aOM<ZAnchor>(2, _omitFieldNames ? '' : 'value',
-        subBuilder: ZAnchor.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderEntry clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderEntry copyWith(void Function(ZOrderEntry) updates) =>
-      super.copyWith((message) => updates(message as ZOrderEntry))
-          as ZOrderEntry;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ZOrderEntry create() => ZOrderEntry._();
-  @$core.override
-  ZOrderEntry createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ZOrderEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ZOrderEntry>(create);
-  static ZOrderEntry? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  CellRef get ref => $_getN(0);
-  @$pb.TagNumber(1)
-  set ref(CellRef value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasRef() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearRef() => $_clearField(1);
-  @$pb.TagNumber(1)
-  CellRef ensureRef() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  ZAnchor get value => $_getN(1);
-  @$pb.TagNumber(2)
-  set value(ZAnchor value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasValue() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearValue() => $_clearField(2);
-  @$pb.TagNumber(2)
-  ZAnchor ensureValue() => $_ensure(1);
-}
-
-class ZOrderTable extends $pb.GeneratedMessage {
-  factory ZOrderTable({
-    $core.Iterable<ZOrderEntry>? entries,
-  }) {
-    final result = create();
-    if (entries != null) result.entries.addAll(entries);
-    return result;
-  }
-
-  ZOrderTable._();
-
-  factory ZOrderTable.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ZOrderTable.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ZOrderTable',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..pPM<ZOrderEntry>(1, _omitFieldNames ? '' : 'entries',
-        subBuilder: ZOrderEntry.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderTable clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderTable copyWith(void Function(ZOrderTable) updates) =>
-      super.copyWith((message) => updates(message as ZOrderTable))
-          as ZOrderTable;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ZOrderTable create() => ZOrderTable._();
-  @$core.override
-  ZOrderTable createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ZOrderTable getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ZOrderTable>(create);
-  static ZOrderTable? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<ZOrderEntry> get entries => $_getList(0);
 }
 
 class StyleEntry extends $pb.GeneratedMessage {
@@ -3694,6 +3563,103 @@ class TextStatement extends $pb.GeneratedMessage {
   void clearParent() => $_clearField(4);
   @$pb.TagNumber(4)
   CellRef ensureParent() => $_ensure(3);
+}
+
+class ReorderStatement extends $pb.GeneratedMessage {
+  factory ReorderStatement({
+    CellSelector? target,
+    ZPlacement? placement,
+    $core.int? rank,
+    CellSelector? sibling,
+  }) {
+    final result = create();
+    if (target != null) result.target = target;
+    if (placement != null) result.placement = placement;
+    if (rank != null) result.rank = rank;
+    if (sibling != null) result.sibling = sibling;
+    return result;
+  }
+
+  ReorderStatement._();
+
+  factory ReorderStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReorderStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReorderStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<CellSelector>(1, _omitFieldNames ? '' : 'target',
+        subBuilder: CellSelector.create)
+    ..aE<ZPlacement>(2, _omitFieldNames ? '' : 'placement',
+        enumValues: ZPlacement.values)
+    ..aI(3, _omitFieldNames ? '' : 'rank')
+    ..aOM<CellSelector>(4, _omitFieldNames ? '' : 'sibling',
+        subBuilder: CellSelector.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReorderStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReorderStatement copyWith(void Function(ReorderStatement) updates) =>
+      super.copyWith((message) => updates(message as ReorderStatement))
+          as ReorderStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReorderStatement create() => ReorderStatement._();
+  @$core.override
+  ReorderStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ReorderStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReorderStatement>(create);
+  static ReorderStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  CellSelector get target => $_getN(0);
+  @$pb.TagNumber(1)
+  set target(CellSelector value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTarget() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTarget() => $_clearField(1);
+  @$pb.TagNumber(1)
+  CellSelector ensureTarget() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ZPlacement get placement => $_getN(1);
+  @$pb.TagNumber(2)
+  set placement(ZPlacement value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPlacement() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPlacement() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get rank => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set rank($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRank() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRank() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  CellSelector get sibling => $_getN(3);
+  @$pb.TagNumber(4)
+  set sibling(CellSelector value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSibling() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSibling() => $_clearField(4);
+  @$pb.TagNumber(4)
+  CellSelector ensureSibling() => $_ensure(3);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {
@@ -6615,105 +6581,17 @@ class StyleChange extends $pb.GeneratedMessage {
   CellStyle_Partial ensureAfter() => $_ensure(2);
 }
 
-class ZOrderChange extends $pb.GeneratedMessage {
-  factory ZOrderChange({
-    CellRef? ref,
-    ZAnchor? before,
-    ZAnchor? after,
-  }) {
-    final result = create();
-    if (ref != null) result.ref = ref;
-    if (before != null) result.before = before;
-    if (after != null) result.after = after;
-    return result;
-  }
-
-  ZOrderChange._();
-
-  factory ZOrderChange.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ZOrderChange.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ZOrderChange',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<CellRef>(1, _omitFieldNames ? '' : 'ref', subBuilder: CellRef.create)
-    ..aOM<ZAnchor>(2, _omitFieldNames ? '' : 'before',
-        subBuilder: ZAnchor.create)
-    ..aOM<ZAnchor>(3, _omitFieldNames ? '' : 'after',
-        subBuilder: ZAnchor.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderChange clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ZOrderChange copyWith(void Function(ZOrderChange) updates) =>
-      super.copyWith((message) => updates(message as ZOrderChange))
-          as ZOrderChange;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ZOrderChange create() => ZOrderChange._();
-  @$core.override
-  ZOrderChange createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static ZOrderChange getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ZOrderChange>(create);
-  static ZOrderChange? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  CellRef get ref => $_getN(0);
-  @$pb.TagNumber(1)
-  set ref(CellRef value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasRef() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearRef() => $_clearField(1);
-  @$pb.TagNumber(1)
-  CellRef ensureRef() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  ZAnchor get before => $_getN(1);
-  @$pb.TagNumber(2)
-  set before(ZAnchor value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasBefore() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearBefore() => $_clearField(2);
-  @$pb.TagNumber(2)
-  ZAnchor ensureBefore() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  ZAnchor get after => $_getN(2);
-  @$pb.TagNumber(3)
-  set after(ZAnchor value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasAfter() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAfter() => $_clearField(3);
-  @$pb.TagNumber(3)
-  ZAnchor ensureAfter() => $_ensure(2);
-}
-
-enum ProgramChange_Value { statement, style, zOrder, empty, notSet }
+enum ProgramChange_Value { statement, style, empty, notSet }
 
 class ProgramChange extends $pb.GeneratedMessage {
   factory ProgramChange({
     StatementChange? statement,
     StyleChange? style,
-    ZOrderChange? zOrder,
     $core.bool? empty,
   }) {
     final result = create();
     if (statement != null) result.statement = statement;
     if (style != null) result.style = style;
-    if (zOrder != null) result.zOrder = zOrder;
     if (empty != null) result.empty = empty;
     return result;
   }
@@ -6731,22 +6609,19 @@ class ProgramChange extends $pb.GeneratedMessage {
       _ProgramChange_ValueByTag = {
     1: ProgramChange_Value.statement,
     2: ProgramChange_Value.style,
-    3: ProgramChange_Value.zOrder,
-    4: ProgramChange_Value.empty,
+    3: ProgramChange_Value.empty,
     0: ProgramChange_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ProgramChange',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4])
+    ..oo(0, [1, 2, 3])
     ..aOM<StatementChange>(1, _omitFieldNames ? '' : 'statement',
         subBuilder: StatementChange.create)
     ..aOM<StyleChange>(2, _omitFieldNames ? '' : 'style',
         subBuilder: StyleChange.create)
-    ..aOM<ZOrderChange>(3, _omitFieldNames ? '' : 'zOrder',
-        subBuilder: ZOrderChange.create)
-    ..aOB(4, _omitFieldNames ? '' : 'empty')
+    ..aOB(3, _omitFieldNames ? '' : 'empty')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -6771,13 +6646,11 @@ class ProgramChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   ProgramChange_Value whichValue() =>
       _ProgramChange_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -6803,24 +6676,13 @@ class ProgramChange extends $pb.GeneratedMessage {
   StyleChange ensureStyle() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  ZOrderChange get zOrder => $_getN(2);
+  $core.bool get empty => $_getBF(2);
   @$pb.TagNumber(3)
-  set zOrder(ZOrderChange value) => $_setField(3, value);
+  set empty($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasZOrder() => $_has(2);
+  $core.bool hasEmpty() => $_has(2);
   @$pb.TagNumber(3)
-  void clearZOrder() => $_clearField(3);
-  @$pb.TagNumber(3)
-  ZOrderChange ensureZOrder() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  $core.bool get empty => $_getBF(3);
-  @$pb.TagNumber(4)
-  set empty($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasEmpty() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearEmpty() => $_clearField(4);
+  void clearEmpty() => $_clearField(3);
 }
 
 class Mat4 extends $pb.GeneratedMessage {

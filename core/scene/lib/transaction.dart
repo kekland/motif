@@ -175,6 +175,7 @@ final class SceneTransaction {
   void commit({Object? mergeKey}) {
     _checkOpen();
     flush();
+    // _pass.notify();
     _closed = true;
     scene._endTransaction(this);
     scene.history.commit(_build(), mergeKey: mergeKey);
@@ -183,6 +184,7 @@ final class SceneTransaction {
   void flush() {
     if (!_dirty) return;
     _pass.drain();
+    // _pass.notify();
     _dirty = false;
   }
 
@@ -197,6 +199,7 @@ final class SceneTransaction {
     for (final change in _entries.reversed) change.unapply(_pass);
     _entries.clear();
     _pass.drain();
+    // _pass.notify();
     _pass.reset();
     _dirty = false;
   }

@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:shared/shared.dart';
 
@@ -19,6 +18,7 @@ part 'utils/mutation_utils.dart';
 part 'utils/ops_utils.dart';
 part 'utils/change_tracker.dart';
 part 'utils/cycle_algebra.dart';
+part 'utils/z_anchor.dart';
 
 part 'elements/frame.dart';
 part 'elements/coframe.dart';
@@ -37,11 +37,12 @@ part 'methods/utility_methods.dart';
 part 'methods/getter_methods.dart';
 part 'methods/topology_methods.dart';
 part 'methods/geometry_methods.dart';
+part 'methods/tree_methods.dart';
 
 part 'transaction/lineage.dart';
 part 'transaction/delta.dart';
 part 'transaction/mutation.dart';
-part 'transaction/snapshot.dart';
+part 'transaction/geometry.dart';
 part 'transaction/op.dart';
 
 part 'mutations/frame_mutations.dart';
@@ -51,11 +52,11 @@ part 'mutations/face_mutations.dart';
 
 part 'ops/add_cell_ops.dart';
 part 'ops/delete_cell_ops.dart';
+part 'ops/tree_ops.dart';
 part 'ops/cut_edge.dart';
 part 'ops/fillet_vertex.dart';
 part 'ops/fillet_face.dart';
 part 'ops/make_face.dart';
-part 'ops/reparent.dart';
 part 'ops/glue_vertices.dart';
 
 part 'cache/arrangement.dart';
@@ -69,3 +70,4 @@ part 'queries/hit_test.dart';
 part 'queries/hit_test_rect.dart';
 part 'queries/transform.dart';
 part 'queries/lca.dart';
+part 'queries/z_order.dart';

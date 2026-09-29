@@ -39,6 +39,31 @@ class CellKind extends $pb.ProtobufEnum {
   const CellKind._(super.value, super.name);
 }
 
+class ZPlacement extends $pb.ProtobufEnum {
+  static const ZPlacement Z_PLACEMENT_TOP =
+      ZPlacement._(0, _omitEnumNames ? '' : 'Z_PLACEMENT_TOP');
+  static const ZPlacement Z_PLACEMENT_BOTTOM =
+      ZPlacement._(1, _omitEnumNames ? '' : 'Z_PLACEMENT_BOTTOM');
+  static const ZPlacement Z_PLACEMENT_ABOVE =
+      ZPlacement._(2, _omitEnumNames ? '' : 'Z_PLACEMENT_ABOVE');
+  static const ZPlacement Z_PLACEMENT_BELOW =
+      ZPlacement._(3, _omitEnumNames ? '' : 'Z_PLACEMENT_BELOW');
+
+  static const $core.List<ZPlacement> values = <ZPlacement>[
+    Z_PLACEMENT_TOP,
+    Z_PLACEMENT_BOTTOM,
+    Z_PLACEMENT_ABOVE,
+    Z_PLACEMENT_BELOW,
+  ];
+
+  static final $core.List<ZPlacement?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static ZPlacement? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ZPlacement._(super.value, super.name);
+}
+
 class GlueVerticesStatement_Position extends $pb.ProtobufEnum {
   static const GlueVerticesStatement_Position
       GLUE_VERTICES_STATEMENT_POSITION_FIRST = GlueVerticesStatement_Position._(

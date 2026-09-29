@@ -145,6 +145,11 @@ final class Transaction {
     if (mode == .topology) delta.lineage.add(l);
   }
 
+  void reorder(CellHandle h, ZAnchor anchor) {
+    _checkOpen();
+    bundle._treeReorder(h, anchor);
+  }
+
   Delta commit() {
     _checkOpen();
     _committed = true;

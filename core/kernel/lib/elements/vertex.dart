@@ -20,6 +20,8 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
   var parent = FrameIndexStorage<VertexIndex>();
   var siblingPrev = CellIndexStorage<VertexIndex>();
   var siblingNext = CellIndexStorage<VertexIndex>();
+  var zPlacement = Int32Storage<VertexIndex>();
+  var zSibling = CellIndexStorage<VertexIndex>();
 
   final id = IdTable<VertexRef, VertexIndex>('vertex');
 
@@ -35,6 +37,8 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
       parent = parent.grow(atLeast);
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
+      zPlacement = zPlacement.grow(atLeast);
+      zSibling = zSibling.grow(atLeast);
     }
   }
 
@@ -49,6 +53,8 @@ final class VertexStorage extends ArenaStorage<VertexIndex, VertexHandle, Vertex
     parent = .copyFrom(other.parent);
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
+    zPlacement = .copyFrom(other.zPlacement);
+    zSibling = .copyFrom(other.zSibling);
     id.copyFrom(other.id);
   }
 

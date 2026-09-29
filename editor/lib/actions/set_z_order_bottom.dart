@@ -26,7 +26,8 @@ class SetZOrderBottomAction extends CommandAction<SetZOrderBottomIntent> with Ca
 
     editor.edit((txn) {
       for (final ref in selection.cells) {
-        txn.reorder(ref, .bottom());
+        final bottom = editor.bundle.query.zAnchorBottomForTarget(ref);
+        txn.reorder(ref, bottom);
       }
     });
   }

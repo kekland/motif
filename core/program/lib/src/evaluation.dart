@@ -10,7 +10,6 @@ final class Evaluation {
     lineage = .new(this);
     live = .new(this);
     style = .new(this);
-    drawOrder = .new(this);
     tree = .new(this);
     layout = .new(this);
     transientTransform = .new();
@@ -23,7 +22,6 @@ final class Evaluation {
   late final LineageIndex lineage;
   late final LiveIndex live;
   late final StyleIndex style;
-  late final DrawOrderIndex drawOrder;
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
   late final skia.FontProvider fontProvider;

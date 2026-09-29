@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:shared/shared.dart';
 

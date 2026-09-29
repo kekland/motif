@@ -99,8 +99,8 @@ extension HitTestQuery on TopologyQuery {
       final clip = bundle.frameClip(f);
       if (f != .root && clip != null && !_faceContains(clip, p, tolerance)) return;
 
-      final children = bundle.frameChildren(f).toList();
-      for (final child in children.reversed) {
+      final children = bundle.frameChildrenReversed(f);
+      for (final child in children) {
         final kind = child.kind;
 
         if (kind == .vertex) {

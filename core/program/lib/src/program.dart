@@ -11,10 +11,8 @@ final class Program {
     this._statements, {
     this.assetResolver,
     StyleTable? styles,
-    ZOrderTable? zOrders,
     AssetManifest? assets,
   }) : styles = styles ?? .empty(),
-       zOrders = zOrders ?? .empty(),
        assets = assets ?? .empty() {
     _reindex(0, length);
   }
@@ -26,7 +24,6 @@ final class Program {
     this.assetResolver,
   }) : _statements = [],
        styles = .empty(),
-       zOrders = .empty(),
        assets = .empty();
 
   final List<Statement> _statements;
@@ -34,7 +31,6 @@ final class Program {
   final _statementIndex = <StatementId, int>{};
 
   final StyleTable styles;
-  final ZOrderTable zOrders;
   final AssetManifest assets;
   AssetResolver? assetResolver;
 
@@ -69,7 +65,6 @@ final class Program {
   Program clone() => .new(
     _statements.toList(),
     styles: styles.clone(),
-    zOrders: zOrders.clone(),
     assets: assets,
     assetResolver: assetResolver,
   );

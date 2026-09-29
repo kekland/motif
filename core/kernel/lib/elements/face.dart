@@ -19,6 +19,8 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
   var siblingPrev = CellIndexStorage<FaceIndex>();
   var siblingNext = CellIndexStorage<FaceIndex>();
   var crossStart = CoframeIndexStorage<FaceIndex>();
+  var zPlacement = Int32Storage<FaceIndex>();
+  var zSibling = CellIndexStorage<FaceIndex>();
 
   final id = IdTable<FaceRef, FaceIndex>('face');
 
@@ -31,6 +33,8 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
       crossStart = crossStart.grow(atLeast);
+      zPlacement = zPlacement.grow(atLeast);
+      zSibling = zSibling.grow(atLeast);
     }
   }
 
@@ -42,6 +46,8 @@ final class FaceStorage extends ArenaStorage<FaceIndex, FaceHandle, FaceStorage>
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
     crossStart = .copyFrom(other.crossStart);
+    zPlacement = .copyFrom(other.zPlacement);
+    zSibling = .copyFrom(other.zSibling);
     id.copyFrom(other.id);
   }
 

@@ -39,6 +39,10 @@ extension Evaluator on EvalPass {
       _evaluate(root);
     }
 
+    notify();
+  }
+
+  void notify() {
     evaluation._onPassComplete(this);
     reset();
   }
@@ -270,7 +274,6 @@ extension Evaluator on EvalPass {
 
   void _onDelta(Delta delta) {
     movedFrames.addAll(delta.movedFrames);
-    for (final f in delta.movedFrames) evaluation.drawOrder.invalidateFrame(f);
   }
 
   void _onMoved(Iterable<CellRef> cells) {

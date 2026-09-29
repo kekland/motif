@@ -34,9 +34,6 @@ part 'style/vertex_style.dart';
 part 'style/edge_style.dart';
 part 'style/face_style.dart';
 
-part 'zorder/zorder.dart';
-part 'zorder/zorder_table.dart';
-
 part 'evaluation/context.dart';
 part 'evaluation/commit.dart';
 part 'evaluation/tree.dart';
@@ -46,7 +43,6 @@ part 'evaluation/indexes/graph.dart';
 part 'evaluation/indexes/lineage.dart';
 part 'evaluation/indexes/live.dart';
 part 'evaluation/indexes/style.dart';
-part 'evaluation/indexes/zorder.dart';
 part 'evaluation/indexes/transient_transform.dart';
 
 part 'layout/shape.dart';
@@ -89,6 +85,7 @@ part 'statements/glue_vertices_statement.dart';
 part 'statements/fillet_face_statement.dart';
 part 'statements/generator_statement.dart';
 part 'statements/text_statement.dart';
+part 'statements/reorder_statement.dart';
 
 part 'modifiers/fillet_modifier.dart';
 

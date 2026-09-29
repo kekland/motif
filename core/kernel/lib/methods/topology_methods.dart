@@ -10,76 +10,41 @@ extension TopologyMethods on Bundle {
     return true;
   }
 
-  void _treeSetSiblingPrev(CellIndex t, CellIndex v) {
-    final storage = _treeSiblingPrevStorage(t.kind);
-    storage[t.index] = v;
-  }
+  // void _treeSetParent(CellHandle h, FrameHandle parent) {
+  //   assert(_checkCell(h));
+  //   assert(_treeCheckInsertion(parent));
 
-  void _treeSetSiblingNext(CellIndex t, CellIndex v) {
-    final storage = _treeSiblingNextStorage(t.kind);
-    storage[t.index] = v;
-  }
+  //   final t = h.cellIndex;
+  //   final p = parent.index;
+  //   if (_treeParentOf(t) == p) return;
+  //   _changeTracker.add(this, _arenaOf(h.kind), h);
 
-  void _treeSiblingInsert(FrameIndex frame, CellIndex t) {
-    final head = _frame.childHead[frame];
-    _treeSetSiblingPrev(t, .none);
-    _treeSetSiblingNext(t, head);
-    if (head.isNotNone) _treeSetSiblingPrev(head, t);
-    _frame.childHead[frame] = t;
-    _changeTracker.markFrameChildrenChanged(frame);
-  }
+  //   _treeSiblingUnlink(t);
+  //   _treeParentStorage(t.kind)[t.index] = p;
+  //   _treeSiblingInsert(p, t, after: _frame.childTail[p]);
 
-  void _treeSiblingUnlink(CellIndex t) {
-    final frame = _treeParentOf(t);
-    final p = _treeSiblingPrev(t), n = _treeSiblingNext(t);
-
-    if (p.isNone) {
-      _frame.childHead[frame] = n;
-    } else {
-      _treeSetSiblingNext(p, n);
-    }
-
-    if (n.isNotNone) _treeSetSiblingPrev(n, p);
-    _treeSetSiblingPrev(t, .none);
-    _treeSetSiblingNext(t, .none);
-    _changeTracker.markFrameChildrenChanged(frame);
-  }
-
-  void _treeSetParent(CellHandle h, FrameHandle parent) {
-    assert(_checkCell(h));
-    assert(_treeCheckInsertion(parent));
-
-    final t = h.cellIndex;
-    final p = parent.index;
-    if (_treeParentOf(t) == p) return;
-    _changeTracker.add(this, _arenaOf(h.kind), h);
-
-    _treeSiblingUnlink(t);
-    _treeParentStorage(t.kind)[t.index] = p;
-    _treeSiblingInsert(p, t);
-
-    final kind = t.kind;
-    if (kind == .frame) {
-      _frame.touch(t.asFrame);
-      _frameInvalidateWorldTransforms();
-      final cells = _frameDependents(p).map((cf) => _coframe.cell[cf]);
-      for (final c in cells) _cellCrossUpdate(c);
-    } else if (kind == .vertex) {
-      _vertex.touch(t.asVertex);
-      for (final e in _vertexEdges(t.asVertex)) {
-        _edge.touch(e);
-        _cellCrossUpdate(e.cell);
-        for (final f in _edgeFaces(e)) _cellCrossUpdate(f.cell);
-      }
-    } else if (kind == .edge) {
-      _edge.touch(t.asEdge);
-      _cellCrossUpdate(t);
-      for (final f in _edgeFaces(t.asEdge)) _cellCrossUpdate(f.cell);
-    } else if (kind == .face) {
-      _face.touch(t.asFace);
-      _cellCrossUpdate(t);
-    }
-  }
+  //   final kind = t.kind;
+  //   if (kind == .frame) {
+  //     _frame.touch(t.asFrame);
+  //     _frameInvalidateWorldTransforms();
+  //     final cells = _frameDependents(p).map((cf) => _coframe.cell[cf]);
+  //     for (final c in cells) _cellCrossUpdate(c);
+  //   } else if (kind == .vertex) {
+  //     _vertex.touch(t.asVertex);
+  //     for (final e in _vertexEdges(t.asVertex)) {
+  //       _edge.touch(e);
+  //       _cellCrossUpdate(e.cell);
+  //       for (final f in _edgeFaces(e)) _cellCrossUpdate(f.cell);
+  //     }
+  //   } else if (kind == .edge) {
+  //     _edge.touch(t.asEdge);
+  //     _cellCrossUpdate(t);
+  //     for (final f in _edgeFaces(t.asEdge)) _cellCrossUpdate(f.cell);
+  //   } else if (kind == .face) {
+  //     _face.touch(t.asFace);
+  //     _cellCrossUpdate(t);
+  //   }
+  // }
 
   // -------------------------------------------------------------------------------------------------------------------
   // Frame
@@ -101,10 +66,11 @@ extension TopologyMethods on Bundle {
     _frame.hasSize[i] = size != null;
     _frame.clip[i] = .none;
     _frame.childHead[i] = .none;
+    _frame.childTail[i] = .none;
     _frame.dependentStart[i] = .none;
 
-    _frameLink(i, p);
     _frame.id.assign(i, ref);
+    _frameLink(i, p);
     return _frame.handleFor(i);
   }
 
@@ -233,8 +199,8 @@ extension TopologyMethods on Bundle {
     _vertex.diskStart[i] = .none;
     _vertex.positionVersion[i] = -1;
 
-    _vertexLink(i, frame);
     _vertex.id.assign(i, ref);
+    _vertexLink(i, frame);
     return _vertex.handleFor(i);
   }
 
@@ -350,9 +316,9 @@ extension TopologyMethods on Bundle {
     _edge.bboxWorldVersion[i] = -1;
     _edge.crossStart[i] = .none;
 
+    _edge.id.assign(i, ref);
     _edgeLink(i, frame);
     _cellCrossUpdate(i.cell);
-    _edge.id.assign(i, ref);
     return _edge.handleFor(i);
   }
 
@@ -547,8 +513,8 @@ extension TopologyMethods on Bundle {
     _face.boundary[i] = .empty();
     _face.crossStart[i] = .none;
 
-    _faceLink(i, frame);
     _face.id.assign(i, ref);
+    _faceLink(i, frame);
     for (final cycle in boundary) _cycleAdd(i, cycle);
     return _face.handleFor(i);
   }

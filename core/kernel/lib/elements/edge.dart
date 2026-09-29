@@ -31,6 +31,8 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
   var siblingPrev = CellIndexStorage<EdgeIndex>();
   var siblingNext = CellIndexStorage<EdgeIndex>();
   var crossStart = CoframeIndexStorage<EdgeIndex>();
+  var zPlacement = Int32Storage<EdgeIndex>();
+  var zSibling = CellIndexStorage<EdgeIndex>();
 
   final id = IdTable<EdgeRef, EdgeIndex>('edge');
 
@@ -57,6 +59,8 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
       siblingPrev = siblingPrev.grow(atLeast);
       siblingNext = siblingNext.grow(atLeast);
       crossStart = crossStart.grow(atLeast);
+      zPlacement = zPlacement.grow(atLeast);
+      zSibling = zSibling.grow(atLeast);
     }
   }
 
@@ -82,6 +86,8 @@ final class EdgeStorage extends ArenaStorage<EdgeIndex, EdgeHandle, EdgeStorage>
     siblingPrev = .copyFrom(other.siblingPrev);
     siblingNext = .copyFrom(other.siblingNext);
     crossStart = .copyFrom(other.crossStart);
+    zPlacement = .copyFrom(other.zPlacement);
+    zSibling = .copyFrom(other.zSibling);
     id.copyFrom(other.id);
   }
 

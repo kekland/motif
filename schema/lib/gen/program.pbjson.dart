@@ -31,6 +31,22 @@ final $typed_data.Uint8List cellKindDescriptor = $convert.base64Decode(
     'CghDZWxsS2luZBITCg9DRUxMX0tJTkRfRlJBTUUQABIUChBDRUxMX0tJTkRfVkVSVEVYEAESEg'
     'oOQ0VMTF9LSU5EX0VER0UQAhISCg5DRUxMX0tJTkRfRkFDRRAD');
 
+@$core.Deprecated('Use zPlacementDescriptor instead')
+const ZPlacement$json = {
+  '1': 'ZPlacement',
+  '2': [
+    {'1': 'Z_PLACEMENT_TOP', '2': 0},
+    {'1': 'Z_PLACEMENT_BOTTOM', '2': 1},
+    {'1': 'Z_PLACEMENT_ABOVE', '2': 2},
+    {'1': 'Z_PLACEMENT_BELOW', '2': 3},
+  ],
+};
+
+/// Descriptor for `ZPlacement`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List zPlacementDescriptor = $convert.base64Decode(
+    'CgpaUGxhY2VtZW50EhMKD1pfUExBQ0VNRU5UX1RPUBAAEhYKElpfUExBQ0VNRU5UX0JPVFRPTR'
+    'ABEhUKEVpfUExBQ0VNRU5UX0FCT1ZFEAISFQoRWl9QTEFDRU1FTlRfQkVMT1cQAw==');
+
 @$core.Deprecated('Use programDescriptor instead')
 const Program$json = {
   '1': 'Program',
@@ -51,22 +67,13 @@ const Program$json = {
       '6': '.motif.StyleTable',
       '10': 'style'
     },
-    {
-      '1': 'z_order',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZOrderTable',
-      '10': 'zOrder'
-    },
   ],
 };
 
 /// Descriptor for `Program`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List programDescriptor = $convert.base64Decode(
     'CgdQcm9ncmFtEjAKCnN0YXRlbWVudHMYASADKAsyEC5tb3RpZi5TdGF0ZW1lbnRSCnN0YXRlbW'
-    'VudHMSJwoFc3R5bGUYAiABKAsyES5tb3RpZi5TdHlsZVRhYmxlUgVzdHlsZRIrCgd6X29yZGVy'
-    'GAMgASgLMhIubW90aWYuWk9yZGVyVGFibGVSBnpPcmRlcg==');
+    'VudHMSJwoFc3R5bGUYAiABKAsyES5tb3RpZi5TdHlsZVRhYmxlUgVzdHlsZQ==');
 
 @$core.Deprecated('Use programSliceDescriptor instead')
 const ProgramSlice$json = {
@@ -88,22 +95,13 @@ const ProgramSlice$json = {
       '6': '.motif.StyleTable',
       '10': 'style'
     },
-    {
-      '1': 'z_order',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZOrderTable',
-      '10': 'zOrder'
-    },
   ],
 };
 
 /// Descriptor for `ProgramSlice`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List programSliceDescriptor = $convert.base64Decode(
     'CgxQcm9ncmFtU2xpY2USMAoKc3RhdGVtZW50cxgBIAMoCzIQLm1vdGlmLlN0YXRlbWVudFIKc3'
-    'RhdGVtZW50cxInCgVzdHlsZRgCIAEoCzIRLm1vdGlmLlN0eWxlVGFibGVSBXN0eWxlEisKB3pf'
-    'b3JkZXIYAyABKAsyEi5tb3RpZi5aT3JkZXJUYWJsZVIGek9yZGVy');
+    'RhdGVtZW50cxInCgVzdHlsZRgCIAEoCzIRLm1vdGlmLlN0eWxlVGFibGVSBXN0eWxl');
 
 @$core.Deprecated('Use statementDescriptor instead')
 const Statement$json = {
@@ -244,6 +242,15 @@ const Statement$json = {
       '9': 0,
       '10': 'text'
     },
+    {
+      '1': 'reorder',
+      '3': 24,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ReorderStatement',
+      '9': 0,
+      '10': 'reorder'
+    },
   ],
   '8': [
     {'1': 'value'},
@@ -267,7 +274,8 @@ final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
     'GBQgASgLMhkubW90aWYuQ29udGFpbmVyU3RhdGVtZW50SABSCWNvbnRhaW5lchItCgVncm91cB'
     'gVIAEoCzIVLm1vdGlmLkdyb3VwU3RhdGVtZW50SABSBWdyb3VwEjkKCWdlbmVyYXRvchgWIAEo'
     'CzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbWVudEgAUglnZW5lcmF0b3ISKgoEdGV4dBgXIAEoCz'
-    'IULm1vdGlmLlRleHRTdGF0ZW1lbnRIAFIEdGV4dEIHCgV2YWx1ZQ==');
+    'IULm1vdGlmLlRleHRTdGF0ZW1lbnRIAFIEdGV4dBIzCgdyZW9yZGVyGBggASgLMhcubW90aWYu'
+    'UmVvcmRlclN0YXRlbWVudEgAUgdyZW9yZGVyQgcKBXZhbHVl');
 
 @$core.Deprecated('Use u64Descriptor instead')
 const U64$json = {
@@ -329,8 +337,8 @@ final $typed_data.Uint8List cellRefDescriptor = $convert.base64Decode(
 const ZAnchor$json = {
   '1': 'ZAnchor',
   '2': [
-    {'1': 'top', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'top'},
-    {'1': 'bottom', '3': 2, '4': 1, '5': 8, '9': 0, '10': 'bottom'},
+    {'1': 'top', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'top'},
+    {'1': 'bottom', '3': 2, '4': 1, '5': 5, '9': 0, '10': 'bottom'},
     {
       '1': 'above',
       '3': 3,
@@ -357,50 +365,9 @@ const ZAnchor$json = {
 
 /// Descriptor for `ZAnchor`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List zAnchorDescriptor = $convert.base64Decode(
-    'CgdaQW5jaG9yEhIKA3RvcBgBIAEoCEgAUgN0b3ASGAoGYm90dG9tGAIgASgISABSBmJvdHRvbR'
+    'CgdaQW5jaG9yEhIKA3RvcBgBIAEoBUgAUgN0b3ASGAoGYm90dG9tGAIgASgFSABSBmJvdHRvbR'
     'ImCgVhYm92ZRgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIFYWJvdmUSJgoFYmVsb3cYBCABKAsy'
     'Di5tb3RpZi5DZWxsUmVmSABSBWJlbG93QgcKBXZhbHVl');
-
-@$core.Deprecated('Use zOrderEntryDescriptor instead')
-const ZOrderEntry$json = {
-  '1': 'ZOrderEntry',
-  '2': [
-    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
-    {
-      '1': 'value',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZAnchor',
-      '10': 'value'
-    },
-  ],
-};
-
-/// Descriptor for `ZOrderEntry`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List zOrderEntryDescriptor = $convert.base64Decode(
-    'CgtaT3JkZXJFbnRyeRIgCgNyZWYYASABKAsyDi5tb3RpZi5DZWxsUmVmUgNyZWYSJAoFdmFsdW'
-    'UYAiABKAsyDi5tb3RpZi5aQW5jaG9yUgV2YWx1ZQ==');
-
-@$core.Deprecated('Use zOrderTableDescriptor instead')
-const ZOrderTable$json = {
-  '1': 'ZOrderTable',
-  '2': [
-    {
-      '1': 'entries',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.motif.ZOrderEntry',
-      '10': 'entries'
-    },
-  ],
-};
-
-/// Descriptor for `ZOrderTable`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List zOrderTableDescriptor = $convert.base64Decode(
-    'CgtaT3JkZXJUYWJsZRIsCgdlbnRyaWVzGAEgAygLMhIubW90aWYuWk9yZGVyRW50cnlSB2VudH'
-    'JpZXM=');
 
 @$core.Deprecated('Use styleEntryDescriptor instead')
 const StyleEntry$json = {
@@ -1606,6 +1573,51 @@ final $typed_data.Uint8List textStatementDescriptor = $convert.base64Decode(
     'bnNmb3JtEisKBnBhcmVudBgEIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB1'
     '9wYXJlbnQ=');
 
+@$core.Deprecated('Use reorderStatementDescriptor instead')
+const ReorderStatement$json = {
+  '1': 'ReorderStatement',
+  '2': [
+    {
+      '1': 'target',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellSelector',
+      '10': 'target'
+    },
+    {
+      '1': 'placement',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.ZPlacement',
+      '10': 'placement'
+    },
+    {'1': 'rank', '3': 3, '4': 1, '5': 5, '9': 0, '10': 'rank', '17': true},
+    {
+      '1': 'sibling',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellSelector',
+      '9': 1,
+      '10': 'sibling',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_rank'},
+    {'1': '_sibling'},
+  ],
+};
+
+/// Descriptor for `ReorderStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reorderStatementDescriptor = $convert.base64Decode(
+    'ChBSZW9yZGVyU3RhdGVtZW50EisKBnRhcmdldBgBIAEoCzITLm1vdGlmLkNlbGxTZWxlY3Rvcl'
+    'IGdGFyZ2V0Ei8KCXBsYWNlbWVudBgCIAEoDjIRLm1vdGlmLlpQbGFjZW1lbnRSCXBsYWNlbWVu'
+    'dBIXCgRyYW5rGAMgASgFSABSBHJhbmuIAQESMgoHc2libGluZxgEIAEoCzITLm1vdGlmLkNlbG'
+    'xTZWxlY3RvckgBUgdzaWJsaW5niAEBQgcKBV9yYW5rQgoKCF9zaWJsaW5n');
+
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {
   '1': 'ObjectShape',
@@ -2739,44 +2751,6 @@ final $typed_data.Uint8List styleChangeDescriptor = $convert.base64Decode(
     'GAMgASgLMhgubW90aWYuQ2VsbFN0eWxlLlBhcnRpYWxIAVIFYWZ0ZXKIAQFCCQoHX2JlZm9yZU'
     'IICgZfYWZ0ZXI=');
 
-@$core.Deprecated('Use zOrderChangeDescriptor instead')
-const ZOrderChange$json = {
-  '1': 'ZOrderChange',
-  '2': [
-    {'1': 'ref', '3': 1, '4': 1, '5': 11, '6': '.motif.CellRef', '10': 'ref'},
-    {
-      '1': 'before',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZAnchor',
-      '9': 0,
-      '10': 'before',
-      '17': true
-    },
-    {
-      '1': 'after',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZAnchor',
-      '9': 1,
-      '10': 'after',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_before'},
-    {'1': '_after'},
-  ],
-};
-
-/// Descriptor for `ZOrderChange`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List zOrderChangeDescriptor = $convert.base64Decode(
-    'CgxaT3JkZXJDaGFuZ2USIAoDcmVmGAEgASgLMg4ubW90aWYuQ2VsbFJlZlIDcmVmEisKBmJlZm'
-    '9yZRgCIAEoCzIOLm1vdGlmLlpBbmNob3JIAFIGYmVmb3JliAEBEikKBWFmdGVyGAMgASgLMg4u'
-    'bW90aWYuWkFuY2hvckgBUgVhZnRlcogBAUIJCgdfYmVmb3JlQggKBl9hZnRlcg==');
-
 @$core.Deprecated('Use programChangeDescriptor instead')
 const ProgramChange$json = {
   '1': 'ProgramChange',
@@ -2799,16 +2773,7 @@ const ProgramChange$json = {
       '9': 0,
       '10': 'style'
     },
-    {
-      '1': 'z_order',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.ZOrderChange',
-      '9': 0,
-      '10': 'zOrder'
-    },
-    {'1': 'empty', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'empty'},
+    {'1': 'empty', '3': 3, '4': 1, '5': 8, '9': 0, '10': 'empty'},
   ],
   '8': [
     {'1': 'value'},
@@ -2819,8 +2784,7 @@ const ProgramChange$json = {
 final $typed_data.Uint8List programChangeDescriptor = $convert.base64Decode(
     'Cg1Qcm9ncmFtQ2hhbmdlEjYKCXN0YXRlbWVudBgBIAEoCzIWLm1vdGlmLlN0YXRlbWVudENoYW'
     '5nZUgAUglzdGF0ZW1lbnQSKgoFc3R5bGUYAiABKAsyEi5tb3RpZi5TdHlsZUNoYW5nZUgAUgVz'
-    'dHlsZRIuCgd6X29yZGVyGAMgASgLMhMubW90aWYuWk9yZGVyQ2hhbmdlSABSBnpPcmRlchIWCg'
-    'VlbXB0eRgEIAEoCEgAUgVlbXB0eUIHCgV2YWx1ZQ==');
+    'dHlsZRIWCgVlbXB0eRgDIAEoCEgAUgVlbXB0eUIHCgV2YWx1ZQ==');
 
 @$core.Deprecated('Use mat4Descriptor instead')
 const Mat4$json = {

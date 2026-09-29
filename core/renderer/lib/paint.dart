@@ -61,7 +61,8 @@ List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int de
     strokeStyle = null;
   }
 
-  for (final (ref, h) in e.drawOrder.of(frame)) {
+  for (final h in bundle.frameChildren(frame)) {
+    final ref = h.ref(bundle);
     switch (ref.kind) {
       case .frame:
         {
