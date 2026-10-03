@@ -1,4 +1,5 @@
 import 'package:editor/imports.dart';
+import 'package:editor/widgets/selection_overlay/selection_overlay.dart';
 
 abstract class LayoutBoxTool extends Tool {
   const LayoutBoxTool();
@@ -35,6 +36,9 @@ typedef CreateLayoutBoxActivityFactory = CreateLayoutBoxActivity Function(
   EdgeStyle edgeStyle,
   FaceStyle faceStyle,
   bool snapToPixel,
+  void Function(FrameRef)? onCreated,
+  void Function()? onEnd,
+  void Function()? onCancel,
 });
 
 class _LayoutBoxToolOverlay extends HookWidget {
@@ -55,17 +59,30 @@ class _LayoutBoxToolOverlay extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = Editor.watch(context);
+    final frame = useState<FrameRef?>(null);
 
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: cursor,
-      child: DragActivityDetector(
-        activityFactory: (_) => activityFactory(
-          editor,
-          edgeStyle: tool.edgeStyle(context),
-          faceStyle: tool.faceStyle(context),
-          snapToPixel: tool.snapToPixel(context),
-        ),
+      child: Stack(
+        children: [
+          CellSelectionGroupOverlay(
+            refs: [?frame.value],
+            editor: editor,
+            childPaintTransform: info.childPaintTransform,
+          ),
+          DragActivityDetector(
+            activityFactory: (_) => activityFactory(
+              editor,
+              edgeStyle: tool.edgeStyle(context),
+              faceStyle: tool.faceStyle(context),
+              snapToPixel: tool.snapToPixel(context),
+              onCreated: (f) => frame.value = f,
+              onEnd: () => frame.value = null,
+              onCancel: () => frame.value = null,
+            ),
+          ),
+        ],
       ),
     );
   }

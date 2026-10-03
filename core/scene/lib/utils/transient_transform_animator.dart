@@ -38,7 +38,7 @@ final class TransientTransformAnimator {
   void cancel(Iterable<StatementId> ids) {
     final removed = ids.where((id) => _animations.remove(id) != null).toList();
     if (removed.isEmpty) return;
-    scene._editTransient((pass) {
+    scene.editTransient((pass) {
       for (final id in removed) pass.setLocalTransientTransform(id, null);
     });
   }
@@ -63,7 +63,7 @@ final class TransientTransformAnimator {
     }
 
     // Apply the updates to the scene
-    scene._editTransient((pass) {
+    scene.editTransient((pass) {
       for (final entry in updates.entries) {
         pass.setLocalTransientTransform(entry.key, entry.value);
       }

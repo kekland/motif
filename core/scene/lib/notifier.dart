@@ -23,7 +23,7 @@ final class SceneNotifier with ChangeNotifier, ChangeNotifierDisposable {
   }
 
   void _update(EvalPass pass) {
-    final movedFrames = pass.movedFrames.map((r) => scene.bundle.frame(r)).nonNulls.toList();
+    final movedFrames = pass.moved.whereFrame().map((f) => scene.bundle.frame(f)).nonNulls.toList();
 
     for (final entry in _refNotifiers.entries) {
       final ref = entry.key;

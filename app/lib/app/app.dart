@@ -74,7 +74,7 @@ class AppState extends State<App> {
                         onTabSelected: (i) => setState(() => activeTab = i),
                         onTabClosed: (i) => remove(i),
                       ),
-                      Divider(),
+                      Divider(height: 1.0),
                       Expanded(
                         child: IndexedStack(
                           index: activeTab,

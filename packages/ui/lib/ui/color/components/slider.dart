@@ -5,8 +5,7 @@ class _Slider extends HookWidget {
     super.key,
     required this.stopsGenerator,
     required this.onChanged,
-    this.onStartChanging,
-    this.onEndChanging,
+    this.sessionCallbacks,
     this.value,
     this.color,
     this.leading,
@@ -18,8 +17,7 @@ class _Slider extends HookWidget {
   final int stops;
   final Color Function(double t) stopsGenerator;
   final ValueChanged<double> onChanged;
-  final VoidCallback? onStartChanging;
-  final VoidCallback? onEndChanging;
+  final InputSessionCallbacks? sessionCallbacks;
   final double? value;
   final Color? color;
   final Widget? leading;
@@ -92,16 +90,16 @@ class _Slider extends HookWidget {
                   final size = context.size!;
                   onChanged(_clamp(position.dx / size.width));
                 },
-                onPanStart: (details) => onStartChanging?.call(),
+                onPanStart: (details) => sessionCallbacks?.start(),
                 onPanUpdate: (details) {
                   final position = details.localPosition;
                   final size = context.size!;
                   onChanged(_clamp(position.dx / size.width));
                 },
-                onPanEnd: (details) => onEndChanging?.call(),
-                onPanCancel: () => onEndChanging?.call(),
+                onPanEnd: (details) => sessionCallbacks?.end(),
+                onPanCancel: () => sessionCallbacks?.end(),
                 onHorizontalDragStart: (details) {
-                  onStartChanging?.call();
+                  sessionCallbacks?.start();
                   dragValue.value = value;
                 },
                 onHorizontalDragUpdate: (details) {
@@ -120,10 +118,10 @@ class _Slider extends HookWidget {
                   dragValue.value = newValue;
                 },
                 onHorizontalDragEnd: (details) {
-                  onEndChanging?.call();
+                  sessionCallbacks?.end();
                 },
                 onHorizontalDragCancel: () {
-                  onEndChanging?.call();
+                  sessionCallbacks?.end();
                 },
                 child: body,
               );

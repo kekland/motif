@@ -1,27 +1,27 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:color/color_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
+import 'package:renderer/decoration.dart';
 import 'package:renderer/renderer.dart';
+import 'package:scene/scene.dart';
 import 'package:shared/shared.dart';
-import 'package:skia/skia.dart' as skia;
 
 part 'statement/text_statement_painter.dart';
 
-List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int depth) {
+List<DrawEntry> paintFrame(Scene scene, FrameRef ref, FrameHandle frame, int depth) {
+  final e = scene.evaluation;
   final statement = e.statement(ref.statementId);
-  final statementPicture = paintStatement(e, statement);
+  final statementPicture = paintStatement(scene, statement);
   if (statementPicture != null) {
     return [DrawPicture(statementPicture)];
   }
 
   final bundle = e.bundle;
   final entries = <DrawEntry>[];
-  final paints = <CellStyle, ui.Paint>{};
 
   ui.PictureRecorder? recorder;
   ui.Canvas? canvas;
@@ -45,18 +45,9 @@ List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int de
 
   void flushStroke() {
     if (strokeStyle == null) return;
-    open().drawPath(
-      edgePath,
-      paints.putIfAbsent(
-        strokeStyle!,
-        () => ui.Paint()
-          ..style = .stroke
-          ..color = strokeStyle!.color.toUiColor()
-          ..strokeCap = .square
-          ..strokeWidth = strokeStyle!.width,
-      ),
-    );
 
+    final canvas = open();
+    paintEdge(canvas, edgePath, scene, strokeStyle!, ref.statementId);
     edgePath.reset();
     strokeStyle = null;
   }
@@ -98,12 +89,8 @@ List<DrawEntry> paintFrame(Evaluation e, FrameRef ref, FrameHandle frame, int de
           flushStroke();
           _addFacePath(bundle, facePath, h.asFace);
           final style = e.style.of(ref)!.asFace;
-
-          final paint = ui.Paint()
-            ..style = .fill
-            ..color = style.color.toUiColor();
-
-          open().drawPath(facePath, paint);
+          final canvas = open();
+          paintFace(canvas, facePath, scene, style, ref.statementId);
           facePath.reset();
         }
     }
@@ -167,13 +154,13 @@ bool isPaintedStatement(Statement? statement) => switch (statement) {
   _ => false,
 };
 
-ui.Picture? paintStatement(Evaluation e, Statement? statement) => switch (statement) {
-  TextStatement s => const TextStatementPainter().paint(e, s),
+ui.Picture? paintStatement(Scene scene, Statement? statement) => switch (statement) {
+  TextStatement s => const TextStatementPainter().paint(scene, s),
   _ => null,
 };
 
 sealed class StatementPainter<S extends Statement> {
   const StatementPainter();
 
-  ui.Picture paint(Evaluation e, S statement);
+  ui.Picture paint(Scene scene, S statement);
 }

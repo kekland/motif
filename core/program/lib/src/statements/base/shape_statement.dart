@@ -154,15 +154,6 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
       cell: frame,
     );
   }
-
-  @override
-  ReparentRoute routeReparent(CellRef target) => target == frame ? .accept : .forward(frame);
-
-  @override
-  Statement absorbReparent(FrameRef to, Mat4 parentTransform) => copyWith(
-    parent: to,
-    transform: parentTransform * transform,
-  );
 }
 
 final class _ResizeAxis(final bool min, final bool max, final bool inside) {

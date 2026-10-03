@@ -1,90 +1,16 @@
-import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
 import 'package:ui/ui.dart';
-import 'package:flutter/material.dart' as material;
-
-class TextFieldOptions {
-  const TextFieldOptions({
-    this.leading,
-    this.trailing,
-    this.useTabularFigures = false,
-    this.autofocus = false,
-    this.padding = const EdgeInsets.symmetric(horizontal: 6.0),
-    this.hintText,
-    this.textStyle,
-    this.builder,
-    this.color,
-    this.border,
-    this.borderRadius,
-  });
-
-  final bool autofocus;
-  final Widget? leading;
-  final Widget? trailing;
-  final bool useTabularFigures;
-  final EdgeInsets padding;
-  final String? hintText;
-  final TextStyle? textStyle;
-  final ProxyWidgetBuilder? builder;
-  final Color? color;
-  final BorderSide? border;
-  final BorderRadius? borderRadius;
-
-  TextFieldOptions merge(TextFieldOptions other) => .new(
-    leading: other.leading ?? leading,
-    trailing: other.trailing ?? trailing,
-    useTabularFigures: other.useTabularFigures || useTabularFigures,
-    autofocus: other.autofocus || autofocus,
-    padding: other.padding,
-    hintText: other.hintText ?? hintText,
-    textStyle: other.textStyle ?? textStyle,
-    builder: other.builder ?? builder,
-    color: other.color ?? color,
-    border: other.border ?? border,
-    borderRadius: other.borderRadius ?? borderRadius,
-  );
-
-  @override
-  bool operator ==(Object other) =>
-      other is TextFieldOptions &&
-      other.leading == leading &&
-      other.trailing == trailing &&
-      other.useTabularFigures == useTabularFigures &&
-      other.autofocus == autofocus &&
-      other.padding == padding &&
-      other.hintText == hintText &&
-      other.textStyle == textStyle &&
-      other.builder == builder &&
-      other.color == color &&
-      other.border == border &&
-      other.borderRadius == borderRadius;
-
-  @override
-  int get hashCode => Object.hash(
-    leading,
-    trailing,
-    useTabularFigures,
-    autofocus,
-    padding,
-    hintText,
-    textStyle,
-    builder,
-    color,
-    border,
-    borderRadius,
-  );
-}
 
 class TextField extends HookWidget {
-  const TextField({
+  const new({
     super.key,
     this.controller,
     this.focusNode,
-    this.inputFormatters,
     this.onEditingComplete,
     this.onSubmitted,
     this.onChanged,
-    this.supportedDevices,
+    this.inputFormatters,
     this.options = const .new(),
   });
 
@@ -94,8 +20,7 @@ class TextField extends HookWidget {
   final VoidCallback? onSubmitted;
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
-  final Set<PointerDeviceKind>? supportedDevices;
-  final TextFieldOptions options;
+  final InputFieldOptions options;
 
   @override
   Widget build(BuildContext context) {
@@ -129,109 +54,44 @@ class TextField extends HookWidget {
       },
     );
 
-    final autofocus = options.autofocus;
-    final leading = options.leading;
-    final trailing = options.trailing;
-    final padding = options.padding;
-    final hintText = options.hintText;
-    final textStyle = options.textStyle;
-    final useTabularFigures = options.useTabularFigures;
-    final builder = options.builder;
-    final color = options.color;
-    final border = options.border;
-    final borderRadius = options.borderRadius;
+    return InputFieldBase(
+      focusNode: focusNode,
+      options: options,
+      cursor: SystemMouseCursors.text,
+      onTap: focusNode.requestFocus,
+      builder: (context, node, style, hintStyle) {
+        final hasFocus = node.hasFocus;
 
-    final hasFocus = useFocusNodeHasFocus(focusNode);
-
-    var effectiveTextStyle = textStyle ?? context.typography.body.primary;
-    if (useTabularFigures) effectiveTextStyle = effectiveTextStyle.tabular;
-
-    Widget child;
-
-    if (hasFocus) {
-      child = material.TextField(
-        autofocus: true,
-        focusNode: fieldFocusNode,
-        controller: controller,
-        style: effectiveTextStyle,
-        inputFormatters: inputFormatters,
-        onTapUpOutside: (_) => focusNode.unfocus(),
-        onEditingComplete: onEditingComplete,
-        onSubmitted: (_) => onSubmitted?.call(),
-        onChanged: onChanged,
-        decoration: InputDecoration.collapsed(
-          hintText: hintText,
-          hintStyle: context.typography.body.tertiary,
-        ),
-      );
-    } else {
-      child = ListenableBuilder(
-        listenable: controller,
-        builder: (context, _) {
-          return Text(
-            controller.text.isNotEmpty ? controller.text : hintText ?? '',
-            style: controller.text.isNotEmpty ? effectiveTextStyle : context.typography.body.tertiary,
-            maxLines: 1,
-            overflow: .visible,
+        if (hasFocus) {
+          return material.TextField(
+            autofocus: true,
+            focusNode: fieldFocusNode,
+            controller: controller,
+            style: style,
+            inputFormatters: inputFormatters,
+            onTapUpOutside: (_) => focusNode.unfocus(),
+            onEditingComplete: onEditingComplete,
+            onSubmitted: (_) => onSubmitted?.call(),
+            onChanged: onChanged,
+            decoration: InputDecoration.collapsed(
+              hintText: options.hintText,
+              hintStyle: hintStyle,
+            ),
           );
-        },
-      );
-    }
-
-    child = Surface(
-      padding: padding,
-      height: 32.0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (leading != null) ...[
-            DefaultForegroundStyle(
-              iconSize: 16.0,
-              style: context.typography.body.tertiary,
-              child: leading,
-            ),
-            SizedBox(width: 6.0),
-          ],
-          Expanded(
-            child: child,
-          ),
-          if (trailing != null) ...[
-            SizedBox(width: 6.0),
-            DefaultForegroundStyle(
-              iconSize: 16.0,
-              style: context.typography.body.tertiary,
-              child: trailing,
-            ),
-          ],
-        ],
-      ),
-    );
-
-    if (builder != null) {
-      child = builder(context, child);
-    }
-
-    var resolvedBorder = border ?? .new(color: context.colors.divider);
-    if (hasFocus) {
-      resolvedBorder = resolvedBorder.copyWith(color: context.colors.accent.primary.background);
-    }
-
-    return TextFieldTapRegion(
-      child: Focus(
-        focusNode: focusNode,
-        autofocus: autofocus,
-        child: GestureSurface(
-          onTap: focusNode.requestFocus,
-          supportedDevices: supportedDevices,
-          width: double.infinity,
-          color: color ?? context.colors.surface.secondary,
-          borderSide: resolvedBorder,
-          borderRadius: borderRadius ?? .circular(4.0),
-          cursor: SystemMouseCursors.text,
-          state: {if (hasFocus) .focused},
-          child: child,
-        ),
-      ),
+        } else {
+          return ListenableBuilder(
+            listenable: controller,
+            builder: (context, _) {
+              return Text(
+                controller.text.isNotEmpty ? controller.text : options.hintText ?? '',
+                style: controller.text.isNotEmpty ? style : hintStyle,
+                maxLines: 1,
+                overflow: .visible,
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

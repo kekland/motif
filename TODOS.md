@@ -41,3 +41,12 @@ Urgent (in order):
 - [?] Proper modifiers section      (Add done, missing: properties, display)
 - [?] Tree view
 - [ ] Prefabs
+
+---
+
+Split server into three parts:
+- server_core -> abstraction over the server communication
+- server_local -> local implementation (supports web)
+- server_network -> networked server implementation (sqlite, native-only)
+
+

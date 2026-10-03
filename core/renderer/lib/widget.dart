@@ -21,13 +21,13 @@ class SceneWidget extends StatefulWidget {
 
 class _SceneWidgetState extends State<SceneWidget> {
   Scene get scene => widget.scene;
-  ProgramRenderer? renderer;
+  SceneRenderer? renderer;
 
   @override
   void initState() {
     super.initState();
     scene.addListener(_onSceneChanged);
-    renderer = .new(scene.evaluation);
+    renderer = .new(scene);
   }
 
   @override
@@ -37,7 +37,7 @@ class _SceneWidgetState extends State<SceneWidget> {
       renderer?.dispose();
       oldWidget.scene.removeListener(_onSceneChanged);
       scene.addListener(_onSceneChanged);
-      renderer = .new(scene.evaluation);
+      renderer = .new(scene);
     }
   }
 
@@ -85,7 +85,7 @@ class _SceneWidgetState extends State<SceneWidget> {
 class _ProgramPainter extends CustomPainter {
   _ProgramPainter({required this.renderer});
 
-  final ProgramRenderer renderer;
+  final SceneRenderer renderer;
 
   @override
   void paint(Canvas canvas, Size size) {

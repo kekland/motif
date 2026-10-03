@@ -19,7 +19,29 @@ enum EditorPanel {
 }
 
 class EditorWidget extends HookWidget {
-  const EditorWidget({super.key, required this.editor});
+  const new({
+    super.key,
+    required this.sync,
+  });
+
+  final EditorSync sync;
+
+  @override
+  Widget build(BuildContext context) {
+    final state = useComputedValue(() => sync.state);
+    final editor = useComputedValue(() => sync.editor);
+
+    return switch (state) {
+      .closed => Center(child: Text('Connection closed')),
+      .errored => Center(child: Text('Error: ${sync.error}')),
+      .connecting || .idle => Center(child: CircularProgressIndicator()),
+      .connected => ConnectedEditorWidget(editor: editor!),
+    };
+  }
+}
+
+class ConnectedEditorWidget extends HookWidget {
+  const ConnectedEditorWidget({super.key, required this.editor});
 
   final Editor editor;
 

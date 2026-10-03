@@ -1,0 +1,17 @@
+name: asset
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  shared:
+  schema:
+  skia:
+
+  crypto: ^3.0.7
+
+dev_dependencies:
+  dotenv: ^4.2.0
+  http: ^1.6.0

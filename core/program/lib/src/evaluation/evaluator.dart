@@ -252,6 +252,16 @@ extension Evaluator on EvalPass {
       if (context._styles.isNotEmpty) {
         restyled.addAll(evaluation.style.attach(commit));
       }
+
+      // [FramedStatement] represents statements that can perform custom paint operations.
+      // In case if the statement will repaint its content, we add its frame to be repainted.
+      if (statement is FramedStatement) {
+        final old = node.lastStatement!;
+        if (statement.frameContentRepaints(old, statement)) {
+          movedFrames.add(statement.frame);
+        }
+      }
+
       return delta.moved;
     } catch (e, st) {
       txn.abort();

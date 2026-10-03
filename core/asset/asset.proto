@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package motif;
+
+import "packages/skia/skia.proto";
+
+message Hash { string value = 1; }
+
+message Asset {
+  message Font {
+    Hash                licenseHash = 3;
+    string              family      = 4;
+    repeated FontFile   files       = 5;
+    FontFamilyThumbnail thumbnail   = 6;
+  }
+
+  message Image {
+    int32  width    = 1;
+    int32  height   = 2;
+    string mimeType = 3;
+  }
+
+  Hash  hash = 1;
+  int32 size = 2;
+
+  oneof kind {
+    Font  font  = 10;
+    Image image = 11;
+  }
+}
+
+message AssetLicense {
+  Hash   hash       = 1;
+  string descriptor = 2;
+  string kind       = 3;
+  string body       = 4;
+}
+
+message FontFamilyThumbnail {
+  motif.Path path   = 1;
+  float      width  = 2;
+  float      height = 3;
+}
+
+message FontFile {
+  Hash              hash  = 1;
+  int32             size  = 2;
+  repeated FontFace faces = 3;
+}
+
+message FontFace {
+  int32  index  = 1;
+  string family = 2;
+  int32  weight = 3;
+  int32  width  = 4;
+  int32  slant  = 5;
+}
+
+message FontCatalog {
+  message Entry {
+    Hash  hash  = 1;
+    Asset asset = 2;
+  }
+
+  repeated Entry entries = 1;
+}
+
+message LicenseBundle {
+  message Entry {
+    Hash         hash    = 1;
+    AssetLicense license = 2;
+  }
+
+  repeated Entry entries = 1;
+}

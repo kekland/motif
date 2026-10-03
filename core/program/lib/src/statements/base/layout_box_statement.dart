@@ -26,4 +26,13 @@ mixin LayoutBoxStatement on PlacedStatement, FramedStatement implements LayoutBo
     LayoutSize? size,
     Mat4? transform,
   });
+
+  @override
+  ReparentRoute routeReparent(CellRef target) => target == frame ? .accept : .forward(frame);
+
+  @override
+  Statement absorbReparent(FrameRef to, Mat4 parentTransform) => copyWith(
+    parent: to,
+    transform: parentTransform * transform,
+  );
 }

@@ -9,14 +9,6 @@ abstract final class ProgramCodec {
 
   static gen.ProgramDelta encodeProgramDelta(ProgramDelta programDelta) => codec.programDeltaCodec.encode(programDelta);
   static ProgramDelta decodeProgramDelta(gen.ProgramDelta programDelta) => codec.programDeltaCodec.decode(programDelta);
-
-  static T? decodeRaw<T>(T Function() decode) {
-    try {
-      return decode();
-    } catch (e) {
-      return null;
-    }
-  }
 }
 
 extension ProgramEncode on Program {

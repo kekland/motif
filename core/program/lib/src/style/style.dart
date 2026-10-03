@@ -8,7 +8,6 @@ sealed class const CellStyle<H extends CellHandle>() {
     _ => throw ArgumentError.value(kind, 'kind', 'unsupported kind'),
   };
 
-  CellStyle<H> updateWith(covariant CellStylePartial<H>? partial) => partial == null ? this : partial.apply(this);
   CellKind get kind;
 
   VertexStyle get asVertex {
@@ -27,7 +26,7 @@ sealed class const CellStyle<H extends CellHandle>() {
   }
 }
 
-sealed class const CellStylePartial<H extends CellHandle>() extends Partial<CellStyle<H>> {
+sealed class const CellStylePartial<S extends CellStyle>() extends Partial<S> {
   @override
-  CellStyle<H> apply(covariant CellStyle<H> style);
+  S apply(covariant S style);
 }

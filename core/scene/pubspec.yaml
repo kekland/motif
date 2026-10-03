@@ -9,13 +9,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  collection: ^1.19.1
-
   shared:
   geometry:
   kernel:
   program:
   state:
+  skia:
 
 dev_dependencies:
   test: ^1.31.2

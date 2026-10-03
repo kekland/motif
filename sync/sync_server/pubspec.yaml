@@ -1,0 +1,25 @@
+name: sync_server
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  shared:
+
+  sync:
+  schema:
+  asset:
+
+  protobuf: ^6.1.0
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4
+  shelf_web_socket: ^3.0.0
+  web_socket_channel: ^3.0.3
+
+  http: ^1.6.0
+
+  sqlite_async: ^0.14.5
+  web: ^1.1.1
+  path: ^1.9.1

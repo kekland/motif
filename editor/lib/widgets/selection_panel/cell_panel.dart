@@ -1,5 +1,4 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/selection_panel/props/prop.dart';
 
 class const CellPanel({
   super.key,
@@ -11,13 +10,15 @@ class const CellPanel({
     final rawProps = <List<PropSource>>[];
     for (final ref in refs) {
       final kind = editor.handleOf(ref)?.kind;
-      final props = switch (kind) {
-        .frame => frameProps(editor.scene, ref.asFrame),
-        .vertex => vertexProps(editor.scene, ref.asVertex),
-        .edge => edgeProps(editor.scene, ref.asEdge),
-        .face => faceProps(editor.scene, ref.asFace),
-        _ => const <PropSource>[],
-      };
+      // final props = switch (kind) {
+      //   .frame => frameProps(editor.scene, ref.asFrame),
+      //   .vertex => vertexProps(editor.scene, ref.asVertex),
+      //   .edge => edgeProps(editor.scene, ref.asEdge),
+      //   .face => faceProps(editor.scene, ref.asFace),
+      //   _ => const <PropSource>[],
+      // };
+
+      final List<PropSource> props = [];
 
       rawProps.add(props);
     }

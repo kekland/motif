@@ -19,11 +19,10 @@ dependencies:
   scene:
   editor:
   ui:
+  
+  sync:
+  sync_server:
 
-  uuid: ^4.6.0
-  path: ^1.9.1
   path_provider: ^2.1.6
-  sembast: ^3.8.11
-  sembast_web: ^2.4.6
   url_launcher: ^6.3.2
   package_info_plus: ^10.2.1

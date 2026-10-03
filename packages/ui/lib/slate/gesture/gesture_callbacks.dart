@@ -20,6 +20,11 @@ typedef GestureCallbackBundleDef = ({
   GestureDragEndCallback? onPanEnd,
   GestureDragCancelCallback? onPanCancel,
   GestureDragDownCallback? onPanDown,
+  GestureLongPressDownCallback? onLongPressDown,
+  GestureLongPressStartCallback? onLongPressStart,
+  GestureLongPressMoveUpdateCallback? onLongPressUpdate,
+  GestureLongPressEndCallback? onLongPressEnd,
+  GestureLongPressCancelCallback? onLongPressCancel,
 });
 
 extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks) {
@@ -43,6 +48,11 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
     GestureDragEndCallback? onPanEnd,
     GestureDragCancelCallback? onPanCancel,
     GestureDragDownCallback? onPanDown,
+    GestureLongPressDownCallback? onLongPressDown,
+    GestureLongPressStartCallback? onLongPressStart,
+    GestureLongPressMoveUpdateCallback? onLongPressUpdate,
+    GestureLongPressEndCallback? onLongPressEnd,
+    GestureLongPressCancelCallback? onLongPressCancel,
   }) : this._((
          onTapDown: onTapDown,
          onTapUp: onTapUp,
@@ -63,6 +73,11 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
          onPanEnd: onPanEnd,
          onPanCancel: onPanCancel,
          onPanDown: onPanDown,
+         onLongPressDown: onLongPressDown,
+         onLongPressStart: onLongPressStart,
+         onLongPressUpdate: onLongPressUpdate,
+         onLongPressEnd: onLongPressEnd,
+         onLongPressCancel: onLongPressCancel,
        ));
 
   GestureTapDownCallback? get onTapDown => callbacks.onTapDown;
@@ -87,6 +102,12 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
   GestureDragEndCallback? get onPanEnd => callbacks.onPanEnd;
   GestureDragCancelCallback? get onPanCancel => callbacks.onPanCancel;
   GestureDragDownCallback? get onPanDown => callbacks.onPanDown;
+
+  GestureLongPressDownCallback? get onLongPressDown => callbacks.onLongPressDown;
+  GestureLongPressStartCallback? get onLongPressStart => callbacks.onLongPressStart;
+  GestureLongPressMoveUpdateCallback? get onLongPressUpdate => callbacks.onLongPressUpdate;
+  GestureLongPressEndCallback? get onLongPressEnd => callbacks.onLongPressEnd;
+  GestureLongPressCancelCallback? get onLongPressCancel => callbacks.onLongPressCancel;
 }
 
 mixin GestureCallbackBundleMixin {
@@ -113,6 +134,12 @@ mixin GestureCallbackBundleMixin {
   GestureDragEndCallback? get onPanEnd;
   GestureDragCancelCallback? get onPanCancel;
 
+  GestureLongPressDownCallback? get onLongPressDown;
+  GestureLongPressStartCallback? get onLongPressStart;
+  GestureLongPressMoveUpdateCallback? get onLongPressUpdate;
+  GestureLongPressEndCallback? get onLongPressEnd;
+  GestureLongPressCancelCallback? get onLongPressCancel;
+
   GestureCallbackBundle get gestureCallbacks => .from(
     onTapDown: onTapDown,
     onTapUp: onTapUp,
@@ -133,6 +160,11 @@ mixin GestureCallbackBundleMixin {
     onPanEnd: onPanEnd,
     onPanCancel: onPanCancel,
     onPanDown: onPanDown,
+    onLongPressDown: onLongPressDown,
+    onLongPressStart: onLongPressStart,
+    onLongPressUpdate: onLongPressUpdate,
+    onLongPressEnd: onLongPressEnd,
+    onLongPressCancel: onLongPressCancel,
   );
 }
 
@@ -161,6 +193,12 @@ mixin GestureCallbackBundleMixin {
   @override final GestureDragUpdateCallback? onPanUpdate;
   @override final GestureDragEndCallback? onPanEnd;
   @override final GestureDragCancelCallback? onPanCancel;
+
+  @override final GestureLongPressDownCallback? onLongPressDown;
+  @override final GestureLongPressStartCallback? onLongPressStart;
+  @override final GestureLongPressMoveUpdateCallback? onLongPressUpdate;
+  @override final GestureLongPressEndCallback? onLongPressEnd;
+  @override final GestureLongPressCancelCallback? onLongPressCancel;
   // dart format on
 
 */
@@ -185,4 +223,9 @@ mixin GestureCallbackBundleMixin {
     this.onPanUpdate,
     this.onPanEnd,
     this.onPanCancel,
+    this.onLongPressDown,
+    this.onLongPressStart,
+    this.onLongPressUpdate,
+    this.onLongPressEnd,
+    this.onLongPressCancel,
 */

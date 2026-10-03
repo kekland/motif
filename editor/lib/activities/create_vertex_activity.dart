@@ -28,7 +28,6 @@ class CreateVertexActivity extends DragActivity with KeyboardListenerDragActivit
   late TransientEdge transientEdge;
   Object get mergeKey => transientEdge.mergeKey;
   bool get isNewEdge => existingTransientEdge == null;
-  var didPassThreshold = false;
 
   static Vec2 computePosition(
     Editor editor,
@@ -111,11 +110,6 @@ class CreateVertexActivity extends DragActivity with KeyboardListenerDragActivit
       topological: false,
     );
 
-    if (!didPassThreshold) {
-      final delta = (details.globalPosition - startDetails.globalPosition).distance;
-      if (delta >= kTouchSlop) didPassThreshold = true;
-    }
-
     if (!isNewEdge) {
       if (isAltPressed) {
         transientEdge.nextCStart = position;
@@ -134,7 +128,7 @@ class CreateVertexActivity extends DragActivity with KeyboardListenerDragActivit
   void onEnd(DragEndDetails details) {
     super.onEnd(details);
 
-    if (!didPassThreshold) {
+    if (didTap) {
       if (!isNewEdge) {
         transientEdge.cEnd = null;
       } else {

@@ -24,7 +24,7 @@ final class ProgramEdit {
   ProgramChange _resolveChange(Program projection, ProgramChange c) => switch (c) {
     StatementChange c => _resolveStatementChange(projection, c),
     StyleChange c => _resolveStyleChange(projection, c),
-    EmptyChange() => c,
+    _ => c,
   };
 
   StatementChange _resolveStatementChange(Program projection, StatementChange c) {

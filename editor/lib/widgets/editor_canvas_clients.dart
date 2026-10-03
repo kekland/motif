@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:editor/imports.dart';
 
 class EditorCanvasPointerUpdateWidget extends StatelessWidget {
@@ -14,16 +16,20 @@ class EditorCanvasPointerUpdateWidget extends StatelessWidget {
       opaque: false,
       onEnter: (e) {
         final position = editor.globalToScene(e.position);
-        editor.onPointerChanged?.call(position);
+        editor.sync.updatePresence(pointerPosition: position);
       },
       onExit: (e) {
-        editor.onPointerChanged?.call(null);
+        editor.sync.updatePresence(pointerPosition: null);
       },
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
           final position = editor.globalToScene(e.position);
-          editor.onPointerChanged?.call(position);
+          editor.sync.updatePresence(pointerPosition: position);
+        },
+        onPointerMove: (e) {
+          final position = editor.globalToScene(e.position);
+          editor.sync.updatePresence(pointerPosition: position);
         },
         child: child,
       ),
@@ -31,7 +37,7 @@ class EditorCanvasPointerUpdateWidget extends StatelessWidget {
   }
 }
 
-class EditorCanvasClientsPointersWidget extends HookWidget {
+class EditorCanvasPeersWidget extends HookWidget {
   const new({
     super.key,
     required this.transform,
@@ -39,31 +45,23 @@ class EditorCanvasClientsPointersWidget extends HookWidget {
 
   final Matrix4 transform;
 
-  Widget? _buildClientCursor(SceneClient client) {
+  Widget? _buildPeerCursor(PeerPresence client) {
     final position = client.pointerPosition;
     if (position == null) return null;
-    
+
     final color = HSLColor.fromAHSL(1, (client.id.hashCode % 360).toDouble(), 0.7, 0.55).toColor();
 
-    return Positioned(
-      left: position.x,
-      top: position.y,
-      child: Transform.scale(
-        scale: 1 / transform.getMaxScaleOnAxis2D(),
-        child: VectorGraphic(
-          loader: assets.cursors.toolCursor,
-          width: 32.0,
-          height: 32.0,
-          colorFilter: cursorTint(color),
-        ),
-      ),
+    return _PeerCursorWidget(
+      color: color,
+      position: position.offset,
+      scale: 1 / transform.getMaxScaleOnAxis2D(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final clients = useListenable(context.editor.clients).clients;
-    final cursors = clients.map(_buildClientCursor).nonNulls.toList();
+    final peers = useExistingSignal(context.editor.sync.peers).value;
+    final cursors = peers.values.map(_buildPeerCursor).nonNulls.toList();
 
     return Stack(
       clipBehavior: .none,
@@ -80,3 +78,80 @@ ColorFilter cursorTint(Color c) => ColorFilter.matrix([
   0, 0, 0, 1, 0,
 ]);
 // dart format on
+
+class _PeerCursorWidget extends StatefulWidget {
+  const new({
+    super.key,
+    required this.color,
+    required this.position,
+    required this.scale,
+  });
+
+  final Color color;
+  final Offset position;
+  final double scale;
+
+  @override
+  State<_PeerCursorWidget> createState() => _PeerCursorWidgetState();
+}
+
+class _PeerCursorWidgetState extends State<_PeerCursorWidget> with SingleTickerProviderStateMixin {
+  static const _t = 0.035;
+
+  late final _position = ValueNotifier(widget.position);
+  late final _ticker = createTicker(_tick);
+  var _last = Duration.zero;
+
+  @override
+  void didUpdateWidget(covariant _PeerCursorWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.position != oldWidget.position && !_ticker.isActive) {
+      _last = .zero;
+      _ticker.start();
+    }
+  }
+
+  void _tick(Duration elapsed) {
+    final dt = (elapsed - _last).inMicroseconds / 1e6;
+    _last = elapsed;
+
+    final delta = widget.position - _position.value;
+    if (delta.distanceSquared < 0.01) {
+      _position.value = widget.position;
+      _ticker.stop();
+      return;
+    }
+
+    final t = 1 - math.pow(0.5, dt / _t);
+    _position.value += delta * t.toDouble();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    _position.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = widget.scale * 32;
+
+    return Positioned(
+      left: 0,
+      top: 0,
+      child: IgnorePointer(
+        child: ValueListenableBuilder(
+          valueListenable: _position,
+          builder: (context, position, child) => Transform.translate(offset: position, child: child),
+          child: VectorGraphic(
+            loader: assets.cursors.toolCursor,
+            width: size,
+            height: size,
+            colorFilter: cursorTint(widget.color),
+          ),
+        ),
+      ),
+    );
+  }
+}

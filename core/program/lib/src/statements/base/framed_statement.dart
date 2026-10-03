@@ -16,4 +16,6 @@ mixin FramedStatement on Statement {
 
     return t;
   }
+
+  bool frameContentRepaints(covariant Statement old, covariant Statement current) => false;
 }

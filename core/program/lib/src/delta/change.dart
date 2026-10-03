@@ -3,18 +3,23 @@ part of '../_program.dart';
 sealed class ProgramChange {
   const ProgramChange();
 
-  const factory ProgramChange.empty() = EmptyChange;
-  factory ProgramChange.statement({
+  const factory empty() = EmptyChange;
+  factory statement({
     required ProgramAnchor anchor,
     List<Statement> removed,
     List<Statement> inserted,
   }) = StatementChange;
 
-  factory ProgramChange.style(
+  factory style(
     CellRef ref, {
     CellStylePartial? before,
     required CellStylePartial? after,
   }) = StyleChange;
+
+  factory asset({
+    required List<Asset> removed,
+    required List<Asset> inserted,
+  }) = AssetChange;
 
   bool get isEmpty;
 
@@ -116,6 +121,7 @@ final class StatementChange extends ProgramChange {
   bool commutesWith(ProgramChange other) => switch (other) {
     StyleChange _ => true,
     EmptyChange _ => true,
+    AssetChange _ => true,
     _ => false,
   };
 
@@ -170,8 +176,7 @@ final class StyleChange extends ProgramChange {
   @override
   bool commutesWith(ProgramChange other) => switch (other) {
     StyleChange d => d.ref != ref,
-    StatementChange _ => true,
-    EmptyChange _ => true,
+    _ => true,
   };
 
   @override
@@ -182,4 +187,44 @@ final class StyleChange extends ProgramChange {
     before: before ?? this.before,
     after: after ?? this.after,
   );
+}
+
+final class AssetChange extends ProgramChange {
+  new({required this.removed, required this.inserted});
+
+  final List<Asset> removed;
+  final List<Asset> inserted;
+
+  @override
+  AssetChange invert() => .new(removed: inserted, inserted: removed);
+
+  @override
+  bool get isEmpty => removed.isEmpty && inserted.isEmpty;
+
+  @override
+  void reapply(EvalPass pass) {
+    pass.program.assetManifest._removeAll(removed);
+    pass.program.assetManifest._insertAll(inserted);
+  }
+
+  @override
+  void unapply(EvalPass pass) {
+    pass.program.assetManifest._removeAll(inserted);
+    pass.program.assetManifest._insertAll(removed);
+  }
+
+  @override
+  AssetChange? coalesce(ProgramChange next) {
+    if (next is! AssetChange) return null;
+    return .new(
+      removed: [...removed, ...next.removed],
+      inserted: [...inserted, ...next.inserted],
+    );
+  }
+
+  @override
+  bool commutesWith(ProgramChange other) => switch (other) {
+    AssetChange _ => false,
+    _ => true,
+  };
 }

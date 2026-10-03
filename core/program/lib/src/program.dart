@@ -13,25 +13,25 @@ final class Program {
     StyleTable? styles,
     AssetManifest? assets,
   }) : styles = styles ?? .empty(),
-       assets = assets ?? .empty() {
+       assetManifest = assets ?? .empty() {
     _reindex(0, length);
   }
 
   factory Program.decode(gen.Program program) => ProgramCodec.decodeProgram(program);
-  static Program? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
+  static Program? decodeRaw(Uint8List data) => codec.decodeRaw(() => .decode(.fromBuffer(data)));
 
   Program.empty({
     this.assetResolver,
   }) : _statements = [],
        styles = .empty(),
-       assets = .empty();
+       assetManifest = .empty();
 
   final List<Statement> _statements;
   Iterable<Statement> get statements => _statements;
   final _statementIndex = <StatementId, int>{};
 
   final StyleTable styles;
-  final AssetManifest assets;
+  final AssetManifest assetManifest;
   AssetResolver? assetResolver;
 
   int get length => _statements.length;
@@ -65,7 +65,7 @@ final class Program {
   Program clone() => .new(
     _statements.toList(),
     styles: styles.clone(),
-    assets: assets,
+    assets: assetManifest,
     assetResolver: assetResolver,
   );
 }

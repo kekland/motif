@@ -6,13 +6,12 @@ environment:
 
 workspace:
   - app
-  - schema
-  - server
   - editor
 
   - core/geometry
   - core/shared
   - core/kernel
+  - core/asset
   - core/program
   - core/scene
   - core/renderer
@@ -28,6 +27,11 @@ workspace:
   - packages/css
   - packages/ink_stroke_modeler
   - packages/skia
+  - packages/skia_flutter
+
+  - sync/schema
+  - sync/sync
+  - sync/sync_server
   
   - vendor/stack_assets
 

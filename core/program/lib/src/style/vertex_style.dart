@@ -2,69 +2,58 @@ part of '../_program.dart';
 
 final class const VertexStyle({
   required final double radius,
-  required final ColorData color,
-}) extends CellStyle<VertexHandle> {
+  required final Decorations decorations,
+}) extends CellStyle<VertexHandle> with Equatable {
   static const default_ = VertexStyle(
     radius: 1.0,
-    color: .white,
+    decorations: .none,
   );
 
   VertexStyle copyWith({
     double? radius,
-    ColorData? color,
-  }) => VertexStyle(
+    Decorations? decorations,
+  }) => .new(
     radius: radius ?? this.radius,
-    color: color ?? this.color,
+    decorations: decorations ?? this.decorations,
   );
 
   @override
   CellKind get kind => .vertex;
-
+  
   @override
-  int get hashCode => Object.hash(radius, color);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is VertexStyle && radius == other.radius && color == other.color);
-
-  @override
-  String toString() => 'VertexStyle(radius: $radius, color: $color)';
+  List<Object?> get props => [radius, decorations];
 }
 
 final class const VertexStylePartial({
   final double? radius,
-  final ColorData? color,
-}) extends CellStylePartial<VertexHandle> {
+  final Decorations? decorations,
+}) extends CellStylePartial<VertexStyle> with Equatable {
   factory VertexStylePartial.from(VertexStyle style) => VertexStylePartial(
     radius: style.radius,
-    color: style.color,
+    decorations: style.decorations,
   );
 
   factory VertexStylePartial.fromList(Iterable<VertexStyle> styles) {
     return .new(
       radius: styles.map((s) => s.radius).toSet().singleOrNull,
-      color: styles.map((s) => s.color).toSet().singleOrNull,
+      decorations: styles.map((s) => s.decorations).toSet().singleOrNull,
     );
   }
 
   @override
-  CellStyle<VertexHandle> apply(VertexStyle style) => style.copyWith(
+  VertexStyle apply(VertexStyle style) => style.copyWith(
     radius: radius,
-    color: color,
+    decorations: decorations,
   );
 
   VertexStylePartial copyWith({
     double? radius,
-    ColorData? color,
+    Decorations? decorations,
   }) => VertexStylePartial(
     radius: radius ?? this.radius,
-    color: color ?? this.color,
+    decorations: decorations ?? this.decorations,
   );
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is VertexStylePartial && radius == other.radius && color == other.color);
-
-  @override
-  int get hashCode => Object.hash(radius, color);
+  List<Object?> get props => [radius, decorations];
 }

@@ -68,10 +68,13 @@ class _TransientStrokePainter extends CustomPainter {
 
     final strokeWidth = stroke.style.width * scale;
 
+    ColorData? color = stroke.style.decorations.colors.firstOrNull?.color;
+    color ??= .white;
+
     canvas.drawPath(
       path.transform(transform.storage),
       Paint()
-        ..color = stroke.style.color.toUiColor()
+        ..color = color.toUiColor()
         ..strokeWidth = strokeWidth
         ..style = .stroke,
     );
@@ -87,7 +90,7 @@ class _TransientStrokePainter extends CustomPainter {
       canvas.drawPath(
         path.transform(transform.storage),
         Paint()
-          ..color = stroke.style.color.toUiColor().withScaledAlpha(0.5)
+          ..color = color.toUiColor().withScaledAlpha(0.5)
           ..style = PaintingStyle.stroke
           ..strokeWidth = strokeWidth,
       );

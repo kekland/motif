@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:listen/listen.dart';
 import 'package:shared/shared.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
+import 'package:asset/asset.dart';
 import 'package:color/color.dart';
 import 'package:skia/skia.dart' as skia;
 
@@ -14,6 +15,8 @@ import 'package:schema/program.dart' as gen;
 
 import 'generator/generator.dart';
 export 'generator/generator.dart';
+
+export 'package:asset/asset.dart';
 
 part 'errors.dart';
 part 'program.dart';
@@ -28,6 +31,7 @@ part 'remap.dart';
 part 'edit.dart';
 part 'serializer.dart';
 
+part 'style/decoration.dart';
 part 'style/style.dart';
 part 'style/style_table.dart';
 part 'style/vertex_style.dart';
@@ -102,7 +106,7 @@ part 'routers/reparent_router.dart';
 part 'routers/slice_router.dart';
 part 'routers/generator_router.dart';
 
-part 'assets/asset.dart';
 part 'assets/asset_manifest.dart';
+part 'assets/asset_cache.dart';
 
 final _log = Logger('program');

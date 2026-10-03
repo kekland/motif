@@ -24,20 +24,23 @@ class TextStatementEditOverlay extends HookWidget {
   const new({
     super.key,
     required this.info,
-    required this.statement,
+    required this.id,
     required this.onClose,
   });
 
   final OverlayChildLayoutInfo info;
-  final TextStatement statement;
+  final StatementId id;
   final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
+    final editor = context.editor;
     final editableTextKey = useMemoized(() => GlobalKey<EditableTextState>());
     final gestureDetectorKey = useMemoized(() => GlobalKey());
     final gestureDelegate = useMemoized(() => _TextStatementEditOverlayDelegate(editableTextKey));
     final gestureBuilder = useMemoized(() => TextSelectionGestureDetectorBuilder(delegate: gestureDelegate));
+    final statement = editor.statement<TextStatement>(id)!;
+    useListenable(editor.scene.notifier.forStatement(id));
 
     final controller = useTextEditingController.fromValue(
       TextEditingValue(
@@ -48,21 +51,33 @@ class TextStatementEditOverlay extends HookWidget {
 
     final focusNode = useFocusNode();
 
-    final editor = Editor.of(context);
     final transform = editor.bundle.query.localToWorld(statement.frame);
     final bbox = editor.bundle.query.bbox(statement.frame)!;
 
     useControllerTextEffect(controller, (text) {
-      editor.edit((txn) => txn.update<TextStatement>(statement.id, (s) => s.copyWith(text: text)));
+      editor.edit((txn) => txn.update<TextStatement>(id, (s) => s.copyWith(text: text)));
     });
 
     useListenerEffect(editor.selection, () {
-      if (!editor.selection.statements.contains(statement.id)) onClose();
+      if (!editor.selection.statements.contains(id)) onClose();
     });
 
     useListenerEffect(focusNode, () {
       if (!focusNode.hasFocus) onClose();
     });
+
+    final textFormat = statement.textFormat;
+    final textStyle = TextStyle(
+      color: Colors.red,
+      fontFamily: textFormat.fontFamily.name,
+      fontSize: textFormat.fontSize,
+      letterSpacing: textFormat.letterSpacing,
+      fontStyle: switch(textFormat.fontStyle) {
+        .regular => .normal,
+        .italic => .italic,
+      },
+      fontWeight: .new(textFormat.fontWeight.value),
+    );
 
     return Transform(
       transform: info.childPaintTransform,
@@ -72,8 +87,7 @@ class TextStatementEditOverlay extends HookWidget {
           Transform(
             transform: transform.asVM(),
             child: SizedBox(
-              width: bbox.width,
-              height: bbox.height,
+              width: statement.size.width.isContain ? null : bbox.width,
               child: gestureBuilder.buildGestureDetector(
                 key: gestureDetectorKey,
                 behavior: .translucent,
@@ -82,11 +96,8 @@ class TextStatementEditOverlay extends HookWidget {
                   autofocus: true,
                   controller: controller,
                   focusNode: focusNode,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontFamily: 'Roboto Mono',
-                    package: 'ui',
-                  ),
+                  maxLines: null,
+                  style: textStyle,
                   cursorColor: context.colors.selection.primary,
                   cursorWidth: 2.0 / info.childPaintTransform.getMaxScaleOnAxis2D(),
                   backgroundCursorColor: context.colors.selection.secondary.withScaledAlpha(0.5),

@@ -11,3 +11,9 @@ bool mapEquals<K, V>(Map<K, V> a, Map<K, V> b) => _mapEquality.equals(a, b);
 int setHash<T>(Set<T> set) => _setEquality.hash(set);
 int listHash<T>(List<T> list) => _listEquality.hash(list);
 int mapHash<K, V>(Map<K, V> map) => _mapEquality.hash(map);
+
+bool listOptionalEquals<T>(List<T>? a, List<T>? b) {
+  if (a == null && b == null) return true;
+  if (a == null || b == null) return false;
+  return listEquals(a, b);
+}

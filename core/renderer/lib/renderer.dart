@@ -3,19 +3,22 @@ import 'dart:ui' as ui;
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
+import 'package:scene/scene.dart';
 
 import 'paint.dart' as painter;
 
 export 'widget.dart';
 
-final class ProgramRenderer {
-  new(this.evaluation) {
-    evaluation.addUpdateListener(_onEvaluationUpdate);
+final class SceneRenderer {
+  new(this.scene) {
+    scene.evaluation.addUpdateListener(_onEvaluationUpdate);
+    scene.assetCache.addFetchListener(_onAssetFetched);
   }
 
-  final Evaluation evaluation;
+  final Scene scene;
+  Bundle get bundle => scene.bundle;
+  Evaluation get evaluation => scene.evaluation;
 
-  Bundle get bundle => evaluation.bundle;
   final _cache = <FrameRef, List<DrawEntry>>{};
 
   void _onEvaluationUpdate(EvalPass pass) {
@@ -34,7 +37,7 @@ final class ProgramRenderer {
     for (final r in pass.restyled) mark(r);
     for (final r in pass.moved) {
       if (r.kind == .frame) {
-        final statement = pass.evaluation.statement(r.statementId);
+        final statement = evaluation.statement(r.statementId);
         if (painter.isPaintedStatement(statement)) stale.add(r.asFrame);
       }
     }
@@ -54,6 +57,7 @@ final class ProgramRenderer {
     for (final f in _cache.keys.toList()) _stale(f);
     _cache.clear();
     evaluation.removeUpdateListener(_onEvaluationUpdate);
+    scene.assetCache.removeFetchListener(_onAssetFetched);
   }
 
   void paint(ui.Canvas canvas) {
@@ -66,7 +70,7 @@ final class ProgramRenderer {
     canvas.save();
     canvas.transform(transform.storage64);
 
-    final entries = _cache.putIfAbsent(ref, () => painter.paintFrame(evaluation, ref, frame, depth));
+    final entries = _cache.putIfAbsent(ref, () => painter.paintFrame(scene, ref, frame, depth));
     for (final e in entries) {
       final _ = switch (e) {
         DrawPicture(:final picture) => canvas.drawPicture(picture),
@@ -75,6 +79,14 @@ final class ProgramRenderer {
     }
 
     canvas.restore();
+  }
+
+  void _onAssetFetched(StatementId id) {
+    final products = scene.evaluation.productsOf(id);
+    for (final cell in products) {
+      final frame = cell.kind == .frame ? cell : bundle.parentOf(bundle.handle(cell)!)?.ref(bundle);
+      if (frame != null) _stale(frame.asFrame);
+    }
   }
 
   void reassemble() {

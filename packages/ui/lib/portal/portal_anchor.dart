@@ -6,7 +6,7 @@ class PortalAnchor {
   static PortalAnchor compute(
     BuildContext context, {
     Rect? rect,
-    EdgeInsets padding = .zero,
+    EdgeInsets padding = const .all(4.0),
     Alignment? alignment,
     Axis axis = .vertical,
   }) {
@@ -174,8 +174,7 @@ class RenderPortalPositioned extends RenderProxyBox {
       return;
     }
 
-    final rectConstraints = BoxConstraints.tight(rect!.size);
-    child!.layout(rectConstraints);
+    child!.layout(portalConstraints ?? constraints.loosen(), parentUsesSize: true);
   }
 
   @override

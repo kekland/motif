@@ -108,7 +108,9 @@ extension RouteReparent on Evaluation {
 
     return .success(
       .build(this, (edit) {
-        edit.insert(insertions, at: placement < 0 ? .start : .after(program[placement].id));
+        // Drop reorder statements
+        final cleanInsertions = insertions.where((s) => s is! ReorderStatement);
+        edit.insert(cleanInsertions.toList(), at: placement < 0 ? .start : .after(program[placement].id));
         for (final m in members) edit.reorder(accepted[m]!, null);
       }),
     );

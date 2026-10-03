@@ -66,10 +66,10 @@ abstract class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
         crossAxisAlignment: .start,
         children: [
           Text('Stroke', style: context.typography.body.secondary),
-          ColorField(
-            value: useMemoComputed(() => value().color.partial),
-            onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
-          ),
+          // ColorInputField(
+          //   value: useMemoComputed(() => value().color.partial),
+          //   onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
+          // ),
           DoubleExpressionInputField(
             value: useMemoComputed(() => value().width),
             onChanged: (v) => onChanged(value().copyWith(width: v)),
@@ -91,7 +91,7 @@ final class PenEdgeStyleToolOption extends EdgeStyleToolOption {
 }
 
 final class ShapeEdgeStyleToolOption extends EdgeStyleToolOption {
-  ShapeEdgeStyleToolOption({EdgeStyle? value}) : super('shapeEdgeStyle', value ?? .new(width: 0.0, color: .white));
+  ShapeEdgeStyleToolOption({EdgeStyle? value}) : super('shapeEdgeStyle', value ?? .none);
 
   static final entry = ShapeEdgeStyleToolOption();
 
@@ -116,10 +116,10 @@ final class FaceStyleToolOption extends ToolOption<FaceStyle> {
         crossAxisAlignment: .start,
         children: [
           Text('Fill', style: context.typography.body.secondary),
-          ColorField(
-            value: useMemoComputed(() => value().color.partial),
-            onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
-          ),
+          // ColorInputField(
+          //   value: useMemoComputed(() => value().color.partial),
+          //   onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
+          // ),
         ],
       ),
     );

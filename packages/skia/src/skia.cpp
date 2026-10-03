@@ -10,7 +10,14 @@
 #include <modules/skparagraph/include/TypefaceFontProvider.h>
 #include <ports/SkFontMgr_empty.h>
 
+#include "enums.hpp"
+
 using namespace skia::textlayout;
+
+SkFontMgr* sk_font_mgr() {
+  static const sk_sp<SkFontMgr> mgr = SkFontMgr_New_Custom_Empty();
+  return mgr.get();
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // font_provider
@@ -20,11 +27,6 @@ struct font_provider {
   sk_sp<TypefaceFontProvider> value = sk_make_sp<TypefaceFontProvider>();
   sk_sp<FontCollection> collection = sk_make_sp<FontCollection>();
 };
-
-SkFontMgr* sk_font_mgr() {
-  static const sk_sp<SkFontMgr> mgr = SkFontMgr_New_Custom_Empty();
-  return mgr.get();
-}
 
 FFI font_provider_t motif_font_provider_create() {
   font_provider_t provider = new font_provider();
@@ -70,6 +72,28 @@ struct paragraph_style {
 FFI paragraph_style_t motif_paragraph_style_create() { return new paragraph_style(); }
 FFI void motif_paragraph_style_destroy(paragraph_style_t style) { delete style; }
 
+FFI void motif_paragraph_style_set_apply_rounding_hack(paragraph_style_t style, bool apply) {
+  style->value.setApplyRoundingHack(apply);
+}
+
+FFI void motif_paragraph_style_set_alignment(paragraph_style_t style, text_alignment alignment) {
+  style->value.setTextAlign(to_skia(alignment));
+}
+
+FFI text_alignment motif_paragraph_style_get_alignment(paragraph_style_t style) {
+  return from_skia(style->value.getTextAlign());
+}
+
+FFI void motif_paragraph_style_set_ellipsis(paragraph_style_t style, const char* ellipsis) {
+  style->value.setEllipsis(SkString(ellipsis));
+}
+
+FFI size_t motif_paragraph_style_get_ellipsis(paragraph_style_t style, char* buffer) {
+  SkString ellipsis = style->value.getEllipsis();
+  if (buffer) strncpy(buffer, ellipsis.c_str(), ellipsis.size() + 1);
+  return ellipsis.size();
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // text_style
 // ---------------------------------------------------------------------------------------------------------------------
@@ -104,6 +128,28 @@ FFI void motif_text_style_set_font_families(text_style_t style, const char** fam
 
   for (int i = 0; i < count; ++i) sk_families.push_back(SkString(families[i]));
   style->value.setFontFamilies(sk_families);
+}
+
+FFI double motif_text_style_get_height(text_style_t style) { return style->value.getHeight(); }
+FFI void motif_text_style_set_height(text_style_t style, double height) { style->value.setHeight(height); }
+
+FFI double motif_text_style_get_letter_spacing(text_style_t style) { return style->value.getLetterSpacing(); }
+FFI void motif_text_style_set_letter_spacing(text_style_t style, double letter_spacing) {
+  style->value.setLetterSpacing(letter_spacing);
+}
+
+FFI void motif_text_style_set_font_style(text_style_t style, text_style_font_style font_style) {
+  style->value.setFontStyle(SkFontStyle(font_style.weight, font_style.width, to_skia(font_style.slant)));
+}
+FFI text_style_font_style motif_text_style_get_font_style(text_style_t style) {
+  SkFontStyle sk_font_style = style->value.getFontStyle();
+  text_style_font_style font_style{
+      sk_font_style.weight(),
+      sk_font_style.width(),
+      from_skia(sk_font_style.slant()),
+  };
+
+  return font_style;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -218,7 +264,6 @@ FFI const glyph_path* motif_paragraph_get_glyph_path(paragraph_t paragraph, size
   SkPath path;
   paragraph->fonts[glyph.font].getPath(glyph.id, &path);
 
-  
   const uint32_t verbs = path.countVerbs();
   const uint32_t points = path.countPoints();
   paragraph->glyph_path_verbs.resize(verbs);
@@ -227,10 +272,10 @@ FFI const glyph_path* motif_paragraph_get_glyph_path(paragraph_t paragraph, size
   path.getPoints(paragraph->glyph_path_points.data(), points);
 
   paragraph->glyph_path = {
-    verbs,
-    points,
-    paragraph->glyph_path_verbs.data(),
-    reinterpret_cast<const float*>(paragraph->glyph_path_points.data()),
+      verbs,
+      points,
+      paragraph->glyph_path_verbs.data(),
+      reinterpret_cast<const float*>(paragraph->glyph_path_points.data()),
   };
 
   return &paragraph->glyph_path;
@@ -266,4 +311,44 @@ FFI void motif_paragraph_builder_pop_style(paragraph_builder_t builder) { builde
 
 FFI paragraph_t motif_paragraph_builder_build(paragraph_builder_t builder) {
   return new paragraph{std::move(builder->value->Build())};
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// font_file
+// ---------------------------------------------------------------------------------------------------------------------
+
+struct font_file {
+  sk_sp<SkData> data;
+  std::vector<sk_sp<SkTypeface>> faces;
+  SkString name;
+};
+
+FFI font_file_t motif_font_file_create(const uint8_t* data, size_t length) {
+  auto file = new font_file();
+  file->data = SkData::MakeWithCopy(data, length);
+  int i = 0;
+  while (true) {
+    auto typeface = sk_font_mgr()->makeFromData(file->data, i);
+    if (!typeface) break;
+    file->faces.push_back(std::move(typeface));
+    i++;
+  }
+  
+  if (file->faces.empty()) {
+    delete file;
+    return nullptr;
+  }
+
+  return file;
+}
+
+FFI void motif_font_file_destroy(font_file_t file) { delete file; }
+
+FFI int32_t motif_font_file_face_count(font_file_t file) { return static_cast<int32_t>(file->faces.size()); }
+
+FFI void motif_font_file_get_face(font_file_t file, int32_t index, font_face* out) {
+  const auto& face = file->faces.at(index);
+  face->getFamilyName(&file->name);
+  const auto style = face->fontStyle();
+  *out = {index, style.weight(), style.width(), from_skia(style.slant()), file->name.c_str()};
 }

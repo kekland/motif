@@ -1,0 +1,6 @@
+dependency_overrides:
+  sqlite_async:
+    git:
+      url: https://github.com/powersync-ja/sqlite_async.dart
+      ref: d10c08942ad9ddf9178a1aae61b2d4043b7ef15a
+      path: packages/sqlite_async

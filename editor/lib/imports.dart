@@ -6,6 +6,7 @@ export 'package:program/program.dart';
 export 'package:kernel/kernel.dart' hide Action;
 export 'package:mouse_cursor/mouse_cursor.dart';
 export 'package:color/color.dart';
+export 'package:skia_flutter/skia_flutter.dart';
 
 export 'actions/_intents.dart';
 export 'activities/activities.dart';
@@ -13,3 +14,5 @@ export 'editor.dart';
 export 'tools/tools.dart';
 // export 'modifiers/modifiers.dart';
 export 'widgets/widgets.dart';
+
+export 'components/props/props.dart';

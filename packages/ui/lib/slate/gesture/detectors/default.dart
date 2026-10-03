@@ -29,6 +29,11 @@ Widget defaultGestureRegionDetectorBuilder(
     onPanEnd: callbacks.onPanEnd,
     onPanCancel: callbacks.onPanCancel,
     onPanDown: callbacks.onPanDown,
+    onLongPressDown: callbacks.onLongPressDown,
+    onLongPressStart: callbacks.onLongPressStart,
+    onLongPressMoveUpdate: callbacks.onLongPressUpdate,
+    onLongPressEnd: callbacks.onLongPressEnd,
+    onLongPressCancel: callbacks.onLongPressCancel,
     child: child,
   );
 }

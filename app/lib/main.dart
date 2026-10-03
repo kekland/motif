@@ -1,18 +1,25 @@
 import 'package:app/imports.dart';
 import 'package:bindings/bindings.dart';
 import 'package:flutter/services.dart';
-import 'package:skia/skia.dart' as skia;
+
+import 'embedded_server_io.dart' if (dart.library.js_interop) 'embedded_server_web.dart';
 
 Future<void> main() async {
   AugmentedWidgetsFlutterBinding.ensureInitialized();
-
-  await skia.Skia.initialize();
-  await SceneStorage.initialize();
 
   if (kDebugMode) {
     envOverride = DevelopmentEnv();
   }
 
+  final embeddedServer = await createEmbeddedServer();
+
+  Provider.debugCheckInvalidValueType = null;
+
   SystemChrome.setEnabledSystemUIMode(.manual, overlays: [.top]);
-  runApp(App());
+  runApp(
+    Provider.value(
+      value: embeddedServer,
+      child: App(),
+    ),
+  );
 }

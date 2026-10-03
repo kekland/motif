@@ -465,6 +465,14 @@ class Icons extends _BaseIcon {
   const Icons.text({super.key, super.size, super.color}): super.iconData(icon: Symbols.text_fields_rounded);
   const Icons.undo({super.key, super.size, super.color}): super.iconData(icon: Symbols.undo_rounded);
   const Icons.redo({super.key, super.size, super.color}): super.iconData(icon: Symbols.redo_rounded);
+  const Icons.fontSize({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_size_rounded);
+  const Icons.lineHeight({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_line_spacing_rounded);
+  const Icons.letterSpacing({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_letter_spacing_rounded);
+  const Icons.search({super.key, super.size, super.color}): super.iconData(icon: Symbols.search_rounded);
+  const Icons.remove({super.key, super.size, super.color}): super.iconData(icon: Symbols.remove_rounded);
+  const Icons.decorationGradient({super.key, super.size, super.color}): super.iconData(icon: Symbols.gradient_rounded);
+  const Icons.decorationImage({super.key, super.size, super.color}): super.iconData(icon: Symbols.image_rounded);
+  const Icons.decorationColor({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_color_fill_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

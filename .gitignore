@@ -12,3 +12,5 @@ scenes.db
 scenes.db-shm
 scenes.db-wal
 motif_server
+
+.env

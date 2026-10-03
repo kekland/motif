@@ -4,7 +4,7 @@ part of '_program.dart';
 ///
 /// Holds the live [Bundle], indexes for statements, and other runtime information.
 final class Evaluation {
-  Evaluation(this.program) {
+  Evaluation(this.program, {this.assetCache}) {
     bundle = .new();
     graph = .new(this);
     lineage = .new(this);
@@ -13,10 +13,12 @@ final class Evaluation {
     tree = .new(this);
     layout = .new(this);
     transientTransform = .new();
-    fontProvider = .new();
+
+    assetCache?.addFetchListener(_onAssetLoaded);
   }
 
   final Program program;
+  final AssetCache? assetCache;
   late final Bundle bundle;
   late final DependencyGraph graph;
   late final LineageIndex lineage;
@@ -24,7 +26,6 @@ final class Evaluation {
   late final StyleIndex style;
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
-  late final skia.FontProvider fontProvider;
 
   // -------------------------------------------------------------------------------------------------------------------
   // State
@@ -126,6 +127,7 @@ final class Evaluation {
   }
 
   void dispose() {
+    assetCache?.removeFetchListener(_onAssetLoaded);
     _updateNotifier.dispose();
   }
 
@@ -135,10 +137,18 @@ final class Evaluation {
     pass.drain();
   }
 
-  Future<void> prepare() async {
-    final font = await program.assetResolver!(program, FontAsset(size: 0, family: '', weight: 0, italic: false));
-    fontProvider.add(font.buffer.asUint8List());
+  // -------------------------------------------------------------------------------------------------------------------
+  // Asset resolution
+  // -------------------------------------------------------------------------------------------------------------------
+
+  void _onAssetLoaded(StatementId id) {
+    final pass = beginPass();
+    pass.queue.add(id);
+    pass.drain();
   }
+
+  A? resolveAsset<A extends Asset>(AssetId id) => program.assetManifest[id] as A?;
+  void fetchAssetData(StatementId? statementId, AssetId id) => assetCache?.fetch(statementId, id);
 }
 
 class AlwaysNotifier<T> extends ChangeNotifier implements ValueListenable<T> {

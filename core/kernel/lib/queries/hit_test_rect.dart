@@ -8,10 +8,7 @@ enum HitTestRectMode {
 
 extension HitTestRectQuery on TopologyQuery {
   HitResult hitTestRect(Aabb2 rect, {HitTestRectMode mode = .normal}) {
-    final vertices = <VertexHitEntry>[];
-    final edges = <EdgeHitEntry>[];
-    final faces = <FaceHitEntry>[];
-    final frames = <FrameHitEntry>[];
+    final entries = <HitEntry>[];
 
     final containLeaves = mode == .contain;
     final containFrames = mode != .intersect;
@@ -25,14 +22,14 @@ extension HitTestRectQuery on TopologyQuery {
         final kind = child.kind;
         if (kind == .vertex) {
           final p = bundle.vertexPosition(child.asVertex, space: .root);
-          if (rect.contains(p)) vertices.add(.new(child.asVertex.ref(bundle), distance: 0.0));
+          if (rect.contains(p)) entries.add(.vertex(child.asVertex.ref(bundle), 0.0));
         } else if (kind == .edge) {
           final c = bundle.edgeCubic(child.asEdge, space: .root);
           final hit = containLeaves ? c.containedInAabb(rect) : c.intersectsAabb(rect);
-          if (hit) edges.add(.new(child.asEdge.ref(bundle), distance: 0.0, t: 0.0));
+          if (hit) entries.add(.edge(child.asEdge.ref(bundle), 0.0, 0.0));
         } else if (kind == .face) {
           final hit = containLeaves ? _faceContainedRect(child.asFace, rect) : _faceIntersectsRect(child.asFace, rect);
-          if (hit) faces.add(.new(child.asFace.ref(bundle), distance: 0.0, point: rect.center));
+          if (hit) entries.add(.face(child.asFace.ref(bundle), 0.0, rect.center));
         } else if (kind == .frame) {
           walk(child.asFrame);
         }
@@ -42,19 +39,13 @@ extension HitTestRectQuery on TopologyQuery {
         final bounds = bbox(f.ref(bundle), space: .root);
         if (bounds != null) {
           final hit = containFrames ? rect.containsAabb(bounds) : rect.intersectsAabb(bounds);
-          if (hit) frames.add(.new(f.asFrame.ref(bundle), distance: 0.0, point: rect.center));
+          if (hit) entries.add(.frame(f.asFrame.ref(bundle), 0.0, rect.center));
         }
       }
     }
 
     walk(bundle.root);
-    return HitResult(
-      vertices: vertices,
-      covertices: [],
-      edges: edges,
-      faces: faces,
-      frames: frames,
-    );
+    return HitResult(entries);
   }
 
   bool _faceIntersectsRect(FaceHandle f, Aabb2 rect) {

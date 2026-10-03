@@ -10,6 +10,29 @@ import 'dart:ffi' as ffi;
 
 import '' as self;
 
+@ffi.Native<font_file_t Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+external font_file_t motif_font_file_create(
+  ffi.Pointer<ffi.Uint8> data,
+  int length,
+);
+
+@ffi.Native<ffi.Void Function(font_file_t)>()
+external void motif_font_file_destroy(
+  font_file_t file,
+);
+
+@ffi.Native<ffi.Int32 Function(font_file_t)>()
+external int motif_font_file_face_count(
+  font_file_t file,
+);
+
+@ffi.Native<ffi.Void Function(font_file_t, ffi.Int32, ffi.Pointer<font_face>)>()
+external void motif_font_file_get_face(
+  font_file_t file,
+  int index,
+  ffi.Pointer<font_face> face,
+);
+
 @ffi.Native<ffi.Int32 Function(font_provider_t, ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Int32, ffi.Pointer<ffi.Char>)>()
 external int motif_font_provider_add(
   font_provider_t provider,
@@ -137,6 +160,55 @@ external void motif_paragraph_style_destroy(
   paragraph_style_t style,
 );
 
+@ffi.Native<ffi.UnsignedInt Function(paragraph_style_t)>(symbol: 'motif_paragraph_style_get_alignment')
+external int _motif_paragraph_style_get_alignment(
+  paragraph_style_t style,
+);
+
+text_alignment motif_paragraph_style_get_alignment(
+  paragraph_style_t style,
+) {
+  return text_alignment.fromValue(
+    _motif_paragraph_style_get_alignment(
+      style,
+    ),
+  );
+}
+
+@ffi.Native<ffi.Size Function(paragraph_style_t, ffi.Pointer<ffi.Char>)>()
+external int motif_paragraph_style_get_ellipsis(
+  paragraph_style_t style,
+  ffi.Pointer<ffi.Char> buffer,
+);
+
+@ffi.Native<ffi.Void Function(paragraph_style_t, ffi.UnsignedInt)>(symbol: 'motif_paragraph_style_set_alignment')
+external void _motif_paragraph_style_set_alignment(
+  paragraph_style_t style,
+  int alignment,
+);
+
+void motif_paragraph_style_set_alignment(
+  paragraph_style_t style,
+  text_alignment alignment,
+) {
+  return _motif_paragraph_style_set_alignment(
+    style,
+    alignment.value,
+  );
+}
+
+@ffi.Native<ffi.Void Function(paragraph_style_t, ffi.Bool)>()
+external void motif_paragraph_style_set_apply_rounding_hack(
+  paragraph_style_t style,
+  bool apply,
+);
+
+@ffi.Native<ffi.Void Function(paragraph_style_t, ffi.Pointer<ffi.Char>)>()
+external void motif_paragraph_style_set_ellipsis(
+  paragraph_style_t style,
+  ffi.Pointer<ffi.Char> ellipsis,
+);
+
 @ffi.Native<text_style_t Function()>()
 external text_style_t motif_text_style_create();
 
@@ -162,6 +234,21 @@ external double motif_text_style_get_font_size(
   text_style_t style,
 );
 
+@ffi.Native<text_style_font_style Function(text_style_t)>()
+external text_style_font_style motif_text_style_get_font_style(
+  text_style_t style,
+);
+
+@ffi.Native<ffi.Double Function(text_style_t)>()
+external double motif_text_style_get_height(
+  text_style_t style,
+);
+
+@ffi.Native<ffi.Double Function(text_style_t)>()
+external double motif_text_style_get_letter_spacing(
+  text_style_t style,
+);
+
 @ffi.Native<ffi.Void Function(text_style_t, ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>()
 external void motif_text_style_set_font_families(
   text_style_t style,
@@ -175,10 +262,30 @@ external void motif_text_style_set_font_size(
   double size,
 );
 
+@ffi.Native<ffi.Void Function(text_style_t, text_style_font_style)>()
+external void motif_text_style_set_font_style(
+  text_style_t style,
+  text_style_font_style font_style,
+);
+
+@ffi.Native<ffi.Void Function(text_style_t, ffi.Double)>()
+external void motif_text_style_set_height(
+  text_style_t style,
+  double height,
+);
+
+@ffi.Native<ffi.Void Function(text_style_t, ffi.Double)>()
+external void motif_text_style_set_letter_spacing(
+  text_style_t style,
+  double letter_spacing,
+);
+
 const addresses = _SymbolAddresses();
 
 class _SymbolAddresses {
   const _SymbolAddresses();
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(font_file_t)>> get motif_font_file_destroy =>
+      ffi.Native.addressOf(self.motif_font_file_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(font_provider_t)>> get motif_font_provider_destroy =>
       ffi.Native.addressOf(self.motif_font_provider_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(paragraph_builder_t)>> get motif_paragraph_builder_destroy =>
@@ -361,6 +468,43 @@ final class _opaque_pthread_t extends ffi.Struct {
   external ffi.Array<ffi.Char> __opaque;
 }
 
+final class font_face extends ffi.Struct {
+  @ffi.Int32()
+  external int index;
+
+  @ffi.Int32()
+  external int weight;
+
+  @ffi.Int32()
+  external int width;
+
+  @ffi.UnsignedInt()
+  external int slantAsInt;
+
+  text_style_font_style_slant get slant => text_style_font_style_slant.fromValue(slantAsInt);
+  set slant(text_style_font_style_slant value) => slantAsInt = value.value;
+
+  external ffi.Pointer<ffi.Char> family;
+
+  static ffi.Pointer<font_face> $allocate(
+    ffi.Allocator $allocator, {
+    required int index,
+    required int weight,
+    required int width,
+    required text_style_font_style_slant slant,
+    required ffi.Pointer<ffi.Char> family,
+  }) => $allocator<font_face>()
+    ..ref.index = index
+    ..ref.weight = weight
+    ..ref.width = width
+    ..ref.slant = slant
+    ..ref.family = family;
+}
+
+final class font_file extends ffi.Opaque {}
+
+typedef font_file_t = ffi.Pointer<font_file>;
+
 final class font_provider extends ffi.Opaque {}
 
 typedef font_provider_t = ffi.Pointer<font_provider>;
@@ -516,7 +660,69 @@ typedef Dartregister_t = int;
 typedef rsize_t = __darwin_size_t;
 typedef syscall_arg_t = u_int64_t;
 
+enum text_alignment {
+  TEXT_ALIGNMENT_LEFT(0),
+  TEXT_ALIGNMENT_RIGHT(1),
+  TEXT_ALIGNMENT_CENTER(2),
+  TEXT_ALIGNMENT_JUSTIFY(3),
+  TEXT_ALIGNMENT_START(4),
+  TEXT_ALIGNMENT_END(5);
+
+  final int value;
+  const text_alignment(this.value);
+
+  static text_alignment fromValue(int value) => switch (value) {
+    0 => TEXT_ALIGNMENT_LEFT,
+    1 => TEXT_ALIGNMENT_RIGHT,
+    2 => TEXT_ALIGNMENT_CENTER,
+    3 => TEXT_ALIGNMENT_JUSTIFY,
+    4 => TEXT_ALIGNMENT_START,
+    5 => TEXT_ALIGNMENT_END,
+    _ => throw ArgumentError('Unknown value for text_alignment: $value'),
+  };
+}
+
 final class text_style extends ffi.Opaque {}
+
+final class text_style_font_style extends ffi.Struct {
+  @ffi.Int32()
+  external int weight;
+
+  @ffi.Int32()
+  external int width;
+
+  @ffi.UnsignedInt()
+  external int slantAsInt;
+
+  text_style_font_style_slant get slant => text_style_font_style_slant.fromValue(slantAsInt);
+  set slant(text_style_font_style_slant value) => slantAsInt = value.value;
+
+  static ffi.Pointer<text_style_font_style> $allocate(
+    ffi.Allocator $allocator, {
+    required int weight,
+    required int width,
+    required text_style_font_style_slant slant,
+  }) => $allocator<text_style_font_style>()
+    ..ref.weight = weight
+    ..ref.width = width
+    ..ref.slant = slant;
+}
+
+enum text_style_font_style_slant {
+  TEXT_STYLE_FONT_STYLE_SLANT_UPRIGHT(0),
+  TEXT_STYLE_FONT_STYLE_SLANT_ITALIC(1),
+  TEXT_STYLE_FONT_STYLE_SLANT_OBLIQUE(2);
+
+  final int value;
+  const text_style_font_style_slant(this.value);
+
+  static text_style_font_style_slant fromValue(int value) => switch (value) {
+    0 => TEXT_STYLE_FONT_STYLE_SLANT_UPRIGHT,
+    1 => TEXT_STYLE_FONT_STYLE_SLANT_ITALIC,
+    2 => TEXT_STYLE_FONT_STYLE_SLANT_OBLIQUE,
+    _ => throw ArgumentError('Unknown value for text_style_font_style_slant: $value'),
+  };
+}
 
 typedef text_style_t = ffi.Pointer<text_style>;
 typedef u_int16_t = ffi.UnsignedShort;

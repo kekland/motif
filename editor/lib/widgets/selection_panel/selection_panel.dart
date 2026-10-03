@@ -11,6 +11,7 @@ class SelectionPanel extends HookWidget {
   Widget build(BuildContext context) {
     final editor = context.editor;
     final selection = editor.selection;
+    final propTransaction = useMemoized(() => PropTransaction(editor.scene), [editor]);
     useListenable(selection);
 
     var selectedCells = selection.refSources.cells.toSet();
@@ -33,15 +34,18 @@ class SelectionPanel extends HookWidget {
       }
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          if (selectedCells.isNotEmpty) ...[
-            CellPanel(refs: selectedCells.toList()),
-            Divider(),
+    return Provider.value(
+      value: propTransaction,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (selectedCells.isNotEmpty) ...[
+              CellPanel(refs: selectedCells.toList()),
+              Divider(),
+            ],
+            StatementPanel(statementIds: selectedStatements.toList()),
           ],
-          StatementPanel(statementIds: selectedStatements.toList()),
-        ],
+        ),
       ),
     );
   }

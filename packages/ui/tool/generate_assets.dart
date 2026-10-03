@@ -72,6 +72,14 @@ Future<void> main() async {
     .new('text', 'Symbols.text_fields_rounded'),
     .new('undo', 'Symbols.undo_rounded'),
     .new('redo', 'Symbols.redo_rounded'),
+    .new('fontSize', 'Symbols.format_size_rounded'),
+    .new('lineHeight', 'Symbols.format_line_spacing_rounded'),
+    .new('letterSpacing', 'Symbols.format_letter_spacing_rounded'),
+    .new('search', 'Symbols.search_rounded'),
+    .new('remove', 'Symbols.remove_rounded'),
+    .new('decorationGradient', 'Symbols.gradient_rounded'),
+    .new('decorationImage', 'Symbols.image_rounded'),
+    .new('decorationColor', 'Symbols.format_color_fill_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

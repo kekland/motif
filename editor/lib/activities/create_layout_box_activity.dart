@@ -7,15 +7,19 @@ sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragA
     with KeyboardListenerDragActivity {
   CreateLayoutBoxActivity(
     this.editor, {
-    this.edgeStyle = .default_,
+    this.edgeStyle = .none,
     this.faceStyle = .default_,
     this.snapToPixel = false,
+    this.onCreated,
+    super.onEnd,
+    super.onCancel,
   });
 
   final Editor editor;
   final EdgeStyle edgeStyle;
   final FaceStyle faceStyle;
   final bool snapToPixel;
+  final void Function(FrameRef)? onCreated;
 
   late final Vec2 startPosition;
   late final S statement;
@@ -24,6 +28,12 @@ sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragA
   final mergeKey = Object();
 
   S create(Vec2 position, FrameRef? parent);
+  Size2 get defaultSize => .new(100, 100);
+
+  S createOnTap(Mat4 transform, Size2 size) => statement.copyWith(
+    transform: transform,
+    size: .fixed(size.width, size.height),
+  ) as S;
 
   @override
   void onStart(PositionedGestureDetails details) {
@@ -50,6 +60,12 @@ sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragA
     transaction!.insert(statement);
     transaction!.flush();
     editor.selection.set(statement.frame);
+    onCreated?.call(statement.frame);
+  }
+
+  void _update(LayoutBoxStatement newStatement) {
+    transaction!.replace(statement.id, [newStatement]);
+    transaction!.flush();
   }
 
   @override
@@ -68,17 +84,22 @@ sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragA
 
     final aabb = isAltPressed ? Aabb2.bbox2(a - d, a + d) : Aabb2.bbox2(a, a + d);
 
-    final newStatement = statement.copyWith(
-      transform: .translation2(aabb.min),
-      size: .fixed(aabb.width, aabb.height),
+    _update(
+      statement.copyWith(
+        transform: .translation2(aabb.min),
+        size: .fixed(aabb.width, aabb.height),
+      ),
     );
-
-    transaction!.replace(statement.id, [newStatement]);
-    transaction!.flush();
   }
 
   @override
   void onEnd(DragEndDetails details) {
+    if (didTap) {
+      final size = defaultSize;
+      final translation = startPosition - (size.vec / 2);
+      _update(createOnTap(.translation2(translation), size));
+    }
+
     transaction!.commit(mergeKey: mergeKey);
     editor.tool.activeTool = tools.cursor;
     super.onEnd(details);
@@ -96,6 +117,9 @@ final class CreateContainerActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
+  super.onCreated,
+  super.onEnd,
+  super.onCancel,
 }) extends CreateLayoutBoxActivity<ContainerStatement> {
   @override
   ContainerStatement create(Vec2 position, FrameRef? parent) => ContainerStatement(
@@ -111,6 +135,9 @@ final class CreateRectangleActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
+  super.onCreated,
+  super.onEnd,
+  super.onCancel,
 }) extends CreateLayoutBoxActivity<RectangleStatement> {
   @override
   RectangleStatement create(Vec2 position, FrameRef? parent) => RectangleStatement(
@@ -126,6 +153,9 @@ final class CreateEllipseActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
+  super.onCreated,
+  super.onEnd,
+  super.onCancel,
 }) extends CreateLayoutBoxActivity<EllipseStatement> {
   @override
   EllipseStatement create(Vec2 position, FrameRef? parent) => EllipseStatement(
@@ -141,6 +171,9 @@ final class CreatePolygonActivity(
   super.snapToPixel,
   super.edgeStyle,
   super.faceStyle,
+  super.onCreated,
+  super.onEnd,
+  super.onCancel,
 }) extends CreateLayoutBoxActivity<PolygonStatement> {
   @override
   PolygonStatement create(Vec2 position, FrameRef? parent) => PolygonStatement(
@@ -154,13 +187,46 @@ final class CreatePolygonActivity(
 final class CreateTextActivity(
   super.editor, {
   super.snapToPixel,
-  super.edgeStyle,
+  super.edgeStyle = .none,
   super.faceStyle,
+  super.onCreated,
+  super.onEnd,
+  super.onCancel,
 }) extends CreateLayoutBoxActivity<TextStatement> {
   @override
+  Size2 get defaultSize => statement.intrinsicSize(editor.evaluation);
+
+  final textFormat = TextFormat.default_(editor.builtinFonts.catalog);
+
+  @override
+  void onStart(PositionedGestureDetails details) {
+    final asset = editor.builtinFonts.catalog.assets[textFormat.fontFamily.hash]!;
+    editor.maybeAddAsset(asset);
+
+    super.onStart(details);
+  }
+
+  @override
+  TextStatement createOnTap(Mat4 transform, Size2 size) {
+    return statement.copyWith(
+      transform: transform,
+      size: .contain(),
+    );
+  }
+
+  @override
   TextStatement create(Vec2 position, FrameRef? parent) => TextStatement(
-    text: 'Hello, world!',
+    text: '',
     transform: .translation2(position),
+    textFormat: .default_(editor.builtinFonts.catalog),
+    edgeStyle: edgeStyle,
+    faceStyle: faceStyle,
     parent: parent,
   );
+
+  @override
+  void onEnd(DragEndDetails details) {
+    editor.cursorTextEditStatement = statement.id;
+    super.onEnd(details);
+  }
 }

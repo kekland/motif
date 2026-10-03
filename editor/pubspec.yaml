@@ -12,6 +12,7 @@ dependencies:
   state:
   mouse_cursor:
 
+  shared:
   blueprint:
   geometry:
   kernel:
@@ -24,8 +25,16 @@ dependencies:
   schema:
   ink_stroke_modeler:
 
-  equatable: ^2.1.0
-  web_socket_channel: ^3.0.3
+  skia:
+  skia_flutter:
+  sync:
+  sync_server:
+
   flutter_boring_avatars: ^2.1.0
-  uuid: ^4.6.0
-  http: ^1.6.0
+  file_picker: ^13.1.0
+  pretty_qr_code: ^3.6.0
+
+flutter:
+  assets:
+    - assets/builtin/
+    - assets/builtin/fonts/

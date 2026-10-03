@@ -6,7 +6,7 @@ final class ProgramDelta {
   ProgramDelta.empty() : this([]);
 
   factory decode(gen.ProgramDelta program) => ProgramCodec.decodeProgramDelta(program);
-  static ProgramDelta? decodeRaw(Uint8List data) => ProgramCodec.decodeRaw(() => .decode(.fromBuffer(data)));
+  static ProgramDelta? decodeRaw(Uint8List data) => codec.decodeRaw(() => .decode(.fromBuffer(data)));
 
   factory coalesced(Iterable<ProgramDelta> deltas) {
     final out = <ProgramChange>[];

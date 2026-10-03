@@ -32,6 +32,9 @@ class EvalContext {
   Placement placementOf(StatementId id) => _evaluation.layout.placementOf(id)!;
 
   Mat4 worldToLocal(FrameRef ref) => bundle.query.worldToLocal(ref);
+
+  A? resolveAsset<A extends Asset>(AssetId id) => _evaluation.resolveAsset<A>(id);
+  void fetchAssetData(AssetId id) => _evaluation.fetchAssetData(this.id, id);
 }
 
 class ModifierEvalContext<B extends Statement> extends EvalContext {

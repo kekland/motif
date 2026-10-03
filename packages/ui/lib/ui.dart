@@ -31,7 +31,8 @@ export 'package:flutter/material.dart'
         Listenable,
         ValueNotifier,
         VoidCallback,
-        Tooltip;
+        Tooltip,
+        Decoration;
 
 export 'package:state/state.dart';
 
@@ -61,13 +62,19 @@ export 'ui/default_gesture_reaction.dart';
 export 'ui/display/single_activator_widget.dart';
 export 'ui/divider.dart';
 export 'ui/form/checkbox.dart';
-export 'ui/form/color_field.dart';
+export 'ui/form/color_input_field.dart';
 export 'ui/form/expression_input.dart';
+export 'ui/form/input_field_base.dart';
+export 'ui/form/input_field.dart';
 export 'ui/form/text_field.dart';
-export 'ui/form/text_form_field.dart';
+export 'ui/form/value_input_field.dart';
+export 'ui/form/value_text_input_field.dart';
 export 'ui/header.dart';
 export 'ui/icon_button.dart';
 export 'ui/list_item.dart';
 export 'ui/selection/selection.dart';
 export 'ui/toggleable_button.dart';
 export 'ui/tooltip/tooltip.dart';
+export 'ui/selectable_list.dart';
+export 'ui/drag_handle.dart';
+

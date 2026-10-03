@@ -53,22 +53,12 @@ final class FaceHitEntry extends HitEntry<FaceRef> {
 }
 
 class HitResult {
-  HitResult({
-    required this.vertices,
-    required this.covertices,
-    required this.edges,
-    required this.faces,
-    required this.frames,
-  });
+  HitResult(this.entries);
 
-  final List<VertexHitEntry> vertices;
-  final List<CovertexHitEntry> covertices;
-  final List<EdgeHitEntry> edges;
-  final List<FaceHitEntry> faces;
-  final List<FrameHitEntry> frames;
+  final List<HitEntry> entries;
 
-  late final List<HitEntry> entries = [...vertices, ...covertices, ...edges, ...faces, ...frames];
   bool get isEmpty => entries.isEmpty;
+  bool get isNotEmpty => entries.isNotEmpty;
 }
 
 final class HitTestCovertexMode {
@@ -89,11 +79,7 @@ extension HitTestQuery on TopologyQuery {
     double tolerance = 0.0,
     HitTestCovertexMode covertexMode = .none,
   }) {
-    final vertices = <VertexHitEntry>[];
-    final covertices = <CovertexHitEntry>[];
-    final edges = <EdgeHitEntry>[];
-    final faces = <FaceHitEntry>[];
-    final frames = <FrameHitEntry>[];
+    final entries = <HitEntry>[];
 
     void walk(FrameHandle f) {
       final clip = bundle.frameClip(f);
@@ -105,13 +91,13 @@ extension HitTestQuery on TopologyQuery {
 
         if (kind == .vertex) {
           final e = _hitTestVertex(child.asVertex, p, tolerance);
-          if (e != null) vertices.add(e);
+          if (e != null) entries.add(e);
         } else if (kind == .edge) {
           final e = _hitTestEdge(child.asEdge, p, tolerance);
-          if (e != null) edges.add(e);
+          if (e != null) entries.add(e);
         } else if (kind == .face) {
           final e = _hitTestFace(child.asFace, p, tolerance);
-          if (e != null) faces.add(e);
+          if (e != null) entries.add(e);
         } else if (kind == .frame) {
           walk(child.asFrame);
         }
@@ -124,7 +110,7 @@ extension HitTestQuery on TopologyQuery {
         final scale = worldToLocal.maxScaleOnAxis;
 
         if (bounds.inflated(tolerance * scale).contains(local)) {
-          frames.add(.new(f.ref(bundle), distance: 0.0, point: local));
+          entries.add(.frame(f.ref(bundle), 0.0, local));
         }
       }
     }
@@ -143,20 +129,12 @@ extension HitTestQuery on TopologyQuery {
     for (final cv in cvs) {
       if (cv == null) continue;
       final e = _hitTestCovertex(cv, p, tolerance, allowCollapsed: covertexMode.allowCollapsed);
-      if (e != null) covertices.add(e);
+      if (e != null) entries.add(e);
     }
 
-    _sortByDistance(vertices);
-    _sortByDistance(covertices);
-    _sortByDistance(edges);
+    _sortByDistance(entries);
 
-    return HitResult(
-      vertices: vertices,
-      covertices: covertices,
-      edges: edges,
-      faces: faces,
-      frames: frames,
-    );
+    return HitResult(entries);
   }
 
   VertexHitEntry? _hitTestVertex(VertexHandle v, Vec2 p, double tolerance) {

@@ -32,7 +32,6 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
   );
 
   late final _focusScopeNode = FocusScopeNode();
-  late final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -45,7 +44,9 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && !_focusNode.hasFocus) _focusNode.requestFocus();
+      if (mounted && !_focusScopeNode.hasFocus) {
+        _focusScopeNode.requestFocus();
+      }
     });
   }
 
@@ -60,7 +61,6 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     _animationController.dispose();
     _animation.dispose();
     _focusScopeNode.dispose();
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -99,6 +99,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
           FocusScope(
             node: _focusScopeNode,
             autofocus: true,
+            descendantsAreFocusable: true,
             onKeyEvent: (_, event) {
               if (entry.isModal && event is KeyDownEvent && event.logicalKey == .escape) {
                 entry.pop();

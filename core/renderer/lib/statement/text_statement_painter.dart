@@ -4,19 +4,11 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
   const TextStatementPainter();
 
   @override
-  ui.Picture paint(Evaluation e, TextStatement statement) {
-    final layoutSize = statement.size;
+  ui.Picture paint(Scene scene, TextStatement statement) {
+    final e = scene.evaluation;
     final size = e.layout.placementOf(statement.id)!.size;
-
-    final textStyle = skia.TextStyle(fontFamilies: e.fontProvider.families);
-    final paragraphStyle = skia.ParagraphStyle();
-    final paragraphBuilder = skia.ParagraphBuilder(paragraphStyle, e.fontProvider);
-    paragraphBuilder.pushStyle(textStyle);
-    paragraphBuilder.addText(statement.text);
-    paragraphBuilder.popStyle();
-
-    final paragraph = paragraphBuilder.build();
-    paragraph.layout(layoutSize.width.isContain ? double.infinity : size.width);
+    final paragraph = statement.buildParagraph(e);
+    paragraph.layout(size.width);
 
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder);
@@ -43,7 +35,9 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
       }
     }
 
-    canvas.drawPath(path, ui.Paint()..color = const ui.Color(0x8000FF00));
+    paintEdge(canvas, path, scene, statement.edgeStyle, statement.id);
+    paintFace(canvas, path, scene, statement.faceStyle, statement.id);
+
     return recorder.endRecording();
   }
 }

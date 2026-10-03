@@ -1,143 +1,64 @@
-import 'package:flutter/gestures.dart';
 import 'package:ui/ui.dart';
 
 final _logger = Logger('ExpressionInputField');
 
-class ExpressionInputField<T> extends HookWidget {
-  const ExpressionInputField({
+class ExpressionInputField<T> extends ValueTextInputField<T> {
+  ExpressionInputField({
     super.key,
-    required this.valueToString,
-    required this.evaluateExpression,
-    required this.value,
-    this.onChanged,
-    this.supportedDevices,
-    this.options = const .new(),
-  });
-
-  final ReadonlySignal<T?> value;
-  final ValueChanged<T>? onChanged;
-  final String Function(T?) valueToString;
-  final T? Function(String) evaluateExpression;
-  final TextFieldOptions options;
-  final Set<PointerDeviceKind>? supportedDevices;
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = useTextEditingController();
-    final focusNode = useFocusNode();
-    final didChange = useRef(false);
-
-    useSignalEffect(() {
-      final v = value();
-      if (didChange.value) return;
-      controller.text = valueToString(v);
-      return null;
-    }, keys: [value]);
-
-    void onEditingComplete() {
-      try {
-        final result = evaluateExpression(controller.text);
-        if (result == null) {
-          controller.text = valueToString(value());
-          return;
-        }
-
-        onChanged?.call(result);
-        controller.text = valueToString(result);
-      } catch (e) {
-        _logger.warning('Failed to parse expression: ${controller.text}: $e');
-        controller.text = valueToString(value.value);
-      }
-
-      didChange.value = false;
-    }
-
-    useListenerEffect(focusNode, () {
-      if (!focusNode.hasFocus) onEditingComplete();
-    });
-
-    return TextField(
-      controller: controller,
-      focusNode: focusNode,
-      onChanged: (_) => didChange.value = true,
-      onEditingComplete: onEditingComplete,
-      supportedDevices: supportedDevices,
-      options: options,
-    );
-  }
+    required super.valueToString,
+    required T? Function(String) evaluateExpression,
+    required super.value,
+    super.onChanged,
+    super.sessionCallbacks,
+    super.options = const .new(),
+  }) : super(
+         valueFromString: (s) {
+           try {
+             return evaluateExpression(s);
+           } catch (e) {
+             _logger.warning('Failed to evaluate expression: $s: $e');
+             return null;
+           }
+         },
+       );
 }
 
-class IntExpressionInputField extends StatelessWidget {
-  const IntExpressionInputField({
+class IntExpressionInputField extends ExpressionInputField<int> {
+  IntExpressionInputField({
     super.key,
-    required this.value,
-    this.onChanged,
-    this.supportedDevices,
-    this.options = const .new(),
-  });
-
-  final ReadonlySignal<int?> value;
-  final ValueChanged<int>? onChanged;
-  final Set<PointerDeviceKind>? supportedDevices;
-  final TextFieldOptions options;
-
-  String _valueToString(int? value) {
-    if (value == null) return '';
-    return value.toString();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpressionInputField<int>(
-      value: value,
-      onChanged: onChanged,
-      valueToString: _valueToString,
-      supportedDevices: supportedDevices,
-      evaluateExpression: (s) => evaluateExpression<num>(s).toInt(),
-      options: options,
-    );
-  }
+    required super.value,
+    super.sessionCallbacks,
+    super.onChanged,
+    super.options,
+  }) : super(
+         valueToString: (v) {
+           if (v == null) return '';
+           return v.toString();
+         },
+         evaluateExpression: (s) => evaluateExpression<num>(s).toInt(),
+       );
 }
 
-class DoubleExpressionInputField extends StatelessWidget {
-  const DoubleExpressionInputField({
+class DoubleExpressionInputField extends ExpressionInputField<double> {
+  DoubleExpressionInputField({
     super.key,
-    required this.value,
-    this.onStartChanging,
-    this.onEndChanging,
-    this.onChanged,
+    required super.value,
+    super.sessionCallbacks,
+    super.onChanged,
+    super.options,
     this.fractionDigits = 3,
-    this.supportedDevices,
-    this.options = const .new(),
-  });
+  }) : super(
+         valueToString: (v) {
+           if (v == null) return '';
+           if (v % 1 < precisionErrorTolerance) {
+             return v.toInt().toString();
+           }
 
-  final ReadonlySignal<double?> value;
-  final VoidCallback? onStartChanging;
-  final VoidCallback? onEndChanging;
-  final ValueChanged<double>? onChanged;
+           final str = v.toStringAsFixed(fractionDigits);
+           return str;
+         },
+         evaluateExpression: (s) => evaluateExpression<num>(s).toDouble(),
+       );
+
   final int fractionDigits;
-  final Set<PointerDeviceKind>? supportedDevices;
-  final TextFieldOptions options;
-
-  String _valueToString(double? value) {
-    if (value == null) return '';
-    if (value % 1 < precisionErrorTolerance) {
-      return value.toInt().toString();
-    }
-
-    final str = value.toStringAsFixed(fractionDigits);
-    return str;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpressionInputField<double>(
-      value: value,
-      onChanged: (v) => onChanged?.call(v),
-      valueToString: _valueToString,
-      supportedDevices: supportedDevices,
-      evaluateExpression: (s) => evaluateExpression<num>(s).toDouble(),
-      options: options,
-    );
-  }
 }

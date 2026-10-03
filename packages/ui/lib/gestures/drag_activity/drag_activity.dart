@@ -29,6 +29,11 @@ abstract class DragActivity {
   int get maxPointers => 1;
   bool shouldAccept(PointerDownEvent event) => true;
 
+  bool _didDrag = false;
+  bool get didDrag => _didDrag;
+  bool get didTap => !_didDrag;
+  double get tapSlop => kTouchSlop;
+
   @mustCallSuper
   void onStart(PositionedGestureDetails details) {
     startDetails = details;
@@ -37,6 +42,10 @@ abstract class DragActivity {
 
   @mustCallSuper
   void onUpdate(DragUpdateDetails details) {
+    if ((details.globalPosition - startDetails.globalPosition).distance > tapSlop) {
+      _didDrag = true;
+    }
+
     _lastUpdateDetails = details;
     _onUpdate?.call();
   }

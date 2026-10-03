@@ -13,6 +13,7 @@ class const ListItem({
   final double? height,
   final bool isSelected = false,
   final bool expands = true,
+  final int? reorderableIndex,
   final EdgeInsets? padding,
 }) extends StatelessWidget {
   @override
@@ -20,7 +21,10 @@ class const ListItem({
     final iconColor = isSelected ? null : context.colors.display.tertiary;
     final titleColor = isSelected ? null : context.colors.display.secondary;
 
-    Widget body = DefaultForegroundStyle(
+    final isDraggable = reorderableIndex != null;
+    final dragHandle = isDraggable ? DragHandle(index: reorderableIndex!) : null;
+
+    Widget child = DefaultForegroundStyle(
       style: context.typography.body.copyWith(color: titleColor),
       iconSize: 18.0,
       maxLines: 1,
@@ -29,11 +33,11 @@ class const ListItem({
     );
 
     if (subtitle != null) {
-      body = Column(
+      child = Column(
         mainAxisSize: .min,
         crossAxisAlignment: .start,
         children: [
-          body,
+          child,
           const SizedBox(height: 2.0),
           DefaultForegroundStyle(
             style: context.typography.caption.tertiary,
@@ -44,7 +48,7 @@ class const ListItem({
     }
 
     if (leading != null || trailing != null) {
-      body = Row(
+      child = Row(
         mainAxisSize: expands ? .max : .min,
         children: [
           if (leading != null) ...[
@@ -57,10 +61,10 @@ class const ListItem({
           ],
           Flexible(
             fit: expands ? .tight : .loose,
-            child: body,
+            child: child,
           ),
           if (trailing != null) ...[
-            const SizedBox(width: 6.0),
+            const SizedBox(width: 4.0),
             DefaultForegroundStyle(
               color: context.colors.display.tertiary,
               style: context.typography.caption.tertiary,
@@ -78,37 +82,60 @@ class const ListItem({
 
     final _selectedColor = selectedColor ?? context.colors.accent.secondary;
 
+    final leftPadding = switch (isDraggable) {
+      true => 16.0,
+      false => 8.0,
+    };
+
     final EdgeInsets defaultPadding = switch (trailing) {
-      null => const .symmetric(horizontal: 8.0),
-      _ => const .only(left: 8.0, right: 6.0),
+      null => .only(left: leftPadding, right: 8.0),
+      _ => .only(left: leftPadding, right: 6.0),
     };
 
     if (onTap == null) {
-      return Surface(
+      child = Surface(
         color: isSelected ? _selectedColor : color,
         padding: padding ?? defaultPadding,
         width: width,
         height: height ?? defaultHeight,
         child: Align(
           alignment: .centerLeft,
-          child: body,
+          child: child,
+        ),
+      );
+    } else {
+      child = GestureSurface(
+        onTap: onTap,
+        ignoreDisabled: true,
+        color: isSelected ? _selectedColor : color,
+        padding: padding ?? defaultPadding,
+        width: width,
+        height: height ?? defaultHeight,
+        state: isSelected ? {.selected} : {},
+        child: Align(
+          alignment: .centerLeft,
+          child: child,
         ),
       );
     }
 
-    return GestureSurface(
-      onTap: onTap,
-      ignoreDisabled: true,
-      color: isSelected ? _selectedColor : color,
-      padding: padding ?? defaultPadding,
-      width: width,
-      height: height ?? defaultHeight,
-      state: isSelected ? {.selected} : {},
-      child: Align(
-        alignment: .centerLeft,
-        child: body,
-      ),
-    );
+    if (isDraggable) {
+      child = ReorderableDelayedDragStartListener(
+        index: reorderableIndex!,
+        child: Stack(
+          alignment: .centerLeft,
+          children: [
+            child,
+            Positioned(
+              left: 0.0,
+              child: dragHandle!,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return child;
   }
 }
 

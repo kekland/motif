@@ -44,16 +44,28 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
   external void _motif_paragraph_style_destroy(
     paragraph_style_t style,
   );
+  external void _motif_paragraph_style_set_apply_rounding_hack(
+    paragraph_style_t style,
+    bool apply,
+  );
+  external void _motif_paragraph_style_set_alignment(
+    paragraph_style_t style,
+    int alignment,
+  );
+  external int _motif_paragraph_style_get_alignment(
+    paragraph_style_t style,
+  );
+  external void _motif_paragraph_style_set_ellipsis(
+    paragraph_style_t style,
+    Pointer<Char> ellipsis,
+  );
+  external size_t _motif_paragraph_style_get_ellipsis(
+    paragraph_style_t style,
+    Pointer<Char> buffer,
+  );
   external text_style_t _motif_text_style_create();
   external void _motif_text_style_destroy(
     text_style_t style,
-  );
-  external double _motif_text_style_get_font_size(
-    text_style_t style,
-  );
-  external void _motif_text_style_set_font_size(
-    text_style_t style,
-    double size,
   );
   external size_t _motif_text_style_get_font_families_count(
     text_style_t style,
@@ -67,6 +79,35 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
     text_style_t style,
     Pointer<PointerClass<Char>> families,
     int count,
+  );
+  external double _motif_text_style_get_font_size(
+    text_style_t style,
+  );
+  external void _motif_text_style_set_font_size(
+    text_style_t style,
+    double size,
+  );
+  external double _motif_text_style_get_height(
+    text_style_t style,
+  );
+  external void _motif_text_style_set_height(
+    text_style_t style,
+    double height,
+  );
+  external double _motif_text_style_get_letter_spacing(
+    text_style_t style,
+  );
+  external void _motif_text_style_set_letter_spacing(
+    text_style_t style,
+    double letter_spacing,
+  );
+  external void _motif_text_style_get_font_style(
+    Pointer<text_style_font_style> text_style_font_style_out,
+    text_style_t style,
+  );
+  external void _motif_text_style_set_font_style(
+    text_style_t style,
+    Pointer<text_style_font_style> font_stylePtr,
   );
   external void _motif_paragraph_destroy(
     paragraph_t p,
@@ -123,6 +164,21 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
   );
   external paragraph_t _motif_paragraph_builder_build(
     paragraph_builder_t builder,
+  );
+  external font_file_t _motif_font_file_create(
+    Pointer<Uint8> data,
+    size_t length,
+  );
+  external void _motif_font_file_destroy(
+    font_file_t file,
+  );
+  external int _motif_font_file_face_count(
+    font_file_t file,
+  );
+  external void _motif_font_file_get_face(
+    font_file_t file,
+    int index,
+    Pointer<font_face> face,
   );
 }
 
@@ -187,6 +243,57 @@ void motif_paragraph_style_destroy(
   return result;
 }
 
+void motif_paragraph_style_set_apply_rounding_hack(
+  Dartparagraph_style_t style,
+  bool apply,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_style_set_apply_rounding_hack(
+    style as Pointer<paragraph_style>,
+    apply,
+  );
+  return result;
+}
+
+void motif_paragraph_style_set_alignment(
+  Dartparagraph_style_t style,
+  text_alignment alignment,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_style_set_alignment(
+    style as Pointer<paragraph_style>,
+    alignment.value,
+  );
+  return result;
+}
+
+text_alignment motif_paragraph_style_get_alignment(
+  Dartparagraph_style_t style,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_style_get_alignment(style as Pointer<paragraph_style>);
+  return text_alignment.fromValue(result);
+}
+
+void motif_paragraph_style_set_ellipsis(
+  Dartparagraph_style_t style,
+  Pointer<Char> ellipsis,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_style_set_ellipsis(
+    style as Pointer<paragraph_style>,
+    ellipsis,
+  );
+  return result;
+}
+
+Dartsize_t motif_paragraph_style_get_ellipsis(
+  Dartparagraph_style_t style,
+  Pointer<Char> buffer,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_style_get_ellipsis(
+    style as Pointer<paragraph_style>,
+    buffer,
+  );
+  return result;
+}
+
 Darttext_style_t motif_text_style_create() {
   final result = GeneratedBindings.instance._motif_text_style_create();
   return Darttext_style_t(result);
@@ -196,21 +303,6 @@ void motif_text_style_destroy(
   Darttext_style_t style,
 ) {
   final result = GeneratedBindings.instance._motif_text_style_destroy(style as Pointer<text_style>);
-  return result;
-}
-
-double motif_text_style_get_font_size(
-  Darttext_style_t style,
-) {
-  final result = GeneratedBindings.instance._motif_text_style_get_font_size(style as Pointer<text_style>);
-  return result;
-}
-
-void motif_text_style_set_font_size(
-  Darttext_style_t style,
-  double size,
-) {
-  final result = GeneratedBindings.instance._motif_text_style_set_font_size(style as Pointer<text_style>, size);
   return result;
 }
 
@@ -243,6 +335,77 @@ void motif_text_style_set_font_families(
     style as Pointer<text_style>,
     families,
     count,
+  );
+  return result;
+}
+
+double motif_text_style_get_font_size(
+  Darttext_style_t style,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_get_font_size(style as Pointer<text_style>);
+  return result;
+}
+
+void motif_text_style_set_font_size(
+  Darttext_style_t style,
+  double size,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_set_font_size(style as Pointer<text_style>, size);
+  return result;
+}
+
+double motif_text_style_get_height(
+  Darttext_style_t style,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_get_height(style as Pointer<text_style>);
+  return result;
+}
+
+void motif_text_style_set_height(
+  Darttext_style_t style,
+  double height,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_set_height(style as Pointer<text_style>, height);
+  return result;
+}
+
+double motif_text_style_get_letter_spacing(
+  Darttext_style_t style,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_get_letter_spacing(style as Pointer<text_style>);
+  return result;
+}
+
+void motif_text_style_set_letter_spacing(
+  Darttext_style_t style,
+  double letter_spacing,
+) {
+  final result = GeneratedBindings.instance._motif_text_style_set_letter_spacing(
+    style as Pointer<text_style>,
+    letter_spacing,
+  );
+  return result;
+}
+
+text_style_font_style motif_text_style_get_font_style(
+  Darttext_style_t style,
+) {
+  final text_style_font_style_out = text_style_font_style.stackAlloc();
+  final result = GeneratedBindings.instance._motif_text_style_get_font_style(
+    text_style_font_style_out.cast(),
+    style as Pointer<text_style>,
+  );
+  return text_style_font_style_out.toDart();
+}
+
+void motif_text_style_set_font_style(
+  Darttext_style_t style,
+  text_style_font_style font_style,
+) {
+  final font_stylePtr = font_style.address;
+  final result = GeneratedBindings.instance._motif_text_style_set_font_style(
+    style as Pointer<text_style>,
+    font_stylePtr.cast(),
   );
   return result;
 }
@@ -380,6 +543,37 @@ Dartparagraph_t motif_paragraph_builder_build(
   return Dartparagraph_t(result);
 }
 
+Dartfont_file_t motif_font_file_create(
+  Pointer<Uint8> data,
+  Dartsize_t length,
+) {
+  final result = GeneratedBindings.instance._motif_font_file_create(data, length);
+  return Dartfont_file_t(result);
+}
+
+void motif_font_file_destroy(
+  Dartfont_file_t file,
+) {
+  final result = GeneratedBindings.instance._motif_font_file_destroy(file as Pointer<font_file>);
+  return result;
+}
+
+int motif_font_file_face_count(
+  Dartfont_file_t file,
+) {
+  final result = GeneratedBindings.instance._motif_font_file_face_count(file as Pointer<font_file>);
+  return result;
+}
+
+void motif_font_file_get_face(
+  Dartfont_file_t file,
+  int index,
+  Pointer<font_face> face,
+) {
+  final result = GeneratedBindings.instance._motif_font_file_get_face(file as Pointer<font_file>, index, face.cast());
+  return result;
+}
+
 enum em_promise_result_t {
   EM_PROMISE_FULFILL(0),
   EM_PROMISE_MATCH(1),
@@ -422,6 +616,29 @@ final class font_provider extends Struct {
 
 typedef size_t = int;
 typedef Dartsize_t = int;
+
+enum text_alignment {
+  TEXT_ALIGNMENT_LEFT(0),
+  TEXT_ALIGNMENT_RIGHT(1),
+  TEXT_ALIGNMENT_CENTER(2),
+  TEXT_ALIGNMENT_JUSTIFY(3),
+  TEXT_ALIGNMENT_START(4),
+  TEXT_ALIGNMENT_END(5);
+
+  final int value;
+  const text_alignment(this.value);
+
+  static text_alignment fromValue(int value) => switch (value) {
+    0 => TEXT_ALIGNMENT_LEFT,
+    1 => TEXT_ALIGNMENT_RIGHT,
+    2 => TEXT_ALIGNMENT_CENTER,
+    3 => TEXT_ALIGNMENT_JUSTIFY,
+    4 => TEXT_ALIGNMENT_START,
+    5 => TEXT_ALIGNMENT_END,
+    _ => throw ArgumentError("Unknown value for text_alignment: $value"),
+  };
+}
+
 typedef paragraph_style_t = Pointer<paragraph_style>;
 typedef Dartparagraph_style_t = Pointer<paragraph_style>;
 
@@ -444,6 +661,22 @@ final class paragraph_style extends Struct {
   }
 }
 
+enum text_style_font_style_slant {
+  TEXT_STYLE_FONT_STYLE_SLANT_UPRIGHT(0),
+  TEXT_STYLE_FONT_STYLE_SLANT_ITALIC(1),
+  TEXT_STYLE_FONT_STYLE_SLANT_OBLIQUE(2);
+
+  final int value;
+  const text_style_font_style_slant(this.value);
+
+  static text_style_font_style_slant fromValue(int value) => switch (value) {
+    0 => TEXT_STYLE_FONT_STYLE_SLANT_UPRIGHT,
+    1 => TEXT_STYLE_FONT_STYLE_SLANT_ITALIC,
+    2 => TEXT_STYLE_FONT_STYLE_SLANT_OBLIQUE,
+    _ => throw ArgumentError("Unknown value for text_style_font_style_slant: $value"),
+  };
+}
+
 typedef text_style_t = Pointer<text_style>;
 typedef Darttext_style_t = Pointer<text_style>;
 
@@ -463,6 +696,57 @@ final class text_style extends Struct {
 
   static Pointer<text_style> stackAlloc() {
     return Pointer<text_style>(NativeLibrary.instance.stackAlloc<text_style>(0));
+  }
+}
+
+extension text_style_font_styleExt on Pointer<text_style_font_style> {
+  text_style_font_style toDart() {
+    return text_style_font_style(this);
+  }
+  text_style_font_style get ref => toDart();
+  text_style_font_style operator [](int index) => Pointer<text_style_font_style>(this.address + sizeOf * index).toDart();
+  operator []=(int index, text_style_font_style value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 12;
+}
+
+final class text_style_font_style extends Struct {
+  Pointer<text_style_font_style> get address => super.address.cast();
+  int get weight {
+    final addr = Pointer<text_style_font_style>(this.address.addr + 0);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set weight(int val) {
+    NativeLibrary.instance.setValue(Pointer<text_style_font_style>(this.address.addr + 0), val.toJS, 'i32');
+  }
+
+  int get width {
+    final addr = Pointer<text_style_font_style>(this.address.addr + 4);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set width(int val) {
+    NativeLibrary.instance.setValue(Pointer<text_style_font_style>(this.address.addr + 4), val.toJS, 'i32');
+  }
+
+  int get slantAsInt {
+    final addr = Pointer<text_style_font_style>(this.address.addr + 8);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set slantAsInt(int val) {
+    NativeLibrary.instance.setValue(Pointer<text_style_font_style>(this.address.addr + 8), val.toJS, 'i32');
+  }
+
+  text_style_font_style_slant get slant => text_style_font_style_slant.fromValue(slantAsInt);
+
+  text_style_font_style(super.address);
+
+  static Pointer<text_style_font_style> stackAlloc() {
+    return Pointer<text_style_font_style>(NativeLibrary.instance.stackAlloc<text_style_font_style>(12));
   }
 }
 
@@ -767,6 +1051,99 @@ final class paragraph_builder extends Struct {
   }
 }
 
+typedef font_file_t = Pointer<font_file>;
+typedef Dartfont_file_t = Pointer<font_file>;
+
+extension font_fileExt on Pointer<font_file> {
+  font_file toDart() {
+    return font_file(this);
+  }
+  font_file get ref => toDart();
+  font_file operator [](int index) => Pointer<font_file>(this.address + sizeOf * index).toDart();
+  operator []=(int index, font_file value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 0;
+}
+
+final class font_file extends Struct {
+  Pointer<font_file> get address => super.address.cast();
+  font_file(super.address);
+
+  static Pointer<font_file> stackAlloc() {
+    return Pointer<font_file>(NativeLibrary.instance.stackAlloc<font_file>(0));
+  }
+}
+
+extension font_faceExt on Pointer<font_face> {
+  font_face toDart() {
+    return font_face(this);
+  }
+  font_face get ref => toDart();
+  font_face operator [](int index) => Pointer<font_face>(this.address + sizeOf * index).toDart();
+  operator []=(int index, font_face value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
+  int get sizeOf => 20;
+}
+
+final class font_face extends Struct {
+  Pointer<font_face> get address => super.address.cast();
+  int get index {
+    final addr = Pointer<font_face>(this.address.addr + 0);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set index(int val) {
+    NativeLibrary.instance.setValue(Pointer<font_face>(this.address.addr + 0), val.toJS, 'i32');
+  }
+
+  int get weight {
+    final addr = Pointer<font_face>(this.address.addr + 4);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set weight(int val) {
+    NativeLibrary.instance.setValue(Pointer<font_face>(this.address.addr + 4), val.toJS, 'i32');
+  }
+
+  int get width {
+    final addr = Pointer<font_face>(this.address.addr + 8);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set width(int val) {
+    NativeLibrary.instance.setValue(Pointer<font_face>(this.address.addr + 8), val.toJS, 'i32');
+  }
+
+  int get slantAsInt {
+    final addr = Pointer<font_face>(this.address.addr + 12);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set slantAsInt(int val) {
+    NativeLibrary.instance.setValue(Pointer<font_face>(this.address.addr + 12), val.toJS, 'i32');
+  }
+
+  text_style_font_style_slant get slant => text_style_font_style_slant.fromValue(slantAsInt);
+
+  Pointer<Char> get family {
+    final addr = Pointer<font_face>(this.address.addr + 16);
+    final value = NativeLibrary.instance.getValue(addr, '*');
+    return Pointer<Char>(value.toDartInt);
+  }
+
+  set family(Pointer<Char> val) {
+    NativeLibrary.instance.setValue(Pointer<font_face>(this.address.addr + 16), val.toJS, '*');
+  }
+
+  font_face(super.address);
+
+  static Pointer<font_face> stackAlloc() {
+    return Pointer<font_face>(NativeLibrary.instance.stackAlloc<font_face>(20));
+  }
+}
+
 extension StructAllocator on Struct {
   static T create<T>() {
     switch (T) {
@@ -778,6 +1155,9 @@ extension StructAllocator on Struct {
         return ptr.toDart() as T;
       case text_style:
         final ptr = text_style.stackAlloc();
+        return ptr.toDart() as T;
+      case text_style_font_style:
+        final ptr = text_style_font_style.stackAlloc();
         return ptr.toDart() as T;
       case paragraph:
         final ptr = paragraph.stackAlloc();
@@ -794,6 +1174,12 @@ extension StructAllocator on Struct {
       case paragraph_builder:
         final ptr = paragraph_builder.stackAlloc();
         return ptr.toDart() as T;
+      case font_file:
+        final ptr = font_file.stackAlloc();
+        return ptr.toDart() as T;
+      case font_face:
+        final ptr = font_face.stackAlloc();
+        return ptr.toDart() as T;
     }
     throw Exception("Unsupported type $T");
   }
@@ -809,4 +1195,5 @@ class _SymbolAddresses {
   late final void Function(Pointer) motif_text_style_destroy = (ptr) => GeneratedBindings.instance._motif_text_style_destroy(ptr.cast());
   late final void Function(Pointer) motif_paragraph_destroy = (ptr) => GeneratedBindings.instance._motif_paragraph_destroy(ptr.cast());
   late final void Function(Pointer) motif_paragraph_builder_destroy = (ptr) => GeneratedBindings.instance._motif_paragraph_builder_destroy(ptr.cast());
+  late final void Function(Pointer) motif_font_file_destroy = (ptr) => GeneratedBindings.instance._motif_font_file_destroy(ptr.cast());
 }

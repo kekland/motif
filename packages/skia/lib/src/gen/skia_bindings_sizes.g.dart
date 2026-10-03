@@ -13,11 +13,14 @@ int sizeOf<T extends jsgen.NativeType>() {
     const (font_provider) => 0,
     const (paragraph_style) => 0,
     const (text_style) => 0,
+    const (text_style_font_style) => 12,
     const (paragraph) => 0,
     const (line_metrics) => 32,
     const (glyph_metrics) => 28,
     const (glyph_path) => 16,
     const (paragraph_builder) => 0,
+    const (font_file) => 0,
+    const (font_face) => 20,
     _ => jsgen.sizeOf<T>(),
   };
 }

@@ -6,8 +6,10 @@ class const Header({
   final Widget? leading,
   final Widget? footnote,
   final Widget? trailing,
+  final Widget? subtitle,
   final EdgeInsets? padding,
   final VoidCallback? onTap,
+  final double? height,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,11 @@ class const Header({
         crossAxisAlignment: .baseline,
         textBaseline: .alphabetic,
         children: [
-          DefaultForegroundStyle(
-            style: context.typography.subtitle.secondary,
-            child: title,
+          Flexible(
+            child: DefaultForegroundStyle(
+              style: context.typography.subtitle.secondary,
+              child: title,
+            ),
           ),
           if (footnote != null) ...[
             const SizedBox(width: 4.0),
@@ -36,9 +40,10 @@ class const Header({
           ],
         ],
       ),
+      subtitle: subtitle,
       trailing: trailing,
       padding: padding,
-      height: 36.0,
+      height: height ?? 36.0,
     );
   }
 }

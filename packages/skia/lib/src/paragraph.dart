@@ -44,17 +44,43 @@ extension type const PathVerb._(int value) {
 }
 
 extension type const PathVerbList._(Uint8List value) implements Uint8List {
-  const PathVerbList.fromList(Uint8List value) : this._(value);
+  PathVerbList.fromList(List<int> value) : this._(Uint8List.fromList(value));
 
   int get length => value.length;
   PathVerb operator [](int index) => PathVerb._(value[index]);
-  
 }
 
-final class GlyphPath {
-  GlyphPath._(gen.glyph_path data)
+final class Path {
+  Path({required this.verbs, required this.points});
+
+  Path._(gen.glyph_path data)
     : verbs = .fromList(data.verbs.asTypedList(data.verb_count)),
       points = .fromList(data.points.asTypedList(data.point_count * 2));
+
+  static Path join(Iterable<Path> paths, {(double, double) Function(int i)? offset}) {
+    final verbCount = paths.fold<int>(0, (s, p) => s + p.verbs.length);
+    final pointCount = paths.fold<int>(0, (s, p) => s + p.points.length);
+
+    final verbs = Uint8List(verbCount);
+    final points = Float32List(pointCount);
+
+    var verbOffset = 0;
+    var pointOffset = 0;
+    for (final (i, path) in paths.indexed) {
+      verbs.setRange(verbOffset, verbOffset + path.verbs.length, path.verbs);
+      verbOffset += path.verbs.length;
+
+      final (x, y) = offset?.call(i) ?? (0, 0);
+      for (var j = 0; j < path.points.length; j += 2) {
+        points[pointOffset + j] = path.points[j] + x;
+        points[pointOffset + j + 1] = path.points[j + 1] + y;
+      }
+
+      pointOffset += path.points.length;
+    }
+
+    return Path(verbs: ._(verbs), points: points);
+  }
 
   final PathVerbList verbs;
   final Float32List points;
@@ -83,7 +109,14 @@ final class Paragraph extends NativeObject<gen.paragraph> {
     return .generate(count, (i) => GlyphMetrics._(addr[i]));
   }
 
-  GlyphPath getGlyphPath(int index) => ._(gen.motif_paragraph_get_glyph_path(ptr, index).ref);
+  Path getGlyphPath(int index) => ._(gen.motif_paragraph_get_glyph_path(ptr, index).ref);
+
+  Path getPath() {
+    final metrics = glyphMetrics.toList();
+    final paths = metrics.map((m) => getGlyphPath(metrics.indexOf(m))).toList();
+    (double, double) offset(int i) => (metrics[i].x, metrics[i].y);
+    return Path.join(paths, offset: offset);
+  }
 
   @override
   void attachFinalizer(Pointer<Void> ptr) => _finalizer.attach(this, ptr, detach: this);

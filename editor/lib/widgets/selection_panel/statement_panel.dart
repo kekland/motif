@@ -1,5 +1,4 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/selection_panel/props/prop.dart';
 
 class const StatementPanel({
   super.key,
@@ -43,10 +42,10 @@ class const StatementPanel({
           props: props,
         ),
         Divider(),
-        ModifierStackWidget(
-          statements: statements,
-        ),
-        Divider(),
+        // ModifierStackWidget(
+        //   statements: statements,
+        // ),
+        // Divider(),
       ],
     );
   }

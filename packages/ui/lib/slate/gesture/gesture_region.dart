@@ -35,6 +35,11 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
     this.onPanUpdate,
     this.onPanEnd,
     this.onPanCancel,
+    this.onLongPressDown,
+    this.onLongPressStart,
+    this.onLongPressUpdate,
+    this.onLongPressEnd,
+    this.onLongPressCancel,
     this.ignoreDisabled = false,
   });
 
@@ -102,6 +107,12 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
   @override final GestureDragUpdateCallback? onPanUpdate;
   @override final GestureDragEndCallback? onPanEnd;
   @override final GestureDragCancelCallback? onPanCancel;
+
+  @override final GestureLongPressDownCallback? onLongPressDown;
+  @override final GestureLongPressStartCallback? onLongPressStart;
+  @override final GestureLongPressMoveUpdateCallback? onLongPressUpdate;
+  @override final GestureLongPressEndCallback? onLongPressEnd;
+  @override final GestureLongPressCancelCallback? onLongPressCancel;
   // dart format on
 
   @override

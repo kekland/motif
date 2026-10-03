@@ -104,11 +104,13 @@ final class EvalNode {
   bool dirty = false;
   int dirtyBelow = 0;
   Statement? lastProduced;
+  Statement? lastStatement;
 
   bool get childrenStale => !identical(lastProduced, statement);
 
   void update(Statement newStatement) {
     if (identical(statement, newStatement)) return;
+    lastStatement = statement;
     statement = newStatement;
     markDirty();
   }

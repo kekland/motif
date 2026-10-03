@@ -1,109 +1,35 @@
 import 'package:app/imports.dart';
-import 'package:editor/client/client.dart';
-import 'package:flutter/services.dart';
+import 'package:sync/client.dart' as sync;
 
-Future<Uint8List> _assetResolver(Program program, ProgramAsset asset) async {
-  final font = await rootBundle.load('packages/ui/assets/fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf');
-  return font.buffer.asUint8List();
-}
+// Future<Uint8List> _assetResolver(Program program, AssetId id) async {
+//   if (id is FontFileId) {
+//     final hash = id.hash;
+//     final font = await rootBundle.load('packages/editor/assets/builtin/fonts/$hash');
+//     final data = font.buffer.asUint8List();
 
-class LocalEditorPage extends HookWidget {
-  const new({
-    super.key,
-    required this.id,
-    required this.program,
-  });
+//     // TODO: all of this is unnecessary once the text editor uses the skia output.
+//     final familyData = EditorBuiltinFonts.instance.catalog.assets.values.firstWhere(
+//       (a) => a.files.any((f) => f.id.hash == id.hash),
+//     );
+//     final loader = FontLoader(familyData.family);
+//     loader.addFont(Future.value(data.buffer.asByteData()));
+//     await loader.load();
 
-  final String id;
-  final Program program;
+//     return data;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final scene = useDisposable(() => Scene(id: id, program: program, assetResolver: _assetResolver));
-    final editor = useDisposable(() => Editor(scene: scene));
+//   throw UnimplementedError('Asset resolver not implemented for $id');
+// }
 
-    useEffect(() {
-      final sub = scene.history.stream.listen((delta) {
-        final encoded = delta.encode();
-        storage.applyDelta(id, encoded);
-      });
-      return sub.cancel;
-    }, [scene]);
+class EditorPage extends HookWidget {
+  const new({super.key, required this.client, required this.id});
 
-    return Scaffold(child: EditorWidget(editor: editor));
-  }
-}
-
-class RemoteEditorPage extends HookWidget {
-  const new({super.key, required this.id});
-
+  final sync.Client client;
   final String id;
 
   @override
   Widget build(BuildContext context) {
-    final connection = useDisposable(
-      () => SceneConnection(server: env.serverUri, id: id, assetResolver: _assetResolver),
-    );
-
-    final status = useListenable(connection.status);
-    final scene = useListenable(connection.scene).value;
-
-    final Widget body = switch (status.value) {
-      .closed => Center(child: Text('Connection closed')),
-      .notFound => Center(child: Text('Document not found')),
-      .connecting => Center(child: CircularProgressIndicator()),
-      .connected => _EditorWidget(
-        connection: connection,
-        scene: scene,
-      ),
-    };
-
-    return Scaffold(child: body);
-  }
-}
-
-class _EditorWidget extends HookWidget {
-  const new({
-    super.key,
-    required this.connection,
-    required this.scene,
-  });
-
-  final SceneConnection connection;
-  final Scene? scene;
-
-  @override
-  Widget build(BuildContext context) {
-    final editor = useMaybeDisposable(
-      () {
-        if (scene == null) return null;
-        final editor = Editor(
-          scene: scene!,
-          onPointerChanged: connection.updatePointer,
-        );
-
-        editor.clients.ownId = connection.ownId;
-        return editor;
-      },
-      [scene],
-    );
-
-    useOnListenableChange(connection.peers, () {
-      final peers = connection.peers.value;
-      final clients = <SceneClient>[
-        for (final p in peers.values)
-          .new(
-            id: p.client.id,
-            pointerPosition: p.hasPointerPosition() ? .new(p.pointerPosition.x, p.pointerPosition.y) : null,
-            pointerType: p.hasPointerType() ? p.pointerType : null,
-          ),
-      ];
-
-      editor?.clients.ownId = connection.ownId;
-      editor?.clients.setClients(clients);
-    });
-
-    if (editor != null) return EditorWidget(editor: editor);
-    return Center(child: CircularProgressIndicator());
+    final editorSync = useDisposable(() => EditorSync(client: client, sceneId: id, clientId: null));
+    return EditorWidget(sync: editorSync);
   }
 }

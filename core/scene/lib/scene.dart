@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
+import 'package:skia/skia.dart' as skia;
 import 'package:state/state.dart';
 
 import 'query.dart';
@@ -15,6 +19,7 @@ part 'selection.dart';
 part 'history.dart';
 part 'notifier.dart';
 part 'tree.dart';
+part 'asset_cache.dart';
 
 part 'utils/embed_vertex.dart';
 part 'utils/embed_edge.dart';
@@ -32,7 +37,8 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     required this.program,
     this.assetResolver,
   }) {
-    evaluation = .new(program);
+    assetCache = .new(this);
+    evaluation = .new(program, assetCache: assetCache);
     selection = .new(this);
     query = .new(this);
     history = .new(this);
@@ -57,13 +63,14 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   final Program program;
   final AssetResolver? assetResolver;
 
-  late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final Evaluation evaluation;
+  late final SceneAssetCache assetCache;
   late final SceneSelection selection;
   late final SceneQuery query;
   late final SceneHistory history;
   late final SceneNotifier notifier;
   late final SceneTree tree;
+  late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final TransientTransformAnimator transientTransformAnimator;
 
   late final signal = Signal(this);
@@ -84,7 +91,6 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   // -------------------------------------------------------------------------------------------------------------------
 
   Future<void> prepare() async {
-    await evaluation.prepare();
     evaluation.performInitialPass();
   }
 
@@ -104,16 +110,13 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     _activeTransaction = null;
   }
 
-  void _editTransient(void Function(EvalPass) fn) {
+  void editTransient(void Function(SceneTransaction) fn) {
     if (_activeTransaction != null) {
-      final pass = _activeTransaction!._pass;
+      final pass = _activeTransaction!;
       fn(pass);
-      _activeTransaction!._dirty = true;
       _activeTransaction!.flush();
     } else {
-      final pass = evaluation.beginPass();
-      fn(pass);
-      pass.drain();
+      return edit(fn);
     }
   }
 
@@ -133,6 +136,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   @override
   void dispose() {
     transientTransformAnimator.dispose();
+    assetCache.dispose();
     notifier.dispose();
     evaluation.dispose();
     selection.dispose();
@@ -140,6 +144,4 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     tree.dispose();
     super.dispose();
   }
-
-  Scene clone() => .new(id: id, program: program.clone());
 }

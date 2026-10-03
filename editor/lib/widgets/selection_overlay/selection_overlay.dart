@@ -53,6 +53,7 @@ class CellSelectionGroupOverlay extends HookWidget {
     this.onMove,
     this.showHandles = true,
     this.snapToPixel = false,
+    this.isInteractable = true,
     this.colors,
   });
 
@@ -63,6 +64,7 @@ class CellSelectionGroupOverlay extends HookWidget {
   final AppSelectionColors? colors;
   final bool showHandles;
   final bool snapToPixel;
+  final bool isInteractable;
 
   @override
   Widget build(BuildContext context) {
@@ -82,15 +84,18 @@ class CellSelectionGroupOverlay extends HookWidget {
       required Size childSize,
     }) {
       final isZero = childSize.width == 0.0 || childSize.height == 0.0;
+      final isResizable = !isZero && isInteractable;
 
       return SelectionControls(
         key: ValueKey(refHash),
         transform: transform,
         layoutSize: layoutSize,
         onMove: (e) => onMove?.call(e, refs),
-        onSideResize: isZero ? null : (s) => ResizeActivity.side(editor, refs, side: s, snapToPixel: snapToPixel),
-        onCornerResize: isZero ? null : (c) => ResizeActivity.corner(editor, refs, corner: c, snapToPixel: snapToPixel),
-        onRotate: isZero ? null : (c) => RotateActivity(editor, refs, corner: c, snapToPixel: snapToPixel),
+        onSideResize: isResizable ? (s) => ResizeActivity.side(editor, refs, side: s, snapToPixel: snapToPixel) : null,
+        onCornerResize: isResizable
+            ? (c) => ResizeActivity.corner(editor, refs, corner: c, snapToPixel: snapToPixel)
+            : null,
+        onRotate: isResizable ? (c) => RotateActivity(editor, refs, corner: c, snapToPixel: snapToPixel) : null,
         padding: gesturePadding,
         childSize: childSize,
         colors: colors,

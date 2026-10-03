@@ -2,69 +2,56 @@ part of '../_program.dart';
 
 final class const EdgeStyle({
   required final double width,
-  required final ColorData color,
-}) extends CellStyle<EdgeHandle> {
-  static const default_ = EdgeStyle(
-    width: 1.0,
-    color: .white,
-  );
+  required final Decorations decorations,
+}) extends CellStyle<EdgeHandle> with Equatable {
+  static const none = EdgeStyle(width: 0.0, decorations: .none);
+  static const default_ = EdgeStyle(width: 1.0, decorations: .white);
 
   EdgeStyle copyWith({
     double? width,
-    ColorData? color,
+    Decorations? decorations,
   }) => EdgeStyle(
     width: width ?? this.width,
-    color: color ?? this.color,
+    decorations: decorations ?? this.decorations,
   );
 
   @override
   CellKind get kind => .edge;
 
   @override
-  int get hashCode => Object.hash(width, color);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is EdgeStyle && width == other.width && color == other.color);
-
-  @override
-  String toString() => 'EdgeStyle(width: $width, color: $color)';
+  List<Object?> get props => [width, decorations];
 }
 
 final class const EdgeStylePartial({
   final double? width,
-  final ColorData? color,
-}) extends CellStylePartial<EdgeHandle> {
-  factory EdgeStylePartial.from(EdgeStyle? style) => EdgeStylePartial(
+  final Decorations? decorations,
+}) extends CellStylePartial<EdgeStyle> with Equatable {
+  factory EdgeStylePartial.from(EdgeStyle? style) => .new(
     width: style?.width,
-    color: style?.color,
+    decorations: style?.decorations,
   );
 
   factory EdgeStylePartial.fromList(Iterable<EdgeStyle> styles) {
     return .new(
       width: styles.map((s) => s.width).toSet().singleOrNull,
-      color: styles.map((s) => s.color).toSet().singleOrNull,
+      decorations: styles.map((s) => s.decorations).toSet().singleOrNull,
     );
   }
 
   @override
   EdgeStyle apply(EdgeStyle style) => style.copyWith(
     width: width,
-    color: color,
+    decorations: decorations,
   );
 
   EdgeStylePartial copyWith({
     double? width,
-    ColorData? color,
+    Decorations? decorations,
   }) => .new(
     width: width ?? this.width,
-    color: color ?? this.color,
+    decorations: decorations ?? this.decorations,
   );
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is EdgeStylePartial && width == other.width && color == other.color);
-
-  @override
-  int get hashCode => Object.hash(width, color);
+  List<Object?> get props => [width, decorations];
 }

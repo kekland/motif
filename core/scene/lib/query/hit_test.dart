@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:scene/scene.dart';
+import 'package:shared/shared.dart';
 
 extension SceneHitEntryExt<R extends Ref> on HitEntry<R> {
   StatementId get statementId => ref.statementId;
@@ -43,7 +43,7 @@ extension SceneHitTestQuery on SceneQuery {
       CellRef(kind: .vertex) => 1,
       CellRef(kind: .edge) => 2,
       CellRef(kind: .face) => 3,
-      CellRef(kind: .frame) => 4,
+      CellRef(kind: .frame) => 3,
     };
 
     entries.sort((a, b) {
