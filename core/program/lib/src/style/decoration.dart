@@ -55,7 +55,11 @@ final class const Decorations(final List<Decoration> entries) {
   }
 
   Decorations append(Decoration d) => .new([...entries, d]);
-  Decorations remove(Decoration d) => .new(entries.where((e) => e != d).toList());
+  Decorations remove(int index) {
+    final out = entries.toList();
+    out.removeAt(index);
+    return .new(out);
+  }
 
   Decorations update(int index, Decoration d) {
     final out = entries.toList();

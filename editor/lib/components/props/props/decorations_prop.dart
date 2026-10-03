@@ -63,7 +63,7 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
           index: i,
           entry: computeds[i],
           onChanged: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.update(i, v))),
-          onRemoved: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.remove(v))),
+          onRemoved: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.remove(i))),
           sessionCallbacks: transaction.sessionCallbacks,
         ),
       ),
