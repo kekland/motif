@@ -13,3 +13,4 @@ export 'vector_math_utils.dart';
 export 'overflow_hit_testable.dart';
 export 'unconstrained_overflow_box.dart';
 export 'geometry_utils.dart';
+export 'proxy_shortcuts.dart';

@@ -63,101 +63,110 @@ class _PenToolOverlay extends HookWidget {
       if (edge != null) edge.remove();
     });
 
-    return CallbackShortcuts(
+    // actions: {
+    //   ClearSelectionIntent: ToggleableCallbackAction(
+    //     isEnabled: (intent) {
+    //       print(transientEdge.value != null);
+    //       return transientEdge.value != null;
+    //     },
+    //     onInvoke: (intent) {
+    //       transientEdge.value!.remove();
+    //       transientEdge.value = null;
+    //       return null;
+    //     },
+    //   ),
+    // },
+
+    return ProxyCallbackShortcuts(
       bindings: {
-        SingleActivator(.escape): () {
-          transientEdge.value?.remove();
-          transientEdge.value = null;
-        },
-        PlatformSingleActivator(.keyZ, control: true): () {
-          if (transientEdge.value != null) {
-            transientEdge.value?.remove();
+        if (transientEdge.value != null) ...{
+          SingleActivator(.escape): () {
+            transientEdge.value!.remove();
             transientEdge.value = null;
-          } else {
-            context.invoke(intents.undo());
-          }
+          },
+          PlatformSingleActivator(.keyZ, control: true): () {
+            transientEdge.value!.remove();
+            transientEdge.value = null;
+          },
         },
       },
-      child: Focus(
-        autofocus: true,
-        child: MouseRegion(
-          hitTestBehavior: .translucent,
-          cursor: topological
-              ? switch (hoveredCell.value) {
-                  CellRef(kind: .vertex) => Cursors.toolPenVertex,
-                  CellRef(kind: .edge) => Cursors.toolPenEdge,
-                  CovertexRef() when transientEdge.value == null => Cursors.toolCursorControlPoint,
-                  _ => Cursors.precise,
-                }
-              : Cursors.precise,
-          child: Listener(
+      child: MouseRegion(
+        hitTestBehavior: .translucent,
+        cursor: topological
+            ? switch (hoveredCell.value) {
+                CellRef(kind: .vertex) => Cursors.toolPenVertex,
+                CellRef(kind: .edge) => Cursors.toolPenEdge,
+                CovertexRef() when transientEdge.value == null => Cursors.toolCursorControlPoint,
+                _ => Cursors.precise,
+              }
+            : Cursors.precise,
+        child: Listener(
+          behavior: .translucent,
+          onPointerHover: (e) {
+            final result = editor.hitTest(
+              e.position,
+              covertexMode: transientEdge.value == null ? .all() : .none,
+            );
+
+            hoveredCell.value = result.top?.ref;
+
+            final position = CreateVertexActivity.computePosition(
+              editor,
+              e.position,
+              startPosition: transientEdge.value?.start,
+              isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
+              topological: topological,
+              snapToPixel: snapToPixel,
+            );
+
+            if (transientEdge.value != null) {
+              transientEdge.value!.end = position;
+            } else {
+              transientStartPosition.value = position;
+            }
+          },
+          child: DragActivityDetector(
             behavior: .translucent,
-            onPointerHover: (e) {
-              final result = editor.hitTest(
-                e.position,
-                covertexMode: transientEdge.value == null ? .all() : .none,
-              );
+            activityFactory: (e) {
+              transientStartPosition.value = null;
 
-              hoveredCell.value = result.top?.ref;
+              if (transientEdge.value == null) {
+                final hitTest = editor.hitTest(e.position, covertexMode: .all());
 
-              final position = CreateVertexActivity.computePosition(
-                editor,
-                e.position,
-                startPosition: transientEdge.value?.start,
-                isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
+                if (hitTest.top?.ref is CovertexRef) {
+                  return MoveActivity(editor, {hitTest.top!.ref});
+                }
+              }
+
+              return CreateVertexActivity(
+                editor: editor,
                 topological: topological,
                 snapToPixel: snapToPixel,
+                destructive: tool.destructive(context),
+                edgeStyle: tool.edgeStyle(context),
+                existingTransientEdge: transientEdge.value,
+                onTransientEdgeCreated: (v) => transientEdge.value = v,
+                onTransientEdgeCompleted: (v) {
+                  transientEdge.value = null;
+                },
               );
-
-              if (transientEdge.value != null) {
-                transientEdge.value!.end = position;
-              } else {
-                transientStartPosition.value = position;
-              }
             },
-            child: DragActivityDetector(
-              behavior: .translucent,
-              activityFactory: (e) {
-                transientStartPosition.value = null;
-
-                if (transientEdge.value == null) {
-                  final hitTest = editor.hitTest(e.position, covertexMode: .all());
-
-                  if (hitTest.top?.ref is CovertexRef) {
-                    return MoveActivity(editor, {hitTest.top!.ref});
-                  }
-                }
-
-                return CreateVertexActivity(
-                  editor: editor,
-                  topological: topological,
-                  snapToPixel: snapToPixel,
-                  destructive: tool.destructive(context),
-                  edgeStyle: tool.edgeStyle(context),
-                  existingTransientEdge: transientEdge.value,
-                  onTransientEdgeCreated: (v) => transientEdge.value = v,
-                  onTransientEdgeCompleted: (v) {
-                    transientEdge.value = null;
+            child: Stack(
+              children: [
+                CellHandlesWidget(
+                  scene: editor.scene,
+                  paintTransform: info.childPaintTransform,
+                  refs: {
+                    ...editor.scene.evaluation.live.ofKind(.vertex),
+                    if (topological) ?hoveredCell.value,
                   },
-                );
-              },
-              child: Stack(
-                children: [
-                  CellHandlesWidget(
-                    scene: editor.scene,
-                    paintTransform: info.childPaintTransform,
-                    refs: {
-                      ...editor.scene.evaluation.live.ofKind(.vertex),
-                      if (topological) ?hoveredCell.value,
-                    },
-                  ),
-                  TransientEdgesWidget(
-                    startPosition: transientStartPosition.value,
-                    transform: info.childPaintTransform,
-                    topological: topological,
-                  ),
-                ],
-              ),
+                ),
+                TransientEdgesWidget(
+                  startPosition: transientStartPosition.value,
+                  transform: info.childPaintTransform,
+                  topological: topological,
+                ),
+              ],
             ),
           ),
         ),

@@ -103,7 +103,7 @@ class ContextMenuWidget extends HookWidget {
               final item = entry as ContextMenuItem;
               final result = ListItem(
                 isSelected: selectedIndex == itemIndex,
-                height: 32.0,
+                height: 28.0,
                 onTap: () => Navigator.pop(context, item.value),
                 leading: item.icon,
                 title: Text(item.label, style: context.typography.body),

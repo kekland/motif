@@ -46,55 +46,52 @@ class _BendToolOverlay extends HookWidget {
     final editor = context.editor;
     final hoveredCell = useState<Ref?>(null);
 
-    return Focus(
-      autofocus: true,
-      child: MouseRegion(
-        hitTestBehavior: .translucent,
-        cursor: switch (hoveredCell.value) {
-          CellRef(kind: .edge) => Cursors.toolPenEdge,
-          CovertexRef() => Cursors.toolCursorControlPoint,
-          _ => Cursors.precise,
+    return MouseRegion(
+      hitTestBehavior: .translucent,
+      cursor: switch (hoveredCell.value) {
+        CellRef(kind: .edge) => Cursors.toolPenEdge,
+        CovertexRef() => Cursors.toolCursorControlPoint,
+        _ => Cursors.precise,
+      },
+      child: Listener(
+        behavior: .translucent,
+        onPointerHover: (e) {
+          final result = editor.hitTest(
+            e.position,
+            covertexMode: .all(allowCollapsed: true),
+          );
+
+          hoveredCell.value = result.topWhere((e) => e.ref is CovertexRef || (e.ref as CellRef).kind == .edge)?.ref;
         },
-        child: Listener(
+        child: DragActivityDetector(
           behavior: .translucent,
-          onPointerHover: (e) {
-            final result = editor.hitTest(
-              e.position,
-              covertexMode: .all(allowCollapsed: true),
-            );
+          activityFactory: (e) {
+            final hitTest = editor.hitTest(e.position, covertexMode: .all(allowCollapsed: true));
+            final hovered = hitTest.topWhere((e) => e.ref is CovertexRef || (e.ref as CellRef).kind == .edge)?.ref;
 
-            hoveredCell.value = result.topWhere((e) => e.ref is CovertexRef || (e.ref as CellRef).kind == .edge)?.ref;
+            if (hovered is CovertexRef) {
+              return MoveActivity(editor, {hitTest.top!.ref});
+            } else if (hovered is EdgeRef) {
+              return BendEdgeActivity(
+                editor,
+                hovered,
+                snapToPixel: tool.snapToPixel(context),
+              );
+            } else {
+              return null;
+            }
           },
-          child: DragActivityDetector(
-            behavior: .translucent,
-            activityFactory: (e) {
-              final hitTest = editor.hitTest(e.position, covertexMode: .all(allowCollapsed: true));
-              final hovered = hitTest.topWhere((e) => e.ref is CovertexRef || (e.ref as CellRef).kind == .edge)?.ref;
-
-              if (hovered is CovertexRef) {
-                return MoveActivity(editor, {hitTest.top!.ref});
-              } else if (hovered is EdgeRef) {
-                return BendEdgeActivity(
-                  editor,
-                  hovered,
-                  snapToPixel: tool.snapToPixel(context),
-                );
-              } else {
-                return null;
-              }
-            },
-            child: Stack(
-              children: [
-                CellHandlesWidget(
-                  scene: editor.scene,
-                  paintTransform: info.childPaintTransform,
-                  refs: {
-                    ...editor.scene.evaluation.live.ofKind(.vertex),
-                    ?hoveredCell.value,
-                  },
-                ),
-              ],
-            ),
+          child: Stack(
+            children: [
+              CellHandlesWidget(
+                scene: editor.scene,
+                paintTransform: info.childPaintTransform,
+                refs: {
+                  ...editor.scene.evaluation.live.ofKind(.vertex),
+                  ?hoveredCell.value,
+                },
+              ),
+            ],
           ),
         ),
       ),

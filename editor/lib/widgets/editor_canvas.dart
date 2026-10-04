@@ -13,36 +13,42 @@ class EditorCanvas extends HookWidget {
     final editor = context.editor;
     final tool = useComputedValue(() => editor.tool.activeTool);
 
+    Widget child = InteractiveCanvas(
+      centerOrigin: true,
+      overlayBuilders: [
+        (context, transform) => CanvasPixelGrid(transform: transform),
+        (context, transform) => EditorCanvasPeersWidget(transform: transform),
+        (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
+      ],
+      child: SceneWidget(
+        key: editor.sceneKey,
+        scene: editor.scene,
+        debug: false,
+        debugArrangement: true,
+      ),
+    );
+
+    child = Overlay.wrap(
+      child: Surface(
+        color: context.colors.surface.canvas,
+        child: EditorCanvasPointerUpdateWidget(
+          child: child,
+        ),
+      ),
+    );
+
     return EditorActions(
       child: EditorShortcuts(
         child: ToolShortcuts(
           controller: editor.tool,
           canInvoke: (context) => editor.areCanvasActionsEnabled,
-          child: CommanderRoot(
-            key: editor.commanderRootKey,
-            child: CanvasContextMenu(
-              child: InteractiveCanvasFocus(
-                focusScopeNode: editor.canvasFocusScopeNode,
-                child: Overlay.wrap(
-                  child: Surface(
-                    color: context.colors.surface.canvas,
-                    child: EditorCanvasPointerUpdateWidget(
-                      child: InteractiveCanvas(
-                        centerOrigin: true,
-                        overlayBuilders: [
-                          (context, transform) => CanvasPixelGrid(transform: transform),
-                          (context, transform) => EditorCanvasPeersWidget(transform: transform),
-                          (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
-                        ],
-                        child: SceneWidget(
-                          key: editor.sceneKey,
-                          scene: editor.scene,
-                          debug: false,
-                          debugArrangement: true,
-                        ),
-                      ),
-                    ),
-                  ),
+          child: InheritedCallbackShortcuts(
+            child: CommanderRoot(
+              key: editor.commanderRootKey,
+              child: CanvasContextMenu(
+                child: InteractiveCanvasFocus(
+                  focusScopeNode: editor.canvasFocusScopeNode,
+                  child: child,
                 ),
               ),
             ),
