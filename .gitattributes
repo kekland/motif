@@ -2,4 +2,5 @@ __archive__/** linguist-vendored
 packages/skia/include/** linguist-vendored
 app/web/skia.js linguist-vendored
 app/web/sqlite3.worker.js linguist-vendored
-*.pb binary
+*.pb linguist-generated
+*.g.dart linguist-generated
