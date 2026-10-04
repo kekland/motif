@@ -14,3 +14,4 @@ scenes.db-wal
 motif_server
 
 .env
+.ignore
