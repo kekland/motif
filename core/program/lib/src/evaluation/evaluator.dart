@@ -256,16 +256,16 @@ extension Evaluator on EvalPass {
       // [FramedStatement] represents statements that can perform custom paint operations.
       // In case if the statement will repaint its content, we add its frame to be repainted.
       if (statement is FramedStatement) {
-        final old = node.lastStatement!;
-        if (statement.frameContentRepaints(old, statement)) {
+        final old = node.lastStatement;
+        if (old != null && statement.frameContentRepaints(old, statement)) {
           movedFrames.add(statement.frame);
         }
       }
 
       return delta.moved;
     } catch (e, st) {
-      txn.abort();
       _log.fine('failed to refresh statement $id', e, st);
+      txn.abort();
       return null;
     }
   }
