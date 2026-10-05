@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const SetZOrderTopIntent() extends CommandIntent;
+final class const SetZOrderTopIntent() extends Intent;
 
 final setZOrderTopIntentDescriptor = CommandIntentDescriptor<SetZOrderTopIntent>(
   command: 'bring-to-front',

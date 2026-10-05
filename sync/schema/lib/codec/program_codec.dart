@@ -20,10 +20,12 @@ final programCodec = $codec<Program, gen.Program>(
   decoder: (v) => .new(
     $map(v.statements, (v) => v.decode()),
     styles: v.style.decode(),
+    assetManifest: v.assetManifest.decode(),
   ),
   encoder: (v) => .new(
     statements: $map(v.statements, (v) => v.encode()),
     style: v.styles.encode(),
+    assetManifest: v.assetManifest.encode(),
   ),
 );
 
@@ -307,20 +309,11 @@ final _colorDecorationCodec = $codec<ColorDecoration, gen.Decoration>(
 
 final _imageDecorationCodec = $codec<ImageDecoration, gen.Decoration>(
   decoder: (v) => .new(
-    $opt(v.image.hasValue, () => .new(hash: v.image.value.decode())),
+    $opt(v.image.hasValue, () => .raw(v.image.value)),
   ),
   encoder: (v) => .new(
-    image: .new(value: v.image?.hash.encode()),
+    image: .new(value: v.image?.value),
   ),
-);
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Assets
-// ---------------------------------------------------------------------------------------------------------------------
-
-final _assetManifestCodec = $codec<AssetManifest, gen.AssetManifest>(
-  decoder: (v) => .new($mapFrom(v.entries, (v) => v.hash.decode(), (v) => v.asset.decode())),
-  encoder: (v) => .new(entries: $fromMap(v.entries, (k, v) => .new(hash: k.encode(), asset: v.encode()))),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -754,12 +747,16 @@ final _generatorStatementCodec = $codec<GeneratorStatement, gen.Statement>(
 final _textStatementCodec = $codec<TextStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
-    textFormat: .default_(.new(assets: {})),
     modifiers: v.modifiers.decode(),
     text: v.text.text,
     size: v.text.size.decode(),
     transform: v.text.transform.decode(),
     parent: $opt(v.text.hasParent, () => v.text.parent.decode()),
+    textFormat: v.text.textFormat.decode(),
+    paragraphFormat: v.text.paragraphFormat.decode(),
+    vertexStyle: v.text.vertexStyle.decode(),
+    edgeStyle: v.text.edgeStyle.decode(),
+    faceStyle: v.text.faceStyle.decode(),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
@@ -769,6 +766,11 @@ final _textStatementCodec = $codec<TextStatement, gen.Statement>(
       size: v.size.encode(),
       transform: v.transform?.encode(),
       parent: v.parent?.ref.encode(),
+      textFormat: v.textFormat.encode(),
+      paragraphFormat: v.paragraphFormat.encode(),
+      vertexStyle: v.vertexStyle.encode(),
+      edgeStyle: v.edgeStyle.encode(),
+      faceStyle: v.faceStyle.encode(),
     ),
   ),
 );
@@ -1144,6 +1146,178 @@ final _layoutCodec = $codec<Layout, gen.Layout>(
     StackLayout v => .new(stack: v.encode()),
     FlexLayout v => .new(flex: v.encode()),
   },
+);
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Text
+// ---------------------------------------------------------------------------------------------------------------------
+
+extension _TextFontSlantEncode on TextFontSlant { gen.TextFontSlant encode() => _textFontSlantCodec.encode(this); }
+extension _TextFontSlantDecode on gen.TextFontSlant { TextFontSlant decode() => _textFontSlantCodec.decode(this); }
+
+final _textFontSlantCodec = $codec<TextFontSlant, gen.TextFontSlant>(
+  decoder: (v) => switch(v) {
+    .TEXT_FONT_SLANT_UPRIGHT => .upright,
+    .TEXT_FONT_SLANT_ITALIC => .italic,
+    .TEXT_FONT_SLANT_OBLIQUE => .oblique,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .upright => .TEXT_FONT_SLANT_UPRIGHT,
+    .italic => .TEXT_FONT_SLANT_ITALIC,
+    .oblique => .TEXT_FONT_SLANT_OBLIQUE,
+  },
+);
+
+extension _TextFontWeightEncode on TextFontWeight { gen.TextFontWeight encode() => _textFontWeightCodec.encode(this); }
+extension _TextFontWeightDecode on gen.TextFontWeight { TextFontWeight decode() => _textFontWeightCodec.decode(this); }
+
+final _textFontWeightCodec = $codec<TextFontWeight, gen.TextFontWeight>(
+  decoder: (v) => switch(v) {
+    .TEXT_FONT_WEIGHT_THIN => .thin,
+    .TEXT_FONT_WEIGHT_EXTRA_LIGHT => .extraLight,
+    .TEXT_FONT_WEIGHT_LIGHT => .light,
+    .TEXT_FONT_WEIGHT_REGULAR => .regular,
+    .TEXT_FONT_WEIGHT_MEDIUM => .medium,
+    .TEXT_FONT_WEIGHT_SEMI_BOLD => .semiBold,
+    .TEXT_FONT_WEIGHT_BOLD => .bold,
+    .TEXT_FONT_WEIGHT_EXTRA_BOLD => .extraBold,
+    .TEXT_FONT_WEIGHT_BLACK => .black,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .thin => .TEXT_FONT_WEIGHT_THIN,
+    .extraLight => .TEXT_FONT_WEIGHT_EXTRA_LIGHT,
+    .light => .TEXT_FONT_WEIGHT_LIGHT,
+    .regular => .TEXT_FONT_WEIGHT_REGULAR,
+    .medium => .TEXT_FONT_WEIGHT_MEDIUM,
+    .semiBold => .TEXT_FONT_WEIGHT_SEMI_BOLD,
+    .bold => .TEXT_FONT_WEIGHT_BOLD,
+    .extraBold => .TEXT_FONT_WEIGHT_EXTRA_BOLD,
+    .black => .TEXT_FONT_WEIGHT_BLACK,
+  },
+);
+
+extension _TextFontWidthEncode on TextFontWidth { gen.TextFontWidth encode() => _textFontWidthCodec.encode(this); }
+extension _TextFontWidthDecode on gen.TextFontWidth { TextFontWidth decode() => _textFontWidthCodec.decode(this); }
+
+final _textFontWidthCodec = $codec<TextFontWidth, gen.TextFontWidth>(
+  decoder: (v) => switch(v) {
+    .TEXT_FONT_WIDTH_ULTRA_CONDENSED => .ultraCondensed,
+    .TEXT_FONT_WIDTH_EXTRA_CONDENSED => .extraCondensed,
+    .TEXT_FONT_WIDTH_CONDENSED => .condensed,
+    .TEXT_FONT_WIDTH_SEMI_CONDENSED => .semiCondensed,
+    .TEXT_FONT_WIDTH_NORMAL => .normal,
+    .TEXT_FONT_WIDTH_SEMI_EXPANDED => .semiExpanded,
+    .TEXT_FONT_WIDTH_EXPANDED => .expanded,
+    .TEXT_FONT_WIDTH_EXTRA_EXPANDED => .extraExpanded,
+    .TEXT_FONT_WIDTH_ULTRA_EXPANDED => .ultraExpanded,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .ultraCondensed => .TEXT_FONT_WIDTH_ULTRA_CONDENSED,
+    .extraCondensed => .TEXT_FONT_WIDTH_EXTRA_CONDENSED,
+    .condensed => .TEXT_FONT_WIDTH_CONDENSED,
+    .semiCondensed => .TEXT_FONT_WIDTH_SEMI_CONDENSED,
+    .normal => .TEXT_FONT_WIDTH_NORMAL,
+    .semiExpanded => .TEXT_FONT_WIDTH_SEMI_EXPANDED,
+    .expanded => .TEXT_FONT_WIDTH_EXPANDED,
+    .extraExpanded => .TEXT_FONT_WIDTH_EXTRA_EXPANDED,
+    .ultraExpanded => .TEXT_FONT_WIDTH_ULTRA_EXPANDED,
+  },
+);
+
+extension _TextDecorationKindEncode on TextDecorationKind { gen.TextDecorationKind encode() => _textDecorationKindCodec.encode(this); }
+extension _TextDecorationKindDecode on gen.TextDecorationKind { TextDecorationKind decode() => _textDecorationKindCodec.decode(this); }
+
+final _textDecorationKindCodec = $codec<TextDecorationKind, gen.TextDecorationKind>(
+  decoder: (v) => switch(v) {
+    .TEXT_DECORATION_KIND_UNDERLINE => .underline,
+    .TEXT_DECORATION_KIND_OVERLINE => .overline,
+    .TEXT_DECORATION_KIND_STRIKETHROUGH => .strikethrough,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .underline => .TEXT_DECORATION_KIND_UNDERLINE,
+    .overline => .TEXT_DECORATION_KIND_OVERLINE,
+    .strikethrough => .TEXT_DECORATION_KIND_STRIKETHROUGH,
+  },
+);
+
+extension _TextFormatEncode on TextFormat { gen.TextFormat encode() => _textFormatCodec.encode(this); }
+extension _TextFormatDecode on gen.TextFormat { TextFormat decode() => _textFormatCodec.decode(this); }
+
+final _textFormatCodec = $codec<TextFormat, gen.TextFormat>(
+  decoder: (v) => .new(
+    fontSize: v.fontSize,
+    lineHeight: v.lineHeight,
+    fontFamily: v.fontFamily,
+    fontSlant: v.fontSlant.decode(),
+    fontWeight: v.fontWeight.decode(),
+    fontWidth: v.fontWidth.decode(),
+    decorations: $map(v.decorations, (e) => e.decode()),
+  ),
+  encoder: (v) => .new(
+    fontSize: v.fontSize,
+    lineHeight: v.lineHeight,
+    fontFamily: v.fontFamily,
+    fontSlant: v.fontSlant.encode(),
+    fontWeight: v.fontWeight.encode(),
+    fontWidth: v.fontWidth.encode(),
+    decorations: $map(v.decorations, (e) => e.encode()),
+  ),
+);
+
+extension _TextAlignmentEncode on TextAlignment { gen.TextAlignment encode() => _textAlignmentCodec.encode(this); }
+extension _TextAlignmentDecode on gen.TextAlignment { TextAlignment decode() => _textAlignmentCodec.decode(this); }
+
+final _textAlignmentCodec = $codec<TextAlignment, gen.TextAlignment>(
+  decoder: (v) => switch(v) {
+    .TEXT_ALIGNMENT_LEFT => .left,
+    .TEXT_ALIGNMENT_RIGHT => .right,
+    .TEXT_ALIGNMENT_CENTER => .center,
+    .TEXT_ALIGNMENT_JUSTIFY => .justify,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .left => .TEXT_ALIGNMENT_LEFT,
+    .right => .TEXT_ALIGNMENT_RIGHT,
+    .center => .TEXT_ALIGNMENT_CENTER,
+    .justify => .TEXT_ALIGNMENT_JUSTIFY,
+  },
+);
+
+extension _TextVerticalAlignmentEncode on TextVerticalAlignment { gen.TextVerticalAlignment encode() => _textVerticalAlignmentCodec.encode(this); }
+extension _TextVerticalAlignmentDecode on gen.TextVerticalAlignment { TextVerticalAlignment decode() => _textVerticalAlignmentCodec.decode(this); }
+
+final _textVerticalAlignmentCodec = $codec<TextVerticalAlignment, gen.TextVerticalAlignment>(
+  decoder: (v) => switch(v) {
+    .TEXT_VERTICAL_ALIGNMENT_TOP => .top,
+    .TEXT_VERTICAL_ALIGNMENT_MIDDLE => .middle,
+    .TEXT_VERTICAL_ALIGNMENT_BOTTOM => .bottom,
+    _ => throw ArgumentError(),
+  },
+  encoder: (v) => switch(v) {
+    .top => .TEXT_VERTICAL_ALIGNMENT_TOP,
+    .middle => .TEXT_VERTICAL_ALIGNMENT_MIDDLE,
+    .bottom => .TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+  },
+);
+
+extension _ParagraphFormatEncode on ParagraphFormat { gen.ParagraphFormat encode() => _paragraphFormatCodec.encode(this); }
+extension _ParagraphFormatDecode on gen.ParagraphFormat { ParagraphFormat decode() => _paragraphFormatCodec.decode(this); }
+
+final _paragraphFormatCodec = $codec<ParagraphFormat, gen.ParagraphFormat>(
+  decoder: (v) => .new(
+    alignment: v.alignment.decode(),
+    verticalAlignment: v.verticalAlignment.decode(),
+    ellipsis: $opt(v.hasEllipsis, () => v.ellipsis),
+  ),
+  encoder: (v) => .new(
+    alignment: v.alignment.encode(),
+    verticalAlignment: v.verticalAlignment.encode(),
+    ellipsis: v.ellipsis,
+  ),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------

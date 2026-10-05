@@ -19,9 +19,7 @@ class PlatformSingleActivator extends SingleActivator {
        );
 }
 
-abstract class const CommandIntent() extends Intent;
-
-class CommandIntentDescriptor<I extends CommandIntent> {
+class CommandIntentDescriptor<I extends Intent> {
   CommandIntentDescriptor({
     required this.build,
     required this.command,
@@ -38,7 +36,7 @@ class CommandIntentDescriptor<I extends CommandIntent> {
   List<SingleActivator> resolveShortcut(BuildContext context) => _resolveShortcut?.call(context) ?? const [];
 }
 
-abstract class CommandAction<I extends CommandIntent> extends ContextAction<I> {
+abstract class CommandAction<I extends Intent> extends ContextAction<I> {
   CommandIntentDescriptor<I> get descriptor;
 
   bool canInvoke(BuildContext context, I intent) => true;

@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const RedoIntent() extends CommandIntent;
+final class const RedoIntent() extends Intent;
 
 final redoIntentDescriptor = CommandIntentDescriptor<RedoIntent>(
   command: 'redo',

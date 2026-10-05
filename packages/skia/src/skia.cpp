@@ -45,6 +45,10 @@ FFI int32_t motif_font_provider_add(font_provider_t provider, const uint8_t* dat
   const size_t registered = family && *family ? provider->value->registerTypeface(std::move(typeface), SkString(family))
                                               : provider->value->registerTypeface(std::move(typeface));
 
+  if (registered) {
+    provider->collection->clearCaches();
+  }
+  
   return registered > 0 ? 1 : 0;
 }
 
@@ -333,7 +337,7 @@ FFI font_file_t motif_font_file_create(const uint8_t* data, size_t length) {
     file->faces.push_back(std::move(typeface));
     i++;
   }
-  
+
   if (file->faces.empty()) {
     delete file;
     return nullptr;

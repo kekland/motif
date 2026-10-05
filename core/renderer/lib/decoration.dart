@@ -47,11 +47,13 @@ void _paintInternal(
     if (decoration is ColorDecoration) {
       paint.color = decoration.color.toUiColor();
     } else if (decoration is ImageDecoration) {
-      final image = decoration.image;
-      if (image == null) return;
+      final imageHash = decoration.image;
+      if (imageHash == null) return;
 
-      scene.evaluation.fetchAssetData(id, image);
-      final uiImage = scene.assetCache.image[image];
+      final image = scene.evaluation.assetManifest.image(imageHash);
+      scene.evaluation.loadAsset(id, image!);
+
+      final uiImage = scene.assetCache.image[imageHash];
       if (uiImage == null) return;
 
       paint.color = const .new(0xFFFFFFFF);

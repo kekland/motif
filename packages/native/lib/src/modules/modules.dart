@@ -7,3 +7,5 @@ export 'shared/mouse_cursor.dart';
 export 'native/mouse_cursor.dart' if (dart.library.js_interop) 'web/mouse_cursor.dart';
 
 export 'native/window_titlebar.dart' if (dart.library.js_interop) 'web/window_titlebar.dart';
+
+export 'clipboard.dart';

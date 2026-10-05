@@ -1,13 +1,14 @@
+import 'package:editor/components/props/widgets/inputs/font_family_input_field.dart';
 import 'package:editor/imports.dart';
 
 final class TextFormatPartial({
   final double? fontSize,
   final double? lineHeight,
   final double? letterSpacing,
-  final FontFamilyId? fontFamily,
-  final TextFontStyle? fontStyle,
+  final String? fontFamily,
+  final TextFontSlant? fontSlant,
   final TextFontWeight? fontWeight,
-  final List<TextFontVariation>? variations,
+  final TextFontWidth? fontWidth,
   final List<TextDecorationKind>? decorations,
 }) extends Partial<TextFormat> with Equatable {
   @override
@@ -16,9 +17,9 @@ final class TextFormatPartial({
     lineHeight: lineHeight,
     letterSpacing: letterSpacing,
     fontFamily: fontFamily,
-    fontStyle: fontStyle,
+    fontSlant: fontSlant,
     fontWeight: fontWeight,
-    variations: variations,
+    fontWidth: fontWidth,
     decorations: decorations,
   );
 
@@ -28,9 +29,9 @@ final class TextFormatPartial({
     lineHeight,
     letterSpacing,
     fontFamily,
-    fontStyle,
+    fontSlant,
     fontWeight,
-    variations,
+    fontWidth,
     decorations,
   ];
 }
@@ -50,6 +51,29 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink();
+    final editor = context.editor;
+    final transaction = usePropTransaction();
+    final computed = usePropComputed(prop);
+    final fontFamily = useProxyComputed(
+      computed,
+      (value) => value.resolve()?.fontFamily,
+    );
+
+    return Padding(
+      padding: PropWidget.padding,
+      child: Column(
+        children: [
+          FontFamilyInputField(
+            value: fontFamily,
+            onChanged: (v) {
+              final family = editor.builtinFonts.catalog[v];
+              for (final asset in family.assets) editor.maybeAddAsset(asset);
+              transaction.edit((txn) => prop.set(txn, .new(fontFamily: v)));
+            },
+            sessionCallbacks: transaction.sessionCallbacks,
+          ),
+        ],
+      ),
+    );
   }
 }

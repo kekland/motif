@@ -8,14 +8,16 @@ abstract class AssetCache {
   void addFetchListener(AssetFetchListener listener);
   void removeFetchListener(AssetFetchListener listener);
 
-  FutureOr<void> add(AssetId id, Uint8List data);
-  FutureOr<void> fetch(StatementId? statementId, AssetId id);
+  FutureOr<void> add(Asset asset, Uint8List data);
+  FutureOr<void> fetch(StatementId? statementId, Asset asset);
 
   void dispose();
 }
 
 abstract class FontCache {
   skia.FontProvider get provider;
+
+  Future<void> add(FontAsset asset, Uint8List bytes);
 
   void dispose();
 }

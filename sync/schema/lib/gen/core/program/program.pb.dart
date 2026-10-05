@@ -25,7 +25,7 @@ class Program extends $pb.GeneratedMessage {
   factory Program({
     $core.Iterable<Statement>? statements,
     StyleTable? style,
-    AssetManifest? assetManifest,
+    $0.AssetManifest? assetManifest,
   }) {
     final result = create();
     if (statements != null) result.statements.addAll(statements);
@@ -51,8 +51,8 @@ class Program extends $pb.GeneratedMessage {
         subBuilder: Statement.create)
     ..aOM<StyleTable>(2, _omitFieldNames ? '' : 'style',
         subBuilder: StyleTable.create)
-    ..aOM<AssetManifest>(3, _omitFieldNames ? '' : 'assetManifest',
-        subBuilder: AssetManifest.create)
+    ..aOM<$0.AssetManifest>(3, _omitFieldNames ? '' : 'assetManifest',
+        subBuilder: $0.AssetManifest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -88,15 +88,15 @@ class Program extends $pb.GeneratedMessage {
   StyleTable ensureStyle() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  AssetManifest get assetManifest => $_getN(2);
+  $0.AssetManifest get assetManifest => $_getN(2);
   @$pb.TagNumber(3)
-  set assetManifest(AssetManifest value) => $_setField(3, value);
+  set assetManifest($0.AssetManifest value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasAssetManifest() => $_has(2);
   @$pb.TagNumber(3)
   void clearAssetManifest() => $_clearField(3);
   @$pb.TagNumber(3)
-  AssetManifest ensureAssetManifest() => $_ensure(2);
+  $0.AssetManifest ensureAssetManifest() => $_ensure(2);
 }
 
 class ProgramSlice extends $pb.GeneratedMessage {
@@ -1627,7 +1627,7 @@ class Decoration_Color extends $pb.GeneratedMessage {
 
 class Decoration_Image extends $pb.GeneratedMessage {
   factory Decoration_Image({
-    $0.Hash? value,
+    $core.String? value,
   }) {
     final result = create();
     if (value != null) result.value = value;
@@ -1647,8 +1647,7 @@ class Decoration_Image extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Decoration.Image',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<$0.Hash>(1, _omitFieldNames ? '' : 'value',
-        subBuilder: $0.Hash.create)
+    ..aOS(1, _omitFieldNames ? '' : 'value')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1671,15 +1670,13 @@ class Decoration_Image extends $pb.GeneratedMessage {
   static Decoration_Image? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Hash get value => $_getN(0);
+  $core.String get value => $_getSZ(0);
   @$pb.TagNumber(1)
-  set value($0.Hash value) => $_setField(1, value);
+  set value($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
   void clearValue() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $0.Hash ensureValue() => $_ensure(0);
 }
 
 enum Decoration_Kind { color, image, notSet }
@@ -1815,126 +1812,6 @@ class Decorations extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<Decoration> get entries => $_getList(0);
-}
-
-class AssetManifest_Entry extends $pb.GeneratedMessage {
-  factory AssetManifest_Entry({
-    $0.Hash? hash,
-    $0.Asset? asset,
-  }) {
-    final result = create();
-    if (hash != null) result.hash = hash;
-    if (asset != null) result.asset = asset;
-    return result;
-  }
-
-  AssetManifest_Entry._();
-
-  factory AssetManifest_Entry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AssetManifest_Entry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AssetManifest.Entry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<$0.Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: $0.Hash.create)
-    ..aOM<$0.Asset>(2, _omitFieldNames ? '' : 'asset',
-        subBuilder: $0.Asset.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetManifest_Entry clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetManifest_Entry copyWith(void Function(AssetManifest_Entry) updates) =>
-      super.copyWith((message) => updates(message as AssetManifest_Entry))
-          as AssetManifest_Entry;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AssetManifest_Entry create() => AssetManifest_Entry._();
-  @$core.override
-  AssetManifest_Entry createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AssetManifest_Entry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AssetManifest_Entry>(create);
-  static AssetManifest_Entry? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $0.Hash get hash => $_getN(0);
-  @$pb.TagNumber(1)
-  set hash($0.Hash value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHash() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $0.Hash ensureHash() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $0.Asset get asset => $_getN(1);
-  @$pb.TagNumber(2)
-  set asset($0.Asset value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAsset() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAsset() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $0.Asset ensureAsset() => $_ensure(1);
-}
-
-class AssetManifest extends $pb.GeneratedMessage {
-  factory AssetManifest({
-    $core.Iterable<AssetManifest_Entry>? entries,
-  }) {
-    final result = create();
-    if (entries != null) result.entries.addAll(entries);
-    return result;
-  }
-
-  AssetManifest._();
-
-  factory AssetManifest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AssetManifest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AssetManifest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..pPM<AssetManifest_Entry>(1, _omitFieldNames ? '' : 'entries',
-        subBuilder: AssetManifest_Entry.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetManifest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetManifest copyWith(void Function(AssetManifest) updates) =>
-      super.copyWith((message) => updates(message as AssetManifest))
-          as AssetManifest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AssetManifest create() => AssetManifest._();
-  @$core.override
-  AssetManifest createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AssetManifest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AssetManifest>(create);
-  static AssetManifest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<AssetManifest_Entry> get entries => $_getList(0);
 }
 
 class CellSelector extends $pb.GeneratedMessage {
@@ -3858,12 +3735,22 @@ class TextStatement extends $pb.GeneratedMessage {
     LayoutSize? size,
     Mat4? transform,
     CellRef? parent,
+    ParagraphFormat? paragraphFormat,
+    TextFormat? textFormat,
+    VertexStyle? vertexStyle,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
   }) {
     final result = create();
     if (text != null) result.text = text;
     if (size != null) result.size = size;
     if (transform != null) result.transform = transform;
     if (parent != null) result.parent = parent;
+    if (paragraphFormat != null) result.paragraphFormat = paragraphFormat;
+    if (textFormat != null) result.textFormat = textFormat;
+    if (vertexStyle != null) result.vertexStyle = vertexStyle;
+    if (edgeStyle != null) result.edgeStyle = edgeStyle;
+    if (faceStyle != null) result.faceStyle = faceStyle;
     return result;
   }
 
@@ -3886,6 +3773,16 @@ class TextStatement extends $pb.GeneratedMessage {
     ..aOM<Mat4>(3, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
     ..aOM<CellRef>(4, _omitFieldNames ? '' : 'parent',
         subBuilder: CellRef.create)
+    ..aOM<ParagraphFormat>(5, _omitFieldNames ? '' : 'paragraphFormat',
+        subBuilder: ParagraphFormat.create)
+    ..aOM<TextFormat>(6, _omitFieldNames ? '' : 'textFormat',
+        subBuilder: TextFormat.create)
+    ..aOM<VertexStyle>(7, _omitFieldNames ? '' : 'vertexStyle',
+        subBuilder: VertexStyle.create)
+    ..aOM<EdgeStyle>(8, _omitFieldNames ? '' : 'edgeStyle',
+        subBuilder: EdgeStyle.create)
+    ..aOM<FaceStyle>(9, _omitFieldNames ? '' : 'faceStyle',
+        subBuilder: FaceStyle.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3948,6 +3845,61 @@ class TextStatement extends $pb.GeneratedMessage {
   void clearParent() => $_clearField(4);
   @$pb.TagNumber(4)
   CellRef ensureParent() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  ParagraphFormat get paragraphFormat => $_getN(4);
+  @$pb.TagNumber(5)
+  set paragraphFormat(ParagraphFormat value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasParagraphFormat() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearParagraphFormat() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ParagraphFormat ensureParagraphFormat() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  TextFormat get textFormat => $_getN(5);
+  @$pb.TagNumber(6)
+  set textFormat(TextFormat value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTextFormat() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTextFormat() => $_clearField(6);
+  @$pb.TagNumber(6)
+  TextFormat ensureTextFormat() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  VertexStyle get vertexStyle => $_getN(6);
+  @$pb.TagNumber(7)
+  set vertexStyle(VertexStyle value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasVertexStyle() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearVertexStyle() => $_clearField(7);
+  @$pb.TagNumber(7)
+  VertexStyle ensureVertexStyle() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  EdgeStyle get edgeStyle => $_getN(7);
+  @$pb.TagNumber(8)
+  set edgeStyle(EdgeStyle value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasEdgeStyle() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearEdgeStyle() => $_clearField(8);
+  @$pb.TagNumber(8)
+  EdgeStyle ensureEdgeStyle() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  FaceStyle get faceStyle => $_getN(8);
+  @$pb.TagNumber(9)
+  set faceStyle(FaceStyle value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasFaceStyle() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearFaceStyle() => $_clearField(9);
+  @$pb.TagNumber(9)
+  FaceStyle ensureFaceStyle() => $_ensure(8);
 }
 
 class ReorderStatement extends $pb.GeneratedMessage {
@@ -4869,6 +4821,224 @@ class Layout extends $pb.GeneratedMessage {
   void clearFlex() => $_clearField(2);
   @$pb.TagNumber(2)
   Layout_Flex ensureFlex() => $_ensure(1);
+}
+
+class TextFormat extends $pb.GeneratedMessage {
+  factory TextFormat({
+    $core.double? fontSize,
+    $core.double? lineHeight,
+    $core.double? letterSpacing,
+    $core.String? fontFamily,
+    TextFontSlant? fontSlant,
+    TextFontWeight? fontWeight,
+    TextFontWidth? fontWidth,
+    $core.Iterable<TextDecorationKind>? decorations,
+  }) {
+    final result = create();
+    if (fontSize != null) result.fontSize = fontSize;
+    if (lineHeight != null) result.lineHeight = lineHeight;
+    if (letterSpacing != null) result.letterSpacing = letterSpacing;
+    if (fontFamily != null) result.fontFamily = fontFamily;
+    if (fontSlant != null) result.fontSlant = fontSlant;
+    if (fontWeight != null) result.fontWeight = fontWeight;
+    if (fontWidth != null) result.fontWidth = fontWidth;
+    if (decorations != null) result.decorations.addAll(decorations);
+    return result;
+  }
+
+  TextFormat._();
+
+  factory TextFormat.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TextFormat.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TextFormat',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'fontSize')
+    ..aD(2, _omitFieldNames ? '' : 'lineHeight')
+    ..aD(3, _omitFieldNames ? '' : 'letterSpacing')
+    ..aOS(4, _omitFieldNames ? '' : 'fontFamily')
+    ..aE<TextFontSlant>(5, _omitFieldNames ? '' : 'fontSlant',
+        enumValues: TextFontSlant.values)
+    ..aE<TextFontWeight>(6, _omitFieldNames ? '' : 'fontWeight',
+        enumValues: TextFontWeight.values)
+    ..aE<TextFontWidth>(7, _omitFieldNames ? '' : 'fontWidth',
+        enumValues: TextFontWidth.values)
+    ..pc<TextDecorationKind>(
+        8, _omitFieldNames ? '' : 'decorations', $pb.PbFieldType.KE,
+        valueOf: TextDecorationKind.valueOf,
+        enumValues: TextDecorationKind.values,
+        defaultEnumValue: TextDecorationKind.TEXT_DECORATION_KIND_UNDERLINE)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextFormat clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TextFormat copyWith(void Function(TextFormat) updates) =>
+      super.copyWith((message) => updates(message as TextFormat)) as TextFormat;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TextFormat create() => TextFormat._();
+  @$core.override
+  TextFormat createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TextFormat getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TextFormat>(create);
+  static TextFormat? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get fontSize => $_getN(0);
+  @$pb.TagNumber(1)
+  set fontSize($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFontSize() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFontSize() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get lineHeight => $_getN(1);
+  @$pb.TagNumber(2)
+  set lineHeight($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLineHeight() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLineHeight() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get letterSpacing => $_getN(2);
+  @$pb.TagNumber(3)
+  set letterSpacing($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLetterSpacing() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLetterSpacing() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get fontFamily => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set fontFamily($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFontFamily() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFontFamily() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  TextFontSlant get fontSlant => $_getN(4);
+  @$pb.TagNumber(5)
+  set fontSlant(TextFontSlant value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFontSlant() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFontSlant() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  TextFontWeight get fontWeight => $_getN(5);
+  @$pb.TagNumber(6)
+  set fontWeight(TextFontWeight value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFontWeight() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFontWeight() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  TextFontWidth get fontWidth => $_getN(6);
+  @$pb.TagNumber(7)
+  set fontWidth(TextFontWidth value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFontWidth() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFontWidth() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $pb.PbList<TextDecorationKind> get decorations => $_getList(7);
+}
+
+class ParagraphFormat extends $pb.GeneratedMessage {
+  factory ParagraphFormat({
+    TextAlignment? alignment,
+    TextVerticalAlignment? verticalAlignment,
+    $core.String? ellipsis,
+  }) {
+    final result = create();
+    if (alignment != null) result.alignment = alignment;
+    if (verticalAlignment != null) result.verticalAlignment = verticalAlignment;
+    if (ellipsis != null) result.ellipsis = ellipsis;
+    return result;
+  }
+
+  ParagraphFormat._();
+
+  factory ParagraphFormat.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ParagraphFormat.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ParagraphFormat',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aE<TextAlignment>(1, _omitFieldNames ? '' : 'alignment',
+        enumValues: TextAlignment.values)
+    ..aE<TextVerticalAlignment>(2, _omitFieldNames ? '' : 'verticalAlignment',
+        enumValues: TextVerticalAlignment.values)
+    ..aOS(3, _omitFieldNames ? '' : 'ellipsis')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ParagraphFormat clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ParagraphFormat copyWith(void Function(ParagraphFormat) updates) =>
+      super.copyWith((message) => updates(message as ParagraphFormat))
+          as ParagraphFormat;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ParagraphFormat create() => ParagraphFormat._();
+  @$core.override
+  ParagraphFormat createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ParagraphFormat getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ParagraphFormat>(create);
+  static ParagraphFormat? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  TextAlignment get alignment => $_getN(0);
+  @$pb.TagNumber(1)
+  set alignment(TextAlignment value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAlignment() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAlignment() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  TextVerticalAlignment get verticalAlignment => $_getN(1);
+  @$pb.TagNumber(2)
+  set verticalAlignment(TextVerticalAlignment value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVerticalAlignment() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVerticalAlignment() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get ellipsis => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set ellipsis($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEllipsis() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEllipsis() => $_clearField(3);
 }
 
 class NodeId extends $pb.GeneratedMessage {

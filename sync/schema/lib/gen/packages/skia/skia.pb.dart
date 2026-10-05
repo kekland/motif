@@ -38,7 +38,7 @@ class Path extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Path',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'skia'),
       createEmptyInstance: create)
     ..p<$core.double>(1, _omitFieldNames ? '' : 'points', $pb.PbFieldType.KF)
     ..p<$core.int>(2, _omitFieldNames ? '' : 'verbs', $pb.PbFieldType.K3)

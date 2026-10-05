@@ -65,15 +65,15 @@ class SqliteSceneStorage implements sync.SceneStorage {
   );
 
   @override
-  Future<Uint8List?> readAsset(pb.Hash hash) async {
-    final row = await db.getOptional('SELECT bytes FROM assets WHERE hash = ?', [hash.value]);
+  Future<Uint8List?> readAsset(String hash) async {
+    final row = await db.getOptional('SELECT bytes FROM assets WHERE hash = ?', [hash]);
     return row?['bytes'] as Uint8List?;
   }
 
   @override
-  Future<void> writeAsset(pb.Hash hash, Uint8List bytes) => db.execute(
+  Future<void> writeAsset(String hash, Uint8List bytes) => db.execute(
     'INSERT OR IGNORE INTO assets (hash, bytes) VALUES (?, ?)',
-    [hash.value, bytes],
+    [hash, bytes],
   );
 
   @override

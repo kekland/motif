@@ -1,5 +1,5 @@
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/form/decoration/decoration_input_field.dart';
+import 'package:editor/components/props/widgets/inputs/decoration/decoration_input_field.dart';
 
 final class DecorationsProp(super.sources, {super.kind = .decorations}) extends Prop<Decorations, Decorations> {
   @override

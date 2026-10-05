@@ -4,6 +4,7 @@ export 'package:listen/listen.dart';
 
 export 'log/log.dart';
 export 'storage/storage.dart';
+export 'hash/hash.dart';
 export 'u64/u64.dart';
 export 'utils/equals.dart';
 export 'utils/lerp.dart';

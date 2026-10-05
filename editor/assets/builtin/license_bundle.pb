@@ -1,8 +1,6 @@
 
-·#
-B
-@5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57ð"
-B
+³#
+@5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57î"
 @5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57InterOFL-1.1"™"Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -97,10 +95,8 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
-Ï#
-B
-@50ab8dd54680d3473f649c9db86fece88434d097c7834475c1c72d2f8c429215ˆ#
-B
+Ë#
+@50ab8dd54680d3473f649c9db86fece88434d097c7834475c1c72d2f8c429215†#
 @50ab8dd54680d3473f649c9db86fece88434d097c7834475c1c72d2f8c429215Roboto MonoOFL-1.1"«"Copyright 2015 The Roboto Mono Project Authors (https://github.com/googlefonts/robotomono)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -195,10 +191,8 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
-Ç#
-B
-@fbbbcfef55318de350562559b671360de6d597112ecc5c73881b05092db89602€#
-B
+Ã#
+@fbbbcfef55318de350562559b671360de6d597112ecc5c73881b05092db89602þ"
 @fbbbcfef55318de350562559b671360de6d597112ecc5c73881b05092db89602	Open SansOFL-1.1"¥"Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -292,10 +286,8 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
-î#
-B
-@88aece7d90f2bb7049719f11619a560af22af3451af141f12aa4f46bb157a99b§#
-B
+ê#
+@88aece7d90f2bb7049719f11619a560af22af3451af141f12aa4f46bb157a99b¥#
 @88aece7d90f2bb7049719f11619a560af22af3451af141f12aa4f46bb157a99bLobsterOFL-1.1"Î"Copyright 2010 The Lobster Project Authors (https://github.com/impallari/The-Lobster-Font), with Reserved Font Name "Lobster".
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.

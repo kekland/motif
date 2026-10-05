@@ -203,14 +203,14 @@ final class AssetChange extends ProgramChange {
 
   @override
   void reapply(EvalPass pass) {
-    pass.program.assetManifest._removeAll(removed);
-    pass.program.assetManifest._insertAll(inserted);
+    pass.program.assetManifest.removeAll(removed);
+    pass.program.assetManifest.insertAll(inserted);
   }
 
   @override
   void unapply(EvalPass pass) {
-    pass.program.assetManifest._removeAll(inserted);
-    pass.program.assetManifest._insertAll(removed);
+    pass.program.assetManifest.removeAll(inserted);
+    pass.program.assetManifest.insertAll(removed);
   }
 
   @override

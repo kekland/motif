@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:shared/shared.dart';
 import 'package:sync_server/embedded.dart';
 
 import 'package:sync/sync.dart' as sync;
@@ -39,20 +40,20 @@ final class EmbeddedClient extends sync.Client {
   }
 
   @override
-  Future<Uint8List> loadAsset(String sceneId, pb.Hash hash) async {
+  Future<Uint8List> loadAsset(String sceneId, Hash hash) async {
     final scene = await server.openScene(sceneId);
     if (scene == null) throw sync.NotFound(sceneId);
 
-    final bytes = await scene.storage.readAsset(hash);
+    final bytes = await scene.storage.readAsset(hash.value);
     if (bytes == null) throw sync.NotFound(hash.value);
     return bytes;
   }
 
   @override
-  Future<void> saveAsset(String sceneId, pb.Hash hash, Uint8List data) async {
+  Future<void> saveAsset(String sceneId, Hash hash, Uint8List data) async {
     final scene = await server.openScene(sceneId);
     if (scene == null) throw sync.NotFound(sceneId);
-    await scene.storage.writeAsset(hash, data);
+    await scene.storage.writeAsset(hash.value, data);
   }
 
   @override

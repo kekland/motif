@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const SelectAllIntent() extends CommandIntent;
+final class const SelectAllIntent() extends Intent;
 
 final selectAllIntentDescriptor = CommandIntentDescriptor<SelectAllIntent>(
   command: 'select-all',

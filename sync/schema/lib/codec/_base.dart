@@ -36,3 +36,7 @@ Map<K, V> $mapFrom<P, K, V>(Iterable<P> list, K Function(P) keyMapper, V Functio
 List<R> $fromMap<K, V, R>(Map<K, V> map, R Function(K key, V value) mapper) {
   return $map(map.entries, (e) => mapper(e.key, e.value));
 }
+
+Map<K2, V2> $mmap<K1, V1, K2, V2>(Map<K1, V1> map, K2 Function(K1) keyMapper, V2 Function(V1) valueMapper) {
+  return map.map((k, v) => .new(keyMapper(k), valueMapper(v)));
+}

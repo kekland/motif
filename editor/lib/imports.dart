@@ -7,6 +7,7 @@ export 'package:kernel/kernel.dart' hide Action;
 export 'package:mouse_cursor/mouse_cursor.dart';
 export 'package:color/color.dart';
 export 'package:skia_flutter/skia_flutter.dart';
+export 'package:native/native.dart';
 
 export 'actions/_intents.dart';
 export 'activities/activities.dart';

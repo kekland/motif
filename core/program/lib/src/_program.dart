@@ -106,7 +106,7 @@ part 'routers/reparent_router.dart';
 part 'routers/slice_router.dart';
 part 'routers/generator_router.dart';
 
-part 'assets/asset_manifest.dart';
+// part 'assets/asset_manifest.dart';
 part 'assets/asset_cache.dart';
 
 final _log = Logger('program');

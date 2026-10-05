@@ -1,8 +1,7 @@
 import 'package:ui/ui.dart';
 
-class SelectToolIntent extends CommandIntent {
+class SelectToolIntent extends Intent {
   const SelectToolIntent(this.tool);
-
   final Tool tool;
 }
 

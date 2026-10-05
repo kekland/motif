@@ -11,9 +11,9 @@ final class Program {
     this._statements, {
     this.assetResolver,
     StyleTable? styles,
-    AssetManifest? assets,
+    AssetManifest? assetManifest,
   }) : styles = styles ?? .empty(),
-       assetManifest = assets ?? .empty() {
+       assetManifest = assetManifest ?? .empty() {
     _reindex(0, length);
   }
 
@@ -65,7 +65,7 @@ final class Program {
   Program clone() => .new(
     _statements.toList(),
     styles: styles.clone(),
-    assets: assetManifest,
+    assetManifest: assetManifest,
     assetResolver: assetResolver,
   );
 }

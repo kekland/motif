@@ -18,71 +18,70 @@ import '../../packages/skia/skia.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class Hash extends $pb.GeneratedMessage {
-  factory Hash({
-    $core.String? value,
+class AssetManifest extends $pb.GeneratedMessage {
+  factory AssetManifest({
+    $core.Iterable<$core.MapEntry<$core.String, Asset>>? entries,
   }) {
     final result = create();
-    if (value != null) result.value = value;
+    if (entries != null) result.entries.addEntries(entries);
     return result;
   }
 
-  Hash._();
+  AssetManifest._();
 
-  factory Hash.fromBuffer($core.List<$core.int> data,
+  factory AssetManifest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory Hash.fromJson($core.String json,
+  factory AssetManifest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Hash',
+      _omitMessageNames ? '' : 'AssetManifest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'value')
+    ..m<$core.String, Asset>(1, _omitFieldNames ? '' : 'entries',
+        entryClassName: 'AssetManifest.EntriesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: Asset.create,
+        valueDefaultOrMaker: Asset.getDefault,
+        packageName: const $pb.PackageName('motif'))
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Hash clone() => deepCopy();
+  AssetManifest clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Hash copyWith(void Function(Hash) updates) =>
-      super.copyWith((message) => updates(message as Hash)) as Hash;
+  AssetManifest copyWith(void Function(AssetManifest) updates) =>
+      super.copyWith((message) => updates(message as AssetManifest))
+          as AssetManifest;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static Hash create() => Hash._();
+  static AssetManifest create() => AssetManifest._();
   @$core.override
-  Hash createEmptyInstance() => create();
+  AssetManifest createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static Hash getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Hash>(create);
-  static Hash? _defaultInstance;
+  static AssetManifest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AssetManifest>(create);
+  static AssetManifest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get value => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set value($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasValue() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearValue() => $_clearField(1);
+  $pb.PbMap<$core.String, Asset> get entries => $_getMap(0);
 }
 
 class Asset_Font extends $pb.GeneratedMessage {
   factory Asset_Font({
-    Hash? licenseHash,
     $core.String? family,
-    $core.Iterable<FontFile>? files,
-    FontFamilyThumbnail? thumbnail,
+    $core.String? license,
+    $core.Iterable<FontFace>? faces,
   }) {
     final result = create();
-    if (licenseHash != null) result.licenseHash = licenseHash;
     if (family != null) result.family = family;
-    if (files != null) result.files.addAll(files);
-    if (thumbnail != null) result.thumbnail = thumbnail;
+    if (license != null) result.license = license;
+    if (faces != null) result.faces.addAll(faces);
     return result;
   }
 
@@ -99,13 +98,10 @@ class Asset_Font extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Asset.Font',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<Hash>(3, _omitFieldNames ? '' : 'licenseHash',
-        protoName: 'licenseHash', subBuilder: Hash.create)
-    ..aOS(4, _omitFieldNames ? '' : 'family')
-    ..pPM<FontFile>(5, _omitFieldNames ? '' : 'files',
-        subBuilder: FontFile.create)
-    ..aOM<FontFamilyThumbnail>(6, _omitFieldNames ? '' : 'thumbnail',
-        subBuilder: FontFamilyThumbnail.create)
+    ..aOS(1, _omitFieldNames ? '' : 'family')
+    ..aOS(2, _omitFieldNames ? '' : 'license')
+    ..pPM<FontFace>(3, _omitFieldNames ? '' : 'faces',
+        subBuilder: FontFace.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -126,39 +122,26 @@ class Asset_Font extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<Asset_Font>(create);
   static Asset_Font? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  Hash get licenseHash => $_getN(0);
-  @$pb.TagNumber(3)
-  set licenseHash(Hash value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasLicenseHash() => $_has(0);
-  @$pb.TagNumber(3)
-  void clearLicenseHash() => $_clearField(3);
-  @$pb.TagNumber(3)
-  Hash ensureLicenseHash() => $_ensure(0);
+  @$pb.TagNumber(1)
+  $core.String get family => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set family($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasFamily() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFamily() => $_clearField(1);
 
-  @$pb.TagNumber(4)
-  $core.String get family => $_getSZ(1);
-  @$pb.TagNumber(4)
-  set family($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(4)
-  $core.bool hasFamily() => $_has(1);
-  @$pb.TagNumber(4)
-  void clearFamily() => $_clearField(4);
+  @$pb.TagNumber(2)
+  $core.String get license => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set license($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLicense() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLicense() => $_clearField(2);
 
-  @$pb.TagNumber(5)
-  $pb.PbList<FontFile> get files => $_getList(2);
-
-  @$pb.TagNumber(6)
-  FontFamilyThumbnail get thumbnail => $_getN(3);
-  @$pb.TagNumber(6)
-  set thumbnail(FontFamilyThumbnail value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasThumbnail() => $_has(3);
-  @$pb.TagNumber(6)
-  void clearThumbnail() => $_clearField(6);
-  @$pb.TagNumber(6)
-  FontFamilyThumbnail ensureThumbnail() => $_ensure(3);
+  @$pb.TagNumber(3)
+  $pb.PbList<FontFace> get faces => $_getList(2);
 }
 
 class Asset_Image extends $pb.GeneratedMessage {
@@ -189,7 +172,7 @@ class Asset_Image extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'width')
     ..aI(2, _omitFieldNames ? '' : 'height')
-    ..aOS(3, _omitFieldNames ? '' : 'mimeType', protoName: 'mimeType')
+    ..aOS(3, _omitFieldNames ? '' : 'mimeType')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -243,7 +226,7 @@ enum Asset_Kind { font, image, notSet }
 
 class Asset extends $pb.GeneratedMessage {
   factory Asset({
-    Hash? hash,
+    $core.String? hash,
     $core.int? size,
     Asset_Font? font,
     Asset_Image? image,
@@ -275,7 +258,7 @@ class Asset extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..oo(0, [10, 11])
-    ..aOM<Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: Hash.create)
+    ..aOS(1, _omitFieldNames ? '' : 'hash')
     ..aI(2, _omitFieldNames ? '' : 'size')
     ..aOM<Asset_Font>(10, _omitFieldNames ? '' : 'font',
         subBuilder: Asset_Font.create)
@@ -309,15 +292,13 @@ class Asset extends $pb.GeneratedMessage {
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  Hash get hash => $_getN(0);
+  $core.String get hash => $_getSZ(0);
   @$pb.TagNumber(1)
-  set hash(Hash value) => $_setField(1, value);
+  set hash($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasHash() => $_has(0);
   @$pb.TagNumber(1)
   void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Hash ensureHash() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.int get size => $_getIZ(1);
@@ -351,100 +332,8 @@ class Asset extends $pb.GeneratedMessage {
   Asset_Image ensureImage() => $_ensure(3);
 }
 
-class AssetLicense extends $pb.GeneratedMessage {
-  factory AssetLicense({
-    Hash? hash,
-    $core.String? descriptor,
-    $core.String? kind,
-    $core.String? body,
-  }) {
-    final result = create();
-    if (hash != null) result.hash = hash;
-    if (descriptor != null) result.descriptor = descriptor;
-    if (kind != null) result.kind = kind;
-    if (body != null) result.body = body;
-    return result;
-  }
-
-  AssetLicense._();
-
-  factory AssetLicense.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AssetLicense.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AssetLicense',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: Hash.create)
-    ..aOS(2, _omitFieldNames ? '' : 'descriptor')
-    ..aOS(3, _omitFieldNames ? '' : 'kind')
-    ..aOS(4, _omitFieldNames ? '' : 'body')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetLicense clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AssetLicense copyWith(void Function(AssetLicense) updates) =>
-      super.copyWith((message) => updates(message as AssetLicense))
-          as AssetLicense;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AssetLicense create() => AssetLicense._();
-  @$core.override
-  AssetLicense createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static AssetLicense getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AssetLicense>(create);
-  static AssetLicense? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  Hash get hash => $_getN(0);
-  @$pb.TagNumber(1)
-  set hash(Hash value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHash() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Hash ensureHash() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.String get descriptor => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set descriptor($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasDescriptor() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearDescriptor() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get kind => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set kind($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasKind() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearKind() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get body => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set body($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasBody() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearBody() => $_clearField(4);
-}
-
-class FontFamilyThumbnail extends $pb.GeneratedMessage {
-  factory FontFamilyThumbnail({
+class FontFace_Thumbnail extends $pb.GeneratedMessage {
+  factory FontFace_Thumbnail({
     $0.Path? path,
     $core.double? width,
     $core.double? height,
@@ -456,17 +345,17 @@ class FontFamilyThumbnail extends $pb.GeneratedMessage {
     return result;
   }
 
-  FontFamilyThumbnail._();
+  FontFace_Thumbnail._();
 
-  factory FontFamilyThumbnail.fromBuffer($core.List<$core.int> data,
+  factory FontFace_Thumbnail.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FontFamilyThumbnail.fromJson($core.String json,
+  factory FontFace_Thumbnail.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FontFamilyThumbnail',
+      _omitMessageNames ? '' : 'FontFace.Thumbnail',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..aOM<$0.Path>(1, _omitFieldNames ? '' : 'path', subBuilder: $0.Path.create)
@@ -475,23 +364,23 @@ class FontFamilyThumbnail extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontFamilyThumbnail clone() => deepCopy();
+  FontFace_Thumbnail clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontFamilyThumbnail copyWith(void Function(FontFamilyThumbnail) updates) =>
-      super.copyWith((message) => updates(message as FontFamilyThumbnail))
-          as FontFamilyThumbnail;
+  FontFace_Thumbnail copyWith(void Function(FontFace_Thumbnail) updates) =>
+      super.copyWith((message) => updates(message as FontFace_Thumbnail))
+          as FontFace_Thumbnail;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FontFamilyThumbnail create() => FontFamilyThumbnail._();
+  static FontFace_Thumbnail create() => FontFace_Thumbnail._();
   @$core.override
-  FontFamilyThumbnail createEmptyInstance() => create();
+  FontFace_Thumbnail createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FontFamilyThumbnail getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FontFamilyThumbnail>(create);
-  static FontFamilyThumbnail? _defaultInstance;
+  static FontFace_Thumbnail getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FontFace_Thumbnail>(create);
+  static FontFace_Thumbnail? _defaultInstance;
 
   @$pb.TagNumber(1)
   $0.Path get path => $_getN(0);
@@ -523,94 +412,22 @@ class FontFamilyThumbnail extends $pb.GeneratedMessage {
   void clearHeight() => $_clearField(3);
 }
 
-class FontFile extends $pb.GeneratedMessage {
-  factory FontFile({
-    Hash? hash,
-    $core.int? size,
-    $core.Iterable<FontFace>? faces,
-  }) {
-    final result = create();
-    if (hash != null) result.hash = hash;
-    if (size != null) result.size = size;
-    if (faces != null) result.faces.addAll(faces);
-    return result;
-  }
-
-  FontFile._();
-
-  factory FontFile.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory FontFile.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FontFile',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: Hash.create)
-    ..aI(2, _omitFieldNames ? '' : 'size')
-    ..pPM<FontFace>(3, _omitFieldNames ? '' : 'faces',
-        subBuilder: FontFace.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontFile clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontFile copyWith(void Function(FontFile) updates) =>
-      super.copyWith((message) => updates(message as FontFile)) as FontFile;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static FontFile create() => FontFile._();
-  @$core.override
-  FontFile createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static FontFile getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FontFile>(create);
-  static FontFile? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  Hash get hash => $_getN(0);
-  @$pb.TagNumber(1)
-  set hash(Hash value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHash() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Hash ensureHash() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.int get size => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set size($core.int value) => $_setSignedInt32(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasSize() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearSize() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $pb.PbList<FontFace> get faces => $_getList(2);
-}
-
 class FontFace extends $pb.GeneratedMessage {
   factory FontFace({
-    $core.int? index,
     $core.String? family,
+    $core.int? index,
     $core.int? weight,
     $core.int? width,
     $core.int? slant,
+    FontFace_Thumbnail? thumbnail,
   }) {
     final result = create();
-    if (index != null) result.index = index;
     if (family != null) result.family = family;
+    if (index != null) result.index = index;
     if (weight != null) result.weight = weight;
     if (width != null) result.width = width;
     if (slant != null) result.slant = slant;
+    if (thumbnail != null) result.thumbnail = thumbnail;
     return result;
   }
 
@@ -627,11 +444,13 @@ class FontFace extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FontFace',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'index')
-    ..aOS(2, _omitFieldNames ? '' : 'family')
+    ..aOS(1, _omitFieldNames ? '' : 'family')
+    ..aI(2, _omitFieldNames ? '' : 'index')
     ..aI(3, _omitFieldNames ? '' : 'weight')
     ..aI(4, _omitFieldNames ? '' : 'width')
     ..aI(5, _omitFieldNames ? '' : 'slant')
+    ..aOM<FontFace_Thumbnail>(6, _omitFieldNames ? '' : 'thumbnail',
+        subBuilder: FontFace_Thumbnail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -653,22 +472,22 @@ class FontFace extends $pb.GeneratedMessage {
   static FontFace? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get index => $_getIZ(0);
+  $core.String get family => $_getSZ(0);
   @$pb.TagNumber(1)
-  set index($core.int value) => $_setSignedInt32(0, value);
+  set family($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasIndex() => $_has(0);
+  $core.bool hasFamily() => $_has(0);
   @$pb.TagNumber(1)
-  void clearIndex() => $_clearField(1);
+  void clearFamily() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get family => $_getSZ(1);
+  $core.int get index => $_getIZ(1);
   @$pb.TagNumber(2)
-  set family($core.String value) => $_setString(1, value);
+  set index($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasFamily() => $_has(1);
+  $core.bool hasIndex() => $_has(1);
   @$pb.TagNumber(2)
-  void clearFamily() => $_clearField(2);
+  void clearIndex() => $_clearField(2);
 
   @$pb.TagNumber(3)
   $core.int get weight => $_getIZ(2);
@@ -696,204 +515,115 @@ class FontFace extends $pb.GeneratedMessage {
   $core.bool hasSlant() => $_has(4);
   @$pb.TagNumber(5)
   void clearSlant() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  FontFace_Thumbnail get thumbnail => $_getN(5);
+  @$pb.TagNumber(6)
+  set thumbnail(FontFace_Thumbnail value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasThumbnail() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearThumbnail() => $_clearField(6);
+  @$pb.TagNumber(6)
+  FontFace_Thumbnail ensureThumbnail() => $_ensure(5);
 }
 
-class FontCatalog_Entry extends $pb.GeneratedMessage {
-  factory FontCatalog_Entry({
-    Hash? hash,
-    Asset? asset,
+class AssetLicense extends $pb.GeneratedMessage {
+  factory AssetLicense({
+    $core.String? hash,
+    $core.String? descriptor,
+    $core.String? kind,
+    $core.String? body,
   }) {
     final result = create();
     if (hash != null) result.hash = hash;
-    if (asset != null) result.asset = asset;
+    if (descriptor != null) result.descriptor = descriptor;
+    if (kind != null) result.kind = kind;
+    if (body != null) result.body = body;
     return result;
   }
 
-  FontCatalog_Entry._();
+  AssetLicense._();
 
-  factory FontCatalog_Entry.fromBuffer($core.List<$core.int> data,
+  factory AssetLicense.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory FontCatalog_Entry.fromJson($core.String json,
+  factory AssetLicense.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FontCatalog.Entry',
+      _omitMessageNames ? '' : 'AssetLicense',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: Hash.create)
-    ..aOM<Asset>(2, _omitFieldNames ? '' : 'asset', subBuilder: Asset.create)
+    ..aOS(1, _omitFieldNames ? '' : 'hash')
+    ..aOS(2, _omitFieldNames ? '' : 'descriptor')
+    ..aOS(3, _omitFieldNames ? '' : 'kind')
+    ..aOS(4, _omitFieldNames ? '' : 'body')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontCatalog_Entry clone() => deepCopy();
+  AssetLicense clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontCatalog_Entry copyWith(void Function(FontCatalog_Entry) updates) =>
-      super.copyWith((message) => updates(message as FontCatalog_Entry))
-          as FontCatalog_Entry;
+  AssetLicense copyWith(void Function(AssetLicense) updates) =>
+      super.copyWith((message) => updates(message as AssetLicense))
+          as AssetLicense;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static FontCatalog_Entry create() => FontCatalog_Entry._();
+  static AssetLicense create() => AssetLicense._();
   @$core.override
-  FontCatalog_Entry createEmptyInstance() => create();
+  AssetLicense createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static FontCatalog_Entry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FontCatalog_Entry>(create);
-  static FontCatalog_Entry? _defaultInstance;
+  static AssetLicense getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AssetLicense>(create);
+  static AssetLicense? _defaultInstance;
 
   @$pb.TagNumber(1)
-  Hash get hash => $_getN(0);
+  $core.String get hash => $_getSZ(0);
   @$pb.TagNumber(1)
-  set hash(Hash value) => $_setField(1, value);
+  set hash($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasHash() => $_has(0);
   @$pb.TagNumber(1)
   void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Hash ensureHash() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  Asset get asset => $_getN(1);
+  $core.String get descriptor => $_getSZ(1);
   @$pb.TagNumber(2)
-  set asset(Asset value) => $_setField(2, value);
+  set descriptor($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasAsset() => $_has(1);
+  $core.bool hasDescriptor() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAsset() => $_clearField(2);
-  @$pb.TagNumber(2)
-  Asset ensureAsset() => $_ensure(1);
-}
+  void clearDescriptor() => $_clearField(2);
 
-class FontCatalog extends $pb.GeneratedMessage {
-  factory FontCatalog({
-    $core.Iterable<FontCatalog_Entry>? entries,
-  }) {
-    final result = create();
-    if (entries != null) result.entries.addAll(entries);
-    return result;
-  }
+  @$pb.TagNumber(3)
+  $core.String get kind => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set kind($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasKind() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearKind() => $_clearField(3);
 
-  FontCatalog._();
-
-  factory FontCatalog.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory FontCatalog.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FontCatalog',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..pPM<FontCatalog_Entry>(1, _omitFieldNames ? '' : 'entries',
-        subBuilder: FontCatalog_Entry.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontCatalog clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FontCatalog copyWith(void Function(FontCatalog) updates) =>
-      super.copyWith((message) => updates(message as FontCatalog))
-          as FontCatalog;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static FontCatalog create() => FontCatalog._();
-  @$core.override
-  FontCatalog createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static FontCatalog getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FontCatalog>(create);
-  static FontCatalog? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $pb.PbList<FontCatalog_Entry> get entries => $_getList(0);
-}
-
-class LicenseBundle_Entry extends $pb.GeneratedMessage {
-  factory LicenseBundle_Entry({
-    Hash? hash,
-    AssetLicense? license,
-  }) {
-    final result = create();
-    if (hash != null) result.hash = hash;
-    if (license != null) result.license = license;
-    return result;
-  }
-
-  LicenseBundle_Entry._();
-
-  factory LicenseBundle_Entry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory LicenseBundle_Entry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'LicenseBundle.Entry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<Hash>(1, _omitFieldNames ? '' : 'hash', subBuilder: Hash.create)
-    ..aOM<AssetLicense>(2, _omitFieldNames ? '' : 'license',
-        subBuilder: AssetLicense.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LicenseBundle_Entry clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LicenseBundle_Entry copyWith(void Function(LicenseBundle_Entry) updates) =>
-      super.copyWith((message) => updates(message as LicenseBundle_Entry))
-          as LicenseBundle_Entry;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static LicenseBundle_Entry create() => LicenseBundle_Entry._();
-  @$core.override
-  LicenseBundle_Entry createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static LicenseBundle_Entry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<LicenseBundle_Entry>(create);
-  static LicenseBundle_Entry? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  Hash get hash => $_getN(0);
-  @$pb.TagNumber(1)
-  set hash(Hash value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHash() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHash() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Hash ensureHash() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  AssetLicense get license => $_getN(1);
-  @$pb.TagNumber(2)
-  set license(AssetLicense value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasLicense() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLicense() => $_clearField(2);
-  @$pb.TagNumber(2)
-  AssetLicense ensureLicense() => $_ensure(1);
+  @$pb.TagNumber(4)
+  $core.String get body => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set body($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBody() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBody() => $_clearField(4);
 }
 
 class LicenseBundle extends $pb.GeneratedMessage {
   factory LicenseBundle({
-    $core.Iterable<LicenseBundle_Entry>? entries,
+    $core.Iterable<$core.MapEntry<$core.String, AssetLicense>>? licenses,
   }) {
     final result = create();
-    if (entries != null) result.entries.addAll(entries);
+    if (licenses != null) result.licenses.addEntries(licenses);
     return result;
   }
 
@@ -910,8 +640,13 @@ class LicenseBundle extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'LicenseBundle',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..pPM<LicenseBundle_Entry>(1, _omitFieldNames ? '' : 'entries',
-        subBuilder: LicenseBundle_Entry.create)
+    ..m<$core.String, AssetLicense>(1, _omitFieldNames ? '' : 'licenses',
+        entryClassName: 'LicenseBundle.LicensesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: AssetLicense.create,
+        valueDefaultOrMaker: AssetLicense.getDefault,
+        packageName: const $pb.PackageName('motif'))
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -934,7 +669,7 @@ class LicenseBundle extends $pb.GeneratedMessage {
   static LicenseBundle? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<LicenseBundle_Entry> get entries => $_getList(0);
+  $pb.PbMap<$core.String, AssetLicense> get licenses => $_getMap(0);
 }
 
 const $core.bool _omitFieldNames =

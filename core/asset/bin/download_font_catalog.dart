@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:asset/asset.dart';
 import 'package:dotenv/dotenv.dart' as dotenv;
 import 'package:http/http.dart' as http;
+import 'package:shared/shared.dart';
 import 'package:skia/skia.dart' as skia;
 
 enum CatalogMode {
@@ -42,26 +43,26 @@ Future<void> main(List<String> args) async {
   final families = (jsonDecode(await File.fromUri(fontFamiliesFile).readAsString()) as List).cast<String>();
   final client = http.Client();
 
-  final fontLicences = <Hash, AssetLicense>{};
   final fontAssets = <Hash, FontAsset>{};
   final fontFiles = <Hash, Uint8List>{};
+  final fontLicenses = <Hash, AssetLicense>{};
 
   try {
     for (final family in families) {
       final variantUrls = await _loadFontVariants(client, googleFontsKey, family);
       final license = await _loadFontLicense(client, family);
 
-      final files = <Hash, FontFile>{};
-
-      var size = 0;
-      var faceCount = 0;
-
-      fontLicences[license.hash] = .new(
+      fontLicenses[license.hash] = .new(
         hash: license.hash,
         descriptor: family,
         kind: license.id,
         body: utf8.decode(license.bytes),
       );
+
+      final assets = <Hash, FontAsset>{};
+
+      var size = 0;
+      var faceCount = 0;
 
       for (final url in variantUrls) {
         final urlHash = Hash.compute(utf8.encode(url));
@@ -88,9 +89,11 @@ Future<void> main(List<String> args) async {
           continue;
         }
 
-        files[hash] = .new(
+        assets[hash] = .new(
           hash: hash,
           size: bytes.length,
+          family: family,
+          license: license.hash,
           faces: faces,
         );
 
@@ -99,43 +102,39 @@ Future<void> main(List<String> args) async {
         faceCount += faces.length;
       }
 
-      if (files.isEmpty) throw StateError('no valid font files found for $family');
+      if (assets.isEmpty) throw StateError('no valid font files found for $family');
+      for (final a in assets.entries) fontAssets[a.key] = a.value;
 
-      final bestThumbnailFace = _bestThumbnailFace(files);
-      final thumbnail = _createThumbnail(fontFiles[bestThumbnailFace.$1]!, bestThumbnailFace.$2);
-
-      final asset = FontAsset(
-        hash: .combine(family, files.values.map((f) => f.hash)),
-        family: family,
-        files: files.values.toList(),
-        licenseHash: license.hash,
-        thumbnail: thumbnail,
-        size: size,
-      );
+      {
+        // Setup thumbnail
+        final (hash, face) = _bestThumbnailFace(assets);
+        final thumbnail = _createThumbnail(fontFiles[hash]!, face);
+        final asset = assets[hash]!;
+        asset.faces[asset.faces.indexOf(face)] = face.copyWith(thumbnail: thumbnail);
+      }
 
       final kb = (size / 1000).round();
 
-      fontAssets[asset.hash] = asset;
       print(
-        '${asset.hash.shortHash}: $family loaded ${files.length} files, total size: ${kb}KB, total faces: $faceCount',
+        '$family loaded ${assets.length} assets, total size: ${kb}KB, total faces: $faceCount',
       );
     }
   } finally {
     client.close();
   }
 
-  final fontCatalog = FontCatalog(assets: fontAssets);
-  final licenseBundle = LicenseBundle(licenses: fontLicences);
+  final manifest = AssetManifest(entries: fontAssets);
+  final licenseBundle = LicenseBundle(licenses: fontLicenses);
   if (outRoot.existsSync()) await outRoot.delete(recursive: true);
   await outRoot.create(recursive: true);
 
-  // Output: catalog and license bundle as two .pb files, fonts as /fonts/{hash}.pb
-  final fontCatalogFile = File.fromUri(outRoot.uri.resolve('font_catalog.pb'));
+  // Output: asset manifest and license bundle as .pb files, fonts as /fonts/{hash}.pb
+  final fontManifestFile = File.fromUri(outRoot.uri.resolve('font_manifest.pb'));
   final licenseBundleFile = File.fromUri(outRoot.uri.resolve('license_bundle.pb'));
   final fontsDir = Directory.fromUri(outRoot.uri.resolve('fonts'));
   await fontsDir.create(recursive: true);
 
-  await fontCatalogFile.writeAsBytes(fontCatalog.encode().writeToBuffer());
+  await fontManifestFile.writeAsBytes(manifest.encode().writeToBuffer());
   await licenseBundleFile.writeAsBytes(licenseBundle.encode().writeToBuffer());
 
   for (final entry in fontFiles.entries) {
@@ -196,7 +195,7 @@ List<FontFace> _parseFontFaces(Uint8List bytes) {
       .toList();
 }
 
-(Hash, FontFace) _bestThumbnailFace(Map<Hash, FontFile> files) {
+(Hash, FontFace) _bestThumbnailFace(Map<Hash, FontAsset> assets) {
   int distance(FontFace f) {
     final slantFactor = f.slant == .upright ? 0 : 10000;
     final weightFactor = (f.weight - 400).abs() * 10;
@@ -205,14 +204,14 @@ List<FontFace> _parseFontFaces(Uint8List bytes) {
   }
 
   final tupled = <(Hash, FontFace)>[];
-  for (final e in files.entries) {
+  for (final e in assets.entries) {
     for (final f in e.value.faces) tupled.add((e.key, f));
   }
 
   return tupled.reduce((a, b) => distance(a.$2) <= distance(b.$2) ? a : b);
 }
 
-FontFamilyThumbnail _createThumbnail(Uint8List bytes, FontFace face) {
+FontFaceThumbnail _createThumbnail(Uint8List bytes, FontFace face) {
   final provider = skia.FontProvider();
   provider.add(bytes);
 
@@ -238,7 +237,7 @@ FontFamilyThumbnail _createThumbnail(Uint8List bytes, FontFace face) {
   paragraph.layout(.infinity);
 
   final path = paragraph.getPath();
-  return FontFamilyThumbnail(
+  return FontFaceThumbnail(
     width: paragraph.maxIntrinsicWidth,
     height: paragraph.height,
     path: path,

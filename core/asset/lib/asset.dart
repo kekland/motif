@@ -1,80 +1,55 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:shared/shared.dart';
 import 'package:schema/asset.dart' as gen;
 import 'package:schema/codec.dart' as codec;
 import 'package:skia/skia.dart' as skia;
-import 'package:crypto/crypto.dart' as crypto;
 
 export 'package:schema/codec/asset_codec.dart';
 
-part 'hash.dart';
 part 'font_catalog.dart';
 part 'license.dart';
+part 'manifest.dart';
 
 sealed class const Asset({
   required final Hash hash,
   required final int size,
 }) {
-  factory decode(gen.Asset asset) => asset.decode();
+  factory decode(gen.Asset bundle) => bundle.decode();
   static Asset? decodeRaw(Uint8List data) => codec.decodeRaw(() => .decode(.fromBuffer(data)));
-
-  AssetId get id;
 }
 
-final class FontAsset({
+final class const FontAsset({
   required super.hash,
   required super.size,
-  required final Hash licenseHash,
   required final String family,
-  required final List<FontFile> files,
-  required final FontFamilyThumbnail thumbnail,
-}) extends Asset {
-  @override
-  FontFamilyId get id => .new(hash: hash, name: family);
-
-  late final Set<skia.FontWeight> weights = files.expand((file) => file.weights).toSet();
-  late final Set<skia.FontWidth> widths = files.expand((file) => file.widths).toSet();
-  late final Set<skia.FontSlant> slants = files.expand((file) => file.slants).toSet();
-
-  FontFile? resolveFile({
-    required skia.FontWeight weight,
-    required skia.FontWidth width,
-    required skia.FontSlant slant,
-  }) {
-    return files.firstWhereOrNull(
-      (f) => f.faces.any((face) => face.weight == weight && face.width == width && face.slant == slant),
-    );
-  }
-}
-
-final class FontFile({
-  required final Hash hash,
-  required final int size,
+  required final Hash license,
   required final List<FontFace> faces,
-}) {
-  FontFileId get id => .new(hash: hash);
+}) extends Asset;
 
-  late final Set<skia.FontWeight> weights = faces.map((face) => face.weight).toSet();
-  late final Set<skia.FontWidth> widths = faces.map((face) => face.width).toSet();
-  late final Set<skia.FontSlant> slants = faces.map((face) => face.slant).toSet();
-}
-
-final class FontFace({
-  required final int index,
+final class const FontFace({
   required final String family,
+  required final int index,
   required final skia.FontWeight weight,
   required final skia.FontWidth width,
   required final skia.FontSlant slant,
-});
-
-final class const FontFamilyThumbnail({
-  required final skia.Path path,
-  required final double width,
-  required final double height,
+  final FontFaceThumbnail? thumbnail,
 }) {
-  factory decode(gen.FontFamilyThumbnail thumbnail) => thumbnail.decode();
+  FontFace copyWith({
+    String? family,
+    int? index,
+    skia.FontWeight? weight,
+    skia.FontWidth? width,
+    skia.FontSlant? slant,
+    FontFaceThumbnail? thumbnail,
+  }) => .new(
+    family: family ?? this.family,
+    index: index ?? this.index,
+    weight: weight ?? this.weight,
+    width: width ?? this.width,
+    slant: slant ?? this.slant,
+    thumbnail: thumbnail ?? this.thumbnail,
+  );
 }
 
 final class const ImageAsset({
@@ -83,24 +58,33 @@ final class const ImageAsset({
   required final int width,
   required final int height,
   required final String mimeType,
-}) extends Asset {
-  @override
-  ImageId get id => .new(hash: hash);
-}
+}) extends Asset;
 
-sealed class AssetId({required final Hash hash}) {
-  @override
-  int get hashCode => hash.value.hashCode;
+final class const FontFaceThumbnail({
+  required final skia.Path path,
+  required final double width,
+  required final double height,
+});
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! AssetId) return false;
-    if (runtimeType != other.runtimeType) return false;
-    return hash == other.hash;
+extension FontFaceResolver on Iterable<FontFace> {
+  FontFace? resolveExact({
+    required skia.FontWeight weight,
+    required skia.FontWidth width,
+    required skia.FontSlant slant,
+  }) => firstWhereOrNull(
+    (f) => f.weight == weight && f.width == width && f.slant == slant,
+  );
+
+  FontFace resolveClosest({
+    required skia.FontWeight weight,
+    required skia.FontWidth width,
+    required skia.FontSlant slant,
+  }) {
+    int distance(FontFace f) =>
+        (f.slant == slant ? 0 : 10000) +
+        (f.width.value - width.value).abs() * 1000 +
+        (f.weight.value - weight.value).abs();
+
+    return reduce((a, b) => distance(a) < distance(b) ? a : b);
   }
 }
-
-final class FontFamilyId({required super.hash, required final String name}) extends AssetId;
-final class FontFileId({required super.hash}) extends AssetId;
-final class ImageId({required super.hash}) extends AssetId;

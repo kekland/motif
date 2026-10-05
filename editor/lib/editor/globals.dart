@@ -1,12 +1,12 @@
 part of '../editor.dart';
 
-class EditorBuiltinFonts {
-  EditorBuiltinFonts._({
+class EditorBuiltinAssets {
+  EditorBuiltinAssets._({
     required this.catalog,
     required this.licenses,
   });
 
-  static const _fontCatalogFile = 'packages/editor/assets/builtin/font_catalog.pb';
+  static const _fontManifestFile = 'packages/editor/assets/builtin/font_manifest.pb';
   static const _licenseBundleFile = 'packages/editor/assets/builtin/license_bundle.pb';
   static const _fontFileFolder = 'packages/editor/assets/builtin/fonts';
 
@@ -16,12 +16,12 @@ class EditorBuiltinFonts {
     _initialized = true;
 
     _logger.info('initializing EditorBuiltinFonts');
-    var catalog = FontCatalog.decodeRaw((await rootBundle.load(_fontCatalogFile)).buffer.asUint8List());
+    var manifest = AssetManifest.decodeRaw((await rootBundle.load(_fontManifestFile)).buffer.asUint8List());
     var licenses = LicenseBundle.decodeRaw((await rootBundle.load(_licenseBundleFile)).buffer.asUint8List());
 
-    if (catalog == null) {
-      _logger.warning('failed to decode font catalog');
-      catalog = .new(assets: {});
+    if (manifest == null) {
+      _logger.warning('failed to decode asset manifest');
+      manifest = .empty();
     }
 
     if (licenses == null) {
@@ -29,16 +29,18 @@ class EditorBuiltinFonts {
       licenses = .new(licenses: {});
     }
 
-    _instance = EditorBuiltinFonts._(catalog: catalog, licenses: licenses);
+    _instance = EditorBuiltinAssets._(catalog: .fromAssets(manifest.fonts), licenses: licenses);
   }
 
-  static EditorBuiltinFonts get instance => _instance!;
-  static EditorBuiltinFonts? _instance;
+  static EditorBuiltinAssets get instance => _instance!;
+  static EditorBuiltinAssets? _instance;
 
   final FontCatalog catalog;
   final LicenseBundle licenses;
 
-  Future<Uint8List> loadFontFile(String hash) async {
+  bool contains(Hash hash) => catalog.contains(hash);
+
+  Future<Uint8List> load(Hash hash) async {
     return (await rootBundle.load('$_fontFileFolder/$hash')).buffer.asUint8List();
   }
 }

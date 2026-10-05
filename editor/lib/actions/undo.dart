@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const UndoIntent() extends CommandIntent;
+final class const UndoIntent() extends Intent;
 
 final undoIntentDescriptor = CommandIntentDescriptor<UndoIntent>(
   command: 'undo',

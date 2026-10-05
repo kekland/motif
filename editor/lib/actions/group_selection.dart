@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const GroupSelectionIntent() extends CommandIntent;
+final class const GroupSelectionIntent() extends Intent;
 
 final groupSelectionIntentDescriptor = CommandIntentDescriptor<GroupSelectionIntent>(
   command: 'group-selection',

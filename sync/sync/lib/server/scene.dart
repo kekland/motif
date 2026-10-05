@@ -200,11 +200,11 @@ pb.Program _applyDeltaImpl(pb.Program program, pb.ProgramDelta delta) {
     final entries = copy.ensureAssetManifest().entries;
 
     for (final removed in change.removed) {
-      entries.removeWhere((e) => e.hash == removed.hash);
+      entries.removeWhere((k, v) => k == removed.hash);
     }
 
     for (final inserted in change.inserted) {
-      entries.add(.new(hash: inserted.hash, asset: inserted));
+      entries[inserted.hash] = inserted;
     }
   }
 

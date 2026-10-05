@@ -30,6 +30,8 @@ dependencies:
   sync:
   sync_server:
 
+  native:
+
   flutter_boring_avatars: ^2.1.0
   file_picker: ^13.1.0
   pretty_qr_code: ^3.6.0

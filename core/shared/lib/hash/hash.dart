@@ -1,4 +1,8 @@
-part of 'asset.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:shared/shared.dart';
 
 extension type const Hash._(String value) {
   const Hash.raw(String value) : this._(value);

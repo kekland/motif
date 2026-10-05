@@ -10,8 +10,6 @@ dependencies:
   schema:
   skia:
 
-  crypto: ^3.0.7
-
 dev_dependencies:
   dotenv: ^4.2.0
   http: ^1.6.0

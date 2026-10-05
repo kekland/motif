@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:shared/shared.dart';
 import 'package:sync/schema.dart' as pb;
 
 abstract class Client {
@@ -8,8 +9,8 @@ abstract class Client {
   Future<pb.CreateSceneResponse> createScene({pb.Program? program, String? title});
   Future<ClientConnection> connect(String id, pb.Client client);
 
-  Future<Uint8List> loadAsset(String sceneId, pb.Hash hash);
-  Future<void> saveAsset(String sceneId, pb.Hash hash, Uint8List data);
+  Future<Uint8List> loadAsset(String sceneId, Hash hash);
+  Future<void> saveAsset(String sceneId, Hash hash, Uint8List data);
 
   Future<void> close();
 }

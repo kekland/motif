@@ -20,6 +20,7 @@ class EditorCanvas extends HookWidget {
         (context, transform) => EditorCanvasPeersWidget(transform: transform),
         (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
       ],
+      minScale: 1 / 128.0,
       child: SceneWidget(
         key: editor.sceneKey,
         scene: editor.scene,

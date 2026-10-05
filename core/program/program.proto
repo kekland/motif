@@ -148,7 +148,7 @@ message Decoration {
   }
 
   message Image {
-    optional motif.Hash value = 1;
+    optional string value = 1;
   }
 
   oneof kind {
@@ -159,19 +159,6 @@ message Decoration {
 
 message Decorations {
   repeated Decoration entries = 1;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Assets
-// ---------------------------------------------------------------------------------------------------------------------
-
-message AssetManifest {
-  message Entry {
-    motif.Hash  hash  = 1;
-    motif.Asset asset = 2;
-  }
-
-  repeated Entry entries = 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -326,10 +313,15 @@ message GeneratorStatement {
 }
 
 message TextStatement {
-  string           text      = 1;
-  LayoutSize       size      = 2;
-  Mat4             transform = 3;
-  optional CellRef parent    = 4;
+  string           text             = 1;
+  LayoutSize       size             = 2;
+  Mat4             transform        = 3;
+  optional CellRef parent           = 4;
+  TextFormat       text_format      = 6;
+  ParagraphFormat  paragraph_format = 5;
+  VertexStyle      vertex_style     = 7;
+  EdgeStyle        edge_style       = 8;
+  FaceStyle        face_style       = 9;
 }
 
 message ReorderStatement {
@@ -425,6 +417,76 @@ message Layout {
     Stack stack = 1;
     Flex  flex  = 2;
   }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Text
+// ---------------------------------------------------------------------------------------------------------------------
+
+enum TextFontSlant {
+  TEXT_FONT_SLANT_UPRIGHT = 0;
+  TEXT_FONT_SLANT_ITALIC  = 1;
+  TEXT_FONT_SLANT_OBLIQUE = 2;
+}
+
+enum TextFontWeight {
+  TEXT_FONT_WEIGHT_THIN        = 0;
+  TEXT_FONT_WEIGHT_EXTRA_LIGHT = 1;
+  TEXT_FONT_WEIGHT_LIGHT       = 2;
+  TEXT_FONT_WEIGHT_REGULAR     = 3;
+  TEXT_FONT_WEIGHT_MEDIUM      = 4;
+  TEXT_FONT_WEIGHT_SEMI_BOLD   = 5;
+  TEXT_FONT_WEIGHT_BOLD        = 6;
+  TEXT_FONT_WEIGHT_EXTRA_BOLD  = 7;
+  TEXT_FONT_WEIGHT_BLACK       = 8;
+}
+
+enum TextFontWidth {
+  TEXT_FONT_WIDTH_ULTRA_CONDENSED = 0;
+  TEXT_FONT_WIDTH_EXTRA_CONDENSED = 1;
+  TEXT_FONT_WIDTH_CONDENSED       = 2;
+  TEXT_FONT_WIDTH_SEMI_CONDENSED  = 3;
+  TEXT_FONT_WIDTH_NORMAL          = 4;
+  TEXT_FONT_WIDTH_SEMI_EXPANDED   = 5;
+  TEXT_FONT_WIDTH_EXPANDED        = 6;
+  TEXT_FONT_WIDTH_EXTRA_EXPANDED  = 7;
+  TEXT_FONT_WIDTH_ULTRA_EXPANDED  = 8;
+}
+
+enum TextDecorationKind {
+  TEXT_DECORATION_KIND_UNDERLINE     = 0;
+  TEXT_DECORATION_KIND_OVERLINE      = 1;
+  TEXT_DECORATION_KIND_STRIKETHROUGH = 2;
+}
+
+message TextFormat {
+  double                      font_size      = 1;
+  double                      line_height    = 2;
+  double                      letter_spacing = 3;
+  string                      font_family    = 4;
+  TextFontSlant               font_slant     = 5;
+  TextFontWeight              font_weight    = 6;
+  TextFontWidth               font_width     = 7;
+  repeated TextDecorationKind decorations    = 8;
+}
+
+enum TextAlignment {
+  TEXT_ALIGNMENT_LEFT    = 0;
+  TEXT_ALIGNMENT_RIGHT   = 1;
+  TEXT_ALIGNMENT_CENTER  = 2;
+  TEXT_ALIGNMENT_JUSTIFY = 3;
+}
+
+enum TextVerticalAlignment {
+  TEXT_VERTICAL_ALIGNMENT_TOP    = 0;
+  TEXT_VERTICAL_ALIGNMENT_MIDDLE = 1;
+  TEXT_VERTICAL_ALIGNMENT_BOTTOM = 2;
+}
+
+message ParagraphFormat {
+  TextAlignment         alignment          = 1;
+  TextVerticalAlignment vertical_alignment = 2;
+  optional string       ellipsis           = 3;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

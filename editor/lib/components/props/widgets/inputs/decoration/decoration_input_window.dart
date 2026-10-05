@@ -111,8 +111,8 @@ final class const _ImageDecorationInputBody({
                 if (result == null) return;
 
                 final data = await result.readAsBytes();
-                final id = await editor.uploadImageAsset(data, mimeType: result.xFile.mimeType ?? 'image');
-                onChanged?.call(.image(id));
+                final asset = await editor.uploadImageAsset(data, mimeType: result.xFile.mimeType ?? 'image/png');
+                onChanged?.call(.image(asset.hash));
               },
               child: Text('Upload'),
             ),

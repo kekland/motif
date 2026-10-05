@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const ClearSelectionIntent() extends CommandIntent;
+final class const ClearSelectionIntent() extends Intent;
 
 final clearSelectionIntentDescriptor = CommandIntentDescriptor<ClearSelectionIntent>(
   command: 'clear-selection',

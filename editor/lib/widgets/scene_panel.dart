@@ -1,7 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/program_panel/program_panel.dart';
 import 'package:editor/widgets/tree_panel/tree_panel.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:sync_server/embedded.dart' as sync;
@@ -167,7 +166,7 @@ class _EmbeddedServerOptionsWindow extends HookWidget {
             Button(
               onTap: () async {
                 final uri = await server.sharedScenes[sceneId]!.localUri;
-                await Clipboard.setData(ClipboardData(text: uri.toString()));
+                await Clipboard.set([.text(uri.toString())]);
               },
               child: Text('Copy to clipboard'),
             ),

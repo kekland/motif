@@ -16,6 +16,202 @@ import 'package:objective_c/objective_c.dart' as objc;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
 const _$objcVersionCheck = objc.ObjCVersionCheck(9, 5);
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeColor')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeColor;
+
+objc.NSString get NSPasteboardTypeColor =>
+    objc.NSString.fromPointer(_NSPasteboardTypeColor, retain: true, release: true);
+
+set NSPasteboardTypeColor(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeColor, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeColor = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeFileURL')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeFileURL;
+
+objc.NSString get NSPasteboardTypeFileURL =>
+    objc.NSString.fromPointer(_NSPasteboardTypeFileURL, retain: true, release: true);
+
+set NSPasteboardTypeFileURL(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeFileURL, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeFileURL = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeFindPanelSearchOptions')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeFindPanelSearchOptions;
+
+objc.NSString get NSPasteboardTypeFindPanelSearchOptions =>
+    objc.NSString.fromPointer(_NSPasteboardTypeFindPanelSearchOptions, retain: true, release: true);
+
+set NSPasteboardTypeFindPanelSearchOptions(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeFindPanelSearchOptions, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeFindPanelSearchOptions = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeFont')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeFont;
+
+objc.NSString get NSPasteboardTypeFont => objc.NSString.fromPointer(_NSPasteboardTypeFont, retain: true, release: true);
+
+set NSPasteboardTypeFont(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeFont, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeFont = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeHTML')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeHTML;
+
+objc.NSString get NSPasteboardTypeHTML => objc.NSString.fromPointer(_NSPasteboardTypeHTML, retain: true, release: true);
+
+set NSPasteboardTypeHTML(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeHTML, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeHTML = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeMultipleTextSelection')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeMultipleTextSelection;
+
+objc.NSString get NSPasteboardTypeMultipleTextSelection =>
+    objc.NSString.fromPointer(_NSPasteboardTypeMultipleTextSelection, retain: true, release: true);
+
+set NSPasteboardTypeMultipleTextSelection(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeMultipleTextSelection, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeMultipleTextSelection = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypePDF')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypePDF;
+
+objc.NSString get NSPasteboardTypePDF => objc.NSString.fromPointer(_NSPasteboardTypePDF, retain: true, release: true);
+
+set NSPasteboardTypePDF(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypePDF, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypePDF = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypePNG')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypePNG;
+
+objc.NSString get NSPasteboardTypePNG => objc.NSString.fromPointer(_NSPasteboardTypePNG, retain: true, release: true);
+
+set NSPasteboardTypePNG(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypePNG, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypePNG = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeRTF')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeRTF;
+
+objc.NSString get NSPasteboardTypeRTF => objc.NSString.fromPointer(_NSPasteboardTypeRTF, retain: true, release: true);
+
+set NSPasteboardTypeRTF(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeRTF, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeRTF = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeRTFD')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeRTFD;
+
+objc.NSString get NSPasteboardTypeRTFD => objc.NSString.fromPointer(_NSPasteboardTypeRTFD, retain: true, release: true);
+
+set NSPasteboardTypeRTFD(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeRTFD, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeRTFD = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeRuler')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeRuler;
+
+objc.NSString get NSPasteboardTypeRuler =>
+    objc.NSString.fromPointer(_NSPasteboardTypeRuler, retain: true, release: true);
+
+set NSPasteboardTypeRuler(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeRuler, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeRuler = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeSound')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeSound;
+
+objc.NSString get NSPasteboardTypeSound =>
+    objc.NSString.fromPointer(_NSPasteboardTypeSound, retain: true, release: true);
+
+set NSPasteboardTypeSound(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeSound, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeSound = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeString')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeString;
+
+objc.NSString get NSPasteboardTypeString =>
+    objc.NSString.fromPointer(_NSPasteboardTypeString, retain: true, release: true);
+
+set NSPasteboardTypeString(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeString, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeString = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeTIFF')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeTIFF;
+
+objc.NSString get NSPasteboardTypeTIFF => objc.NSString.fromPointer(_NSPasteboardTypeTIFF, retain: true, release: true);
+
+set NSPasteboardTypeTIFF(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeTIFF, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeTIFF = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeTabularText')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeTabularText;
+
+objc.NSString get NSPasteboardTypeTabularText =>
+    objc.NSString.fromPointer(_NSPasteboardTypeTabularText, retain: true, release: true);
+
+set NSPasteboardTypeTabularText(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeTabularText, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeTabularText = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeTextFinderOptions')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeTextFinderOptions;
+
+objc.NSString get NSPasteboardTypeTextFinderOptions =>
+    objc.NSString.fromPointer(_NSPasteboardTypeTextFinderOptions, retain: true, release: true);
+
+set NSPasteboardTypeTextFinderOptions(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeTextFinderOptions, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeTextFinderOptions = _$$ref.retainAndReturnPointer();
+}
+
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSPasteboardTypeURL')
+external ffi.Pointer<objc.ObjCObjectImpl> _NSPasteboardTypeURL;
+
+objc.NSString get NSPasteboardTypeURL => objc.NSString.fromPointer(_NSPasteboardTypeURL, retain: true, release: true);
+
+set NSPasteboardTypeURL(objc.NSString value) {
+  objc.NSString.fromPointer(_NSPasteboardTypeURL, retain: false, release: true).ref.release();
+  final _$$ref = value.ref;
+  _NSPasteboardTypeURL = _$$ref.retainAndReturnPointer();
+}
+
 @ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'NSWindowDidResizeNotification')
 external ffi.Pointer<objc.ObjCObjectImpl> _NSWindowDidResizeNotification;
 
@@ -53,7 +249,7 @@ set NSWindowWillExitFullScreenNotification(objc.NSString value) {
 }
 
 @ffi.Native<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<ffi.Void>, ffi.Long, ffi.UnsignedLong)>()
-external void _k4vejs_protocolTrampoline_gjex3c(
+external void _zy1hgj_protocolTrampoline_gjex3c(
   ffi.Pointer<objc.ObjCObjectImpl> target,
   ffi.Pointer<ffi.Void> arg0,
   int arg1,
@@ -61,13 +257,56 @@ external void _k4vejs_protocolTrampoline_gjex3c(
 );
 
 @ffi.Native<
+  ffi.Pointer<objc.ObjCObjectImpl> Function(
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+  )
+>()
+external ffi.Pointer<objc.ObjCObjectImpl> _zy1hgj_protocolTrampoline_xr62hr(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<objc.ObjCObjectImpl> arg1,
+);
+
+@ffi.Native<
+  ffi.Pointer<objc.ObjCObjectImpl> Function(
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+  )
+>()
+external ffi.Pointer<objc.ObjCObjectImpl> _zy1hgj_protocolTrampoline_zi5eed(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ffi.Pointer<objc.ObjCObjectImpl> arg2,
+);
+
+@ffi.Native<
+  ffi.UnsignedLong Function(
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+    ffi.Pointer<objc.ObjCObjectImpl>,
+  )
+>()
+external int _zy1hgj_protocolTrampoline_zs9fen(
+  ffi.Pointer<objc.ObjCObjectImpl> target,
+  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ffi.Pointer<objc.ObjCObjectImpl> arg2,
+);
+
+@ffi.Native<
   ffi.Pointer<objc.ObjCBlockImpl> Function(
     ffi.Int64,
     ffi.Pointer<objc.DOBJC_Context>,
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>>,
   )
 >(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_1pl9qdv(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapBlockingBlock_1pl9qdv(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>> directInvoke,
@@ -80,7 +319,7 @@ external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_1pl9qdv(
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>>,
   )
 >(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_4sp4xj(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapBlockingBlock_4sp4xj(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>> directInvoke,
@@ -93,7 +332,7 @@ external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_4sp4xj(
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>>,
   )
 >(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_gjex3c(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapBlockingBlock_gjex3c(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>> directInvoke,
@@ -106,7 +345,7 @@ external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_gjex3c(
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>>,
   )
 >(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_t8l8el(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapBlockingBlock_t8l8el(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>> directInvoke,
@@ -119,38 +358,38 @@ external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_t8l8el(
     ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>>,
   )
 >(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapBlockingBlock_xtuoz7(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapBlockingBlock_xtuoz7(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl> args)>> directInvoke,
 );
 
 @ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Int64, ffi.Pointer<objc.DOBJC_Context>)>(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapListenerBlock_1pl9qdv(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapListenerBlock_1pl9qdv(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
 );
 
 @ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Int64, ffi.Pointer<objc.DOBJC_Context>)>(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapListenerBlock_4sp4xj(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapListenerBlock_4sp4xj(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
 );
 
 @ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Int64, ffi.Pointer<objc.DOBJC_Context>)>(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapListenerBlock_gjex3c(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapListenerBlock_gjex3c(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
 );
 
 @ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Int64, ffi.Pointer<objc.DOBJC_Context>)>(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapListenerBlock_t8l8el(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapListenerBlock_t8l8el(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
 );
 
 @ffi.Native<ffi.Pointer<objc.ObjCBlockImpl> Function(ffi.Int64, ffi.Pointer<objc.DOBJC_Context>)>(isLeaf: true)
-external ffi.Pointer<objc.ObjCBlockImpl> _k4vejs_wrapListenerBlock_xtuoz7(
+external ffi.Pointer<objc.ObjCBlockImpl> _zy1hgj_wrapListenerBlock_xtuoz7(
   int port,
   ffi.Pointer<objc.DOBJC_Context> context,
 );
@@ -207,6 +446,51 @@ extension type CIImage._(objc.ObjCObject object$) implements objc.ObjCObject {
   /// Constructs a [CIImage] that wraps the given raw object pointer.
   CIImage.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
     : object$ = objc.ObjCObject(other, retain: retain, release: release) {}
+}
+
+/// FilterServices
+extension FilterServices on NSPasteboard {
+  /// pasteboardByFilteringData:ofType:
+  static NSPasteboard pasteboardByFilteringData(objc.NSData data, {required objc.NSString ofType}) {
+    final _$$ref = data.ref;
+    final _$$ref$1 = ofType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardByFilteringData:ofType:', iOS: (true, null));
+    final $ret = _objc_msgSend_15qeuct(
+      _class_NSPasteboard,
+      _sel_pasteboardByFilteringData_ofType_,
+      _$$ref.pointer,
+      _$$ref$1.pointer,
+    );
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// pasteboardByFilteringFile:
+  static NSPasteboard pasteboardByFilteringFile(objc.NSString filename) {
+    final _$$ref = filename.ref;
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardByFilteringFile:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_class_NSPasteboard, _sel_pasteboardByFilteringFile_, _$$ref.pointer);
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// pasteboardByFilteringTypesInPasteboard:
+  static NSPasteboard pasteboardByFilteringTypesInPasteboard(NSPasteboard pboard) {
+    final _$$ref = pboard.ref;
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardByFilteringTypesInPasteboard:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(
+      _class_NSPasteboard,
+      _sel_pasteboardByFilteringTypesInPasteboard_,
+      _$$ref.pointer,
+    );
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// typesFilterableTo:
+  static objc.NSArray typesFilterableTo(objc.NSString type) {
+    final _$$ref = type.ref;
+    objc.checkOsVersionInternal('NSPasteboard.typesFilterableTo:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_class_NSPasteboard, _sel_typesFilterableTo_, _$$ref.pointer);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
 }
 
 /// WARNING: NSAccessibility is a stub. To generate bindings for this class, include
@@ -9431,6 +9715,65 @@ extension type NSExtensionRequestHandling._(objc.ObjCProtocol object$)
   }) : object$ = objc.ObjCProtocol(other, retain: retain, release: release);
 }
 
+/// NSFileContents
+extension NSFileContents on NSPasteboard {
+  /// readFileContentsType:toFile:
+  objc.NSString? readFileContentsType(objc.NSString? type, {required objc.NSString toFile}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type?.ref;
+    final _$$ref$2 = toFile.ref;
+    objc.checkOsVersionInternal('NSPasteboard.readFileContentsType:toFile:', iOS: (true, null));
+    final $ret = _objc_msgSend_15qeuct(
+      _$$ref.pointer,
+      _sel_readFileContentsType_toFile_,
+      _$$ref$1?.pointer ?? ffi.nullptr,
+      _$$ref$2.pointer,
+    );
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// readFileWrapper
+  NSFileWrapper? readFileWrapper() {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.readFileWrapper', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_$$ref.pointer, _sel_readFileWrapper);
+    return $ret.address == 0 ? null : NSFileWrapper.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// writeFileContents:
+  bool writeFileContents(objc.NSString filename) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = filename.ref;
+    objc.checkOsVersionInternal('NSPasteboard.writeFileContents:', iOS: (true, null));
+    return _objc_msgSend_19nvye5(_$$ref.pointer, _sel_writeFileContents_, _$$ref$1.pointer);
+  }
+
+  /// writeFileWrapper:
+  bool writeFileWrapper(NSFileWrapper wrapper) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = wrapper.ref;
+    objc.checkOsVersionInternal('NSPasteboard.writeFileWrapper:', iOS: (true, null));
+    return _objc_msgSend_19nvye5(_$$ref.pointer, _sel_writeFileWrapper_, _$$ref$1.pointer);
+  }
+}
+
+/// WARNING: NSFileWrapper is a stub. To generate bindings for this class, include
+/// NSFileWrapper in your config's objc-interfaces list.
+///
+/// NSFileWrapper
+extension type NSFileWrapper._(objc.ObjCObject object$) implements objc.ObjCObject, objc.NSObject, objc.NSSecureCoding {
+  /// Constructs a [NSFileWrapper] that points to the same underlying object as [other].
+  NSFileWrapper.as(objc.ObjCObject other) : object$ = other {
+    objc.checkOsVersionInternal('NSFileWrapper', iOS: (false, (4, 0, 0)), macOS: (false, (10, 0, 0)));
+  }
+
+  /// Constructs a [NSFileWrapper] that wraps the given raw object pointer.
+  NSFileWrapper.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
+    : object$ = objc.ObjCObject(other, retain: retain, release: release) {
+    objc.checkOsVersionInternal('NSFileWrapper', iOS: (false, (4, 0, 0)), macOS: (false, (10, 0, 0)));
+  }
+}
+
 /// NSFindIndicator
 extension NSFindIndicator on NSView {
   /// isDrawingFindIndicator
@@ -9851,7 +10194,7 @@ interface class NSHapticFeedbackPerformer$Builder {
               ffi.NativeFunction<
                 ffi.Void Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<ffi.Void>, ffi.Long, ffi.UnsignedLong)
               >
-            >(_k4vejs_protocolTrampoline_gjex3c)
+            >(_zy1hgj_protocolTrampoline_gjex3c)
             .cast(),
         objc.getProtocolMethodSignature(
           _protocol_NSHapticFeedbackPerformer,
@@ -12677,26 +13020,524 @@ extension type NSMenuItemValidation._(objc.ObjCProtocol object$) implements objc
     : object$ = objc.ObjCProtocol(other, retain: retain, release: release);
 }
 
-/// WARNING: NSPasteboard is a stub. To generate bindings for this class, include
-/// NSPasteboard in your config's objc-interfaces list.
-///
 /// NSPasteboard
 extension type NSPasteboard._(objc.ObjCObject object$) implements objc.ObjCObject, objc.NSObject {
   /// Constructs a [NSPasteboard] that points to the same underlying object as [other].
   NSPasteboard.as(objc.ObjCObject other) : object$ = other {
     objc.checkOsVersionInternal('NSPasteboard', iOS: (true, null));
+    assert(isA(object$));
   }
 
   /// Constructs a [NSPasteboard] that wraps the given raw object pointer.
   NSPasteboard.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
     : object$ = objc.ObjCObject(other, retain: retain, release: release) {
     objc.checkOsVersionInternal('NSPasteboard', iOS: (true, null));
+    assert(isA(object$));
+  }
+
+  /// Returns whether [obj] is an instance of [NSPasteboard].
+  static bool isA(objc.ObjCObject? obj) =>
+      obj == null ? false : _objc_msgSend_19nvye5(obj.ref.pointer, _sel_isKindOfClass_, _class_NSPasteboard);
+
+  /// alloc
+  static NSPasteboard alloc() {
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboard, _sel_alloc);
+    return NSPasteboard.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static NSPasteboard allocWithZone(ffi.Pointer<objc.NSZone> zone) {
+    final $ret = _objc_msgSend_1cwp428(_class_NSPasteboard, _sel_allocWithZone_, zone);
+    return NSPasteboard.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// generalPasteboard
+  static NSPasteboard getGeneralPasteboard() {
+    objc.checkOsVersionInternal('NSPasteboard.generalPasteboard', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboard, _sel_generalPasteboard);
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// new
+  static NSPasteboard new$() {
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboard, _sel_new);
+    return NSPasteboard.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// pasteboardWithName:
+  static NSPasteboard pasteboardWithName(objc.NSString name) {
+    final _$$ref = name.ref;
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardWithName:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_class_NSPasteboard, _sel_pasteboardWithName_, _$$ref.pointer);
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// pasteboardWithUniqueName
+  static NSPasteboard pasteboardWithUniqueName() {
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardWithUniqueName', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboard, _sel_pasteboardWithUniqueName);
+    return NSPasteboard.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// Returns a new instance of NSPasteboard constructed with the default `new` method.
+  NSPasteboard() : this.as(new$().object$);
+}
+
+extension NSPasteboard$Methods on NSPasteboard {
+  /// addTypes:owner:
+  int addTypes(objc.NSArray newTypes, {objc.ObjCObject? owner}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = newTypes.ref;
+    final _$$ref$2 = owner?.ref;
+    objc.checkOsVersionInternal('NSPasteboard.addTypes:owner:', iOS: (true, null));
+    return _objc_msgSend_gayyhh(
+      _$$ref.pointer,
+      _sel_addTypes_owner_,
+      _$$ref$1.pointer,
+      _$$ref$2?.pointer ?? ffi.nullptr,
+    );
+  }
+
+  /// availableTypeFromArray:
+  objc.NSString? availableTypeFromArray(objc.NSArray types) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = types.ref;
+    objc.checkOsVersionInternal('NSPasteboard.availableTypeFromArray:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_availableTypeFromArray_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// canReadItemWithDataConformingToTypes:
+  bool canReadItemWithDataConformingToTypes(objc.NSArray types) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = types.ref;
+    objc.checkOsVersionInternal(
+      'NSPasteboard.canReadItemWithDataConformingToTypes:',
+      iOS: (true, null),
+      macOS: (false, (10, 6, 0)),
+    );
+    return _objc_msgSend_19nvye5(_$$ref.pointer, _sel_canReadItemWithDataConformingToTypes_, _$$ref$1.pointer);
+  }
+
+  /// canReadObjectForClasses:options:
+  bool canReadObjectForClasses(objc.NSArray classArray, {objc.NSDictionary? options}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = classArray.ref;
+    final _$$ref$2 = options?.ref;
+    objc.checkOsVersionInternal(
+      'NSPasteboard.canReadObjectForClasses:options:',
+      iOS: (true, null),
+      macOS: (false, (10, 6, 0)),
+    );
+    return _objc_msgSend_1lsax7n(
+      _$$ref.pointer,
+      _sel_canReadObjectForClasses_options_,
+      _$$ref$1.pointer,
+      _$$ref$2?.pointer ?? ffi.nullptr,
+    );
+  }
+
+  /// changeCount
+  int get changeCount {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.changeCount', iOS: (true, null));
+    return _objc_msgSend_1hz7y9r(_$$ref.pointer, _sel_changeCount);
+  }
+
+  /// clearContents
+  int clearContents() {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.clearContents', iOS: (true, null), macOS: (false, (10, 6, 0)));
+    return _objc_msgSend_1hz7y9r(_$$ref.pointer, _sel_clearContents);
+  }
+
+  /// dataForType:
+  objc.NSData? dataForType(objc.NSString dataType) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = dataType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.dataForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_dataForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSData.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// declareTypes:owner:
+  int declareTypes(objc.NSArray newTypes, {objc.ObjCObject? owner}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = newTypes.ref;
+    final _$$ref$2 = owner?.ref;
+    objc.checkOsVersionInternal('NSPasteboard.declareTypes:owner:', iOS: (true, null));
+    return _objc_msgSend_gayyhh(
+      _$$ref.pointer,
+      _sel_declareTypes_owner_,
+      _$$ref$1.pointer,
+      _$$ref$2?.pointer ?? ffi.nullptr,
+    );
+  }
+
+  /// indexOfPasteboardItem:
+  int indexOfPasteboardItem(NSPasteboardItem pasteboardItem) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = pasteboardItem.ref;
+    objc.checkOsVersionInternal('NSPasteboard.indexOfPasteboardItem:', iOS: (true, null), macOS: (false, (10, 6, 0)));
+    return _objc_msgSend_1vd1c5m(_$$ref.pointer, _sel_indexOfPasteboardItem_, _$$ref$1.pointer);
+  }
+
+  /// init
+  NSPasteboard init() {
+    final _$$ref$12 = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final $ret = _objc_msgSend_151sglz(_$$ref$12.retainAndReturnPointer(), _sel_init);
+    return NSPasteboard.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// name
+  objc.NSString get name {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.name', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_$$ref.pointer, _sel_name);
+    return objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// pasteboardItems
+  objc.NSArray? get pasteboardItems {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.pasteboardItems', iOS: (true, null), macOS: (false, (10, 6, 0)));
+    final $ret = _objc_msgSend_151sglz(_$$ref.pointer, _sel_pasteboardItems);
+    return $ret.address == 0 ? null : objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// prepareForNewContentsWithOptions:
+  int prepareForNewContentsWithOptions(int options) {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal(
+      'NSPasteboard.prepareForNewContentsWithOptions:',
+      iOS: (true, null),
+      macOS: (false, (10, 12, 0)),
+    );
+    return _objc_msgSend_8bhyg1(_$$ref.pointer, _sel_prepareForNewContentsWithOptions_, options);
+  }
+
+  /// propertyListForType:
+  objc.ObjCObject? propertyListForType(objc.NSString dataType) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = dataType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.propertyListForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_propertyListForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: true, release: true);
+  }
+
+  /// readObjectsForClasses:options:
+  objc.NSArray? readObjectsForClasses(objc.NSArray classArray, {objc.NSDictionary? options}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = classArray.ref;
+    final _$$ref$2 = options?.ref;
+    objc.checkOsVersionInternal(
+      'NSPasteboard.readObjectsForClasses:options:',
+      iOS: (true, null),
+      macOS: (false, (10, 6, 0)),
+    );
+    final $ret = _objc_msgSend_15qeuct(
+      _$$ref.pointer,
+      _sel_readObjectsForClasses_options_,
+      _$$ref$1.pointer,
+      _$$ref$2?.pointer ?? ffi.nullptr,
+    );
+    return $ret.address == 0 ? null : objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// releaseGlobally
+  void releaseGlobally() {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.releaseGlobally', iOS: (true, null));
+    _objc_msgSend_1pl9qdv(_$$ref.pointer, _sel_releaseGlobally);
+  }
+
+  /// setData:forType:
+  bool setData(objc.NSData? data, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = data?.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.setData:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(
+      _$$ref.pointer,
+      _sel_setData_forType_,
+      _$$ref$1?.pointer ?? ffi.nullptr,
+      _$$ref$2.pointer,
+    );
+  }
+
+  /// setPropertyList:forType:
+  bool setPropertyList(objc.ObjCObject plist, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = plist.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.setPropertyList:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setPropertyList_forType_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// setString:forType:
+  bool setString(objc.NSString string, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = string.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.setString:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setString_forType_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// stringForType:
+  objc.NSString? stringForType(objc.NSString dataType) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = dataType.ref;
+    objc.checkOsVersionInternal('NSPasteboard.stringForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_stringForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// types
+  objc.NSArray? get types {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboard.types', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_$$ref.pointer, _sel_types);
+    return $ret.address == 0 ? null : objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// writeObjects:
+  bool writeObjects(objc.NSArray objects) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = objects.ref;
+    objc.checkOsVersionInternal('NSPasteboard.writeObjects:', iOS: (true, null), macOS: (false, (10, 6, 0)));
+    return _objc_msgSend_19nvye5(_$$ref.pointer, _sel_writeObjects_, _$$ref$1.pointer);
   }
 }
 
-/// WARNING: NSPasteboardReading is a stub. To generate bindings for this class, include
-/// NSPasteboardReading in your config's objc-protocols list.
+sealed class NSPasteboardContentsOptions {
+  static const NSPasteboardContentsCurrentHostOnly = 1;
+}
+
+/// NSPasteboardItem
+extension type NSPasteboardItem._(objc.ObjCObject object$)
+    implements objc.ObjCObject, objc.NSObject, NSPasteboardWriting, NSPasteboardReading {
+  /// Constructs a [NSPasteboardItem] that points to the same underlying object as [other].
+  NSPasteboardItem.as(objc.ObjCObject other) : object$ = other {
+    assert(isA(object$));
+  }
+
+  /// Constructs a [NSPasteboardItem] that wraps the given raw object pointer.
+  NSPasteboardItem.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
+    : object$ = objc.ObjCObject(other, retain: retain, release: release) {
+    assert(isA(object$));
+  }
+
+  /// Returns whether [obj] is an instance of [NSPasteboardItem].
+  static bool isA(objc.ObjCObject? obj) =>
+      obj == null ? false : _objc_msgSend_19nvye5(obj.ref.pointer, _sel_isKindOfClass_, _class_NSPasteboardItem);
+
+  /// alloc
+  static NSPasteboardItem alloc() {
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboardItem, _sel_alloc);
+    return NSPasteboardItem.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// allocWithZone:
+  static NSPasteboardItem allocWithZone(ffi.Pointer<objc.NSZone> zone) {
+    final $ret = _objc_msgSend_1cwp428(_class_NSPasteboardItem, _sel_allocWithZone_, zone);
+    return NSPasteboardItem.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// new
+  static NSPasteboardItem new$() {
+    final $ret = _objc_msgSend_151sglz(_class_NSPasteboardItem, _sel_new);
+    return NSPasteboardItem.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// readableTypesForPasteboard:
+  static objc.NSArray readableTypesForPasteboard(NSPasteboard pasteboard) {
+    final _$$ref = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.readableTypesForPasteboard:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_class_NSPasteboardItem, _sel_readableTypesForPasteboard_, _$$ref.pointer);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// readingOptionsForType:pasteboard:
+  static int readingOptionsForType(objc.NSString type, {required NSPasteboard pasteboard}) {
+    final _$$ref = type.ref;
+    final _$$ref$1 = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.readingOptionsForType:pasteboard:', iOS: (true, null));
+    if (!objc.respondsToSelector(_class_NSPasteboardItem, _sel_readingOptionsForType_pasteboard_)) {
+      throw objc.UnimplementedOptionalMethodException('NSPasteboardItem', 'readingOptionsForType:pasteboard:');
+    }
+    return _objc_msgSend_9e06sb(
+      _class_NSPasteboardItem,
+      _sel_readingOptionsForType_pasteboard_,
+      _$$ref.pointer,
+      _$$ref$1.pointer,
+    );
+  }
+
+  /// Returns a new instance of NSPasteboardItem constructed with the default `new` method.
+  NSPasteboardItem() : this.as(new$().object$);
+}
+
+extension NSPasteboardItem$Methods on NSPasteboardItem {
+  /// availableTypeFromArray:
+  objc.NSString? availableTypeFromArray(objc.NSArray types) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = types.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.availableTypeFromArray:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_availableTypeFromArray_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// dataForType:
+  objc.NSData? dataForType(objc.NSString type) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.dataForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_dataForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSData.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// init
+  NSPasteboardItem init() {
+    final _$$ref$13 = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
+    final $ret = _objc_msgSend_151sglz(_$$ref$13.retainAndReturnPointer(), _sel_init);
+    return NSPasteboardItem.fromPointer($ret, retain: false, release: true);
+  }
+
+  /// initWithPasteboardPropertyList:ofType:
+  objc.ObjCObject? initWithPasteboardPropertyList(objc.ObjCObject propertyList, {required objc.NSString ofType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = propertyList.ref;
+    final _$$ref$2 = ofType.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.initWithPasteboardPropertyList:ofType:', iOS: (true, null));
+    if (!objc.respondsToSelector(_$$ref.retainAndReturnPointer(), _sel_initWithPasteboardPropertyList_ofType_)) {
+      throw objc.UnimplementedOptionalMethodException('NSPasteboardItem', 'initWithPasteboardPropertyList:ofType:');
+    }
+    final $ret = _objc_msgSend_15qeuct(
+      _$$ref.retainAndReturnPointer(),
+      _sel_initWithPasteboardPropertyList_ofType_,
+      _$$ref$1.pointer,
+      _$$ref$2.pointer,
+    );
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: false, release: true);
+  }
+
+  /// pasteboardPropertyListForType:
+  objc.ObjCObject? pasteboardPropertyListForType(objc.NSString type) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.pasteboardPropertyListForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_pasteboardPropertyListForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: true, release: true);
+  }
+
+  /// propertyListForType:
+  objc.ObjCObject? propertyListForType(objc.NSString type) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.propertyListForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_propertyListForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: true, release: true);
+  }
+
+  /// setData:forType:
+  bool setData(objc.NSData data, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = data.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.setData:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setData_forType_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// setDataProvider:forTypes:
+  bool setDataProvider(NSPasteboardItemDataProvider dataProvider, {required objc.NSArray forTypes}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = dataProvider.ref;
+    final _$$ref$2 = forTypes.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.setDataProvider:forTypes:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setDataProvider_forTypes_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// setPropertyList:forType:
+  bool setPropertyList(objc.ObjCObject propertyList, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = propertyList.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.setPropertyList:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setPropertyList_forType_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// setString:forType:
+  bool setString(objc.NSString string, {required objc.NSString forType}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = string.ref;
+    final _$$ref$2 = forType.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.setString:forType:', iOS: (true, null));
+    return _objc_msgSend_1lsax7n(_$$ref.pointer, _sel_setString_forType_, _$$ref$1.pointer, _$$ref$2.pointer);
+  }
+
+  /// stringForType:
+  objc.NSString? stringForType(objc.NSString type) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.stringForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_stringForType_, _$$ref$1.pointer);
+    return $ret.address == 0 ? null : objc.NSString.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// types
+  objc.NSArray get types {
+    final _$$ref = object$.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.types', iOS: (true, null));
+    final $ret = _objc_msgSend_151sglz(_$$ref.pointer, _sel_types);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// writableTypesForPasteboard:
+  objc.NSArray writableTypesForPasteboard(NSPasteboard pasteboard) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.writableTypesForPasteboard:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref.pointer, _sel_writableTypesForPasteboard_, _$$ref$1.pointer);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// writingOptionsForType:pasteboard:
+  int writingOptionsForType(objc.NSString type, {required NSPasteboard pasteboard}) {
+    final _$$ref = object$.ref;
+    final _$$ref$1 = type.ref;
+    final _$$ref$2 = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardItem.writingOptionsForType:pasteboard:', iOS: (true, null));
+    if (!objc.respondsToSelector(_$$ref.pointer, _sel_writingOptionsForType_pasteboard_)) {
+      throw objc.UnimplementedOptionalMethodException('NSPasteboardItem', 'writingOptionsForType:pasteboard:');
+    }
+    return _objc_msgSend_1r3sx4b(
+      _$$ref.pointer,
+      _sel_writingOptionsForType_pasteboard_,
+      _$$ref$1.pointer,
+      _$$ref$2.pointer,
+    );
+  }
+}
+
+/// WARNING: NSPasteboardItemDataProvider is a stub. To generate bindings for this class, include
+/// NSPasteboardItemDataProvider in your config's objc-protocols list.
 ///
+/// NSPasteboardItemDataProvider
+extension type NSPasteboardItemDataProvider._(objc.ObjCProtocol object$)
+    implements objc.ObjCProtocol, objc.NSObjectProtocol {
+  /// Constructs a [NSPasteboardItemDataProvider] that points to the same underlying object as [other].
+  NSPasteboardItemDataProvider.as(objc.ObjCObject other) : object$ = other;
+
+  /// Constructs a [NSPasteboardItemDataProvider] that wraps the given raw object pointer.
+  NSPasteboardItemDataProvider.fromPointer(
+    ffi.Pointer<objc.ObjCObjectImpl> other, {
+    bool retain = false,
+    bool release = false,
+  }) : object$ = objc.ObjCProtocol(other, retain: retain, release: release);
+}
+
 /// NSPasteboardReading
 extension type NSPasteboardReading._(objc.ObjCProtocol object$) implements objc.ObjCProtocol, objc.NSObjectProtocol {
   /// Constructs a [NSPasteboardReading] that points to the same underlying object as [other].
@@ -12705,11 +13546,107 @@ extension type NSPasteboardReading._(objc.ObjCProtocol object$) implements objc.
   /// Constructs a [NSPasteboardReading] that wraps the given raw object pointer.
   NSPasteboardReading.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
     : object$ = objc.ObjCProtocol(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [NSPasteboardReading].
+  static bool conformsTo(objc.ObjCObject obj) {
+    return _objc_msgSend_e3qsqz(obj.ref.pointer, _sel_conformsToProtocol_, _protocol_NSPasteboardReading);
+  }
 }
 
-/// WARNING: NSPasteboardWriting is a stub. To generate bindings for this class, include
-/// NSPasteboardWriting in your config's objc-protocols list.
-///
+extension NSPasteboardReading$Methods on NSPasteboardReading {
+  /// initWithPasteboardPropertyList:ofType:
+  objc.ObjCObject? initWithPasteboardPropertyList(objc.ObjCObject propertyList, {required objc.NSString ofType}) {
+    final _$$ref$3 = object$.ref;
+    final _$$ref$4 = propertyList.ref;
+    final _$$ref$5 = ofType.ref;
+    objc.checkOsVersionInternal('NSPasteboardReading.initWithPasteboardPropertyList:ofType:', iOS: (true, null));
+    if (!objc.respondsToSelector(_$$ref$3.retainAndReturnPointer(), _sel_initWithPasteboardPropertyList_ofType_)) {
+      throw objc.UnimplementedOptionalMethodException('NSPasteboardReading', 'initWithPasteboardPropertyList:ofType:');
+    }
+    final $ret = _objc_msgSend_15qeuct(
+      _$$ref$3.retainAndReturnPointer(),
+      _sel_initWithPasteboardPropertyList_ofType_,
+      _$$ref$4.pointer,
+      _$$ref$5.pointer,
+    );
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: false, release: true);
+  }
+}
+
+interface class NSPasteboardReading$Builder {
+  /// Returns the [objc.Protocol] object for this protocol.
+  static objc.Protocol get $protocol => objc.Protocol.fromPointer(_protocol_NSPasteboardReading.cast());
+
+  /// Builds an object that implements the NSPasteboardReading protocol. To implement
+  /// multiple protocols, use [addToBuilder] or [objc.ObjCProtocolBuilder] directly.
+  ///
+  /// If `$keepIsolateAlive` is true, this protocol will keep this isolate
+  /// alive until it is garbage collected by both Dart and ObjC.
+  static NSPasteboardReading implement({
+    objc.ObjCObject? Function(objc.ObjCObject, objc.NSString)? initWithPasteboardPropertyList_ofType_,
+    bool $keepIsolateAlive = true,
+  }) {
+    final builder = objc.ObjCProtocolBuilder(debugName: 'NSPasteboardReading');
+    NSPasteboardReading$Builder.initWithPasteboardPropertyList_ofType_.implement(
+      builder,
+      initWithPasteboardPropertyList_ofType_,
+    );
+    builder.addProtocol($protocol);
+    return NSPasteboardReading.as(builder.build(keepIsolateAlive: $keepIsolateAlive));
+  }
+
+  /// Adds the implementation of the NSPasteboardReading protocol to an existing
+  /// [objc.ObjCProtocolBuilder].
+  ///
+  /// Note: You cannot call this method after you have called `builder.build`.
+  static void addToBuilder(
+    objc.ObjCProtocolBuilder builder, {
+    objc.ObjCObject? Function(objc.ObjCObject, objc.NSString)? initWithPasteboardPropertyList_ofType_,
+    bool $keepIsolateAlive = true,
+  }) {
+    NSPasteboardReading$Builder.initWithPasteboardPropertyList_ofType_.implement(
+      builder,
+      initWithPasteboardPropertyList_ofType_,
+    );
+    builder.addProtocol($protocol);
+  }
+
+  /// initWithPasteboardPropertyList:ofType:
+  static final initWithPasteboardPropertyList_ofType_ =
+      objc.ObjCProtocolMethod<objc.ObjCObject? Function(objc.ObjCObject, objc.NSString)>(
+        _protocol_NSPasteboardReading,
+        _sel_initWithPasteboardPropertyList_ofType_,
+        ffi.Native.addressOf<
+              ffi.NativeFunction<
+                ffi.Pointer<objc.ObjCObjectImpl> Function(
+                  ffi.Pointer<objc.ObjCObjectImpl>,
+                  ffi.Pointer<ffi.Void>,
+                  ffi.Pointer<objc.ObjCObjectImpl>,
+                  ffi.Pointer<objc.ObjCObjectImpl>,
+                )
+              >
+            >(_zy1hgj_protocolTrampoline_zi5eed)
+            .cast(),
+        objc.getProtocolMethodSignature(
+          _protocol_NSPasteboardReading,
+          _sel_initWithPasteboardPropertyList_ofType_,
+          isRequired: false,
+          isInstanceMethod: true,
+        ),
+        (objc.ObjCObject? Function(objc.ObjCObject, objc.NSString) func) =>
+            ObjCBlock_objcObjCObjectImpl_ffiVoid_objcObjCObjectImpl_NSPasteboardType.fromFunction(
+              (ffi.Pointer<ffi.Void> _, objc.ObjCObject arg1, objc.NSString arg2) => func(arg1, arg2),
+            ),
+      );
+}
+
+sealed class NSPasteboardReadingOptions {
+  static const NSPasteboardReadingAsData = 0;
+  static const NSPasteboardReadingAsString = 1;
+  static const NSPasteboardReadingAsPropertyList = 2;
+  static const NSPasteboardReadingAsKeyedArchive = 4;
+}
+
 /// NSPasteboardWriting
 extension type NSPasteboardWriting._(objc.ObjCProtocol object$) implements objc.ObjCProtocol, objc.NSObjectProtocol {
   /// Constructs a [NSPasteboardWriting] that points to the same underlying object as [other].
@@ -12718,6 +13655,170 @@ extension type NSPasteboardWriting._(objc.ObjCProtocol object$) implements objc.
   /// Constructs a [NSPasteboardWriting] that wraps the given raw object pointer.
   NSPasteboardWriting.fromPointer(ffi.Pointer<objc.ObjCObjectImpl> other, {bool retain = false, bool release = false})
     : object$ = objc.ObjCProtocol(other, retain: retain, release: release);
+
+  /// Returns whether [obj] is an instance of [NSPasteboardWriting].
+  static bool conformsTo(objc.ObjCObject obj) {
+    return _objc_msgSend_e3qsqz(obj.ref.pointer, _sel_conformsToProtocol_, _protocol_NSPasteboardWriting);
+  }
+}
+
+extension NSPasteboardWriting$Methods on NSPasteboardWriting {
+  /// pasteboardPropertyListForType:
+  objc.ObjCObject? pasteboardPropertyListForType(objc.NSString type) {
+    final _$$ref$2 = object$.ref;
+    final _$$ref$3 = type.ref;
+    objc.checkOsVersionInternal('NSPasteboardWriting.pasteboardPropertyListForType:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref$2.pointer, _sel_pasteboardPropertyListForType_, _$$ref$3.pointer);
+    return $ret.address == 0 ? null : objc.ObjCObject($ret, retain: true, release: true);
+  }
+
+  /// writableTypesForPasteboard:
+  objc.NSArray writableTypesForPasteboard(NSPasteboard pasteboard) {
+    final _$$ref$2 = object$.ref;
+    final _$$ref$3 = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardWriting.writableTypesForPasteboard:', iOS: (true, null));
+    final $ret = _objc_msgSend_1sotr3r(_$$ref$2.pointer, _sel_writableTypesForPasteboard_, _$$ref$3.pointer);
+    return objc.NSArray.fromPointer($ret, retain: true, release: true);
+  }
+
+  /// writingOptionsForType:pasteboard:
+  int writingOptionsForType(objc.NSString type, {required NSPasteboard pasteboard}) {
+    final _$$ref$3 = object$.ref;
+    final _$$ref$4 = type.ref;
+    final _$$ref$5 = pasteboard.ref;
+    objc.checkOsVersionInternal('NSPasteboardWriting.writingOptionsForType:pasteboard:', iOS: (true, null));
+    if (!objc.respondsToSelector(_$$ref$3.pointer, _sel_writingOptionsForType_pasteboard_)) {
+      throw objc.UnimplementedOptionalMethodException('NSPasteboardWriting', 'writingOptionsForType:pasteboard:');
+    }
+    return _objc_msgSend_1r3sx4b(
+      _$$ref$3.pointer,
+      _sel_writingOptionsForType_pasteboard_,
+      _$$ref$4.pointer,
+      _$$ref$5.pointer,
+    );
+  }
+}
+
+interface class NSPasteboardWriting$Builder {
+  /// Returns the [objc.Protocol] object for this protocol.
+  static objc.Protocol get $protocol => objc.Protocol.fromPointer(_protocol_NSPasteboardWriting.cast());
+
+  /// Builds an object that implements the NSPasteboardWriting protocol. To implement
+  /// multiple protocols, use [addToBuilder] or [objc.ObjCProtocolBuilder] directly.
+  ///
+  /// If `$keepIsolateAlive` is true, this protocol will keep this isolate
+  /// alive until it is garbage collected by both Dart and ObjC.
+  static NSPasteboardWriting implement({
+    required objc.ObjCObject? Function(objc.NSString) pasteboardPropertyListForType_,
+    required objc.NSArray Function(NSPasteboard) writableTypesForPasteboard_,
+    int Function(objc.NSString, NSPasteboard)? writingOptionsForType_pasteboard_,
+    bool $keepIsolateAlive = true,
+  }) {
+    final builder = objc.ObjCProtocolBuilder(debugName: 'NSPasteboardWriting');
+    NSPasteboardWriting$Builder.pasteboardPropertyListForType_.implement(builder, pasteboardPropertyListForType_);
+    NSPasteboardWriting$Builder.writableTypesForPasteboard_.implement(builder, writableTypesForPasteboard_);
+    NSPasteboardWriting$Builder.writingOptionsForType_pasteboard_.implement(builder, writingOptionsForType_pasteboard_);
+    builder.addProtocol($protocol);
+    return NSPasteboardWriting.as(builder.build(keepIsolateAlive: $keepIsolateAlive));
+  }
+
+  /// Adds the implementation of the NSPasteboardWriting protocol to an existing
+  /// [objc.ObjCProtocolBuilder].
+  ///
+  /// Note: You cannot call this method after you have called `builder.build`.
+  static void addToBuilder(
+    objc.ObjCProtocolBuilder builder, {
+    required objc.ObjCObject? Function(objc.NSString) pasteboardPropertyListForType_,
+    required objc.NSArray Function(NSPasteboard) writableTypesForPasteboard_,
+    int Function(objc.NSString, NSPasteboard)? writingOptionsForType_pasteboard_,
+    bool $keepIsolateAlive = true,
+  }) {
+    NSPasteboardWriting$Builder.pasteboardPropertyListForType_.implement(builder, pasteboardPropertyListForType_);
+    NSPasteboardWriting$Builder.writableTypesForPasteboard_.implement(builder, writableTypesForPasteboard_);
+    NSPasteboardWriting$Builder.writingOptionsForType_pasteboard_.implement(builder, writingOptionsForType_pasteboard_);
+    builder.addProtocol($protocol);
+  }
+
+  /// pasteboardPropertyListForType:
+  static final pasteboardPropertyListForType_ = objc.ObjCProtocolMethod<objc.ObjCObject? Function(objc.NSString)>(
+    _protocol_NSPasteboardWriting,
+    _sel_pasteboardPropertyListForType_,
+    ffi.Native.addressOf<
+          ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >
+        >(_zy1hgj_protocolTrampoline_xr62hr)
+        .cast(),
+    objc.getProtocolMethodSignature(
+      _protocol_NSPasteboardWriting,
+      _sel_pasteboardPropertyListForType_,
+      isRequired: true,
+      isInstanceMethod: true,
+    ),
+    (objc.ObjCObject? Function(objc.NSString) func) =>
+        ObjCBlock_objcObjCObjectImpl_ffiVoid_NSPasteboardType.fromFunction(
+          (ffi.Pointer<ffi.Void> _, objc.NSString arg1) => func(arg1),
+        ),
+  );
+
+  /// writableTypesForPasteboard:
+  static final writableTypesForPasteboard_ = objc.ObjCProtocolMethod<objc.NSArray Function(NSPasteboard)>(
+    _protocol_NSPasteboardWriting,
+    _sel_writableTypesForPasteboard_,
+    ffi.Native.addressOf<
+          ffi.NativeFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >
+        >(_zy1hgj_protocolTrampoline_xr62hr)
+        .cast(),
+    objc.getProtocolMethodSignature(
+      _protocol_NSPasteboardWriting,
+      _sel_writableTypesForPasteboard_,
+      isRequired: true,
+      isInstanceMethod: true,
+    ),
+    (objc.NSArray Function(NSPasteboard) func) =>
+        ObjCBlock_NSArray_ffiVoid_NSPasteboard.fromFunction((ffi.Pointer<ffi.Void> _, NSPasteboard arg1) => func(arg1)),
+  );
+
+  /// writingOptionsForType:pasteboard:
+  static final writingOptionsForType_pasteboard_ = objc.ObjCProtocolMethod<int Function(objc.NSString, NSPasteboard)>(
+    _protocol_NSPasteboardWriting,
+    _sel_writingOptionsForType_pasteboard_,
+    ffi.Native.addressOf<
+          ffi.NativeFunction<
+            ffi.UnsignedLong Function(
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >
+        >(_zy1hgj_protocolTrampoline_zs9fen)
+        .cast(),
+    objc.getProtocolMethodSignature(
+      _protocol_NSPasteboardWriting,
+      _sel_writingOptionsForType_pasteboard_,
+      isRequired: false,
+      isInstanceMethod: true,
+    ),
+    (int Function(objc.NSString, NSPasteboard) func) =>
+        ObjCBlock_NSPasteboardWritingOptions_ffiVoid_NSPasteboardType_NSPasteboard.fromFunction(
+          (ffi.Pointer<ffi.Void> _, objc.NSString arg1, NSPasteboard arg2) => func(arg1, arg2),
+        ),
+  );
+}
+
+sealed class NSPasteboardWritingOptions {
+  static const NSPasteboardWritingPromised = 512;
 }
 
 enum NSPopoverBehavior {
@@ -13167,9 +14268,9 @@ extension NSResponder$Methods on NSResponder {
 
   /// init
   NSResponder init() {
-    final _$$ref$12 = object$.ref;
+    final _$$ref$14 = object$.ref;
     objc.checkOsVersionInternal('NSResponder.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final $ret = _objc_msgSend_151sglz(_$$ref$12.retainAndReturnPointer(), _sel_init);
+    final $ret = _objc_msgSend_151sglz(_$$ref$14.retainAndReturnPointer(), _sel_init);
     return NSResponder.fromPointer($ret, retain: false, release: true);
   }
 
@@ -15336,13 +16437,13 @@ extension NSTitlebarAccessoryViewController$Methods on NSTitlebarAccessoryViewCo
 
   /// init
   NSTitlebarAccessoryViewController init() {
-    final _$$ref$13 = object$.ref;
+    final _$$ref$15 = object$.ref;
     objc.checkOsVersionInternal(
       'NSTitlebarAccessoryViewController.init',
       iOS: (false, (2, 0, 0)),
       macOS: (false, (10, 0, 0)),
     );
-    final $ret = _objc_msgSend_151sglz(_$$ref$13.retainAndReturnPointer(), _sel_init);
+    final $ret = _objc_msgSend_151sglz(_$$ref$15.retainAndReturnPointer(), _sel_init);
     return NSTitlebarAccessoryViewController.fromPointer($ret, retain: false, release: true);
   }
 
@@ -18025,9 +19126,9 @@ extension NSView$Methods on NSView {
 
   /// init
   NSView init() {
-    final _$$ref$14 = object$.ref;
+    final _$$ref$16 = object$.ref;
     objc.checkOsVersionInternal('NSView.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final $ret = _objc_msgSend_151sglz(_$$ref$14.retainAndReturnPointer(), _sel_init);
+    final $ret = _objc_msgSend_151sglz(_$$ref$16.retainAndReturnPointer(), _sel_init);
     return NSView.fromPointer($ret, retain: false, release: true);
   }
 
@@ -20503,9 +21604,9 @@ extension NSViewController$Methods on NSViewController {
 
   /// init
   NSViewController init() {
-    final _$$ref$15 = object$.ref;
+    final _$$ref$17 = object$.ref;
     objc.checkOsVersionInternal('NSViewController.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final $ret = _objc_msgSend_151sglz(_$$ref$15.retainAndReturnPointer(), _sel_init);
+    final $ret = _objc_msgSend_151sglz(_$$ref$17.retainAndReturnPointer(), _sel_init);
     return NSViewController.fromPointer($ret, retain: false, release: true);
   }
 
@@ -23600,9 +24701,9 @@ extension NSWindow$Methods on NSWindow {
 
   /// init
   NSWindow init() {
-    final _$$ref$16 = object$.ref;
+    final _$$ref$18 = object$.ref;
     objc.checkOsVersionInternal('NSWindow.init', iOS: (false, (2, 0, 0)), macOS: (false, (10, 0, 0)));
-    final $ret = _objc_msgSend_151sglz(_$$ref$16.retainAndReturnPointer(), _sel_init);
+    final $ret = _objc_msgSend_151sglz(_$$ref$18.retainAndReturnPointer(), _sel_init);
     return NSWindow.fromPointer($ret, retain: false, release: true);
   }
 
@@ -27086,6 +28187,269 @@ enum NSWritingDirection {
   };
 }
 
+/// Construction methods for `objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)>`.
+abstract final class ObjCBlock_NSArray_ffiVoid_NSPasteboard {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)> fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
+    bool retain = false,
+    bool release = false,
+  }) => objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)>(
+    pointer,
+    retain: retain,
+    release: release,
+  );
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)> fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1)
+      >
+    >
+    ptr,
+  ) => objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)>(
+    objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)> fromFunction(
+    objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard) fn, {
+    bool keepIsolateAlive = true,
+  }) => objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)>(
+    objc.newClosureBlock(_closureCallable, (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) {
+      final _$$ref = fn(arg0, NSPasteboard.fromPointer(arg1, retain: true, release: true)).ref;
+      return _$$ref.retainAndAutorelease();
+    }, keepIsolateAlive),
+    retain: false,
+    release: true,
+  );
+
+  static ffi.Pointer<objc.ObjCObjectImpl> _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1)
+        >
+      >()
+      .asFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>)
+      >()(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline)
+          .cast();
+  static ffi.Pointer<objc.ObjCObjectImpl> _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => (objc.getBlockClosure(
+    block,
+  ) as ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>))(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)>`.
+extension ObjCBlock_NSArray_ffiVoid_NSPasteboard$CallExtension
+    on objc.ObjCBlock<objc.NSArray Function(ffi.Pointer<ffi.Void>, NSPasteboard)> {
+  objc.NSArray call(ffi.Pointer<ffi.Void> arg0, NSPasteboard arg1) {
+    final _$$ref$1 = arg1.ref;
+    return objc.NSArray.fromPointer(
+      ref.pointer.ref.invoke
+          .cast<
+            ffi.NativeFunction<
+              ffi.Pointer<objc.ObjCObjectImpl> Function(
+                ffi.Pointer<objc.ObjCBlockImpl> block,
+                ffi.Pointer<ffi.Void> arg0,
+                ffi.Pointer<objc.ObjCObjectImpl> arg1,
+              )
+            >
+          >()
+          .asFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >()(ref.pointer, arg0, _$$ref$1.pointer),
+      retain: true,
+      release: true,
+    );
+  }
+}
+
+/// Construction methods for `objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>`.
+abstract final class ObjCBlock_NSPasteboardWritingOptions_ffiVoid_NSPasteboardType_NSPasteboard {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)> fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
+    bool retain = false,
+    bool release = false,
+  }) => objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>(
+    pointer,
+    retain: retain,
+    release: release,
+  );
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        ffi.UnsignedLong Function(
+          ffi.Pointer<ffi.Void> arg0,
+          ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          ffi.Pointer<objc.ObjCObjectImpl> arg2,
+        )
+      >
+    >
+    ptr,
+  ) => objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>(
+    objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)> fromFunction(
+    int Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard) fn, {
+    bool keepIsolateAlive = true,
+  }) => objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>(
+    objc.newClosureBlock(_closureCallable, (
+      ffi.Pointer<ffi.Void> arg0,
+      ffi.Pointer<objc.ObjCObjectImpl> arg1,
+      ffi.Pointer<objc.ObjCObjectImpl> arg2,
+    ) {
+      return fn(
+        arg0,
+        objc.NSString.fromPointer(arg1, retain: true, release: true),
+        NSPasteboard.fromPointer(arg2, retain: true, release: true),
+      );
+    }, keepIsolateAlive),
+    retain: false,
+    release: true,
+  );
+
+  static int _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+    ffi.Pointer<objc.ObjCObjectImpl> arg2,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          ffi.UnsignedLong Function(
+            ffi.Pointer<ffi.Void> arg0,
+            ffi.Pointer<objc.ObjCObjectImpl> arg1,
+            ffi.Pointer<objc.ObjCObjectImpl> arg2,
+          )
+        >
+      >()
+      .asFunction<
+        int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCObjectImpl>)
+      >()(arg0, arg1, arg2);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.UnsignedLong Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline, 0)
+          .cast();
+  static int _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+    ffi.Pointer<objc.ObjCObjectImpl> arg2,
+  ) =>
+      (objc.getBlockClosure(block)
+          as int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCObjectImpl>))(
+        arg0,
+        arg1,
+        arg2,
+      );
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.UnsignedLong Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline, 0)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)>`.
+extension ObjCBlock_NSPasteboardWritingOptions_ffiVoid_NSPasteboardType_NSPasteboard$CallExtension
+    on objc.ObjCBlock<ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, objc.NSString, NSPasteboard)> {
+  int call(ffi.Pointer<ffi.Void> arg0, objc.NSString arg1, NSPasteboard arg2) {
+    final _$$ref = arg1.ref;
+    final _$$ref$1 = arg2.ref;
+    return ref.pointer.ref.invoke
+        .cast<
+          ffi.NativeFunction<
+            ffi.UnsignedLong Function(
+              ffi.Pointer<objc.ObjCBlockImpl> block,
+              ffi.Pointer<ffi.Void> arg0,
+              ffi.Pointer<objc.ObjCObjectImpl> arg1,
+              ffi.Pointer<objc.ObjCObjectImpl> arg2,
+            )
+          >
+        >()
+        .asFunction<
+          int Function(
+            ffi.Pointer<objc.ObjCBlockImpl>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          )
+        >()(ref.pointer, arg0, _$$ref.pointer, _$$ref$1.pointer);
+  }
+}
+
 /// Construction methods for `objc.ObjCBlock<objc.CGPoint Function(objc.NSRange)>`.
 abstract final class ObjCBlock_NSPoint_NSRange {
   /// Returns a block that wraps the given raw block pointer.
@@ -27266,7 +28630,7 @@ abstract final class ObjCBlock_ffiVoid {
   static objc.ObjCBlock<ffi.Void Function()> listener(void Function() fn, {bool keepIsolateAlive = true}) {
     return objc.ObjCBlock<ffi.Void Function()>(
       objc.newBlockPort(
-        _k4vejs_wrapListenerBlock_1pl9qdv,
+        _zy1hgj_wrapListenerBlock_1pl9qdv,
         (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) => fn(),
         keepIsolateAlive,
       ),
@@ -27288,7 +28652,7 @@ abstract final class ObjCBlock_ffiVoid {
   static objc.ObjCBlock<ffi.Void Function()> blocking(void Function() fn, {bool keepIsolateAlive = true}) {
     return objc.ObjCBlock<ffi.Void Function()>(
       objc.newBlockingBlockPort(
-        _k4vejs_wrapBlockingBlock_1pl9qdv,
+        _zy1hgj_wrapBlockingBlock_1pl9qdv,
         (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) => fn(),
         keepIsolateAlive,
       ),
@@ -27374,7 +28738,7 @@ abstract final class ObjCBlock_ffiVoid_NSError {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(objc.NSError?)>(
-      objc.newBlockPort(_k4vejs_wrapListenerBlock_xtuoz7, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockPort(_zy1hgj_wrapListenerBlock_xtuoz7, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_117e0ww.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0);
@@ -27399,7 +28763,7 @@ abstract final class ObjCBlock_ffiVoid_NSError {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(objc.NSError?)>(
-      objc.newBlockingBlockPort(_k4vejs_wrapBlockingBlock_xtuoz7, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockingBlockPort(_zy1hgj_wrapBlockingBlock_xtuoz7, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_117e0ww.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0);
@@ -27500,7 +28864,7 @@ abstract final class ObjCBlock_ffiVoid_NSEvent_bool {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(NSEvent?, ffi.Pointer<ffi.Bool>)>(
-      objc.newBlockPort(_k4vejs_wrapListenerBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockPort(_zy1hgj_wrapListenerBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_fg21xo.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1);
@@ -27525,7 +28889,7 @@ abstract final class ObjCBlock_ffiVoid_NSEvent_bool {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(NSEvent?, ffi.Pointer<ffi.Bool>)>(
-      objc.newBlockingBlockPort(_k4vejs_wrapBlockingBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockingBlockPort(_zy1hgj_wrapBlockingBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_fg21xo.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1);
@@ -27634,7 +28998,7 @@ abstract final class ObjCBlock_ffiVoid_NSModalResponse {
   /// until it is garbage collected by both Dart and ObjC.
   static objc.ObjCBlock<ffi.Void Function(ffi.Long)> listener(void Function(int) fn, {bool keepIsolateAlive = true}) {
     return objc.ObjCBlock<ffi.Void Function(ffi.Long)>(
-      objc.newBlockPort(_k4vejs_wrapListenerBlock_4sp4xj, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockPort(_zy1hgj_wrapListenerBlock_4sp4xj, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_u29e9x.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0);
@@ -27656,7 +29020,7 @@ abstract final class ObjCBlock_ffiVoid_NSModalResponse {
   /// indefinitely, or have other undefined behavior.
   static objc.ObjCBlock<ffi.Void Function(ffi.Long)> blocking(void Function(int) fn, {bool keepIsolateAlive = true}) {
     return objc.ObjCBlock<ffi.Void Function(ffi.Long)>(
-      objc.newBlockingBlockPort(_k4vejs_wrapBlockingBlock_4sp4xj, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockingBlockPort(_zy1hgj_wrapBlockingBlock_4sp4xj, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_u29e9x.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0);
@@ -27743,7 +29107,7 @@ abstract final class ObjCBlock_ffiVoid_NSWindow_bool {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(NSWindow, ffi.Pointer<ffi.Bool>)>(
-      objc.newBlockPort(_k4vejs_wrapListenerBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockPort(_zy1hgj_wrapListenerBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_13x7nl1.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1);
@@ -27768,7 +29132,7 @@ abstract final class ObjCBlock_ffiVoid_NSWindow_bool {
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(NSWindow, ffi.Pointer<ffi.Bool>)>(
-      objc.newBlockingBlockPort(_k4vejs_wrapBlockingBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockingBlockPort(_zy1hgj_wrapBlockingBlock_t8l8el, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_13x7nl1.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1);
@@ -27885,7 +29249,7 @@ abstract final class ObjCBlock_ffiVoid_ffiVoid_NSHapticFeedbackPattern_NSHapticF
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Long, ffi.UnsignedLong)>(
-      objc.newBlockPort(_k4vejs_wrapListenerBlock_gjex3c, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockPort(_zy1hgj_wrapListenerBlock_gjex3c, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_140wqu6.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1, args.arg2);
@@ -27910,7 +29274,7 @@ abstract final class ObjCBlock_ffiVoid_ffiVoid_NSHapticFeedbackPattern_NSHapticF
     bool keepIsolateAlive = true,
   }) {
     return objc.ObjCBlock<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Long, ffi.UnsignedLong)>(
-      objc.newBlockingBlockPort(_k4vejs_wrapBlockingBlock_gjex3c, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
+      objc.newBlockingBlockPort(_zy1hgj_wrapBlockingBlock_gjex3c, (ffi.Pointer<objc.ObjCObjectImpl> rawArgs) {
         final args = _BlockArgs_140wqu6.fromPointer(rawArgs, retain: false, release: false);
 
         fn(args.arg0, args.arg1, args.arg2);
@@ -27967,6 +29331,357 @@ extension ObjCBlock_ffiVoid_ffiVoid_NSHapticFeedbackPattern_NSHapticFeedbackPerf
       arg1.value,
       arg2.value,
     );
+  }
+}
+
+/// Construction methods for `objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>`.
+abstract final class ObjCBlock_objcObjCObjectImpl_ffiVoid_NSPasteboardType {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)> fromPointer(
+    ffi.Pointer<objc.ObjCBlockImpl> pointer, {
+    bool retain = false,
+    bool release = false,
+  }) => objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>(
+    pointer,
+    retain: retain,
+    release: release,
+  );
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1)
+      >
+    >
+    ptr,
+  ) => objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>(
+    objc.newPointerBlock(_fnPtrCallable, ptr.cast()),
+    retain: false,
+    release: true,
+  );
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)> fromFunction(
+    objc.ObjCObject? Function(ffi.Pointer<ffi.Void>, objc.NSString) fn, {
+    bool keepIsolateAlive = true,
+  }) => objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>(
+    objc.newClosureBlock(_closureCallable, (ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1) {
+      final _$$ref = fn(arg0, objc.NSString.fromPointer(arg1, retain: true, release: true))?.ref;
+      return _$$ref?.retainAndAutorelease() ?? ffi.nullptr;
+    }, keepIsolateAlive),
+    retain: false,
+    release: true,
+  );
+
+  static ffi.Pointer<objc.ObjCObjectImpl> _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void> arg0, ffi.Pointer<objc.ObjCObjectImpl> arg1)
+        >
+      >()
+      .asFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>)
+      >()(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline)
+          .cast();
+  static ffi.Pointer<objc.ObjCObjectImpl> _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+  ) => (objc.getBlockClosure(
+    block,
+  ) as ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>))(arg0, arg1);
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)>`.
+extension ObjCBlock_objcObjCObjectImpl_ffiVoid_NSPasteboardType$CallExtension
+    on objc.ObjCBlock<ffi.Pointer<objc.ObjCObjectImpl>? Function(ffi.Pointer<ffi.Void>, objc.NSString)> {
+  objc.ObjCObject? call(ffi.Pointer<ffi.Void> arg0, objc.NSString arg1) {
+    final _$$ref$1 = arg1.ref;
+    return ref.pointer.ref.invoke
+                .cast<
+                  ffi.NativeFunction<
+                    ffi.Pointer<objc.ObjCObjectImpl> Function(
+                      ffi.Pointer<objc.ObjCBlockImpl> block,
+                      ffi.Pointer<ffi.Void> arg0,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                    )
+                  >
+                >()
+                .asFunction<
+                  ffi.Pointer<objc.ObjCObjectImpl> Function(
+                    ffi.Pointer<objc.ObjCBlockImpl>,
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                  )
+                >()(ref.pointer, arg0, _$$ref$1.pointer)
+                .address ==
+            0
+        ? null
+        : objc.ObjCObject(
+            ref.pointer.ref.invoke
+                .cast<
+                  ffi.NativeFunction<
+                    ffi.Pointer<objc.ObjCObjectImpl> Function(
+                      ffi.Pointer<objc.ObjCBlockImpl> block,
+                      ffi.Pointer<ffi.Void> arg0,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                    )
+                  >
+                >()
+                .asFunction<
+                  ffi.Pointer<objc.ObjCObjectImpl> Function(
+                    ffi.Pointer<objc.ObjCBlockImpl>,
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                  )
+                >()(ref.pointer, arg0, _$$ref$1.pointer),
+            retain: true,
+            release: true,
+          );
+  }
+}
+
+/// Construction methods for `objc.ObjCBlock<objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>, objc.NSString)>`.
+abstract final class ObjCBlock_objcObjCObjectImpl_ffiVoid_objcObjCObjectImpl_NSPasteboardType {
+  /// Returns a block that wraps the given raw block pointer.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+      objc.NSString,
+    )
+  >
+  fromPointer(ffi.Pointer<objc.ObjCBlockImpl> pointer, {bool retain = false, bool release = false}) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          objc.NSString,
+        )
+      >(pointer, retain: retain, release: release);
+
+  /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+      objc.NSString,
+    )
+  >
+  fromFunctionPointer(
+    ffi.Pointer<
+      ffi.NativeFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(
+          ffi.Pointer<ffi.Void> arg0,
+          ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          ffi.Pointer<objc.ObjCObjectImpl> arg2,
+        )
+      >
+    >
+    ptr,
+  ) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          objc.NSString,
+        )
+      >(objc.newPointerBlock(_fnPtrCallable, ptr.cast()), retain: false, release: true);
+
+  /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
+  ///
+  /// If `keepIsolateAlive` is true, this block will keep this isolate alive
+  /// until it is garbage collected by both Dart and ObjC.
+  static objc.ObjCBlock<
+    objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+      ffi.Pointer<ffi.Void>,
+      ffi.Pointer<objc.ObjCObjectImpl>,
+      objc.NSString,
+    )
+  >
+  fromFunction(
+    objc.ObjCObject? Function(ffi.Pointer<ffi.Void>, objc.ObjCObject, objc.NSString) fn, {
+    bool keepIsolateAlive = true,
+  }) =>
+      objc.ObjCBlock<
+        objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          objc.NSString,
+        )
+      >(
+        objc.newClosureBlock(_closureCallable, (
+          ffi.Pointer<ffi.Void> arg0,
+          ffi.Pointer<objc.ObjCObjectImpl> arg1,
+          ffi.Pointer<objc.ObjCObjectImpl> arg2,
+        ) {
+          final _$$ref = fn(
+            arg0,
+            objc.ObjCObject(arg1, retain: true, release: true),
+            objc.NSString.fromPointer(arg2, retain: true, release: true),
+          )?.ref;
+          return _$$ref?.retainAndReturnPointer() ?? ffi.nullptr;
+        }, keepIsolateAlive),
+        retain: false,
+        release: true,
+      );
+
+  static ffi.Pointer<objc.ObjCObjectImpl> _fnPtrTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+    ffi.Pointer<objc.ObjCObjectImpl> arg2,
+  ) => block.ref.target
+      .cast<
+        ffi.NativeFunction<
+          ffi.Pointer<objc.ObjCObjectImpl> Function(
+            ffi.Pointer<ffi.Void> arg0,
+            ffi.Pointer<objc.ObjCObjectImpl> arg1,
+            ffi.Pointer<objc.ObjCObjectImpl> arg2,
+          )
+        >
+      >()
+      .asFunction<
+        ffi.Pointer<objc.ObjCObjectImpl> Function(
+          ffi.Pointer<ffi.Void>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >()(arg0, arg1, arg2);
+  static ffi.Pointer<ffi.Void> _fnPtrCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_fnPtrTrampoline)
+          .cast();
+  static ffi.Pointer<objc.ObjCObjectImpl> _closureTrampoline(
+    ffi.Pointer<objc.ObjCBlockImpl> block,
+    ffi.Pointer<ffi.Void> arg0,
+    ffi.Pointer<objc.ObjCObjectImpl> arg1,
+    ffi.Pointer<objc.ObjCObjectImpl> arg2,
+  ) =>
+      (objc.getBlockClosure(block)
+          as ffi.Pointer<objc.ObjCObjectImpl> Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+          ))(arg0, arg1, arg2);
+  static ffi.Pointer<ffi.Void> _closureCallable =
+      ffi.Pointer.fromFunction<
+            ffi.Pointer<objc.ObjCObjectImpl> Function(
+              ffi.Pointer<objc.ObjCBlockImpl>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+              ffi.Pointer<objc.ObjCObjectImpl>,
+            )
+          >(_closureTrampoline)
+          .cast();
+}
+
+/// Call operator for `objc.ObjCBlock<objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<objc.ObjCObjectImpl>, objc.NSString)>`.
+extension ObjCBlock_objcObjCObjectImpl_ffiVoid_objcObjCObjectImpl_NSPasteboardType$CallExtension
+    on
+        objc.ObjCBlock<
+          objc.Retained<ffi.Pointer<objc.ObjCObjectImpl>?> Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<objc.ObjCObjectImpl>,
+            objc.NSString,
+          )
+        > {
+  objc.ObjCObject? call(ffi.Pointer<ffi.Void> arg0, objc.ObjCObject arg1, objc.NSString arg2) {
+    final _$$ref$1 = arg1.ref;
+    final _$$ref$2 = arg2.ref;
+    return ref.pointer.ref.invoke
+                .cast<
+                  ffi.NativeFunction<
+                    ffi.Pointer<objc.ObjCObjectImpl> Function(
+                      ffi.Pointer<objc.ObjCBlockImpl> block,
+                      ffi.Pointer<ffi.Void> arg0,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg2,
+                    )
+                  >
+                >()
+                .asFunction<
+                  ffi.Pointer<objc.ObjCObjectImpl> Function(
+                    ffi.Pointer<objc.ObjCBlockImpl>,
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                  )
+                >()(ref.pointer, arg0, _$$ref$1.pointer, _$$ref$2.pointer)
+                .address ==
+            0
+        ? null
+        : objc.ObjCObject(
+            ref.pointer.ref.invoke
+                .cast<
+                  ffi.NativeFunction<
+                    ffi.Pointer<objc.ObjCObjectImpl> Function(
+                      ffi.Pointer<objc.ObjCBlockImpl> block,
+                      ffi.Pointer<ffi.Void> arg0,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg1,
+                      ffi.Pointer<objc.ObjCObjectImpl> arg2,
+                    )
+                  >
+                >()
+                .asFunction<
+                  ffi.Pointer<objc.ObjCObjectImpl> Function(
+                    ffi.Pointer<objc.ObjCBlockImpl>,
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                    ffi.Pointer<objc.ObjCObjectImpl>,
+                  )
+                >()(ref.pointer, arg0, _$$ref$1.pointer, _$$ref$2.pointer),
+            retain: false,
+            release: true,
+          );
   }
 }
 
@@ -28210,6 +29925,18 @@ final _class_NSLayoutYAxisAnchor = objc.getClass(
   "NSLayoutYAxisAnchor",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class_NSLayoutYAxisAnchor_raw).cast(),
 );
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$_NSPasteboard')
+external ffi.Pointer<objc.ObjCObjectImpl> _class_NSPasteboard_raw;
+final _class_NSPasteboard = objc.getClass(
+  "NSPasteboard",
+  () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class_NSPasteboard_raw).cast(),
+);
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$_NSPasteboardItem')
+external ffi.Pointer<objc.ObjCObjectImpl> _class_NSPasteboardItem_raw;
+final _class_NSPasteboardItem = objc.getClass(
+  "NSPasteboardItem",
+  () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class_NSPasteboardItem_raw).cast(),
+);
 @ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$_NSResponder')
 external ffi.Pointer<objc.ObjCObjectImpl> _class_NSResponder_raw;
 final _class_NSResponder = objc.getClass(
@@ -28240,40 +29967,40 @@ final _class_NSWindow = objc.getClass(
   "NSWindow",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class_NSWindow_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_xtuoz7')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_xtuoz7')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_117e0ww_raw;
 final _class__BlockArgs_117e0ww = objc.getClass(
-  "_k4vejs_BlockArgs_xtuoz7",
+  "_zy1hgj_BlockArgs_xtuoz7",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_117e0ww_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_t8l8el')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_t8l8el')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_13x7nl1_raw;
 final _class__BlockArgs_13x7nl1 = objc.getClass(
-  "_k4vejs_BlockArgs_t8l8el",
+  "_zy1hgj_BlockArgs_t8l8el",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_13x7nl1_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_gjex3c')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_gjex3c')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_140wqu6_raw;
 final _class__BlockArgs_140wqu6 = objc.getClass(
-  "_k4vejs_BlockArgs_gjex3c",
+  "_zy1hgj_BlockArgs_gjex3c",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_140wqu6_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_t8l8el')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_t8l8el')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_fg21xo_raw;
 final _class__BlockArgs_fg21xo = objc.getClass(
-  "_k4vejs_BlockArgs_t8l8el",
+  "_zy1hgj_BlockArgs_t8l8el",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_fg21xo_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_1pl9qdv')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_1pl9qdv')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_ii17hk_raw;
 final _class__BlockArgs_ii17hk = objc.getClass(
-  "_k4vejs_BlockArgs_1pl9qdv",
+  "_zy1hgj_BlockArgs_1pl9qdv",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_ii17hk_raw).cast(),
 );
-@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__k4vejs_BlockArgs_4sp4xj')
+@ffi.Native<ffi.Pointer<objc.ObjCObjectImpl>>(symbol: 'OBJC_CLASS_\$__zy1hgj_BlockArgs_4sp4xj')
 external ffi.Pointer<objc.ObjCObjectImpl> _class__BlockArgs_u29e9x_raw;
 final _class__BlockArgs_u29e9x = objc.getClass(
-  "_k4vejs_BlockArgs_4sp4xj",
+  "_zy1hgj_BlockArgs_4sp4xj",
   () => ffi.Native.addressOf<ffi.Pointer<objc.ObjCObjectImpl>>(_class__BlockArgs_u29e9x_raw).cast(),
 );
 final _objc_msgSend_103wtsh = objc.msgSendPointer
@@ -29771,6 +31498,25 @@ final _objc_msgSend_1r01ixf = objc.msgSendPointer
     .asFunction<
       ffi.Pointer<objc.ObjCObjectImpl> Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>, int)
     >();
+final _objc_msgSend_1r3sx4b = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.UnsignedLong Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >
+    >()
+    .asFunction<
+      int Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+      )
+    >();
 final _objc_msgSend_1r6ymhb = objc.msgSendPointer
     .cast<
       ffi.NativeFunction<
@@ -29969,6 +31715,19 @@ final _objc_msgSend_1uxc1ui = objc.msgSendPointer
       ffi.NativeFunction<ffi.UnsignedLong Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>
     >()
     .asFunction<int Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>();
+final _objc_msgSend_1vd1c5m = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.UnsignedLong Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >
+    >()
+    .asFunction<
+      int Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>, ffi.Pointer<objc.ObjCObjectImpl>)
+    >();
 final _objc_msgSend_1vdfken = objc.msgSendPointer
     .cast<ffi.NativeFunction<objc.CGSize Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>>()
     .asFunction<objc.CGSize Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>();
@@ -30665,6 +32424,13 @@ final _objc_msgSend_8b326q = objc.msgSendPointer
         ffi.Pointer<objc.ObjCObjectImpl>,
       )
     >();
+final _objc_msgSend_8bhyg1 = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.Long Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>, ffi.UnsignedLong)
+      >
+    >()
+    .asFunction<int Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>, int)>();
 final _objc_msgSend_8sdj0f = objc.msgSendPointer
     .cast<ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>>()
     .asFunction<int Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>();
@@ -30685,6 +32451,25 @@ final _objc_msgSend_93gyx4 = objc.msgSendPointer
     >()
     .asFunction<
       void Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>, objc.CGPoint, objc.CGRect, double)
+    >();
+final _objc_msgSend_9e06sb = objc.msgSendPointer
+    .cast<
+      ffi.NativeFunction<
+        ffi.UnsignedLong Function(
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCSelector>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+          ffi.Pointer<objc.ObjCObjectImpl>,
+        )
+      >
+    >()
+    .asFunction<
+      int Function(
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCSelector>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+        ffi.Pointer<objc.ObjCObjectImpl>,
+      )
     >();
 final _objc_msgSend_9e3va4 = objc.msgSendPointer
     .cast<
@@ -32021,12 +33806,18 @@ final _objc_msgSend_ysm2mt = objc.msgSendPointer
 final _objc_msgSend_yxy6zy = objc.msgSendPointer
     .cast<ffi.NativeFunction<ffi.Long Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>>()
     .asFunction<int Function(ffi.Pointer<objc.ObjCObjectImpl>, ffi.Pointer<objc.ObjCSelector>)>();
-@ffi.Native<ffi.Pointer<objc.ObjCProtocolImpl> Function()>(symbol: '_k4vejs_NSHapticFeedbackPerformer')
+@ffi.Native<ffi.Pointer<objc.ObjCProtocolImpl> Function()>(symbol: '_zy1hgj_NSHapticFeedbackPerformer')
 external ffi.Pointer<objc.ObjCProtocolImpl> _protocol_NSHapticFeedbackPerformer_raw();
 final _protocol_NSHapticFeedbackPerformer = objc.getProtocol(
   "NSHapticFeedbackPerformer",
   _protocol_NSHapticFeedbackPerformer_raw,
 );
+@ffi.Native<ffi.Pointer<objc.ObjCProtocolImpl> Function()>(symbol: '_zy1hgj_NSPasteboardReading')
+external ffi.Pointer<objc.ObjCProtocolImpl> _protocol_NSPasteboardReading_raw();
+final _protocol_NSPasteboardReading = objc.getProtocol("NSPasteboardReading", _protocol_NSPasteboardReading_raw);
+@ffi.Native<ffi.Pointer<objc.ObjCProtocolImpl> Function()>(symbol: '_zy1hgj_NSPasteboardWriting')
+external ffi.Pointer<objc.ObjCProtocolImpl> _protocol_NSPasteboardWriting_raw();
+final _protocol_NSPasteboardWriting = objc.getProtocol("NSPasteboardWriting", _protocol_NSPasteboardWriting_raw);
 late final _sel_CGImage = objc.registerName("CGImage");
 late final _sel_CGImageForProposedRect_context_hints_ = objc.registerName("CGImageForProposedRect:context:hints:");
 late final _sel_IBeamCursor = objc.registerName("IBeamCursor");
@@ -32204,6 +33995,7 @@ late final _sel_addTrackingArea_ = objc.registerName("addTrackingArea:");
 late final _sel_addTrackingRect_owner_userData_assumeInside_ = objc.registerName(
   "addTrackingRect:owner:userData:assumeInside:",
 );
+late final _sel_addTypes_owner_ = objc.registerName("addTypes:owner:");
 late final _sel_addWindowsItem_title_filename_ = objc.registerName("addWindowsItem:title:filename:");
 late final _sel_additionalSafeAreaInsets = objc.registerName("additionalSafeAreaInsets");
 late final _sel_adjustPageHeightNew_top_bottom_limit_ = objc.registerName("adjustPageHeightNew:top:bottom:limit:");
@@ -32262,6 +34054,7 @@ late final _sel_autorecalculatesKeyViewLoop = objc.registerName("autorecalculate
 late final _sel_autoresizesSubviews = objc.registerName("autoresizesSubviews");
 late final _sel_autoresizingMask = objc.registerName("autoresizingMask");
 late final _sel_autoscroll_ = objc.registerName("autoscroll:");
+late final _sel_availableTypeFromArray_ = objc.registerName("availableTypeFromArray:");
 late final _sel_backgroundColor = objc.registerName("backgroundColor");
 late final _sel_backgroundFilters = objc.registerName("backgroundFilters");
 late final _sel_backingAlignedRect_options_ = objc.registerName("backingAlignedRect:options:");
@@ -32330,6 +34123,8 @@ late final _sel_canDrawSubviewsIntoLayer = objc.registerName("canDrawSubviewsInt
 late final _sel_canHide = objc.registerName("canHide");
 late final _sel_canInitWithData_ = objc.registerName("canInitWithData:");
 late final _sel_canInitWithPasteboard_ = objc.registerName("canInitWithPasteboard:");
+late final _sel_canReadItemWithDataConformingToTypes_ = objc.registerName("canReadItemWithDataConformingToTypes:");
+late final _sel_canReadObjectForClasses_options_ = objc.registerName("canReadObjectForClasses:options:");
 late final _sel_canRepresentDisplayGamut_ = objc.registerName("canRepresentDisplayGamut:");
 late final _sel_canStoreColor = objc.registerName("canStoreColor");
 late final _sel_cancelIncrementalLoad = objc.registerName("cancelIncrementalLoad");
@@ -32347,11 +34142,13 @@ late final _sel_centerSelectionInVisibleArea_ = objc.registerName("centerSelecti
 late final _sel_centerXAnchor = objc.registerName("centerXAnchor");
 late final _sel_centerYAnchor = objc.registerName("centerYAnchor");
 late final _sel_changeCaseOfLetter_ = objc.registerName("changeCaseOfLetter:");
+late final _sel_changeCount = objc.registerName("changeCount");
 late final _sel_changeModeWithEvent_ = objc.registerName("changeModeWithEvent:");
 late final _sel_changeWindowsItem_title_filename_ = objc.registerName("changeWindowsItem:title:filename:");
 late final _sel_checkboxWithTitle_target_action_ = objc.registerName("checkboxWithTitle:target:action:");
 late final _sel_childViewControllers = objc.registerName("childViewControllers");
 late final _sel_childWindows = objc.registerName("childWindows");
+late final _sel_clearContents = objc.registerName("clearContents");
 late final _sel_clipsToBounds = objc.registerName("clipsToBounds");
 late final _sel_close = objc.registerName("close");
 late final _sel_closedHandCursor = objc.registerName("closedHandCursor");
@@ -32481,10 +34278,12 @@ late final _sel_currentEvent = objc.registerName("currentEvent");
 late final _sel_currentSystemCursor = objc.registerName("currentSystemCursor");
 late final _sel_currentSystemPresentationOptions = objc.registerName("currentSystemPresentationOptions");
 late final _sel_cursorUpdate_ = objc.registerName("cursorUpdate:");
+late final _sel_dataForType_ = objc.registerName("dataForType:");
 late final _sel_dataWithEPSInsideRect_ = objc.registerName("dataWithEPSInsideRect:");
 late final _sel_dataWithPDFInsideRect_ = objc.registerName("dataWithPDFInsideRect:");
 late final _sel_deactivate = objc.registerName("deactivate");
 late final _sel_deactivateConstraints_ = objc.registerName("deactivateConstraints:");
+late final _sel_declareTypes_owner_ = objc.registerName("declareTypes:owner:");
 late final _sel_deepestScreen = objc.registerName("deepestScreen");
 late final _sel_defaultAnimationForKey_ = objc.registerName("defaultAnimationForKey:");
 late final _sel_defaultButtonCell = objc.registerName("defaultButtonCell");
@@ -32628,6 +34427,7 @@ late final _sel_frameResizeCursorFromPosition_inDirections_ = objc.registerName(
 late final _sel_frameRotation = objc.registerName("frameRotation");
 late final _sel_fullScreenMinHeight = objc.registerName("fullScreenMinHeight");
 late final _sel_gState = objc.registerName("gState");
+late final _sel_generalPasteboard = objc.registerName("generalPasteboard");
 late final _sel_gestureRecognizers = objc.registerName("gestureRecognizers");
 late final _sel_getBitmapDataPlanes_ = objc.registerName("getBitmapDataPlanes:");
 late final _sel_getCompression_factor_ = objc.registerName("getCompression:factor:");
@@ -32699,6 +34499,7 @@ late final _sel_imageWithSystemSymbolName_variableValue_accessibilityDescription
 late final _sel_inLiveResize = objc.registerName("inLiveResize");
 late final _sel_incrementalLoadFromData_complete_ = objc.registerName("incrementalLoadFromData:complete:");
 late final _sel_indent_ = objc.registerName("indent:");
+late final _sel_indexOfPasteboardItem_ = objc.registerName("indexOfPasteboardItem:");
 late final _sel_init = objc.registerName("init");
 late final _sel_initByReferencingFile_ = objc.registerName("initByReferencingFile:");
 late final _sel_initByReferencingURL_ = objc.registerName("initByReferencingURL:");
@@ -32733,6 +34534,7 @@ late final _sel_initWithImage_foregroundColorHint_backgroundColorHint_hotSpot_ =
 );
 late final _sel_initWithImage_hotSpot_ = objc.registerName("initWithImage:hotSpot:");
 late final _sel_initWithNibName_bundle_ = objc.registerName("initWithNibName:bundle:");
+late final _sel_initWithPasteboardPropertyList_ofType_ = objc.registerName("initWithPasteboardPropertyList:ofType:");
 late final _sel_initWithPasteboard_ = objc.registerName("initWithPasteboard:");
 late final _sel_initWithSize_ = objc.registerName("initWithSize:");
 late final _sel_initWithWindowRef_ = objc.registerName("initWithWindowRef:");
@@ -32999,6 +34801,13 @@ late final _sel_pageUpAndModifySelection_ = objc.registerName("pageUpAndModifySe
 late final _sel_pageUp_ = objc.registerName("pageUp:");
 late final _sel_parentViewController = objc.registerName("parentViewController");
 late final _sel_parentWindow = objc.registerName("parentWindow");
+late final _sel_pasteboardByFilteringData_ofType_ = objc.registerName("pasteboardByFilteringData:ofType:");
+late final _sel_pasteboardByFilteringFile_ = objc.registerName("pasteboardByFilteringFile:");
+late final _sel_pasteboardByFilteringTypesInPasteboard_ = objc.registerName("pasteboardByFilteringTypesInPasteboard:");
+late final _sel_pasteboardItems = objc.registerName("pasteboardItems");
+late final _sel_pasteboardPropertyListForType_ = objc.registerName("pasteboardPropertyListForType:");
+late final _sel_pasteboardWithName_ = objc.registerName("pasteboardWithName:");
+late final _sel_pasteboardWithUniqueName = objc.registerName("pasteboardWithUniqueName");
 late final _sel_performClick_ = objc.registerName("performClick:");
 late final _sel_performClose_ = objc.registerName("performClose:");
 late final _sel_performDragOperation_ = objc.registerName("performDragOperation:");
@@ -33028,6 +34837,7 @@ late final _sel_preferredScreenOrigin = objc.registerName("preferredScreenOrigin
 late final _sel_prefersColorMatch = objc.registerName("prefersColorMatch");
 late final _sel_prepareContentInRect_ = objc.registerName("prepareContentInRect:");
 late final _sel_prepareForDragOperation_ = objc.registerName("prepareForDragOperation:");
+late final _sel_prepareForNewContentsWithOptions_ = objc.registerName("prepareForNewContentsWithOptions:");
 late final _sel_prepareForReuse = objc.registerName("prepareForReuse");
 late final _sel_prepareForSegue_sender_ = objc.registerName("prepareForSegue:sender:");
 late final _sel_preparedContentRect = objc.registerName("preparedContentRect");
@@ -33055,10 +34865,16 @@ late final _sel_previousValidKeyView = objc.registerName("previousValidKeyView")
 late final _sel_printJobTitle = objc.registerName("printJobTitle");
 late final _sel_print_ = objc.registerName("print:");
 late final _sel_priority = objc.registerName("priority");
+late final _sel_propertyListForType_ = objc.registerName("propertyListForType:");
 late final _sel_push = objc.registerName("push");
 late final _sel_quickLookPreviewItems_ = objc.registerName("quickLookPreviewItems:");
 late final _sel_quickLookWithEvent_ = objc.registerName("quickLookWithEvent:");
 late final _sel_radioButtonWithTitle_target_action_ = objc.registerName("radioButtonWithTitle:target:action:");
+late final _sel_readFileContentsType_toFile_ = objc.registerName("readFileContentsType:toFile:");
+late final _sel_readFileWrapper = objc.registerName("readFileWrapper");
+late final _sel_readObjectsForClasses_options_ = objc.registerName("readObjectsForClasses:options:");
+late final _sel_readableTypesForPasteboard_ = objc.registerName("readableTypesForPasteboard:");
+late final _sel_readingOptionsForType_pasteboard_ = objc.registerName("readingOptionsForType:pasteboard:");
 late final _sel_recache = objc.registerName("recache");
 late final _sel_recalculateKeyViewLoop = objc.registerName("recalculateKeyViewLoop");
 late final _sel_recommendedLayerContentsScale_ = objc.registerName("recommendedLayerContentsScale:");
@@ -33079,6 +34895,7 @@ late final _sel_registeredDraggedTypes = objc.registerName("registeredDraggedTyp
 late final _sel_registeredImageRepClasses = objc.registerName("registeredImageRepClasses");
 late final _sel_relation = objc.registerName("relation");
 late final _sel_releaseGState = objc.registerName("releaseGState");
+late final _sel_releaseGlobally = objc.registerName("releaseGlobally");
 late final _sel_removeAllToolTips = objc.registerName("removeAllToolTips");
 late final _sel_removeChildViewControllerAtIndex_ = objc.registerName("removeChildViewControllerAtIndex:");
 late final _sel_removeChildWindow_ = objc.registerName("removeChildWindow:");
@@ -33423,7 +35240,9 @@ late final _sel_setContentViewController_ = objc.registerName("setContentViewCon
 late final _sel_setContentView_ = objc.registerName("setContentView:");
 late final _sel_setContinuous_ = objc.registerName("setContinuous:");
 late final _sel_setControlSize_ = objc.registerName("setControlSize:");
+late final _sel_setDataProvider_forTypes_ = objc.registerName("setDataProvider:forTypes:");
 late final _sel_setDataRetained_ = objc.registerName("setDataRetained:");
+late final _sel_setData_forType_ = objc.registerName("setData:forType:");
 late final _sel_setDefaultButtonCell_ = objc.registerName("setDefaultButtonCell:");
 late final _sel_setDelegate_ = objc.registerName("setDelegate:");
 late final _sel_setDepthLimit_ = objc.registerName("setDepthLimit:");
@@ -33530,6 +35349,7 @@ late final _sel_setPreventsApplicationTerminationWhenModal_ = objc.registerName(
   "setPreventsApplicationTerminationWhenModal:",
 );
 late final _sel_setPriority_ = objc.registerName("setPriority:");
+late final _sel_setPropertyList_forType_ = objc.registerName("setPropertyList:forType:");
 late final _sel_setProperty_withValue_ = objc.registerName("setProperty:withValue:");
 late final _sel_setRefusesFirstResponder_ = objc.registerName("setRefusesFirstResponder:");
 late final _sel_setReleasedWhenClosed_ = objc.registerName("setReleasedWhenClosed:");
@@ -33553,6 +35373,7 @@ late final _sel_setSourceItemView_ = objc.registerName("setSourceItemView:");
 late final _sel_setSpringLoaded_ = objc.registerName("setSpringLoaded:");
 late final _sel_setState_ = objc.registerName("setState:");
 late final _sel_setStringValue_ = objc.registerName("setStringValue:");
+late final _sel_setString_forType_ = objc.registerName("setString:forType:");
 late final _sel_setStyleMask_ = objc.registerName("setStyleMask:");
 late final _sel_setSubtitle_ = objc.registerName("setSubtitle:");
 late final _sel_setSubviews_ = objc.registerName("setSubviews:");
@@ -33626,6 +35447,7 @@ late final _sel_stopModal = objc.registerName("stopModal");
 late final _sel_stopModalWithCode_ = objc.registerName("stopModalWithCode:");
 late final _sel_stop_ = objc.registerName("stop:");
 late final _sel_storyboard = objc.registerName("storyboard");
+late final _sel_stringForType_ = objc.registerName("stringForType:");
 late final _sel_stringValue = objc.registerName("stringValue");
 late final _sel_stringWithSavedFrame = objc.registerName("stringWithSavedFrame");
 late final _sel_styleMask = objc.registerName("styleMask");
@@ -33691,6 +35513,8 @@ late final _sel_translatesAutoresizingMaskIntoConstraints = objc.registerName(
 late final _sel_transposeWords_ = objc.registerName("transposeWords:");
 late final _sel_transpose_ = objc.registerName("transpose:");
 late final _sel_tryToPerform_with_ = objc.registerName("tryToPerform:with:");
+late final _sel_types = objc.registerName("types");
+late final _sel_typesFilterableTo_ = objc.registerName("typesFilterableTo:");
 late final _sel_undoManager = objc.registerName("undoManager");
 late final _sel_unhide = objc.registerName("unhide");
 late final _sel_unhideAllApplications_ = objc.registerName("unhideAllApplications:");
@@ -33782,8 +35606,13 @@ late final _sel_windowWithWindowNumber_ = objc.registerName("windowWithWindowNum
 late final _sel_windows = objc.registerName("windows");
 late final _sel_windowsMenu = objc.registerName("windowsMenu");
 late final _sel_worksWhenModal = objc.registerName("worksWhenModal");
+late final _sel_writableTypesForPasteboard_ = objc.registerName("writableTypesForPasteboard:");
 late final _sel_writeEPSInsideRect_toPasteboard_ = objc.registerName("writeEPSInsideRect:toPasteboard:");
+late final _sel_writeFileContents_ = objc.registerName("writeFileContents:");
+late final _sel_writeFileWrapper_ = objc.registerName("writeFileWrapper:");
+late final _sel_writeObjects_ = objc.registerName("writeObjects:");
 late final _sel_writePDFInsideRect_toPasteboard_ = objc.registerName("writePDFInsideRect:toPasteboard:");
+late final _sel_writingOptionsForType_pasteboard_ = objc.registerName("writingOptionsForType:pasteboard:");
 late final _sel_yank_ = objc.registerName("yank:");
 late final _sel_yieldActivationToApplicationWithBundleIdentifier_ = objc.registerName(
   "yieldActivationToApplicationWithBundleIdentifier:",

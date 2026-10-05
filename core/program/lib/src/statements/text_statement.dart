@@ -128,17 +128,17 @@ extension ParagraphBuilder on TextStatement {
   skia.Paragraph buildParagraph(Evaluation e) {
     final context = e.contextFor(id);
 
-    final family = context.resolveAsset<FontAsset>(textFormat.fontFamily)!;
+    final familyName = textFormat.fontFamily;
+    final family = e.assetManifest.fontCatalog[familyName];
 
-    final skWeight = skia.FontWeight(textFormat.fontWeight.value);
-    final skWidth = family.widths.first;
-    final skSlant = switch (textFormat.fontStyle) {
-      .regular => skia.FontSlant.upright,
-      .italic => skia.FontSlant.italic,
-    };
+    final face = family.resolveClosest(
+      weight: textFormat.skWeight,
+      width: textFormat.skWidth,
+      slant: textFormat.skSlant,
+    );
 
-    final fontFile = family.resolveFile(weight: skWeight, width: skWidth, slant: skSlant)!;
-    context.fetchAssetData(fontFile.id);
+    final asset = family.assetFor(face);
+    context.loadAsset(asset);
 
     final paragraphStyle = skia.ParagraphStyle(
       alignment: switch (paragraphFormat.alignment) {
@@ -152,8 +152,8 @@ extension ParagraphBuilder on TextStatement {
 
     final textStyle = skia.TextStyle(
       fontSize: textFormat.fontSize,
-      fontFamilies: [family.family],
-      fontStyle: .new(weight: skWeight, width: skWidth, slant: skSlant),
+      fontFamilies: [familyName],
+      fontStyle: .new(weight: face.weight, width: face.width, slant: face.slant),
       height: textFormat.lineHeight,
       letterSpacing: textFormat.letterSpacing,
     );
@@ -173,13 +173,7 @@ extension ParagraphBuilder on TextStatement {
 
 enum TextDecorationKind { underline, overline, strikethrough }
 
-sealed class const TextFontVariation();
-final class const TextFontVariationItalic(final double value);
-final class const TextFontVariationWeight(final double value);
-final class const TextFontVariationWidth(final double value);
-final class const TextFontVariationSlant(final double value);
-
-enum TextFontStyle { regular, italic }
+enum TextFontSlant { upright, italic, oblique }
 
 enum TextFontWeight {
   thin(100),
@@ -196,19 +190,34 @@ enum TextFontWeight {
   final int value;
 }
 
+enum TextFontWidth {
+  ultraCondensed(1),
+  extraCondensed(2),
+  condensed(3),
+  semiCondensed(4),
+  normal(5),
+  semiExpanded(6),
+  expanded(7),
+  extraExpanded(8),
+  ultraExpanded(9);
+
+  const new(this.value);
+  final int value;
+}
+
 final class const TextFormat({
   required final double fontSize,
   final double lineHeight = 1.0,
   final double letterSpacing = 0.0,
-  required final FontFamilyId fontFamily,
-  final TextFontStyle fontStyle = .regular,
+  required final String fontFamily,
+  final TextFontWidth fontWidth = .normal,
   final TextFontWeight fontWeight = .regular,
-  final List<TextFontVariation> variations = const [],
+  final TextFontSlant fontSlant = .upright,
   final List<TextDecorationKind> decorations = const [],
 }) with Equatable {
   static TextFormat default_(FontCatalog catalog) {
     return .new(
-      fontFamily: catalog.assets.values.first.id,
+      fontFamily: catalog.families.values.first.name,
       fontSize: 16.0,
     );
   }
@@ -217,24 +226,44 @@ final class const TextFormat({
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
-    FontFamilyId? fontFamily,
-    TextFontStyle? fontStyle,
+    String? fontFamily,
+    TextFontSlant? fontSlant,
     TextFontWeight? fontWeight,
-    List<TextFontVariation>? variations,
+    TextFontWidth? fontWidth,
     List<TextDecorationKind>? decorations,
   }) => .new(
     fontFamily: fontFamily ?? this.fontFamily,
     fontSize: fontSize ?? this.fontSize,
     lineHeight: lineHeight ?? this.lineHeight,
     letterSpacing: letterSpacing ?? this.letterSpacing,
-    fontStyle: fontStyle ?? this.fontStyle,
+    fontSlant: fontSlant ?? this.fontSlant,
     fontWeight: fontWeight ?? this.fontWeight,
-    variations: variations ?? this.variations,
+    fontWidth: fontWidth ?? this.fontWidth,
     decorations: decorations ?? this.decorations,
   );
 
   @override
-  List<Object?> get props => [fontSize, lineHeight, letterSpacing, fontStyle, fontWeight, variations, decorations];
+  List<Object?> get props => [fontSize, lineHeight, letterSpacing, fontSlant, fontWeight, fontWidth, decorations];
+
+  skia.FontStyle get skStyle => .new(
+    weight: skWeight,
+    width: skWidth,
+    slant: skSlant,
+  );
+
+  skia.FontWeight get skWeight => .new(fontWeight.value);
+  skia.FontWidth get skWidth => .new(fontWidth.value);
+  skia.FontSlant get skSlant => switch (fontSlant) {
+    .upright => .upright,
+    .italic => .italic,
+    .oblique => .oblique,
+  };
+
+  FontFace resolveClosest(FontFamily family) => family.resolveClosest(
+    weight: skWeight,
+    width: skWidth,
+    slant: skSlant,
+  );
 }
 
 enum TextAlignment { left, right, center, justify }

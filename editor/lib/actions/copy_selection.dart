@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const CopySelectionIntent() extends CommandIntent;
+final class const CopySelectionIntent() extends Intent;
 
 final copySelectionIntentDescriptor = CommandIntentDescriptor<CopySelectionIntent>(
   command: 'copy',
@@ -20,7 +20,9 @@ class CopySelectionAction extends CommandAction<CopySelectionIntent> with Canvas
     if (selection.isEmpty) return;
 
     final slice = editor.scene.evaluation.routeSlice(selection.refs.cells);
-    final data = base64Encode(slice.encode().writeToBuffer());
-    Clipboard.setData(.new(text: data));
+    final data = slice.encode().writeToBuffer();
+    Clipboard.set([
+      .custom({'motif.program-slice': data}),
+    ]);
   }
 }

@@ -8,6 +8,7 @@ environment:
 dependencies:
   geometry:
 
+  crypto: ^3.0.7
   collection: ^1.19.1
   colorize: ^3.0.0
   logging: ^1.3.0

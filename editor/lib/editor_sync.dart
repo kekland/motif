@@ -50,7 +50,7 @@ final class EditorSync extends Controller {
 
   Future<void> initialize() async {
     await skia.Skia.initialize();
-    await EditorBuiltinFonts.initialize();
+    await EditorBuiltinAssets.initialize();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -214,13 +214,14 @@ final class EditorSync extends Controller {
 
   Future<Hash> saveAsset(Uint8List data) async {
     final hash = Hash.compute(data);
-    await client.saveAsset(sceneId, hash.encode(), data);
+    await client.saveAsset(sceneId, hash, data);
     return hash;
   }
 
-  Future<Uint8List> loadAsset(AssetId id) async {
-    final data = await client.loadAsset(sceneId, id.hash.encode());
-    return data;
+  Future<Uint8List> loadAsset(Hash hash) async {
+    final builtins = EditorBuiltinAssets.instance;
+    if (builtins.contains(hash)) return builtins.load(hash);
+    return client.loadAsset(sceneId, hash);
   }
 }
 

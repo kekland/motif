@@ -22,9 +22,11 @@ class EditorShortcuts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shortcuts(
-      shortcuts: buildShortcuts(context),
-      child: child,
+    return PasteHandlerWidget(
+      child: Shortcuts(
+        shortcuts: buildShortcuts(context),
+        child: child,
+      ),
     );
   }
 }

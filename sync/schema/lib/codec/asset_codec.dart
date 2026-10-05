@@ -24,14 +24,14 @@ final _assetCodec = $codec<Asset, gen.Asset>(
 
 final _imageAssetCodec = $codec<ImageAsset, gen.Asset>(
   decoder: (v) => .new(
-    hash: v.hash.decode(),
+    hash: .raw(v.hash),
     size: v.size,
     width: v.image.width,
     height: v.image.height,
     mimeType: v.image.mimeType,
   ),
   encoder: (v) => .new(
-    hash: v.hash.encode(),
+    hash: v.hash.value,
     size: v.size,
     image: .new(
       width: v.width,
@@ -43,47 +43,20 @@ final _imageAssetCodec = $codec<ImageAsset, gen.Asset>(
 
 final _fontAssetCodec = $codec<FontAsset, gen.Asset>(
   decoder: (v) => .new(
-    hash: v.hash.decode(),
+    hash: .raw(v.hash),
     size: v.size,
-    licenseHash: v.font.licenseHash.decode(),
+    license: .raw(v.font.license),
     family: v.font.family,
-    files: $map(v.font.files, (e) => e.decode()),
-    thumbnail: v.font.thumbnail.decode(),
+    faces: $map(v.font.faces, (e) => e.decode()),
   ),
   encoder: (v) => .new(
-    hash: v.hash.encode(),
+    hash: v.hash.value,
     size: v.size,
     font: .new(
-      licenseHash: v.licenseHash.encode(),
+      license: v.license.value,
       family: v.family,
-      files: $map(v.files, (e) => e.encode()),
-      thumbnail: v.thumbnail.encode(),
+      faces: $map(v.faces, (e) => e.encode()),
     ),
-  ),
-);
-
-
-extension HashEncode on Hash { gen.Hash encode() => _hashCodec.encode(this); }
-extension HashDecode on gen.Hash { Hash decode() => _hashCodec.decode(this); }
-
-final _hashCodec = $codec<Hash, gen.Hash>(
-  decoder: (v) => Hash.raw(v.value),
-  encoder: (v) => gen.Hash(value: v.value),
-);
-
-extension _FontFileEncode on FontFile { gen.FontFile encode() => _fontFileCodec.encode(this); }
-extension _FontFileDecode on gen.FontFile { FontFile decode() => _fontFileCodec.decode(this); }
-
-final _fontFileCodec = $codec<FontFile, gen.FontFile>(
-  decoder: (v) => .new(
-    hash: v.hash.decode(),
-    size: v.size,
-    faces: $map(v.faces, (e) => e.decode()),
-  ),
-  encoder: (v) => .new(
-    hash: v.hash.encode(),
-    size: v.size,
-    faces: $map(v.faces, (e) => e.encode()),
   ),
 );
 
@@ -98,6 +71,7 @@ final _fontFaceCodec = $codec<FontFace, gen.FontFace>(
     weight: .new(v.weight),
     width: .new(v.width),
     slant: .values[v.slant],
+    thumbnail: $opt(v.hasThumbnail, () => v.thumbnail.decode()),
   ),
   encoder: (v) => .new(
     index: v.index,
@@ -105,13 +79,14 @@ final _fontFaceCodec = $codec<FontFace, gen.FontFace>(
     weight: v.weight.value,
     width: v.width.value,
     slant: v.slant.index,
+    thumbnail: v.thumbnail?.encode(),
   ),
 );
 
-extension FontFamilyThumbnailEncode on FontFamilyThumbnail { gen.FontFamilyThumbnail encode() => _fontFamilyThumbnailCodec.encode(this); }
-extension FontFamilyThumbnailDecode on gen.FontFamilyThumbnail { FontFamilyThumbnail decode() => _fontFamilyThumbnailCodec.decode(this); }
+extension FontFaceThumbnailEncode on FontFaceThumbnail { gen.FontFace_Thumbnail encode() => _fontFamilyThumbnailCodec.encode(this); }
+extension FontFaceThumbnailDecode on gen.FontFace_Thumbnail { FontFaceThumbnail decode() => _fontFamilyThumbnailCodec.decode(this); }
 
-final _fontFamilyThumbnailCodec = $codec<FontFamilyThumbnail, gen.FontFamilyThumbnail>(
+final _fontFamilyThumbnailCodec = $codec<FontFaceThumbnail, gen.FontFace_Thumbnail>(
   decoder: (v) => .new(
     path: v.path.decode(),
     width: v.width,
@@ -124,30 +99,18 @@ final _fontFamilyThumbnailCodec = $codec<FontFamilyThumbnail, gen.FontFamilyThum
   ),
 );
 
-extension FontCatalogEncode on FontCatalog { gen.FontCatalog encode() => _fontCatalogCodec.encode(this); }
-extension FontCatalogDecode on gen.FontCatalog { FontCatalog decode() => _fontCatalogCodec.decode(this); }
-
-final _fontCatalogCodec = $codec<FontCatalog, gen.FontCatalog>(
-  decoder: (v) => .new(
-    assets: $mapFrom(v.entries, (e) => e.hash.decode(), (e) => _fontAssetCodec.decode(e.asset)),
-  ),
-  encoder: (v) => .new(
-    entries: $map(v.assets.entries, (e) => .new(hash: e.key.encode(), asset: e.value.encode())),
-  ),
-);
-
 extension AssetLicenseEncode on AssetLicense { gen.AssetLicense encode() => _assetLicenseCodec.encode(this); }
 extension AssetLicenseDecode on gen.AssetLicense { AssetLicense decode() => _assetLicenseCodec.decode(this); }
 
 final _assetLicenseCodec = $codec<AssetLicense, gen.AssetLicense>(
   decoder: (v) => .new(
-    hash: v.hash.decode(),
+    hash: .raw(v.hash),
     descriptor: v.descriptor,
     kind: v.kind,
     body: v.body,
   ),
   encoder: (v) => .new(
-    hash: v.hash.encode(),
+    hash: v.hash.value,
     descriptor: v.descriptor,
     kind: v.kind,
     body: v.body,
@@ -159,9 +122,21 @@ extension LicenseBundleDecode on gen.LicenseBundle { LicenseBundle decode() => _
 
 final _licenseBundleCodec = $codec<LicenseBundle, gen.LicenseBundle>(
   decoder: (v) => .new(
-    licenses: $mapFrom(v.entries, (e) => e.hash.decode(), (e) => e.license.decode()),
+    licenses: $mmap(v.licenses, (k) => .raw(k), (v) => v.decode()),
   ),
   encoder: (v) => .new(
-    entries: $map(v.licenses.entries, (e) => .new(hash: e.key.encode(), license: e.value.encode())),
+    licenses: $mmap(v.licenses, (k) => k.value, (v) => v.encode()).entries,
+  ),
+);
+
+extension AssetManifestEncode on AssetManifest { gen.AssetManifest encode() => _assetManifestCodec.encode(this); }
+extension AssetManifestDecode on gen.AssetManifest { AssetManifest decode() => _assetManifestCodec.decode(this); }
+
+final _assetManifestCodec = $codec<AssetManifest, gen.AssetManifest>(
+  decoder: (v) => .new(
+    entries: $mmap(v.entries, (k) => .raw(k), (v) => v.decode()),
+  ),
+  encoder: (v) => .new(
+    entries: $mmap(v.entries, (k) => k.value, (v) => v.encode()).entries,
   ),
 );

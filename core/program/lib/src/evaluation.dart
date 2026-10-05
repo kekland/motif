@@ -27,6 +27,8 @@ final class Evaluation {
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
 
+  AssetManifest get assetManifest => program.assetManifest;
+
   // -------------------------------------------------------------------------------------------------------------------
   // State
   // -------------------------------------------------------------------------------------------------------------------
@@ -147,8 +149,8 @@ final class Evaluation {
     pass.drain();
   }
 
-  A? resolveAsset<A extends Asset>(AssetId id) => program.assetManifest[id] as A?;
-  void fetchAssetData(StatementId? statementId, AssetId id) => assetCache?.fetch(statementId, id);
+  // A? resolveAsset<A extends Asset>(AssetId id) => program.assetManifest[id] as A?;
+  void loadAsset(StatementId? id, Asset asset) => assetCache?.fetch(id, asset);
 }
 
 class AlwaysNotifier<T> extends ChangeNotifier implements ValueListenable<T> {

@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:editor/imports.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' hide Clipboard;
 
 part 'select_ref.dart';
 part 'select_statement.dart';
@@ -55,6 +53,9 @@ Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {
 
   for (final action in actions.values) {
     if (action is! CommandAction) continue;
+
+    // Pastes are handled separately per platform, so don't register shortcuts for them.
+    if (action.intentType == PasteIntent) continue;
 
     final descriptor = action.descriptor;
     final shortcut = descriptor.resolveShortcut(context);

@@ -33,6 +33,8 @@ headers:
     - $MACOS_SDK/System/Library/Frameworks/AppKit.framework/Headers/NSImageRep.h
     - $MACOS_SDK/System/Library/Frameworks/AppKit.framework/Headers/NSBitmapImageRep.h
     - $MACOS_SDK/System/Library/Frameworks/AppKit.framework/Headers/NSHapticFeedback.h
+    - $MACOS_SDK/System/Library/Frameworks/AppKit.framework/Headers/NSPasteboard.h
+    - $MACOS_SDK/System/Library/Frameworks/AppKit.framework/Headers/NSPasteboardItem.h
 
 globals:
   include:
@@ -40,6 +42,7 @@ globals:
     - NSWindowWillExitFullScreenNotification
     - NSWindowDidResizeNotification
     - NSWindowStyleMaskFullScreen
+    - NSPasteboardType.*
   
 objc-interfaces:
   include:
@@ -64,9 +67,15 @@ objc-interfaces:
     # Haptics
     - NSHapticFeedbackManager
 
+    # Pasteboard
+    - NSPasteboard
+    - NSPasteboardItem
+
 objc-protocols:
   include:
     - NSHapticFeedbackPerformer
+    - NSPasteboardReading
+    - NSPasteboardWriting
 
 objc-categories:
   rename:

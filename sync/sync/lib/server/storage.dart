@@ -32,7 +32,7 @@ abstract class SceneStorage {
   Future<pb.Program> loadProgram();
   Future<void> saveProgram(pb.Program program);
 
-  Future<Uint8List?> readAsset(pb.Hash hash);
-  Future<void> writeAsset(pb.Hash hash, Uint8List data);
+  Future<Uint8List?> readAsset(String hash);
+  Future<void> writeAsset(String hash, Uint8List data);
   Future<void> close();
 }

@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const DeleteSelectionIntent() extends CommandIntent;
+final class const DeleteSelectionIntent() extends Intent;
 
 final deleteSelectionIntentDescriptor = CommandIntentDescriptor<DeleteSelectionIntent>(
   command: 'delete-selection',

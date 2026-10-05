@@ -200,7 +200,9 @@ final class CreateTextActivity(
 
   @override
   void onStart(PositionedGestureDetails details) {
-    final asset = editor.builtinFonts.catalog.assets[textFormat.fontFamily.hash]!;
+    final family = editor.builtinFonts.catalog[textFormat.fontFamily];
+    final face = textFormat.resolveClosest(family);
+    final asset = family.assetFor(face);
     editor.maybeAddAsset(asset);
 
     super.onStart(details);

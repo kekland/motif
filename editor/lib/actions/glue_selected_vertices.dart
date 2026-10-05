@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const GlueSelectedVerticesIntent() extends CommandIntent;
+final class const GlueSelectedVerticesIntent() extends Intent;
 
 final glueSelectedVerticesIntentDescriptor = CommandIntentDescriptor<GlueSelectedVerticesIntent>(
   command: 'glue-vertices',

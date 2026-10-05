@@ -54,6 +54,7 @@ extension LayoutBoxStatementProps on LayoutBoxStatement {
       override: (scene, s) {
         final layout = scene.layoutOf(s.id);
         if (layout == null) return null;
+        if (layout.offset == null) return null;
         return .new(translation: .from(layout.offset), rotation: null);
       },
     );
@@ -65,7 +66,11 @@ extension LayoutBoxStatementProps on LayoutBoxStatement {
       override: (scene, s) {
         final layout = scene.layoutOf(s.id);
         if (layout == null) return null;
-        return .from(.fixed(layout.size.width, layout.size.height));
+
+        return .new(
+          width: !s.size.width.isFixed ? .new(layout.size.width, s.size.width.type, s.size.width.range) : null,
+          height: !s.size.height.isFixed ? .new(layout.size.height, s.size.height.type, s.size.height.range) : null,
+        );
       },
     );
   }

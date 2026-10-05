@@ -47,6 +47,120 @@ final $typed_data.Uint8List zPlacementDescriptor = $convert.base64Decode(
     'CgpaUGxhY2VtZW50EhMKD1pfUExBQ0VNRU5UX1RPUBAAEhYKElpfUExBQ0VNRU5UX0JPVFRPTR'
     'ABEhUKEVpfUExBQ0VNRU5UX0FCT1ZFEAISFQoRWl9QTEFDRU1FTlRfQkVMT1cQAw==');
 
+@$core.Deprecated('Use textFontSlantDescriptor instead')
+const TextFontSlant$json = {
+  '1': 'TextFontSlant',
+  '2': [
+    {'1': 'TEXT_FONT_SLANT_UPRIGHT', '2': 0},
+    {'1': 'TEXT_FONT_SLANT_ITALIC', '2': 1},
+    {'1': 'TEXT_FONT_SLANT_OBLIQUE', '2': 2},
+  ],
+};
+
+/// Descriptor for `TextFontSlant`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textFontSlantDescriptor = $convert.base64Decode(
+    'Cg1UZXh0Rm9udFNsYW50EhsKF1RFWFRfRk9OVF9TTEFOVF9VUFJJR0hUEAASGgoWVEVYVF9GT0'
+    '5UX1NMQU5UX0lUQUxJQxABEhsKF1RFWFRfRk9OVF9TTEFOVF9PQkxJUVVFEAI=');
+
+@$core.Deprecated('Use textFontWeightDescriptor instead')
+const TextFontWeight$json = {
+  '1': 'TextFontWeight',
+  '2': [
+    {'1': 'TEXT_FONT_WEIGHT_THIN', '2': 0},
+    {'1': 'TEXT_FONT_WEIGHT_EXTRA_LIGHT', '2': 1},
+    {'1': 'TEXT_FONT_WEIGHT_LIGHT', '2': 2},
+    {'1': 'TEXT_FONT_WEIGHT_REGULAR', '2': 3},
+    {'1': 'TEXT_FONT_WEIGHT_MEDIUM', '2': 4},
+    {'1': 'TEXT_FONT_WEIGHT_SEMI_BOLD', '2': 5},
+    {'1': 'TEXT_FONT_WEIGHT_BOLD', '2': 6},
+    {'1': 'TEXT_FONT_WEIGHT_EXTRA_BOLD', '2': 7},
+    {'1': 'TEXT_FONT_WEIGHT_BLACK', '2': 8},
+  ],
+};
+
+/// Descriptor for `TextFontWeight`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textFontWeightDescriptor = $convert.base64Decode(
+    'Cg5UZXh0Rm9udFdlaWdodBIZChVURVhUX0ZPTlRfV0VJR0hUX1RISU4QABIgChxURVhUX0ZPTl'
+    'RfV0VJR0hUX0VYVFJBX0xJR0hUEAESGgoWVEVYVF9GT05UX1dFSUdIVF9MSUdIVBACEhwKGFRF'
+    'WFRfRk9OVF9XRUlHSFRfUkVHVUxBUhADEhsKF1RFWFRfRk9OVF9XRUlHSFRfTUVESVVNEAQSHg'
+    'oaVEVYVF9GT05UX1dFSUdIVF9TRU1JX0JPTEQQBRIZChVURVhUX0ZPTlRfV0VJR0hUX0JPTEQQ'
+    'BhIfChtURVhUX0ZPTlRfV0VJR0hUX0VYVFJBX0JPTEQQBxIaChZURVhUX0ZPTlRfV0VJR0hUX0'
+    'JMQUNLEAg=');
+
+@$core.Deprecated('Use textFontWidthDescriptor instead')
+const TextFontWidth$json = {
+  '1': 'TextFontWidth',
+  '2': [
+    {'1': 'TEXT_FONT_WIDTH_ULTRA_CONDENSED', '2': 0},
+    {'1': 'TEXT_FONT_WIDTH_EXTRA_CONDENSED', '2': 1},
+    {'1': 'TEXT_FONT_WIDTH_CONDENSED', '2': 2},
+    {'1': 'TEXT_FONT_WIDTH_SEMI_CONDENSED', '2': 3},
+    {'1': 'TEXT_FONT_WIDTH_NORMAL', '2': 4},
+    {'1': 'TEXT_FONT_WIDTH_SEMI_EXPANDED', '2': 5},
+    {'1': 'TEXT_FONT_WIDTH_EXPANDED', '2': 6},
+    {'1': 'TEXT_FONT_WIDTH_EXTRA_EXPANDED', '2': 7},
+    {'1': 'TEXT_FONT_WIDTH_ULTRA_EXPANDED', '2': 8},
+  ],
+};
+
+/// Descriptor for `TextFontWidth`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textFontWidthDescriptor = $convert.base64Decode(
+    'Cg1UZXh0Rm9udFdpZHRoEiMKH1RFWFRfRk9OVF9XSURUSF9VTFRSQV9DT05ERU5TRUQQABIjCh'
+    '9URVhUX0ZPTlRfV0lEVEhfRVhUUkFfQ09OREVOU0VEEAESHQoZVEVYVF9GT05UX1dJRFRIX0NP'
+    'TkRFTlNFRBACEiIKHlRFWFRfRk9OVF9XSURUSF9TRU1JX0NPTkRFTlNFRBADEhoKFlRFWFRfRk'
+    '9OVF9XSURUSF9OT1JNQUwQBBIhCh1URVhUX0ZPTlRfV0lEVEhfU0VNSV9FWFBBTkRFRBAFEhwK'
+    'GFRFWFRfRk9OVF9XSURUSF9FWFBBTkRFRBAGEiIKHlRFWFRfRk9OVF9XSURUSF9FWFRSQV9FWF'
+    'BBTkRFRBAHEiIKHlRFWFRfRk9OVF9XSURUSF9VTFRSQV9FWFBBTkRFRBAI');
+
+@$core.Deprecated('Use textDecorationKindDescriptor instead')
+const TextDecorationKind$json = {
+  '1': 'TextDecorationKind',
+  '2': [
+    {'1': 'TEXT_DECORATION_KIND_UNDERLINE', '2': 0},
+    {'1': 'TEXT_DECORATION_KIND_OVERLINE', '2': 1},
+    {'1': 'TEXT_DECORATION_KIND_STRIKETHROUGH', '2': 2},
+  ],
+};
+
+/// Descriptor for `TextDecorationKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textDecorationKindDescriptor = $convert.base64Decode(
+    'ChJUZXh0RGVjb3JhdGlvbktpbmQSIgoeVEVYVF9ERUNPUkFUSU9OX0tJTkRfVU5ERVJMSU5FEA'
+    'ASIQodVEVYVF9ERUNPUkFUSU9OX0tJTkRfT1ZFUkxJTkUQARImCiJURVhUX0RFQ09SQVRJT05f'
+    'S0lORF9TVFJJS0VUSFJPVUdIEAI=');
+
+@$core.Deprecated('Use textAlignmentDescriptor instead')
+const TextAlignment$json = {
+  '1': 'TextAlignment',
+  '2': [
+    {'1': 'TEXT_ALIGNMENT_LEFT', '2': 0},
+    {'1': 'TEXT_ALIGNMENT_RIGHT', '2': 1},
+    {'1': 'TEXT_ALIGNMENT_CENTER', '2': 2},
+    {'1': 'TEXT_ALIGNMENT_JUSTIFY', '2': 3},
+  ],
+};
+
+/// Descriptor for `TextAlignment`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textAlignmentDescriptor = $convert.base64Decode(
+    'Cg1UZXh0QWxpZ25tZW50EhcKE1RFWFRfQUxJR05NRU5UX0xFRlQQABIYChRURVhUX0FMSUdOTU'
+    'VOVF9SSUdIVBABEhkKFVRFWFRfQUxJR05NRU5UX0NFTlRFUhACEhoKFlRFWFRfQUxJR05NRU5U'
+    'X0pVU1RJRlkQAw==');
+
+@$core.Deprecated('Use textVerticalAlignmentDescriptor instead')
+const TextVerticalAlignment$json = {
+  '1': 'TextVerticalAlignment',
+  '2': [
+    {'1': 'TEXT_VERTICAL_ALIGNMENT_TOP', '2': 0},
+    {'1': 'TEXT_VERTICAL_ALIGNMENT_MIDDLE', '2': 1},
+    {'1': 'TEXT_VERTICAL_ALIGNMENT_BOTTOM', '2': 2},
+  ],
+};
+
+/// Descriptor for `TextVerticalAlignment`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List textVerticalAlignmentDescriptor = $convert.base64Decode(
+    'ChVUZXh0VmVydGljYWxBbGlnbm1lbnQSHwobVEVYVF9WRVJUSUNBTF9BTElHTk1FTlRfVE9QEA'
+    'ASIgoeVEVYVF9WRVJUSUNBTF9BTElHTk1FTlRfTUlERExFEAESIgoeVEVYVF9WRVJUSUNBTF9B'
+    'TElHTk1FTlRfQk9UVE9NEAI=');
+
 @$core.Deprecated('Use programDescriptor instead')
 const Program$json = {
   '1': 'Program',
@@ -685,16 +799,7 @@ const Decoration_Color$json = {
 const Decoration_Image$json = {
   '1': 'Image',
   '2': [
-    {
-      '1': 'value',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Hash',
-      '9': 0,
-      '10': 'value',
-      '17': true
-    },
+    {'1': 'value', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'value', '17': true},
   ],
   '8': [
     {'1': '_value'},
@@ -705,9 +810,8 @@ const Decoration_Image$json = {
 final $typed_data.Uint8List decorationDescriptor = $convert.base64Decode(
     'CgpEZWNvcmF0aW9uEi8KBWNvbG9yGAEgASgLMhcubW90aWYuRGVjb3JhdGlvbi5Db2xvckgAUg'
     'Vjb2xvchIvCgVpbWFnZRgCIAEoCzIXLm1vdGlmLkRlY29yYXRpb24uSW1hZ2VIAFIFaW1hZ2Ua'
-    'LwoFQ29sb3ISJgoFdmFsdWUYASABKAsyEC5tb3RpZi5Db2xvckRhdGFSBXZhbHVlGjkKBUltYW'
-    'dlEiYKBXZhbHVlGAEgASgLMgsubW90aWYuSGFzaEgAUgV2YWx1ZYgBAUIICgZfdmFsdWVCBgoE'
-    'a2luZA==');
+    'LwoFQ29sb3ISJgoFdmFsdWUYASABKAsyEC5tb3RpZi5Db2xvckRhdGFSBXZhbHVlGiwKBUltYW'
+    'dlEhkKBXZhbHVlGAEgASgJSABSBXZhbHVliAEBQggKBl92YWx1ZUIGCgRraW5k');
 
 @$core.Deprecated('Use decorationsDescriptor instead')
 const Decorations$json = {
@@ -728,37 +832,6 @@ const Decorations$json = {
 final $typed_data.Uint8List decorationsDescriptor = $convert.base64Decode(
     'CgtEZWNvcmF0aW9ucxIrCgdlbnRyaWVzGAEgAygLMhEubW90aWYuRGVjb3JhdGlvblIHZW50cm'
     'llcw==');
-
-@$core.Deprecated('Use assetManifestDescriptor instead')
-const AssetManifest$json = {
-  '1': 'AssetManifest',
-  '2': [
-    {
-      '1': 'entries',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.motif.AssetManifest.Entry',
-      '10': 'entries'
-    },
-  ],
-  '3': [AssetManifest_Entry$json],
-};
-
-@$core.Deprecated('Use assetManifestDescriptor instead')
-const AssetManifest_Entry$json = {
-  '1': 'Entry',
-  '2': [
-    {'1': 'hash', '3': 1, '4': 1, '5': 11, '6': '.motif.Hash', '10': 'hash'},
-    {'1': 'asset', '3': 2, '4': 1, '5': 11, '6': '.motif.Asset', '10': 'asset'},
-  ],
-};
-
-/// Descriptor for `AssetManifest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List assetManifestDescriptor = $convert.base64Decode(
-    'Cg1Bc3NldE1hbmlmZXN0EjQKB2VudHJpZXMYASADKAsyGi5tb3RpZi5Bc3NldE1hbmlmZXN0Lk'
-    'VudHJ5UgdlbnRyaWVzGkwKBUVudHJ5Eh8KBGhhc2gYASABKAsyCy5tb3RpZi5IYXNoUgRoYXNo'
-    'EiIKBWFzc2V0GAIgASgLMgwubW90aWYuQXNzZXRSBWFzc2V0');
 
 @$core.Deprecated('Use cellSelectorDescriptor instead')
 const CellSelector$json = {
@@ -1692,6 +1765,46 @@ const TextStatement$json = {
       '10': 'parent',
       '17': true
     },
+    {
+      '1': 'text_format',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.TextFormat',
+      '10': 'textFormat'
+    },
+    {
+      '1': 'paragraph_format',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ParagraphFormat',
+      '10': 'paragraphFormat'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
   ],
   '8': [
     {'1': '_parent'},
@@ -1702,8 +1815,13 @@ const TextStatement$json = {
 final $typed_data.Uint8List textStatementDescriptor = $convert.base64Decode(
     'Cg1UZXh0U3RhdGVtZW50EhIKBHRleHQYASABKAlSBHRleHQSJQoEc2l6ZRgCIAEoCzIRLm1vdG'
     'lmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNmb3JtGAMgASgLMgsubW90aWYuTWF0NFIJdHJh'
-    'bnNmb3JtEisKBnBhcmVudBgEIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB1'
-    '9wYXJlbnQ=');
+    'bnNmb3JtEisKBnBhcmVudBgEIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEjIKC3'
+    'RleHRfZm9ybWF0GAYgASgLMhEubW90aWYuVGV4dEZvcm1hdFIKdGV4dEZvcm1hdBJBChBwYXJh'
+    'Z3JhcGhfZm9ybWF0GAUgASgLMhYubW90aWYuUGFyYWdyYXBoRm9ybWF0Ug9wYXJhZ3JhcGhGb3'
+    'JtYXQSNQoMdmVydGV4X3N0eWxlGAcgASgLMhIubW90aWYuVmVydGV4U3R5bGVSC3ZlcnRleFN0'
+    'eWxlEi8KCmVkZ2Vfc3R5bGUYCCABKAsyEC5tb3RpZi5FZGdlU3R5bGVSCWVkZ2VTdHlsZRIvCg'
+    'pmYWNlX3N0eWxlGAkgASgLMhAubW90aWYuRmFjZVN0eWxlUglmYWNlU3R5bGVCCQoHX3BhcmVu'
+    'dA==');
 
 @$core.Deprecated('Use reorderStatementDescriptor instead')
 const ReorderStatement$json = {
@@ -2074,6 +2192,101 @@ final $typed_data.Uint8List layoutDescriptor = $convert.base64Decode(
     'xBWU9VVF9KVVNUSUZZX1NUQVJUEAASGQoVTEFZT1VUX0pVU1RJRllfQ0VOVEVSEAESFgoSTEFZ'
     'T1VUX0pVU1RJRllfRU5EEAISIAocTEFZT1VUX0pVU1RJRllfU1BBQ0VfQkVUV0VFThADQgcKBX'
     'ZhbHVl');
+
+@$core.Deprecated('Use textFormatDescriptor instead')
+const TextFormat$json = {
+  '1': 'TextFormat',
+  '2': [
+    {'1': 'font_size', '3': 1, '4': 1, '5': 1, '10': 'fontSize'},
+    {'1': 'line_height', '3': 2, '4': 1, '5': 1, '10': 'lineHeight'},
+    {'1': 'letter_spacing', '3': 3, '4': 1, '5': 1, '10': 'letterSpacing'},
+    {'1': 'font_family', '3': 4, '4': 1, '5': 9, '10': 'fontFamily'},
+    {
+      '1': 'font_slant',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TextFontSlant',
+      '10': 'fontSlant'
+    },
+    {
+      '1': 'font_weight',
+      '3': 6,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TextFontWeight',
+      '10': 'fontWeight'
+    },
+    {
+      '1': 'font_width',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TextFontWidth',
+      '10': 'fontWidth'
+    },
+    {
+      '1': 'decorations',
+      '3': 8,
+      '4': 3,
+      '5': 14,
+      '6': '.motif.TextDecorationKind',
+      '10': 'decorations'
+    },
+  ],
+};
+
+/// Descriptor for `TextFormat`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List textFormatDescriptor = $convert.base64Decode(
+    'CgpUZXh0Rm9ybWF0EhsKCWZvbnRfc2l6ZRgBIAEoAVIIZm9udFNpemUSHwoLbGluZV9oZWlnaH'
+    'QYAiABKAFSCmxpbmVIZWlnaHQSJQoObGV0dGVyX3NwYWNpbmcYAyABKAFSDWxldHRlclNwYWNp'
+    'bmcSHwoLZm9udF9mYW1pbHkYBCABKAlSCmZvbnRGYW1pbHkSMwoKZm9udF9zbGFudBgFIAEoDj'
+    'IULm1vdGlmLlRleHRGb250U2xhbnRSCWZvbnRTbGFudBI2Cgtmb250X3dlaWdodBgGIAEoDjIV'
+    'Lm1vdGlmLlRleHRGb250V2VpZ2h0Ugpmb250V2VpZ2h0EjMKCmZvbnRfd2lkdGgYByABKA4yFC'
+    '5tb3RpZi5UZXh0Rm9udFdpZHRoUglmb250V2lkdGgSOwoLZGVjb3JhdGlvbnMYCCADKA4yGS5t'
+    'b3RpZi5UZXh0RGVjb3JhdGlvbktpbmRSC2RlY29yYXRpb25z');
+
+@$core.Deprecated('Use paragraphFormatDescriptor instead')
+const ParagraphFormat$json = {
+  '1': 'ParagraphFormat',
+  '2': [
+    {
+      '1': 'alignment',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TextAlignment',
+      '10': 'alignment'
+    },
+    {
+      '1': 'vertical_alignment',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TextVerticalAlignment',
+      '10': 'verticalAlignment'
+    },
+    {
+      '1': 'ellipsis',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'ellipsis',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_ellipsis'},
+  ],
+};
+
+/// Descriptor for `ParagraphFormat`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List paragraphFormatDescriptor = $convert.base64Decode(
+    'Cg9QYXJhZ3JhcGhGb3JtYXQSMgoJYWxpZ25tZW50GAEgASgOMhQubW90aWYuVGV4dEFsaWdubW'
+    'VudFIJYWxpZ25tZW50EksKEnZlcnRpY2FsX2FsaWdubWVudBgCIAEoDjIcLm1vdGlmLlRleHRW'
+    'ZXJ0aWNhbEFsaWdubWVudFIRdmVydGljYWxBbGlnbm1lbnQSHwoIZWxsaXBzaXMYAyABKAlIAF'
+    'IIZWxsaXBzaXOIAQFCCwoJX2VsbGlwc2lz');
 
 @$core.Deprecated('Use nodeIdDescriptor instead')
 const NodeId$json = {

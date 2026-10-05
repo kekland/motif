@@ -69,12 +69,13 @@ class TextStatementEditOverlay extends HookWidget {
     final textFormat = statement.textFormat;
     final textStyle = TextStyle(
       color: Colors.red,
-      fontFamily: textFormat.fontFamily.name,
+      fontFamily: textFormat.fontFamily,
       fontSize: textFormat.fontSize,
       letterSpacing: textFormat.letterSpacing,
-      fontStyle: switch(textFormat.fontStyle) {
-        .regular => .normal,
+      fontStyle: switch(textFormat.fontSlant) {
+        .upright => .normal,
         .italic => .italic,
+        .oblique => .normal,
       },
       fontWeight: .new(textFormat.fontWeight.value),
     );

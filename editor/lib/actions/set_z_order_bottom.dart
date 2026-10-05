@@ -1,6 +1,6 @@
 part of '_intents.dart';
 
-final class const SetZOrderBottomIntent() extends CommandIntent;
+final class const SetZOrderBottomIntent() extends Intent;
 
 final setZOrderBottomIntentDescriptor = CommandIntentDescriptor<SetZOrderBottomIntent>(
   command: 'send-to-back',

@@ -42,7 +42,7 @@ class AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.indigo;
+    final seedColor = Colors.purple;
     final theme = generateAppTheme(
       brightness: .dark,
       seedColor: seedColor,

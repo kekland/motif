@@ -4,7 +4,7 @@ enum DecorationKind { color, image }
 
 sealed class const Decoration() {
   const factory color(ColorData color) = ColorDecoration;
-  const factory image(ImageId? image) = ImageDecoration;
+  const factory image(Hash? image) = ImageDecoration;
 
   DecorationKind get kind;
 
@@ -23,7 +23,7 @@ final class const ColorDecoration(final ColorData color) extends Decoration with
 }
 
 final class const ImageDecoration(
-  final ImageId? image, {
+  final Hash? image, {
   final double opacity = 1.0,
 }) extends Decoration with Equatable {
   @override

@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:asset/asset.dart';
-import 'package:protobuf/protobuf.dart' as protobuf;
 import 'package:shared/shared.dart';
+import 'package:protobuf/protobuf.dart' as protobuf;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 
 import 'package:sync/schema.dart' as pb;
@@ -97,7 +96,7 @@ final class ServerHttpGateway {
     final scene = await server.openScene(id);
     if (scene == null) return Response.notFound('scene not found');
 
-    final bytes = await scene.storage.readAsset(.new(value: hash));
+    final bytes = await scene.storage.readAsset(hash);
     if (bytes == null) return Response.notFound('asset not found');
 
     const headers = {
@@ -115,7 +114,7 @@ final class ServerHttpGateway {
 
     final bytes = await _bytes(r);
     if (Hash.compute(bytes).value != hash) return Response.badRequest(body: 'hash mismatch');
-    await scene.storage.writeAsset(.new(value: hash), bytes);
+    await scene.storage.writeAsset(hash, bytes);
     return Response.ok('');
   }
 

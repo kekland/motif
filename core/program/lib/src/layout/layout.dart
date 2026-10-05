@@ -8,10 +8,13 @@ abstract interface class LayoutBox {
   LayoutSize get size;
   Size2 intrinsicSize(Evaluation evaluation);
 
-  static bool compareLayout(Evaluation e,LayoutBox a, LayoutBox b) {
+  static bool isLayoutEqual(Evaluation e, LayoutBox a, LayoutBox b, {Size2? oldIntrinsicSize}) {
     if (a.runtimeType != b.runtimeType) return false;
     if (!a.transform.equals(b.transform)) return false;
-    if (!a.intrinsicSize(e).equals(b.intrinsicSize(e))) return false;
+
+    final intrinsicSize = oldIntrinsicSize ?? a.intrinsicSize(e);
+    if (!intrinsicSize.equals(b.intrinsicSize(e))) return false;
+
     if (a.size != b.size) return false;
     if (a is LayoutContainer && b is LayoutContainer) {
       if (a.layout != b.layout) return false;
@@ -66,6 +69,7 @@ final class _LayoutNode {
   LayoutBox box;
   Size2? natural;
   Placement? placement;
+  Size2? intrinsicSize;
   var dirty = false;
 
   Size2 fitSize(Size2 available) => box.size.fit(natural!, available);

@@ -1,6 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/tab_bar.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' hide AssetManifest, Clipboard;
 
 export 'widgets/editor_widget.dart';
 export 'editor_sync.dart';
@@ -31,12 +31,14 @@ final class Editor extends Controller {
     });
 
     scene.prepare().then((_) => isLoaded.value = true);
+
+    Clipboard.addCustomTypes(['motif.program-slice']);
   }
 
   static Editor of(BuildContext context) => context.read<Editor>();
   static Editor watch(BuildContext context) => context.watch<Editor>();
 
-  EditorBuiltinFonts get builtinFonts => EditorBuiltinFonts.instance;
+  EditorBuiltinAssets get builtinFonts => EditorBuiltinAssets.instance;
 
   final EditorSync sync;
   final Scene scene;
@@ -85,42 +87,31 @@ final class Editor extends Controller {
   // Move this somewhere else, but it's ok for now
   StatementId? cursorTextEditStatement;
 
-  Future<ImageId> uploadImageAsset(Uint8List data, {required String mimeType}) async {
-    final hash = Hash.compute(data);
-    final id = ImageId(hash: hash);
-
-    await uploadAsset(id, data, (cache) {
-      final image = cache.image[id]!;
-      return ImageAsset(
-        hash: hash,
-        size: data.lengthInBytes,
-        width: image.width,
-        height: image.height,
-        mimeType: mimeType,
-      );
-    });
-
-    return id;
+  Future<ImageAsset> uploadImageAsset(
+    Uint8List data, {
+    required String mimeType,
+  }) async {
+    final asset = await uploadAsset(data, (cache) => cache.image.addLocal(data, mimeType: mimeType));
+    return asset;
   }
 
-  Future<AssetId> uploadAsset(
-    AssetId id,
+  Future<A> uploadAsset<A extends Asset>(
     Uint8List data,
-    Asset Function(SceneAssetCache cache) createAsset,
+    Future<A> Function(SceneAssetCache cache) createAsset,
   ) async {
-    await scene.assetCache.add(id, data);
-    final asset = createAsset(scene.assetCache);
-    program.assetManifest.insertUnsynced(asset);
+    final asset = await createAsset(scene.assetCache);
+    program.assetManifest.insertAll([asset]);
 
     sync.saveAsset(data).then((hash) {
       scene.editTransient((txn) => txn.addAsset(asset));
     });
-    return asset.id;
+
+    return asset;
   }
 
   void maybeAddAsset(Asset asset) {
-    if (program.assetManifest.contains(asset.id)) return;
-    scene.edit((txn) => txn.addAsset(asset));
+    if (program.assetManifest.contains(asset.hash)) return;
+    scene.editTransient((txn) => txn.addAsset(asset));
   }
 
   @override

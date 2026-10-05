@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:shared/shared.dart';
 import 'package:http/http.dart' as http;
 import 'package:protobuf/protobuf.dart' as protobuf;
 
@@ -48,13 +49,13 @@ final class NetworkClient extends sync.Client {
   }
 
   @override
-  Future<Uint8List> loadAsset(String sceneId, pb.Hash hash) async {
+  Future<Uint8List> loadAsset(String sceneId, Hash hash) async {
     final response = await client.get(_assetUri(sceneId, hash), headers: _headers());
     return _parseResponse(response);
   }
 
   @override
-  Future<void> saveAsset(String sceneId, pb.Hash hash, Uint8List data) async {
+  Future<void> saveAsset(String sceneId, Hash hash, Uint8List data) async {
     final response = await client.put(_assetUri(sceneId, hash), headers: _headers(), body: data);
     _parseResponse(response);
   }
@@ -74,7 +75,7 @@ final class NetworkClient extends sync.Client {
     return _parseResponse(response);
   }
 
-  Uri _assetUri(String sceneId, pb.Hash hash) => uri.replace(path: '${uri.path}/scene/$sceneId/asset/${hash.value}');
+  Uri _assetUri(String sceneId, Hash hash) => uri.replace(path: '${uri.path}/scene/$sceneId/asset/$hash');
 
   Map<String, String> _headers() => {
     if (token != null) 'authorization': 'Bearer $token',
@@ -84,7 +85,7 @@ final class NetworkClient extends sync.Client {
     return switch (response.statusCode) {
       200 => response.bodyBytes,
       403 => throw sync.Forbidden(),
-      404 => throw sync.NotFound('scene'),
+      404 => throw sync.NotFound(),
       _ => throw http.ClientException('${response.statusCode}: ${response.body}', response.request?.url),
     };
   }

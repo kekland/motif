@@ -33,8 +33,8 @@ class EvalContext {
 
   Mat4 worldToLocal(FrameRef ref) => bundle.query.worldToLocal(ref);
 
-  A? resolveAsset<A extends Asset>(AssetId id) => _evaluation.resolveAsset<A>(id);
-  void fetchAssetData(AssetId id) => _evaluation.fetchAssetData(this.id, id);
+  // A? resolveAsset<A extends Asset>(AssetId id) => _evaluation.resolveAsset<A>(id);
+  void loadAsset(Asset asset) => _evaluation.loadAsset(id, asset);
 }
 
 class ModifierEvalContext<B extends Statement> extends EvalContext {
