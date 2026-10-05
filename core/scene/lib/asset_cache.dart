@@ -95,9 +95,6 @@ final class SceneFontCache extends FontCache {
 
   @override
   Future<void> add(FontAsset asset, Uint8List bytes) async {
-    print('added font asset: ${asset.family}: ${asset.faces.length}');
-    print(provider.add(bytes, family: asset.family));
-
     final loader = FontLoader(asset.family);
     loader.addFont(.value(bytes.buffer.asByteData()));
     await loader.load();
