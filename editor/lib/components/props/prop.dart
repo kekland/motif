@@ -206,7 +206,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
       getter: (scene) => get(scene, scene.statement<T>(id)!),
       setter: (txn, value) {
         final scene = txn.scene;
-        final session = TransformSession.statement(scene, id, transaction: txn);
+        final session = TransformSession.statements(scene, [id], transaction: txn);
         return execute(session, get(scene, scene.statement<T>(id)!), value);
       },
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,

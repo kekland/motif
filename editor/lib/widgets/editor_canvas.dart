@@ -14,6 +14,8 @@ class EditorCanvas extends HookWidget {
     final tool = useComputedValue(() => editor.tool.activeTool);
 
     Widget child = InteractiveCanvas(
+      key: editor.canvasKey,
+      transformationController: editor.canvasTransformationController,
       centerOrigin: true,
       overlayBuilders: [
         (context, transform) => CanvasPixelGrid(transform: transform),
@@ -32,9 +34,7 @@ class EditorCanvas extends HookWidget {
     child = Overlay.wrap(
       child: Surface(
         color: context.colors.surface.canvas,
-        child: EditorCanvasPointerUpdateWidget(
-          child: child,
-        ),
+        child: EditorCanvasPointerUpdateWidget(child: child),
       ),
     );
 

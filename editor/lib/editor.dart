@@ -59,6 +59,11 @@ final class Editor extends Controller {
   late final canvasFocusScopeNode = $customDisposable(FocusScopeNode(), (n) => n.dispose());
   bool get areCanvasActionsEnabled => canvasFocusScopeNode.hasPrimaryFocus || commander.isVisible.value;
 
+  final canvasKey = GlobalKey();
+  RenderBox get renderCanvas => canvasKey.currentContext!.findRenderObject() as RenderBox;
+
+  late final canvasTransformationController = $customDisposable(TransformationController(), (v) => v.dispose());
+
   final sceneKey = GlobalKey();
   RenderBox get renderScene => sceneKey.currentContext!.findRenderObject() as RenderBox;
 
@@ -86,6 +91,16 @@ final class Editor extends Controller {
 
   // Move this somewhere else, but it's ok for now
   StatementId? cursorTextEditStatement;
+  Vec2? cursorCanvasPosition;
+
+  Vec2 get canvasCenter {
+    final size = renderCanvas.size;
+    return canvasTransformationController.toScene(size.center(Offset.zero)).vec2;
+  }
+
+  Vec2 get canvasPosition {
+    return cursorCanvasPosition ?? canvasCenter;
+  }
 
   Future<ImageAsset> uploadImageAsset(
     Uint8List data, {

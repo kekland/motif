@@ -3,7 +3,10 @@ import 'dart:math' as math;
 import 'package:editor/imports.dart';
 
 class EditorCanvasPointerUpdateWidget extends StatelessWidget {
-  const new({super.key, required this.child});
+  const new({
+    super.key,
+    required this.child,
+  });
 
   final Widget child;
 
@@ -16,9 +19,11 @@ class EditorCanvasPointerUpdateWidget extends StatelessWidget {
       opaque: false,
       onEnter: (e) {
         final position = editor.globalToScene(e.position);
+        editor.cursorCanvasPosition = position;
         editor.sync.updatePresence(pointerPosition: position);
       },
       onExit: (e) {
+        editor.cursorCanvasPosition = null;
         editor.sync.updatePresence(pointerPosition: null);
       },
       child: Listener(
@@ -26,10 +31,12 @@ class EditorCanvasPointerUpdateWidget extends StatelessWidget {
         onPointerHover: (e) {
           final position = editor.globalToScene(e.position);
           editor.sync.updatePresence(pointerPosition: position);
+          editor.cursorCanvasPosition = position;
         },
         onPointerMove: (e) {
           final position = editor.globalToScene(e.position);
           editor.sync.updatePresence(pointerPosition: position);
+          editor.cursorCanvasPosition = position;
         },
         child: child,
       ),

@@ -49,6 +49,8 @@ final class const ClipboardValue(final List<ClipboardItem> items) {
     return result;
   }
 
+  String? text() => items.whereType<ClipboardText>().firstOrNull?.text;
+
   Uint8List? custom(String type) => items.whereType<ClipboardCustom>().firstOrNull?.entries[type];
 }
 

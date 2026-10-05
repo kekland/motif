@@ -24,8 +24,18 @@ final class TransformSession {
 
   final Object mergeKey;
 
-  factory TransformSession.statement(Scene scene, StatementId id, {SceneTransaction? transaction, Object? mergeKey}) {
-    return .of(scene, scene.productsOf(id), transaction: transaction, mergeKey: mergeKey);
+  factory TransformSession.statements(
+    Scene scene,
+    Iterable<StatementId> ids, {
+    SceneTransaction? transaction,
+    Object? mergeKey,
+  }) {
+    final products = <Ref>{};
+    for (final id in ids) {
+      products.addAll(scene.productsOf(id));
+    }
+
+    return .of(scene, products, transaction: transaction, mergeKey: mergeKey);
   }
 
   factory TransformSession.of(Scene scene, Iterable<Ref> refs, {SceneTransaction? transaction, Object? mergeKey}) {
