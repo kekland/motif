@@ -11,10 +11,6 @@ late final SharedPreferences prefs;
 Future<void> main() async {
   AugmentedWidgetsFlutterBinding.ensureInitialized();
 
-  if (kDebugMode) {
-    envOverride = DevelopmentEnv();
-  }
-
   final embeddedServer = await createEmbeddedServer();
   prefs = await SharedPreferences.getInstance();
 

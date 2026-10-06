@@ -19,11 +19,11 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          channel: master
+          flutter-version-file: .fvmrc
 
       - uses: bluefireteam/flutter-gh-pages@v9
         with:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
-          customArgs: --source-maps --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ steps.version.outputs.name }} --build-number=${{ github.run_number }}
+          customArgs: --source-maps --no-strip-wasm --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ steps.version.outputs.name }} --build-number=${{ github.run_number }}
