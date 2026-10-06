@@ -1,6 +1,8 @@
 import 'package:app/editor/editor_page.dart';
-import 'package:app/home/server_section_widget.dart';
+import 'package:app/home/server_panel.dart';
+import 'package:app/home/servers_panel.dart';
 import 'package:app/imports.dart';
+import 'package:app/servers.dart';
 import 'package:sync/client.dart' as sync;
 import 'package:sync_server/network.dart';
 
@@ -22,22 +24,33 @@ class HomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final embeddedServer = context.embeddedServer;
+    final servers = useListenable(context.watch<AppServers>());
+    final selectedServer = useState<Uri?>(null);
 
-    final sections = <Widget>[
-      SliverPadding(
-        padding: const .symmetric(horizontal: 16.0),
-        sliver: ServerSection(
-          client: embeddedServer.client,
-          onPushEditor: (id, {info}) => pushEditorTab(context, embeddedServer.client, id, title: info?.title),
-          actions: [
-            Button(
-              onTap: () async {
-                final result = await context.pushDialog<String>((_) => JoinDialog());
-                if (!context.mounted || result == null) return;
+    useOnListenableChange(servers, () {
+      if (!servers.contains(selectedServer.value)) {
+        selectedServer.value = null;
+      }
+    });
 
+    return Scaffold(
+      child: Panels(
+        direction: .horizontal,
+        panels: [
+          Panel(
+            key: #servers,
+            constraints: .pixels(256.0, 384.0),
+            child: ServersPanel(
+              servers: servers.servers,
+              selectedServer: selectedServer.value,
+              onServerSelected: (uri) => selectedServer.value = uri,
+              onAddServer: (url) {
+                final uri = Uri.parse(url);
+                servers.addServer(uri);
+              },
+              onConnect: (url) {
                 // http://{ip}:{port}/{sceneId}?token={token}
-                final uri = Uri.parse(result);
+                final uri = Uri.parse(url);
                 final sceneId = uri.pathSegments.last;
                 final token = uri.queryParameters['token'];
 
@@ -48,81 +61,17 @@ class HomePage extends HookWidget {
 
                 pushEditorTab(context, client, sceneId, title: sceneId);
               },
-              leading: Icons.link(),
-              child: Text('Connect'),
             ),
-          ],
-        ),
-      ),
-    ];
-
-    return Scaffold(
-      child: CustomScrollView(
-        slivers: [
-          SliverSpacer(size: 24.0),
-          ...sections,
-          SliverSpacer(size: 24.0),
+          ),
+          Panel(
+            key: #main,
+            constraints: .flex(1.0),
+            child: ServerPanel(
+              uri: selectedServer.value,
+              pushEditorTab: pushEditorTab,
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class CreateDialog extends StatelessWidget {
-  const new({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DialogScaffold(
-      title: Text('Create'),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ButtonRow(
-          buttons: [
-            Expanded(
-              child: Button(
-                onTap: () => Navigator.pop(context, 'local'),
-                height: 40.0,
-                leading: Icons.folder(),
-                child: Text('Local'),
-              ),
-            ),
-            Expanded(
-              child: Button(
-                onTap: () => Navigator.pop(context, 'online'),
-                height: 40.0,
-                leading: Icons.cloud(),
-                child: Text('Online'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class JoinDialog extends HookWidget {
-  const new({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = useTextEditingController();
-
-    return DialogScaffold(
-      title: Text('Join'),
-      actions: [
-        Button(
-          onTap: () => Navigator.pop(context, controller.text),
-          child: Text('Join'),
-        ),
-      ],
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          options: .new(hintText: 'Room URL'),
-        ),
       ),
     );
   }

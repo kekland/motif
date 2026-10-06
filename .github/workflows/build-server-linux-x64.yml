@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'server-v*'
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -14,7 +15,9 @@ jobs:
       - uses: actions/checkout@v7
 
       - id: version
-        run: echo "name=${GITHUB_REF_NAME#server-v}" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSION=${GITHUB_REF_NAME#server-}
+          echo "name=${VERSION#v}" >> "$GITHUB_OUTPUT"
 
       - name: Native toolchain
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang cmake ninja-build pkg-config

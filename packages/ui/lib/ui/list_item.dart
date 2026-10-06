@@ -15,6 +15,8 @@ class const ListItem({
   final bool expands = true,
   final int? reorderableIndex,
   final EdgeInsets? padding,
+  final bool dividerBelow = false,
+  final TooltipData? tooltip,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -136,6 +138,18 @@ class const ListItem({
         ),
       );
     }
+
+    if (dividerBelow) {
+      child = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [child, const Divider()],
+      );
+    }
+
+    child = Tooltip(
+      tooltip: tooltip,
+      child: child,
+    );
 
     return child;
   }

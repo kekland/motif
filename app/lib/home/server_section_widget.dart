@@ -6,20 +6,27 @@ import 'package:sync/schema.dart' as pb;
 class ServerSection extends HookWidget {
   const new({
     super.key,
+    required this.title,
+    this.subtitle,
     required this.client,
     required this.onPushEditor,
+    this.onRefresh,
     this.actions = const [],
   });
 
+  final String title;
+  final String? subtitle;
   final Client client;
   final void Function(String id, {pb.SceneInfo? info}) onPushEditor;
   final List<Widget> actions;
+  final VoidCallback? onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final documents = useState<List<pb.SceneInfo>?>(null);
 
     Future<void> loadDocuments() async {
+      onRefresh?.call();
       documents.value = (await client.listScenes()).scenes;
     }
 
@@ -31,7 +38,11 @@ class ServerSection extends HookWidget {
     final header = Column(
       crossAxisAlignment: .start,
       children: [
-        Text('Documents ($client)', style: context.typography.largeTitle),
+        Text(title, style: context.typography.largeTitle),
+        if (subtitle != null) ...[
+          const SizedBox(height: 4.0),
+          Text(subtitle!, style: context.typography.body),
+        ],
         const SizedBox(height: 12.0),
         ButtonRow(
           buttons: [

@@ -1,4 +1,5 @@
 import 'package:app/imports.dart';
+import 'package:app/servers.dart';
 import 'package:bindings/bindings.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,9 +21,19 @@ Future<void> main() async {
   Provider.debugCheckInvalidValueType = null;
   SystemChrome.setEnabledSystemUIMode(.manual, overlays: [.top]);
 
+  if (prefs.getString('userId') == null) {
+    prefs.setString('userId', uuid.v4());
+  }
+
+  if (prefs.getStringList('servers') == null) {
+    prefs.setStringList('servers', ['https://motif.kz/api']);
+  }
+
+  final servers = AppServers(embeddedServer);
+
   runApp(
     Provider.value(
-      value: embeddedServer,
+      value: servers,
       child: App(),
     ),
   );

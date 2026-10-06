@@ -17,19 +17,19 @@ final class NetworkClient extends sync.Client {
 
   @override
   Future<pb.ListScenesResponse> listScenes() async {
-    return .fromBuffer(await _post('/scene/list', null));
+    return .fromBuffer(await _post('scene/list', null));
   }
 
   @override
   Future<pb.CreateSceneResponse> createScene({pb.Program? program, String? title}) async {
     final request = pb.CreateSceneRequest(program: program, title: title);
-    return .fromBuffer(await _post('/scene/create', request));
+    return .fromBuffer(await _post('scene/create', request));
   }
 
   @override
   Future<pb.GetSceneResponse> getScene(String id) async {
     final request = pb.GetSceneRequest(id: id);
-    return .fromBuffer(await _post('/scene/get', request));
+    return .fromBuffer(await _post('scene/get', request));
   }
 
   @override

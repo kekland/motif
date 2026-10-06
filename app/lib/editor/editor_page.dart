@@ -1,4 +1,5 @@
 import 'package:app/imports.dart';
+import 'package:app/servers.dart';
 import 'package:sync/client.dart' as sync;
 
 class EditorPage extends HookWidget {
@@ -9,11 +10,13 @@ class EditorPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final servers = useListenable(context.watch<AppServers>());
+
     final editorSync = useDisposable(
       () => EditorSync(
         client: client,
         sceneId: id,
-        clientId: null,
+        clientId: servers.ownUser.id,
         onSceneInfoUpdated: (info) {
           final tab = InheritedTab.of(context);
           if (tab == null) return;

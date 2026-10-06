@@ -77,6 +77,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with TickerP
 
     _showScrimTimer?.cancel();
     _showScrimTimer = Timer(Duration(seconds: 2), () {
+      if (!context.mounted) return;
       _scrimDimAnimationController.animateTo(1.0);
     });
   }
