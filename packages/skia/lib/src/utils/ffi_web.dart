@@ -5,6 +5,8 @@ import 'package:ffigen_js/ffigen_js.dart' as jsgen hide StringUtils;
 
 export 'package:ffigen_js/ffigen_js.dart' hide StringUtils;
 
+import 'package:skia/src/gen/skia_bindings_sizes.g.dart' as sizes;
+
 typedef Pointer<T extends jsgen.NativeType> = jsgen.Pointer<T>;
 
 abstract class Allocator {
@@ -13,12 +15,16 @@ abstract class Allocator {
   jsgen.Pointer<T> call<T extends jsgen.NativeType>([int? count, int? size]);
 }
 
+int _sizeOf<T extends jsgen.NativeType>() {
+  return sizes.sizeOf<T>();
+}
+
 class Arena extends Allocator {
   final _managedPtrs = <jsgen.Pointer<jsgen.NativeType>>[];
 
   @override
   jsgen.Pointer<T> call<T extends jsgen.NativeType>([int? count, int? size]) {
-    final _size = (size ?? jsgen.sizeOf<T>());
+    final _size = (size ?? _sizeOf<T>());
     final ptr = jsgen.malloc<T>(_size * (count ?? 1));
     _managedPtrs.add(ptr);
     return ptr;
