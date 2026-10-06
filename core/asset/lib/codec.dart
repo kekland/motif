@@ -1,9 +1,8 @@
-import '_base.dart';
-
-import 'package:asset/asset.dart';
+import 'package:schema/codec.dart';
 import 'package:schema/asset.dart' as gen;
 
-import 'skia_codec.dart';
+import 'package:asset/asset.dart';
+import 'package:skia_common/codec.dart';
 
 // dart format off
 

@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from packages/skia/skia.proto.
+// Generated from packages/skia_common/skia_common.proto.
 
 // @dart = 3.3
 

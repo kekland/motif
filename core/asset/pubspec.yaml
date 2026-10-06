@@ -8,8 +8,9 @@ environment:
 dependencies:
   shared:
   schema:
-  skia:
+  skia_common:
 
 dev_dependencies:
+  skia:
   dotenv: ^4.2.0
   http: ^1.6.0

@@ -1,8 +1,8 @@
 // ignore_for_file: unused_element
 
-import '_base.dart';
-
+export 'package:schema/codec.dart';
 import 'package:schema/program.dart' as gen;
+
 import 'package:shared/shared.dart';
 import 'package:color/color.dart';
 import 'package:kernel/kernel.dart';

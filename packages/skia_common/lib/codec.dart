@@ -1,7 +1,7 @@
-import '_base.dart';
+import 'package:schema/codec.dart';
+import 'package:schema/skia_common.dart' as gen;
 
-import 'package:schema/skia.dart' as gen;
-import 'package:skia/skia.dart' as skia;
+import 'package:skia_common/skia_common.dart' as skia;
 
 // dart format off
 

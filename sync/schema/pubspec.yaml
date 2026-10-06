@@ -9,14 +9,5 @@ dependencies:
   protobuf: ^6.0.0
   fixnum: ^1.1.1
 
-  shared:
-  asset:
-  color:
-  blueprint:
-  geometry:
-  kernel:
-  program:
-  skia:
-
 dev_dependencies:
   protoc_plugin: ^25.1.0

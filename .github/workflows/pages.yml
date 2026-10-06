@@ -3,19 +3,24 @@ name: Deploy app to GitHub Pages
 on:
   push:
     tags:
-      - '*'
+      - 'app-v*'
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v7
+
+      - id: version
+        run: echo "name=${GITHUB_REF_NAME#app-v}" >> "$GITHUB_OUTPUT"
+
       - uses: subosito/flutter-action@v2
         with:
           channel: master
+
       - uses: bluefireteam/flutter-gh-pages@v9
         with:
           workingDir: app
           baseHref: /motif/
           compileToWasm: true
-          customArgs: --source-maps --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ github.ref_name }} --build-number=${{ github.run_number }}
+          customArgs: --source-maps --dart-define="SERVER_URL=https://motif.kz" --dart-define="ENV=external" --build-name=${{ steps.version.outputs.name }} --build-number=${{ github.run_number }}

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package motif;
 
-import "packages/skia/skia.proto";
+import "packages/skia_common/skia_common.proto";
 
 message AssetManifest {
   map<string, Asset> entries = 1;

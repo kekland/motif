@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:shared/shared.dart';
 import 'package:schema/asset.dart' as gen;
 import 'package:schema/codec.dart' as codec;
-import 'package:skia/skia.dart' as skia;
+import 'package:skia_common/skia_common.dart' as skia;
 
-export 'package:schema/codec/asset_codec.dart';
+import 'package:asset/codec.dart';
+export 'package:asset/codec.dart';
 
 part 'font_catalog.dart';
 part 'license.dart';

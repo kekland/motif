@@ -3,14 +3,6 @@ import 'dart:typed_data';
 import 'package:skia/src/gen/skia_bindings.g.dart' as gen;
 import 'package:skia/internal.dart';
 
-final class FontFaceInfo({
-  required final int index,
-  required final FontWeight weight,
-  required final FontWidth width,
-  required final FontSlant slant,
-  required final String family,
-});
-
 class FontFile extends NativeObject<gen.font_file> {
   FontFile._(super.ptr);
   static final _finalizer = NativeFinalizer(gen.addresses.motif_font_file_destroy.cast());
@@ -32,7 +24,7 @@ class FontFile extends NativeObject<gen.font_file> {
         index: face.index,
         weight: .new(face.weight),
         width: .new(face.width),
-        slant: .fromNative(face.slant),
+        slant: .values[face.slant.value],
         family: face.family.cast<Utf8>().toDartString(),
       );
     });

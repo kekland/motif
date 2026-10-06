@@ -14,7 +14,7 @@ protos = [
   root / 'sync' / 'sync' / 'sync.proto',
   root / 'core' / 'program' / 'program.proto',
   root / 'core' / 'asset' / 'asset.proto',
-  root / 'packages' / 'skia' / 'skia.proto',
+  root / 'packages' / 'skia_common' / 'skia_common.proto',
 ]
 
 

@@ -28,6 +28,7 @@ workspace:
   - packages/ink_stroke_modeler
   - packages/skia
   - packages/skia_flutter
+  - packages/skia_common
 
   - sync/schema
   - sync/sync

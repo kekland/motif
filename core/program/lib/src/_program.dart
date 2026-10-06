@@ -10,13 +10,15 @@ import 'package:asset/asset.dart';
 import 'package:color/color.dart';
 import 'package:skia/skia.dart' as skia;
 
-import 'package:schema/codec.dart' as codec;
 import 'package:schema/program.dart' as gen;
+
+export 'package:asset/asset.dart';
 
 import 'generator/generator.dart';
 export 'generator/generator.dart';
 
-export 'package:asset/asset.dart';
+import 'codec.dart' as codec;
+export 'codec.dart';
 
 part 'errors.dart';
 part 'program.dart';

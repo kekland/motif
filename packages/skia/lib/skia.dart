@@ -1,3 +1,5 @@
+export 'package:skia_common/skia_common.dart';
+
 export 'src/initialize.dart';
 export 'src/font_provider.dart';
 export 'src/font_provider_system.dart';
