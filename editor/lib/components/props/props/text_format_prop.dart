@@ -43,9 +43,16 @@ final class TextFormatProp(super.sources, {super.kind = .textFormat}) extends Pr
 }
 
 final class TextFormatPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final TextFormatProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Text';
@@ -58,7 +65,7 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
     final format = useProxyComputed(computed, (value) => value.resolve());
 
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: Column(
         children: [
           FontFamilyInputField(

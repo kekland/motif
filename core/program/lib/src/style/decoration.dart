@@ -55,6 +55,8 @@ final class const Decorations(final List<Decoration> entries) {
   }
 
   Decorations append(Decoration d) => .new([...entries, d]);
+  Decorations appendAll(Iterable<Decoration> decorations) => .new([...entries, ...decorations]);
+
   Decorations remove(int index) {
     final out = entries.toList();
     out.removeAt(index);

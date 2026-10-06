@@ -34,7 +34,9 @@ class FontFamilyInputField extends InputField<String> {
       value: value,
       sessionCallbacks: sessionCallbacks,
       onChanged: onChanged,
-      options: options,
+      options: options.copyWith(
+        hasFocus: usePortalEntryActive(window),
+      ),
     );
   }
 }

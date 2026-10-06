@@ -6,9 +6,16 @@ final class StrokeWidthProp(super.sources, {super.kind = .strokeWidth}) extends 
 }
 
 final class StrokeWidthPropWidget extends HookWidget with PropWidget {
-  StrokeWidthPropWidget({super.key, required this.prop});
+  StrokeWidthPropWidget({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final StrokeWidthProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Stroke width';
@@ -19,7 +26,7 @@ final class StrokeWidthPropWidget extends HookWidget with PropWidget {
     final transaction = usePropTransaction();
 
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
         onChanged: (width) => transaction.edit((txn) => prop.set(txn, width)),

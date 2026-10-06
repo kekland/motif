@@ -1,7 +1,14 @@
 part of '../../_program.dart';
 
 sealed class ShapeStatement<S extends ObjectShape> extends Statement
-    with PlacedStatement, FramedStatement, LayoutBoxStatement, FacedStatement {
+    with
+        VertexStyledStatement,
+        EdgeStyledStatement,
+        FaceStyledStatement,
+        PlacedStatement,
+        FramedStatement,
+        LayoutBoxStatement,
+        FacedStatement {
   ShapeStatement({
     required this.shape,
     LayoutSize? size,
@@ -27,9 +34,15 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
   @override
   Size2 intrinsicSize(Evaluation e) => .zero();
 
+  @override
   final VertexStyle vertexStyle;
+
+  @override
   final EdgeStyle edgeStyle;
+
+  @override
   final FaceStyle faceStyle;
+
   final S shape;
 
   @override
@@ -71,6 +84,15 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
     FaceStyle? faceStyle,
     FrameRef? parent,
   });
+
+  @override
+  ShapeStatement<S> copyWithVertexStyle({VertexStyle? style}) => copyWith(vertexStyle: style);
+
+  @override
+  ShapeStatement<S> copyWithEdgeStyle({EdgeStyle? style}) => copyWith(edgeStyle: style);
+
+  @override
+  ShapeStatement<S> copyWithFaceStyle({FaceStyle? style}) => copyWith(faceStyle: style);
 
   @override
   DissolveIntent routeDissolve(Set<CellRef<CellHandle>> targeted) => .new({frame});

@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:state/initializer.dart';
 
 part 'mouse_cursor_manager.dart';
+part 'global_pointer_tracker.dart';
 
 class AugmentedWidgetsFlutterBinding extends BindingBase
     with
@@ -31,10 +32,15 @@ class AugmentedWidgetsFlutterBinding extends BindingBase
         ExclusiveMouseCursorManager(SystemMouseCursors.basic),
       ),
     );
+
+    _pointerTracker = .new();
   }
 
   static AugmentedWidgetsFlutterBinding? _instance;
   static AugmentedWidgetsFlutterBinding get instance => _instance!;
+
+  GlobalPointerTracker get pointerTracker => _pointerTracker;
+  late final GlobalPointerTracker _pointerTracker;
 
   static WidgetsBinding ensureInitialized() {
     if (_instance != null) return _instance!;

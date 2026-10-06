@@ -84,7 +84,9 @@ class const ListItem({
 
     final leftPadding = switch (isDraggable) {
       true => 16.0,
-      false => 8.0,
+      false when leading != null => 6.0,
+      false when leading == null => 12.0,
+      _ => 16.0,
     };
 
     final EdgeInsets defaultPadding = switch (trailing) {

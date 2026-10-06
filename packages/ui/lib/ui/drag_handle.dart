@@ -17,7 +17,7 @@ class DragHandle extends HookWidget {
         child: MouseRegion(
           cursor: SystemMouseCursors.grab,
           child: SizedBox(
-            width: 16.0,
+            width: 12.0,
             height: 36.0,
             child: Icons.dragHandle(
               color: context.colors.display.tertiary.withScaledAlpha(isHovering.value ? 1.0 : 0.5),

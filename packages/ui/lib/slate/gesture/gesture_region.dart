@@ -183,6 +183,7 @@ class _GestureRegionState extends State<GestureRegion> {
 
   void _onTapStart(BuildContext context) {
     if (!mounted) return;
+    if (_hoveredChildCount > 0) return;
 
     setState(() => _gestureDetectorState = {WidgetState.pressed});
     _stopwatch.start();

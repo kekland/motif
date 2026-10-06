@@ -8,10 +8,18 @@ final class CoordinateProp(super.sources, {super.kind = .coordinate}) extends Pr
 }
 
 final class CoordinatePropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop, this.axis});
+  const new({
+    super.key,
+    required this.prop,
+    this.axis,
+    this.isNested = false,
+  });
 
   final CoordinateProp prop;
   final CoordinateAxis? axis;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Coordinate';
@@ -28,14 +36,17 @@ final class CoordinatePropWidget extends HookWidget with PropWidget {
       _ => null,
     };
 
-    return DoubleExpressionInputField(
-      value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
-      onChanged: (v) => transaction.edit((txn) => prop.set(txn, v)),
-      sessionCallbacks: transaction.sessionCallbacks,
-      options: .new(
-        leading: icon,
-        textStyle: isOverridden ? context.typography.body.tertiary : null,
-        hintText: 'Mixed',
+    return Padding(
+      padding: resolvedPadding,
+      child: DoubleExpressionInputField(
+        value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
+        onChanged: (v) => transaction.edit((txn) => prop.set(txn, v)),
+        sessionCallbacks: transaction.sessionCallbacks,
+        options: .new(
+          leading: icon,
+          textStyle: isOverridden ? context.typography.body.tertiary : null,
+          hintText: 'Mixed',
+        ),
       ),
     );
   }

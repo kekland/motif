@@ -67,11 +67,11 @@ class PropsSection extends StatelessWidget {
       crossAxisAlignment: .start,
       children: [
         ListItem(
+          padding: .only(left: 12.0, right: 6.0),
           title: Text(child.resolveHeader(context), style: context.typography.caption.secondary),
           trailing: ButtonRow(buttons: buttons.toList()),
         ),
         child,
-        const SizedBox(height: 8.0),
       ],
     );
   }

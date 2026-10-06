@@ -21,6 +21,9 @@ extension StatementUtils on Statement {
     PlacedStatement() => unreachable(),
     FacedStatement() => unreachable(),
     FramedStatement() => unreachable(),
+    VertexStyledStatement() => unreachable(),
+    EdgeStyledStatement() => unreachable(),
+    FaceStyledStatement() => unreachable(),
   };
 
   Widget icon(BuildContext context) => switch (this) {
@@ -40,6 +43,9 @@ extension StatementUtils on Statement {
     GeneratorStatement() => Icons.generator(),
     PlacedStatement() => unreachable(),
     FacedStatement() => unreachable(),
+    VertexStyledStatement() => unreachable(),
+    EdgeStyledStatement() => unreachable(),
+    FaceStyledStatement() => unreachable(),
     _ => Icons.s(),
   };
 }

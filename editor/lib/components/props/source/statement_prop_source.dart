@@ -122,16 +122,16 @@ extension TextStatementProps on TextStatement {
       set: (scene, s, value) => s.copyWith(paragraphFormat: value),
     );
 
-    yield PropKind.edgeStyle.statement<TextStatement>(
-      id,
-      get: (scene, s) => s.edgeStyle,
-      set: (scene, s, value) => s.copyWith(edgeStyle: value),
-    );
-
     yield PropKind.faceStyle.statement<TextStatement>(
       id,
       get: (scene, s) => s.faceStyle,
       set: (scene, s, value) => s.copyWith(faceStyle: value),
+    );
+
+    yield PropKind.edgeStyle.statement<TextStatement>(
+      id,
+      get: (scene, s) => s.edgeStyle,
+      set: (scene, s, value) => s.copyWith(edgeStyle: value),
     );
   }
 }

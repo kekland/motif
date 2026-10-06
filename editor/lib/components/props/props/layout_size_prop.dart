@@ -36,9 +36,16 @@ final class LayoutSizeProp(super.sources, {super.kind = .layoutSize}) extends Pr
 }
 
 final class LayoutSizePropWidget extends HookWidget with PropWidget {
-  const LayoutSizePropWidget({super.key, required this.prop});
+  const LayoutSizePropWidget({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final LayoutSizeProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Size';
@@ -46,15 +53,15 @@ final class LayoutSizePropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: Row(
         spacing: 4.0,
         children: [
           Expanded(
-            child: LayoutDimensionPropWidget(prop: prop.width, axis: .x),
+            child: LayoutDimensionPropWidget(prop: prop.width, axis: .x, isNested: true),
           ),
           Expanded(
-            child: LayoutDimensionPropWidget(prop: prop.height, axis: .y),
+            child: LayoutDimensionPropWidget(prop: prop.height, axis: .y, isNested: true),
           ),
         ],
       ),

@@ -26,9 +26,13 @@ final class EdgeStylePropWidget extends HookWidget with PropWidget {
   const new({
     super.key,
     required this.prop,
+    this.isNested = false,
   });
 
   final EdgeStyleProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Stroke';
@@ -37,7 +41,10 @@ final class EdgeStylePropWidget extends HookWidget with PropWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DecorationsPropWidget(prop: prop.decorations, padding: .only(bottom: 8.0)),
+        DecorationsPropWidget(
+          prop: prop.decorations,
+          padding: resolvedPadding,
+        ),
         StrokeWidthPropWidget(prop: prop.strokeWidth),
       ],
     );

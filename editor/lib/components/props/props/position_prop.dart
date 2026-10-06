@@ -33,9 +33,16 @@ final class PositionProp(super.sources, {super.kind = .position}) extends Prop<V
 }
 
 final class PositionPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final PositionProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Position';
@@ -43,15 +50,15 @@ final class PositionPropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: Row(
         spacing: 4.0,
         children: [
           Expanded(
-            child: CoordinatePropWidget(prop: prop.x, axis: .x),
+            child: CoordinatePropWidget(prop: prop.x, axis: .x, isNested: true),
           ),
           Expanded(
-            child: CoordinatePropWidget(prop: prop.y, axis: .y),
+            child: CoordinatePropWidget(prop: prop.y, axis: .y, isNested: true),
           ),
         ],
       ),

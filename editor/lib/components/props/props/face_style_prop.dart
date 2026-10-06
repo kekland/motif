@@ -19,9 +19,13 @@ final class FaceStylePropWidget extends HookWidget with PropWidget {
   const new({
     super.key,
     required this.prop,
+    this.isNested = false,
   });
 
   final FaceStyleProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Fill';
@@ -31,7 +35,10 @@ final class FaceStylePropWidget extends HookWidget with PropWidget {
     return Column(
       spacing: 8.0,
       children: [
-        DecorationsPropWidget(prop: prop.decorations),
+        DecorationsPropWidget(
+          prop: prop.decorations,
+          padding: resolvedPadding,
+        ),
       ],
     );
   }

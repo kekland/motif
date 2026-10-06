@@ -1,6 +1,6 @@
 part of '../_program.dart';
 
-final class FaceStatement extends Statement with PlacedStatement, FacedStatement {
+final class FaceStatement extends Statement with FaceStyledStatement, PlacedStatement, FacedStatement {
   new(
     ChainSelector outer, {
     List<ChainSelector> holes = const [],
@@ -16,6 +16,9 @@ final class FaceStatement extends Statement with PlacedStatement, FacedStatement
 
   final ChainSelector outer;
   final List<ChainSelector> holes;
+
+  @override
+  FaceStyle get faceStyle => style;
   final FaceStyle style;
 
   @override
@@ -50,6 +53,9 @@ final class FaceStatement extends Statement with PlacedStatement, FacedStatement
     modifiers: modifiers ?? this.modifiers,
     parent: parent ?? this.parent?.ref,
   );
+
+  @override
+  FaceStatement copyWithFaceStyle({FaceStyle? style}) => copyWith(style: style);
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .forward([

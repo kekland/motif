@@ -1,9 +1,15 @@
 import 'package:editor/imports.dart';
 
 mixin PropWidget on Widget {
+  bool get isNested;
   String resolveHeader(BuildContext context);
 
-  static const EdgeInsets padding = .symmetric(horizontal: 8.0);
+  EdgeInsets get resolvedPadding => switch (isNested) {
+    true => .zero,
+    false => padding,
+  };
+
+  static const EdgeInsets padding = .only(left: 12.0, right: 12.0, bottom: 8.0);
 }
 
 Computed<PropValue<G>> usePropComputed<G, S>(Prop<G, S> prop) {

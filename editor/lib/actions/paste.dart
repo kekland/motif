@@ -50,6 +50,32 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
     final images = await value.images();
     if (images.isNotEmpty) {
       try {
+        final assets = <ImageAsset>[];
+
+        for (final imageData in images) {
+          final asset = await editor.uploadImageAsset(imageData.bytes, mimeType: imageData.mimeType);
+          assets.add(asset);
+        }
+
+        if (editor.selection.isNotEmpty) {
+          final statements = editor.selection.statements.map(editor.scene.statement).whereType<FaceStyledStatement>();
+          if (statements.isNotEmpty) {
+            // Add image decorations per statement
+            final decorations = assets.map((a) => ImageDecoration(a.hash)).toList();
+
+            editor.edit((txn) {
+              for (final statement in statements) {
+                final style = statement.faceStyle;
+                final newStyle = style.copyWith(decorations: style.decorations.appendAll(decorations));
+                final updated = statement.copyWithFaceStyle(style: newStyle);
+                txn.update(updated.id, (_) => updated);
+              }
+            });
+
+            return;
+          }
+        }
+
         Vec2 offset = editor.canvasPosition;
         final statements = <Statement>[];
 

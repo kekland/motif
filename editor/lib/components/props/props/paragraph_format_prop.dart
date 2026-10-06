@@ -23,9 +23,16 @@ final class ParagraphFormatProp(super.sources, {super.kind = .paragraphFormat})
 }
 
 final class ParagraphFormatPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final ParagraphFormatProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Paragraph';
@@ -40,7 +47,7 @@ final class ParagraphFormatPropWidget extends HookWidget with PropWidget {
     final verticalAlignment = useProxyComputedValue(format, (v) => v?.verticalAlignment);
 
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: Column(
         spacing: 8.0,
         children: [

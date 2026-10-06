@@ -20,6 +20,9 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
   final EdgeInsets? padding;
 
   @override
+  bool get isNested => false;
+
+  @override
   String resolveHeader(BuildContext context) => 'Decorations';
 
   @override
@@ -52,8 +55,13 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
       };
     }, [computeds]);
 
+    final verticalPadding = EdgeInsets.only(
+      top: itemCount > 0 ? padding?.top ?? 0.0 : 0.0,
+      bottom: itemCount > 0 ? padding?.bottom ?? 0.0 : 0.0,
+    );
+
     return Padding(
-      padding: itemCount > 0 ? (padding ?? .zero) : .zero,
+      padding: verticalPadding,
       child: DragBoundary(
         child: ReorderableList(
           shrinkWrap: true,
@@ -128,6 +136,7 @@ final class const DecorationEntry({
       onTap: () {},
       height: 40.0,
       reorderableIndex: index,
+      padding: .only(left: 12.0, right: 6.0),
       title: DecorationInputField(
         editor: editor,
         value: entry,

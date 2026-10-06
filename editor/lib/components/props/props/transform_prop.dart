@@ -49,21 +49,31 @@ final class TransformProp(super.sources, {super.kind = .transform}) extends Prop
 }
 
 final class TransformPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final TransformProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Transform';
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 8.0,
-      children: [
-        PositionPropWidget(prop: prop.translation),
-        RotationPropWidget(prop: prop.rotation),
-      ],
+    return Padding(
+      padding: resolvedPadding,
+      child: Column(
+        spacing: 8.0,
+        children: [
+          PositionPropWidget(prop: prop.translation, isNested: true),
+          RotationPropWidget(prop: prop.rotation, isNested: true),
+        ],
+      ),
     );
   }
 }

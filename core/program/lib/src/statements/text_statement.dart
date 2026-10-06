@@ -1,6 +1,13 @@
 part of '../_program.dart';
 
-final class TextStatement extends Statement with PlacedStatement, FramedStatement, LayoutBoxStatement {
+final class TextStatement extends Statement
+    with
+        VertexStyledStatement,
+        EdgeStyledStatement,
+        FaceStyledStatement,
+        PlacedStatement,
+        FramedStatement,
+        LayoutBoxStatement {
   TextStatement({
     required this.text,
     required this.textFormat,
@@ -22,8 +29,14 @@ final class TextStatement extends Statement with PlacedStatement, FramedStatemen
   final String text;
   final TextFormat textFormat;
   final ParagraphFormat paragraphFormat;
+
+  @override
   final VertexStyle vertexStyle;
+
+  @override
   final EdgeStyle edgeStyle;
+
+  @override
   final FaceStyle faceStyle;
 
   @override
@@ -86,6 +99,15 @@ final class TextStatement extends Statement with PlacedStatement, FramedStatemen
     edgeStyle: edgeStyle ?? this.edgeStyle,
     faceStyle: faceStyle ?? this.faceStyle,
   );
+
+  @override
+  TextStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(vertexStyle: style);
+
+  @override
+  TextStatement copyWithEdgeStyle({EdgeStyle? style}) => copyWith(edgeStyle: style);
+
+  @override
+  TextStatement copyWithFaceStyle({FaceStyle? style}) => copyWith(faceStyle: style);
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;

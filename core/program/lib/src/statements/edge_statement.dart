@@ -1,6 +1,6 @@
 part of '../_program.dart';
 
-final class EdgeStatement extends Statement with PlacedStatement {
+final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStatement {
   new(
     VertexSelector start,
     VertexSelector end, {
@@ -20,6 +20,9 @@ final class EdgeStatement extends Statement with PlacedStatement {
   final VertexSelector end;
   final Vec2? startTangent;
   final Vec2? endTangent;
+
+  @override
+  EdgeStyle get edgeStyle => style;
   final EdgeStyle style;
 
   EdgeRef get ref => id.cell(.edge, 0);
@@ -38,6 +41,9 @@ final class EdgeStatement extends Statement with PlacedStatement {
       parent: context.maybeResolve(parent),
     );
   }
+
+  @override
+  EdgeStatement copyWithEdgeStyle({EdgeStyle? style}) => copyWith(style: style);
 
   @override
   EdgeStatement copyWith({

@@ -3,6 +3,7 @@ import 'package:ui/ui.dart';
 
 final class const InputFieldOptions({
   final bool autofocus = false,
+  final bool hasFocus = false,
   final Widget? leading,
   final Widget? trailing,
   final bool useTabularFigures = false,
@@ -20,6 +21,7 @@ final class const InputFieldOptions({
     trailing: other.trailing ?? trailing,
     useTabularFigures: other.useTabularFigures || useTabularFigures,
     autofocus: other.autofocus || autofocus,
+    hasFocus: other.hasFocus || hasFocus,
     padding: other.padding,
     hintText: other.hintText ?? hintText,
     textStyle: other.textStyle ?? textStyle,
@@ -45,6 +47,36 @@ final class const InputFieldOptions({
     border,
     borderRadius,
   ];
+
+  InputFieldOptions copyWith({
+    bool? autofocus,
+    bool? hasFocus,
+    Widget? leading,
+    Widget? trailing,
+    bool? useTabularFigures,
+    EdgeInsets? padding,
+    Set<PointerDeviceKind>? supportedDevices,
+    String? hintText,
+    TextStyle? textStyle,
+    ProxyWidgetBuilder? builder,
+    Color? color,
+    BorderSide? border,
+    BorderRadius? borderRadius,
+  }) => .new(
+    autofocus: autofocus ?? this.autofocus,
+    hasFocus: hasFocus ?? this.hasFocus,
+    leading: leading ?? this.leading,
+    trailing: trailing ?? this.trailing,
+    useTabularFigures: useTabularFigures ?? this.useTabularFigures,
+    padding: padding ?? this.padding,
+    supportedDevices: supportedDevices ?? this.supportedDevices,
+    hintText: hintText ?? this.hintText,
+    textStyle: textStyle ?? this.textStyle,
+    builder: builder ?? this.builder,
+    color: color ?? this.color,
+    border: border ?? this.border,
+    borderRadius: borderRadius ?? this.borderRadius,
+  );
 }
 
 class InputFieldSurface extends StatelessWidget {
@@ -76,6 +108,7 @@ class InputFieldSurface extends StatelessWidget {
     final color = options.color;
     final border = options.border;
     final borderRadius = options.borderRadius;
+    final hasFocus = this.hasFocus || options.hasFocus;
 
     var effectiveTextStyle = textStyle ?? context.typography.body.primary;
     if (useTabularFigures) effectiveTextStyle = effectiveTextStyle.tabular;

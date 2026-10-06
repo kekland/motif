@@ -444,6 +444,9 @@ final _statementCodec = $codec<Statement, gen.Statement>(
     GeneratingStatement() => unreachable(),
     FacedStatement() => unreachable(),
     FramedStatement() => unreachable(),
+    VertexStyledStatement() => unreachable(),
+    EdgeStyledStatement() => unreachable(),
+    FaceStyledStatement() => unreachable(),
   },
 );
 

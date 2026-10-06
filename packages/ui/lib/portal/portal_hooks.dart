@@ -6,15 +6,13 @@ PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create, [List<Object?
   useEffect(() {
     return () {
       final entry = ref.value;
-      if (entry != null && entry.isActive) {
-        entry.pop(force: true);
-      }
+      entry?.dispose();
     };
   }, const []);
 
   useEffect(
     () {
-      ref.value?.pop(force: true);
+      ref.value?.dispose();
       ref.value = create();
       return null;
     },
@@ -24,6 +22,11 @@ PortalEntry<T> usePortalEntry<T>(PortalEntry<T> Function() create, [List<Object?
   return ref.value!;
 }
 
+bool usePortalEntryActive(PortalEntry entry) {
+  useListenable(entry);
+  return entry.isActive;
+}
+
 class PortalEntryManager {
   PortalEntry? _entry;
   PortalEntry? get entry => _entry;
@@ -31,22 +34,18 @@ class PortalEntryManager {
   bool get isActive => _entry?.isActive ?? false;
 
   Future<T?> push<T>(BuildContext context, PortalEntry<T> entry, {PortalAnchor? anchor}) {
-    if (_entry != null && _entry!.isActive) {
-      _entry!.pop(force: true);
-    }
+    _entry?.dispose();
     _entry = entry;
     return entry.push(context, anchor: anchor);
   }
 
   void pop({bool force = false}) {
-    if (_entry != null && _entry!.isActive) {
-      _entry!.pop(force: force);
-    }
+    _entry?.dispose();
     _entry = null;
   }
 
   void dispose() {
-    pop(force: true);
+    _entry?.dispose();
   }
 }
 

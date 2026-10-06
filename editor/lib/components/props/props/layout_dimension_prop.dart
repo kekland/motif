@@ -11,10 +11,14 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
     super.key,
     required this.prop,
     this.axis,
+    this.isNested = false,
   });
 
   final LayoutDimensionProp prop;
   final CoordinateAxis? axis;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Layout Dimension';
@@ -42,7 +46,7 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
 
     final typePicker = ToggleableButtonRow(
       borderRadius: .vertical(bottom: .circular(4.0)),
-      height: 28.0,
+      height: 24.0,
       children: [
         ToggleableButton(
           isActive: type == .fixed,
@@ -65,24 +69,27 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
       ],
     );
 
-    return DoubleExpressionInputField(
-      value: value,
-      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fixed(v))),
-      sessionCallbacks: transaction.sessionCallbacks,
-      options: .new(
-        leading: icon,
-        textStyle: isOverridden ? context.typography.body.tertiary : null,
-        hintText: 'Mixed',
-        padding: .zero,
-        builder: (context, child) => Column(
-          children: [
-            Padding(
-              padding: .symmetric(horizontal: 6.0),
-              child: child,
-            ),
-            Divider(),
-            typePicker,
-          ],
+    return Padding(
+      padding: resolvedPadding,
+      child: DoubleExpressionInputField(
+        value: value,
+        onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fixed(v))),
+        sessionCallbacks: transaction.sessionCallbacks,
+        options: .new(
+          leading: icon,
+          textStyle: isOverridden ? context.typography.body.tertiary : null,
+          hintText: 'Mixed',
+          padding: .zero,
+          builder: (context, child) => Column(
+            children: [
+              Padding(
+                padding: .symmetric(horizontal: 6.0),
+                child: child,
+              ),
+              Divider(),
+              typePicker,
+            ],
+          ),
         ),
       ),
     );

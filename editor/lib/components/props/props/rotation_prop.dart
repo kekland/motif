@@ -6,9 +6,16 @@ final class RotationProp(super.sources, {super.kind = .rotation}) extends Prop<A
 }
 
 final class RotationPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.isNested = false,
+  });
 
   final RotationProp prop;
+
+  @override
+  final bool isNested;
 
   @override
   String resolveHeader(BuildContext context) => 'Rotation';
@@ -20,7 +27,7 @@ final class RotationPropWidget extends HookWidget with PropWidget {
     final isOverridden = useComputed(() => computed.value.isOverridden, keys: [computed]).value;
 
     return Padding(
-      padding: PropWidget.padding,
+      padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: useMemoComputed(() => computed.value.resolve()?.deg, keys: [computed]),
         onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fromDeg(v))),

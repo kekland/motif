@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bindings/bindings.dart';
 import 'package:flutter/material.dart' show Material;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +42,7 @@ typedef PortalEntryTransitionBuilder = Widget Function(
   Widget child,
 );
 
-class PortalEntry<T> {
+class PortalEntry<T> with ChangeNotifier {
   new({
     required this.builder,
     this.anchorBuilder,
@@ -64,8 +65,15 @@ class PortalEntry<T> {
 
   PortalRootState? _root;
   Completer<T?>? _completer;
+  int? _poppedModalPointerId;
 
   Future<T?> push(BuildContext context, {PortalAnchor? anchor, Object? uniqueKey}) {
+    // If the modal was popped by a pointer event, check if the same pointer event wants to push this.
+    if (_poppedModalPointerId != null) {
+      final activePointerIds = GlobalPointerTracker.instance.activePointerIds;
+      if (activePointerIds.singleOrNull == _poppedModalPointerId) return Future.value(null);
+    }
+
     _insert(context, anchor: anchor, uniqueKey: uniqueKey);
     return _completer!.future;
   }
@@ -76,16 +84,25 @@ class PortalEntry<T> {
     _root!.push(context, this, anchor: anchor, uniqueKey: uniqueKey);
     _isActive = true;
     _completer = .new();
+    notifyListeners();
   }
 
   void _resolve(T? result) => _completer?.complete(result);
 
-  void pop({T? result, bool force = false}) {
+  void pop({T? result, bool force = false, int? pointerId}) {
     if (!_isActive) return;
+    _poppedModalPointerId = pointerId;
 
     _isActive = false;
     _root!.pop(this, force: force);
 
     if (!_completer!.isCompleted) _resolve(result);
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    if (isActive) pop(force: true);
+    super.dispose();
   }
 }

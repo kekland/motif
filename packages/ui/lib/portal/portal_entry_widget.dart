@@ -90,8 +90,8 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
             Positioned.fill(
               child: Listener(
                 behavior: .translucent,
-                onPointerDown: (_) {
-                  entry.pop();
+                onPointerDown: (e) {
+                  entry.pop(pointerId: e.pointer);
                 },
               ),
             ),

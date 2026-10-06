@@ -68,6 +68,7 @@ class TextStatementEditOverlay extends HookWidget {
 
     final textFormat = statement.textFormat;
     final textStyle = TextStyle(
+      color: Colors.transparent,
       fontFamily: textFormat.fontFamily,
       fontSize: textFormat.fontSize,
       letterSpacing: textFormat.letterSpacing,

@@ -72,6 +72,7 @@ part 'statements/base/layout_box_statement.dart';
 part 'statements/base/shape_statement.dart';
 part 'statements/base/faced_statement.dart';
 part 'statements/base/framed_statement.dart';
+part 'statements/base/styled_statement.dart';
 
 part 'statements/shapes/container_statement.dart';
 part 'statements/shapes/rectangle_statement.dart';

@@ -1,6 +1,6 @@
 part of '../_program.dart';
 
-final class VertexStatement extends Statement with PlacedStatement {
+final class VertexStatement extends Statement with VertexStyledStatement, PlacedStatement {
   new(
     this.position, {
     this.style = .default_,
@@ -12,6 +12,9 @@ final class VertexStatement extends Statement with PlacedStatement {
   }
 
   final Vec2 position;
+
+  @override
+  VertexStyle get vertexStyle => style;
   final VertexStyle style;
 
   VertexRef get ref => id.cell(.vertex, 0);
@@ -42,6 +45,9 @@ final class VertexStatement extends Statement with PlacedStatement {
     modifiers: modifiers ?? this.modifiers,
     parent: parent ?? this.parent?.ref,
   );
+
+  @override
+  VertexStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(style: style);
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
