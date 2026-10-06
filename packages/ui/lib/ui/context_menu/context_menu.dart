@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:ui/ui.dart';
 
 part 'context_menu_manager.dart';
