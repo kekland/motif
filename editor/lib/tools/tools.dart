@@ -1,5 +1,4 @@
 import 'package:editor/imports.dart';
-import 'package:editor/tools/knife/knife_tool.dart';
 
 export 'options.dart';
 
@@ -7,6 +6,7 @@ export 'cursor/cursor_tool.dart';
 export 'marquee/marquee_tool.dart';
 export 'fill/fill_tool.dart';
 export 'pen/pen_tool.dart';
+export 'knife/knife_tool.dart';
 export 'shape/layout_box_tool.dart';
 export 'shape/container_tool.dart';
 export 'shape/rectangle_tool.dart';
@@ -23,7 +23,7 @@ const toolset = <Tool>[
   PenTool(),
   PencilTool(),
   BendTool(),
-  KnifeTool(),
+  // KnifeTool(),
   FillTool(),
   TextTool(),
   ContainerTool(),
@@ -39,7 +39,7 @@ const tools = (
   pen: PenTool(),
   pencil: PencilTool(),
   bend: BendTool(),
-  knife: KnifeTool(),
+  // knife: KnifeTool(),
   fill: FillTool(),
   container: ContainerTool(),
   rectangle: RectangleTool(),
