@@ -92,6 +92,7 @@ Future<void> main() async {
     .new('paragraphFormatVerticalAlignmentTop', 'Symbols.vertical_align_top_rounded'),
     .new('paragraphFormatVerticalAlignmentMiddle', 'Symbols.vertical_align_center_rounded'),
     .new('paragraphFormatVerticalAlignmentBottom', 'Symbols.vertical_align_bottom_rounded'),
+    .new('more', 'Symbols.more_vert_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

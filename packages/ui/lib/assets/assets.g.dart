@@ -31,6 +31,7 @@ class IconsAssets {
   static const vFill = AssetBytesLoader('assets/gen/icons/v-fill.vec', packageName: 'ui');
   static const iFill = AssetBytesLoader('assets/gen/icons/i-fill.vec', packageName: 'ui');
   static const hFill = AssetBytesLoader('assets/gen/icons/h-fill.vec', packageName: 'ui');
+  static const github = AssetBytesLoader('assets/gen/icons/github.vec', packageName: 'ui');
   static const cFill = AssetBytesLoader('assets/gen/icons/c-fill.vec', packageName: 'ui');
   static const bFill = AssetBytesLoader('assets/gen/icons/b-fill.vec', packageName: 'ui');
   static const layoutColumn = AssetBytesLoader('assets/gen/icons/layout-column.vec', packageName: 'ui');
@@ -107,6 +108,7 @@ const iconsAssets = (
   vFill: IconsAssets.vFill,
   iFill: IconsAssets.iFill,
   hFill: IconsAssets.hFill,
+  github: IconsAssets.github,
   cFill: IconsAssets.cFill,
   bFill: IconsAssets.bFill,
   layoutColumn: IconsAssets.layoutColumn,
@@ -333,6 +335,7 @@ class Icons extends _BaseIcon {
   const Icons.vFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.vFill, filledLoader: null, autocolor: true);
   const Icons.iFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.iFill, filledLoader: null, autocolor: true);
   const Icons.hFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.hFill, filledLoader: null, autocolor: true);
+  const Icons.github({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.github, filledLoader: null, autocolor: true);
   const Icons.cFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.cFill, filledLoader: null, autocolor: true);
   const Icons.bFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.bFill, filledLoader: null, autocolor: true);
   const Icons.layoutColumn({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.layoutColumn, filledLoader: IconsAssets.layoutColumnFill, autocolor: true);
@@ -485,6 +488,7 @@ class Icons extends _BaseIcon {
   const Icons.paragraphFormatVerticalAlignmentTop({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_top_rounded);
   const Icons.paragraphFormatVerticalAlignmentMiddle({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_center_rounded);
   const Icons.paragraphFormatVerticalAlignmentBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_bottom_rounded);
+  const Icons.more({super.key, super.size, super.color}): super.iconData(icon: Symbols.more_vert_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

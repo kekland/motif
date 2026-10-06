@@ -1,6 +1,7 @@
 import 'package:app/imports.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:native/native.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppNavigationBar extends StatelessWidget {
   const AppNavigationBar({
@@ -36,6 +37,13 @@ class AppNavigationBar extends StatelessWidget {
                   onTabSelected: onTabSelected,
                   onTabClosed: onTabClosed,
                 ),
+              ),
+              IconButton.flat(
+                onTap: () {
+                  final githubUrl = Uri.parse('https://github.com/kekland/motif');
+                  launchUrl(githubUrl);
+                },
+                child: Icons.github(),
               ),
               IconButton.flat(
                 onTap: () => context.pushDialog((_) => SettingsDialog()),

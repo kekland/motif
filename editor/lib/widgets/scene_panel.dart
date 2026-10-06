@@ -115,7 +115,7 @@ class _SyncPanel extends HookWidget {
   }
 }
 
-class _EmbeddedServerOptions extends StatelessWidget {
+class _EmbeddedServerOptions extends HookWidget {
   const new({super.key, required this.server});
 
   final sync.EmbeddedServer server;
@@ -123,18 +123,35 @@ class _EmbeddedServerOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
+    useListenable(server);
 
-    return IconButton.flat(
-      tooltip: .new('Server settings'),
-      child: Icons.settings(),
-      onTap: () {
-        context.pushDialog(
-          (context) => _EmbeddedServerOptionsWindow(
-            server: server,
-            sceneId: editor.scene.id,
+    final isShared = server.sharedSceneIds.isNotEmpty;
+
+    return Stack(
+      children: [
+        IconButton.flat(
+          tooltip: .new('Server settings'),
+          child: Icons.more(),
+          onTap: () {
+            context.pushDialog(
+              (context) => _EmbeddedServerOptionsWindow(
+                server: server,
+                sceneId: editor.scene.id,
+              ),
+            );
+          },
+        ),
+        if (isShared)
+          Positioned(
+            right: 2.0,
+            top: 2.0,
+            child: Container(
+              width: 6.0,
+              height: 6.0,
+              decoration: BoxDecoration(color: context.colors.accent.primary, shape: .circle),
+            ),
           ),
-        );
-      },
+      ],
     );
   }
 }
