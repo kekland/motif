@@ -105,7 +105,7 @@ class SettingsDialog extends HookWidget {
                 color: swatch,
                 width: 32.0,
                 height: 32.0,
-                borderRadius: .circular(16.0),
+                borderRadius: .circular(8.0),
                 borderSide: BorderSide(
                   color: swatch == selectedAccentColor ? context.colors.divider : Colors.transparent,
                   width: 2.0,
