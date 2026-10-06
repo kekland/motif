@@ -21,7 +21,8 @@ class ContextMenuRootState extends State<ContextMenuRoot> {
   Future<T?> push<T>(BuildContext context, ContextMenu menu, {PositionedGestureDetails? details}) {
     final Rect? rect;
     if (details != null) {
-      rect = details.localPosition & .zero;
+      final offset = menu.resolveOffsets().$2;
+      rect = (details.localPosition - Offset(0.0, offset)) & .zero;
     } else {
       rect = null;
     }
@@ -35,8 +36,7 @@ class ContextMenuRootState extends State<ContextMenuRoot> {
       anchor: .compute(
         context,
         rect: rect,
-        alignment: .bottomRight,
-        padding: const .all(8.0),
+        alignment: .bottomCenter,
       ),
     );
   }

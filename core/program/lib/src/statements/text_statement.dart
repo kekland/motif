@@ -243,7 +243,16 @@ final class const TextFormat({
   );
 
   @override
-  List<Object?> get props => [fontSize, lineHeight, letterSpacing, fontSlant, fontWeight, fontWidth, decorations];
+  List<Object?> get props => [
+    fontFamily,
+    fontSize,
+    lineHeight,
+    letterSpacing,
+    fontSlant,
+    fontWeight,
+    fontWidth,
+    decorations,
+  ];
 
   skia.FontStyle get skStyle => .new(
     weight: skWeight,

@@ -39,6 +39,7 @@ class SearchableSelectableListState<T> extends State<SearchableSelectableList<T>
     super.initState();
     HardwareKeyboard.instance.addHandler(_handleKey);
     _selectionNotifier.value = widget.selection;
+    _onQueryChanged(widget.query);
   }
 
   @override
@@ -83,6 +84,8 @@ class SearchableSelectableListState<T> extends State<SearchableSelectableList<T>
 
   void _selectItem(T? item) {
     _selectionNotifier.value = item;
+    final selectedChild = _children[item];
+    selectedChild?.context.findRenderObject()?.showOnScreen();
   }
 
   bool _handleKey(KeyEvent event) {

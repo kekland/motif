@@ -36,9 +36,8 @@ final class EdgeStylePropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 8.0,
       children: [
-        DecorationsPropWidget(prop: prop.decorations),
+        DecorationsPropWidget(prop: prop.decorations, padding: .only(bottom: 8.0)),
         StrokeWidthPropWidget(prop: prop.strokeWidth),
       ],
     );

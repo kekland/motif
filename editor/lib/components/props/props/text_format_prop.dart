@@ -1,4 +1,5 @@
 import 'package:editor/components/props/widgets/inputs/font_family_input_field.dart';
+import 'package:editor/components/props/widgets/inputs/font_options_input_field.dart';
 import 'package:editor/imports.dart';
 
 final class TextFormatPartial({
@@ -54,23 +55,69 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
     final editor = context.editor;
     final transaction = usePropTransaction();
     final computed = usePropComputed(prop);
-    final fontFamily = useProxyComputed(
-      computed,
-      (value) => value.resolve()?.fontFamily,
-    );
+    final format = useProxyComputed(computed, (value) => value.resolve());
 
     return Padding(
       padding: PropWidget.padding,
       child: Column(
         children: [
           FontFamilyInputField(
-            value: fontFamily,
+            value: useProxyComputed(format, (v) => v?.fontFamily),
             onChanged: (v) {
               final family = editor.builtinFonts.catalog[v];
               for (final asset in family.assets) editor.maybeAddAsset(asset);
               transaction.edit((txn) => prop.set(txn, .new(fontFamily: v)));
             },
             sessionCallbacks: transaction.sessionCallbacks,
+          ),
+          const SizedBox(height: 8.0),
+          Row(
+            spacing: 8.0,
+            children: [
+              Expanded(
+                child: FontWeightInputField(
+                  values: TextFontWeight.values,
+                  value: useProxyComputed(format, (v) => v?.fontWeight),
+                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontWeight: v))),
+                ),
+              ),
+              Expanded(
+                child: FontSlantInputField(
+                  values: TextFontSlant.values,
+                  value: useProxyComputed(format, (v) => v?.fontSlant),
+                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontSlant: v))),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          DoubleExpressionInputField(
+            value: useProxyComputed(format, (v) => v?.fontSize),
+            onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontSize: v))),
+            sessionCallbacks: transaction.sessionCallbacks,
+            options: .new(leading: Icons.textFormatSize()),
+          ),
+          const SizedBox(height: 8.0),
+          Row(
+            spacing: 8.0,
+            children: [
+              Expanded(
+                child: DoubleExpressionInputField(
+                  value: useProxyComputed(format, (v) => v?.lineHeight),
+                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(lineHeight: v))),
+                  sessionCallbacks: transaction.sessionCallbacks,
+                  options: .new(leading: Icons.lineHeight()),
+                ),
+              ),
+              Expanded(
+                child: DoubleExpressionInputField(
+                  value: useProxyComputed(format, (v) => v?.letterSpacing),
+                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(letterSpacing: v))),
+                  sessionCallbacks: transaction.sessionCallbacks,
+                  options: .new(leading: Icons.textFormatLetterSpacing()),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -473,6 +473,18 @@ class Icons extends _BaseIcon {
   const Icons.decorationGradient({super.key, super.size, super.color}): super.iconData(icon: Symbols.gradient_rounded);
   const Icons.decorationImage({super.key, super.size, super.color}): super.iconData(icon: Symbols.image_rounded);
   const Icons.decorationColor({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_color_fill_rounded);
+  const Icons.textFormatWeight({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_bold_rounded);
+  const Icons.textFormatSlant({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_italic_rounded);
+  const Icons.textFormatSize({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_size_rounded);
+  const Icons.textFormatLineHeight({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_line_spacing_rounded);
+  const Icons.textFormatLetterSpacing({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_letter_spacing_rounded);
+  const Icons.paragraphFormatAlignmentLeft({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_align_left_rounded);
+  const Icons.paragraphFormatAlignmentCenter({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_align_center_rounded);
+  const Icons.paragraphFormatAlignmentRight({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_align_right_rounded);
+  const Icons.paragraphFormatAlignmentJustify({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_align_justify_rounded);
+  const Icons.paragraphFormatVerticalAlignmentTop({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_top_rounded);
+  const Icons.paragraphFormatVerticalAlignmentMiddle({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_center_rounded);
+  const Icons.paragraphFormatVerticalAlignmentBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_bottom_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

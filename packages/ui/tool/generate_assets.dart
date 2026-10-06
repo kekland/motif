@@ -80,6 +80,18 @@ Future<void> main() async {
     .new('decorationGradient', 'Symbols.gradient_rounded'),
     .new('decorationImage', 'Symbols.image_rounded'),
     .new('decorationColor', 'Symbols.format_color_fill_rounded'),
+    .new('textFormatWeight', 'Symbols.format_bold_rounded'),
+    .new('textFormatSlant', 'Symbols.format_italic_rounded'),
+    .new('textFormatSize', 'Symbols.format_size_rounded'),
+    .new('textFormatLineHeight', 'Symbols.format_line_spacing_rounded'),
+    .new('textFormatLetterSpacing', 'Symbols.format_letter_spacing_rounded'),
+    .new('paragraphFormatAlignmentLeft', 'Symbols.format_align_left_rounded'),
+    .new('paragraphFormatAlignmentCenter', 'Symbols.format_align_center_rounded'),
+    .new('paragraphFormatAlignmentRight', 'Symbols.format_align_right_rounded'),
+    .new('paragraphFormatAlignmentJustify', 'Symbols.format_align_justify_rounded'),
+    .new('paragraphFormatVerticalAlignmentTop', 'Symbols.vertical_align_top_rounded'),
+    .new('paragraphFormatVerticalAlignmentMiddle', 'Symbols.vertical_align_center_rounded'),
+    .new('paragraphFormatVerticalAlignmentBottom', 'Symbols.vertical_align_bottom_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

@@ -6,6 +6,7 @@ class ValueInputField<T> extends InputField<T> {
     required super.value,
     this.valueToString,
     this.onTap,
+    this.onTapDown,
     super.onChanged,
     super.sessionCallbacks,
     super.options,
@@ -13,15 +14,17 @@ class ValueInputField<T> extends InputField<T> {
 
   final String? Function(T?)? valueToString;
   final VoidCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
 
   @override
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
     final valueToString = this.valueToString ?? (v) => v?.toString();
-    final textValue = useMemoComputed(() => valueToString(value()), keys: [value]);
+    final textValue = useProxyComputed(value, (v) => valueToString(v));
 
     return InputFieldBase(
       onTap: onTap,
+      onTapDown: onTapDown,
       options: options,
       focusNode: focusNode,
       cursor: SystemMouseCursors.click,

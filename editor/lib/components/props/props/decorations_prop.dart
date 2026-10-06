@@ -10,9 +10,14 @@ final class DecorationsProp(super.sources, {super.kind = .decorations}) extends 
 }
 
 final class DecorationsPropWidget extends HookWidget with PropWidget {
-  const new({super.key, required this.prop});
+  const new({
+    super.key,
+    required this.prop,
+    this.padding,
+  });
 
   final DecorationsProp prop;
+  final EdgeInsets? padding;
 
   @override
   String resolveHeader(BuildContext context) => 'Decorations';
@@ -36,7 +41,7 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
     }
     final itemCount = useComputed(() => computed().resolve()!.entries.length, keys: [computed]).value;
     final computeds = useMemoized(
-      () => List.generate(itemCount, (i) => Computed(() => computed().resolve()!.entries[i])),
+      () => List.generate(itemCount, (i) => Computed(() => computed().resolve()!.entries.elementAtOrNull(i))),
       [itemCount, computed],
     );
 
@@ -47,23 +52,27 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
       };
     }, [computeds]);
 
-    return DragBoundary(
-      child: ReorderableList(
-        shrinkWrap: true,
-        itemCount: itemCount,
-        proxyDecorator: (child, i, animation) => FadeTransition(
-          opacity: animation.drive(Tween(begin: 1.0, end: 0.5)),
-          child: child,
-        ),
-        onReorderItem: (a, b) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.reorder(a, b))),
-        itemBuilder: (context, i) => DecorationEntry(
-          key: ValueKey(computeds[i]),
-          editor: editor,
-          index: i,
-          entry: computeds[i],
-          onChanged: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.update(i, v))),
-          onRemoved: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.remove(i))),
-          sessionCallbacks: transaction.sessionCallbacks,
+    return Padding(
+      padding: itemCount > 0 ? (padding ?? .zero) : .zero,
+      child: DragBoundary(
+        child: ReorderableList(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: itemCount,
+          proxyDecorator: (child, i, animation) => FadeTransition(
+            opacity: animation.drive(Tween(begin: 1.0, end: 0.5)),
+            child: child,
+          ),
+          onReorderItem: (a, b) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.reorder(a, b))),
+          itemBuilder: (context, i) => DecorationEntry(
+            key: ValueKey(computeds[i]),
+            editor: editor,
+            index: i,
+            entry: computeds[i],
+            onChanged: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.update(i, v))),
+            onRemoved: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.remove(i))),
+            sessionCallbacks: transaction.sessionCallbacks,
+          ),
         ),
       ),
     );
@@ -101,13 +110,20 @@ final class const DecorationEntry({
   super.key,
   required final Editor editor,
   required final int index,
-  required final ReadonlySignal<Decoration> entry,
+  required final ReadonlySignal<Decoration?> entry,
   final ValueChanged<Decoration>? onChanged,
   final ValueChanged<Decoration>? onRemoved,
   final InputSessionCallbacks? sessionCallbacks,
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final value = useRef(this.entry()!);
+    final entry = useComputed(() {
+      final v = this.entry();
+      if (v == null) return value.value;
+      return value.value = v;
+    });
+
     return ListItem(
       onTap: () {},
       height: 40.0,

@@ -125,7 +125,7 @@ class _GestureRegionState extends State<GestureRegion> {
   late Set<WidgetState> _hoverState;
   late Duration _smallAnimationDuration;
 
-  bool get _hasTapCallbacks => widget.gestureCallbacks.onTap != null;
+  bool get _hasTapCallbacks => widget.gestureCallbacks.isNotEmpty;
 
   _GestureRegionState? _parent;
   var _hoveredChildCount = 0;

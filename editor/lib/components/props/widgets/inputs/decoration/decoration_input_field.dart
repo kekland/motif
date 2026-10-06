@@ -32,13 +32,13 @@ final class const DecorationInputField({
     final leadingBody = switch (kind) {
       .color => HookBuilder(
         builder: (context) {
-          final color = useProxyComputed(value, (value) => (value as ColorDecoration).color).value;
+          final color = useProxyComputedValue(value, (value) => (value as ColorDecoration).color);
           return ColoredBox(color: color.toUiColor());
         },
       ),
       .image => HookBuilder(
         builder: (context) {
-          final id = useProxyComputed(value, (value) => (value as ImageDecoration).image).value;
+          final id = useProxyComputedValue(value, (value) => (value as ImageDecoration).image);
           if (id == null) return SizedBox.shrink();
           return RawImage(image: scene.assetCache.image[id]);
         },

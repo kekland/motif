@@ -108,6 +108,33 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
   GestureLongPressMoveUpdateCallback? get onLongPressUpdate => callbacks.onLongPressUpdate;
   GestureLongPressEndCallback? get onLongPressEnd => callbacks.onLongPressEnd;
   GestureLongPressCancelCallback? get onLongPressCancel => callbacks.onLongPressCancel;
+
+  bool get isNotEmpty {
+    return onTapDown != null ||
+        onTapUp != null ||
+        onTapCancel != null ||
+        onTap != null ||
+        onHorizontalDragDown != null ||
+        onHorizontalDragStart != null ||
+        onHorizontalDragUpdate != null ||
+        onHorizontalDragEnd != null ||
+        onHorizontalDragCancel != null ||
+        onVerticalDragDown != null ||
+        onVerticalDragStart != null ||
+        onVerticalDragUpdate != null ||
+        onVerticalDragEnd != null ||
+        onVerticalDragCancel != null ||
+        onPanDown != null ||
+        onPanStart != null ||
+        onPanUpdate != null ||
+        onPanEnd != null ||
+        onPanCancel != null ||
+        onLongPressDown != null ||
+        onLongPressStart != null ||
+        onLongPressUpdate != null ||
+        onLongPressEnd != null ||
+        onLongPressCancel != null;
+  }
 }
 
 mixin GestureCallbackBundleMixin {

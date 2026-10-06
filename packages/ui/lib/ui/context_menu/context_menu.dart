@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:ui/ui.dart';
@@ -5,16 +7,49 @@ import 'package:ui/ui.dart';
 part 'context_menu_manager.dart';
 
 final class ContextMenu(
-  final List<ContextMenuEntry> entries,
-) {
+  final List<ContextMenuEntry> entries, {
+  final Object? selectedValue,
+}) {
   late final length = entries.length;
   late final items = entries.whereType<ContextMenuItem>().toList();
   late final itemCount = items.length;
+
+  static const double itemExtent = 32.0;
+  static const double dividerExtent = 8.0;
+  static const double maxHeight = 200.0;
 
   static ContextMenuRootState of(BuildContext context) => context.findAncestorStateOfType<ContextMenuRootState>()!;
 
   static Future<T?> push<T>(BuildContext context, ContextMenu menu, {PositionedGestureDetails? details}) {
     return of(context).push(context, menu, details: details);
+  }
+
+  ContextMenuItem? resolveSelectedItem() {
+    if (selectedValue == null) return null;
+    return items.firstWhereOrNull((item) => item.value == selectedValue);
+  }
+
+  int? resolveSelectedIndex() {
+    final selectedItem = resolveSelectedItem();
+    if (selectedItem == null) return null;
+    return items.indexOf(selectedItem);
+  }
+
+  double _extentFor(ContextMenuEntry e) => switch (e) {
+    ContextMenuItem() => ContextMenu.itemExtent,
+    ContextMenuDivider() => ContextMenu.dividerExtent,
+  };
+
+  (double, double) resolveOffsets() {
+    final selected = resolveSelectedIndex();
+    if (selected == null) return (0.0, 0.0);
+
+    final before = entries.take(selected).fold(0.0, (s, e) => s + _extentFor(e));
+    final total = entries.fold(0.0, (s, e) => s + _extentFor(e));
+    final viewport = min(total, maxHeight);
+    final scrollOffset = (before + itemExtent / 2.0 - viewport / 2.0).clamp(0.0, max(0.0, total - viewport)).toDouble();
+    final anchorOffset = before - scrollOffset + itemExtent / 2.0;
+    return (scrollOffset, anchorOffset);
   }
 }
 
@@ -48,69 +83,44 @@ class ContextMenuWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selected = useState<(int, ContextMenuItem)?>(null);
-    final selectedIndex = selected.value?.$1;
-    final selectedItem = selected.value?.$2;
+    final scrollController = useScrollController(
+      initialScrollOffset: menu.resolveOffsets().$1,
+    );
 
-    void selectIndex(int i) {
-      final index = i.clamp(0, menu.itemCount - 1);
-      selected.value = (index, menu.items[index]);
-    }
-
-    void next() => selectIndex(selectedIndex != null ? selectedIndex + 1 : 0);
-    void previous() => selectIndex(selectedIndex != null ? selectedIndex - 1 : 0);
-
-    var itemIndex = 0;
-    debugPaintFocusBoxes = false;
-
-    return Focus(
-      autofocus: true,
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent || event is KeyRepeatEvent) {
-          if (event.logicalKey == .arrowUp) {
-            previous();
-            return .handled;
-          } else if (event.logicalKey == .arrowDown) {
-            next();
-            return .handled;
-          }
-
-          if (event.logicalKey == .enter) {
-            if (selectedItem != null) {
-              Navigator.pop(context, selectedItem.value);
-              return .handled;
-            }
-          }
-        }
-
-        return .ignored;
-      },
-      child: ConstrainedBox(
-        constraints: .new(maxHeight: 200.0),
-        child: Surface(
-          width: 160.0,
-          color: context.colors.surface.secondary,
-          borderSide: .new(color: context.colors.divider),
-          borderRadius: .circular(4.0),
-          shadows: context.shadows.window,
-          child: ListView.builder(
-            shrinkWrap: true,
+    return ConstrainedBox(
+      constraints: .new(maxHeight: ContextMenu.maxHeight),
+      child: Surface(
+        width: 160.0,
+        color: context.colors.surface.secondary,
+        borderSide: .new(color: context.colors.divider),
+        borderRadius: .circular(4.0),
+        shadows: context.shadows.window,
+        child: SearchableSelectableList(
+          focusNode: FocusScope.of(context),
+          items: menu.items,
+          selection: menu.resolveSelectedItem(),
+          onSubmit: (item) => Navigator.pop(context, item?.value),
+          builder: (context, _) => ListView.builder(
+            controller: scrollController,
             itemCount: menu.length,
+            shrinkWrap: true,
             itemBuilder: (context, index) {
               final entry = menu.entries[index];
-              if (entry is ContextMenuDivider) return const Divider();
+              if (entry is ContextMenuDivider) return const Divider(height: ContextMenu.dividerExtent);
 
               final item = entry as ContextMenuItem;
-              final result = ListItem(
-                isSelected: selectedIndex == itemIndex,
-                height: 28.0,
-                onTap: () => Navigator.pop(context, item.value),
-                leading: item.icon,
-                title: Text(item.label, style: context.typography.body),
-                trailing: item.shortcut != null ? SingleActivatorWidget(value: item.shortcut!) : null,
+              final result = SelectableListItem(
+                value: item,
+                builder: (context, isSelected) => ListItem(
+                  onTap: () => Navigator.pop(context, item.value),
+                  height: ContextMenu.itemExtent,
+                  isSelected: isSelected,
+                  leading: item.icon,
+                  title: Text(item.label, style: context.typography.body),
+                  trailing: item.shortcut != null ? SingleActivatorWidget(value: item.shortcut!) : null,
+                ),
               );
 
-              itemIndex++;
               return result;
             },
           ),

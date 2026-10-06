@@ -84,6 +84,7 @@ class FontFamilyPickerWindow extends HookWidget {
             itemCount: items.length,
             itemBuilder: (context, i) {
               final family = items[i];
+              final style = context.typography.body;
 
               return SelectableListItem(
                 key: ValueKey(family),
@@ -93,8 +94,8 @@ class FontFamilyPickerWindow extends HookWidget {
                   isSelected: isSelected,
                   title: family.thumbnail != null
                       ? CustomPaint(
-                          size: .infinite,
-                          painter: _FontThumbnailPainter(
+                          size: Size(double.infinity, style.fontSize! * (style.height ?? 1.0)),
+                          painter: FontThumbnailPainter(
                             thumbnail: family.thumbnail!,
                             color: context.colors.display.primary,
                           ),
@@ -110,8 +111,8 @@ class FontFamilyPickerWindow extends HookWidget {
   }
 }
 
-class _FontThumbnailPainter extends CustomPainter {
-  _FontThumbnailPainter({required this.thumbnail, required this.color});
+class FontThumbnailPainter extends CustomPainter {
+  FontThumbnailPainter({required this.thumbnail, required this.color});
 
   final FontFaceThumbnail thumbnail;
   final Color color;
@@ -123,7 +124,7 @@ class _FontThumbnailPainter extends CustomPainter {
 
     // Resize to fit into 24px height
     final height = thumbnail.height;
-    final scale = 24.0 / height;
+    final scale = (size.height / height) * 1.25;
 
     canvas.translate(0, (size.height - thumbnail.height * scale) / 2);
     canvas.scale(scale, scale);
@@ -131,6 +132,6 @@ class _FontThumbnailPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_FontThumbnailPainter oldDelegate) =>
+  bool shouldRepaint(FontThumbnailPainter oldDelegate) =>
       color != oldDelegate.color || thumbnail != oldDelegate.thumbnail;
 }

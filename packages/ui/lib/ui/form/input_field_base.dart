@@ -54,12 +54,14 @@ class InputFieldSurface extends StatelessWidget {
     required this.hasFocus,
     required this.options,
     this.onTap,
+    this.onTapDown,
     this.cursor = SystemMouseCursors.text,
   });
 
   final bool hasFocus;
   final InputFieldOptions options;
   final VoidCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
   final MouseCursor? cursor;
   final Widget Function(BuildContext context, TextStyle style, TextStyle hintStyle) builder;
 
@@ -125,6 +127,7 @@ class InputFieldSurface extends StatelessWidget {
 
     return GestureSurface(
       onTap: onTap,
+      onTapDown: onTapDown,
       width: double.infinity,
       supportedDevices: options.supportedDevices,
       color: color ?? context.colors.surface.secondary,
@@ -175,12 +178,14 @@ class InputFieldBase extends StatelessWidget {
     this.cursor,
     this.focusNode,
     this.onTap,
+    this.onTapDown,
   });
 
   final FocusNode? focusNode;
   final InputFieldOptions options;
   final MouseCursor? cursor;
   final VoidCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
   final Widget Function(BuildContext context, FocusNode node, TextStyle style, TextStyle hintStyle) builder;
 
   @override
@@ -194,6 +199,7 @@ class InputFieldBase extends StatelessWidget {
           options: options,
           cursor: cursor,
           onTap: onTap,
+          onTapDown: onTapDown,
           builder: (context, style, hintStyle) => builder(context, node, style, hintStyle),
         );
       },
