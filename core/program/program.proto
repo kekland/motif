@@ -12,6 +12,7 @@ message Program {
   repeated Statement statements     = 1;
   StyleTable         style          = 2;
   AssetManifest      asset_manifest = 3;
+  ProgramSettings    settings       = 4;
 }
 
 message ProgramSlice {
@@ -63,6 +64,11 @@ message CellRef {
   uint32   tag       = 2;
   uint32   sub       = 3;
   CellKind kind      = 4;
+}
+
+message ProgramSettings {
+  ColorData background_color = 1;
+  string    title            = 2;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -656,12 +662,18 @@ message AssetChange {
   repeated motif.Asset inserted = 2;
 }
 
+message SettingsChange {
+  ProgramSettings before = 1;
+  ProgramSettings after  = 2;
+}
+
 message ProgramChange {
   oneof value {
     StatementChange statement = 1;
     StyleChange     style     = 2;
     AssetChange     asset     = 3;
-    bool            empty     = 4;
+    SettingsChange  settings  = 4;
+    bool            empty     = 100;
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:sync/server.dart';
 final class ServerScene {
   ServerScene({
     required this.info,
+    required this.indexStorage,
     required this.storage,
     required this.program,
     required this.onEmpty,
@@ -14,7 +15,8 @@ final class ServerScene {
     _launchEmptyTimer();
   }
 
-  final pb.SceneInfo info;
+  pb.SceneInfo info;
+  final IndexStorage indexStorage;
   final SceneStorage storage;
   final void Function() onEmpty;
   final Logger logger;
@@ -29,6 +31,7 @@ final class ServerScene {
   bool get canBeClosed => hasNoConnections;
 
   var _dirty = false;
+  var _infoDirty = false;
   Timer? _saveTimer;
   Timer? _emptyTimer;
 
@@ -117,6 +120,13 @@ final class ServerScene {
 
   void _applyDelta(pb.ProgramDelta delta) {
     program = _applyDeltaImpl(program, delta);
+
+    if (program.settings.title != info.title) {
+      _infoDirty = true;
+      info.title = program.settings.title;
+      _broadcast(.new(sceneInfo: pb.SceneInfoUpdate(info: info)));
+    }
+
     _dirty = true;
     _saveTimer?.cancel();
     _saveTimer = Timer(const Duration(seconds: 2), save);
@@ -132,6 +142,13 @@ final class ServerScene {
     try {
       _dirty = false;
       await storage.saveProgram(program);
+
+      if (_infoDirty) {
+        _infoDirty = false;
+        await storage.saveInfo(info);
+        await indexStorage.updateInfo(info);
+      }
+
       logger.finest('saved');
     } catch (e, st) {
       logger.severe('failed to save', e, st);
@@ -208,11 +225,16 @@ pb.Program _applyDeltaImpl(pb.Program program, pb.ProgramDelta delta) {
     }
   }
 
+  void applySettings(pb.SettingsChange change) {
+    copy.settings = change.after;
+  }
+
   for (final change in delta.changes) {
     final _ = switch (change.whichValue()) {
       .statement => applyStatement(change.statement),
       .style => applyStyle(change.style),
       .asset => applyAsset(change.asset),
+      .settings => applySettings(change.settings),
       .empty => null,
       .notSet => throw StateError('invalid change: $change'),
     };

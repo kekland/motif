@@ -21,6 +21,11 @@ sealed class ProgramChange {
     required List<Asset> inserted,
   }) = AssetChange;
 
+  factory settings({
+    required ProgramSettings before,
+    required ProgramSettings after,
+  }) = SettingsChange;
+
   bool get isEmpty;
 
   void reapply(EvalPass pass);
@@ -225,6 +230,45 @@ final class AssetChange extends ProgramChange {
   @override
   bool commutesWith(ProgramChange other) => switch (other) {
     AssetChange _ => false,
+    _ => true,
+  };
+}
+
+final class SettingsChange extends ProgramChange {
+  new({
+    required this.before,
+    required this.after,
+  });
+
+  final ProgramSettings before;
+  final ProgramSettings after;
+
+  @override
+  SettingsChange invert() => .new(before: after, after: before);
+
+  @override
+  bool get isEmpty => before == after;
+
+  @override
+  void reapply(EvalPass pass) {
+    pass.program._settings = after;
+  }
+
+  @override
+  void unapply(EvalPass pass) {
+    pass.program._settings = before;
+  }
+
+  @override
+  SettingsChange? coalesce(ProgramChange next) {
+    if (next is! SettingsChange) return null;
+    if (next.before != after) return null;
+    return .new(before: before, after: next.after);
+  }
+
+  @override
+  bool commutesWith(ProgramChange other) => switch (other) {
+    SettingsChange d => d.before != after,
     _ => true,
   };
 }

@@ -25,6 +25,13 @@ final class SceneTransaction {
     _dirty = true;
   }
 
+  void applyChange(ProgramChange change) {
+    _checkOpen();
+    change.reapply(_pass);
+    _entries.add(change);
+    _dirty = true;
+  }
+
   T _route<T>(T Function() route) {
     _checkOpen();
     flush();

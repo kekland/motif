@@ -33,11 +33,11 @@ class SqliteIndexStorage implements sync.IndexStorage {
   }
 
   @override
-  Future<pb.SceneInfo> create(pb.Program program, {String? title, String? path}) async {
+  Future<pb.SceneInfo> create(pb.Program program, {String? path}) async {
     final isManaged = path == null;
     final info = pb.SceneInfo(
       id: uuid.v4(),
-      title: title ?? 'Untitled',
+      title: program.settings.title,
       updatedAt: .new(DateTime.now().millisecondsSinceEpoch),
       managed: isManaged,
     );
@@ -90,6 +90,12 @@ class SqliteIndexStorage implements sync.IndexStorage {
 
   @override
   Future<void> close() => db.close();
+
+  @override
+  Future<void> updateInfo(pb.SceneInfo info) => db.execute(
+    'UPDATE scenes SET info = ? WHERE id = ?',
+    [info.writeToBuffer(), info.id],
+  ); 
 
   Future<void> _upsertInfo(String path, pb.SceneInfo info) => db.execute(
     'INSERT INTO scenes (id, path, updated_at, info) VALUES (?, ?, ?, ?) '

@@ -189,6 +189,14 @@ const Program$json = {
       '6': '.motif.AssetManifest',
       '10': 'assetManifest'
     },
+    {
+      '1': 'settings',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ProgramSettings',
+      '10': 'settings'
+    },
   ],
 };
 
@@ -196,7 +204,8 @@ const Program$json = {
 final $typed_data.Uint8List programDescriptor = $convert.base64Decode(
     'CgdQcm9ncmFtEjAKCnN0YXRlbWVudHMYASADKAsyEC5tb3RpZi5TdGF0ZW1lbnRSCnN0YXRlbW'
     'VudHMSJwoFc3R5bGUYAiABKAsyES5tb3RpZi5TdHlsZVRhYmxlUgVzdHlsZRI7Cg5hc3NldF9t'
-    'YW5pZmVzdBgDIAEoCzIULm1vdGlmLkFzc2V0TWFuaWZlc3RSDWFzc2V0TWFuaWZlc3Q=');
+    'YW5pZmVzdBgDIAEoCzIULm1vdGlmLkFzc2V0TWFuaWZlc3RSDWFzc2V0TWFuaWZlc3QSMgoIc2'
+    'V0dGluZ3MYBCABKAsyFi5tb3RpZi5Qcm9ncmFtU2V0dGluZ3NSCHNldHRpbmdz');
 
 @$core.Deprecated('Use programSliceDescriptor instead')
 const ProgramSlice$json = {
@@ -455,6 +464,27 @@ final $typed_data.Uint8List cellRefDescriptor = $convert.base64Decode(
     'CgdDZWxsUmVmEigKCW5hbWVzcGFjZRgBIAEoCzIKLm1vdGlmLlU2NFIJbmFtZXNwYWNlEhAKA3'
     'RhZxgCIAEoDVIDdGFnEhAKA3N1YhgDIAEoDVIDc3ViEiMKBGtpbmQYBCABKA4yDy5tb3RpZi5D'
     'ZWxsS2luZFIEa2luZA==');
+
+@$core.Deprecated('Use programSettingsDescriptor instead')
+const ProgramSettings$json = {
+  '1': 'ProgramSettings',
+  '2': [
+    {
+      '1': 'background_color',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '10': 'backgroundColor'
+    },
+    {'1': 'title', '3': 2, '4': 1, '5': 9, '10': 'title'},
+  ],
+};
+
+/// Descriptor for `ProgramSettings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List programSettingsDescriptor = $convert.base64Decode(
+    'Cg9Qcm9ncmFtU2V0dGluZ3MSOwoQYmFja2dyb3VuZF9jb2xvchgBIAEoCzIQLm1vdGlmLkNvbG'
+    '9yRGF0YVIPYmFja2dyb3VuZENvbG9yEhQKBXRpdGxlGAIgASgJUgV0aXRsZQ==');
 
 @$core.Deprecated('Use zAnchorDescriptor instead')
 const ZAnchor$json = {
@@ -3124,6 +3154,34 @@ final $typed_data.Uint8List assetChangeDescriptor = $convert.base64Decode(
     'CgtBc3NldENoYW5nZRImCgdyZW1vdmVkGAEgAygLMgwubW90aWYuQXNzZXRSB3JlbW92ZWQSKA'
     'oIaW5zZXJ0ZWQYAiADKAsyDC5tb3RpZi5Bc3NldFIIaW5zZXJ0ZWQ=');
 
+@$core.Deprecated('Use settingsChangeDescriptor instead')
+const SettingsChange$json = {
+  '1': 'SettingsChange',
+  '2': [
+    {
+      '1': 'before',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ProgramSettings',
+      '10': 'before'
+    },
+    {
+      '1': 'after',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ProgramSettings',
+      '10': 'after'
+    },
+  ],
+};
+
+/// Descriptor for `SettingsChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List settingsChangeDescriptor = $convert.base64Decode(
+    'Cg5TZXR0aW5nc0NoYW5nZRIuCgZiZWZvcmUYASABKAsyFi5tb3RpZi5Qcm9ncmFtU2V0dGluZ3'
+    'NSBmJlZm9yZRIsCgVhZnRlchgCIAEoCzIWLm1vdGlmLlByb2dyYW1TZXR0aW5nc1IFYWZ0ZXI=');
+
 @$core.Deprecated('Use programChangeDescriptor instead')
 const ProgramChange$json = {
   '1': 'ProgramChange',
@@ -3155,7 +3213,16 @@ const ProgramChange$json = {
       '9': 0,
       '10': 'asset'
     },
-    {'1': 'empty', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'empty'},
+    {
+      '1': 'settings',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SettingsChange',
+      '9': 0,
+      '10': 'settings'
+    },
+    {'1': 'empty', '3': 100, '4': 1, '5': 8, '9': 0, '10': 'empty'},
   ],
   '8': [
     {'1': 'value'},
@@ -3166,8 +3233,9 @@ const ProgramChange$json = {
 final $typed_data.Uint8List programChangeDescriptor = $convert.base64Decode(
     'Cg1Qcm9ncmFtQ2hhbmdlEjYKCXN0YXRlbWVudBgBIAEoCzIWLm1vdGlmLlN0YXRlbWVudENoYW'
     '5nZUgAUglzdGF0ZW1lbnQSKgoFc3R5bGUYAiABKAsyEi5tb3RpZi5TdHlsZUNoYW5nZUgAUgVz'
-    'dHlsZRIqCgVhc3NldBgDIAEoCzISLm1vdGlmLkFzc2V0Q2hhbmdlSABSBWFzc2V0EhYKBWVtcH'
-    'R5GAQgASgISABSBWVtcHR5QgcKBXZhbHVl');
+    'dHlsZRIqCgVhc3NldBgDIAEoCzISLm1vdGlmLkFzc2V0Q2hhbmdlSABSBWFzc2V0EjMKCHNldH'
+    'RpbmdzGAQgASgLMhUubW90aWYuU2V0dGluZ3NDaGFuZ2VIAFIIc2V0dGluZ3MSFgoFZW1wdHkY'
+    'ZCABKAhIAFIFZW1wdHlCBwoFdmFsdWU=');
 
 @$core.Deprecated('Use mat4Descriptor instead')
 const Mat4$json = {

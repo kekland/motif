@@ -232,6 +232,26 @@ final $typed_data.Uint8List clientDeltaDescriptor = $convert.base64Decode(
     'CgtDbGllbnREZWx0YRIpCgVkZWx0YRgBIAEoCzITLm1vdGlmLlByb2dyYW1EZWx0YVIFZGVsdG'
     'ESJQoGY2xpZW50GAIgASgLMg0ubW90aWYuQ2xpZW50UgZjbGllbnQ=');
 
+@$core.Deprecated('Use sceneInfoUpdateDescriptor instead')
+const SceneInfoUpdate$json = {
+  '1': 'SceneInfoUpdate',
+  '2': [
+    {
+      '1': 'info',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SceneInfo',
+      '10': 'info'
+    },
+  ],
+};
+
+/// Descriptor for `SceneInfoUpdate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sceneInfoUpdateDescriptor = $convert.base64Decode(
+    'Cg9TY2VuZUluZm9VcGRhdGUSJAoEaW5mbxgBIAEoCzIQLm1vdGlmLlNjZW5lSW5mb1IEaW5mbw'
+    '==');
+
 @$core.Deprecated('Use snapshotDescriptor instead')
 const Snapshot$json = {
   '1': 'Snapshot',
@@ -334,6 +354,15 @@ const ServerEvent$json = {
       '9': 0,
       '10': 'left'
     },
+    {
+      '1': 'scene_info',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.SceneInfoUpdate',
+      '9': 0,
+      '10': 'sceneInfo'
+    },
   ],
   '8': [
     {'1': 'event'},
@@ -345,4 +374,5 @@ final $typed_data.Uint8List serverEventDescriptor = $convert.base64Decode(
     'CgtTZXJ2ZXJFdmVudBItCghzbmFwc2hvdBgBIAEoCzIPLm1vdGlmLlNuYXBzaG90SABSCHNuYX'
     'BzaG90EjMKCHByZXNlbmNlGAIgASgLMhUubW90aWYuQ2xpZW50UHJlc2VuY2VIAFIIcHJlc2Vu'
     'Y2USKgoFZGVsdGEYAyABKAsyEi5tb3RpZi5DbGllbnREZWx0YUgAUgVkZWx0YRIjCgRsZWZ0GA'
-    'QgASgLMg0ubW90aWYuQ2xpZW50SABSBGxlZnRCBwoFZXZlbnQ=');
+    'QgASgLMg0ubW90aWYuQ2xpZW50SABSBGxlZnQSNwoKc2NlbmVfaW5mbxgFIAEoCzIWLm1vdGlm'
+    'LlNjZW5lSW5mb1VwZGF0ZUgAUglzY2VuZUluZm9CBwoFZXZlbnQ=');

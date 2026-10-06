@@ -18,8 +18,12 @@ class Server {
   }
 
   Future<(pb.SceneInfo, pb.Program)> createScene({pb.Program? program, String? title, String? path}) async {
+    final _title = title ?? 'Untitled';
+
     final _program = program ?? .create();
-    final info = await indexStorage.create(_program, title: title, path: path);
+    _program.settings.title = _title;
+
+    final info = await indexStorage.create(_program, path: path);
     return (info, _program);
   }
 
@@ -43,8 +47,9 @@ class Server {
     }
 
     return .new(
-      storage: storage,
       info: await storage.loadInfo(),
+      indexStorage: indexStorage,
+      storage: storage,
       program: await storage.loadProgram(),
       onEmpty: () => _closeScene(id),
     );

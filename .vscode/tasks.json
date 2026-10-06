@@ -3,21 +3,47 @@
   "tasks": [
     {
       "label": "packages/ui/generate_assets",
+      "detail": "Generate assets for package/ui",
       "type": "shell",
       "command": "./packages/ui/tool/generate_assets.dart",
       "problemMatcher": [],
     },
     {
       "label": "packages/native/ffigen",
+      "detail": "Run ffigen for package/native",
       "type": "shell",
       "command": "./packages/native/tool/ffigen.py",
       "problemMatcher": [],
     },
     {
       "label": "core/program/generate_blueprint",
+      "detail": "Generate blueprint boilerplate",
       "type": "shell",
       "command": "./core/program/tool/generate_blueprint.dart",
       "problemMatcher": []
-    }
+    },
+    {
+      "label": "sync/schema/generate_schema",
+      "detail": "Generate pb schema",
+      "type": "shell",
+      "command": "./sync/schema/tool/generate_schema.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "sync/sync_server/compile",
+      "detail": "Compile server for linux-x64",
+      "type": "shell",
+      "command": "./sync/sync_server/tool/compile.py",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "packages/skia/build",
+      "detail": "Build Skia and shims",
+      "type": "shell",
+      "command": "./packages/skia/tool/build.py",
+      "group": "build",
+      "problemMatcher": []
+    },
   ],
 }

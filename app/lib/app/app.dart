@@ -18,13 +18,7 @@ class AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    tabs.add(
-      .new(
-        body: HomePage(),
-        leading: Icons.home(),
-        title: 'Home',
-      ),
-    );
+    tabs.add(.new(body: HomePage(), leading: Icons.home(), title: 'Home'));
   }
 
   void push(AppTab tab) {
@@ -37,6 +31,11 @@ class AppState extends State<App> {
     if (i == 0) throw StateError('cannot pop home tab');
     tabs.removeAt(i);
     if (activeTab >= tabs.length) activeTab = tabs.length - 1;
+    setState(() {});
+  }
+
+  void update(int i, AppTab tab) {
+    tabs[i] = tab;
     setState(() {});
   }
 
@@ -79,7 +78,11 @@ class AppState extends State<App> {
                         child: IndexedStack(
                           index: activeTab,
                           children: [
-                            for (final t in tabs) KeyedSubtree(key: t.key, child: t.body),
+                            for (final (i, t) in tabs.indexed)
+                              KeyedSubtree(
+                                key: t.key,
+                                child: InheritedTab(index: i, tab: t, child: t.body),
+                              ),
                           ],
                         ),
                       ),
@@ -93,4 +96,21 @@ class AppState extends State<App> {
       ),
     );
   }
+}
+
+class InheritedTab extends InheritedWidget {
+  const InheritedTab({
+    super.key,
+    required this.index,
+    required this.tab,
+    required super.child,
+  });
+
+  final int index;
+  final AppTab tab;
+
+  static InheritedTab? of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<InheritedTab>();
+
+  @override
+  bool updateShouldNotify(covariant InheritedTab oldWidget) => tab != oldWidget.tab;
 }

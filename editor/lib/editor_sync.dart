@@ -18,6 +18,7 @@ final class EditorSync extends Controller {
     required this.client,
     required this.sceneId,
     String? clientId,
+    this.onSceneInfoUpdated,
   }) : clientId = clientId ?? uuid.v4(),
        super(logger: Logger('editor/$sceneId')) {
     connect();
@@ -26,6 +27,7 @@ final class EditorSync extends Controller {
   final sync.Client client;
   final String sceneId;
   final String clientId;
+  final void Function(pb.SceneInfo)? onSceneInfoUpdated;
 
   sync.ClientConnection? _connection;
 
@@ -109,6 +111,7 @@ final class EditorSync extends Controller {
     .delta => _handleDeltaEvent(event.delta),
     .presence => _handlePresenceEvent(event.presence),
     .left => _handleLeftEvent(event.left),
+    .sceneInfo => _handleSceneInfoEvent(event.sceneInfo),
     .notSet => null,
   };
 
@@ -133,6 +136,10 @@ final class EditorSync extends Controller {
 
   void _handleLeftEvent(pb.Client left) {
     peers.remove(left.id);
+  }
+
+  void _handleSceneInfoEvent(pb.SceneInfoUpdate sceneInfoUpdate) {
+    onSceneInfoUpdated?.call(sceneInfoUpdate.info);
   }
 
   // -------------------------------------------------------------------------------------------------------------------

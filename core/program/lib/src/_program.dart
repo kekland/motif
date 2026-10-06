@@ -33,6 +33,8 @@ part 'remap.dart';
 part 'edit.dart';
 part 'serializer.dart';
 
+part 'settings/settings.dart';
+
 part 'style/decoration.dart';
 part 'style/style.dart';
 part 'style/style_table.dart';

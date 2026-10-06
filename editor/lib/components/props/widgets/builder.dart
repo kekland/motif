@@ -63,13 +63,29 @@ class PropsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttons = prop.buildHeaderButtons(context);
 
+    return PropsSectionWidget(
+      title: Text(child.resolveHeader(context)),
+      trailing: buttons.toList(),
+      child: child,
+    );
+  }
+}
+
+final class const PropsSectionWidget({
+  super.key,
+  required final Widget title,
+  required final Widget child,
+  final List<Widget> trailing = const [],
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListItem(
           padding: .only(left: 12.0, right: 6.0),
-          title: Text(child.resolveHeader(context), style: context.typography.caption.secondary),
-          trailing: ButtonRow(buttons: buttons.toList()),
+          title: DefaultForegroundStyle(style: context.typography.caption.secondary, child: title),
+          trailing: ButtonRow(buttons: trailing),
         ),
         child,
       ],

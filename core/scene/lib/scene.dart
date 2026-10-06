@@ -58,8 +58,6 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     program.assetResolver = assetResolver;
   }
 
-  Scene.empty(String id) : this(id: id, program: .empty());
-
   final String id;
   final Program program;
   final AssetResolver? assetResolver;

@@ -21,11 +21,13 @@ final programCodec = $codec<Program, gen.Program>(
     $map(v.statements, (v) => v.decode()),
     styles: v.style.decode(),
     assetManifest: v.assetManifest.decode(),
+    settings: v.settings.decode(),
   ),
   encoder: (v) => .new(
     statements: $map(v.statements, (v) => v.encode()),
     style: v.styles.encode(),
     assetManifest: v.assetManifest.encode(),
+    settings: v.settings.encode(),
   ),
 );
 
@@ -101,6 +103,20 @@ extension _CellRefDecode on gen.CellRef {
 final _cellRefCodec = $codec<CellRef, gen.CellRef>(
   decoder: (v) => .make(namespace: v.namespace.decode(), op: v.tag, sub: v.sub, kind: v.kind.decode()),
   encoder: (v) => .new(namespace: v.namespace.encode(), tag: v.op, sub: v.sub, kind: v.kind.encode()),
+);
+
+extension _ProgramSettingsEncode on ProgramSettings { gen.ProgramSettings encode() => _programSettingsCodec.encode(this); }
+extension _ProgramSettingsDecode on gen.ProgramSettings { ProgramSettings decode() => _programSettingsCodec.decode(this); }
+
+final _programSettingsCodec = $codec<ProgramSettings, gen.ProgramSettings>(
+  decoder: (v) => .new(
+    title: v.title,
+    backgroundColor: v.backgroundColor.decode(),
+  ),
+  encoder: (v) => .new(
+    title: v.title,
+    backgroundColor: v.backgroundColor.encode(),
+  ),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -900,6 +916,7 @@ final _programChangeCodec = $codec<ProgramChange, gen.ProgramChange>(
     .statement => v.statement.decode(),
     .style => v.style.decode(),
     .asset => v.asset.decode(),
+    .settings => v.settings.decode(),
     .empty => .empty(),
     .notSet => throw ArgumentError(),
   },
@@ -907,6 +924,7 @@ final _programChangeCodec = $codec<ProgramChange, gen.ProgramChange>(
     StatementChange v => .new(statement: v.encode()),
     StyleChange v => .new(style: v.encode()),
     AssetChange v => .new(asset: v.encode()),
+    SettingsChange v => .new(settings: v.encode()),
     EmptyChange() => .new(empty: true),
   },
 );
@@ -974,6 +992,14 @@ final _programAnchorCodec = $codec<ProgramAnchor, gen.ProgramAnchor>(
     AtAnchor a => .new(at: a.id.encode()),
     AfterAnchor a => .new(after: a.id.encode()),
   },
+);
+
+extension _SettingsChangeEncode on SettingsChange { gen.SettingsChange encode() => _settingsChangeCodec.encode(this); }
+extension _SettingsChangeDecode on gen.SettingsChange { SettingsChange decode() => _settingsChangeCodec.decode(this); }
+
+final _settingsChangeCodec = $codec<SettingsChange, gen.SettingsChange>(
+  decoder: (v) => .new(before: v.before.decode(), after: v.after.decode()),
+  encoder: (v) => .new(before: v.before.encode(), after: v.after.encode()),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------

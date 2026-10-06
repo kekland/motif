@@ -21,7 +21,7 @@ message ListScenesResponse {
 
 message CreateSceneRequest {
   optional Program program = 1;
-  optional string title = 2;
+  optional string  title   = 2;
 }
 
 message CreateSceneResponse {
@@ -49,6 +49,10 @@ message ClientDelta {
   Client       client = 2;
 }
 
+message SceneInfoUpdate {
+  SceneInfo info = 1;
+}
+
 message Snapshot {
   Program                 program = 1;
   repeated ClientPresence clients = 2;
@@ -63,9 +67,10 @@ message ClientEvent {
 
 message ServerEvent {
   oneof event {
-    Snapshot       snapshot = 1;
-    ClientPresence presence = 2;
-    ClientDelta    delta    = 3;
-    Client         left     = 4;
+    Snapshot        snapshot   = 1;
+    ClientPresence  presence   = 2;
+    ClientDelta     delta      = 3;
+    Client          left       = 4;
+    SceneInfoUpdate scene_info = 5;
   }
 }

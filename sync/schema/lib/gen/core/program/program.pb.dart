@@ -26,11 +26,13 @@ class Program extends $pb.GeneratedMessage {
     $core.Iterable<Statement>? statements,
     StyleTable? style,
     $0.AssetManifest? assetManifest,
+    ProgramSettings? settings,
   }) {
     final result = create();
     if (statements != null) result.statements.addAll(statements);
     if (style != null) result.style = style;
     if (assetManifest != null) result.assetManifest = assetManifest;
+    if (settings != null) result.settings = settings;
     return result;
   }
 
@@ -53,6 +55,8 @@ class Program extends $pb.GeneratedMessage {
         subBuilder: StyleTable.create)
     ..aOM<$0.AssetManifest>(3, _omitFieldNames ? '' : 'assetManifest',
         subBuilder: $0.AssetManifest.create)
+    ..aOM<ProgramSettings>(4, _omitFieldNames ? '' : 'settings',
+        subBuilder: ProgramSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -97,6 +101,17 @@ class Program extends $pb.GeneratedMessage {
   void clearAssetManifest() => $_clearField(3);
   @$pb.TagNumber(3)
   $0.AssetManifest ensureAssetManifest() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ProgramSettings get settings => $_getN(3);
+  @$pb.TagNumber(4)
+  set settings(ProgramSettings value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSettings() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSettings() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ProgramSettings ensureSettings() => $_ensure(3);
 }
 
 class ProgramSlice extends $pb.GeneratedMessage {
@@ -733,6 +748,75 @@ class CellRef extends $pb.GeneratedMessage {
   $core.bool hasKind() => $_has(3);
   @$pb.TagNumber(4)
   void clearKind() => $_clearField(4);
+}
+
+class ProgramSettings extends $pb.GeneratedMessage {
+  factory ProgramSettings({
+    ColorData? backgroundColor,
+    $core.String? title,
+  }) {
+    final result = create();
+    if (backgroundColor != null) result.backgroundColor = backgroundColor;
+    if (title != null) result.title = title;
+    return result;
+  }
+
+  ProgramSettings._();
+
+  factory ProgramSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProgramSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProgramSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ColorData>(1, _omitFieldNames ? '' : 'backgroundColor',
+        subBuilder: ColorData.create)
+    ..aOS(2, _omitFieldNames ? '' : 'title')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramSettings clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProgramSettings copyWith(void Function(ProgramSettings) updates) =>
+      super.copyWith((message) => updates(message as ProgramSettings))
+          as ProgramSettings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProgramSettings create() => ProgramSettings._();
+  @$core.override
+  ProgramSettings createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ProgramSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProgramSettings>(create);
+  static ProgramSettings? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ColorData get backgroundColor => $_getN(0);
+  @$pb.TagNumber(1)
+  set backgroundColor(ColorData value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBackgroundColor() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBackgroundColor() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ColorData ensureBackgroundColor() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get title => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set title($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTitle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTitle() => $_clearField(2);
 }
 
 enum ZAnchor_Value { top, bottom, above, below, notSet }
@@ -7192,19 +7276,93 @@ class AssetChange extends $pb.GeneratedMessage {
   $pb.PbList<$0.Asset> get inserted => $_getList(1);
 }
 
-enum ProgramChange_Value { statement, style, asset, empty, notSet }
+class SettingsChange extends $pb.GeneratedMessage {
+  factory SettingsChange({
+    ProgramSettings? before,
+    ProgramSettings? after,
+  }) {
+    final result = create();
+    if (before != null) result.before = before;
+    if (after != null) result.after = after;
+    return result;
+  }
+
+  SettingsChange._();
+
+  factory SettingsChange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SettingsChange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SettingsChange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ProgramSettings>(1, _omitFieldNames ? '' : 'before',
+        subBuilder: ProgramSettings.create)
+    ..aOM<ProgramSettings>(2, _omitFieldNames ? '' : 'after',
+        subBuilder: ProgramSettings.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SettingsChange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SettingsChange copyWith(void Function(SettingsChange) updates) =>
+      super.copyWith((message) => updates(message as SettingsChange))
+          as SettingsChange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SettingsChange create() => SettingsChange._();
+  @$core.override
+  SettingsChange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SettingsChange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SettingsChange>(create);
+  static SettingsChange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ProgramSettings get before => $_getN(0);
+  @$pb.TagNumber(1)
+  set before(ProgramSettings value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBefore() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBefore() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ProgramSettings ensureBefore() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ProgramSettings get after => $_getN(1);
+  @$pb.TagNumber(2)
+  set after(ProgramSettings value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAfter() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAfter() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ProgramSettings ensureAfter() => $_ensure(1);
+}
+
+enum ProgramChange_Value { statement, style, asset, settings, empty, notSet }
 
 class ProgramChange extends $pb.GeneratedMessage {
   factory ProgramChange({
     StatementChange? statement,
     StyleChange? style,
     AssetChange? asset,
+    SettingsChange? settings,
     $core.bool? empty,
   }) {
     final result = create();
     if (statement != null) result.statement = statement;
     if (style != null) result.style = style;
     if (asset != null) result.asset = asset;
+    if (settings != null) result.settings = settings;
     if (empty != null) result.empty = empty;
     return result;
   }
@@ -7223,21 +7381,24 @@ class ProgramChange extends $pb.GeneratedMessage {
     1: ProgramChange_Value.statement,
     2: ProgramChange_Value.style,
     3: ProgramChange_Value.asset,
-    4: ProgramChange_Value.empty,
+    4: ProgramChange_Value.settings,
+    100: ProgramChange_Value.empty,
     0: ProgramChange_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ProgramChange',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4])
+    ..oo(0, [1, 2, 3, 4, 100])
     ..aOM<StatementChange>(1, _omitFieldNames ? '' : 'statement',
         subBuilder: StatementChange.create)
     ..aOM<StyleChange>(2, _omitFieldNames ? '' : 'style',
         subBuilder: StyleChange.create)
     ..aOM<AssetChange>(3, _omitFieldNames ? '' : 'asset',
         subBuilder: AssetChange.create)
-    ..aOB(4, _omitFieldNames ? '' : 'empty')
+    ..aOM<SettingsChange>(4, _omitFieldNames ? '' : 'settings',
+        subBuilder: SettingsChange.create)
+    ..aOB(100, _omitFieldNames ? '' : 'empty')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -7263,12 +7424,14 @@ class ProgramChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   ProgramChange_Value whichValue() =>
       _ProgramChange_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(100)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -7305,13 +7468,24 @@ class ProgramChange extends $pb.GeneratedMessage {
   AssetChange ensureAsset() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $core.bool get empty => $_getBF(3);
+  SettingsChange get settings => $_getN(3);
   @$pb.TagNumber(4)
-  set empty($core.bool value) => $_setBool(3, value);
+  set settings(SettingsChange value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasEmpty() => $_has(3);
+  $core.bool hasSettings() => $_has(3);
   @$pb.TagNumber(4)
-  void clearEmpty() => $_clearField(4);
+  void clearSettings() => $_clearField(4);
+  @$pb.TagNumber(4)
+  SettingsChange ensureSettings() => $_ensure(3);
+
+  @$pb.TagNumber(100)
+  $core.bool get empty => $_getBF(4);
+  @$pb.TagNumber(100)
+  set empty($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(100)
+  $core.bool hasEmpty() => $_has(4);
+  @$pb.TagNumber(100)
+  void clearEmpty() => $_clearField(100);
 }
 
 class Mat4 extends $pb.GeneratedMessage {

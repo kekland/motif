@@ -631,6 +631,63 @@ class ClientDelta extends $pb.GeneratedMessage {
   Client ensureClient() => $_ensure(1);
 }
 
+class SceneInfoUpdate extends $pb.GeneratedMessage {
+  factory SceneInfoUpdate({
+    SceneInfo? info,
+  }) {
+    final result = create();
+    if (info != null) result.info = info;
+    return result;
+  }
+
+  SceneInfoUpdate._();
+
+  factory SceneInfoUpdate.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SceneInfoUpdate.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SceneInfoUpdate',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<SceneInfo>(1, _omitFieldNames ? '' : 'info',
+        subBuilder: SceneInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SceneInfoUpdate clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SceneInfoUpdate copyWith(void Function(SceneInfoUpdate) updates) =>
+      super.copyWith((message) => updates(message as SceneInfoUpdate))
+          as SceneInfoUpdate;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SceneInfoUpdate create() => SceneInfoUpdate._();
+  @$core.override
+  SceneInfoUpdate createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SceneInfoUpdate getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SceneInfoUpdate>(create);
+  static SceneInfoUpdate? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  SceneInfo get info => $_getN(0);
+  @$pb.TagNumber(1)
+  set info(SceneInfo value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInfo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInfo() => $_clearField(1);
+  @$pb.TagNumber(1)
+  SceneInfo ensureInfo() => $_ensure(0);
+}
+
 class Snapshot extends $pb.GeneratedMessage {
   factory Snapshot({
     $0.Program? program,
@@ -782,7 +839,7 @@ class ClientEvent extends $pb.GeneratedMessage {
   ClientDelta ensureDelta() => $_ensure(1);
 }
 
-enum ServerEvent_Event { snapshot, presence, delta, left, notSet }
+enum ServerEvent_Event { snapshot, presence, delta, left, sceneInfo, notSet }
 
 class ServerEvent extends $pb.GeneratedMessage {
   factory ServerEvent({
@@ -790,12 +847,14 @@ class ServerEvent extends $pb.GeneratedMessage {
     ClientPresence? presence,
     ClientDelta? delta,
     Client? left,
+    SceneInfoUpdate? sceneInfo,
   }) {
     final result = create();
     if (snapshot != null) result.snapshot = snapshot;
     if (presence != null) result.presence = presence;
     if (delta != null) result.delta = delta;
     if (left != null) result.left = left;
+    if (sceneInfo != null) result.sceneInfo = sceneInfo;
     return result;
   }
 
@@ -814,13 +873,14 @@ class ServerEvent extends $pb.GeneratedMessage {
     2: ServerEvent_Event.presence,
     3: ServerEvent_Event.delta,
     4: ServerEvent_Event.left,
+    5: ServerEvent_Event.sceneInfo,
     0: ServerEvent_Event.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ServerEvent',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4])
+    ..oo(0, [1, 2, 3, 4, 5])
     ..aOM<Snapshot>(1, _omitFieldNames ? '' : 'snapshot',
         subBuilder: Snapshot.create)
     ..aOM<ClientPresence>(2, _omitFieldNames ? '' : 'presence',
@@ -828,6 +888,8 @@ class ServerEvent extends $pb.GeneratedMessage {
     ..aOM<ClientDelta>(3, _omitFieldNames ? '' : 'delta',
         subBuilder: ClientDelta.create)
     ..aOM<Client>(4, _omitFieldNames ? '' : 'left', subBuilder: Client.create)
+    ..aOM<SceneInfoUpdate>(5, _omitFieldNames ? '' : 'sceneInfo',
+        subBuilder: SceneInfoUpdate.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -853,11 +915,13 @@ class ServerEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   ServerEvent_Event whichEvent() => _ServerEvent_EventByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
   @$pb.TagNumber(2)
   @$pb.TagNumber(3)
   @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
   void clearEvent() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -903,6 +967,17 @@ class ServerEvent extends $pb.GeneratedMessage {
   void clearLeft() => $_clearField(4);
   @$pb.TagNumber(4)
   Client ensureLeft() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  SceneInfoUpdate get sceneInfo => $_getN(4);
+  @$pb.TagNumber(5)
+  set sceneInfo(SceneInfoUpdate value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSceneInfo() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSceneInfo() => $_clearField(5);
+  @$pb.TagNumber(5)
+  SceneInfoUpdate ensureSceneInfo() => $_ensure(4);
 }
 
 const $core.bool _omitFieldNames =

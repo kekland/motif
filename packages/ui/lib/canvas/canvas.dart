@@ -81,13 +81,22 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
               ),
             );
 
+            final backgroundColor = widget.backgroundColor ?? context.colors.surface.canvas.background;
+            var bgHsl = HSLColor.fromColor(backgroundColor);
+            final lightness = bgHsl.lightness;
+            final saturation = bgHsl.saturation * 0.25;
+            bgHsl = bgHsl.withSaturation(saturation);
+            final foregroundColor = lightness < 0.5
+                ? bgHsl.withLightness((lightness + 0.5).clamp(0.0, 1.0))
+                : bgHsl.withLightness((lightness - 0.5).clamp(0.0, 1.0));
+
             return Stack(
               children: [
                 Positioned.fill(
                   child: CanvasBackground(
                     transformationController: controller,
-                    backgroundColor: widget.backgroundColor ?? context.colors.surface.canvas.background,
-                    dotColor: context.colors.surface.canvas.foreground,
+                    backgroundColor: backgroundColor,
+                    dotColor: foregroundColor.toColor(),
                     baseSpacing: 50.0,
                   ),
                 ),

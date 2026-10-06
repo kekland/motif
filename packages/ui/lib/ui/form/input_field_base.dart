@@ -15,6 +15,7 @@ final class const InputFieldOptions({
   final Color? color,
   final BorderSide? border,
   final BorderRadius? borderRadius,
+  final bool isFlat = false,
 }) with Equatable {
   InputFieldOptions merge(InputFieldOptions other) => .new(
     leading: other.leading ?? leading,
@@ -30,6 +31,7 @@ final class const InputFieldOptions({
     border: other.border ?? border,
     borderRadius: other.borderRadius ?? borderRadius,
     supportedDevices: other.supportedDevices ?? supportedDevices,
+    isFlat: other.isFlat || isFlat,
   );
 
   @override
@@ -46,6 +48,7 @@ final class const InputFieldOptions({
     color,
     border,
     borderRadius,
+    isFlat,
   ];
 
   InputFieldOptions copyWith({
@@ -62,6 +65,7 @@ final class const InputFieldOptions({
     Color? color,
     BorderSide? border,
     BorderRadius? borderRadius,
+    bool? isFlat,
   }) => .new(
     autofocus: autofocus ?? this.autofocus,
     hasFocus: hasFocus ?? this.hasFocus,
@@ -76,6 +80,7 @@ final class const InputFieldOptions({
     color: color ?? this.color,
     border: border ?? this.border,
     borderRadius: borderRadius ?? this.borderRadius,
+    isFlat: isFlat ?? this.isFlat,
   );
 }
 
@@ -101,14 +106,18 @@ class InputFieldSurface extends StatelessWidget {
   Widget build(BuildContext context) {
     final leading = options.leading;
     final trailing = options.trailing;
-    final padding = options.padding;
+    var padding = options.padding;
     final textStyle = options.textStyle;
     final useTabularFigures = options.useTabularFigures;
     final builder = options.builder;
-    final color = options.color;
+    var color = options.color;
     final border = options.border;
     final borderRadius = options.borderRadius;
     final hasFocus = this.hasFocus || options.hasFocus;
+
+    if (options.isFlat) {
+      color = Surface.colorOf(context);
+    }
 
     var effectiveTextStyle = textStyle ?? context.typography.body.primary;
     if (useTabularFigures) effectiveTextStyle = effectiveTextStyle.tabular;
@@ -156,6 +165,10 @@ class InputFieldSurface extends StatelessWidget {
     var resolvedBorder = border ?? .new(color: context.colors.divider);
     if (hasFocus) {
       resolvedBorder = resolvedBorder.copyWith(color: context.colors.accent.primary.background);
+    }
+
+    if (options.isFlat) {
+      resolvedBorder = .none;
     }
 
     return GestureSurface(

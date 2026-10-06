@@ -37,7 +37,16 @@ class ServerSection extends HookWidget {
           buttons: [
             Button(
               onTap: () async {
-                final info = (await client.createScene()).info;
+                final backgroundColor = context.colors.surface.canvas.background;
+                final program = Program.empty(
+                  settings: .new(
+                    backgroundColor: .fromCss(
+                      .rgb(r: backgroundColor.r, g: backgroundColor.g, b: backgroundColor.b),
+                    ),
+                  ),
+                );
+
+                final info = (await client.createScene(program: program.encode())).info;
                 onPushEditor(info.id, info: info);
                 await loadDocuments();
               },

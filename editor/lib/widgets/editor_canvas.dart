@@ -1,3 +1,4 @@
+import 'package:color/color_flutter.dart';
 import 'package:editor/widgets/actions.dart';
 import 'package:editor/widgets/context_menu/canvas_context_menu.dart';
 import 'package:editor/widgets/editor_canvas_clients.dart';
@@ -12,10 +13,12 @@ class EditorCanvas extends HookWidget {
   Widget build(BuildContext context) {
     final editor = context.editor;
     final tool = useComputedValue(() => editor.tool.activeTool);
+    final backgroundColor = useComputedValue(() => editor.scene.signal().program.settings.backgroundColor);
 
     Widget child = InteractiveCanvas(
       key: editor.canvasKey,
       transformationController: editor.canvasTransformationController,
+      backgroundColor: backgroundColor.toUiColor(),
       centerOrigin: true,
       overlayBuilders: [
         (context, transform) => CanvasPixelGrid(transform: transform),
@@ -33,7 +36,6 @@ class EditorCanvas extends HookWidget {
 
     child = Overlay.wrap(
       child: Surface(
-        color: context.colors.surface.canvas,
         child: EditorCanvasPointerUpdateWidget(child: child),
       ),
     );

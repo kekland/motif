@@ -113,10 +113,21 @@ class AppTab {
     required this.title,
     required this.body,
     this.leading,
-  }) : key = GlobalKey();
+    GlobalKey? key,
+  }) : key = key ?? GlobalKey();
 
   final Widget? leading;
   final String title;
   final GlobalKey key;
   final Widget body;
+
+  AppTab copyWith({
+    Widget? leading,
+    String? title,
+  }) => .new(
+    leading: leading ?? this.leading,
+    title: title ?? this.title,
+    body: body,
+    key: key,
+  );
 }

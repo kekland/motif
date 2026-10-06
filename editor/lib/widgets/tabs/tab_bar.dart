@@ -69,7 +69,7 @@ class EditorTabBar extends HookWidget {
               );
             },
           ),
-          const SizedBox(width: 2.0),
+          const SizedBox(width: 6.0),
         ],
       ),
     );

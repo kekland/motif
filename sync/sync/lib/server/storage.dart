@@ -19,9 +19,12 @@ abstract class StorageManager {
 abstract class IndexStorage {
   Future<void> initialize();
   Future<List<pb.SceneInfo>> listScenes();
-  Future<pb.SceneInfo> create(pb.Program program, {String? title, String? path});
+  Future<pb.SceneInfo> create(pb.Program program, {String? path});
   Future<pb.SceneInfo> add(String path);
   Future<SceneStorage?> open(String id);
+
+  Future<void> updateInfo(pb.SceneInfo info);
+
   Future<void> close();
 }
 

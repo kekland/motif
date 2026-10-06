@@ -10,9 +10,11 @@ final class Program {
   Program(
     this._statements, {
     this.assetResolver,
+    ProgramSettings? settings,
     StyleTable? styles,
     AssetManifest? assetManifest,
-  }) : styles = styles ?? .empty(),
+  }) : _settings = settings ?? .default_,
+       styles = styles ?? .empty(),
        assetManifest = assetManifest ?? .empty() {
     _reindex(0, length);
   }
@@ -22,7 +24,9 @@ final class Program {
 
   Program.empty({
     this.assetResolver,
+    ProgramSettings? settings,
   }) : _statements = [],
+       _settings = settings ?? .default_,
        styles = .empty(),
        assetManifest = .empty();
 
@@ -33,6 +37,9 @@ final class Program {
   final StyleTable styles;
   final AssetManifest assetManifest;
   AssetResolver? assetResolver;
+
+  ProgramSettings _settings;
+  ProgramSettings get settings => _settings;
 
   int get length => _statements.length;
   Statement operator [](int index) => _statements[index];
