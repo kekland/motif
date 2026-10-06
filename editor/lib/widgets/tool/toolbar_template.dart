@@ -66,6 +66,7 @@ class ToolbarButton extends StatelessWidget {
         isActive: isActive,
         borderRadius: .circular(4.0),
         foregroundColor: isActive ? null : context.colors.display.secondary,
+        iconSize: 24.0,
         child: child,
       ),
     );

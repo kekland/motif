@@ -14,7 +14,7 @@ class PortalEntryWidget<T> extends StatefulWidget {
   State<PortalEntryWidget<T>> createState() => PortalEntryWidgetState<T>();
 }
 
-class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleTickerProviderStateMixin {
+class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with TickerProviderStateMixin {
   PortalEntry<T> get entry => widget.entry;
   PortalAnchor? get anchor => widget.anchor;
   AnimationStyle get animationStyle => entry.animationStyle;
@@ -31,6 +31,16 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     reverseCurve: animationStyle.reverseCurve,
   );
 
+  late final _scrimDimAnimationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 250),
+  );
+
+  late final _scrimDimAnimation = CurvedAnimation(
+    parent: _scrimDimAnimationController,
+    curve: Curves.easeInOut,
+  );
+
   late final _focusScopeNode = FocusScopeNode();
 
   @override
@@ -43,6 +53,7 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
       _animationController.value = 1.0;
     }
 
+    _scrimDimAnimationController.value = 1.0;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && !_focusScopeNode.hasFocus) {
         _focusScopeNode.requestFocus();
@@ -56,10 +67,26 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
     }
   }
 
+  Timer? _showScrimTimer;
+  var hidingScrim = false;
+
+  Future<void> hideScrim() async {
+    if (_scrimDimAnimationController.status != .forward) {
+      _scrimDimAnimationController.animateTo(0.0);
+    }
+
+    _showScrimTimer?.cancel();
+    _showScrimTimer = Timer(Duration(seconds: 2), () {
+      _scrimDimAnimationController.animateTo(1.0);
+    });
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
     _animation.dispose();
+    _scrimDimAnimationController.dispose();
+    _scrimDimAnimation.dispose();
     _focusScopeNode.dispose();
     super.dispose();
   }
@@ -85,7 +112,12 @@ class PortalEntryWidgetState<T> extends State<PortalEntryWidget<T>> with SingleT
       type: .transparency,
       child: Stack(
         children: [
-          Positioned.fill(child: scrim),
+          Positioned.fill(
+            child: FadeTransition(
+              opacity: _scrimDimAnimation,
+              child: scrim,
+            ),
+          ),
           if (entry.isModal) ...[
             Positioned.fill(
               child: Listener(

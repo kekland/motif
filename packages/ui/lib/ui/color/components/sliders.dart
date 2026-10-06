@@ -24,7 +24,7 @@ class _HueSlider extends StatelessWidget {
       .new(0xFFFF0000),
     ];
 
-    return _Slider(
+    return Slider(
       leading: Icons.h(),
       stops: colors.length,
       stopsGenerator: (v) => colors[(v * (colors.length - 1)).round()],
@@ -54,7 +54,7 @@ class _SaturationSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 0.0, v: 1.0);
 
-    return _Slider(
+    return Slider(
       leading: Icons.s(),
       stopsGenerator: (s) => stopsColor.copyWith(s: s).toUiColor(),
       onChanged: (s) => onChanged?.call(s),
@@ -83,7 +83,7 @@ class _ValueSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 1.0, v: 0.0);
 
-    return _Slider(
+    return Slider(
       leading: Icons.v(),
       stopsGenerator: (v) => stopsColor.copyWith(v: v).toUiColor(),
       onChanged: (v) => onChanged?.call(v),
@@ -127,7 +127,7 @@ class _AlphaSlider extends StatelessWidget {
 
     final stopsColor = color?.copyWith(alpha: 1.0) ?? HsvColorData(h: 0.0, s: 1.0, v: 1.0);
 
-    return _Slider(
+    return Slider(
       leading: Icons.a(),
       background: background,
       stops: 2,

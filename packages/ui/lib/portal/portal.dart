@@ -52,6 +52,9 @@ class PortalEntry<T> with ChangeNotifier {
     this.isModal = false,
   });
 
+  static PortalEntryWidgetState? maybeOf(BuildContext context) =>
+      context.findAncestorStateOfType<PortalEntryWidgetState>();
+
   final PortalEntryBuilder builder;
   final AnimationStyle animationStyle;
   final PortalScrimBuilder? scrimBuilder;

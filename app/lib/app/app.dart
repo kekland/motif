@@ -1,6 +1,7 @@
 import 'package:app/app/root_navigation_bar.dart';
 import 'package:app/home/home_page.dart';
 import 'package:app/imports.dart';
+import 'package:app/main.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -39,12 +40,42 @@ class AppState extends State<App> {
     setState(() {});
   }
 
+  void onPrefsChanged() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    final seedColor = Colors.purple;
+    final themeMode = switch (prefs.getString('themeMode')) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+
+    late final Color accentColor;
+    final accentColorValue = prefs.getInt('accentColor');
+    if (accentColorValue != null) {
+      accentColor = Color(accentColorValue);
+    } else {
+      accentColor = Colors.indigo;
+    }
+
+    late final double contrastLevel;
+    final contrastLevelValue = prefs.getDouble('contrastLevel');
+    if (contrastLevelValue != null) {
+      contrastLevel = contrastLevelValue;
+    } else {
+      contrastLevel = 0.5;
+    }
+
     final theme = generateAppTheme(
-      brightness: .dark,
-      seedColor: seedColor,
+      brightness: switch (themeMode) {
+        .light => .light,
+        .dark => .dark,
+        .system => MediaQuery.of(context).platformBrightness,
+      },
+      seedColor: accentColor,
+      contrastLevel: contrastLevel,
     );
 
     return AppThemeWidget(

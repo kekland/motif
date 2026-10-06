@@ -1,7 +1,7 @@
 part of '../color_input_window.dart';
 
-class _Slider extends HookWidget {
-  const _Slider({
+class Slider extends HookWidget {
+  const Slider({
     super.key,
     required this.stopsGenerator,
     required this.onChanged,

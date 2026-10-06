@@ -489,6 +489,9 @@ class Icons extends _BaseIcon {
   const Icons.paragraphFormatVerticalAlignmentMiddle({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_center_rounded);
   const Icons.paragraphFormatVerticalAlignmentBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.vertical_align_bottom_rounded);
   const Icons.more({super.key, super.size, super.color}): super.iconData(icon: Symbols.more_vert_rounded);
+  const Icons.brightnessLight({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_7_rounded);
+  const Icons.brightnessDark({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_2_rounded);
+  const Icons.brightnessSystem({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_auto_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

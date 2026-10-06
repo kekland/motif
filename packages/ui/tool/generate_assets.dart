@@ -93,6 +93,9 @@ Future<void> main() async {
     .new('paragraphFormatVerticalAlignmentMiddle', 'Symbols.vertical_align_center_rounded'),
     .new('paragraphFormatVerticalAlignmentBottom', 'Symbols.vertical_align_bottom_rounded'),
     .new('more', 'Symbols.more_vert_rounded'),
+    .new('brightnessLight', 'Symbols.brightness_7_rounded'),
+    .new('brightnessDark', 'Symbols.brightness_2_rounded'),
+    .new('brightnessSystem', 'Symbols.brightness_auto_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));
