@@ -19,6 +19,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          channel: beta
           flutter-version-file: .fvmrc
 
       - uses: bluefireteam/flutter-gh-pages@v9
