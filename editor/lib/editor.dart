@@ -12,13 +12,13 @@ part 'editor/transform.dart';
 part 'editor/transient_edge.dart';
 part 'editor/transient_stroke.dart';
 
-final _logger = Logger('editor');
+final logger = Logger('editor');
 
 final class Editor extends Controller {
   Editor({
     required this.sync,
     required this.scene,
-  }) : super(logger: _logger) {
+  }) : super(logger: logger) {
     $effect(() {
       final tab = this.tab.value;
       if (panelsRootKey.currentState == null) return;
@@ -57,7 +57,7 @@ final class Editor extends Controller {
   Iterable<CellRef> productsOf(StatementId id) => scene.productsOf(id);
 
   late final canvasFocusScopeNode = $customDisposable(FocusScopeNode(), (n) => n.dispose());
-  bool get areCanvasActionsEnabled => canvasFocusScopeNode.hasPrimaryFocus || commander.isVisible.value;
+  bool get areCanvasActionsEnabled => canvasHasFocus || commander.isVisible.value;
 
   final canvasKey = GlobalKey();
   RenderBox get renderCanvas => canvasKey.currentContext!.findRenderObject() as RenderBox;
@@ -100,6 +100,22 @@ final class Editor extends Controller {
 
   Vec2 get canvasPosition {
     return cursorCanvasPosition ?? canvasCenter;
+  }
+
+  bool get canvasHasFocus {
+    if (canvasFocusScopeNode.hasPrimaryFocus) return true;
+
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    var willGetFocus = false;
+    if (primaryFocus == null) {
+      willGetFocus = true;
+    } else if (primaryFocus.ancestors.isEmpty) {
+      willGetFocus = true;
+    } else if (primaryFocus == canvasFocusScopeNode.enclosingScope) {
+      willGetFocus = true;
+    }
+
+    return willGetFocus;
   }
 
   Future<ImageAsset> uploadImageAsset(

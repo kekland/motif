@@ -15,17 +15,17 @@ class EditorBuiltinAssets {
     if (_initialized) return;
     _initialized = true;
 
-    _logger.info('initializing EditorBuiltinFonts');
+    logger.info('initializing EditorBuiltinFonts');
     var manifest = AssetManifest.decodeRaw((await rootBundle.load(_fontManifestFile)).buffer.asUint8List());
     var licenses = LicenseBundle.decodeRaw((await rootBundle.load(_licenseBundleFile)).buffer.asUint8List());
 
     if (manifest == null) {
-      _logger.warning('failed to decode asset manifest');
+      logger.warning('failed to decode asset manifest');
       manifest = .empty();
     }
 
     if (licenses == null) {
-      _logger.warning('failed to decode license bundle');
+      logger.warning('failed to decode license bundle');
       licenses = .new(licenses: {});
     }
 

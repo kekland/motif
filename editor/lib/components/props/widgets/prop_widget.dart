@@ -8,11 +8,13 @@ mixin PropWidget on Widget {
 
 Computed<PropValue<G>> usePropComputed<G, S>(Prop<G, S> prop) {
   final scene = Editor.of(useContext()).scene;
+  final lastValue = useRef<PropValue<G>?>(null);
 
   final computed = useMemoComputed(() {
     scene.signal();
     try {
-      return prop.resolve(scene);
+      if (!prop.isEverythingActive(scene)) return lastValue.value ?? .mixed();
+      return lastValue.value = prop.resolve(scene);
     } catch (e) {
       // This can usually happen when the statement is removed from the tree, but the prop references update
       // only on the next frame.

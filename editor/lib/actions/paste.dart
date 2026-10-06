@@ -42,8 +42,8 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
 
         editor.selection.setStatements(remapped.statements.map((s) => s.id));
         return;
-      } catch (e) {
-        print('Failed to paste custom slice: $e');
+      } catch (e, st) {
+        logger.warning('failed to paste slice', e, st);
       }
     }
 
@@ -68,8 +68,8 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
 
         editor.edit((txn) => txn.insertAll(statements));
         return;
-      } catch (e) {
-        print('Failed to paste image: $e');
+      } catch (e, st) {
+        logger.warning('failed to paste image', e, st);
       }
     }
 
@@ -93,8 +93,8 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
 
         editor.edit((txn) => txn.insert(statement));
         return;
-      } catch (e) {
-        print('Failed to paste text: $e');
+      } catch (e, st) {
+        logger.warning('failed to paste text', e, st);
       }
     }
   }

@@ -17,10 +17,14 @@ abstract class Prop<G, S> {
 
   bool compare(G a, G b) => a == b;
 
-  PropValue<G> resolve(Scene scene) {
-    final values = sources.map((s) => s.get(scene)).toList();
-    final first = values.first;
+  bool isEverythingActive(Scene scene) => sources.every((s) => s.isActive(scene));
 
+  PropValue<G> resolve(Scene scene) {
+    final active = sources.where((s) => s.isActive(scene)).toList();
+    final values = active.map((s) => s.get(scene)).toList();
+    if (values.isEmpty) return const .mixed();
+
+    final first = values.first;
     for (final value in values.skip(1)) {
       if (!compare(first.resolve() as G, value.resolve() as G)) return const .mixed();
     }
@@ -103,12 +107,18 @@ final class PropSource<G, S> {
     required this._getter,
     required this._setter,
     this._override,
+    this._isActive,
   });
 
   final PropKind<G, S> kind;
   final G Function(Scene scene) _getter;
   final void Function(SceneTransaction txn, S value) _setter;
   final S? Function(Scene scene)? _override;
+  final bool Function(Scene scene)? _isActive;
+
+  bool isActive(Scene scene) {
+    return _isActive?.call(scene) ?? true;
+  }
 
   PropValue<G> get(Scene scene) {
     final value = _getter(scene);
@@ -135,6 +145,7 @@ final class PropSource<G, S> {
     S2? Function(S?)? override,
   }) => .new(
     kind: kind,
+    isActive: _isActive,
     getter: (scene) => getter(_getter(scene)),
     setter: (txn, value) => set(txn, setter(_getter(txn.scene), value)),
     override: (scene) => override?.call(_override?.call(scene)),
@@ -189,6 +200,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
   }) {
     return .new(
       kind: this,
+      isActive: (scene) => scene.statement(id) != null,
       getter: (scene) => get(scene, scene.statement<T>(id)!),
       setter: (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value.apply(get(txn.scene, s)))),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
@@ -203,6 +215,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
   }) {
     return .new(
       kind: this,
+      isActive: (scene) => scene.statement(id) != null,
       getter: (scene) => get(scene, scene.statement<T>(id)!),
       setter: (txn, value) {
         final scene = txn.scene;
@@ -223,6 +236,7 @@ extension TotalStatementFieldProp<V> on PropKind<V, V> {
   }) {
     return .new(
       kind: this,
+      isActive: (scene) => scene.statement(id) != null,
       getter: (scene) => get(scene, scene.statement<T>(id)!),
       setter: (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value)),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,

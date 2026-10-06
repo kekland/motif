@@ -34,7 +34,6 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
         ),
       );
     }
-
     final itemCount = useComputed(() => computed().resolve()!.entries.length, keys: [computed]).value;
     final computeds = useMemoized(
       () => List.generate(itemCount, (i) => Computed(() => computed().resolve()!.entries[i])),
