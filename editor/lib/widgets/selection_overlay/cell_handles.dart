@@ -409,6 +409,7 @@ final class FrameHandleRenderObject extends HandleRenderObject<FrameRef> {
   FrameHandleRenderObject(super.ref);
 
   late Aabb2 bbox;
+  late Mat4 transform;
 
   @override
   void performLayout() {
@@ -423,13 +424,18 @@ final class FrameHandleRenderObject extends HandleRenderObject<FrameRef> {
       return;
     }
 
-    bbox = bundle.query.bbox(ref, space: .root)!;
+    bbox = bundle.query.bbox(ref, space: ref)!;
+    transform = bundle.query.localToWorld(ref)!;
   }
 
   @override
   void performPaint(Canvas canvas) {
     if (!enabled) return;
-    final transformedBbox = bbox.transformed(.fromListFloat64(paintTransform.storage));
-    paintFrameHandle(canvas, transformedBbox, primaryColor);
+
+    final points = bbox.corners;
+    final totalTransform = Mat4.fromListFloat64(paintTransform.storage) * transform;
+    points.transform(totalTransform);
+
+    paintFrameHandle(canvas, points, primaryColor);
   }
 }

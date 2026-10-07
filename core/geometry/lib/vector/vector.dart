@@ -16,6 +16,10 @@ extension type Vec2List._(Float64x2List value) implements Float64x2List {
   int get length => value.length;
 
   Vec2List sublist(int start, [int? end]) => ._(value.sublist(start, end));
+
+  void transform(Mat4 m) {
+    for (var i = 0; i < length; i++) this[i] = m.transform2(this[i]);
+  }
 }
 
 extension type Vec2._(Float64x2 value) implements Float64x2 {

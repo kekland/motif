@@ -83,8 +83,15 @@ void paintIntersectionHandle(Canvas canvas, Offset position, Color primaryColor,
   paintVertexHandle(canvas, position, primaryColor, secondaryColor);
 }
 
-void paintFrameHandle(Canvas canvas, Aabb2 bbox, Color color) {
+void paintFrameHandle(Canvas canvas, Vec2List points, Color color) {
   final paint = _resolvePrimaryPaint(color);
-  final rect = Rect.fromLTRB(bbox.min.x, bbox.min.y, bbox.max.x, bbox.max.y);
-  canvas.drawRect(rect, paint);
+
+  final path = Path()
+    ..moveTo(points[0].x, points[0].y)
+    ..lineTo(points[1].x, points[1].y)
+    ..lineTo(points[2].x, points[2].y)
+    ..lineTo(points[3].x, points[3].y)
+    ..close();
+
+  canvas.drawPath(path, paint);
 }

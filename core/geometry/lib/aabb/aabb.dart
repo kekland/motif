@@ -111,6 +111,8 @@ extension type const Aabb2._(Vec2List storage) {
   Vec2 get topRight => .new(max.x, min.y);
   Vec2 get bottomRight => max;
   Vec2 get bottomLeft => .new(min.x, max.y);
+  Vec2List get corners => .fromList([topLeft, topRight, bottomRight, bottomLeft]);
+
   Vec2 get center => .new((min.x + max.x) * 0.5, (min.y + max.y) * 0.5);
 
   Aabb2 copyWith({Vec2? min, Vec2? max}) => .minMax(min ?? this.min, max ?? this.max);
