@@ -69,5 +69,5 @@ part 'queries/frame_bounds.dart';
 part 'queries/hit_test.dart';
 part 'queries/hit_test_rect.dart';
 part 'queries/transform.dart';
-part 'queries/lca.dart';
+part 'queries/tree.dart';
 part 'queries/z_order.dart';

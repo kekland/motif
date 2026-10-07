@@ -6,6 +6,7 @@ class SelectionControls extends StatelessWidget {
   const SelectionControls({
     super.key,
     required this.layoutSize,
+    this.onTapUp,
     this.onMove,
     this.onSideResize,
     this.onCornerResize,
@@ -20,6 +21,7 @@ class SelectionControls extends StatelessWidget {
 
   final Mat4? transform;
   final Size layoutSize;
+  final GestureTapUpCallback? onTapUp;
   final DragActivityFactory? onMove;
   final DragActivity Function(Side)? onSideResize;
   final DragActivity Function(Corner)? onCornerResize;
@@ -180,9 +182,12 @@ class SelectionControls extends StatelessWidget {
             transform: transform.asVM(),
             child: UnconstrainedOverflowBox(
               alignment: Alignment.topLeft,
-              child: SizedBox.fromSize(
-                size: paddedSize,
-                child: transformedChildren,
+              child: GestureDetector(
+                onTapUp: onTapUp,
+                child: SizedBox.fromSize(
+                  size: paddedSize,
+                  child: transformedChildren,
+                ),
               ),
             ),
           ),

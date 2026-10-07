@@ -35,9 +35,25 @@ final class SceneHitResult {
 }
 
 extension SceneHitTestQuery on SceneQuery {
-  SceneHitResult _remapHitResult(Vec2 position, HitResult result) {
-    final entries = result.entries;
+  SceneHitResult _remapHitResult(Vec2 position, HitResult result, {bool onlyIfParentSelected = true}) {
+    final rawEntries = result.entries;
+    final entries = <HitEntry>[];
 
+    if (onlyIfParentSelected) {
+      // Entries can only be hit if their parent is selected.
+      for (final e in rawEntries) {
+        final cell = e.ref.cell;
+        final parent = bundle.query.parent(cell);
+        if (parent == .root || scene.selection.frames.contains(parent)) {
+          entries.add(e);
+        }
+      }
+    }
+    else {
+      entries.addAll(rawEntries);
+    }
+
+    // Sort hit entries by their priority
     int priority(Ref r) => switch (r) {
       CovertexRef() => 0,
       CellRef(kind: .vertex) => 1,
@@ -78,6 +94,6 @@ extension SceneHitTestQuery on SceneQuery {
 
   SceneHitResult hitTestRect(Aabb2 rect, {HitTestRectMode mode = .normal}) {
     final result = scene.bundle.query.hitTestRect(rect, mode: mode);
-    return _remapHitResult(rect.center, result);
+    return _remapHitResult(rect.center, result, onlyIfParentSelected: false);
   }
 }

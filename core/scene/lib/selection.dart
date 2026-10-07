@@ -9,6 +9,7 @@ final class SceneSelection with ChangeNotifier {
 
   final _refs = <Ref>{};
   final _cells = <CellRef>{};
+  final _frames = <FrameRef>{};
   final _statements = <StatementId>{};
   var _visibleCovertices = <CovertexRef>{};
   var _stamp = 0;
@@ -16,6 +17,7 @@ final class SceneSelection with ChangeNotifier {
   Set<Ref> get refs => _refs;
   Set<Ref> get refSources => _refSources;
   Set<CellRef> get cells => _cells;
+  Set<FrameRef> get frames => _frames;
   Set<StatementId> get statements => _statements;
   Set<StatementId> get statementSources => _statementSources;
   Set<CovertexRef> get visibleCovertices => _visibleCovertices;
@@ -78,9 +80,15 @@ final class SceneSelection with ChangeNotifier {
     for (final s in _statementSources) _refs.addAll(e.productsOf(s).where(e.bundle.isLive));
 
     _cells.clear();
+    _frames.clear();
     for (final r in _refs) {
-      if (r is CellRef) _cells.add(r);
-      if (r is CovertexRef) _cells.add(r.edge);
+      final cell = r.cell;
+      _cells.add(cell);
+
+      if (cell.kind == .frame) _frames.add(cell.asFrame);
+
+      final parent = scene.bundle.query.parent(cell);
+      if (parent != null) _frames.add(parent);
     }
 
     _resolveVisibleCovertices();

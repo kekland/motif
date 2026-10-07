@@ -154,6 +154,15 @@ class _CursorToolOverlay extends HookWidget {
               editor: editor,
               childPaintTransform: info.childPaintTransform,
               snapToPixel: snapToPixel,
+              onTapUp: (details) {
+                final target = editor.hitTest(details.globalPosition).top;
+
+                if (target != null) {
+                  context.invoke(intents.selectRef(target.ref));
+                } else {
+                  context.invoke(intents.clearSelection());
+                }
+              },
               onMove: (e, refs) {
                 final refsToMove = _refsToMove(e);
                 if (refsToMove == null) return null;

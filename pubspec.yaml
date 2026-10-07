@@ -1,4 +1,5 @@
 name: motif
+version: 0.1.4
 publish_to: none
 
 environment:

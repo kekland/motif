@@ -1,6 +1,13 @@
 part of '../kernel.dart';
 
-extension LcaQuery on TopologyQuery {
+extension TreeQuery on TopologyQuery {
+  FrameRef? parent(CellRef cell) {
+    final h = bundle.handle(cell);
+    if (h == null) return null;
+    final p = bundle.parentOf(h);
+    return p?.ref(bundle);
+  }
+
   FrameRef lca(CellRef a, CellRef b) {
     final ha = bundle.handle(a);
     final hb = bundle.handle(b);

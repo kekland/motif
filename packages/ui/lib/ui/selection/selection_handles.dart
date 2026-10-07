@@ -107,6 +107,7 @@ class SelectionSideResizeHandle extends StatelessWidget {
       child: DragActivityDetector(
         behavior: .opaque,
         activityFactory: onResize!,
+        onlyAcceptDragOnThreshold: true,
         child: SizedBox.expand(),
       ),
     );

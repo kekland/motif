@@ -8,9 +8,10 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
     super.allowedButtonsFilter,
     super.supportedDevices,
     super.debugOwner,
+    bool onlyAcceptDragOnThreshold = false,
   }) {
     dragStartBehavior = .down;
-    onlyAcceptDragOnThreshold = false;
+    this.onlyAcceptDragOnThreshold = onlyAcceptDragOnThreshold;
 
     onStart = (details) {
       _onActivityCreated();
@@ -170,13 +171,20 @@ class DragActivityRecognizer<T extends DragActivity> extends PanGestureRecognize
 
 class DragActivityRecognizerFactory<T extends DragActivity>
     extends GestureRecognizerFactory<DragActivityRecognizer<T>> {
-  DragActivityRecognizerFactory({required this.activityFactory});
+  DragActivityRecognizerFactory({
+    required this.activityFactory,
+    this.onlyAcceptDragOnThreshold = false,
+  });
 
   final DragActivityFactory<T> activityFactory;
+  final bool onlyAcceptDragOnThreshold;
 
   @override
   DragActivityRecognizer<T> constructor() {
-    return DragActivityRecognizer<T>(factory: activityFactory);
+    return DragActivityRecognizer<T>(
+      factory: activityFactory,
+      onlyAcceptDragOnThreshold: onlyAcceptDragOnThreshold,
+    );
   }
 
   @override
@@ -193,11 +201,13 @@ class DragActivityDetector<T extends DragActivity> extends RawGestureDetector {
     this.onEnd,
     this.supportedDevices,
     super.behavior,
+    bool onlyAcceptDragOnThreshold = false,
     super.child,
   }) : super(
          gestures: {
            DragActivityRecognizer<T>: DragActivityRecognizerFactory<T>(
              activityFactory: activityFactory,
+             onlyAcceptDragOnThreshold: onlyAcceptDragOnThreshold,
            ),
          },
        );

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart';
 import 'package:geometry/geometry.dart';
 import 'package:mouse_cursor/mouse_cursor.dart';
 import 'package:ui/ui.dart';

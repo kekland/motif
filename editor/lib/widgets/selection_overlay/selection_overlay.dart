@@ -6,12 +6,14 @@ class CellSelectionOverlay extends HookWidget {
     super.key,
     required this.editor,
     required this.childPaintTransform,
+    this.onTapUp,
     this.onMove,
     this.snapToPixel = false,
   });
 
   final Editor editor;
   final Matrix4 childPaintTransform;
+  final GestureTapUpCallback? onTapUp;
   final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
   final bool snapToPixel;
 
@@ -36,6 +38,7 @@ class CellSelectionOverlay extends HookWidget {
             editor: editor,
             childPaintTransform: childPaintTransform,
             onMove: onMove,
+            onTapUp: onTapUp,
             snapToPixel: snapToPixel,
           ),
         ],
@@ -50,6 +53,7 @@ class CellSelectionGroupOverlay extends HookWidget {
     required this.refs,
     required this.editor,
     required this.childPaintTransform,
+    this.onTapUp,
     this.onMove,
     this.showHandles = true,
     this.snapToPixel = false,
@@ -60,6 +64,7 @@ class CellSelectionGroupOverlay extends HookWidget {
   final Iterable<Ref> refs;
   final Editor editor;
   final Matrix4 childPaintTransform;
+  final GestureTapUpCallback? onTapUp;
   final DragActivity? Function(PointerEvent, List<Ref> refs)? onMove;
   final AppSelectionColors? colors;
   final bool showHandles;
@@ -90,6 +95,7 @@ class CellSelectionGroupOverlay extends HookWidget {
         key: ValueKey(refHash),
         transform: transform,
         layoutSize: layoutSize,
+        onTapUp: onTapUp,
         onMove: (e) => onMove?.call(e, refs),
         onSideResize: isResizable ? (s) => ResizeActivity.side(editor, refs, side: s, snapToPixel: snapToPixel) : null,
         onCornerResize: isResizable

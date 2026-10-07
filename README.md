@@ -28,8 +28,6 @@ My goal is to provide a free and open-source alternative to vector graphics desi
 
 My aim is to release a beta version in October 2026, and continue to improve the tools based on user feedback and contributions.
 
-The short-term roadmap is in the [TODOS](./TODOS.md) file. A longer-term roadmap will be added once the project reaches a more stable state.
-
 ### Current goals
 
 - Figma-like ease of use
