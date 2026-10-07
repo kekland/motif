@@ -24,7 +24,7 @@ final class LayoutPropWidget extends HookWidget with PropWidget {
   Widget build(BuildContext context) {
     final computed = usePropComputed(prop);
     final transaction = usePropTransaction();
-    final value = useComputed(() => computed.value.resolve()).value;
+    final value = useProxyComputedValue(computed, (v) => v.resolve());
 
     return Padding(
       padding: resolvedPadding,

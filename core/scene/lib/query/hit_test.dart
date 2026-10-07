@@ -41,15 +41,20 @@ extension SceneHitTestQuery on SceneQuery {
 
     if (onlyIfParentSelected) {
       // Entries can only be hit if their parent is selected.
+      // Vertices, edges, faces can only be hit if their dependent is selected.
       for (final e in rawEntries) {
         final cell = e.ref.cell;
         final parent = bundle.query.parent(cell);
         if (parent == .root || scene.selection.frames.contains(parent)) {
           entries.add(e);
+        } else {
+          final dependents = bundle.cellDirectDependents(cell);
+          if (dependents.any((d) => scene.selection.cells.contains(d))) {
+            entries.add(e);
+          }
         }
       }
-    }
-    else {
+    } else {
       entries.addAll(rawEntries);
     }
 

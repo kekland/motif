@@ -63,20 +63,6 @@ class _PenToolOverlay extends HookWidget {
       if (edge != null) edge.remove();
     });
 
-    // actions: {
-    //   ClearSelectionIntent: ToggleableCallbackAction(
-    //     isEnabled: (intent) {
-    //       print(transientEdge.value != null);
-    //       return transientEdge.value != null;
-    //     },
-    //     onInvoke: (intent) {
-    //       transientEdge.value!.remove();
-    //       transientEdge.value = null;
-    //       return null;
-    //     },
-    //   ),
-    // },
-
     return ProxyCallbackShortcuts(
       bindings: {
         if (transientEdge.value != null) ...{

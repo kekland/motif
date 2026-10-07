@@ -9,7 +9,6 @@ extension StatementProps on Statement {
     ShapeStatement s => s.props,
     TextStatement s => s.props,
     LayoutBoxStatement s => s.props,
-    CutEdgeStatement s => s.props,
     _ => [],
   };
 }

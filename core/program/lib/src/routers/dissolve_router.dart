@@ -77,12 +77,22 @@ extension RouteDissolve on Evaluation {
     }
 
     bool held(CellRef r) {
-      if (readersOf([r]).any((o) => !owners.contains(o))) return true;
+      final readers = readersOf([r]);
+      final reorders = <StatementId>{};
+
+      // Reorder statements die with the owner
+      for (final reorder in readers.where((id) => statement(id) is ReorderStatement).toList()) {
+        reorders.add(reorder);
+        readers.remove(reorder);
+      }
+
+      if (readers.any((o) => !owners.contains(o))) return true;
 
       for (final d in bundle.cellDirectDependents(r)) {
         if (!deleted.contains(d)) return true;
       }
 
+      owners.addAll(reorders.map(rootOf));
       return false;
     }
 
@@ -93,6 +103,10 @@ extension RouteDissolve on Evaluation {
       changed = before != deleted.length;
     }
 
-    return DissolveRouter(owners: owners, deleted: deleted, held: resolved.difference(deleted));
+    return DissolveRouter(
+      owners: owners,
+      deleted: deleted,
+      held: resolved.difference(deleted),
+    );
   }
 }

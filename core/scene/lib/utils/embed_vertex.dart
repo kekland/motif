@@ -5,7 +5,7 @@ extension EmbedVertexTransaction on SceneTransaction {
     SceneHitResult hitTest, {
     bool topological = true,
     bool destructive = true,
-    Vec2? position,
+    Vec2? globalPosition,
   }) {
     if (topological && hitTest.vertices.isNotEmpty) return hitTest.vertices.first.ref;
     if (topological && hitTest.edges.isNotEmpty) {
@@ -21,13 +21,24 @@ extension EmbedVertexTransaction on SceneTransaction {
       return vertex;
     }
     if (hitTest.frames.isNotEmpty) {
-      final frame = hitTest.frames.last;
-      final point = position ?? frame.point;
+      for (final f in hitTest.frames) {
+        final statement = evaluation.statement(f.statementId);
+        if (statement == null) continue;
+        if (statement is FramedStatement && !statement.isLeaf) {
+          final Vec2 point;
 
-      return insert(VertexStatement(point, parent: frame.ref)).ref;
+          if (globalPosition != null) {
+            point = scene.bundle.query.worldToLocal(f.ref).transform2(globalPosition);
+          } else {
+            point = f.point;
+          }
+
+          return insert(VertexStatement(point, parent: f.ref)).ref;
+        }
+      }
     }
 
-    final point = position ?? hitTest.position;
+    final point = globalPosition ?? hitTest.position;
     return insert(VertexStatement(point)).ref;
   }
 }

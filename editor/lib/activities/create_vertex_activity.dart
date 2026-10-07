@@ -85,7 +85,7 @@ class CreateVertexActivity extends DragActivity with KeyboardListenerDragActivit
         hitTest,
         topological: topological,
         destructive: destructive,
-        position: position,
+        globalPosition: position,
       ),
       mergeKey: mergeKey,
     );
