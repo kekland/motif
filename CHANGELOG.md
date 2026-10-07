@@ -3,6 +3,7 @@
 * Props: simplify the core, making it easier to use in other places
 * Tool options: moved into the tab bar, opens as a window. WIP.
 * Prop widgets: adjusted spacing, padding, etc.
+* Cell handles: fixed incorrect frame bbox transformation
 
 # 0.1.5
 
