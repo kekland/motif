@@ -82,3 +82,9 @@ Path _cubicPath(Cubic2 cubic) {
 void paintIntersectionHandle(Canvas canvas, Offset position, Color primaryColor, Color secondaryColor) {
   paintVertexHandle(canvas, position, primaryColor, secondaryColor);
 }
+
+void paintFrameHandle(Canvas canvas, Aabb2 bbox, Color color) {
+  final paint = _resolvePrimaryPaint(color);
+  final rect = Rect.fromLTRB(bbox.min.x, bbox.min.y, bbox.max.x, bbox.max.y);
+  canvas.drawRect(rect, paint);
+}

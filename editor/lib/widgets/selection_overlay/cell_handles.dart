@@ -121,11 +121,13 @@ class CellHandlesRenderObject extends RenderBox {
         } else if (kind == .face) {
           extendedRefs.add(ref);
           extendedRefs.addAll(bundle.cellDependencies(ref));
-        } else {
+        } else if (kind == .frame) {
+          extendedRefs.add(ref);
+
           final handle = bundle.frame(ref.asFrame);
           if (handle == null) continue;
 
-          final children = bundle.frameChildren(handle).where((c) => c.kind != .frame);
+          final children = bundle.frameChildren(handle);
           final childRefs = children.map((c) => c.ref(bundle));
           for (final r in childRefs) {
             extendedRefs.add(r);
@@ -184,6 +186,7 @@ class CellHandlesRenderObject extends RenderBox {
   @override
   void visitChildren(RenderObjectVisitor visitor) {
     _faces.forEach(visitor);
+    _frames.forEach(visitor);
     _edges.forEach(visitor);
     _covertices.forEach(visitor);
     _vertices.forEach(visitor);
@@ -195,13 +198,14 @@ class CellHandlesRenderObject extends RenderBox {
   final Set<CovertexHandleRenderObject> _covertices = {};
   final Set<EdgeHandleRenderObject> _edges = {};
   final Set<FaceHandleRenderObject> _faces = {};
+  final Set<FrameHandleRenderObject> _frames = {};
 
   Set<HandleRenderObject> _refArray(Ref ref) => switch (ref) {
     CovertexRef() => _covertices,
     CellRef(kind: .vertex) => _vertices,
     CellRef(kind: .edge) => _edges,
     CellRef(kind: .face) => _faces,
-    _ => throw UnimplementedError('unsupported type: ${ref.runtimeType}'),
+    CellRef(kind: .frame) => _frames,
   };
 
   @override
@@ -216,6 +220,7 @@ class CellHandlesRenderObject extends RenderBox {
     context.canvas.translate(offset.dx, offset.dy);
 
     for (final face in _faces) context.paintChild(face, offset);
+    for (final frame in _frames) context.paintChild(frame, offset);
     for (final covertex in _covertices) covertex.paintTangent(context.canvas);
     for (final edge in _edges) context.paintChild(edge, offset);
     for (final covertex in _covertices) context.paintChild(covertex, offset);
@@ -232,10 +237,10 @@ abstract class HandleRenderObject<R extends Ref> extends RenderBox {
 
   static HandleRenderObject create(Ref ref) => switch (ref) {
     CovertexRef() => CovertexHandleRenderObject(ref),
-    CellRef(kind: .vertex) => VertexHandleRenderObject(ref as VertexRef),
-    CellRef(kind: .edge) => EdgeHandleRenderObject(ref as EdgeRef),
-    CellRef(kind: .face) => FaceHandleRenderObject(ref as FaceRef),
-    _ => throw UnimplementedError('unsupported type: ${ref.runtimeType}'),
+    CellRef(kind: .vertex) => VertexHandleRenderObject(ref.asVertex),
+    CellRef(kind: .edge) => EdgeHandleRenderObject(ref.asEdge),
+    CellRef(kind: .face) => FaceHandleRenderObject(ref.asFace),
+    CellRef(kind: .frame) => FrameHandleRenderObject(ref.asFrame),
   };
 
   @override
@@ -396,4 +401,33 @@ final class FaceHandleRenderObject extends HandleRenderObject<FaceRef> {
 
   @override
   void performPaint(Canvas canvas) {}
+}
+
+final class FrameHandleRenderObject extends HandleRenderObject<FrameRef> {
+  FrameHandleRenderObject(super.ref);
+
+  late Aabb2 bbox;
+
+  @override
+  void performLayout() {
+    size = .zero;
+    _refresh();
+  }
+
+  void _refresh() {
+    final handle = bundle.frame(ref);
+    if (handle == null) {
+      enabled = false;
+      return;
+    }
+
+    bbox = bundle.query.bbox(ref, space: .root)!;
+  }
+
+  @override
+  void performPaint(Canvas canvas) {
+    if (!enabled) return;
+    final transformedBbox = bbox.transformed(.fromListFloat64(paintTransform.storage));
+    paintFrameHandle(canvas, transformedBbox, primaryColor);
+  }
 }
