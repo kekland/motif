@@ -1,6 +1,5 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/selection_panel/selection_panel.dart';
-import 'package:editor/widgets/tool/tool_options_panel.dart';
 
 class EditorSidebar extends StatelessWidget {
   const EditorSidebar({super.key});
