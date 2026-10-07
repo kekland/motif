@@ -22,7 +22,7 @@ final class RotationPropWidget extends HookWidget with PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
     final computed = usePropComputed(prop);
     final isOverridden = useComputed(() => computed.value.isOverridden, keys: [computed]).value;
 
@@ -30,8 +30,8 @@ final class RotationPropWidget extends HookWidget with PropWidget {
       padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: useMemoComputed(() => computed.value.resolve()?.deg, keys: [computed]),
-        onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fromDeg(v))),
-        sessionCallbacks: transaction.sessionCallbacks,
+        onChanged: (v) => prop.set(txn, .fromDeg(v)),
+        sessionCallbacks: txn.sessionCallbacks,
         options: .new(
           leading: Icons.angle(),
           textStyle: isOverridden ? context.typography.body.tertiary : null,

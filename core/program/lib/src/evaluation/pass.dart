@@ -21,6 +21,7 @@ final class EvalPass {
   final changed = HashSet<CellRef>();
   final moved = HashSet<CellRef>();
   final movedFrames = HashSet<FrameRef>();
+  final evaluated = HashSet<StatementId>();
   final relayouted = HashSet<StatementId>();
   final restyled = HashSet<CellRef>();
 
@@ -40,6 +41,7 @@ final class EvalPass {
     changed.clear();
     moved.clear();
     movedFrames.clear();
+    evaluated.clear();
     relayouted.clear();
     restyled.clear();
   }

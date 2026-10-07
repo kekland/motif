@@ -1,4 +1,4 @@
-import 'package:ui/ui.dart';
+import 'package:editor/imports.dart';
 
 class SelectToolIntent extends Intent {
   const SelectToolIntent(this.tool);

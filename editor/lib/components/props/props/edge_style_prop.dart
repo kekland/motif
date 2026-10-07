@@ -1,6 +1,10 @@
 import 'package:editor/imports.dart';
 
-final class EdgeStyleProp(super.sources, {super.kind = .edgeStyle}) extends Prop<EdgeStyle, EdgeStylePartial> {
+final class EdgeStyleProp(
+  super.sources, {
+  super.kind = .edgeStyle,
+  final String? decorationsEmptyStateLabel,
+}) extends Prop<EdgeStyle, EdgeStylePartial> {
   late final StrokeWidthProp strokeWidth = remap(
     .strokeWidth,
     getter: (s) => s.width,
@@ -43,7 +47,8 @@ final class EdgeStylePropWidget extends HookWidget with PropWidget {
       children: [
         DecorationsPropWidget(
           prop: prop.decorations,
-          padding: resolvedPadding,
+          padding: resolvedPadding.copyWith(bottom: 4.0),
+          emptyStateLabel: prop.decorationsEmptyStateLabel,
         ),
         StrokeWidthPropWidget(prop: prop.strokeWidth),
       ],

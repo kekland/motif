@@ -44,6 +44,9 @@ final class const Decorations(final List<Decoration> entries) {
   Iterable<ColorDecoration> get colors => entries.whereType<ColorDecoration>();
   Iterable<ImageDecoration> get images => entries.whereType<ImageDecoration>();
 
+  bool get isEmpty => entries.isEmpty;
+  bool get isNotEmpty => entries.isNotEmpty;
+
   @override
   int get hashCode => Object.hash(runtimeType, Object.hashAll(entries));
 

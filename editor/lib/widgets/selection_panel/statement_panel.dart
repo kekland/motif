@@ -9,10 +9,11 @@ class const StatementPanel({
     final editor = context.editor;
     final statements = <Statement>[];
     final rawProps = <List<PropSource>>[];
+
     for (final id in statementIds) {
       final statement = editor.statement(id);
       statements.add(statement!);
-      rawProps.add(statement.props.toList());
+      rawProps.add(statement.resolveProps(editor.scene).toList());
     }
 
     final props = Prop.intersect(rawProps);
@@ -37,10 +38,7 @@ class const StatementPanel({
           footnote: footnote,
         ),
         Divider(),
-        PropListBuilder(
-          scene: editor.scene,
-          props: props,
-        ),
+        PropListBuilder(props: props),
         Divider(),
         // ModifierStackWidget(
         //   statements: statements,

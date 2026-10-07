@@ -12,7 +12,7 @@ class FillTool extends Tool {
     FaceStyleToolOption.entry,
   ];
 
-  FaceStyle faceStyle(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+  FaceStyle faceStyle(BuildContext context) => context.editor.tool.get(options[0].key);
 
   @override
   String resolveName(BuildContext context) => 'Fill';
@@ -21,8 +21,11 @@ class FillTool extends Tool {
   Widget buildIcon(BuildContext context) => Icons.fill();
 
   @override
-  Widget buildViewportOverlay(BuildContext context, OverlayChildLayoutInfo info, FillTool tool) =>
-      _FillToolOverlay(info: info, tool: tool);
+  Widget buildViewportOverlay(
+    BuildContext context,
+    OverlayChildLayoutInfo info,
+    FillTool tool,
+  ) => _FillToolOverlay(info: info, tool: tool);
 
   @override
   SingleActivator? get shortcut => .new(.keyG);

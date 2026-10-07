@@ -40,7 +40,7 @@ class TextStatementEditOverlay extends HookWidget {
     final gestureDelegate = useMemoized(() => _TextStatementEditOverlayDelegate(editableTextKey));
     final gestureBuilder = useMemoized(() => TextSelectionGestureDetectorBuilder(delegate: gestureDelegate));
     final statement = editor.statement<TextStatement>(id)!;
-    useListenable(editor.scene.notifier.forStatement(id));
+    useExistingSignal(editor.scene.notifier.forStatement(id), keys: [id]);
 
     final controller = useTextEditingController.fromValue(
       TextEditingValue(

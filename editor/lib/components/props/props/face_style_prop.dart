@@ -1,6 +1,10 @@
 import 'package:editor/imports.dart';
 
-final class FaceStyleProp(super.sources, {super.kind = .faceStyle}) extends Prop<FaceStyle, FaceStylePartial> {
+final class FaceStyleProp(
+  super.sources, {
+  super.kind = .faceStyle,
+  final String? decorationsEmptyStateLabel,
+}) extends Prop<FaceStyle, FaceStylePartial> {
   late final DecorationsProp decorations = remap(
     .decorations,
     getter: (s) => s.decorations,
@@ -37,7 +41,8 @@ final class FaceStylePropWidget extends HookWidget with PropWidget {
       children: [
         DecorationsPropWidget(
           prop: prop.decorations,
-          padding: resolvedPadding,
+          padding: resolvedPadding.copyWith(bottom: 8.0),
+          emptyStateLabel: prop.decorationsEmptyStateLabel,
         ),
       ],
     );

@@ -39,7 +39,7 @@ final class ParagraphFormatPropWidget extends HookWidget with PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
     final computed = usePropComputed(prop);
     final format = useProxyComputed(computed, (value) => value.resolve());
 
@@ -61,25 +61,25 @@ final class ParagraphFormatPropWidget extends HookWidget with PropWidget {
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: alignment == .left,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(alignment: .left))),
+                      onChanged: (v) => prop.set(txn, .new(alignment: .left)),
                       child: Icons.paragraphFormatAlignmentLeft(),
                     ),
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: alignment == .center,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(alignment: .center))),
+                      onChanged: (v) => prop.set(txn, .new(alignment: .center)),
                       child: Icons.paragraphFormatAlignmentCenter(),
                     ),
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: alignment == .right,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(alignment: .right))),
+                      onChanged: (v) => prop.set(txn, .new(alignment: .right)),
                       child: Icons.paragraphFormatAlignmentRight(),
                     ),
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: alignment == .justify,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(alignment: .justify))),
+                      onChanged: (v) => prop.set(txn, .new(alignment: .justify)),
                       child: Icons.paragraphFormatAlignmentJustify(),
                     ),
                   ],
@@ -92,19 +92,19 @@ final class ParagraphFormatPropWidget extends HookWidget with PropWidget {
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: verticalAlignment == .top,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(verticalAlignment: .top))),
+                      onChanged: (v) => prop.set(txn, .new(verticalAlignment: .top)),
                       child: Icons.paragraphFormatVerticalAlignmentTop(),
                     ),
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: verticalAlignment == .middle,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(verticalAlignment: .middle))),
+                      onChanged: (v) => prop.set(txn, .new(verticalAlignment: .middle)),
                       child: Icons.paragraphFormatVerticalAlignmentMiddle(),
                     ),
                     ToggleableButton(
                       iconSize: 16.0,
                       isActive: verticalAlignment == .bottom,
-                      onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(verticalAlignment: .bottom))),
+                      onChanged: (v) => prop.set(txn, .new(verticalAlignment: .bottom)),
                       child: Icons.paragraphFormatVerticalAlignmentBottom(),
                     ),
                   ],

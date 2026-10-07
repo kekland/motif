@@ -15,11 +15,6 @@ class EditorSidebar extends StatelessWidget {
           constraints: .flex(1.0),
           child: SelectionPanel(),
         ),
-        Panel(
-          key: EditorPanel.tool,
-          constraints: .pixels(200.0, 400.0, initial: 300.0),
-          child: ToolOptionsPanel(),
-        ),
       ],
     );
   }

@@ -52,12 +52,15 @@ class _InteractiveCanvasFocusState extends State<InteractiveCanvasFocus> {
 
   @override
   Widget build(BuildContext context) {
-    return FocusScope(
-      autofocus: true,
-      canRequestFocus: true,
-      descendantsAreFocusable: true,
-      node: widget.focusScopeNode,
-      child: widget.child,
+    return Listener(
+      onPointerDown: (_) => widget.focusScopeNode.requestFocus(),
+      child: FocusScope(
+        autofocus: true,
+        canRequestFocus: true,
+        descendantsAreFocusable: true,
+        node: widget.focusScopeNode,
+        child: widget.child,
+      ),
     );
   }
 }

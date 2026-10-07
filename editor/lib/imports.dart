@@ -17,3 +17,4 @@ export 'tools/tools.dart';
 export 'widgets/widgets.dart';
 
 export 'components/props/props.dart';
+export 'components/tool/tool.dart';

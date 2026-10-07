@@ -23,7 +23,7 @@ final class LayoutPropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     final computed = usePropComputed(prop);
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
     final value = useProxyComputedValue(computed, (v) => v.resolve());
 
     return Padding(
@@ -31,17 +31,17 @@ final class LayoutPropWidget extends HookWidget with PropWidget {
       child: ToggleableButtonRow(
         children: [
           ToggleableButton(
-            onChanged: (v) => transaction.edit((txn) => prop.set(txn, .stack())),
+            onChanged: (v) => prop.set(txn, .stack()),
             isActive: value is StackLayout,
             child: Icons.layoutStack(),
           ),
           ToggleableButton(
-            onChanged: (v) => transaction.edit((txn) => prop.set(txn, .flex(direction: .row))),
+            onChanged: (v) => prop.set(txn, .flex(direction: .row)),
             isActive: value is FlexLayout && value.direction == .row,
             child: Icons.layoutRow(),
           ),
           ToggleableButton(
-            onChanged: (v) => transaction.edit((txn) => prop.set(txn, .flex(direction: .column))),
+            onChanged: (v) => prop.set(txn, .flex(direction: .column)),
             isActive: value is FlexLayout && value.direction == .column,
             child: Icons.layoutColumn(),
           ),

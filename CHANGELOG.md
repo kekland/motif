@@ -1,3 +1,9 @@
+# 0.1.6
+
+* Props: simplify the core, making it easier to use in other places
+* Tool options: moved into the tab bar, opens as a window. WIP.
+* Prop widgets: adjusted spacing, padding, etc.
+
 # 0.1.5
 
 * Selection: parented cells are now selectable only if its parent is selected.

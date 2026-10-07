@@ -14,9 +14,9 @@ class PencilTool extends Tool {
     PenEdgeStyleToolOption.entry,
   ];
 
-  bool topological(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
-  bool destructive(BuildContext context) => context.editor.tool.getOption(options[1].key).value;
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.getOption(options[2].key).value;
+  bool topological(BuildContext context) => context.editor.tool.get(options[0].key);
+  bool destructive(BuildContext context) => context.editor.tool.get(options[1].key);
+  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.get(options[2].key);
 
   @override
   String resolveName(BuildContext context) => 'Pencil';

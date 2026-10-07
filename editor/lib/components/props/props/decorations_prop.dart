@@ -1,5 +1,5 @@
+import 'package:editor/components/props/widgets/inputs/decoration/decorations_input_field.dart';
 import 'package:editor/imports.dart';
-import 'package:editor/components/props/widgets/inputs/decoration/decoration_input_field.dart';
 
 final class DecorationsProp(super.sources, {super.kind = .decorations}) extends Prop<Decorations, Decorations> {
   @override
@@ -14,10 +14,12 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
     super.key,
     required this.prop,
     this.padding,
+    this.emptyStateLabel,
   });
 
   final DecorationsProp prop;
   final EdgeInsets? padding;
+  final String? emptyStateLabel;
 
   @override
   bool get isNested => false;
@@ -27,11 +29,9 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = context.editor;
-
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
     final computed = usePropComputed(prop);
-    final isMixed = useComputed(() => computed().isMixed, keys: [computed]).value;
+    final isMixed = useProxyComputedValue(computed, (v) => v.isMixed);
 
     if (isMixed) {
       return Padding(
@@ -42,46 +42,30 @@ final class DecorationsPropWidget extends HookWidget with PropWidget {
         ),
       );
     }
-    final itemCount = useComputed(() => computed().resolve()!.entries.length, keys: [computed]).value;
-    final computeds = useMemoized(
-      () => List.generate(itemCount, (i) => Computed(() => computed().resolve()!.entries.elementAtOrNull(i))),
-      [itemCount, computed],
-    );
 
-    useEffect(() {
-      final values = computeds;
-      return () {
-        for (final c in values) c.dispose();
-      };
-    }, [computeds]);
+    final isNotEmpty = useComputed(() => computed().resolve()!.isNotEmpty, keys: [computed]).value;
+
+    if (!isNotEmpty && emptyStateLabel != null) {
+      return Padding(
+        padding: PropWidget.padding,
+        child: Text(
+          emptyStateLabel!,
+          style: context.typography.caption.tertiary,
+        ),
+      );
+    }
 
     final verticalPadding = EdgeInsets.only(
-      top: itemCount > 0 ? padding?.top ?? 0.0 : 0.0,
-      bottom: itemCount > 0 ? padding?.bottom ?? 0.0 : 0.0,
+      top: isNotEmpty ? (padding?.top ?? 0.0) : 0.0,
+      bottom: isNotEmpty ? (padding?.bottom ?? 0.0) : 0.0,
     );
 
     return Padding(
       padding: verticalPadding,
-      child: DragBoundary(
-        child: ReorderableList(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: itemCount,
-          proxyDecorator: (child, i, animation) => FadeTransition(
-            opacity: animation.drive(Tween(begin: 1.0, end: 0.5)),
-            child: child,
-          ),
-          onReorderItem: (a, b) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.reorder(a, b))),
-          itemBuilder: (context, i) => DecorationEntry(
-            key: ValueKey(computeds[i]),
-            editor: editor,
-            index: i,
-            entry: computeds[i],
-            onChanged: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.update(i, v))),
-            onRemoved: (v) => transaction.edit((txn) => prop.set(txn, computed().resolve()!.remove(i))),
-            sessionCallbacks: transaction.sessionCallbacks,
-          ),
-        ),
+      child: DecorationsInputField(
+        value: useProxyComputed(computed, (v) => v.resolve()!),
+        onChanged: (v) => prop.set(txn, v),
+        sessionCallbacks: txn.sessionCallbacks,
       ),
     );
   }
@@ -94,85 +78,22 @@ final class DecorationsAddButtonWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
 
     return IconButton.flat(
       onTap: () {
-        final value = prop.resolve(context.editor.scene);
+        final value = prop.resolve();
         final isMixed = value.isMixed;
 
         if (isMixed) {
-          transaction.edit((txn) => prop.set(txn, .white));
+          prop.set(txn, .white);
         } else {
           final resolved = value.resolve()!;
           final added = resolved.append(.color(.white));
-          transaction.edit((txn) => prop.set(txn, added));
+          prop.set(txn, added);
         }
       },
       child: Icons.add(),
     );
-  }
-}
-
-final class const DecorationEntry({
-  super.key,
-  required final Editor editor,
-  required final int index,
-  required final ReadonlySignal<Decoration?> entry,
-  final ValueChanged<Decoration>? onChanged,
-  final ValueChanged<Decoration>? onRemoved,
-  final InputSessionCallbacks? sessionCallbacks,
-}) extends HookWidget {
-  @override
-  Widget build(BuildContext context) {
-    final value = useRef(this.entry()!);
-    final entry = useComputed(() {
-      final v = this.entry();
-      if (v == null) return value.value;
-      return value.value = v;
-    });
-
-    return ListItem(
-      onTap: () {},
-      height: 40.0,
-      reorderableIndex: index,
-      padding: .only(left: 12.0, right: 6.0),
-      title: DecorationInputField(
-        editor: editor,
-        value: entry,
-        onChanged: onChanged,
-        sessionCallbacks: sessionCallbacks,
-      ),
-      trailing: IconButton.flat(
-        onTap: () => onRemoved?.call(entry.value),
-        child: Icons.remove(),
-      ),
-    );
-  }
-}
-
-final class const ColorDecorationBody({
-  super.key,
-  required final ReadonlySignal<ColorDecoration> entry,
-  final ValueChanged<ColorDecoration>? onChanged,
-  final InputSessionCallbacks? sessionCallbacks,
-}) extends HookWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ColorInputField(
-      value: useMemoComputed(() => entry.value.color.partial),
-      onChanged: (p) => onChanged?.call(.new(p.apply(entry.value.color))),
-      sessionCallbacks: sessionCallbacks,
-    );
-  }
-}
-
-final class const ImageDecorationBody({
-  super.key,
-  required final ReadonlySignal<ImageDecoration> entry,
-}) extends HookWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

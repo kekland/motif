@@ -1,4 +1,4 @@
-import 'package:ui/ui.dart';
+import 'package:editor/imports.dart';
 
 export 'tool_shortcuts.dart';
 export 'tool_options.dart';
@@ -26,8 +26,10 @@ class ToolController with ChangeNotifier, ChangeNotifierDisposable {
 
     for (final tool in toolset) {
       for (final option in tool.options) {
-        _options[option.key] = option;
-        _optionValueSignals[option.key] = option.createSignal();
+        final key = option.key;
+
+        _options[key] = option;
+        _optionProps[key] = option.createProp(this);
       }
     }
 
@@ -44,12 +46,13 @@ class ToolController with ChangeNotifier, ChangeNotifierDisposable {
   set activeTool(Tool? value) => _activeTool.value = value;
 
   late final _options = $mapSignal<String, ToolOption>({});
-  late final _optionValueSignals = <String, Signal>{};
+  late final _optionProps = <String, Prop>{};
 
-  ToolOption getOption(String key) => _options[key]!;
-  ReadonlySignal getOptionSignal(String key) => _optionValueSignals[key]!;
-  void setOption(String key, ToolOption value) {
-    _options[key] = value;
-    _optionValueSignals[key]!.value = value.value;
+  T get<T>(String key) => _options[key]!.value as T;
+  void set<T>(String key, T value) {
+    _options[key] = _options[key]!.copyWith(value: value);
+    _optionProps[key]!.sources.single.signal?.value = value;
   }
+
+  Prop getProp(String key) => _optionProps[key]!;
 }

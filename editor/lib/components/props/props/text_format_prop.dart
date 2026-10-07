@@ -60,7 +60,7 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
     final computed = usePropComputed(prop);
     final format = useProxyComputed(computed, (value) => value.resolve());
 
@@ -73,9 +73,9 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
             onChanged: (v) {
               final family = editor.builtinFonts.catalog[v];
               for (final asset in family.assets) editor.maybeAddAsset(asset);
-              transaction.edit((txn) => prop.set(txn, .new(fontFamily: v)));
+              prop.set(txn, .new(fontFamily: v));
             },
-            sessionCallbacks: transaction.sessionCallbacks,
+            sessionCallbacks: txn.sessionCallbacks,
           ),
           const SizedBox(height: 8.0),
           Row(
@@ -85,14 +85,14 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
                 child: FontWeightInputField(
                   values: TextFontWeight.values,
                   value: useProxyComputed(format, (v) => v?.fontWeight),
-                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontWeight: v))),
+                  onChanged: (v) => prop.set(txn, .new(fontWeight: v)),
                 ),
               ),
               Expanded(
                 child: FontSlantInputField(
                   values: TextFontSlant.values,
                   value: useProxyComputed(format, (v) => v?.fontSlant),
-                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontSlant: v))),
+                  onChanged: (v) => prop.set(txn, .new(fontSlant: v)),
                 ),
               ),
             ],
@@ -100,8 +100,8 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
           const SizedBox(height: 8.0),
           DoubleExpressionInputField(
             value: useProxyComputed(format, (v) => v?.fontSize),
-            onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(fontSize: v))),
-            sessionCallbacks: transaction.sessionCallbacks,
+            onChanged: (v) => prop.set(txn, .new(fontSize: v)),
+            sessionCallbacks: txn.sessionCallbacks,
             options: .new(leading: Icons.textFormatSize()),
           ),
           const SizedBox(height: 8.0),
@@ -111,16 +111,16 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
               Expanded(
                 child: DoubleExpressionInputField(
                   value: useProxyComputed(format, (v) => v?.lineHeight),
-                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(lineHeight: v))),
-                  sessionCallbacks: transaction.sessionCallbacks,
+                  onChanged: (v) => prop.set(txn, .new(lineHeight: v)),
+                  sessionCallbacks: txn.sessionCallbacks,
                   options: .new(leading: Icons.lineHeight()),
                 ),
               ),
               Expanded(
                 child: DoubleExpressionInputField(
                   value: useProxyComputed(format, (v) => v?.letterSpacing),
-                  onChanged: (v) => transaction.edit((txn) => prop.set(txn, .new(letterSpacing: v))),
-                  sessionCallbacks: transaction.sessionCallbacks,
+                  onChanged: (v) => prop.set(txn, .new(letterSpacing: v)),
+                  sessionCallbacks: txn.sessionCallbacks,
                   options: .new(leading: Icons.textFormatLetterSpacing()),
                 ),
               ),

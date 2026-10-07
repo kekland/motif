@@ -23,14 +23,14 @@ final class StrokeWidthPropWidget extends HookWidget with PropWidget {
   @override
   Widget build(BuildContext context) {
     final computed = usePropComputed(prop);
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
 
     return Padding(
       padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
-        onChanged: (width) => transaction.edit((txn) => prop.set(txn, width)),
-        sessionCallbacks: transaction.sessionCallbacks,
+        onChanged: (width) => prop.set(txn, width),
+        sessionCallbacks: txn.sessionCallbacks,
         options: .new(
           leading: Icons.weight(),
           hintText: 'Mixed',

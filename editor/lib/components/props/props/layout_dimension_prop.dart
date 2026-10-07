@@ -27,7 +27,7 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
   Widget build(BuildContext context) {
     final computed = usePropComputed(prop);
     final isOverridden = useComputed(() => computed.value.isOverridden, keys: [computed]).value;
-    final transaction = usePropTransaction();
+    final txn = usePropTransaction();
 
     final type = useComputed(() => computed.value.resolve()?.type, keys: [computed]).value;
     final value = useMemoComputed(() => computed.value.resolve()?.value, keys: [computed]);
@@ -50,19 +50,19 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
       children: [
         ToggleableButton(
           isActive: type == .fixed,
-          onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fixed(value() ?? 0.0))),
+          onChanged: (v) => prop.set(txn, .fixed(value() ?? 0.0)),
           iconSize: 16.0,
           child: type == .fixed ? Icons.layoutSizeFixed() : Icons.layoutSizeNonFixed(),
         ),
         ToggleableButton(
           isActive: type == .contain,
-          onChanged: (v) => transaction.edit((txn) => prop.set(txn, .contain())),
+          onChanged: (v) => prop.set(txn, .contain()),
           iconSize: 16.0,
           child: RotatedBox(quarterTurns: iconTurns + 1, child: Icons.layoutSizeContain()),
         ),
         ToggleableButton(
           isActive: type == .expand,
-          onChanged: (v) => transaction.edit((txn) => prop.set(txn, .expand())),
+          onChanged: (v) => prop.set(txn, .expand()),
           iconSize: 16.0,
           child: RotatedBox(quarterTurns: iconTurns + 1, child: Icons.layoutSizeExpand()),
         ),
@@ -73,8 +73,8 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
       padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: value,
-        onChanged: (v) => transaction.edit((txn) => prop.set(txn, .fixed(v))),
-        sessionCallbacks: transaction.sessionCallbacks,
+        onChanged: (v) => prop.set(txn, .fixed(v)),
+        sessionCallbacks: txn.sessionCallbacks,
         options: .new(
           leading: icon,
           textStyle: isOverridden ? context.typography.body.tertiary : null,

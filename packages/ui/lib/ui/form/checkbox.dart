@@ -14,8 +14,8 @@ class Checkbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureSurface(
       onTap: onChanged != null ? () => onChanged!(!value()) : null,
-      width: 28.0,
-      height: 28.0,
+      width: 24.0,
+      height: 24.0,
       borderRadius: .circular(4.0),
       child: SignalBuilder(
         builder: (context) => CheckboxIcon(value: value()),

@@ -62,51 +62,53 @@ class ConnectedEditorWidget extends HookWidget {
 
           return Provider.value(
             value: editor,
-            child: Panels<EditorPanel>(
-              key: editor.panelsRootKey,
-              direction: .horizontal,
-              panels: [
-                Panel(
-                  key: EditorPanel.toolbar,
-                  constraints: .pixels(48.0, 48.0),
-                  child: EditorToolbar(),
-                ),
-                Panel(
-                  key: EditorPanel.scene,
-                  constraints: .pixels(0.0, 384.0, initial: 200.0),
-                  child: ScenePanel(),
-                ),
-                Panel(
-                  key: EditorPanel.main,
-                  constraints: .flex(1.0),
-                  child: Panels(
-                    direction: .vertical,
-                    panels: [
-                      Panel(
-                        key: EditorPanel.canvas,
-                        constraints: .flex(1.0),
-                        child: EditorCanvas(),
-                      ),
-                      Panel(
-                        key: EditorPanel.tab,
-                        constraints: .pixels(0.0, maxHeight * 0.35),
-                        child: EditorTabWidget(),
-                      ),
-                      Panel(
-                        key: EditorPanel.tabBar,
-                        constraints: .pixels(36.0, 36.0),
-                        child: EditorTabBar(),
-                      ),
-                    ],
+            child: PortalRoot(
+              child: Panels<EditorPanel>(
+                key: editor.panelsRootKey,
+                direction: .horizontal,
+                panels: [
+                  Panel(
+                    key: EditorPanel.toolbar,
+                    constraints: .pixels(48.0, 48.0),
+                    child: EditorToolbar(),
                   ),
-                ),
+                  Panel(
+                    key: EditorPanel.scene,
+                    constraints: .pixels(0.0, 384.0, initial: 200.0),
+                    child: ScenePanel(),
+                  ),
+                  Panel(
+                    key: EditorPanel.main,
+                    constraints: .flex(1.0),
+                    child: Panels(
+                      direction: .vertical,
+                      panels: [
+                        Panel(
+                          key: EditorPanel.canvas,
+                          constraints: .flex(1.0),
+                          child: EditorCanvas(),
+                        ),
+                        Panel(
+                          key: EditorPanel.tab,
+                          constraints: .pixels(0.0, maxHeight * 0.35),
+                          child: EditorTabWidget(),
+                        ),
+                        Panel(
+                          key: EditorPanel.tabBar,
+                          constraints: .pixels(36.0, 36.0),
+                          child: EditorTabBar(height: 36.0),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                Panel(
-                  key: EditorPanel.sidebar,
-                  constraints: .pixels(196.0, 384.0, initial: 296.0),
-                  child: EditorSidebar(),
-                ),
-              ],
+                  Panel(
+                    key: EditorPanel.sidebar,
+                    constraints: .pixels(196.0, 384.0, initial: 296.0),
+                    child: EditorSidebar(),
+                  ),
+                ],
+              ),
             ),
           );
         },

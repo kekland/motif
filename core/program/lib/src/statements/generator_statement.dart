@@ -101,5 +101,8 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   }
 
   @override
+  ReparentRoute routeReparent(CellRef target) => .accept;
+
+  @override
   Statement absorbReparent(FrameRef to, Mat4 parentTransform) => copyWith(parent: to, transform: parentTransform);
 }

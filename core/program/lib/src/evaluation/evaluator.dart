@@ -54,6 +54,7 @@ extension Evaluator on EvalPass {
   /// Evaluates the given [node] and its children.
   void _evaluate(EvalNode node) {
     if (!node.dirty && node.dirtyBelow == 0) return;
+    evaluated.add(node.id);
 
     if (node.dirty) {
       _settle(node);

@@ -1,15 +1,9 @@
 import 'package:editor/imports.dart';
 
-final class PropListBuilder extends StatelessWidget {
-  const new({
-    super.key,
-    required this.scene,
-    required this.props,
-  });
-
-  final Scene scene;
-  final List<Prop> props;
-
+final class const PropListBuilder({
+  super.key,
+  required final List<Prop> props,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = <Widget>[];
@@ -27,6 +21,7 @@ final class PropListBuilder extends StatelessWidget {
     }
 
     return Column(
+      mainAxisSize: .min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children.interleave(Divider()).toList(),
     );
@@ -62,9 +57,10 @@ class PropsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttons = prop.buildHeaderButtons(context);
+    final header = child.resolveHeader(context);
 
     return PropsSectionWidget(
-      title: Text(child.resolveHeader(context)),
+      title: header != null ? Text(header) : null,
       trailing: buttons.toList(),
       child: child,
     );
@@ -73,7 +69,7 @@ class PropsSection extends StatelessWidget {
 
 final class const PropsSectionWidget({
   super.key,
-  required final Widget title,
+  required final Widget? title,
   required final Widget child,
   final List<Widget> trailing = const [],
 }) extends StatelessWidget {
@@ -82,11 +78,12 @@ final class const PropsSectionWidget({
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ListItem(
-          padding: .only(left: 12.0, right: 6.0),
-          title: DefaultForegroundStyle(style: context.typography.caption.secondary, child: title),
-          trailing: ButtonRow(buttons: trailing),
-        ),
+        if (title != null || trailing.isNotEmpty)
+          ListItem(
+            padding: .only(left: 12.0, right: 6.0),
+            title: DefaultForegroundStyle(style: context.typography.caption.secondary, child: title!),
+            trailing: ButtonRow(buttons: trailing),
+          ),
         child,
       ],
     );

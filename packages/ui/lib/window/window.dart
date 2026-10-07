@@ -54,6 +54,8 @@ class WindowScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final headerHeight = largeHeader ? 48.0 : 36.0;
+
     return Surface(
       color: context.colors.surface.primary,
       shadows: context.shadows.window,
@@ -61,27 +63,30 @@ class WindowScaffold extends StatelessWidget {
       borderRadius: BorderRadius.circular(4.0),
       child: ConstrainedBox(
         constraints: .new(minWidth: 200.0),
-        child: IntrinsicWidth(
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              DefaultForegroundStyle(
-                color: context.colors.display.tertiary,
-                child: ListItem(
-                  leading: leading,
-                  height: largeHeader ? 48.0 : 36.0,
-                  padding: largeHeader ? const .only(left: 8.0, right: 8.0) : const .only(left: 8.0, right: 4.0),
-                  trailing: IconButton.flat(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Icons.close(),
-                  ),
-                  title: title ?? const SizedBox.shrink(),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              top: 0.0,
+              child: ListItem(
+                color: context.colors.surface.secondary,
+                leading: leading,
+                height: headerHeight,
+                padding: largeHeader ? const .only(left: 8.0, right: 8.0) : const .only(left: 8.0, right: 6.0),
+                trailing: IconButton.flat(
+                  onTap: () => Navigator.of(context).maybePop(),
+                  child: Icons.close(),
                 ),
+                title: title ?? const SizedBox.shrink(),
+                dividerBelow: true,
               ),
-              Divider(),
-              child,
-            ],
-          ),
+            ),
+            Padding(
+              padding: .only(top: headerHeight),
+              child: child,
+            ),
+          ],
         ),
       ),
     );

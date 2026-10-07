@@ -169,10 +169,10 @@ class RenderPortalPositioned extends RenderProxyBox {
     size = constraints.biggest;
 
     // If no rect is passed - try to compute an initial rect.
-    if (rect == null) {
+    // if (rect == null) {
       _recomputeRect();
-      return;
-    }
+    //   return;
+    // }
 
     child!.layout(portalConstraints ?? constraints.loosen(), parentUsesSize: true);
   }

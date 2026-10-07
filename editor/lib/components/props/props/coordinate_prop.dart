@@ -40,7 +40,7 @@ final class CoordinatePropWidget extends HookWidget with PropWidget {
       padding: resolvedPadding,
       child: DoubleExpressionInputField(
         value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
-        onChanged: (v) => transaction.edit((txn) => prop.set(txn, v)),
+        onChanged: (v) => prop.set(transaction, v),
         sessionCallbacks: transaction.sessionCallbacks,
         options: .new(
           leading: icon,

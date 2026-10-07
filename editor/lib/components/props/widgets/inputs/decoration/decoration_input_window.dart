@@ -7,7 +7,8 @@ class const DecorationInputWindow({
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final kind = useProxyComputedValue(field.value, (v) => v.kind);
+    final value = useProxyComputed(field.value, (v) => v!);
+    final kind = useProxyComputedValue(value, (v) => v.kind);
 
     return WindowScaffold(
       title: ButtonRow(
@@ -43,14 +44,14 @@ class const DecorationInputWindow({
             .color => _ColorDecorationInputBody(
               key: ValueKey(kind),
               editor: editor,
-              value: field.value,
+              value: value,
               onChanged: field.onChanged,
               sessionCallbacks: field.sessionCallbacks,
             ),
             .image => _ImageDecorationInputBody(
               key: ValueKey(kind),
               editor: editor,
-              value: field.value,
+              value: value,
               onChanged: field.onChanged,
               sessionCallbacks: field.sessionCallbacks,
             ),

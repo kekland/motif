@@ -11,7 +11,7 @@ class SelectionPanel extends HookWidget {
   Widget build(BuildContext context) {
     final editor = context.editor;
     final selection = editor.selection;
-    final propTransaction = useMemoized(() => PropTransaction(editor.scene), [editor]);
+    final propTransaction = useMemoized(() => ScenePropTransaction(editor.scene), [editor]);
     useListenable(selection);
 
     var selectedCells = selection.refSources.cells.toSet();
@@ -34,7 +34,7 @@ class SelectionPanel extends HookWidget {
       }
     }
 
-    return Provider.value(
+    return Provider<PropTransaction>.value(
       value: propTransaction,
       child: SingleChildScrollView(
         child: Column(

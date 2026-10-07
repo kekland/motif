@@ -59,10 +59,7 @@ class const CellPanel({
           footnote: footnote,
         ),
         Divider(),
-        PropListBuilder(
-          scene: editor.scene,
-          props: props,
-        ),
+        PropListBuilder(props: props),
       ],
     );
   }

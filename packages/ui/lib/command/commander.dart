@@ -150,49 +150,46 @@ class CommanderOverlay extends HookWidget {
         return .ignored;
       },
       child: Center(
-        child: FractionalTranslation(
-          translation: .new(0.0, 0.5),
-          child: Surface(
-            width: 400.0,
-            shadows: context.shadows.window,
-            color: context.colors.surface.secondary,
-            borderSide: .new(color: context.colors.divider),
-            borderRadius: .circular(4.0),
-            child: ConstrainedBox(
-              constraints: .new(maxHeight: 320.0),
-              child: Column(
-                mainAxisSize: .min,
-                children: [
-                  CommanderInputField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    onSubmitted: () {
-                      final action = selected.value;
-                      if (action != null) submit(action);
+        child: Surface(
+          width: 400.0,
+          shadows: context.shadows.window,
+          color: context.colors.surface.secondary,
+          borderSide: .new(color: context.colors.divider),
+          borderRadius: .circular(4.0),
+          child: ConstrainedBox(
+            constraints: .new(maxHeight: 320.0),
+            child: Column(
+              mainAxisSize: .min,
+              children: [
+                CommanderInputField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  onSubmitted: () {
+                    final action = selected.value;
+                    if (action != null) submit(action);
+                  },
+                ),
+                Divider(),
+                Flexible(
+                  child: ListView.separated(
+                    padding: .zero,
+                    shrinkWrap: true,
+                    itemCount: sorted.value.length,
+                    itemBuilder: (context, index) {
+                      final action = sorted.value[index];
+                      return CommandSuggestionWidget(
+                        action: action,
+                        isSelected: action == selected.value,
+                        onTap: () => submit(action),
+                      );
                     },
-                  ),
-                  Divider(),
-                  Flexible(
-                    child: ListView.separated(
-                      padding: .zero,
-                      shrinkWrap: true,
-                      itemCount: sorted.value.length,
-                      itemBuilder: (context, index) {
-                        final action = sorted.value[index];
-                        return CommandSuggestionWidget(
-                          action: action,
-                          isSelected: action == selected.value,
-                          onTap: () => submit(action),
-                        );
-                      },
-                      separatorBuilder: (context, i) => Divider(
-                        height: 1.0,
-                        color: context.colors.divider,
-                      ),
+                    separatorBuilder: (context, i) => Divider(
+                      height: 1.0,
+                      color: context.colors.divider,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

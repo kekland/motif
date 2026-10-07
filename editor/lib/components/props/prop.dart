@@ -17,11 +17,11 @@ abstract class Prop<G, S> {
 
   bool compare(G a, G b) => a == b;
 
-  bool isEverythingActive(Scene scene) => sources.every((s) => s.isActive(scene));
+  bool isEverythingActive() => sources.every((s) => s.isActive());
 
-  PropValue<G> resolve(Scene scene) {
-    final active = sources.where((s) => s.isActive(scene)).toList();
-    final values = active.map((s) => s.get(scene)).toList();
+  PropValue<G> resolve() {
+    final active = sources.where((s) => s.isActive()).toList();
+    final values = active.map((s) => s.get()).toList();
     if (values.isEmpty) return const .mixed();
 
     final first = values.first;
@@ -32,8 +32,10 @@ abstract class Prop<G, S> {
     return first;
   }
 
-  void set(SceneTransaction txn, S value) {
+  void set(PropTransaction txn, S value) {
+    txn.onStartChanging();
     for (final source in sources) source.set(txn, value);
+    txn.onEndChanging();
   }
 
   P remap<G2, S2, P extends Prop<G2, S2>>(
@@ -106,23 +108,23 @@ final class PropSource<G, S> {
     required this.kind,
     required this._getter,
     required this._setter,
+    required this.signal,
     this._override,
     this._isActive,
   });
 
   final PropKind<G, S> kind;
-  final G Function(Scene scene) _getter;
-  final void Function(SceneTransaction txn, S value) _setter;
-  final S? Function(Scene scene)? _override;
-  final bool Function(Scene scene)? _isActive;
+  final G Function() _getter;
+  final void Function(PropTransaction txn, S value) _setter;
+  final S? Function()? _override;
+  final bool Function()? _isActive;
+  final Signal? signal;
 
-  bool isActive(Scene scene) {
-    return _isActive?.call(scene) ?? true;
-  }
+  bool isActive() => _isActive?.call() ?? true;
 
-  PropValue<G> get(Scene scene) {
-    final value = _getter(scene);
-    final override = _override?.call(scene);
+  PropValue<G> get() {
+    final value = _getter();
+    final override = _override?.call();
     if (override != null) {
       return .uniform(resolveOverridden(value, override), isOverridden: true);
     }
@@ -130,7 +132,7 @@ final class PropSource<G, S> {
     return .uniform(value);
   }
 
-  void set(SceneTransaction txn, S value) => _setter(txn, value);
+  void set(PropTransaction txn, S value) => _setter(txn, value);
 
   G resolveOverridden(G value, S override) {
     if (G == S) return override as G;
@@ -146,9 +148,10 @@ final class PropSource<G, S> {
   }) => .new(
     kind: kind,
     isActive: _isActive,
-    getter: (scene) => getter(_getter(scene)),
-    setter: (txn, value) => set(txn, setter(_getter(txn.scene), value)),
-    override: (scene) => override?.call(_override?.call(scene)),
+    getter: () => getter(_getter()),
+    setter: (txn, value) => set(txn, setter(_getter(), value)),
+    override: () => override?.call(_override?.call()),
+    signal: signal,
   );
 }
 
@@ -191,38 +194,62 @@ extension PropSourceIterableExt<G, S> on Iterable<PropSource<G, S>> {
 // Source extensions
 // ---------------------------------------------------------------------------------------------------------------------
 
+PropSource<G, S> _sceneSource<G, S>(
+  PropKind<G, S> kind,
+  Scene scene, {
+  required Signal signal,
+  required bool Function(Scene) isActive,
+  required G Function(Scene) get,
+  required void Function(SceneTransaction, S) set,
+  S? Function(Scene)? override,
+}) {
+  return .new(
+    kind: kind,
+    isActive: () => isActive(scene),
+    getter: () => get(scene),
+    setter: (txn, value) => (txn as ScenePropTransaction).editScene((txn) => set(txn, value)),
+    override: override != null ? () => override(scene) : null,
+    signal: signal,
+  );
+}
+
 extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
   PropSource<G, S> statement<T extends Statement>(
     StatementId id, {
+    required Scene scene,
     required G Function(Scene, T) get,
     required T Function(Scene, T, G) set,
     S? Function(Scene, T)? override,
   }) {
-    return .new(
-      kind: this,
+    return _sceneSource(
+      this,
+      scene,
       isActive: (scene) => scene.statement(id) != null,
-      getter: (scene) => get(scene, scene.statement<T>(id)!),
-      setter: (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value.apply(get(txn.scene, s)))),
+      get: (scene) => get(scene, scene.statement<T>(id)!),
+      set: (txn, value) => txn.update<T>(id, (s) => set(scene, s, value.apply(get(scene, s)))),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
+      signal: scene.notifier.forStatement(id),
     );
   }
 
   PropSource<G, S> statementTransforming<T extends Statement>(
     StatementId id, {
+    required Scene scene,
     required G Function(Scene, T) get,
     required void Function(TransformSession, G, S) execute,
     S? Function(Scene, T)? override,
   }) {
-    return .new(
-      kind: this,
+    return _sceneSource(
+      this,
+      scene,
       isActive: (scene) => scene.statement(id) != null,
-      getter: (scene) => get(scene, scene.statement<T>(id)!),
-      setter: (txn, value) {
-        final scene = txn.scene;
+      get: (scene) => get(scene, scene.statement<T>(id)!),
+      set: (txn, value) {
         final session = TransformSession.statements(scene, [id], transaction: txn);
         return execute(session, get(scene, scene.statement<T>(id)!), value);
       },
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
+      signal: scene.notifier.forStatement(id),
     );
   }
 }
@@ -230,16 +257,19 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
 extension TotalStatementFieldProp<V> on PropKind<V, V> {
   PropSource<V, V> of<T extends Statement>(
     StatementId id, {
+    required Scene scene,
     required V Function(Scene, T) get,
     required T Function(Scene, T, V) set,
     V? Function(Scene, T)? override,
   }) {
-    return .new(
-      kind: this,
+    return _sceneSource(
+      this,
+      scene,
       isActive: (scene) => scene.statement(id) != null,
-      getter: (scene) => get(scene, scene.statement<T>(id)!),
-      setter: (txn, value) => txn.update<T>(id, (s) => set(txn.scene, s, value)),
+      get: (scene) => get(scene, scene.statement<T>(id)!),
+      set: (txn, value) => txn.update<T>(id, (s) => set(scene, s, value)),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
+      signal: scene.notifier.forStatement(id),
     );
   }
 }

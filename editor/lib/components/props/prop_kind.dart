@@ -20,6 +20,8 @@ final class const PropKind<G, S>(
   static const textFormat = PropKind<TextFormat, TextFormatPartial>(TextFormatProp.new);
   static const paragraphFormat = PropKind<ParagraphFormat, ParagraphFormatPartial>(ParagraphFormatProp.new);
 
+  static const boolean = PropKind<bool, bool>(BooleanProp.new);
+
   Prop<G, S> compose(Iterable<PropSource> props) {
     return factory(props.cast<PropSource<G, S>>().toList());
   }

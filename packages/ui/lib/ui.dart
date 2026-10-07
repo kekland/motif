@@ -50,7 +50,6 @@ export 'gestures/gestures.dart';
 export 'panels/panels.dart';
 export 'portal/portal.dart';
 export 'theme/theme.dart';
-export 'tool/tool.dart';
 export 'utils/utils.dart';
 export 'window/window.dart';
 

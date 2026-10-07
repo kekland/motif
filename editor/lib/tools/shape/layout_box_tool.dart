@@ -14,9 +14,9 @@ abstract class LayoutBoxTool extends Tool {
     FaceStyleToolOption.entry,
   ];
 
-  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.getOption(options[1].key).value;
-  FaceStyle faceStyle(BuildContext context) => context.editor.tool.getOption(options[2].key).value;
+  bool snapToPixel(BuildContext context) => context.editor.tool.get(options[0].key);
+  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.get(options[1].key);
+  FaceStyle faceStyle(BuildContext context) => context.editor.tool.get(options[2].key);
 
   @override
   Widget buildViewportOverlay(

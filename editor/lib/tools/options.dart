@@ -6,16 +6,17 @@ final class TopologicalToolOption extends ToolOption<bool> {
   static final entry = TopologicalToolOption();
 
   @override
-  TopologicalToolOption copyWith({bool? value}) => .new(value: value);
+  BooleanProp createProp(ToolController controller) => .new([
+    .new(
+      kind: .boolean,
+      getter: () => controller.get(key),
+      setter: (txn, p) => controller.set(key, p),
+      signal: .new(controller.get(key)),
+    ),
+  ], label: 'Topological');
 
   @override
-  Widget performBuild(BuildContext context, ReadonlySignal<bool> value, ValueChanged<bool> onChanged) {
-    return CheckboxListItem(
-      title: Text('Topological'),
-      value: value,
-      onChanged: onChanged,
-    );
-  }
+  TopologicalToolOption copyWith({bool? value}) => .new(value: value);
 }
 
 final class DestructiveToolOption extends ToolOption<bool> {
@@ -24,16 +25,17 @@ final class DestructiveToolOption extends ToolOption<bool> {
   static final entry = DestructiveToolOption();
 
   @override
-  DestructiveToolOption copyWith({bool? value}) => .new(value: value);
+  BooleanProp createProp(ToolController controller) => .new([
+    .new(
+      kind: .boolean,
+      getter: () => controller.get(key),
+      setter: (txn, p) => controller.set(key, p),
+      signal: .new(controller.get(key)),
+    ),
+  ], label: 'Destructive');
 
   @override
-  Widget performBuild(BuildContext context, ReadonlySignal<bool> value, ValueChanged<bool> onChanged) {
-    return CheckboxListItem(
-      title: Text('Destructive'),
-      value: value,
-      onChanged: onChanged,
-    );
-  }
+  DestructiveToolOption copyWith({bool? value}) => .new(value: value);
 }
 
 final class SnapToPixelToolOption extends ToolOption<bool> {
@@ -42,49 +44,43 @@ final class SnapToPixelToolOption extends ToolOption<bool> {
   static final entry = SnapToPixelToolOption();
 
   @override
-  SnapToPixelToolOption copyWith({bool? value}) => .new(value: value);
+  BooleanProp createProp(ToolController controller) => .new([
+    .new(
+      kind: .boolean,
+      getter: () => controller.get(key),
+      setter: (txn, p) => controller.set(key, p),
+      signal: .new(controller.get(key)),
+    ),
+  ], label: 'Snap to Pixel');
 
   @override
-  Widget performBuild(BuildContext context, ReadonlySignal<bool> value, ValueChanged<bool> onChanged) {
-    return CheckboxListItem(
-      title: Text('Snap to pixel grid'),
-      value: value,
-      onChanged: onChanged,
-    );
-  }
+  SnapToPixelToolOption copyWith({bool? value}) => .new(value: value);
 }
 
 abstract class EdgeStyleToolOption extends ToolOption<EdgeStyle> {
   EdgeStyleToolOption(super.id, super.value);
 
+  String? get decorationsEmptyStateLabel;
+
   @override
-  Widget performBuild(BuildContext context, ReadonlySignal<EdgeStyle> value, ValueChanged<EdgeStyle> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        spacing: 8.0,
-        crossAxisAlignment: .start,
-        children: [
-          Text('Stroke', style: context.typography.body.secondary),
-          // ColorInputField(
-          //   value: useMemoComputed(() => value().color.partial),
-          //   onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
-          // ),
-          DoubleExpressionInputField(
-            value: useMemoComputed(() => value().width),
-            onChanged: (v) => onChanged(value().copyWith(width: v)),
-            options: .new(leading: Icons.weight()),
-          ),
-        ],
-      ),
-    );
-  }
+  EdgeStyleProp createProp(ToolController controller) => .new([
+    .new(
+      kind: .edgeStyle,
+      getter: () => controller.get(key),
+      setter: (txn, p) => controller.set(key, p.apply(controller.get(key))),
+      signal: .new(controller.get(key)),
+    ),
+  ], decorationsEmptyStateLabel: decorationsEmptyStateLabel);
 }
 
 final class PenEdgeStyleToolOption extends EdgeStyleToolOption {
-  PenEdgeStyleToolOption({EdgeStyle? value}) : super('penEdgeStyle', value ?? .default_);
+  PenEdgeStyleToolOption({EdgeStyle? value}) : super('penEdgeStyle', value ?? .new(width: 1.0, decorations: .none));
 
   static final entry = PenEdgeStyleToolOption();
+
+  @override
+  String? get decorationsEmptyStateLabel =>
+      'Tap on + to add decorations. If empty, the color will be resolved automatically.';
 
   @override
   PenEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
@@ -96,32 +92,27 @@ final class ShapeEdgeStyleToolOption extends EdgeStyleToolOption {
   static final entry = ShapeEdgeStyleToolOption();
 
   @override
+  String? get decorationsEmptyStateLabel => null;
+
+  @override
   ShapeEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
 }
 
 final class FaceStyleToolOption extends ToolOption<FaceStyle> {
-  FaceStyleToolOption({FaceStyle? value}) : super('faceStyle', value ?? .default_);
+  FaceStyleToolOption({FaceStyle? value}) : super('faceStyle', value ?? .none);
 
   static final entry = FaceStyleToolOption();
 
   @override
-  FaceStyleToolOption copyWith({FaceStyle? value}) => .new(value: value);
+  FaceStyleProp createProp(ToolController controller) => .new([
+    .new(
+      kind: .faceStyle,
+      getter: () => controller.get(key),
+      setter: (txn, p) => controller.set(key, p.apply(controller.get(key))),
+      signal: .new(controller.get(key)),
+    ),
+  ], decorationsEmptyStateLabel: 'Tap on + to add decorations. If empty, the color will be resolved automatically.');
 
   @override
-  Widget performBuild(BuildContext context, ReadonlySignal<FaceStyle> value, ValueChanged<FaceStyle> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        spacing: 8.0,
-        crossAxisAlignment: .start,
-        children: [
-          Text('Fill', style: context.typography.body.secondary),
-          // ColorInputField(
-          //   value: useMemoComputed(() => value().color.partial),
-          //   onChanged: (v) => onChanged(value().copyWith(color: v.apply(value().color))),
-          // ),
-        ],
-      ),
-    );
-  }
+  FaceStyleToolOption copyWith({FaceStyle? value}) => .new(value: value);
 }

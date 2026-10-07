@@ -26,7 +26,7 @@ class FontFamilyInputField extends InputField<String> {
       [value],
     );
 
-    return ValueInputField<String>(
+    return ValueInputField(
       onTap: () async {
         final result = await window.push(context, anchor: .compute(context, axis: .horizontal));
         if (result != null) onChanged?.call(result);
@@ -48,7 +48,7 @@ class FontFamilyPickerWindow extends HookWidget {
     required this.catalogs,
   });
 
-  final InputField<String> field;
+  final InputField<String?> field;
   final Map<String, FontCatalog> catalogs;
 
   @override

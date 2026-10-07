@@ -18,7 +18,7 @@ class BendTool extends Tool {
     SnapToPixelToolOption.entry,
   ];
 
-  bool snapToPixel(BuildContext context) => context.editor.tool.getOption(options[0].key).value;
+  bool snapToPixel(BuildContext context) => context.editor.tool.get(options[0].key);
 
   @override
   Widget buildViewportOverlay(

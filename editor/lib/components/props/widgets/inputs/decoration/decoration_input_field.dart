@@ -7,15 +7,16 @@ part 'decoration_input_window.dart';
 final class const DecorationInputField({
   super.key,
   required final Editor editor,
-  required final ReadonlySignal<Decoration> value,
-  final ValueChanged<Decoration>? onChanged,
-  final InputSessionCallbacks? sessionCallbacks,
-}) extends HookWidget {
+  required super.value,
+  super.onChanged,
+  super.sessionCallbacks,
+}) extends InputField<Decoration> {
   @override
   Widget build(BuildContext context) {
     final iconTheme = IconTheme.of(context);
 
     final scene = editor.scene;
+    final value = useProxyComputed(this.value, (value) => value!);
     final kind = useProxyComputedValue(value, (value) => value.kind);
 
     final window = usePortalEntry(

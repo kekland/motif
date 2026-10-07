@@ -1,5 +1,6 @@
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/tab_bar.dart';
+import 'package:editor/widgets/tool/tool_options_panel.dart';
 import 'package:flutter/services.dart' hide AssetManifest, Clipboard;
 
 export 'widgets/editor_widget.dart';
@@ -72,6 +73,10 @@ final class Editor extends Controller {
 
   final commanderRootKey = GlobalKey<CommanderRootState>();
   CommanderRootState get commander => commanderRootKey.currentState!;
+
+  late final toolOptionsWindow = WindowEntry(
+    builder: (context) => ToolOptionsWindow(editor: this),
+  );
 
   late final tab = $signal<EditorTab?>(null);
   late final isLoaded = $signal<bool>(false);

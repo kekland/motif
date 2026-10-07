@@ -252,18 +252,20 @@ abstract class HandleRenderObject<R extends Ref> extends RenderBox {
   Color get primaryColor => parent!.primaryColor;
   Color get secondaryColor => parent!.secondaryColor;
 
-  late ChangeNotifier _sceneNotifier;
+  late EffectCleanup _sceneSubscription;
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    _sceneNotifier = scene.notifier.forRef(ref);
-    _sceneNotifier.addListener(markNeedsLayout);
+    _sceneSubscription = effect(() {
+      scene.notifier.forRef(ref)();
+      markNeedsLayout();
+    });
   }
 
   @override
   void detach() {
-    _sceneNotifier.removeListener(markNeedsLayout);
+    _sceneSubscription();
     super.detach();
   }
 
