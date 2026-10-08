@@ -14,6 +14,7 @@ part 'set_z_order_top.dart';
 part 'set_z_order_bottom.dart';
 part 'glue_selected_vertices.dart';
 part 'group_selection.dart';
+part 'selection.dart';
 
 final intents = (
   selectRef: SelectRefIntent.new,
@@ -30,6 +31,11 @@ final intents = (
   setZOrderBottom: SetZOrderBottomIntent.new,
   glueSelectedVertices: GlueSelectedVerticesIntent.new,
   groupSelection: GroupSelectionIntent.new,
+  selectPrevious: SelectPreviousIntent.new,
+  selectNext: SelectNextIntent.new,
+  selectFirstChild: SelectFirstChildIntent.new,
+  selectParent: SelectParentIntent.new,
+  showSelectionOnScreen: ShowSelectionOnScreenIntent.new,
 );
 
 final actions = <Type, Action>{
@@ -46,6 +52,11 @@ final actions = <Type, Action>{
   SetZOrderBottomIntent: SetZOrderBottomAction(),
   GlueSelectedVerticesIntent: GlueSelectedVerticesAction(),
   GroupSelectionIntent: GroupSelectionAction(),
+  SelectPreviousIntent: SelectPreviousAction(),
+  SelectNextIntent: SelectNextAction(),
+  SelectFirstChildIntent: SelectFirstChildAction(),
+  SelectParentIntent: SelectParentAction(),
+  ShowSelectionOnScreenIntent: ShowSelectionOnScreenAction(),
 };
 
 Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {

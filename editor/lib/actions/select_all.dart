@@ -10,8 +10,7 @@ final selectAllIntentDescriptor = CommandIntentDescriptor<SelectAllIntent>(
 );
 
 class SelectAllAction extends CommandAction<SelectAllIntent> with CanvasFocusAction {
-  @override
-  final descriptor = selectAllIntentDescriptor;
+  new() : super(selectAllIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, SelectAllIntent intent) {

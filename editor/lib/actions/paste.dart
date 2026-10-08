@@ -9,8 +9,7 @@ final pasteIntentDescriptor = CommandIntentDescriptor<PasteIntent>(
 );
 
 class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
-  @override
-  final descriptor = pasteIntentDescriptor;
+  new() : super(pasteIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, PasteIntent intent) async {

@@ -98,7 +98,7 @@ class _CursorToolOverlay extends HookWidget {
       child: Listener(
         behavior: .translucent,
         onPointerHover: (e) {
-          final result = editor.hitTest(e.position);
+          final result = editor.hitTest(e.position, onlyIfParentSelected: true);
           hoveredCell.value = result.top?.ref;
         },
         child: Stack(
@@ -110,7 +110,7 @@ class _CursorToolOverlay extends HookWidget {
             GestureDetector(
               behavior: .translucent,
               onDoubleTapDown: (details) {
-                final target = editor.hitTest(details.globalPosition).top;
+                final target = editor.hitTest(details.globalPosition, onlyIfParentSelected: true).top;
                 if (target != null) {
                   context.invoke(intents.selectRef(target.ref));
                   final statement = editor.statement(target.statementId);
@@ -130,7 +130,7 @@ class _CursorToolOverlay extends HookWidget {
                 shouldUpdateSelectionOnUp.value = true;
 
                 if (e is PointerDownEvent) {
-                  final target = editor.hitTest(e.position).top;
+                  final target = editor.hitTest(e.position, onlyIfParentSelected: true).top;
 
                   if (target != null) {
                     context.invoke(intents.selectRef(target.ref));
@@ -155,7 +155,7 @@ class _CursorToolOverlay extends HookWidget {
               childPaintTransform: info.childPaintTransform,
               snapToPixel: snapToPixel,
               onTapUp: (details) {
-                final target = editor.hitTest(details.globalPosition).top;
+                final target = editor.hitTest(details.globalPosition, onlyIfParentSelected: true).top;
 
                 if (target != null) {
                   context.invoke(intents.selectRef(target.ref));
@@ -173,7 +173,7 @@ class _CursorToolOverlay extends HookWidget {
 
                 shouldUpdateSelectionOnUp.value = true;
                 isSelectionMove.value = true;
-                return _move(selection.refs, clicked: editor.hitTest(e.position).top?.ref);
+                return _move(selection.refs, clicked: editor.hitTest(e.position, onlyIfParentSelected: true).top?.ref);
               },
             ),
             if (textEditOverlay.value != null)

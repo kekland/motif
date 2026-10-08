@@ -37,7 +37,9 @@ class CommandIntentDescriptor<I extends Intent> {
 }
 
 abstract class CommandAction<I extends Intent> extends ContextAction<I> {
-  CommandIntentDescriptor<I> get descriptor;
+  CommandAction(this.descriptor);
+
+  final CommandIntentDescriptor<I> descriptor;
 
   bool canInvoke(BuildContext context, I intent) => true;
   Object? performInvoke(BuildContext context, I intent);

@@ -17,23 +17,23 @@ class TreePanel extends HookWidget {
     final tree = useListenable(editor.scene.tree);
     final selection = useListenable(editor.selection);
     final listKey = useMemoized(() => GlobalKey());
-    final controller = useDisposable(() => SceneTreeController(editor, tree, selection, listKey));
+    final controller = useDisposable(() => SceneTreeController(editor, tree, selection, listKey, scrollController));
     useListenable(controller);
 
     void onTap(StatementId id) {
       if (context.keyboard.isCtrlPressed) {
         context.editor.selection.toggleStatement(id);
       } else if (context.keyboard.isShiftPressed) {
-        final flattened = tree.flattened;
-        final indices = selection.statements.map((s) => flattened.indexWhere((n) => n.id == s));
-        final rangeStart = indices.isNotEmpty ? indices.reduce(min) : 0;
-        final rangeEnd = indices.isNotEmpty ? indices.reduce(max) : 0;
-        final target = flattened.indexWhere((n) => n.id == id);
+        final selectionRange = tree.rangeOf(selection.statements);
+        final target = tree.indexOf(id);
 
-        if (target != -1) {
-          final range = (min(rangeStart, target), max(rangeEnd, target));
-          final statements = flattened.sublist(range.$1, range.$2 + 1).map((n) => n.id);
+        if (selectionRange != null && target != null) {
+          final (start, end) = selectionRange;
+          final range = (min(start, target), max(end, target));
+          final statements = tree.nodesInRange(range.$1, range.$2).map((n) => n.id);
           context.editor.selection.setStatements(statements);
+        } else {
+          context.editor.selection.setStatement(id);
         }
       } else {
         context.editor.selection.setStatement(id);
@@ -42,52 +42,49 @@ class TreePanel extends HookWidget {
 
     final nodes = controller.nodes;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
-          children: [
-            Scrollbar(
-              controller: scrollController,
-              child: ListView.builder(
-                key: listKey,
-                controller: scrollController,
-                itemCount: nodes.length,
-                findChildIndexCallback: (key) {
-                  final id = (key as ValueKey<StatementId>).value;
-                  return nodes.indexWhere((n) => n.statement.id == id);
-                },
-                itemBuilder: (context, index) {
-                  final node = nodes[index];
-                  final statement = node.statement;
-                  final isExpanded = controller.isExpanded(node.statement.id);
+    return Stack(
+      clipBehavior: .hardEdge,
+      children: [
+        Scrollbar(
+          controller: scrollController,
+          child: ListView.builder(
+            key: listKey,
+            controller: scrollController,
+            itemCount: nodes.length,
+            padding: const .only(bottom: 32.0),
+            findChildIndexCallback: (key) {
+              final id = (key as ValueKey<StatementId>).value;
+              return nodes.indexWhere((n) => n.statement.id == id);
+            },
+            itemBuilder: (context, index) {
+              final node = nodes[index];
+              final statement = node.statement;
+              final isExpanded = controller.isExpanded(node.statement.id);
 
-                  final id = statement.id;
-                  final isSelected = selection.statements.contains(id);
-                  final isImplicitlySelected = !isSelected && selection.isImplicitlySelected(id);
+              final id = statement.id;
+              final isSelected = selection.statements.contains(id);
+              final isImplicitlySelected = !isSelected && selection.isImplicitlySelected(id);
 
-                  return SceneNodeDraggable(
-                    id: id,
-                    controller: controller,
-                    child: _SceneNodeWidget(
-                      key: ValueKey(id),
-                      node: node,
-                      isExpanded: isExpanded,
-                      isSelected: isSelected,
-                      isImplicitlySelected: isImplicitlySelected,
-                      onTap: () => onTap(id),
-                      onToggleExpanded: () => controller.toggleExpanded(id),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: SceneTreeDragAnchorWidget(controller: controller),
-            ),
-          ],
-        );
-      },
+              return SceneNodeDraggable(
+                id: id,
+                controller: controller,
+                child: _SceneNodeWidget(
+                  key: ValueKey(id),
+                  node: node,
+                  isExpanded: isExpanded,
+                  isSelected: isSelected,
+                  isImplicitlySelected: isImplicitlySelected,
+                  onTap: () => onTap(id),
+                  onToggleExpanded: () => controller.toggleExpanded(id),
+                ),
+              );
+            },
+          ),
+        ),
+        Positioned.fill(
+          child: SceneTreeDragAnchorWidget(controller: controller),
+        ),
+      ],
     );
   }
 }

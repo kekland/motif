@@ -9,8 +9,7 @@ final glueSelectedVerticesIntentDescriptor = CommandIntentDescriptor<GlueSelecte
 );
 
 class GlueSelectedVerticesAction extends CommandAction<GlueSelectedVerticesIntent> with CanvasFocusAction {
-  @override
-  final descriptor = glueSelectedVerticesIntentDescriptor;
+  new() : super(glueSelectedVerticesIntentDescriptor);
 
   @override
   bool canInvoke(BuildContext context, GlueSelectedVerticesIntent intent) {

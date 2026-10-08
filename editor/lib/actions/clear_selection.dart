@@ -10,8 +10,7 @@ final clearSelectionIntentDescriptor = CommandIntentDescriptor<ClearSelectionInt
 );
 
 class ClearSelectionAction extends CommandAction<ClearSelectionIntent> with CanvasFocusAction {
-  @override
-  final descriptor = clearSelectionIntentDescriptor;
+  new() : super(clearSelectionIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, ClearSelectionIntent intent) {

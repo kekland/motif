@@ -15,20 +15,20 @@ sealed class SceneNode {
 
   List<CellRef> get cells;
 
-  List<SceneNode> get children => !isLeaf ? (_children ??= tree._build(this)) : const [];
-  List<SceneNode>? _children;
+  List<ObjectSceneNode> get children => !isLeaf ? (_children ??= tree._build(this)) : const [];
+  List<ObjectSceneNode>? _children;
 
-  int? get index => parent?._children?.indexOf(this);
+  int? get index => parent?._children?.indexOf(this as ObjectSceneNode);
 
   ObjectSceneNode? get siblingPrev {
     if (index == null) return null;
-    if (index! > 0) return parent!._children![index! - 1] as ObjectSceneNode;
+    if (index! > 0) return parent!._children![index! - 1];
     return null;
   }
 
   ObjectSceneNode? get siblingNext {
     if (index == null) return null;
-    if (index! < (parent!._children!.length - 1)) return parent!._children![index! + 1] as ObjectSceneNode;
+    if (index! < (parent!._children!.length - 1)) return parent!._children![index! + 1];
     return null;
   }
 }
@@ -75,22 +75,53 @@ final class SceneTree with ChangeNotifier {
 
   late final RootSceneNode root;
 
-  List<ObjectSceneNode> get flattened => _flattened ??= [..._walk(root)];
-  List<ObjectSceneNode>? _flattened;
+  List<ObjectSceneNode> get flattened {
+    if (_flattened == null) _computeFlattened();
+    return _flattened!;
+  }
 
-  Iterable<ObjectSceneNode> _walk(SceneNode node) sync* {
-    for (final child in node.children) {
-      if (child is! ObjectSceneNode) continue;
-      yield child;
-      yield* _walk(child);
+  List<ObjectSceneNode>? _flattened;
+  Map<StatementId, int>? _flattenedIndices;
+
+  int? indexOf(StatementId id) {
+    if (_flattenedIndices == null) _computeFlattened();
+    return _flattenedIndices?[id];
+  }
+
+  (int, int)? rangeOf(Iterable<StatementId> ids) {
+    final indices = ids.map(indexOf).whereType<int>().toList();
+    if (indices.isEmpty) return null;
+    final min = indices.reduce((a, b) => a < b ? a : b);
+    final max = indices.reduce((a, b) => a > b ? a : b);
+    return (min, max);
+  }
+
+  Iterable<ObjectSceneNode> nodesInRange(int start, int end) {
+    return flattened.skip(start).take(end - start + 1);
+  }
+
+  void _computeFlattened() {
+    final flattened = <ObjectSceneNode>[];
+    final indices = <StatementId, int>{};
+
+    void walk(SceneNode node) {
+      if (node is! ObjectSceneNode) return;
+      indices[node.id] = flattened.length;
+      flattened.add(node);
+
+      for (final child in node.children) walk(child);
     }
+
+    for (final child in root.children) walk(child);
+    _flattened = flattened;
+    _flattenedIndices = indices;
   }
 
   final _byFrame = <FrameRef, SceneNode>{};
   final _byId = <StatementId, ObjectSceneNode>{};
   ObjectSceneNode? nodeOf(StatementId id) => _byId[id];
 
-  List<SceneNode> _build(SceneNode parent) {
+  List<ObjectSceneNode> _build(SceneNode parent) {
     final frame = parent.frame!;
     final nodes = <StatementId, ObjectSceneNode>{};
     for (final handle in bundle.frameChildren(bundle.frame(frame)!)) {

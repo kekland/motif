@@ -3,44 +3,46 @@ import 'dart:math';
 
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tree_panel/tree_panel.dart';
+import 'package:flutter/gestures.dart';
 
 final class const SceneNodeDraggable({
   super.key,
   required final StatementId id,
   required final SceneTreeController controller,
   required final Widget child,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragStart: (details) => controller.onStartDrag(id, details),
-      onVerticalDragUpdate: controller.onUpdateDrag,
-      onVerticalDragEnd: controller.onEndDrag,
+    final keepAlive = useState(false);
+    useAutomaticKeepAlive(wantKeepAlive: keepAlive.value);
+
+    return RawGestureDetector(
+      gestures: {
+        VerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
+          () => .new(supportedDevices: {.mouse, .touch, .stylus, .invertedStylus}),
+          (instance) {
+            instance.onStart = (details) {
+              controller.onStartDrag(id, details);
+              keepAlive.value = true;
+            };
+            instance.onUpdate = (details) => controller.onUpdateDrag(details);
+            instance.onEnd = (details) {
+              controller.onEndDrag(details);
+              keepAlive.value = false;
+            };
+          },
+        ),
+      },
       child: child,
     );
   }
 }
 
-// final class const SceneNodeDrag({
-//   super.key,
-//   required final List<ObjectSceneNode> nodes,
-//   required final Set<StatementId> selection,
-//   required final Widget child,
-// }) extends StatefulWidget {
-//   @override
-//   State<SceneNodeDrag> createState() => SceneNodeDragState();
-// }
-
-// class SceneNodeDragState extends State<SceneNodeDrag> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return widget.child;
-//   }
-// }
-
 final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
-  SceneTreeController(this.editor, this.tree, this.selection, this.listKey) {
+  SceneTreeController(this.editor, this.tree, this.selection, this.listKey, this.scrollController) {
     $listen(tree, _recomputeTree);
+    $listen(selection, _onSelectionChanged);
+    _onSelectionChanged();
     _recomputeTree();
   }
 
@@ -48,8 +50,10 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
   final SceneTree tree;
   final SceneSelection selection;
   final GlobalKey listKey;
+  final ScrollController scrollController;
 
   RenderBox get listRenderBox => listKey.currentContext!.findRenderObject() as RenderBox;
+  ScrollableState get scrollable => scrollController.position.context as ScrollableState;
 
   var _expanded = <StatementId>{};
   set expanded(Set<StatementId> value) {
@@ -83,6 +87,40 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
 
     _recomputeTree();
     notifyListeners();
+  }
+
+  void _onSelectionChanged() {
+    final selected = selection.statements.toSet();
+    if (selected.isEmpty) return;
+
+    var changed = false;
+    for (final s in selected) {
+      var parent = tree.nodeOf(s)?.parent;
+      while (parent is ObjectSceneNode) {
+        final didChange = _expanded.add(parent.id);
+        if (didChange) changed = true;
+        parent = parent.parent;
+      }
+    }
+
+    if (changed) _recomputeTree();
+
+    final indices = selected.map(indexOf).toList();
+    final minIndex = indices.reduce(min);
+    final offset = minIndex * TreePanel.itemHeight;
+
+    final position = scrollController.position;
+
+    final viewportMin = position.extentBefore;
+    final viewportMax = position.extentBefore + position.extentInside;
+
+    if (offset < viewportMin || offset > viewportMax) {
+      scrollController.animateTo(
+        offset.clamp(position.minScrollExtent, position.maxScrollExtent),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _recomputeTree() {
@@ -186,10 +224,14 @@ final class const SceneTreeDragAnchorAfter(super.id) extends SceneTreeDragAnchor
 }
 
 final class SceneTreeDragController with ChangeNotifier, ChangeNotifierDisposable {
-  SceneTreeDragController(this.controller, this.selection);
+  SceneTreeDragController(this.controller, this.selection) {
+    controller.scrollController.addListener(_onScroll);
+    scroller = .new(controller.scrollable, velocityScalar: 80.0);
+  }
 
   final SceneTreeController controller;
   final Set<StatementId> selection;
+  late final EdgeDraggingAutoScroller scroller;
 
   Timer? _expandHoveredTimer;
   StatementId? _expandHoveredTimerId;
@@ -212,8 +254,26 @@ final class SceneTreeDragController with ChangeNotifier, ChangeNotifierDisposabl
     notifyListeners();
   }
 
-  void onUpdate(DragUpdateDetails details) {
-    final position = controller.listRenderBox.globalToLocal(details.globalPosition);
+  void _onScroll() {
+    onUpdate(null);
+  }
+
+  DragUpdateDetails? _lastDetails;
+  void onUpdate(DragUpdateDetails? _details) {
+    if (_details == null && _lastDetails == null) return;
+
+    final details = _details ?? _lastDetails!;
+    _lastDetails = details;
+
+    final scrollPosition = controller.scrollController.position.pixels;
+
+    var position = controller.listRenderBox.globalToLocal(details.globalPosition);
+    scroller.startAutoScrollIfNecessary(
+      .fromCircle(center: details.globalPosition, radius: TreePanel.itemHeight / 2.0),
+    );
+
+    position = position.translate(0, scrollPosition);
+
     var index = position.dy / TreePanel.itemHeight;
     final depth = max(0, (position.dx / TreePanel.depthPadding).round());
 
@@ -270,6 +330,13 @@ final class SceneTreeDragController with ChangeNotifier, ChangeNotifierDisposabl
 
   void onEnd(DragEndDetails details) {
     if (_anchor != null) controller.reorder(selection, _anchor!);
+    _lastDetails = null;
+  }
+
+  @override
+  void dispose() {
+    controller.scrollController.removeListener(_onScroll);
+    super.dispose();
   }
 }
 
@@ -297,7 +364,7 @@ final class SceneTreeDragAnchorPainter extends CustomPainter {
     required this.dragController,
     required this.primaryColor,
     required this.secondaryColor,
-  }) : super(repaint: dragController);
+  }) : super(repaint: .merge([dragController, dragController.controller.scrollController]));
 
   final SceneTreeDragController dragController;
   SceneTreeController get controller => dragController.controller;
@@ -309,6 +376,9 @@ final class SceneTreeDragAnchorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final anchor = dragController.anchor;
     if (anchor == null) return;
+
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    canvas.translate(0, -controller.scrollController.offset);
 
     final paint = Paint()
       ..color = primaryColor

@@ -30,7 +30,7 @@ part 'utils/covertices.dart';
 part 'utils/ticker_provider.dart';
 part 'utils/transient_transform_animator.dart';
 
-final _log = Logger('scene');
+final sceneLogger = Logger('scene');
 
 final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   new({
@@ -126,7 +126,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
       txn.commit(mergeKey: mergeKey);
       return result;
     } catch (e, st) {
-      _log.severe('scene edit error', e, st);
+      sceneLogger.severe('scene edit error', e, st);
       txn.cancel();
       rethrow;
     }

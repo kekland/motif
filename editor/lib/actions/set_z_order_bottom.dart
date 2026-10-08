@@ -10,8 +10,7 @@ final setZOrderBottomIntentDescriptor = CommandIntentDescriptor<SetZOrderBottomI
 );
 
 class SetZOrderBottomAction extends CommandAction<SetZOrderBottomIntent> with CanvasFocusAction {
-  @override
-  final descriptor = setZOrderBottomIntentDescriptor;
+  new() : super(setZOrderBottomIntentDescriptor);
 
   @override
   bool canInvoke(BuildContext context, SetZOrderBottomIntent intent) {

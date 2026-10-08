@@ -88,7 +88,10 @@ extension RouteReparent on Evaluation {
     }
 
     for (final m in members) {
+      final parent = statement<PlacedStatement>(m)?.parent?.ref.statementId;
+
       for (final d in dependenciesOf(m)) {
+        if (d == parent) continue;
         if (!members.contains(d)) placement = math.max(placement, indexOf(d)!);
       }
     }

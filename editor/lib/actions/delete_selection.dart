@@ -10,8 +10,7 @@ final deleteSelectionIntentDescriptor = CommandIntentDescriptor<DeleteSelectionI
 );
 
 class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> with CanvasFocusAction {
-  @override
-  final descriptor = deleteSelectionIntentDescriptor;
+  new() : super(deleteSelectionIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, DeleteSelectionIntent intent) {

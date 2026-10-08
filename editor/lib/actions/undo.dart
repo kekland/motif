@@ -9,8 +9,7 @@ final undoIntentDescriptor = CommandIntentDescriptor<UndoIntent>(
 );
 
 class UndoAction extends CommandAction<UndoIntent> with CanvasFocusAction {
-  @override
-  final descriptor = undoIntentDescriptor;
+  new() : super(undoIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, UndoIntent intent) {

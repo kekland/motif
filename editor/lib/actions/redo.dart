@@ -12,8 +12,7 @@ final redoIntentDescriptor = CommandIntentDescriptor<RedoIntent>(
 );
 
 class RedoAction extends CommandAction<RedoIntent> with CanvasFocusAction {
-  @override
-  final descriptor = redoIntentDescriptor;
+  new() : super(redoIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, RedoIntent intent) {

@@ -10,8 +10,7 @@ final groupSelectionIntentDescriptor = CommandIntentDescriptor<GroupSelectionInt
 );
 
 class GroupSelectionAction extends CommandAction<GroupSelectionIntent> with CanvasFocusAction {
-  @override
-  final descriptor = groupSelectionIntentDescriptor;
+  new() : super(groupSelectionIntentDescriptor);
 
   @override
   bool canInvoke(BuildContext context, GroupSelectionIntent intent) {

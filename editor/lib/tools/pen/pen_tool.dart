@@ -92,6 +92,7 @@ class _PenToolOverlay extends HookWidget {
             final result = editor.hitTest(
               e.position,
               covertexMode: transientEdge.value == null ? .all() : .none,
+              onlyIfParentSelected: false,
             );
 
             hoveredCell.value = result.top?.ref;

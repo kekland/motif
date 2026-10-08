@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/tab_bar.dart';
 import 'package:editor/widgets/tool/tool_options_panel.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/services.dart' hide AssetManifest, Clipboard;
 export 'widgets/editor_widget.dart';
 export 'editor_sync.dart';
 
+part 'editor/canvas.dart';
 part 'editor/clients.dart';
 part 'editor/globals.dart';
 part 'editor/hit_test.dart';
@@ -20,6 +24,8 @@ final class Editor extends Controller {
     required this.sync,
     required this.scene,
   }) : super(logger: logger) {
+    canvasUtils = .new(this);
+
     $effect(() {
       final tab = this.tab.value;
       if (panelsRootKey.currentState == null) return;
@@ -32,7 +38,6 @@ final class Editor extends Controller {
     });
 
     scene.prepare().then((_) => isLoaded.value = true);
-
     Clipboard.addCustomTypes(['motif.program-slice']);
   }
 
@@ -43,6 +48,7 @@ final class Editor extends Controller {
 
   final EditorSync sync;
   final Scene scene;
+  late final EditorCanvasUtils canvasUtils;
 
   Program get program => scene.program;
   Bundle get bundle => scene.bundle;
@@ -73,6 +79,9 @@ final class Editor extends Controller {
 
   final commanderRootKey = GlobalKey<CommanderRootState>();
   CommanderRootState get commander => commanderRootKey.currentState!;
+
+  final tickerProviderKey = GlobalKey<TickerProviderStateMixin>();
+  TickerProviderStateMixin get tickerProvider => tickerProviderKey.currentState!;
 
   late final toolOptionsWindow = WindowEntry(
     builder: (context) => ToolOptionsWindow(editor: this),

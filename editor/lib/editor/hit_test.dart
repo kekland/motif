@@ -1,23 +1,33 @@
 part of '../editor.dart';
 
 extension EditorHitTest on Editor {
-  SceneHitResult hitTest(Offset globalPosition, {HitTestCovertexMode? covertexMode}) {
+  SceneHitResult hitTest(
+    Offset globalPosition, {
+    HitTestCovertexMode? covertexMode,
+    bool onlyIfParentSelected = false,
+  }) {
     final transform = renderScene.getTransformTo(null);
     final scale = transform.getMaxScaleOnAxis2D();
     return scene.query.hitTest(
       globalToScene(globalPosition),
       tolerance: 8.0 / scale,
       covertexMode: covertexMode,
+      onlyIfParentSelected: onlyIfParentSelected,
     );
   }
 
-  SceneHitResult hitTestScene(Vec2 scenePosition, {HitTestCovertexMode? covertexMode}) {
+  SceneHitResult hitTestScene(
+    Vec2 scenePosition, {
+    HitTestCovertexMode? covertexMode,
+    bool onlyIfParentSelected = false,
+  }) {
     final transform = renderScene.getTransformTo(null);
     final scale = transform.getMaxScaleOnAxis2D();
     return scene.query.hitTest(
       scenePosition,
       tolerance: 8.0 / scale,
       covertexMode: covertexMode,
+      onlyIfParentSelected: onlyIfParentSelected,
     );
   }
 

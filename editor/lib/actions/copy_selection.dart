@@ -9,8 +9,7 @@ final copySelectionIntentDescriptor = CommandIntentDescriptor<CopySelectionInten
 );
 
 class CopySelectionAction extends CommandAction<CopySelectionIntent> with CanvasFocusAction {
-  @override
-  final descriptor = copySelectionIntentDescriptor;
+  new() : super(copySelectionIntentDescriptor);
 
   @override
   void performInvoke(BuildContext context, CopySelectionIntent intent) {

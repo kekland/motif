@@ -10,12 +10,14 @@ class InteractiveViewer2 extends StatefulWidget {
     required this.minScale,
     required this.maxScale,
     required this.builder,
+    this.onInteractionStart,
   });
 
   final TransformationController? controller;
   final double minScale;
   final double maxScale;
   final Widget Function(BuildContext context, Matrix4 transform) builder;
+  final VoidCallback? onInteractionStart;
 
   @override
   State<InteractiveViewer2> createState() => _InteractiveViewer2State();
@@ -31,6 +33,27 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
     currentTransform: () => _totalTransform,
     supportedDevices: {.trackpad, .touch, .mouse},
   );
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller?.addListener(_onControllerUpdate);
+  }
+
+  void _onControllerUpdate() {
+    if (_totalTransform != widget.controller!.value) {
+      _transform = widget.controller!.value;
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_onControllerUpdate);
+    _translationFlingAnimationController.dispose();
+    _scaleFlingAnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(covariant InteractiveViewer2 oldWidget) {
@@ -65,7 +88,7 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
   void _onGestureStart(TransformStartDetails details) {
     _translationFlingAnimationController.stop();
     _scaleFlingAnimationController.stop();
-
+    widget.onInteractionStart?.call();
     setState(() {});
   }
 
@@ -132,12 +155,6 @@ class _InteractiveViewer2State extends State<InteractiveViewer2> with TickerProv
 
     this.transform = transform * _transform;
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    _translationFlingAnimationController.dispose();
-    super.dispose();
   }
 
   @override

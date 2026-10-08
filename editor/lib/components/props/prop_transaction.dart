@@ -29,6 +29,7 @@ final class ScenePropTransaction extends PropTransaction {
 
   @override
   void onEndChanging() {
+    if (_txnCount == 0) return;
     _txnCount--;
 
     if (_txnCount == 0) {

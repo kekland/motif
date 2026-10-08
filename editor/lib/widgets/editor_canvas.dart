@@ -25,7 +25,8 @@ class EditorCanvas extends HookWidget {
         (context, transform) => EditorCanvasPeersWidget(transform: transform),
         (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
       ],
-      minScale: 1 / 128.0,
+      minScale: EditorCanvasUtils.minScale,
+      maxScale: EditorCanvasUtils.maxScale,
       child: SceneWidget(
         key: editor.sceneKey,
         scene: editor.scene,
@@ -40,18 +41,21 @@ class EditorCanvas extends HookWidget {
       ),
     );
 
-    return EditorActions(
-      child: EditorShortcuts(
-        child: ToolShortcuts(
-          controller: editor.tool,
-          canInvoke: (context) => editor.areCanvasActionsEnabled,
-          child: InheritedCallbackShortcuts(
-            child: CommanderRoot(
-              key: editor.commanderRootKey,
-              child: CanvasContextMenu(
-                child: InteractiveCanvasFocus(
-                  focusScopeNode: editor.canvasFocusScopeNode,
-                  child: child,
+    return EditorTickerProviderWidget(
+      key: editor.tickerProviderKey,
+      child: EditorActions(
+        child: EditorShortcuts(
+          child: ToolShortcuts(
+            controller: editor.tool,
+            canInvoke: (context) => editor.areCanvasActionsEnabled,
+            child: InheritedCallbackShortcuts(
+              child: CommanderRoot(
+                key: editor.commanderRootKey,
+                child: CanvasContextMenu(
+                  child: InteractiveCanvasFocus(
+                    focusScopeNode: editor.canvasFocusScopeNode,
+                    child: child,
+                  ),
                 ),
               ),
             ),
@@ -60,4 +64,17 @@ class EditorCanvas extends HookWidget {
       ),
     );
   }
+}
+
+final class const EditorTickerProviderWidget({
+  super.key,
+  required final Widget child,
+}) extends StatefulWidget {
+  @override
+  State<EditorTickerProviderWidget> createState() => EditorTickerProviderWidgetState();
+}
+
+class EditorTickerProviderWidgetState extends State<EditorTickerProviderWidget> with TickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

@@ -92,7 +92,7 @@ extension SceneHitTestQuery on SceneQuery {
     Vec2 p, {
     double tolerance = 0.0,
     HitTestCovertexMode? covertexMode,
-    bool onlyIfParentSelected = true,
+    bool onlyIfParentSelected = false,
   }) {
     final result = scene.bundle.query.hitTest(
       p,

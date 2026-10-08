@@ -8,6 +8,7 @@
 * Tooltip: display logic adjusted to account for nested tooltips. If the child is currently queued to be displayed, the parent will not be displayed.
 * Statements: added support for an optional name field
 * Tree panel: added support for multi-selection, toggle selection, collapsing, reordering
+* Actions: added tab and enter-based navigation
 
 # 0.1.5
 
