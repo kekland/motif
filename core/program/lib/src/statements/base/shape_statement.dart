@@ -19,6 +19,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
     FrameRef? parent,
     super.id,
     super.modifiers,
+    super.name,
   }) : size = size ?? .zero,
        transform = transform ?? .identity(),
        parent = .of(parent) {
@@ -77,6 +78,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
   ShapeStatement<S> copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     LayoutSize? size,
     Mat4? transform,
     VertexStyle? vertexStyle,

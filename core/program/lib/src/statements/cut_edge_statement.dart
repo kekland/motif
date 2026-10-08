@@ -6,6 +6,7 @@ final class CutEdgeStatement extends Statement {
     required this.t,
     super.id,
     super.modifiers,
+    super.name,
   }) : target = target.clone() {
     selectors = [this.target];
   }
@@ -26,12 +27,14 @@ final class CutEdgeStatement extends Statement {
   CutEdgeStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     EdgeSelector? target,
     double? t,
   }) => .new(
     target ?? this.target,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     t: t ?? this.t,
   );
 

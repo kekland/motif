@@ -8,6 +8,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
     Mat4? transform,
     super.id,
     super.modifiers,
+    super.name,
   }) : inputs = inputs.map((i) => i.clone()).toList(),
        parent = .of(parent),
        transform = transform?.copy() ?? .identity() {
@@ -67,6 +68,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   GeneratorStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     Generator? generator,
     List<FragmentSelector>? inputs,
     Mat4? transform,
@@ -74,6 +76,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   }) => .new(
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     generator: generator ?? this.generator,
     inputs: inputs ?? this.inputs,
     transform: transform ?? this.transform,

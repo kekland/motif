@@ -64,6 +64,15 @@ final class SceneSelection with ChangeNotifier {
     _onUpdated();
   }
 
+  void toggleStatement(StatementId id) {
+    if (_statementSources.contains(id)) {
+      _statementSources.remove(id);
+    } else {
+      _statementSources.add(id);
+    }
+    _onUpdated();
+  }
+
   void clear() {
     _clear();
     _onUpdated();
@@ -140,4 +149,13 @@ final class SceneSelection with ChangeNotifier {
   }
 
   int get stamp => _stamp;
+
+  bool isImplicitlySelected(StatementId id) {
+    if (_statements.contains(id)) return true;
+
+    final node = scene.tree.nodeOf(id);
+    final parent = node?.parent;
+    if (parent is ObjectSceneNode) return isImplicitlySelected(parent.id);
+    return false;
+  }
 }

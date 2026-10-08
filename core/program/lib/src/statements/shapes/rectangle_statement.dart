@@ -11,12 +11,14 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
     super.parent,
     super.id,
     super.modifiers,
+    super.name,
   });
 
   @override
   RectangleStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     LayoutSize? size,
     Mat4? transform,
     RectangleObjectShape? shape,
@@ -27,6 +29,7 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
   }) => .new(
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     size: size ?? this.size,
     transform: transform ?? this.transform,
     shape: shape ?? this.shape,

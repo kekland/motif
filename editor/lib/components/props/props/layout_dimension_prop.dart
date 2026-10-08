@@ -51,18 +51,21 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
       height: 24.0,
       children: [
         ToggleableButton(
+          tooltip: .new('Fixed size'),
           isActive: type == .fixed,
           onChanged: (v) => prop.set(txn, .fixed(value() ?? 0.0)),
           iconSize: 16.0,
           child: type == .fixed ? Icons.layoutSizeFixed() : Icons.layoutSizeNonFixed(),
         ),
         ToggleableButton(
+          tooltip: .new('Fit own size'),
           isActive: type == .contain,
           onChanged: (v) => prop.set(txn, .contain()),
           iconSize: 16.0,
           child: RotatedBox(quarterTurns: iconTurns + 1, child: Icons.layoutSizeContain()),
         ),
         ToggleableButton(
+          tooltip: .new('Expand to fill'),
           isActive: type == .expand,
           onChanged: (v) => prop.set(txn, .expand()),
           iconSize: 16.0,

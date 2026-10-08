@@ -27,6 +27,9 @@ def exec_cmd(cmd, cwd=None):
     raise
 
 exec_cmd(f'protoc --dart_out="{out}" --proto_path={proto_path} {" ".join(str(p) for p in protos)}')
+print(f'Protos generated:')
+for p in protos:
+  print(f'  {p}')
 
 
 # exec_cmd(f'protoc --dart_out="grpc:{out}" --proto_path={proto_path} program.proto server.proto')

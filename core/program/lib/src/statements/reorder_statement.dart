@@ -8,6 +8,7 @@ final class ReorderStatement extends Statement {
     CellSelector? sibling,
     super.id,
     super.modifiers,
+    super.name,
   }) : target = target.clone(),
        sibling = sibling?.clone() {
     selectors = [this.target, ?this.sibling];
@@ -49,16 +50,18 @@ final class ReorderStatement extends Statement {
   ReorderStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     CellSelector? target,
     int? rank,
     ZPlacement? placement,
     CellSelector? sibling,
   }) => .new(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    modifiers: modifiers ?? this.modifiers,
     target ?? this.target,
     placement: placement ?? this.placement,
     rank: rank ?? this.rank,
     sibling: sibling ?? this.sibling,
-    id: id ?? this.id,
-    modifiers: modifiers ?? this.modifiers,
   );
 }

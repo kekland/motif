@@ -90,6 +90,7 @@ class AppState extends State<App> {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           showPerformanceOverlay: false,
+          // showPerformanceOverlay: true,
           theme: materialTheme,
           home: Scaffold(
             child: TooltipManager(

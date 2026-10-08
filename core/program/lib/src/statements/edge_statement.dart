@@ -9,6 +9,7 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
     this.style = .default_,
     super.id,
     super.modifiers,
+    super.name,
     FrameRef? parent,
   }) : start = start.clone(),
        end = end.clone(),
@@ -49,6 +50,7 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
   EdgeStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     VertexSelector? start,
     VertexSelector? end,
     Vec2? startTangent,
@@ -63,6 +65,7 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
     style: style ?? this.style,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     parent: parent ?? this.parent?.ref,
   );
 

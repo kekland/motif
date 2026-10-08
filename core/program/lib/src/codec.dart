@@ -472,12 +472,14 @@ final _vertexStatementCodec = $codec<VertexStatement, gen.Statement>(
     v.vertex.position.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     style: v.vertex.style.decode(),
     parent: $opt(v.vertex.hasParent, () => v.vertex.parent.decode()),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     vertex: .new(
       position: v.position.encode(),
       style: v.style.encode(),
@@ -492,6 +494,7 @@ final _edgeStatementCodec = $codec<EdgeStatement, gen.Statement>(
     v.edge.end.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     startTangent: $opt(v.edge.hasStartTangent, () => v.edge.startTangent.decode()),
     endTangent: $opt(v.edge.hasEndTangent, () => v.edge.endTangent.decode()),
     style: v.edge.style.decode(),
@@ -500,6 +503,7 @@ final _edgeStatementCodec = $codec<EdgeStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     edge: .new(
       start: v.start.encode(),
       end: v.end.encode(),
@@ -516,6 +520,7 @@ final _faceStatementCodec = $codec<FaceStatement, gen.Statement>(
     v.face.outer.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     style: v.face.style.decode(),
     holes: $map(v.face.holes, (v) => v.decode()),
     parent: $opt(v.face.hasParent, () => v.face.parent.decode()),
@@ -523,6 +528,7 @@ final _faceStatementCodec = $codec<FaceStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     face: .new(
       outer: v.outer.encode(),
       style: v.style.encode(),
@@ -537,11 +543,13 @@ final _cutEdgeStatementCodec = $codec<CutEdgeStatement, gen.Statement>(
     v.cutEdge.target.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     t: v.cutEdge.t,
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     cutEdge: .new(
       target: v.target.encode(),
       t: v.t,
@@ -554,12 +562,14 @@ final _filletFaceStatementCodec = $codec<FilletFaceStatement, gen.Statement>(
     v.filletFace.face.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     corners: .fromEntries($map(v.filletFace.corners, (v) => .new(v.index, v.radius.decode()))),
     radius: $opt(v.filletFace.hasRadius, () => v.filletFace.radius.decode()),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     filletFace: .new(
       face: v.face.encode(),
       corners: $map(v.corners.entries, (e) => .new(index: e.key, radius: e.value.encode())),
@@ -589,10 +599,12 @@ final _glueVerticesStatementCodec = $codec<GlueVerticesStatement, gen.Statement>
     position: v.glueVertices.position.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     glueVertices: .new(
       vertices: v.vertices.map((v) => v.encode()).toList(),
       position: v.position.encode(),
@@ -604,6 +616,7 @@ final _rectangleStatementCodec = $codec<RectangleStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     transform: $opt(v.rectangle.hasTransform, () => v.rectangle.transform.decode()),
     vertexStyle: v.rectangle.vertexStyle.decode(),
     edgeStyle: v.rectangle.edgeStyle.decode(),
@@ -615,6 +628,7 @@ final _rectangleStatementCodec = $codec<RectangleStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     rectangle: .new(
       transform: v.transform?.encode(),
       vertexStyle: v.vertexStyle.encode(),
@@ -631,6 +645,7 @@ final _polygonStatementCodec = $codec<PolygonStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     transform: $opt(v.polygon.hasTransform, () => v.polygon.transform.decode()),
     vertexStyle: v.polygon.vertexStyle.decode(),
     edgeStyle: v.polygon.edgeStyle.decode(),
@@ -642,6 +657,7 @@ final _polygonStatementCodec = $codec<PolygonStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     polygon: .new(
       transform: v.transform?.encode(),
       vertexStyle: v.vertexStyle.encode(),
@@ -658,6 +674,7 @@ final _ellipseStatementCodec = $codec<EllipseStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     transform: $opt(v.ellipse.hasTransform, () => v.ellipse.transform.decode()),
     vertexStyle: v.ellipse.vertexStyle.decode(),
     edgeStyle: v.ellipse.edgeStyle.decode(),
@@ -669,6 +686,7 @@ final _ellipseStatementCodec = $codec<EllipseStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     ellipse: .new(
       transform: v.transform?.encode(),
       vertexStyle: v.vertexStyle.encode(),
@@ -685,6 +703,7 @@ final _containerStatementCodec = $codec<ContainerStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     transform: $opt(v.container.hasTransform, () => v.container.transform.decode()),
     layout: v.container.layout.decode(),
     size: v.container.size.decode(),
@@ -697,6 +716,7 @@ final _containerStatementCodec = $codec<ContainerStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     container: .new(
       transform: v.transform?.encode(),
       layout: v.layout.encode(),
@@ -714,11 +734,13 @@ final _groupStatementCodec = $codec<GroupStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     parent: $opt(v.group.hasParent, () => v.group.parent.decode()),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     group: .new(
       parent: v.parent?.ref.encode(),
     ),
@@ -730,11 +752,13 @@ final _multiCutEdgeStatementCodec = $codec<MultiCutEdgeStatement, gen.Statement>
     v.multiCutEdge.target.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     ts: v.multiCutEdge.ts.toList(),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     multiCutEdge: .new(
       target: v.target.encode(),
       ts: v.ts,
@@ -746,6 +770,7 @@ final _generatorStatementCodec = $codec<GeneratorStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     generator: v.generator.generator.decode(),
     inputs: $map(v.generator.inputs, (e) => e.decode()),
     parent: $opt(v.generator.hasParent, () => v.generator.parent.decode()),
@@ -754,6 +779,7 @@ final _generatorStatementCodec = $codec<GeneratorStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     generator: .new(
       generator: v.generator.encode(),
       inputs: $map(v.inputs, (e) => e.encode()),
@@ -767,6 +793,7 @@ final _textStatementCodec = $codec<TextStatement, gen.Statement>(
   decoder: (v) => .new(
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     text: v.text.text,
     size: v.text.size.decode(),
     transform: v.text.transform.decode(),
@@ -780,6 +807,7 @@ final _textStatementCodec = $codec<TextStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     text: .new(
       text: v.text,
       size: v.size.encode(),
@@ -799,6 +827,7 @@ final _reorderStatementCodec = $codec<ReorderStatement, gen.Statement>(
     v.reorder.target.decode(),
     id: v.id.decode(),
     modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
     placement: v.reorder.placement.decode(),
     rank: $opt(v.reorder.hasRank, () => v.reorder.rank),
     sibling: $opt(v.reorder.hasSibling, () => v.reorder.sibling.decode()),
@@ -806,6 +835,7 @@ final _reorderStatementCodec = $codec<ReorderStatement, gen.Statement>(
   encoder: (v) => .new(
     id: v.id.encode(),
     modifiers: v.modifiers.encode(),
+    name: v.name,
     reorder: .new(
       target: v.target.encode(),
       placement: v.placement.encode(),

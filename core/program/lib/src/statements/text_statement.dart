@@ -20,6 +20,7 @@ final class TextStatement extends Statement
     FrameRef? parent,
     super.id,
     super.modifiers,
+    super.name,
   }) : size = size ?? .zero,
        transform = transform ?? .identity(),
        parent = .of(parent) {
@@ -77,6 +78,7 @@ final class TextStatement extends Statement
   TextStatement copyWith({
     StatementId? id,
     List<Modifier<Statement>>? modifiers,
+    String? name,
     LayoutSize? size,
     Mat4? transform,
     FrameRef? parent,
@@ -89,6 +91,7 @@ final class TextStatement extends Statement
   }) => .new(
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     size: size ?? this.size,
     transform: transform ?? this.transform,
     parent: parent ?? this.parent?.ref,

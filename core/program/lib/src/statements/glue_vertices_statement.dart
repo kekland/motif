@@ -6,6 +6,7 @@ final class GlueVerticesStatement extends Statement {
     this.position = .centroid,
     super.id,
     super.modifiers,
+    super.name,
   }) : vertices = vertices.map((v) => v.clone()).toList() {
     selectors = [...this.vertices];
   }
@@ -25,6 +26,7 @@ final class GlueVerticesStatement extends Statement {
   GlueVerticesStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     List<VertexSelector>? vertices,
     GlueVerticesPosition? position,
   }) => .new(
@@ -32,6 +34,7 @@ final class GlueVerticesStatement extends Statement {
     position: position ?? this.position,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
   );
 
   @override

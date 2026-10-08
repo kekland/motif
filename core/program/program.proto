@@ -23,6 +23,7 @@ message ProgramSlice {
 message Statement {
   StatementId       id        = 1;
   repeated Modifier modifiers = 2;
+  optional string   name      = 3;
 
   oneof value {
     VertexStatement       vertex         = 10;

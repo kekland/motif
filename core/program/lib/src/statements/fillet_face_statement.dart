@@ -7,6 +7,7 @@ final class FilletFaceStatement extends Statement {
     this.radius,
     super.id,
     super.modifiers,
+    super.name,
   }) : face = face.clone() {
     selectors = [this.face];
   }
@@ -28,6 +29,7 @@ final class FilletFaceStatement extends Statement {
   FilletFaceStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     FaceSelector? face,
     Map<int, CornerRadius>? corners,
     CornerRadius? radius,
@@ -37,6 +39,7 @@ final class FilletFaceStatement extends Statement {
     radius: radius ?? this.radius,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
   );
 
   @override

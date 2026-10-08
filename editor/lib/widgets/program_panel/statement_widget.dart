@@ -7,8 +7,8 @@ class const StatementWidget({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final name = statement.name(context);
-    final icon = statement.icon(context);
+    final name = statement.resolveName(context);
+    final icon = statement.resolveIcon(context);
 
     return ListItem(
       onTap: () {

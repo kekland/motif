@@ -201,6 +201,7 @@ class Statement extends $pb.GeneratedMessage {
   factory Statement({
     StatementId? id,
     $core.Iterable<Modifier>? modifiers,
+    $core.String? name,
     VertexStatement? vertex,
     EdgeStatement? edge,
     FaceStatement? face,
@@ -220,6 +221,7 @@ class Statement extends $pb.GeneratedMessage {
     final result = create();
     if (id != null) result.id = id;
     if (modifiers != null) result.modifiers.addAll(modifiers);
+    if (name != null) result.name = name;
     if (vertex != null) result.vertex = vertex;
     if (edge != null) result.edge = edge;
     if (face != null) result.face = face;
@@ -274,6 +276,7 @@ class Statement extends $pb.GeneratedMessage {
         subBuilder: StatementId.create)
     ..pPM<Modifier>(2, _omitFieldNames ? '' : 'modifiers',
         subBuilder: Modifier.create)
+    ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOM<VertexStatement>(10, _omitFieldNames ? '' : 'vertex',
         subBuilder: VertexStatement.create)
     ..aOM<EdgeStatement>(11, _omitFieldNames ? '' : 'edge',
@@ -371,170 +374,179 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $pb.PbList<Modifier> get modifiers => $_getList(1);
 
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
+
   @$pb.TagNumber(10)
-  VertexStatement get vertex => $_getN(2);
+  VertexStatement get vertex => $_getN(3);
   @$pb.TagNumber(10)
   set vertex(VertexStatement value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasVertex() => $_has(2);
+  $core.bool hasVertex() => $_has(3);
   @$pb.TagNumber(10)
   void clearVertex() => $_clearField(10);
   @$pb.TagNumber(10)
-  VertexStatement ensureVertex() => $_ensure(2);
+  VertexStatement ensureVertex() => $_ensure(3);
 
   @$pb.TagNumber(11)
-  EdgeStatement get edge => $_getN(3);
+  EdgeStatement get edge => $_getN(4);
   @$pb.TagNumber(11)
   set edge(EdgeStatement value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasEdge() => $_has(3);
+  $core.bool hasEdge() => $_has(4);
   @$pb.TagNumber(11)
   void clearEdge() => $_clearField(11);
   @$pb.TagNumber(11)
-  EdgeStatement ensureEdge() => $_ensure(3);
+  EdgeStatement ensureEdge() => $_ensure(4);
 
   @$pb.TagNumber(12)
-  FaceStatement get face => $_getN(4);
+  FaceStatement get face => $_getN(5);
   @$pb.TagNumber(12)
   set face(FaceStatement value) => $_setField(12, value);
   @$pb.TagNumber(12)
-  $core.bool hasFace() => $_has(4);
+  $core.bool hasFace() => $_has(5);
   @$pb.TagNumber(12)
   void clearFace() => $_clearField(12);
   @$pb.TagNumber(12)
-  FaceStatement ensureFace() => $_ensure(4);
+  FaceStatement ensureFace() => $_ensure(5);
 
   @$pb.TagNumber(13)
-  CutEdgeStatement get cutEdge => $_getN(5);
+  CutEdgeStatement get cutEdge => $_getN(6);
   @$pb.TagNumber(13)
   set cutEdge(CutEdgeStatement value) => $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasCutEdge() => $_has(5);
+  $core.bool hasCutEdge() => $_has(6);
   @$pb.TagNumber(13)
   void clearCutEdge() => $_clearField(13);
   @$pb.TagNumber(13)
-  CutEdgeStatement ensureCutEdge() => $_ensure(5);
+  CutEdgeStatement ensureCutEdge() => $_ensure(6);
 
   @$pb.TagNumber(14)
-  MultiCutEdgeStatement get multiCutEdge => $_getN(6);
+  MultiCutEdgeStatement get multiCutEdge => $_getN(7);
   @$pb.TagNumber(14)
   set multiCutEdge(MultiCutEdgeStatement value) => $_setField(14, value);
   @$pb.TagNumber(14)
-  $core.bool hasMultiCutEdge() => $_has(6);
+  $core.bool hasMultiCutEdge() => $_has(7);
   @$pb.TagNumber(14)
   void clearMultiCutEdge() => $_clearField(14);
   @$pb.TagNumber(14)
-  MultiCutEdgeStatement ensureMultiCutEdge() => $_ensure(6);
+  MultiCutEdgeStatement ensureMultiCutEdge() => $_ensure(7);
 
   @$pb.TagNumber(15)
-  FilletFaceStatement get filletFace => $_getN(7);
+  FilletFaceStatement get filletFace => $_getN(8);
   @$pb.TagNumber(15)
   set filletFace(FilletFaceStatement value) => $_setField(15, value);
   @$pb.TagNumber(15)
-  $core.bool hasFilletFace() => $_has(7);
+  $core.bool hasFilletFace() => $_has(8);
   @$pb.TagNumber(15)
   void clearFilletFace() => $_clearField(15);
   @$pb.TagNumber(15)
-  FilletFaceStatement ensureFilletFace() => $_ensure(7);
+  FilletFaceStatement ensureFilletFace() => $_ensure(8);
 
   @$pb.TagNumber(16)
-  GlueVerticesStatement get glueVertices => $_getN(8);
+  GlueVerticesStatement get glueVertices => $_getN(9);
   @$pb.TagNumber(16)
   set glueVertices(GlueVerticesStatement value) => $_setField(16, value);
   @$pb.TagNumber(16)
-  $core.bool hasGlueVertices() => $_has(8);
+  $core.bool hasGlueVertices() => $_has(9);
   @$pb.TagNumber(16)
   void clearGlueVertices() => $_clearField(16);
   @$pb.TagNumber(16)
-  GlueVerticesStatement ensureGlueVertices() => $_ensure(8);
+  GlueVerticesStatement ensureGlueVertices() => $_ensure(9);
 
   @$pb.TagNumber(17)
-  RectangleStatement get rectangle => $_getN(9);
+  RectangleStatement get rectangle => $_getN(10);
   @$pb.TagNumber(17)
   set rectangle(RectangleStatement value) => $_setField(17, value);
   @$pb.TagNumber(17)
-  $core.bool hasRectangle() => $_has(9);
+  $core.bool hasRectangle() => $_has(10);
   @$pb.TagNumber(17)
   void clearRectangle() => $_clearField(17);
   @$pb.TagNumber(17)
-  RectangleStatement ensureRectangle() => $_ensure(9);
+  RectangleStatement ensureRectangle() => $_ensure(10);
 
   @$pb.TagNumber(18)
-  PolygonStatement get polygon => $_getN(10);
+  PolygonStatement get polygon => $_getN(11);
   @$pb.TagNumber(18)
   set polygon(PolygonStatement value) => $_setField(18, value);
   @$pb.TagNumber(18)
-  $core.bool hasPolygon() => $_has(10);
+  $core.bool hasPolygon() => $_has(11);
   @$pb.TagNumber(18)
   void clearPolygon() => $_clearField(18);
   @$pb.TagNumber(18)
-  PolygonStatement ensurePolygon() => $_ensure(10);
+  PolygonStatement ensurePolygon() => $_ensure(11);
 
   @$pb.TagNumber(19)
-  EllipseStatement get ellipse => $_getN(11);
+  EllipseStatement get ellipse => $_getN(12);
   @$pb.TagNumber(19)
   set ellipse(EllipseStatement value) => $_setField(19, value);
   @$pb.TagNumber(19)
-  $core.bool hasEllipse() => $_has(11);
+  $core.bool hasEllipse() => $_has(12);
   @$pb.TagNumber(19)
   void clearEllipse() => $_clearField(19);
   @$pb.TagNumber(19)
-  EllipseStatement ensureEllipse() => $_ensure(11);
+  EllipseStatement ensureEllipse() => $_ensure(12);
 
   @$pb.TagNumber(20)
-  ContainerStatement get container => $_getN(12);
+  ContainerStatement get container => $_getN(13);
   @$pb.TagNumber(20)
   set container(ContainerStatement value) => $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasContainer() => $_has(12);
+  $core.bool hasContainer() => $_has(13);
   @$pb.TagNumber(20)
   void clearContainer() => $_clearField(20);
   @$pb.TagNumber(20)
-  ContainerStatement ensureContainer() => $_ensure(12);
+  ContainerStatement ensureContainer() => $_ensure(13);
 
   @$pb.TagNumber(21)
-  GroupStatement get group => $_getN(13);
+  GroupStatement get group => $_getN(14);
   @$pb.TagNumber(21)
   set group(GroupStatement value) => $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasGroup() => $_has(13);
+  $core.bool hasGroup() => $_has(14);
   @$pb.TagNumber(21)
   void clearGroup() => $_clearField(21);
   @$pb.TagNumber(21)
-  GroupStatement ensureGroup() => $_ensure(13);
+  GroupStatement ensureGroup() => $_ensure(14);
 
   @$pb.TagNumber(22)
-  GeneratorStatement get generator => $_getN(14);
+  GeneratorStatement get generator => $_getN(15);
   @$pb.TagNumber(22)
   set generator(GeneratorStatement value) => $_setField(22, value);
   @$pb.TagNumber(22)
-  $core.bool hasGenerator() => $_has(14);
+  $core.bool hasGenerator() => $_has(15);
   @$pb.TagNumber(22)
   void clearGenerator() => $_clearField(22);
   @$pb.TagNumber(22)
-  GeneratorStatement ensureGenerator() => $_ensure(14);
+  GeneratorStatement ensureGenerator() => $_ensure(15);
 
   @$pb.TagNumber(23)
-  TextStatement get text => $_getN(15);
+  TextStatement get text => $_getN(16);
   @$pb.TagNumber(23)
   set text(TextStatement value) => $_setField(23, value);
   @$pb.TagNumber(23)
-  $core.bool hasText() => $_has(15);
+  $core.bool hasText() => $_has(16);
   @$pb.TagNumber(23)
   void clearText() => $_clearField(23);
   @$pb.TagNumber(23)
-  TextStatement ensureText() => $_ensure(15);
+  TextStatement ensureText() => $_ensure(16);
 
   @$pb.TagNumber(24)
-  ReorderStatement get reorder => $_getN(16);
+  ReorderStatement get reorder => $_getN(17);
   @$pb.TagNumber(24)
   set reorder(ReorderStatement value) => $_setField(24, value);
   @$pb.TagNumber(24)
-  $core.bool hasReorder() => $_has(16);
+  $core.bool hasReorder() => $_has(17);
   @$pb.TagNumber(24)
   void clearReorder() => $_clearField(24);
   @$pb.TagNumber(24)
-  ReorderStatement ensureReorder() => $_ensure(16);
+  ReorderStatement ensureReorder() => $_ensure(17);
 }
 
 class U64 extends $pb.GeneratedMessage {

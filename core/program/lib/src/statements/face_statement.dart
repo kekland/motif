@@ -7,6 +7,7 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
     this.style = .default_,
     super.id,
     super.modifiers,
+    super.name,
     FrameRef? parent,
   }) : outer = outer.clone(),
        holes = holes.map((h) => h.clone()).toList(),
@@ -41,6 +42,7 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
   FaceStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     ChainSelector? outer,
     List<ChainSelector>? holes,
     FaceStyle? style,
@@ -51,6 +53,7 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
     style: style ?? this.style,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     parent: parent ?? this.parent?.ref,
   );
 

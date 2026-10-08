@@ -1,32 +1,36 @@
 import 'package:editor/imports.dart';
 
 extension StatementUtils on Statement {
-  String name(BuildContext context) => switch (this) {
-    VertexStatement() => 'Vertex',
-    EdgeStatement() => 'Edge',
-    FaceStatement() => 'Face',
-    ContainerStatement() => 'Container',
-    RectangleStatement() => 'Rectangle',
-    EllipseStatement() => 'Ellipse',
-    PolygonStatement() => 'Polygon',
-    CutEdgeStatement() => 'Cut edge',
-    MultiCutEdgeStatement() => 'Multi-cut edge',
-    GlueVerticesStatement() => 'Glue vertices',
-    FilletFaceStatement() => 'Fillet face',
-    GeneratorStatement() => 'Generator',
-    GroupStatement() => 'Group',
-    TextStatement() => 'Text',
-    ReorderStatement() => 'Reorder',
-    GeneratingStatement() => unreachable(),
-    PlacedStatement() => unreachable(),
-    FacedStatement() => unreachable(),
-    FramedStatement() => unreachable(),
-    VertexStyledStatement() => unreachable(),
-    EdgeStyledStatement() => unreachable(),
-    FaceStyledStatement() => unreachable(),
-  };
+  String resolveName(BuildContext context) {
+    if (name != null) return name!;
 
-  Widget icon(BuildContext context) => switch (this) {
+    return switch (this) {
+      VertexStatement() => 'Vertex',
+      EdgeStatement() => 'Edge',
+      FaceStatement() => 'Face',
+      ContainerStatement() => 'Container',
+      RectangleStatement() => 'Rectangle',
+      EllipseStatement() => 'Ellipse',
+      PolygonStatement() => 'Polygon',
+      CutEdgeStatement() => 'Cut edge',
+      MultiCutEdgeStatement() => 'Multi-cut edge',
+      GlueVerticesStatement() => 'Glue vertices',
+      FilletFaceStatement() => 'Fillet face',
+      GeneratorStatement() => 'Generator',
+      GroupStatement() => 'Group',
+      TextStatement() => 'Text',
+      ReorderStatement() => 'Reorder',
+      GeneratingStatement() => unreachable(),
+      PlacedStatement() => unreachable(),
+      FacedStatement() => unreachable(),
+      FramedStatement() => unreachable(),
+      VertexStyledStatement() => unreachable(),
+      EdgeStyledStatement() => unreachable(),
+      FaceStyledStatement() => unreachable(),
+    };
+  }
+
+  Widget resolveIcon(BuildContext context) => switch (this) {
     VertexStatement() => Icons.vertex(),
     EdgeStatement() => Icons.edge(),
     FaceStatement() => Icons.face(),

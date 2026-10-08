@@ -5,6 +5,9 @@
 * Prop widgets: adjusted spacing, padding, etc.
 * Cell handles: fixed incorrect frame bbox transformation
 * Tool options: edge/face styles now automatically resolve the fill/stroke color based on the color of the tap position, unless the color is set manually.
+* Tooltip: display logic adjusted to account for nested tooltips. If the child is currently queued to be displayed, the parent will not be displayed.
+* Statements: added support for an optional name field
+* Tree panel: added support for multi-selection, toggle selection, collapsing, reordering
 
 # 0.1.5
 

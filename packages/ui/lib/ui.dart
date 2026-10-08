@@ -32,7 +32,8 @@ export 'package:flutter/material.dart'
         ValueNotifier,
         VoidCallback,
         Tooltip,
-        Decoration;
+        Decoration,
+        TooltipState;
 
 export 'package:state/state.dart';
 

@@ -12,17 +12,20 @@ sealed class Statement {
   Statement({
     StatementId? id,
     this.modifiers = const [],
+    this.name,
   }) : id = id ?? .allocate();
 
   final StatementId id;
   final List<Modifier> modifiers;
   late final List<Selector> selectors;
+  final String? name;
 
   Iterable<Op> execute(EvalContext context);
 
   Statement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
   });
 
   /// Tries to apply a given [remap] to the statement and its selectors. Returns `null` if the remap is refused.

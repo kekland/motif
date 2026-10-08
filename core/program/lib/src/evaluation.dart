@@ -5,7 +5,7 @@ part of '_program.dart';
 /// Holds the live [Bundle], indexes for statements, and other runtime information.
 final class Evaluation {
   Evaluation(this.program, {this.assetCache}) {
-    bundle = .new();
+    bundle = .new(order: cellEvalOrder);
     graph = .new(this);
     lineage = .new(this);
     live = .new(this);
@@ -58,6 +58,9 @@ final class Evaluation {
 
   /// Resolves the evaluation order between two statements.
   int evalOrder(StatementId a, StatementId b) => tree.order(tree[a]!, tree[b]!);
+
+  /// Resolves the evaluation order between two cells.
+  int cellEvalOrder(CellRef a, CellRef b) => evalOrder(a.statementId, b.statementId);
 
   /// Returns the products (added cells) of the statement and its subtree.
   Iterable<CellRef> productsOf(StatementId id) => switch (tree[id]) {

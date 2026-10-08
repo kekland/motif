@@ -6,6 +6,7 @@ final class MultiCutEdgeStatement extends Statement {
     required this.ts,
     super.id,
     super.modifiers,
+    super.name,
   }) : target = target.clone() {
     selectors = [this.target];
   }
@@ -28,12 +29,14 @@ final class MultiCutEdgeStatement extends Statement {
   MultiCutEdgeStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     EdgeSelector? target,
     List<double>? ts,
   }) => .new(
-    target ?? this.target,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
+    target ?? this.target,
     ts: ts ?? this.ts,
   );
 

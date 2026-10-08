@@ -6,6 +6,7 @@ final class VertexStatement extends Statement with VertexStyledStatement, Placed
     this.style = .default_,
     super.id,
     super.modifiers,
+    super.name,
     FrameRef? parent,
   }) : parent = .of(parent) {
     selectors = [?this.parent];
@@ -35,14 +36,16 @@ final class VertexStatement extends Statement with VertexStyledStatement, Placed
   VertexStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     Vec2? position,
     VertexStyle? style,
     FrameRef? parent,
   }) => .new(
-    position ?? this.position,
-    style: style ?? this.style,
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
+    position ?? this.position,
+    style: style ?? this.style,
     parent: parent ?? this.parent?.ref,
   );
 

@@ -12,6 +12,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
     super.parent,
     super.id,
     super.modifiers,
+    super.name,
   });
 
   @override
@@ -24,6 +25,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
   ContainerStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     Layout? layout,
     LayoutSize? size,
     Mat4? transform,
@@ -35,6 +37,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
   }) => .new(
     id: id ?? this.id,
     modifiers: modifiers ?? this.modifiers,
+    name: name ?? this.name,
     layout: layout ?? this.layout,
     size: size ?? this.size,
     transform: transform ?? this.transform,

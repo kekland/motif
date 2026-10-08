@@ -4,6 +4,7 @@ final class GroupStatement extends Statement with PlacedStatement, FramedStateme
   GroupStatement({
     super.id,
     super.modifiers,
+    super.name,
     FrameRef? parent,
   }) : parent = .of(parent) {
     selectors = [?this.parent];
@@ -31,11 +32,13 @@ final class GroupStatement extends Statement with PlacedStatement, FramedStateme
   GroupStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     FrameRef? parent,
   }) {
     return GroupStatement(
       id: id ?? this.id,
       modifiers: modifiers ?? this.modifiers,
+      name: name ?? this.name,
       parent: parent ?? this.parent?.ref,
     );
   }

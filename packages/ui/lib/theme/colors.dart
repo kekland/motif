@@ -66,6 +66,12 @@ Color _mixColor(Color background, Color foreground, double opacity) => Color.ler
       tint: scheme.surfaceTint,
       divider: divider,
     ),
+    tertiary: .new(
+      background: _mixColor(scheme.surfaceContainer, scheme.primary, secondaryMixRatio / 2.0),
+      foreground: scheme.primary,
+      tint: scheme.surfaceTint,
+      divider: divider,
+    ),
   );
 
   final AppDangerColors dangerColors = (

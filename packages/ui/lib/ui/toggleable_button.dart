@@ -10,6 +10,7 @@ class ToggleableButton extends StatelessWidget {
     this.iconSize = 16.0,
     this.color,
     this.foregroundColor,
+    this.tooltip,
   });
 
   final bool isActive;
@@ -18,22 +19,26 @@ class ToggleableButton extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Color? color;
   final Color? foregroundColor;
+  final TooltipData? tooltip;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.0,
-      child: GestureSurface(
-        onTap: onChanged != null ? () => onChanged?.call(!isActive) : null,
-        color: isActive ? context.colors.accent.secondary : color,
-        foregroundColor: foregroundColor,
-        borderRadius: borderRadius,
-        state: {if (isActive) .selected},
-        child: Center(
-          child: DefaultForegroundStyle(
-            iconSize: iconSize,
-            child: child,
+      child: Tooltip(
+        tooltip: tooltip,
+        child: GestureSurface(
+          onTap: onChanged != null ? () => onChanged?.call(!isActive) : null,
+          color: isActive ? context.colors.accent.secondary : color,
+          foregroundColor: foregroundColor,
+          borderRadius: borderRadius,
+          state: {if (isActive) .selected},
+          child: Center(
+            child: DefaultForegroundStyle(
+              iconSize: iconSize,
+              child: child,
+            ),
           ),
         ),
       ),

@@ -18,16 +18,14 @@ class const StatementPanel({
 
     final props = Prop.intersect(rawProps);
 
-    late final Widget? icon, title, footnote;
+    late final Widget? icon, title;
     if (statementIds.length == 1) {
       final statement = context.editor.statement(statementIds.single)!;
-      icon = statement.icon(context);
-      title = Text(statement.name(context));
-      footnote = Text(statement.id.toString());
+      icon = statement.resolveIcon(context);
+      title = Text(statement.resolveName(context));
     } else {
       icon = Icons.stacks();
       title = Text('${statementIds.length} statements');
-      footnote = null;
     }
 
     return Column(
@@ -35,7 +33,6 @@ class const StatementPanel({
         Header(
           leading: icon,
           title: title,
-          footnote: footnote,
         ),
         Divider(),
         PropListBuilder(props: props),

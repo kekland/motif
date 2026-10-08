@@ -11,12 +11,26 @@ sealed class SceneNode {
   int get depth => parent != null ? parent!.depth + 1 : 0;
 
   FrameRef? get frame;
-  bool get expands => frame != null;
+  bool get isLeaf => frame == null;
 
   List<CellRef> get cells;
 
-  List<SceneNode> get children => expands ? (_children ??= tree._build(this)) : const [];
+  List<SceneNode> get children => !isLeaf ? (_children ??= tree._build(this)) : const [];
   List<SceneNode>? _children;
+
+  int? get index => parent?._children?.indexOf(this);
+
+  ObjectSceneNode? get siblingPrev {
+    if (index == null) return null;
+    if (index! > 0) return parent!._children![index! - 1] as ObjectSceneNode;
+    return null;
+  }
+
+  ObjectSceneNode? get siblingNext {
+    if (index == null) return null;
+    if (index! < (parent!._children!.length - 1)) return parent!._children![index! + 1] as ObjectSceneNode;
+    return null;
+  }
 }
 
 final class RootSceneNode extends SceneNode {
@@ -61,11 +75,12 @@ final class SceneTree with ChangeNotifier {
 
   late final RootSceneNode root;
 
-  List<SceneNode> get flattened => _flattened ??= [..._walk(root)];
-  List<SceneNode>? _flattened;
+  List<ObjectSceneNode> get flattened => _flattened ??= [..._walk(root)];
+  List<ObjectSceneNode>? _flattened;
 
-  Iterable<SceneNode> _walk(SceneNode node) sync* {
+  Iterable<ObjectSceneNode> _walk(SceneNode node) sync* {
     for (final child in node.children) {
+      if (child is! ObjectSceneNode) continue;
       yield child;
       yield* _walk(child);
     }

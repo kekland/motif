@@ -18,6 +18,7 @@ typedef AppDisplayColors = ({
 typedef AppAccentColors = ({
   SurfaceColor primary,
   SurfaceColor secondary,
+  SurfaceColor tertiary,
 });
 
 typedef AppDangerColors = ({

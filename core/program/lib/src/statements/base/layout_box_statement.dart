@@ -22,6 +22,7 @@ mixin LayoutBoxStatement on PlacedStatement, FramedStatement implements LayoutBo
   LayoutBoxStatement copyWith({
     StatementId? id,
     List<Modifier>? modifiers,
+    String? name,
     FrameRef? parent,
     LayoutSize? size,
     Mat4? transform,

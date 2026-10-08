@@ -11,7 +11,7 @@ extension type const TooltipData._((String label, SingleActivator? shortcut) _) 
   SingleActivator? get shortcut => _.$2;
 }
 
-class Tooltip extends HookWidget {
+class Tooltip extends StatefulHookWidget {
   const new({
     super.key,
     required this.tooltip,
@@ -22,49 +22,87 @@ class Tooltip extends HookWidget {
   final Widget child;
 
   @override
+  State<Tooltip> createState() => TooltipState();
+}
+
+class TooltipState extends State<Tooltip> {
+  TooltipState? parent;
+  Timer? timer;
+  var suppressed = false;
+  var suppressedByChild = false;
+  late PortalEntry portal;
+
+  bool get enabled => widget.tooltip != null;
+  TooltipManagerState get manager => TooltipManager.of(context);
+
+  @override
+  void initState() {
+    super.initState();
+    parent = context.findAncestorStateOfType<TooltipState>();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    parent = null;
+    super.dispose();
+  }
+
+  void show() {
+    if (!enabled) return;
+    if (suppressed || suppressedByChild) return;
+    portal.push(context, anchor: .compute(context, axis: .horizontal));
+    manager.onShow();
+  }
+
+  void hide() {
+    parent?.hide();
+
+    if (!enabled) return;
+    timer?.cancel();
+    timer = null;
+    if (portal.isActive) {
+      portal.pop();
+      manager.onHide();
+    }
+  }
+
+  void schedule() {
+    parent?.hide();
+
+    if (!enabled) return;
+    timer?.cancel();
+    if (manager.isWarm) {
+      show();
+    } else {
+      timer = manager.createTimer(show);
+    }
+  }
+
+  void _suppressParent() {
+    if (parent?.suppressedByChild == true) return;
+    parent?.suppressedByChild = true;
+    parent?._suppressParent();
+  }
+
+  void _unsuppressParent() {
+    if (parent?.suppressedByChild == false) return;
+    parent?.suppressedByChild = false;
+    parent?._unsuppressParent();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final manager = TooltipManager.of(context);
-    final timer = useRef<Timer?>(null);
-    final suppressed = useRef(false);
-    final enabled = tooltip != null;
-
-    final portal = usePortalEntry(
+    portal = usePortalEntry(
       () => PortalEntry(
-        builder: (context) => TooltipOverlay(tooltip: tooltip!),
+        builder: (context) => TooltipOverlay(tooltip: widget.tooltip!),
       ),
-      [tooltip],
+      [widget.tooltip],
     );
-
-    void show() {
-      if (!enabled) return;
-      if (suppressed.value) return;
-      portal.push(context, anchor: .compute(context, axis: .horizontal));
-      manager.onShow();
-    }
-
-    void hide() {
-      if (!enabled) return;
-      timer.value?.cancel();
-      timer.value = null;
-      if (portal.isActive) {
-        portal.pop();
-        manager.onHide();
-      }
-    }
-
-    void schedule() {
-      if (!enabled) return;
-      timer.value?.cancel();
-      if (manager.isWarm) {
-        show();
-      } else {
-        timer.value = manager.createTimer(show);
-      }
-    }
 
     return Listener(
       onPointerDown: (_) {
-        suppressed.value = true;
+        suppressed = true;
         hide();
       },
       onPointerSignal: (_) {
@@ -72,12 +110,19 @@ class Tooltip extends HookWidget {
       },
       child: MouseRegion(
         onEnter: (_) {
-          suppressed.value = false;
+          suppressed = false;
+          _suppressParent();
           schedule();
         },
-        onHover: (_) => schedule(),
-        onExit: (_) => hide(),
-        child: child,
+        onHover: (_) {
+          _suppressParent();
+          schedule();
+        },
+        onExit: (_) {
+          _unsuppressParent();
+          hide();
+        },
+        child: widget.child,
       ),
     );
   }
