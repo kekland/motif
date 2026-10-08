@@ -4,6 +4,7 @@
 * Tool options: moved into the tab bar, opens as a window. WIP.
 * Prop widgets: adjusted spacing, padding, etc.
 * Cell handles: fixed incorrect frame bbox transformation
+* Tool options: edge/face styles now automatically resolve the fill/stroke color based on the color of the tap position.
 
 # 0.1.5
 

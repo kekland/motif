@@ -10,7 +10,11 @@ final class Vec2Partial({final double? x, final double? y}) extends Partial<Vec2
   List<Object?> get props => [x, y];
 }
 
-final class PositionProp(super.sources, {super.kind = .position}) extends Prop<Vec2, Vec2Partial> {
+final class PositionProp(
+  super.sources, {
+  super.kind = .position,
+  super.tooltip = const .new('Controls how the statement is positioned'),
+}) extends Prop<Vec2, Vec2Partial> {
   late final CoordinateProp x = remap(
     .coordinate,
     getter: (v) => v.x,

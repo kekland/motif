@@ -6,14 +6,18 @@ final class TopologicalToolOption extends ToolOption<bool> {
   static final entry = TopologicalToolOption();
 
   @override
-  BooleanProp createProp(ToolController controller) => .new([
-    .new(
-      kind: .boolean,
-      getter: () => controller.get(key),
-      setter: (txn, p) => controller.set(key, p),
-      signal: .new(controller.get(key)),
-    ),
-  ], label: 'Topological');
+  BooleanProp createProp(ToolController controller) => .new(
+    [
+      .new(
+        kind: .boolean,
+        getter: () => controller.get(key),
+        setter: (txn, p) => controller.set(key, p),
+        signal: .new(controller.get(key)),
+      ),
+    ],
+    label: 'Topological',
+    tooltip: .new('Whether intersections with existing geometry will be resolved'),
+  );
 
   @override
   TopologicalToolOption copyWith({bool? value}) => .new(value: value);
@@ -25,14 +29,20 @@ final class DestructiveToolOption extends ToolOption<bool> {
   static final entry = DestructiveToolOption();
 
   @override
-  BooleanProp createProp(ToolController controller) => .new([
-    .new(
-      kind: .boolean,
-      getter: () => controller.get(key),
-      setter: (txn, p) => controller.set(key, p),
-      signal: .new(controller.get(key)),
+  BooleanProp createProp(ToolController controller) => .new(
+    [
+      .new(
+        kind: .boolean,
+        getter: () => controller.get(key),
+        setter: (txn, p) => controller.set(key, p),
+        signal: .new(controller.get(key)),
+      ),
+    ],
+    label: 'Destructive',
+    tooltip: .new(
+      'Whether intersections with existing geometry will be destructive (i.e. original geometry is modified)',
     ),
-  ], label: 'Destructive');
+  );
 
   @override
   DestructiveToolOption copyWith({bool? value}) => .new(value: value);
@@ -44,14 +54,18 @@ final class SnapToPixelToolOption extends ToolOption<bool> {
   static final entry = SnapToPixelToolOption();
 
   @override
-  BooleanProp createProp(ToolController controller) => .new([
-    .new(
-      kind: .boolean,
-      getter: () => controller.get(key),
-      setter: (txn, p) => controller.set(key, p),
-      signal: .new(controller.get(key)),
-    ),
-  ], label: 'Snap to Pixel');
+  BooleanProp createProp(ToolController controller) => .new(
+    [
+      .new(
+        kind: .boolean,
+        getter: () => controller.get(key),
+        setter: (txn, p) => controller.set(key, p),
+        signal: .new(controller.get(key)),
+      ),
+    ],
+    label: 'Snap to Pixel',
+    tooltip: .new('Whether the geometry will snap to the pixel grid'),
+  );
 
   @override
   SnapToPixelToolOption copyWith({bool? value}) => .new(value: value);
@@ -82,6 +96,11 @@ final class PenEdgeStyleToolOption extends EdgeStyleToolOption {
   String? get decorationsEmptyStateLabel =>
       'Tap on + to add decorations. If empty, the color will be resolved automatically.';
 
+  EdgeStyle resolve(Scene scene, Vec2 position) {
+    if (value.decorations.isNotEmpty) return value;
+    return value.copyWith(decorations: _resolveAutoDecoration(scene, position));
+  }
+
   @override
   PenEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
 }
@@ -93,6 +112,8 @@ final class ShapeEdgeStyleToolOption extends EdgeStyleToolOption {
 
   @override
   String? get decorationsEmptyStateLabel => null;
+
+  EdgeStyle resolve(Scene scene, Vec2 position) => value;
 
   @override
   ShapeEdgeStyleToolOption copyWith({EdgeStyle? value}) => .new(value: value);
@@ -113,6 +134,24 @@ final class FaceStyleToolOption extends ToolOption<FaceStyle> {
     ),
   ], decorationsEmptyStateLabel: 'Tap on + to add decorations. If empty, the color will be resolved automatically.');
 
+  FaceStyle resolve(Scene scene, Vec2 position) {
+    if (value.decorations.isNotEmpty) return value;
+    return .new(decorations: _resolveAutoDecoration(scene, position));
+  }
+
   @override
   FaceStyleToolOption copyWith({FaceStyle? value}) => .new(value: value);
+}
+
+Decorations _resolveAutoDecoration(Scene scene, Vec2 position) {
+  final (color, isBackground) = scene.query.colorAt(position);
+  final luminance = color.computeLuminance();
+
+  if (isBackground) {
+    if (luminance > 0.5) return .color(.black);
+    return .color(.white);
+  }
+
+  if (luminance > 0.5) return .color(color.darken(0.6));
+  return .color(color.lighten(0.6));
 }

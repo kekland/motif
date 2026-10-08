@@ -1,3 +1,4 @@
+import 'package:color/color.dart';
 import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
@@ -87,18 +88,33 @@ extension SceneHitTestQuery on SceneQuery {
     );
   }
 
-  SceneHitResult hitTest(Vec2 p, {double tolerance = 0.0, HitTestCovertexMode? covertexMode}) {
+  SceneHitResult hitTest(
+    Vec2 p, {
+    double tolerance = 0.0,
+    HitTestCovertexMode? covertexMode,
+    bool onlyIfParentSelected = true,
+  }) {
     final result = scene.bundle.query.hitTest(
       p,
       tolerance: tolerance,
       covertexMode: covertexMode ?? .some(scene.selection.visibleCovertices),
     );
 
-    return _remapHitResult(p, result);
+    return _remapHitResult(p, result, onlyIfParentSelected: onlyIfParentSelected);
   }
 
   SceneHitResult hitTestRect(Aabb2 rect, {HitTestRectMode mode = .normal}) {
     final result = scene.bundle.query.hitTestRect(rect, mode: mode);
     return _remapHitResult(rect.center, result, onlyIfParentSelected: false);
+  }
+
+  (ColorData, bool isBackground) colorAt(Vec2 position) {
+    final faces = hitTest(position, onlyIfParentSelected: false).faces;
+    for (final f in faces) {
+      final style = scene.styleOf(f.ref)?.asFace;
+      final color = style?.decorations.colors.firstOrNull;
+      if (color != null) return (color.color, false);
+    }
+    return (scene.program.settings.backgroundColor, true);
   }
 }

@@ -103,6 +103,14 @@ class PortalEntry<T> with ChangeNotifier {
     notifyListeners();
   }
 
+  void toggle(BuildContext context) {
+    if (isActive) {
+      pop();
+    } else {
+      push(context);
+    }
+  }
+
   @override
   void dispose() {
     if (isActive) pop(force: true);

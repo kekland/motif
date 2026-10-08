@@ -15,8 +15,8 @@ abstract class LayoutBoxTool extends Tool {
   ];
 
   bool snapToPixel(BuildContext context) => context.editor.tool.get(options[0].key);
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.get(options[1].key);
-  FaceStyle faceStyle(BuildContext context) => context.editor.tool.get(options[2].key);
+  ShapeEdgeStyleToolOption edgeStyle(BuildContext context) => context.editor.tool.getOption(options[1].key);
+  FaceStyleToolOption faceStyle(BuildContext context) => context.editor.tool.getOption(options[2].key);
 
   @override
   Widget buildViewportOverlay(
@@ -72,15 +72,19 @@ class _LayoutBoxToolOverlay extends HookWidget {
             childPaintTransform: info.childPaintTransform,
           ),
           DragActivityDetector(
-            activityFactory: (_) => activityFactory(
-              editor,
-              edgeStyle: tool.edgeStyle(context),
-              faceStyle: tool.faceStyle(context),
-              snapToPixel: tool.snapToPixel(context),
-              onCreated: (f) => frame.value = f,
-              onEnd: () => frame.value = null,
-              onCancel: () => frame.value = null,
-            ),
+            activityFactory: (e) {
+              final position = editor.globalToScene(e.position);
+
+              return activityFactory(
+                editor,
+                edgeStyle: tool.edgeStyle(context).resolve(editor.scene, position),
+                faceStyle: tool.faceStyle(context).resolve(editor.scene, position),
+                snapToPixel: tool.snapToPixel(context),
+                onCreated: (f) => frame.value = f,
+                onEnd: () => frame.value = null,
+                onCancel: () => frame.value = null,
+              );
+            },
           ),
         ],
       ),

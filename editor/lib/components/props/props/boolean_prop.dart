@@ -4,6 +4,7 @@ final class BooleanProp(
   super.sources, {
   super.kind = .boolean,
   this.label = 'Boolean',
+  super.tooltip,
 }) extends Prop<bool, bool> {
   final String label;
 

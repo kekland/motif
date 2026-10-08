@@ -41,6 +41,9 @@ final class const Decorations(final List<Decoration> entries) {
   static const white = Decorations([.color(.white)]);
   static const black = Decorations([.color(.black)]);
 
+  static Decorations color(ColorData color) => Decorations([.color(color)]);
+  static Decorations image(Hash? image) => Decorations([.image(image)]);
+
   Iterable<ColorDecoration> get colors => entries.whereType<ColorDecoration>();
   Iterable<ImageDecoration> get images => entries.whereType<ImageDecoration>();
 

@@ -58,11 +58,15 @@ class PropsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttons = prop.buildHeaderButtons(context);
     final header = child.resolveHeader(context);
+    final tooltip = prop.tooltip;
 
-    return PropsSectionWidget(
-      title: header != null ? Text(header) : null,
-      trailing: buttons.toList(),
-      child: child,
+    return Tooltip(
+      tooltip: tooltip,
+      child: PropsSectionWidget(
+        title: header != null ? Text(header) : null,
+        trailing: buttons.toList(),
+        child: child,
+      ),
     );
   }
 }

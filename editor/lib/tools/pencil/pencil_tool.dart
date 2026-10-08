@@ -16,7 +16,7 @@ class PencilTool extends Tool {
 
   bool topological(BuildContext context) => context.editor.tool.get(options[0].key);
   bool destructive(BuildContext context) => context.editor.tool.get(options[1].key);
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.get(options[2].key);
+  PenEdgeStyleToolOption edgeStyle(BuildContext context) => context.editor.tool.getOption(options[2].key);
 
   @override
   String resolveName(BuildContext context) => 'Pencil';
@@ -47,17 +47,23 @@ class _PencilToolOverlay extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final editor = context.editor;
+
     return MouseRegion(
       hitTestBehavior: .translucent,
       cursor: SystemMouseCursors.precise,
       child: DragActivityDetector(
         behavior: .translucent,
-        activityFactory: (_) => PencilFreehandStrokeActivity(
-          context.editor,
-          topological: tool.topological(context),
-          destructive: tool.destructive(context),
-          edgeStyle: tool.edgeStyle(context),
-        ),
+        activityFactory: (e) {
+          final position = editor.globalToScene(e.position);
+
+          return PencilFreehandStrokeActivity(
+            context.editor,
+            topological: tool.topological(context),
+            destructive: tool.destructive(context),
+            edgeStyle: tool.edgeStyle(context).resolve(editor.scene, position),
+          );
+        },
         child: TransientStrokesWidget(
           transform: info.childPaintTransform,
         ),

@@ -1,6 +1,10 @@
 import 'package:editor/imports.dart';
 
-final class LayoutProp(super.sources, {super.kind = .layout}) extends Prop<Layout, Layout> {
+final class LayoutProp(
+  super.sources, {
+  super.kind = .layout,
+  super.tooltip = const .new('Controls how the children are laid out'),
+}) extends Prop<Layout, Layout> {
   @override
   PropWidget? buildWidget(BuildContext context) => LayoutPropWidget(prop: this);
 }

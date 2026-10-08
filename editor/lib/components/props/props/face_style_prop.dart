@@ -4,6 +4,7 @@ final class FaceStyleProp(
   super.sources, {
   super.kind = .faceStyle,
   final String? decorationsEmptyStateLabel,
+  super.tooltip = const .new('Style applied to the faces'),
 }) extends Prop<FaceStyle, FaceStylePartial> {
   late final DecorationsProp decorations = remap(
     .decorations,

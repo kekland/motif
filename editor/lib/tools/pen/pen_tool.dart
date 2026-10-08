@@ -20,7 +20,7 @@ class PenTool extends Tool {
   bool topological(BuildContext context) => context.editor.tool.get(options[0].key);
   bool destructive(BuildContext context) => context.editor.tool.get(options[1].key);
   bool snapToPixel(BuildContext context) => context.editor.tool.get(options[2].key);
-  EdgeStyle edgeStyle(BuildContext context) => context.editor.tool.get(options[3].key);
+  PenEdgeStyleToolOption edgeStyle(BuildContext context) => context.editor.tool.getOption(options[3].key);
 
   @override
   String resolveName(BuildContext context) => 'Pen';
@@ -124,12 +124,14 @@ class _PenToolOverlay extends HookWidget {
                 }
               }
 
+              final position = editor.globalToScene(e.position);
+
               return CreateVertexActivity(
                 editor: editor,
                 topological: topological,
                 snapToPixel: snapToPixel,
                 destructive: tool.destructive(context),
-                edgeStyle: tool.edgeStyle(context),
+                edgeStyle: tool.edgeStyle(context).resolve(editor.scene, position),
                 existingTransientEdge: transientEdge.value,
                 onTransientEdgeCreated: (v) => transientEdge.value = v,
                 onTransientEdgeCompleted: (v) {

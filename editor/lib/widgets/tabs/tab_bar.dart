@@ -69,7 +69,7 @@ class EditorTabBar extends HookWidget {
               return IconButton.flat(
                 size: height,
                 borderRadius: .zero,
-                onTap: () => context.editor.toolOptionsWindow.push(context),
+                onTap: () => context.editor.toolOptionsWindow.toggle(context),
                 isSelected: isVisible,
                 tooltip: .new('Tool options', shortcut: .new(.keyO)),
                 child: Icons.tune(),

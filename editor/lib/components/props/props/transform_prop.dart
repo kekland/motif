@@ -26,7 +26,11 @@ final class TransformDataPartial({
   }
 }
 
-final class TransformProp(super.sources, {super.kind = .transform}) extends Prop<TransformData, TransformDataPartial> {
+final class TransformProp(
+  super.sources, {
+  super.kind = .transform,
+  super.tooltip = const .new('Controls how the statement is transformed'),
+}) extends Prop<TransformData, TransformDataPartial> {
   late final PositionProp translation = remap(
     .position,
     getter: (v) => v.translation,

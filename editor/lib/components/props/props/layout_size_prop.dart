@@ -13,7 +13,11 @@ final class const LayoutSizePartial({
   List<Object?> get props => [width, height];
 }
 
-final class LayoutSizeProp(super.sources, {super.kind = .layoutSize}) extends Prop<LayoutSize, LayoutSizePartial> {
+final class LayoutSizeProp(
+  super.sources, {
+  super.kind = .layoutSize,
+  super.tooltip = const .new('Controls the size of this statement'),
+}) extends Prop<LayoutSize, LayoutSizePartial> {
   late final LayoutDimensionProp width = remap(
     .layoutDimension,
     getter: (v) => v.width,

@@ -1,6 +1,10 @@
 import 'package:editor/imports.dart';
 
-final class StrokeWidthProp(super.sources, {super.kind = .strokeWidth}) extends Prop<double, double> {
+final class StrokeWidthProp(
+  super.sources, {
+  super.kind = .strokeWidth,
+  super.tooltip = const .new('Width of the strokes'),
+}) extends Prop<double, double> {
   @override
   PropWidget? buildWidget(BuildContext context) => StrokeWidthPropWidget(prop: this);
 }

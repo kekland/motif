@@ -1,7 +1,11 @@
 import 'package:editor/components/props/widgets/inputs/decoration/decorations_input_field.dart';
 import 'package:editor/imports.dart';
 
-final class DecorationsProp(super.sources, {super.kind = .decorations}) extends Prop<Decorations, Decorations> {
+final class DecorationsProp(
+  super.sources, {
+  super.kind = .decorations,
+  super.tooltip,
+}) extends Prop<Decorations, Decorations> {
   @override
   PropWidget? buildWidget(BuildContext context) => DecorationsPropWidget(prop: this);
 

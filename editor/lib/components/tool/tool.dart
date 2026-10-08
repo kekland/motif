@@ -48,6 +48,8 @@ class ToolController with ChangeNotifier, ChangeNotifierDisposable {
   late final _options = $mapSignal<String, ToolOption>({});
   late final _optionProps = <String, Prop>{};
 
+  O getOption<O extends ToolOption>(String key) => _options[key]! as O;
+
   T get<T>(String key) => _options[key]!.value as T;
   void set<T>(String key, T value) {
     _options[key] = _options[key]!.copyWith(value: value);

@@ -102,18 +102,23 @@ class TooltipOverlay extends StatelessWidget {
         shadows: context.shadows.window,
         borderRadius: .circular(8.0),
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: .min,
-          children: [
-            if (shortcut != null) ...[
-              SingleActivatorWidget(value: shortcut),
-              const SizedBox(width: 8.0),
+        child: ConstrainedBox(
+          constraints: .new(maxWidth: 160.0),
+          child: Row(
+            mainAxisSize: .min,
+            children: [
+              if (shortcut != null) ...[
+                SingleActivatorWidget(value: shortcut),
+                const SizedBox(width: 8.0),
+              ],
+              Flexible(
+                child: DefaultForegroundStyle(
+                  style: context.typography.body.primary,
+                  child: Text(label),
+                ),
+              ),
             ],
-            DefaultForegroundStyle(
-              style: context.typography.body.primary,
-              child: Text(label),
-            ),
-          ],
+          ),
         ),
       ),
     );

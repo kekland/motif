@@ -37,7 +37,11 @@ final class TextFormatPartial({
   ];
 }
 
-final class TextFormatProp(super.sources, {super.kind = .textFormat}) extends Prop<TextFormat, TextFormatPartial> {
+final class TextFormatProp(
+  super.sources, {
+  super.kind = .textFormat,
+  super.tooltip = const .new('Controls how the text is formatted'),
+}) extends Prop<TextFormat, TextFormatPartial> {
   @override
   PropWidget? buildWidget(BuildContext context) => TextFormatPropWidget(prop: this);
 }

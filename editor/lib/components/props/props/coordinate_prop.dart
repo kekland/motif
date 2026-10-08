@@ -2,7 +2,11 @@ import 'package:editor/imports.dart';
 
 enum CoordinateAxis { x, y }
 
-final class CoordinateProp(super.sources, {super.kind = .coordinate}) extends Prop<double, double> {
+final class CoordinateProp(
+  super.sources, {
+  super.kind = .coordinate,
+  super.tooltip,
+}) extends Prop<double, double> {
   @override
   PropWidget? buildWidget(BuildContext context) => CoordinatePropWidget(prop: this);
 }

@@ -1,6 +1,10 @@
 import 'package:editor/imports.dart';
 
-final class RotationProp(super.sources, {super.kind = .rotation}) extends Prop<Angle2, Angle2> {
+final class RotationProp(
+  super.sources, {
+  super.kind = .rotation,
+  super.tooltip = const .new('Controls how the statement is rotated'),
+}) extends Prop<Angle2, Angle2> {
   @override
   PropWidget? buildWidget(BuildContext context) => RotationPropWidget(prop: this);
 }

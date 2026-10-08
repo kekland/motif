@@ -4,6 +4,7 @@ final class EdgeStyleProp(
   super.sources, {
   super.kind = .edgeStyle,
   final String? decorationsEmptyStateLabel,
+  super.tooltip = const .new('Style applied to the edges'),
 }) extends Prop<EdgeStyle, EdgeStylePartial> {
   late final StrokeWidthProp strokeWidth = remap(
     .strokeWidth,

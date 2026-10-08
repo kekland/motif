@@ -54,6 +54,10 @@ sealed class ColorData {
   double get v1 => _v1;
   double get v2 => _v2;
   double get v3 => _v3;
+
+  double computeLuminance();
+  ColorData darken(double amount);
+  ColorData lighten(double amount);
 }
 
 final class HsvColorData extends ColorData {
@@ -84,6 +88,23 @@ final class HsvColorData extends ColorData {
     if (alpha != 1.0) return 'hsv($body / ${_double(alpha)})';
     return 'hsv($body)';
   }
+
+  @override
+  double computeLuminance() {
+    final rgb = cssColor.convert<css_color.SrgbColorData>();
+    return 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b;
+  }
+
+  @override
+  ColorData darken(double amount) => copyWith(
+    v: (v * (1.0 - amount)).clamp(0.0, 1.0),
+  );
+
+  @override
+  ColorData lighten(double amount) => copyWith(
+    s: (s * (1.0 - amount)).clamp(0.0, 1.0),
+    v: (v + ((1.0 - v) * amount)).clamp(0.0, 1.0),
+  );
 }
 
 String _double(double v) {

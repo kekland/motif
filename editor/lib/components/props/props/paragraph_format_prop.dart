@@ -16,8 +16,11 @@ final class ParagraphFormatPartial({
   List<Object?> get props => [alignment, verticalAlignment, ellipsis];
 }
 
-final class ParagraphFormatProp(super.sources, {super.kind = .paragraphFormat})
-    extends Prop<ParagraphFormat, ParagraphFormatPartial> {
+final class ParagraphFormatProp(
+  super.sources, {
+  super.kind = .paragraphFormat,
+  super.tooltip = const .new('Controls how the paragraph is formatted'),
+}) extends Prop<ParagraphFormat, ParagraphFormatPartial> {
   @override
   PropWidget? buildWidget(BuildContext context) => ParagraphFormatPropWidget(prop: this);
 }

@@ -1,7 +1,9 @@
 import 'package:editor/imports.dart';
 
-final class LayoutDimensionProp(super.sources, {super.kind = .layoutDimension})
-    extends Prop<LayoutDimension, LayoutDimension> {
+final class LayoutDimensionProp(
+  super.sources, {
+  super.kind = .layoutDimension,
+}) extends Prop<LayoutDimension, LayoutDimension> {
   @override
   PropWidget? buildWidget(BuildContext context) => LayoutDimensionPropWidget(prop: this);
 }

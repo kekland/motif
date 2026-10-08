@@ -10,10 +10,15 @@ part 'prop_transaction.dart';
 ///
 /// Prop values are obtained from [PropSource] instances.
 abstract class Prop<G, S> {
-  Prop(this.sources, {required this.kind});
+  Prop(
+    this.sources, {
+    required this.kind,
+    this.tooltip,
+  });
 
   final List<PropSource<G, S>> sources;
   final PropKind<G, S> kind;
+  final TooltipData? tooltip;
 
   bool compare(G a, G b) => a == b;
 

@@ -15,6 +15,7 @@ dependencies:
   program:
   state:
   skia:
+  color:
 
 dev_dependencies:
   test: ^1.31.2
