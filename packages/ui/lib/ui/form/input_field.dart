@@ -20,10 +20,12 @@ abstract class InputField<T> extends HookWidget {
     this.sessionCallbacks,
     this.onChanged,
     this.options = const .new(),
+    this.focusNode,
   });
 
   final ReadonlySignal<T?> value;
   final InputSessionCallbacks? sessionCallbacks;
   final ValueChanged<T>? onChanged;
   final InputFieldOptions options;
+  final FocusNode? focusNode;
 }

@@ -3,7 +3,7 @@ import 'package:editor/imports.dart';
 class const StatementPanel({
   super.key,
   required final List<StatementId> statementIds,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.editor;
@@ -17,12 +17,23 @@ class const StatementPanel({
     }
 
     final props = Prop.intersect(rawProps);
+    final isSingle = statementIds.length == 1;
 
     late final Widget? icon, title;
-    if (statementIds.length == 1) {
+    if (isSingle) {
       final statement = context.editor.statement(statementIds.single)!;
-      icon = statement.resolveIcon(context);
-      title = Text(statement.resolveName(context));
+      final prop = useMemoized(() => resolveStatementNameProp(context, editor.scene, statement), [statement.id]);
+      icon = null;
+      title = StringPropWidget(
+        prop: prop,
+        options: .new(
+          leading: statement.resolveIcon(context),
+          isFlat: true,
+          padding: .symmetric(horizontal: 8.0),
+          borderRadius: .zero,
+          fillHeight: true,
+        ),
+      );
     } else {
       icon = Icons.stacks();
       title = Text('${statementIds.length} statements');
@@ -31,6 +42,7 @@ class const StatementPanel({
     return Column(
       children: [
         Header(
+          padding: isSingle ? .zero : null,
           leading: icon,
           title: title,
         ),

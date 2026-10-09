@@ -38,3 +38,24 @@ ReadonlySignal<R> useCastComputed<R>(ReadonlySignal signal) {
 
   return s;
 }
+
+VoidCallback useOnDoubleTap({
+  required VoidCallback onTap,
+  required VoidCallback onDoubleTap,
+  Duration delay = const .new(milliseconds: 300),
+}) {
+  final tapTime = useRef<DateTime?>(null);
+
+  return () {
+    final now = DateTime.now();
+    final isDoubleTap = tapTime.value != null && now.difference(tapTime.value!) <= delay;
+
+    if (isDoubleTap) {
+      onDoubleTap();
+      tapTime.value = null;
+    } else {
+      onTap();
+      tapTime.value = now;
+    }
+  };
+}

@@ -1,3 +1,7 @@
+# 0.1.7
+
+* Tree panel, statement panel: added name text fields
+
 # 0.1.6
 
 * Props: simplify the core, making it easier to use in other places

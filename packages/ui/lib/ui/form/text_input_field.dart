@@ -12,4 +12,5 @@ final class const TextInputField({
   super.onTap,
   super.valueToString = _valueToString,
   super.valueFromString = _valueFromString,
+  super.focusNode,
 }) extends ValueTextInputField<String>;

@@ -18,7 +18,7 @@ class TreePanel extends HookWidget {
     final selection = useListenable(editor.selection);
     final listKey = useMemoized(() => GlobalKey());
     final controller = useDisposable(() => SceneTreeController(editor, tree, selection, listKey, scrollController));
-    useListenable(controller);
+    final propTransaction = useMemoized(() => ScenePropTransaction(editor.scene), [editor]);
 
     void onTap(StatementId id) {
       if (context.keyboard.isCtrlPressed) {
@@ -42,7 +42,7 @@ class TreePanel extends HookWidget {
 
     final nodes = controller.nodes;
 
-    return Stack(
+    Widget child = Stack(
       clipBehavior: .hardEdge,
       children: [
         Scrollbar(
@@ -86,6 +86,11 @@ class TreePanel extends HookWidget {
         ),
       ],
     );
+
+    return Provider<PropTransaction>.value(
+      value: propTransaction,
+      child: child,
+    );
   }
 }
 
@@ -97,19 +102,41 @@ final class const _SceneNodeWidget({
   required final bool isImplicitlySelected,
   required final VoidCallback onTap,
   required final VoidCallback onToggleExpanded,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final scene = context.editor.scene;
     final statement = node.statement;
     final hasChildren = node.children.isNotEmpty;
+    final nameProp = useMemoized(() => resolveStatementNameProp(context, scene, statement), [statement.id]);
+    final focusNode = useFocusNode();
+    final onTap = useOnDoubleTap(onTap: this.onTap, onDoubleTap: () => focusNode.requestFocus());
+
+    final hasSelection = isSelected || isImplicitlySelected;
 
     return ListItem(
       height: TreePanel.itemHeight,
       onTap: onTap,
-      leading: statement.resolveIcon(context),
-      title: Text(statement.resolveName(context)),
-      padding: .only(left: node.depth * TreePanel.depthPadding, right: 6.0),
-      isSelected: isSelected || isImplicitlySelected,
+      title: StringPropWidget(
+        focusNode: focusNode,
+        prop: nameProp,
+        options: .new(
+          ignoreGestures: true,
+          leading: DefaultForegroundStyle(
+            color: hasSelection ? context.colors.accent.primary : context.colors.display.tertiary,
+            iconFill: hasSelection ? 1.0 : null,
+            child: statement.resolveIcon(context),
+          ),
+          textStyle: context.typography.body.copyWith(
+            color: hasSelection ? context.colors.accent.primary : context.colors.display.secondary,
+          ),
+          isFlat: true,
+          fillHeight: true,
+          padding: .only(left: node.depth * TreePanel.depthPadding, right: 8.0),
+        ),
+      ),
+      padding: .zero,
+      isSelected: hasSelection,
       selectedColor: isImplicitlySelected ? context.colors.accent.tertiary : null,
       trailing: hasChildren
           ? IconButton.flat(

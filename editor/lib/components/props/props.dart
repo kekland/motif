@@ -14,6 +14,7 @@ export 'props/rotation_prop.dart';
 export 'props/stroke_width_prop.dart';
 export 'props/text_format_prop.dart';
 export 'props/transform_prop.dart';
+export 'props/string_prop.dart';
 
 export 'widgets/prop_widget.dart';
 export 'widgets/builder.dart';

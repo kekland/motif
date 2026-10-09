@@ -16,6 +16,9 @@ final class const InputFieldOptions({
   final BorderSide? border,
   final BorderRadius? borderRadius,
   final bool isFlat = false,
+  final bool fillHeight = false,
+  final bool focusOnDoubleTap = false,
+  final bool ignoreGestures = false,
 }) with Equatable {
   InputFieldOptions merge(InputFieldOptions other) => .new(
     leading: other.leading ?? leading,
@@ -32,6 +35,9 @@ final class const InputFieldOptions({
     borderRadius: other.borderRadius ?? borderRadius,
     supportedDevices: other.supportedDevices ?? supportedDevices,
     isFlat: other.isFlat || isFlat,
+    fillHeight: other.fillHeight || fillHeight,
+    focusOnDoubleTap: other.focusOnDoubleTap || focusOnDoubleTap,
+    ignoreGestures: other.ignoreGestures || ignoreGestures,
   );
 
   @override
@@ -49,6 +55,9 @@ final class const InputFieldOptions({
     border,
     borderRadius,
     isFlat,
+    fillHeight,
+    focusOnDoubleTap,
+    ignoreGestures,
   ];
 
   InputFieldOptions copyWith({
@@ -66,6 +75,9 @@ final class const InputFieldOptions({
     BorderSide? border,
     BorderRadius? borderRadius,
     bool? isFlat,
+    bool? fillHeight,
+    bool? focusOnDoubleTap,
+    bool? ignoreGestures,
   }) => .new(
     autofocus: autofocus ?? this.autofocus,
     hasFocus: hasFocus ?? this.hasFocus,
@@ -81,6 +93,9 @@ final class const InputFieldOptions({
     border: border ?? this.border,
     borderRadius: borderRadius ?? this.borderRadius,
     isFlat: isFlat ?? this.isFlat,
+    fillHeight: fillHeight ?? this.fillHeight,
+    focusOnDoubleTap: focusOnDoubleTap ?? this.focusOnDoubleTap,
+    ignoreGestures: ignoreGestures ?? this.ignoreGestures,
   );
 }
 
@@ -131,7 +146,7 @@ class InputFieldSurface extends StatelessWidget {
 
     child = Surface(
       padding: padding,
-      height: 32.0,
+      height: options.fillHeight ? .infinity : 32.0,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -171,8 +186,12 @@ class InputFieldSurface extends StatelessWidget {
       resolvedBorder = .none;
     }
 
+    final hasOnTap = !options.ignoreGestures && !options.focusOnDoubleTap;
+    final hasOnDoubleTap = !options.ignoreGestures && options.focusOnDoubleTap;
+
     return GestureSurface(
-      onTap: onTap,
+      onTap: hasOnTap ? onTap : null,
+      onDoubleTap: hasOnDoubleTap ? onTap : null,
       onTapDown: onTapDown,
       width: double.infinity,
       supportedDevices: options.supportedDevices,

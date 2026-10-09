@@ -12,8 +12,9 @@ sealed class Statement {
   Statement({
     StatementId? id,
     this.modifiers = const [],
-    this.name,
-  }) : id = id ?? .allocate();
+    String? name,
+  }) : id = id ?? .allocate(),
+       name = name != null && name.isNotEmpty ? name : null;
 
   final StatementId id;
   final List<Modifier> modifiers;

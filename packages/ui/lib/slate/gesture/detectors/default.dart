@@ -34,6 +34,7 @@ Widget defaultGestureRegionDetectorBuilder(
     onLongPressMoveUpdate: callbacks.onLongPressUpdate,
     onLongPressEnd: callbacks.onLongPressEnd,
     onLongPressCancel: callbacks.onLongPressCancel,
+    onDoubleTap: callbacks.onDoubleTap,
     child: child,
   );
 }

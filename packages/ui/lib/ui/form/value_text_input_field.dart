@@ -10,6 +10,7 @@ class ValueTextInputField<T> extends InputField<T> {
     super.onChanged,
     super.sessionCallbacks,
     super.options,
+    super.focusNode,
   });
 
   final String Function(T?)? valueToString;
@@ -19,7 +20,12 @@ class ValueTextInputField<T> extends InputField<T> {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController();
-    final focusNode = useFocusNode();
+    final focusNode = useManagedResource(
+      value: this.focusNode,
+      create: () => FocusNode(),
+      dispose: (f) => f.dispose(),
+    );
+
     final didChange = useRef(false);
 
     final valueToString = this.valueToString ?? (v) => v?.toString() ?? '';

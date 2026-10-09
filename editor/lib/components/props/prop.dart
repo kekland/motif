@@ -199,7 +199,7 @@ extension PropSourceIterableExt<G, S> on Iterable<PropSource<G, S>> {
 // Source extensions
 // ---------------------------------------------------------------------------------------------------------------------
 
-PropSource<G, S> _sceneSource<G, S>(
+PropSource<G, S> sceneSource<G, S>(
   PropKind<G, S> kind,
   Scene scene, {
   required Signal signal,
@@ -226,7 +226,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
     required T Function(Scene, T, G) set,
     S? Function(Scene, T)? override,
   }) {
-    return _sceneSource(
+    return sceneSource(
       this,
       scene,
       isActive: (scene) => scene.statement(id) != null,
@@ -244,7 +244,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
     required void Function(TransformSession, G, S) execute,
     S? Function(Scene, T)? override,
   }) {
-    return _sceneSource(
+    return sceneSource(
       this,
       scene,
       isActive: (scene) => scene.statement(id) != null,
@@ -267,7 +267,7 @@ extension TotalStatementFieldProp<V> on PropKind<V, V> {
     required T Function(Scene, T, V) set,
     V? Function(Scene, T)? override,
   }) {
-    return _sceneSource(
+    return sceneSource(
       this,
       scene,
       isActive: (scene) => scene.statement(id) != null,

@@ -25,6 +25,7 @@ typedef GestureCallbackBundleDef = ({
   GestureLongPressMoveUpdateCallback? onLongPressUpdate,
   GestureLongPressEndCallback? onLongPressEnd,
   GestureLongPressCancelCallback? onLongPressCancel,
+  GestureDoubleTapCallback? onDoubleTap,
 });
 
 extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks) {
@@ -53,6 +54,7 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
     GestureLongPressMoveUpdateCallback? onLongPressUpdate,
     GestureLongPressEndCallback? onLongPressEnd,
     GestureLongPressCancelCallback? onLongPressCancel,
+    GestureDoubleTapCallback? onDoubleTap,
   }) : this._((
          onTapDown: onTapDown,
          onTapUp: onTapUp,
@@ -78,6 +80,7 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
          onLongPressUpdate: onLongPressUpdate,
          onLongPressEnd: onLongPressEnd,
          onLongPressCancel: onLongPressCancel,
+         onDoubleTap: onDoubleTap,
        ));
 
   GestureTapDownCallback? get onTapDown => callbacks.onTapDown;
@@ -109,6 +112,8 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
   GestureLongPressEndCallback? get onLongPressEnd => callbacks.onLongPressEnd;
   GestureLongPressCancelCallback? get onLongPressCancel => callbacks.onLongPressCancel;
 
+  GestureDoubleTapCallback? get onDoubleTap => callbacks.onDoubleTap;
+
   bool get isNotEmpty {
     return onTapDown != null ||
         onTapUp != null ||
@@ -133,7 +138,8 @@ extension type const GestureCallbackBundle._(GestureCallbackBundleDef callbacks)
         onLongPressStart != null ||
         onLongPressUpdate != null ||
         onLongPressEnd != null ||
-        onLongPressCancel != null;
+        onLongPressCancel != null ||
+        onDoubleTap != null;
   }
 }
 
@@ -167,6 +173,8 @@ mixin GestureCallbackBundleMixin {
   GestureLongPressEndCallback? get onLongPressEnd;
   GestureLongPressCancelCallback? get onLongPressCancel;
 
+  GestureDoubleTapCallback? get onDoubleTap;
+
   GestureCallbackBundle get gestureCallbacks => .from(
     onTapDown: onTapDown,
     onTapUp: onTapUp,
@@ -192,6 +200,7 @@ mixin GestureCallbackBundleMixin {
     onLongPressUpdate: onLongPressUpdate,
     onLongPressEnd: onLongPressEnd,
     onLongPressCancel: onLongPressCancel,
+    onDoubleTap: onDoubleTap,
   );
 }
 
@@ -226,6 +235,8 @@ mixin GestureCallbackBundleMixin {
   @override final GestureLongPressMoveUpdateCallback? onLongPressUpdate;
   @override final GestureLongPressEndCallback? onLongPressEnd;
   @override final GestureLongPressCancelCallback? onLongPressCancel;
+
+  @override final GestureDoubleTapCallback? onDoubleTap;
   // dart format on
 
 */
@@ -255,4 +266,5 @@ mixin GestureCallbackBundleMixin {
     this.onLongPressUpdate,
     this.onLongPressEnd,
     this.onLongPressCancel,
+    this.onDoubleTap,
 */

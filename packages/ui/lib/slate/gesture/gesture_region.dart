@@ -40,6 +40,7 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
     this.onLongPressUpdate,
     this.onLongPressEnd,
     this.onLongPressCancel,
+    this.onDoubleTap,
     this.ignoreDisabled = false,
   });
 
@@ -72,6 +73,7 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
          onPanUpdate: surface.onPanUpdate,
          onPanEnd: surface.onPanEnd,
          onPanCancel: surface.onPanCancel,
+         onDoubleTap: surface.onDoubleTap,
          detectorBuilder: detectorBuilder,
          ignoreDisabled: surface.ignoreDisabled,
          builder: builder,
@@ -113,6 +115,8 @@ class GestureRegion extends StatefulWidget with GestureCallbackBundleMixin {
   @override final GestureLongPressMoveUpdateCallback? onLongPressUpdate;
   @override final GestureLongPressEndCallback? onLongPressEnd;
   @override final GestureLongPressCancelCallback? onLongPressCancel;
+
+  @override final GestureDoubleTapCallback? onDoubleTap;
   // dart format on
 
   @override
@@ -164,7 +168,7 @@ class _GestureRegionState extends State<GestureRegion> {
 
   @override
   void dispose() {
-    if (_isDirectlyHovered) _parent?._onChildHoverChanged(false);
+    // if (_isDirectlyHovered) _parent?._onChildHoverChanged(false);
 
     _stopwatch.stop();
     _stopwatch.reset();

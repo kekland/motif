@@ -13,6 +13,21 @@ extension StatementProps on Statement {
   };
 }
 
+StringProp resolveStatementNameProp(BuildContext context, Scene scene, Statement s) {
+  return .new(
+    [
+      PropKind.string.of<Statement>(
+        s.id,
+        scene: scene,
+        get: (scene, s) => s.name ?? s.resolveName(context),
+        set: (scene, s, value) => s.copyWith(name: value.isNotEmpty ? value : null),
+      ),
+    ],
+    label: 'Name',
+    tooltip: .new('Statement name'),
+  );
+}
+
 Iterable<PropSource> _vertexStatementProps(Scene scene, VertexStatement s) sync* {
   yield PropKind.position.statementTransforming<VertexStatement>(
     s.id,

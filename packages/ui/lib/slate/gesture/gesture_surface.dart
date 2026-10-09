@@ -49,6 +49,7 @@ class GestureSurface extends Surface with GestureCallbackBundleMixin {
     this.onLongPressUpdate,
     this.onLongPressEnd,
     this.onLongPressCancel,
+    this.onDoubleTap,
   });
 
   final Widget Function(BuildContext context, Set<WidgetState> states)? builder;
@@ -89,6 +90,8 @@ class GestureSurface extends Surface with GestureCallbackBundleMixin {
   @override final GestureLongPressMoveUpdateCallback? onLongPressUpdate;
   @override final GestureLongPressEndCallback? onLongPressEnd;
   @override final GestureLongPressCancelCallback? onLongPressCancel;
+
+  @override final GestureDoubleTapCallback? onDoubleTap;
   // dart format on
 
   Widget? resolveChild(BuildContext context, Set<WidgetState>? states) {

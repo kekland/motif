@@ -31,6 +31,7 @@ class RootSelectionPanel extends HookWidget {
               leading: Icons.document(),
               borderRadius: .zero,
               padding: .symmetric(horizontal: 8.0),
+              fillHeight: true,
             ),
           ),
         ),
