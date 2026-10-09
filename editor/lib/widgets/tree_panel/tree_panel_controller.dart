@@ -115,11 +115,19 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
     final viewportMax = position.extentBefore + position.extentInside;
 
     if (offset < viewportMin || offset > viewportMax) {
-      scrollController.animateTo(
-        offset.clamp(position.minScrollExtent, position.maxScrollExtent),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
+      final targetOffset = offset.clamp(position.minScrollExtent, position.maxScrollExtent);
+      final change = (targetOffset - position.pixels).abs();
+      final animate = change < position.viewportDimension * 2.0;
+
+      if (animate) {
+        scrollController.animateTo(
+          targetOffset,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        scrollController.jumpTo(targetOffset);
+      }
     }
   }
 

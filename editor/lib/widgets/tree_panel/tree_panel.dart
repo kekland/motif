@@ -52,6 +52,7 @@ class TreePanel extends HookWidget {
             controller: scrollController,
             itemCount: nodes.length,
             padding: const .only(bottom: 32.0),
+            itemExtent: TreePanel.itemHeight,
             findChildIndexCallback: (key) {
               final id = (key as ValueKey<StatementId>).value;
               return nodes.indexWhere((n) => n.statement.id == id);
