@@ -18,7 +18,7 @@ final class ReorderStatement extends Statement {
     CellSelector target, {
     required ZAnchor anchor,
     StatementId? id,
-    List<Modifier> modifiers = const [],
+    ModifierStack modifiers = const .empty(),
   }) : this(
          target,
          placement: anchor.placement,
@@ -49,7 +49,7 @@ final class ReorderStatement extends Statement {
   @override
   ReorderStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     CellSelector? target,
     int? rank,

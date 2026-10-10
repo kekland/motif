@@ -24,7 +24,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
   @override
   ContainerStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     Layout? layout,
     LayoutSize? size,

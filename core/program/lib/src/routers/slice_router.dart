@@ -2,9 +2,20 @@ part of '../_program.dart';
 
 extension RouteSlice on Evaluation {
   ProgramSlice routeSlice(Iterable<CellRef> targets) {
-    final copies = <StatementId>{};
+    final cells = <CellRef>{};
 
-    for (final t in targets) copies.add(rootOf(t.statementId));
+    void walkCell(CellRef cell) {
+      cells.add(cell);
+      if (cell.kind != .frame) return;
+      final handle = bundle.frame(cell.asFrame)!;
+      final children = bundle.frameChildren(handle);
+      for (final child in children) walkCell(child.ref(bundle));
+    }
+
+    for (final c in targets) walkCell(c);
+
+    final copies = <StatementId>{};
+    for (final t in cells) copies.add(rootOf(t.statementId));
 
     final ground = <CellRef>{};
     final gone = <CellRef>{};

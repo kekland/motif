@@ -31,7 +31,7 @@ final class GroupStatement extends Statement with PlacedStatement, FramedStateme
   @override
   GroupStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     FrameRef? parent,
   }) {

@@ -44,7 +44,7 @@ Future<void> main() async {
     .new('visibilityOff', 'Symbols.visibility_off_rounded'),
     .new('mirror', 'Symbols.flip_rounded'),
     .new('generator', 'Symbols.graph_4_rounded'),
-    .new('symbols', 'Symbols.category_rounded'),
+    .new('prefabs', 'Symbols.category_rounded'),
     .new('unknown', 'Symbols.help_rounded'),
     .new('stacks', 'Symbols.stacks_rounded'),
     .new('world', 'Symbols.public_rounded'),

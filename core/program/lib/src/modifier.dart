@@ -27,3 +27,26 @@ enum ModifierKind {
   // static bool _any(Statement s) => true;
   static bool _faced(Statement s) => s is FacedStatement;
 }
+
+final class ModifierStack {
+  const ModifierStack([this._entries = const []]);
+  const ModifierStack.empty() : this(const []);
+
+  final List<Modifier> _entries;
+  List<Modifier> get entries => _entries;
+
+  int get length => _entries.length;
+  bool get isEmpty => _entries.isEmpty;
+  bool get isNotEmpty => _entries.isNotEmpty;
+
+  ModifierStack sublist(int start, [int? end]) => .new(_entries.sublist(start, end));
+
+  ModifierStack append(Modifier modifier) => .new([..._entries, modifier]);
+  ModifierStack remove(int index) => .new([..._entries]..removeAt(index));
+
+  ModifierStack update(int index, Modifier d) {
+    final out = entries.toList();
+    out[index] = d;
+    return .new(out);
+  }
+}

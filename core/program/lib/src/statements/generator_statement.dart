@@ -67,7 +67,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   @override
   GeneratorStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     Generator? generator,
     List<FragmentSelector>? inputs,

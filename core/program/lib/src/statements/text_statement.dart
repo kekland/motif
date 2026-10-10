@@ -77,7 +77,7 @@ final class TextStatement extends Statement
   @override
   TextStatement copyWith({
     StatementId? id,
-    List<Modifier<Statement>>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     LayoutSize? size,
     Mat4? transform,

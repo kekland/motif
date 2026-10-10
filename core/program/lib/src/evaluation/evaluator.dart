@@ -78,7 +78,7 @@ extension Evaluator on EvalPass {
   List<EvalNode> _produce(EvalNode node) {
     final statement = node.statement;
     final produced = <Statement>[];
-    for (final (i, m) in statement.modifiers.indexed) {
+    for (final (i, m) in statement.modifiers.entries.indexed) {
       if (!m.enabled) continue;
 
       final id = statement.id.derive(.of(0, i));

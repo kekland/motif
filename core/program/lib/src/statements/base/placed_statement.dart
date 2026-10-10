@@ -6,7 +6,7 @@ mixin PlacedStatement on Statement {
   @override
   PlacedStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     FrameRef? parent,
   });

@@ -17,7 +17,7 @@ final class EllipseStatement extends ShapeStatement<EllipseObjectShape> {
   @override
   EllipseStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     LayoutSize? size,
     Mat4? transform,

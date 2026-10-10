@@ -35,7 +35,7 @@ final class VertexStatement extends Statement with VertexStyledStatement, Placed
   @override
   VertexStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     Vec2? position,
     VertexStyle? style,

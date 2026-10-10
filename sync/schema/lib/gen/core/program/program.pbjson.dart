@@ -243,9 +243,9 @@ const Statement$json = {
     {
       '1': 'modifiers',
       '3': 2,
-      '4': 3,
+      '4': 1,
       '5': 11,
-      '6': '.motif.Modifier',
+      '6': '.motif.ModifierStack',
       '10': 'modifiers'
     },
     {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
@@ -393,24 +393,24 @@ const Statement$json = {
 
 /// Descriptor for `Statement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
-    'CglTdGF0ZW1lbnQSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSLQoJbW9kaW'
-    'ZpZXJzGAIgAygLMg8ubW90aWYuTW9kaWZpZXJSCW1vZGlmaWVycxIXCgRuYW1lGAMgASgJSAFS'
-    'BG5hbWWIAQESMAoGdmVydGV4GAogASgLMhYubW90aWYuVmVydGV4U3RhdGVtZW50SABSBnZlcn'
-    'RleBIqCgRlZGdlGAsgASgLMhQubW90aWYuRWRnZVN0YXRlbWVudEgAUgRlZGdlEioKBGZhY2UY'
-    'DCABKAsyFC5tb3RpZi5GYWNlU3RhdGVtZW50SABSBGZhY2USNAoIY3V0X2VkZ2UYDSABKAsyFy'
-    '5tb3RpZi5DdXRFZGdlU3RhdGVtZW50SABSB2N1dEVkZ2USRAoObXVsdGlfY3V0X2VkZ2UYDiAB'
-    'KAsyHC5tb3RpZi5NdWx0aUN1dEVkZ2VTdGF0ZW1lbnRIAFIMbXVsdGlDdXRFZGdlEj0KC2ZpbG'
-    'xldF9mYWNlGA8gASgLMhoubW90aWYuRmlsbGV0RmFjZVN0YXRlbWVudEgAUgpmaWxsZXRGYWNl'
-    'EkMKDWdsdWVfdmVydGljZXMYECABKAsyHC5tb3RpZi5HbHVlVmVydGljZXNTdGF0ZW1lbnRIAF'
-    'IMZ2x1ZVZlcnRpY2VzEjkKCXJlY3RhbmdsZRgRIAEoCzIZLm1vdGlmLlJlY3RhbmdsZVN0YXRl'
-    'bWVudEgAUglyZWN0YW5nbGUSMwoHcG9seWdvbhgSIAEoCzIXLm1vdGlmLlBvbHlnb25TdGF0ZW'
-    '1lbnRIAFIHcG9seWdvbhIzCgdlbGxpcHNlGBMgASgLMhcubW90aWYuRWxsaXBzZVN0YXRlbWVu'
-    'dEgAUgdlbGxpcHNlEjkKCWNvbnRhaW5lchgUIAEoCzIZLm1vdGlmLkNvbnRhaW5lclN0YXRlbW'
-    'VudEgAUgljb250YWluZXISLQoFZ3JvdXAYFSABKAsyFS5tb3RpZi5Hcm91cFN0YXRlbWVudEgA'
-    'UgVncm91cBI5CglnZW5lcmF0b3IYFiABKAsyGS5tb3RpZi5HZW5lcmF0b3JTdGF0ZW1lbnRIAF'
-    'IJZ2VuZXJhdG9yEioKBHRleHQYFyABKAsyFC5tb3RpZi5UZXh0U3RhdGVtZW50SABSBHRleHQS'
-    'MwoHcmVvcmRlchgYIAEoCzIXLm1vdGlmLlJlb3JkZXJTdGF0ZW1lbnRIAFIHcmVvcmRlckIHCg'
-    'V2YWx1ZUIHCgVfbmFtZQ==');
+    'CglTdGF0ZW1lbnQSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSMgoJbW9kaW'
+    'ZpZXJzGAIgASgLMhQubW90aWYuTW9kaWZpZXJTdGFja1IJbW9kaWZpZXJzEhcKBG5hbWUYAyAB'
+    'KAlIAVIEbmFtZYgBARIwCgZ2ZXJ0ZXgYCiABKAsyFi5tb3RpZi5WZXJ0ZXhTdGF0ZW1lbnRIAF'
+    'IGdmVydGV4EioKBGVkZ2UYCyABKAsyFC5tb3RpZi5FZGdlU3RhdGVtZW50SABSBGVkZ2USKgoE'
+    'ZmFjZRgMIAEoCzIULm1vdGlmLkZhY2VTdGF0ZW1lbnRIAFIEZmFjZRI0CghjdXRfZWRnZRgNIA'
+    'EoCzIXLm1vdGlmLkN1dEVkZ2VTdGF0ZW1lbnRIAFIHY3V0RWRnZRJECg5tdWx0aV9jdXRfZWRn'
+    'ZRgOIAEoCzIcLm1vdGlmLk11bHRpQ3V0RWRnZVN0YXRlbWVudEgAUgxtdWx0aUN1dEVkZ2USPQ'
+    'oLZmlsbGV0X2ZhY2UYDyABKAsyGi5tb3RpZi5GaWxsZXRGYWNlU3RhdGVtZW50SABSCmZpbGxl'
+    'dEZhY2USQwoNZ2x1ZV92ZXJ0aWNlcxgQIAEoCzIcLm1vdGlmLkdsdWVWZXJ0aWNlc1N0YXRlbW'
+    'VudEgAUgxnbHVlVmVydGljZXMSOQoJcmVjdGFuZ2xlGBEgASgLMhkubW90aWYuUmVjdGFuZ2xl'
+    'U3RhdGVtZW50SABSCXJlY3RhbmdsZRIzCgdwb2x5Z29uGBIgASgLMhcubW90aWYuUG9seWdvbl'
+    'N0YXRlbWVudEgAUgdwb2x5Z29uEjMKB2VsbGlwc2UYEyABKAsyFy5tb3RpZi5FbGxpcHNlU3Rh'
+    'dGVtZW50SABSB2VsbGlwc2USOQoJY29udGFpbmVyGBQgASgLMhkubW90aWYuQ29udGFpbmVyU3'
+    'RhdGVtZW50SABSCWNvbnRhaW5lchItCgVncm91cBgVIAEoCzIVLm1vdGlmLkdyb3VwU3RhdGVt'
+    'ZW50SABSBWdyb3VwEjkKCWdlbmVyYXRvchgWIAEoCzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbW'
+    'VudEgAUglnZW5lcmF0b3ISKgoEdGV4dBgXIAEoCzIULm1vdGlmLlRleHRTdGF0ZW1lbnRIAFIE'
+    'dGV4dBIzCgdyZW9yZGVyGBggASgLMhcubW90aWYuUmVvcmRlclN0YXRlbWVudEgAUgdyZW9yZG'
+    'VyQgcKBXZhbHVlQgcKBV9uYW1l');
 
 @$core.Deprecated('Use u64Descriptor instead')
 const U64$json = {
@@ -2920,6 +2920,26 @@ final $typed_data.Uint8List generatorDescriptor = $convert.base64Decode(
     'l4ZWQYBCADKAsyDS5tb3RpZi5Ob2RlSWRSBWZpeGVkGlsKDVBvc2l0aW9uRW50cnkSIQoEbm9k'
     'ZRgBIAEoCzINLm1vdGlmLk5vZGVJZFIEbm9kZRInCghwb3NpdGlvbhgCIAEoCzILLm1vdGlmLl'
     'ZlYzJSCHBvc2l0aW9u');
+
+@$core.Deprecated('Use modifierStackDescriptor instead')
+const ModifierStack$json = {
+  '1': 'ModifierStack',
+  '2': [
+    {
+      '1': 'entries',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.Modifier',
+      '10': 'entries'
+    },
+  ],
+};
+
+/// Descriptor for `ModifierStack`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List modifierStackDescriptor = $convert.base64Decode(
+    'Cg1Nb2RpZmllclN0YWNrEikKB2VudHJpZXMYASADKAsyDy5tb3RpZi5Nb2RpZmllclIHZW50cm'
+    'llcw==');
 
 @$core.Deprecated('Use modifierDescriptor instead')
 const Modifier$json = {

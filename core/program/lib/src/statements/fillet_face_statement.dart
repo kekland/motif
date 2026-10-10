@@ -28,7 +28,7 @@ final class FilletFaceStatement extends Statement {
   @override
   FilletFaceStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     FaceSelector? face,
     Map<int, CornerRadius>? corners,

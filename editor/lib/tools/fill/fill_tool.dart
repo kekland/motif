@@ -12,7 +12,7 @@ class FillTool extends Tool {
     FaceStyleToolOption.entry,
   ];
 
-  FaceStyle faceStyle(BuildContext context) => context.editor.tool.get(options[0].key);
+  FaceStyleToolOption faceStyle(BuildContext context) => context.editor.tool.getOption(options[0].key);
 
   @override
   String resolveName(BuildContext context) => 'Fill';
@@ -74,10 +74,11 @@ class _FillToolOverlay extends HookWidget {
 
           final lca = bundle.query.lcaMany([...outer, ...holes.expand((h) => h)]);
 
+          final position = editor.globalToScene(e.position);
           final statement = FaceStatement(
             .new(outer),
             holes: holes.map((e) => ChainSelector(e)).toList(),
-            style: tool.faceStyle(context),
+            style: tool.faceStyle(context).resolve(editor.scene, position),
             parent: lca,
           );
 

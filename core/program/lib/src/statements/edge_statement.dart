@@ -49,7 +49,7 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
   @override
   EdgeStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     VertexSelector? start,
     VertexSelector? end,

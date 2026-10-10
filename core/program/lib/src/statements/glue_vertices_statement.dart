@@ -25,7 +25,7 @@ final class GlueVerticesStatement extends Statement {
   @override
   GlueVerticesStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     List<VertexSelector>? vertices,
     GlueVerticesPosition? position,

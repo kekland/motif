@@ -17,7 +17,7 @@ final class RectangleStatement extends ShapeStatement<RectangleObjectShape> {
   @override
   RectangleStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     LayoutSize? size,
     Mat4? transform,

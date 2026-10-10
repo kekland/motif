@@ -1,23 +1,27 @@
 import 'package:editor/imports.dart';
 
 extension StatementProps on Statement {
-  Iterable<PropSource> resolveProps(Scene scene) => switch (this) {
-    VertexStatement s => _vertexStatementProps(scene, s),
-    EdgeStatement s => _edgeStatementProps(scene, s),
-    FaceStatement s => _faceStatementProps(scene, s),
-    ContainerStatement s => _containerStatementProps(scene, s),
-    ShapeStatement s => _shapeStatementProps(scene, s),
-    TextStatement s => _textStatementProps(scene, s),
-    LayoutBoxStatement s => _layoutBoxStatementProps(scene, s),
-    _ => [],
-  };
+  Iterable<PropSource> resolveProps(Scene scene) sync* {
+    yield* switch (this) {
+      VertexStatement s => _vertexStatementProps(scene, s),
+      EdgeStatement s => _edgeStatementProps(scene, s),
+      FaceStatement s => _faceStatementProps(scene, s),
+      ContainerStatement s => _containerStatementProps(scene, s),
+      ShapeStatement s => _shapeStatementProps(scene, s),
+      TextStatement s => _textStatementProps(scene, s),
+      LayoutBoxStatement s => _layoutBoxStatementProps(scene, s),
+      _ => [],
+    };
+
+    yield* _statementProps(scene, this);
+  }
 }
 
-StringProp resolveStatementNameProp(BuildContext context, Scene scene, Statement s) {
+StringProp resolveStatementNameProp(BuildContext context, Scene scene, StatementId id) {
   return .new(
     [
       PropKind.string.of<Statement>(
-        s.id,
+        id,
         scene: scene,
         get: (scene, s) => s.name ?? s.resolveName(context),
         set: (scene, s, value) => s.copyWith(name: value.isNotEmpty ? value : null),
@@ -25,6 +29,15 @@ StringProp resolveStatementNameProp(BuildContext context, Scene scene, Statement
     ],
     label: 'Name',
     tooltip: .new('Statement name'),
+  );
+}
+
+Iterable<PropSource> _statementProps(Scene scene, Statement s) sync* {
+  yield PropKind.modifierStack.of<Statement>(
+    s.id,
+    scene: scene,
+    get: (scene, s) => s.modifiers,
+    set: (scene, s, value) => s.copyWith(modifiers: value),
   );
 }
 

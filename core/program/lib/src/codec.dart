@@ -894,8 +894,17 @@ final _objectShapeCodec = $codec<ObjectShape, gen.ObjectShape>(
 // Modifiers
 // ---------------------------------------------------------------------------------------------------------------------
 
-extension _ModifierListEncode on List<Modifier> { List<gen.Modifier> encode() => map((v) => v.encode()).toList(); }
-extension _ModifierListDecode on List<gen.Modifier> { List<Modifier> decode() => map((v) => v.decode()).toList(); }
+extension _ModifierStackEncode on ModifierStack { gen.ModifierStack encode() => _modifierStackCodec.encode(this); }
+extension _ModifierStackDecode on gen.ModifierStack { ModifierStack decode() => _modifierStackCodec.decode(this); }
+
+final _modifierStackCodec = $codec<ModifierStack, gen.ModifierStack>(
+  decoder: (v) => .new(
+    v.entries.map((e) => e.decode()).toList(),
+  ),
+  encoder: (v) => .new(
+    entries: v.entries.map((e) => e.encode()).toList(),
+  ),
+);
 
 extension _ModifierEncode on Modifier { gen.Modifier encode() => _modifierCodec.encode(this); }
 extension _ModifierDecode on gen.Modifier { Modifier decode() => _modifierCodec.decode(this); }

@@ -70,7 +70,7 @@ final class const DecorationEntry({
       onTap: () {},
       height: 40.0,
       reorderableIndex: index,
-      padding: .only(left: 12.0, right: 6.0),
+      padding: .only(left: 12.0, right: 4.0),
       title: DecorationInputField(
         editor: editor,
         value: entry,

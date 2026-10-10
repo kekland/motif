@@ -17,7 +17,7 @@ final class PolygonStatement extends ShapeStatement<PolygonObjectShape> {
   @override
   PolygonStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     LayoutSize? size,
     Mat4? transform,

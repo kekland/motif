@@ -11,13 +11,13 @@ part of '_program.dart';
 sealed class Statement {
   Statement({
     StatementId? id,
-    this.modifiers = const [],
+    this.modifiers = const .empty(),
     String? name,
   }) : id = id ?? .allocate(),
        name = name != null && name.isNotEmpty ? name : null;
 
   final StatementId id;
-  final List<Modifier> modifiers;
+  final ModifierStack modifiers;
   late final List<Selector> selectors;
   final String? name;
 
@@ -25,7 +25,7 @@ sealed class Statement {
 
   Statement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
   });
 

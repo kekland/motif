@@ -22,7 +22,7 @@ class const StatementPanel({
     late final Widget? icon, title;
     if (isSingle) {
       final statement = context.editor.statement(statementIds.single)!;
-      final prop = useMemoized(() => resolveStatementNameProp(context, editor.scene, statement), [statement.id]);
+      final prop = useMemoized(() => resolveStatementNameProp(context, editor.scene, statement.id), [statement.id]);
       icon = null;
       title = StringPropWidget(
         prop: prop,
@@ -49,10 +49,6 @@ class const StatementPanel({
         Divider(),
         PropListBuilder(props: props),
         Divider(),
-        // ModifierStackWidget(
-        //   statements: statements,
-        // ),
-        // Divider(),
       ],
     );
   }

@@ -19,6 +19,8 @@ class TreePanel extends HookWidget {
     final listKey = useMemoized(() => GlobalKey());
     final controller = useDisposable(() => SceneTreeController(editor, tree, selection, listKey, scrollController));
     final propTransaction = useMemoized(() => ScenePropTransaction(editor.scene), [editor]);
+    final nodes = controller.nodes;
+    useListenable(controller);
 
     void onTap(StatementId id) {
       if (context.keyboard.isCtrlPressed) {
@@ -39,8 +41,6 @@ class TreePanel extends HookWidget {
         context.editor.selection.setStatement(id);
       }
     }
-
-    final nodes = controller.nodes;
 
     Widget child = Stack(
       clipBehavior: .hardEdge,
@@ -109,7 +109,7 @@ final class const _SceneNodeWidget({
     final scene = context.editor.scene;
     final statement = node.statement;
     final hasChildren = node.children.isNotEmpty;
-    final nameProp = useMemoized(() => resolveStatementNameProp(context, scene, statement), [statement.id]);
+    final nameProp = useMemoized(() => resolveStatementNameProp(context, scene, statement.id), [statement.id]);
     final focusNode = useFocusNode();
     final onTap = useOnDoubleTap(onTap: this.onTap, onDoubleTap: () => focusNode.requestFocus());
 
@@ -131,12 +131,13 @@ final class const _SceneNodeWidget({
           textStyle: context.typography.body.copyWith(
             color: hasSelection ? context.colors.accent.primary : context.colors.display.secondary,
           ),
+          color: Colors.transparent,
           isFlat: true,
           fillHeight: true,
           padding: .only(left: node.depth * TreePanel.depthPadding, right: 8.0),
         ),
       ),
-      padding: .zero,
+      padding: .only(right: 4.0),
       isSelected: hasSelection,
       selectedColor: isImplicitlySelected ? context.colors.accent.tertiary : null,
       trailing: hasChildren

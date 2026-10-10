@@ -26,7 +26,7 @@ final class CutEdgeStatement extends Statement {
   @override
   CutEdgeStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     EdgeSelector? target,
     double? t,

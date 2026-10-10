@@ -4,6 +4,7 @@ import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/animation_tab.dart';
 import 'package:editor/widgets/tabs/generators_tab.dart';
 import 'package:editor/widgets/tabs/variables_tab.dart';
+import 'package:editor/widgets/tabs/prefabs_tab.dart';
 
 class EditorTabWidget extends HookWidget {
   const new({super.key});
@@ -21,6 +22,7 @@ class EditorTabWidget extends HookWidget {
             maxHeight: max(192.0, constraints.maxHeight),
             fit: .deferToChild,
             child: switch (selectedTab) {
+              .prefabs => PrefabsTab(),
               .generators => GeneratorsTab(),
               .variables => VariablesTab(),
               .animation => AnimationTab(),

@@ -29,6 +29,8 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
           // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
         }, mergeKey: mergeKey);
 
+        final bbox = editor.scene.query.bbox(remapped.statements.map((s) => s.id));
+
         editor.edit((txn) {
           final session = TransformSession.statements(
             editor.scene,
@@ -36,7 +38,8 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
             transaction: txn,
           );
 
-          session.apply(Mat4.translation2(editor.canvasPosition));
+          final center = bbox.center;
+          session.apply(Mat4.translation2(editor.canvasPosition - center));
         }, mergeKey: mergeKey);
 
         editor.selection.setStatements(remapped.statements.map((s) => s.id));

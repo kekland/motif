@@ -26,7 +26,10 @@ final class SceneNotifier with ChangeNotifier, ChangeNotifierDisposable {
     for (final entry in _refSignals.entries) {
       final ref = entry.key;
 
-      if (pass.moved.contains(ref) || pass.deleted.contains(ref) || _isRefInFrame(ref, movedFrames)) {
+      if (pass.moved.contains(ref) ||
+          pass.movedFrames.contains(ref) ||
+          pass.deleted.contains(ref) ||
+          _isRefInFrame(ref, movedFrames)) {
         final signal = entry.value;
         signal.set(signal.value + 1, force: true);
       }

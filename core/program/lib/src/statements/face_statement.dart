@@ -41,7 +41,7 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
   @override
   FaceStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     ChainSelector? outer,
     List<ChainSelector>? holes,

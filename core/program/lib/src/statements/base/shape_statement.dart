@@ -77,7 +77,7 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
   @override
   ShapeStatement<S> copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     LayoutSize? size,
     Mat4? transform,

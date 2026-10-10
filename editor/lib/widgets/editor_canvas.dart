@@ -1,7 +1,8 @@
 import 'package:color/color_flutter.dart';
 import 'package:editor/widgets/actions.dart';
+import 'package:editor/widgets/canvas_overlays/editor_canvas_container_labels.dart';
 import 'package:editor/widgets/context_menu/canvas_context_menu.dart';
-import 'package:editor/widgets/editor_canvas_clients.dart';
+import 'package:editor/widgets/canvas_overlays/editor_canvas_peers.dart';
 import 'package:renderer/renderer.dart';
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tool/tool_overlay.dart';
@@ -22,6 +23,7 @@ class EditorCanvas extends HookWidget {
       centerOrigin: true,
       overlayBuilders: [
         (context, transform) => CanvasPixelGrid(transform: transform),
+        (context, transform) => EditorCanvasContainersLabels(transform: transform),
         (context, transform) => EditorCanvasPeersWidget(transform: transform),
         (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
       ],

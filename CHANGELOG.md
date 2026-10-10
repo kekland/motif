@@ -2,6 +2,12 @@
 
 * Tree panel, statement panel: added name text fields
 * Move activity: fix container reparenting
+* Paste: fixed handling of pasted content to ensure proper positioning
+* Transform session: statement dependents are automatically ignored if those are included
+* Cell handles: moving a group now correctly updates the overlay position
+* Canvas: added top-level container name labels
+* Modifiers: replaced `List<Modifier> modifiers` field with a `ModifierStack` object, similar to `Decorations`/`List<Decoration>`.
+* Modifiers: added an input field for a fillet modifier.
 
 # 0.1.6
 

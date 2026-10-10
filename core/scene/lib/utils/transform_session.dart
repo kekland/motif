@@ -35,6 +35,11 @@ final class TransformSession {
       products.addAll(scene.productsOf(id));
     }
 
+    for (final p in products.toList()) {
+      final dependents = scene.bundle.cellDirectDependents(p.cell);
+      products.removeAll(dependents);
+    }
+
     return .of(scene, products, transaction: transaction, mergeKey: mergeKey);
   }
 

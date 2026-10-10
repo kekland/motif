@@ -21,9 +21,9 @@ message ProgramSlice {
 }
 
 message Statement {
-  StatementId       id        = 1;
-  repeated Modifier modifiers = 2;
-  optional string   name      = 3;
+  StatementId     id        = 1;
+  ModifierStack   modifiers = 2;
+  optional string name      = 3;
 
   oneof value {
     VertexStatement       vertex         = 10;
@@ -612,6 +612,10 @@ message Generator {
 // ---------------------------------------------------------------------------------------------------------------------
 // Modifiers
 // ---------------------------------------------------------------------------------------------------------------------
+
+message ModifierStack {
+  repeated Modifier entries = 1;
+}
 
 message Modifier {
   oneof value {

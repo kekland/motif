@@ -65,7 +65,6 @@ class _TintEffectAnimatorState extends State<_TintEffectAnimator> {
         animationStyle: context.animations.effectFast,
         iconWeight: 200.0,
         iconFill: isSelected || isHovered || isFocused ? 1.0 : 0.0,
-        iconGrade: isPressed || isHovered || isSelected || isFocused ? 0.0 : 0.0,
         color: isPressed ? context.colors.accent.primary : null,
         child: widget.child,
       ),

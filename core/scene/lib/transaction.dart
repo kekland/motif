@@ -79,12 +79,12 @@ final class SceneTransaction {
 
   void attach(StatementId host, Modifier modifier) {
     _checkOpen();
-    update<Statement>(host, (s) => s.copyWith(modifiers: [...s.modifiers, modifier]));
+    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.append(modifier)));
   }
 
-  void detach(StatementId host, Modifier modifier) {
+  void detach(StatementId host, int index) {
     _checkOpen();
-    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.where((m) => m != modifier).toList()));
+    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.remove(index)));
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ final class SceneTransaction {
     return result;
   }
 
-  GeneratorStatement wrapGenerator(List<StatementId> ids, {Generator? generator}) {
+  GeneratorStatement wrapGenerator(Iterable<StatementId> ids, {Generator? generator}) {
     final edit = _route(() => evaluation.routeGenerate(ids, generator ?? .empty()));
     apply(edit);
     return edit.created.single as GeneratorStatement;

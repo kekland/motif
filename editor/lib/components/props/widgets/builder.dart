@@ -84,7 +84,7 @@ final class const PropsSectionWidget({
       children: [
         if (title != null || trailing.isNotEmpty)
           ListItem(
-            padding: .only(left: 12.0, right: 6.0),
+            padding: .only(left: 12.0, right: 4.0),
             title: DefaultForegroundStyle(style: context.typography.caption.secondary, child: title!),
             trailing: ButtonRow(buttons: trailing),
           ),

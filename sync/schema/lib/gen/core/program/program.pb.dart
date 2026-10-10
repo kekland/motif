@@ -200,7 +200,7 @@ enum Statement_Value {
 class Statement extends $pb.GeneratedMessage {
   factory Statement({
     StatementId? id,
-    $core.Iterable<Modifier>? modifiers,
+    ModifierStack? modifiers,
     $core.String? name,
     VertexStatement? vertex,
     EdgeStatement? edge,
@@ -220,7 +220,7 @@ class Statement extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (id != null) result.id = id;
-    if (modifiers != null) result.modifiers.addAll(modifiers);
+    if (modifiers != null) result.modifiers = modifiers;
     if (name != null) result.name = name;
     if (vertex != null) result.vertex = vertex;
     if (edge != null) result.edge = edge;
@@ -274,8 +274,8 @@ class Statement extends $pb.GeneratedMessage {
     ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
-    ..pPM<Modifier>(2, _omitFieldNames ? '' : 'modifiers',
-        subBuilder: Modifier.create)
+    ..aOM<ModifierStack>(2, _omitFieldNames ? '' : 'modifiers',
+        subBuilder: ModifierStack.create)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOM<VertexStatement>(10, _omitFieldNames ? '' : 'vertex',
         subBuilder: VertexStatement.create)
@@ -372,7 +372,15 @@ class Statement extends $pb.GeneratedMessage {
   StatementId ensureId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<Modifier> get modifiers => $_getList(1);
+  ModifierStack get modifiers => $_getN(1);
+  @$pb.TagNumber(2)
+  set modifiers(ModifierStack value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasModifiers() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearModifiers() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ModifierStack ensureModifiers() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $core.String get name => $_getSZ(2);
@@ -6703,6 +6711,55 @@ class Generator extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $pb.PbList<NodeId> get fixed => $_getList(3);
+}
+
+class ModifierStack extends $pb.GeneratedMessage {
+  factory ModifierStack({
+    $core.Iterable<Modifier>? entries,
+  }) {
+    final result = create();
+    if (entries != null) result.entries.addAll(entries);
+    return result;
+  }
+
+  ModifierStack._();
+
+  factory ModifierStack.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ModifierStack.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ModifierStack',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..pPM<Modifier>(1, _omitFieldNames ? '' : 'entries',
+        subBuilder: Modifier.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ModifierStack clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ModifierStack copyWith(void Function(ModifierStack) updates) =>
+      super.copyWith((message) => updates(message as ModifierStack))
+          as ModifierStack;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ModifierStack create() => ModifierStack._();
+  @$core.override
+  ModifierStack createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ModifierStack getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ModifierStack>(create);
+  static ModifierStack? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Modifier> get entries => $_getList(0);
 }
 
 enum Modifier_Value { fillet, notSet }

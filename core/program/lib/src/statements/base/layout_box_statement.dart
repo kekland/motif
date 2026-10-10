@@ -21,7 +21,7 @@ mixin LayoutBoxStatement on PlacedStatement, FramedStatement implements LayoutBo
   @override
   LayoutBoxStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     FrameRef? parent,
     LayoutSize? size,

@@ -131,7 +131,7 @@ class InputFieldSurface extends StatelessWidget {
     final hasFocus = this.hasFocus || options.hasFocus;
 
     if (options.isFlat) {
-      color = Surface.colorOf(context);
+      color = Colors.transparent;
     }
 
     var effectiveTextStyle = textStyle ?? context.typography.body.primary;

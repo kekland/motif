@@ -93,7 +93,7 @@ class const ListItem({
 
     final EdgeInsets defaultPadding = switch (trailing) {
       null => .only(left: leftPadding, right: 8.0),
-      _ => .only(left: leftPadding, right: 6.0),
+      _ => .only(left: leftPadding, right: 4.0),
     };
 
     if (onTap == null) {

@@ -28,7 +28,7 @@ final class MultiCutEdgeStatement extends Statement {
   @override
   MultiCutEdgeStatement copyWith({
     StatementId? id,
-    List<Modifier>? modifiers,
+    ModifierStack? modifiers,
     String? name,
     EdgeSelector? target,
     List<double>? ts,
