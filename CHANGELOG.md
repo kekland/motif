@@ -8,6 +8,7 @@
 * Canvas: added top-level container name labels
 * Modifiers: replaced `List<Modifier> modifiers` field with a `ModifierStack` object, similar to `Decorations`/`List<Decoration>`.
 * Modifiers: added an input field for a fillet modifier.
+* Dissolution/deletion: fix handling of owning statements after filtering
 
 # 0.1.6
 

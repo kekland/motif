@@ -103,6 +103,11 @@ extension RouteDissolve on Evaluation {
       changed = before != deleted.length;
     }
 
+    owners.clear();
+    for (final d in deleted) {
+      owners.add(rootOf(d.statementId));
+    }
+
     return DissolveRouter(
       owners: owners,
       deleted: deleted,
