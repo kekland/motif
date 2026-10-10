@@ -7,7 +7,7 @@ class ValueInputField<T> extends InputField<T> {
     this.valueToString,
     this.onTap,
     this.onTapDown,
-    this.focusNode,
+    super.focusNode,
     super.onChanged,
     super.sessionCallbacks,
     super.options,
@@ -16,7 +16,6 @@ class ValueInputField<T> extends InputField<T> {
   final String? Function(T?)? valueToString;
   final VoidCallback? onTap;
   final GestureTapDownCallback? onTapDown;
-  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {

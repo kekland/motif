@@ -1,6 +1,7 @@
 # 0.1.7
 
 * Tree panel, statement panel: added name text fields
+* Move activity: fix container reparenting
 
 # 0.1.6
 

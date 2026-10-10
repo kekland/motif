@@ -113,6 +113,7 @@ final class MoveActivity extends TransformActivity {
 
     for (final hit in scene.query.hitTest(pointer).statements) {
       final id = evaluation.rootOf(hit);
+      if (layoutBoxIds!.contains(id)) continue;
       if (ignored.contains(id) || layoutTree.ancestorsOf(id).any((i) => ignored.contains(i))) continue;
       if (evaluation.statement(id) is LayoutContainer) return id;
     }
@@ -138,6 +139,8 @@ final class MoveActivity extends TransformActivity {
     final FrameRef parentFrame = parent != null ? frameOf(parent) : .root;
     txn!.reparent(layoutBoxes.map((b) => b.frame), parentFrame, before: before);
     txn!.flush();
+
+    Haptics.click();
   }
 
   void _updateTransients(Vec2 delta) {
