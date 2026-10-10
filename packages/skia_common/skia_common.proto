@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package skia;
-
-message Path {
-  repeated float points = 1;
-  repeated int32 verbs  = 2;
-}
