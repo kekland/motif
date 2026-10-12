@@ -40,6 +40,13 @@ final class MultiCutEdgeStatement extends Statement {
     ts: ts ?? this.ts,
   );
 
+  @override
+  MultiCutEdgeStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    ts: partial.field(#cutTs),
+  );
+
   // @override
   // TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
   //   CellRef c when c == vertex => .absorb,

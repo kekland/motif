@@ -76,7 +76,7 @@ final class LayoutDimensionPropWidget extends HookWidget with PropWidget {
 
     return Padding(
       padding: resolvedPadding,
-      child: DoubleExpressionInputField(
+      child: DoubleInputField(
         value: value,
         onChanged: (v) => prop.set(txn, .fixed(v)),
         sessionCallbacks: txn.sessionCallbacks,

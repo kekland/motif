@@ -223,7 +223,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
     StatementId id, {
     required Scene scene,
     required G Function(Scene, T) get,
-    required T Function(Scene, T, G) set,
+    required StatementPartial<T> Function(Scene, G) set,
     S? Function(Scene, T)? override,
   }) {
     return sceneSource(
@@ -231,7 +231,7 @@ extension PartialStatementFieldProp<G, S extends Partial<G>> on PropKind<G, S> {
       scene,
       isActive: (scene) => scene.statement(id) != null,
       get: (scene) => get(scene, scene.statement<T>(id)!),
-      set: (txn, value) => txn.update<T>(id, (s) => set(scene, s, value.apply(get(scene, s)))),
+      set: (txn, value) => txn.updatePartial<T>(id, set(scene, value.apply(get(scene, scene.statement<T>(id)!)))),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
       signal: scene.notifier.forStatement(id),
     );
@@ -264,7 +264,7 @@ extension TotalStatementFieldProp<V> on PropKind<V, V> {
     StatementId id, {
     required Scene scene,
     required V Function(Scene, T) get,
-    required T Function(Scene, T, V) set,
+    required StatementPartial<T> Function(Scene, V) set,
     V? Function(Scene, T)? override,
   }) {
     return sceneSource(
@@ -272,7 +272,7 @@ extension TotalStatementFieldProp<V> on PropKind<V, V> {
       scene,
       isActive: (scene) => scene.statement(id) != null,
       get: (scene) => get(scene, scene.statement<T>(id)!),
-      set: (txn, value) => txn.update<T>(id, (s) => set(scene, s, value)),
+      set: (txn, value) => txn.updatePartial<T>(id, set(scene, value)),
       override: override != null ? (scene) => override(scene, scene.statement<T>(id)!) : null,
       signal: scene.notifier.forStatement(id),
     );

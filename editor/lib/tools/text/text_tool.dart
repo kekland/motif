@@ -55,7 +55,8 @@ class TextStatementEditOverlay extends HookWidget {
     final bbox = editor.bundle.query.bbox(statement.frame)!;
 
     useControllerTextEffect(controller, (text) {
-      editor.edit((txn) => txn.update<TextStatement>(id, (s) => s.copyWith(text: text)));
+      final updated = editor.edit((txn) => txn.updatePartial<TextStatement>(id, .text(text)));
+      if (!updated) controller.text = statement.text;
     });
 
     useListenerEffect(editor.selection, () {
@@ -72,7 +73,7 @@ class TextStatementEditOverlay extends HookWidget {
       fontFamily: textFormat.fontFamily,
       fontSize: textFormat.fontSize,
       letterSpacing: textFormat.letterSpacing,
-      fontStyle: switch(textFormat.fontSlant) {
+      fontStyle: switch (textFormat.fontSlant) {
         .upright => .normal,
         .italic => .italic,
         .oblique => .normal,

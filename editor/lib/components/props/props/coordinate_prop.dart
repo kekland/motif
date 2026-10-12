@@ -42,7 +42,7 @@ final class CoordinatePropWidget extends HookWidget with PropWidget {
 
     return Padding(
       padding: resolvedPadding,
-      child: DoubleExpressionInputField(
+      child: DoubleInputField(
         value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
         onChanged: (v) => prop.set(transaction, v),
         sessionCallbacks: transaction.sessionCallbacks,

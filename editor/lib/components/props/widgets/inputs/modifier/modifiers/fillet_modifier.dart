@@ -12,7 +12,7 @@ final class const FilletModifierInputField({
   Widget build(BuildContext context) {
     final radius = useProxyComputed(value, (m) => m!.radius?.x ?? 0.0);
 
-    return DoubleExpressionInputField(
+    return DoubleInputField(
       value: radius,
       onChanged: (v) => onChanged?.call(.new(radius: .new(v, v))),
       options: .new(leading: Icons.borderRadius()),

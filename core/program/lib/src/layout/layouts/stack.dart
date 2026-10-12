@@ -2,13 +2,27 @@ part of '../../_program.dart';
 
 final class StackLayout extends Layout {
   const StackLayout({
-    this.alignHorizontal,
-    this.alignVertical,
+    this.alignHorizontal = .none,
+    this.alignVertical = .none,
     super.padding,
   });
 
-  final LayoutAlign? alignHorizontal;
-  final LayoutAlign? alignVertical;
+  final LayoutAlign alignHorizontal;
+  final LayoutAlign alignVertical;
+
+  @override
+  LayoutKind get kind => .stack;
+
+  @override
+  StackLayout copyWith({
+    LayoutAlign? alignHorizontal,
+    LayoutAlign? alignVertical,
+    LayoutInsets? padding,
+  }) => .new(
+    alignHorizontal: alignHorizontal ?? this.alignHorizontal,
+    alignVertical: alignVertical ?? this.alignVertical,
+    padding: padding ?? this.padding,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -35,7 +49,7 @@ extension _StackLayoutImpl on LayoutTree {
       final alignX = l.alignHorizontal;
       final alignY = l.alignVertical;
 
-      if (alignX == null && alignY == null) {
+      if (alignX == .none && alignY == .none) {
         out.add(.new(null, size));
         continue;
       }
@@ -43,8 +57,8 @@ extension _StackLayoutImpl on LayoutTree {
       final bounds = c.bounds(size);
       final translation = c.box.transform.translation2;
 
-      final x = alignX == null ? translation.x : alignX.offset(inner.width, bounds.width) - bounds.min.x;
-      final y = alignY == null ? translation.y : alignY.offset(inner.height, bounds.height) - bounds.min.y;
+      final x = alignX == .none ? translation.x : alignX.offset(inner.width, bounds.width) - bounds.min.x;
+      final y = alignY == .none ? translation.y : alignY.offset(inner.height, bounds.height) - bounds.min.y;
 
       out.add(.new(l.padding.origin + .new(x, y), size));
     }

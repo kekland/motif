@@ -10,7 +10,17 @@ final class const PropKind<G, S>(
 
   static const layoutDimension = PropKind<LayoutDimension, LayoutDimension>(LayoutDimensionProp.new);
   static const layoutSize = PropKind<LayoutSize, LayoutSizePartial>(LayoutSizeProp.new);
-  static const layout = PropKind<Layout, Layout>(LayoutProp.new);
+
+  static const layout = PropKind<Layout, LayoutPartial>(LayoutProp.new);
+  static const layoutKind = PropKind<LayoutKind, LayoutPartial>(LayoutKindProp.new);
+  static const layoutPadding = PropKind<LayoutInsets, LayoutInsetsPartial>(LayoutInsetsProp.new);
+
+  static const layoutStack = PropKind<StackLayout, StackLayoutPartial>(StackLayoutProp.new);
+  static const layoutFlex = PropKind<FlexLayout, FlexLayoutPartial>(FlexLayoutProp.new);
+
+  static const layoutAlign = PropKind<LayoutAlign, LayoutAlign>(LayoutAlignProp.new);
+  static const layoutJustify = PropKind<LayoutJustify, LayoutJustify>(LayoutJustifyProp.new);
+  static const layoutGap = PropKind<double, double>(LayoutGapProp.new);
 
   static const strokeWidth = PropKind<double, double>(StrokeWidthProp.new);
   static const decorations = PropKind<Decorations, Decorations>(DecorationsProp.new);
@@ -24,6 +34,7 @@ final class const PropKind<G, S>(
 
   static const boolean = PropKind<bool, bool>(BooleanProp.new);
   static const string = PropKind<String, String>(StringProp.new);
+  static const double_ = PropKind<double, double>(DoubleProp.new);
 
   Prop<G, S> compose(Iterable<PropSource> props) {
     return factory(props.cast<PropSource<G, S>>().toList());

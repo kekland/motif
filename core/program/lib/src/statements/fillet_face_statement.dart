@@ -43,6 +43,14 @@ final class FilletFaceStatement extends Statement {
   );
 
   @override
+  FilletFaceStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    corners: partial.field(#corners),
+    radius: partial.field(#radius),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .forward([
     context.resolve(face),
   ]);

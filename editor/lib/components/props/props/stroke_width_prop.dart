@@ -31,7 +31,7 @@ final class StrokeWidthPropWidget extends HookWidget with PropWidget {
 
     return Padding(
       padding: resolvedPadding,
-      child: DoubleExpressionInputField(
+      child: DoubleInputField(
         value: useMemoComputed(() => computed.value.resolve(), keys: [computed]),
         onChanged: (width) => prop.set(txn, width),
         sessionCallbacks: txn.sessionCallbacks,

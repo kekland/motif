@@ -64,4 +64,10 @@ final class ReorderStatement extends Statement {
     rank: rank ?? this.rank,
     sibling: sibling ?? this.sibling,
   );
+
+  @override
+  ReorderStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+  );
 }

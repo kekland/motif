@@ -18,7 +18,7 @@ final class ArrayNode extends ArrayNodeBase {
     var index = 0;
     for (var x = 0; x < count.x.floor(); x++) {
       for (var y = 0; y < count.y.floor(); y++) {
-        final copy = input.materialize((s) => execution.deriveFor(this, s, index: index));
+        final copy = input.materialize((_, s) => execution.deriveFor(this, s, index: index));
         final inside = {for (final s in copy.statements) s.id};
         final shift = Vec2(offset.x * x, offset.y * y);
         for (final s in copy.statements) out.statements.add(_shifted(s, shift, inside));

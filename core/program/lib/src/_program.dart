@@ -52,6 +52,7 @@ part 'evaluation/indexes/lineage.dart';
 part 'evaluation/indexes/live.dart';
 part 'evaluation/indexes/style.dart';
 part 'evaluation/indexes/transient_transform.dart';
+part 'evaluation/indexes/prefab.dart';
 
 part 'layout/shape.dart';
 part 'layout/size.dart';
@@ -95,6 +96,8 @@ part 'statements/fillet_face_statement.dart';
 part 'statements/generator_statement.dart';
 part 'statements/text_statement.dart';
 part 'statements/reorder_statement.dart';
+part 'statements/prefab_origin_statement.dart';
+part 'statements/prefab_instance_statement.dart';
 
 part 'modifiers/fillet_modifier.dart';
 
@@ -110,8 +113,8 @@ part 'routers/flatten_router.dart';
 part 'routers/reparent_router.dart';
 part 'routers/slice_router.dart';
 part 'routers/generator_router.dart';
+part 'routers/prefab_router.dart';
 
-// part 'assets/asset_manifest.dart';
 part 'assets/asset_cache.dart';
 
 final _log = Logger('program');

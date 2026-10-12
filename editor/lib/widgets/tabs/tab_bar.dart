@@ -67,12 +67,12 @@ class EditorTabBar extends HookWidget {
           VerticalDivider(),
           HookBuilder(
             builder: (context) {
-              final isVisible = useListenable(context.editor.toolOptionsWindow).isActive;
+              final isVisible = useListenable(context.editor.canvasToolOptionsWindow).isActive;
 
               return IconButton.flat(
                 size: height,
                 borderRadius: .zero,
-                onTap: () => context.editor.toolOptionsWindow.toggle(context),
+                onTap: () => context.editor.canvasToolOptionsWindow.toggle(context),
                 isSelected: isVisible,
                 tooltip: .new('Tool options', shortcut: .new(.keyO)),
                 child: Icons.tune(),

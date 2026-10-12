@@ -39,6 +39,14 @@ final class CutEdgeStatement extends Statement {
   );
 
   @override
+  CutEdgeStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    target: partial.field(#target),
+    t: partial.field(#t),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) {
     return switch (target) {
       CellRef c when c == vertex => .absorb,

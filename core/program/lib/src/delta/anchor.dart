@@ -7,7 +7,7 @@ sealed class ProgramAnchor {
   static const end = EndAnchor();
   const factory ProgramAnchor.at(StatementId id) = AtAnchor;
   const factory ProgramAnchor.after(StatementId id) = AfterAnchor;
-
+  
   int? resolve(Program program);
 }
 

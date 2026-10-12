@@ -6,6 +6,6 @@ final class GeneratorInputNode extends GeneratorInputNodeBase {
   @override
   void execute(BlueprintExecution context) {
     final inputSlice = context.environment<ProgramSlice>();
-    context.setConstant(o.slice, inputSlice.materialize((s) => context.deriveFor(this, s)));
+    context.setConstant(o.slice, inputSlice.materialize((_, s) => context.deriveFor(this, s)));
   }
 }

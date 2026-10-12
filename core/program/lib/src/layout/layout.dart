@@ -28,10 +28,13 @@ abstract interface class LayoutContainer extends LayoutBox {
   Layout get layout;
 }
 
+enum LayoutKind { stack, flexRow, flexColumn }
+
 sealed class Layout {
   const Layout({this.padding = .zero});
 
   final LayoutInsets padding;
+  LayoutKind get kind;
 
   static const default_ = Layout.stack();
 
@@ -41,13 +44,17 @@ sealed class Layout {
     LayoutInsets padding,
   }) = StackLayout;
 
-  const factory Layout.flex({
+  factory Layout.flex({
     required FlexDirection direction,
     double gap,
     LayoutJustify justify,
     LayoutAlign crossAlign,
     LayoutInsets padding,
-  }) = FlexLayout;
+  }) = FlexLayout.create;
+
+  Layout copyWith({
+    LayoutInsets? padding,
+  });
 }
 
 final class const Placement(final Vec2? offset, final Size2 size) {

@@ -194,6 +194,8 @@ enum Statement_Value {
   generator,
   text,
   reorder,
+  prefabOrigin,
+  prefabInstance,
   notSet
 }
 
@@ -217,6 +219,8 @@ class Statement extends $pb.GeneratedMessage {
     GeneratorStatement? generator,
     TextStatement? text,
     ReorderStatement? reorder,
+    PrefabOriginStatement? prefabOrigin,
+    PrefabInstanceStatement? prefabInstance,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -237,6 +241,8 @@ class Statement extends $pb.GeneratedMessage {
     if (generator != null) result.generator = generator;
     if (text != null) result.text = text;
     if (reorder != null) result.reorder = reorder;
+    if (prefabOrigin != null) result.prefabOrigin = prefabOrigin;
+    if (prefabInstance != null) result.prefabInstance = prefabInstance;
     return result;
   }
 
@@ -265,13 +271,16 @@ class Statement extends $pb.GeneratedMessage {
     22: Statement_Value.generator,
     23: Statement_Value.text,
     24: Statement_Value.reorder,
+    25: Statement_Value.prefabOrigin,
+    26: Statement_Value.prefabInstance,
     0: Statement_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Statement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
+    ..oo(
+        0, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26])
     ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: StatementId.create)
     ..aOM<ModifierStack>(2, _omitFieldNames ? '' : 'modifiers',
@@ -307,6 +316,10 @@ class Statement extends $pb.GeneratedMessage {
         subBuilder: TextStatement.create)
     ..aOM<ReorderStatement>(24, _omitFieldNames ? '' : 'reorder',
         subBuilder: ReorderStatement.create)
+    ..aOM<PrefabOriginStatement>(25, _omitFieldNames ? '' : 'prefabOrigin',
+        subBuilder: PrefabOriginStatement.create)
+    ..aOM<PrefabInstanceStatement>(26, _omitFieldNames ? '' : 'prefabInstance',
+        subBuilder: PrefabInstanceStatement.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -342,6 +355,8 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   @$pb.TagNumber(23)
   @$pb.TagNumber(24)
+  @$pb.TagNumber(25)
+  @$pb.TagNumber(26)
   Statement_Value whichValue() => _Statement_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -358,6 +373,8 @@ class Statement extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   @$pb.TagNumber(23)
   @$pb.TagNumber(24)
+  @$pb.TagNumber(25)
+  @$pb.TagNumber(26)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -555,6 +572,28 @@ class Statement extends $pb.GeneratedMessage {
   void clearReorder() => $_clearField(24);
   @$pb.TagNumber(24)
   ReorderStatement ensureReorder() => $_ensure(17);
+
+  @$pb.TagNumber(25)
+  PrefabOriginStatement get prefabOrigin => $_getN(18);
+  @$pb.TagNumber(25)
+  set prefabOrigin(PrefabOriginStatement value) => $_setField(25, value);
+  @$pb.TagNumber(25)
+  $core.bool hasPrefabOrigin() => $_has(18);
+  @$pb.TagNumber(25)
+  void clearPrefabOrigin() => $_clearField(25);
+  @$pb.TagNumber(25)
+  PrefabOriginStatement ensurePrefabOrigin() => $_ensure(18);
+
+  @$pb.TagNumber(26)
+  PrefabInstanceStatement get prefabInstance => $_getN(19);
+  @$pb.TagNumber(26)
+  set prefabInstance(PrefabInstanceStatement value) => $_setField(26, value);
+  @$pb.TagNumber(26)
+  $core.bool hasPrefabInstance() => $_has(19);
+  @$pb.TagNumber(26)
+  void clearPrefabInstance() => $_clearField(26);
+  @$pb.TagNumber(26)
+  PrefabInstanceStatement ensurePrefabInstance() => $_ensure(19);
 }
 
 class U64 extends $pb.GeneratedMessage {
@@ -4101,6 +4140,343 @@ class ReorderStatement extends $pb.GeneratedMessage {
   void clearSibling() => $_clearField(4);
   @$pb.TagNumber(4)
   CellSelector ensureSibling() => $_ensure(3);
+}
+
+class PrefabOriginStatement extends $pb.GeneratedMessage {
+  factory PrefabOriginStatement({
+    Layout? layout,
+    LayoutSize? size,
+    Mat4? transform,
+    ObjectShape? shape,
+    VertexStyle? vertexStyle,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
+    CellRef? parent,
+  }) {
+    final result = create();
+    if (layout != null) result.layout = layout;
+    if (size != null) result.size = size;
+    if (transform != null) result.transform = transform;
+    if (shape != null) result.shape = shape;
+    if (vertexStyle != null) result.vertexStyle = vertexStyle;
+    if (edgeStyle != null) result.edgeStyle = edgeStyle;
+    if (faceStyle != null) result.faceStyle = faceStyle;
+    if (parent != null) result.parent = parent;
+    return result;
+  }
+
+  PrefabOriginStatement._();
+
+  factory PrefabOriginStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrefabOriginStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrefabOriginStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Layout>(1, _omitFieldNames ? '' : 'layout', subBuilder: Layout.create)
+    ..aOM<LayoutSize>(2, _omitFieldNames ? '' : 'size',
+        subBuilder: LayoutSize.create)
+    ..aOM<Mat4>(3, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
+    ..aOM<ObjectShape>(4, _omitFieldNames ? '' : 'shape',
+        subBuilder: ObjectShape.create)
+    ..aOM<VertexStyle>(5, _omitFieldNames ? '' : 'vertexStyle',
+        subBuilder: VertexStyle.create)
+    ..aOM<EdgeStyle>(6, _omitFieldNames ? '' : 'edgeStyle',
+        subBuilder: EdgeStyle.create)
+    ..aOM<FaceStyle>(7, _omitFieldNames ? '' : 'faceStyle',
+        subBuilder: FaceStyle.create)
+    ..aOM<CellRef>(8, _omitFieldNames ? '' : 'parent',
+        subBuilder: CellRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabOriginStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabOriginStatement copyWith(
+          void Function(PrefabOriginStatement) updates) =>
+      super.copyWith((message) => updates(message as PrefabOriginStatement))
+          as PrefabOriginStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrefabOriginStatement create() => PrefabOriginStatement._();
+  @$core.override
+  PrefabOriginStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PrefabOriginStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrefabOriginStatement>(create);
+  static PrefabOriginStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Layout get layout => $_getN(0);
+  @$pb.TagNumber(1)
+  set layout(Layout value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLayout() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLayout() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Layout ensureLayout() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  LayoutSize get size => $_getN(1);
+  @$pb.TagNumber(2)
+  set size(LayoutSize value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSize() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSize() => $_clearField(2);
+  @$pb.TagNumber(2)
+  LayoutSize ensureSize() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  Mat4 get transform => $_getN(2);
+  @$pb.TagNumber(3)
+  set transform(Mat4 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTransform() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTransform() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Mat4 ensureTransform() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ObjectShape get shape => $_getN(3);
+  @$pb.TagNumber(4)
+  set shape(ObjectShape value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasShape() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearShape() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ObjectShape ensureShape() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  VertexStyle get vertexStyle => $_getN(4);
+  @$pb.TagNumber(5)
+  set vertexStyle(VertexStyle value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVertexStyle() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVertexStyle() => $_clearField(5);
+  @$pb.TagNumber(5)
+  VertexStyle ensureVertexStyle() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  EdgeStyle get edgeStyle => $_getN(5);
+  @$pb.TagNumber(6)
+  set edgeStyle(EdgeStyle value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEdgeStyle() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEdgeStyle() => $_clearField(6);
+  @$pb.TagNumber(6)
+  EdgeStyle ensureEdgeStyle() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  FaceStyle get faceStyle => $_getN(6);
+  @$pb.TagNumber(7)
+  set faceStyle(FaceStyle value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFaceStyle() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFaceStyle() => $_clearField(7);
+  @$pb.TagNumber(7)
+  FaceStyle ensureFaceStyle() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  CellRef get parent => $_getN(7);
+  @$pb.TagNumber(8)
+  set parent(CellRef value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasParent() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearParent() => $_clearField(8);
+  @$pb.TagNumber(8)
+  CellRef ensureParent() => $_ensure(7);
+}
+
+class PrefabInstanceStatement extends $pb.GeneratedMessage {
+  factory PrefabInstanceStatement({
+    StatementId? prefabId,
+    Layout? layout,
+    LayoutSize? size,
+    Mat4? transform,
+    ObjectShape? shape,
+    VertexStyle? vertexStyle,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
+    CellRef? parent,
+  }) {
+    final result = create();
+    if (prefabId != null) result.prefabId = prefabId;
+    if (layout != null) result.layout = layout;
+    if (size != null) result.size = size;
+    if (transform != null) result.transform = transform;
+    if (shape != null) result.shape = shape;
+    if (vertexStyle != null) result.vertexStyle = vertexStyle;
+    if (edgeStyle != null) result.edgeStyle = edgeStyle;
+    if (faceStyle != null) result.faceStyle = faceStyle;
+    if (parent != null) result.parent = parent;
+    return result;
+  }
+
+  PrefabInstanceStatement._();
+
+  factory PrefabInstanceStatement.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrefabInstanceStatement.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrefabInstanceStatement',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<StatementId>(1, _omitFieldNames ? '' : 'prefabId',
+        subBuilder: StatementId.create)
+    ..aOM<Layout>(2, _omitFieldNames ? '' : 'layout', subBuilder: Layout.create)
+    ..aOM<LayoutSize>(3, _omitFieldNames ? '' : 'size',
+        subBuilder: LayoutSize.create)
+    ..aOM<Mat4>(4, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
+    ..aOM<ObjectShape>(5, _omitFieldNames ? '' : 'shape',
+        subBuilder: ObjectShape.create)
+    ..aOM<VertexStyle>(6, _omitFieldNames ? '' : 'vertexStyle',
+        subBuilder: VertexStyle.create)
+    ..aOM<EdgeStyle>(7, _omitFieldNames ? '' : 'edgeStyle',
+        subBuilder: EdgeStyle.create)
+    ..aOM<FaceStyle>(8, _omitFieldNames ? '' : 'faceStyle',
+        subBuilder: FaceStyle.create)
+    ..aOM<CellRef>(9, _omitFieldNames ? '' : 'parent',
+        subBuilder: CellRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabInstanceStatement clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabInstanceStatement copyWith(
+          void Function(PrefabInstanceStatement) updates) =>
+      super.copyWith((message) => updates(message as PrefabInstanceStatement))
+          as PrefabInstanceStatement;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrefabInstanceStatement create() => PrefabInstanceStatement._();
+  @$core.override
+  PrefabInstanceStatement createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PrefabInstanceStatement getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrefabInstanceStatement>(create);
+  static PrefabInstanceStatement? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  StatementId get prefabId => $_getN(0);
+  @$pb.TagNumber(1)
+  set prefabId(StatementId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPrefabId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPrefabId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StatementId ensurePrefabId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  Layout get layout => $_getN(1);
+  @$pb.TagNumber(2)
+  set layout(Layout value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLayout() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLayout() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Layout ensureLayout() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  LayoutSize get size => $_getN(2);
+  @$pb.TagNumber(3)
+  set size(LayoutSize value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSize() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSize() => $_clearField(3);
+  @$pb.TagNumber(3)
+  LayoutSize ensureSize() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  Mat4 get transform => $_getN(3);
+  @$pb.TagNumber(4)
+  set transform(Mat4 value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTransform() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTransform() => $_clearField(4);
+  @$pb.TagNumber(4)
+  Mat4 ensureTransform() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  ObjectShape get shape => $_getN(4);
+  @$pb.TagNumber(5)
+  set shape(ObjectShape value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasShape() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearShape() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ObjectShape ensureShape() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  VertexStyle get vertexStyle => $_getN(5);
+  @$pb.TagNumber(6)
+  set vertexStyle(VertexStyle value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasVertexStyle() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearVertexStyle() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VertexStyle ensureVertexStyle() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  EdgeStyle get edgeStyle => $_getN(6);
+  @$pb.TagNumber(7)
+  set edgeStyle(EdgeStyle value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasEdgeStyle() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearEdgeStyle() => $_clearField(7);
+  @$pb.TagNumber(7)
+  EdgeStyle ensureEdgeStyle() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  FaceStyle get faceStyle => $_getN(7);
+  @$pb.TagNumber(8)
+  set faceStyle(FaceStyle value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasFaceStyle() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearFaceStyle() => $_clearField(8);
+  @$pb.TagNumber(8)
+  FaceStyle ensureFaceStyle() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  CellRef get parent => $_getN(8);
+  @$pb.TagNumber(9)
+  set parent(CellRef value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasParent() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearParent() => $_clearField(9);
+  @$pb.TagNumber(9)
+  CellRef ensureParent() => $_ensure(8);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {

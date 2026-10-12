@@ -36,7 +36,7 @@ final class const ModifierInputField({
         ListItem(
           title: body,
           height: 32.0,
-          padding: .only(left: 12.0, right: 4.0),
+          padding: .only(left: 12.0, right: 6.0),
           trailing: IconButton.flat(
             onTap: onRemove,
             child: Icons.remove(),

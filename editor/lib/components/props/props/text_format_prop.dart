@@ -102,7 +102,7 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
             ],
           ),
           const SizedBox(height: 8.0),
-          DoubleExpressionInputField(
+          DoubleInputField(
             value: useProxyComputed(format, (v) => v?.fontSize),
             onChanged: (v) => prop.set(txn, .new(fontSize: v)),
             sessionCallbacks: txn.sessionCallbacks,
@@ -113,7 +113,7 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
             spacing: 8.0,
             children: [
               Expanded(
-                child: DoubleExpressionInputField(
+                child: DoubleInputField(
                   value: useProxyComputed(format, (v) => v?.lineHeight),
                   onChanged: (v) => prop.set(txn, .new(lineHeight: v)),
                   sessionCallbacks: txn.sessionCallbacks,
@@ -121,7 +121,7 @@ final class TextFormatPropWidget extends HookWidget with PropWidget {
                 ),
               ),
               Expanded(
-                child: DoubleExpressionInputField(
+                child: DoubleInputField(
                   value: useProxyComputed(format, (v) => v?.letterSpacing),
                   onChanged: (v) => prop.set(txn, .new(letterSpacing: v)),
                   sessionCallbacks: txn.sessionCallbacks,

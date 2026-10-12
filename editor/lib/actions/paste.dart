@@ -22,7 +22,7 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
         final slice = ProgramSlice.decodeRaw(sliceData);
         if (slice == null) return;
 
-        final remapped = slice.materialize((s) => .allocate());
+        final remapped = slice.materialize((_, s) => .allocate());
         final mergeKey = Object();
         editor.edit((txn) {
           for (final s in remapped.statements) txn.insert(s);
@@ -69,8 +69,7 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
               for (final statement in statements) {
                 final style = statement.faceStyle;
                 final newStyle = style.copyWith(decorations: style.decorations.appendAll(decorations));
-                final updated = statement.copyWithFaceStyle(style: newStyle);
-                txn.update(updated.id, (_) => updated);
+                txn.updatePartial(statement.id, .faceStyle(newStyle));
               }
             });
 

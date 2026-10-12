@@ -63,7 +63,7 @@ export 'ui/display/single_activator_widget.dart';
 export 'ui/divider.dart';
 export 'ui/form/checkbox.dart';
 export 'ui/form/color_input_field.dart';
-export 'ui/form/expression_input.dart';
+export 'ui/form/number_input.dart';
 export 'ui/form/input_field_base.dart';
 export 'ui/form/input_field.dart';
 export 'ui/form/text_field.dart';

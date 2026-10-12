@@ -8,6 +8,13 @@ extension TreeQuery on TopologyQuery {
     return p?.ref(bundle);
   }
 
+  Iterable<FrameRef> ancestorChain(CellRef cell) {
+    final h = bundle.handle(cell);
+    if (h == null) return const [];
+    final chain = bundle.ancestorsOf(h);
+    return chain.map(bundle.frameRef);
+  }
+
   FrameRef lca(CellRef a, CellRef b) {
     final ha = bundle.handle(a);
     final hb = bundle.handle(b);
@@ -17,7 +24,7 @@ extension TreeQuery on TopologyQuery {
     return bundle.frameRef(f);
   }
 
-  FrameRef lcaMany(List<CellRef> cells) {
+  FrameRef lcaMany(Iterable<CellRef> cells) {
     if (cells.isEmpty) return .root;
     final handles = cells.map(bundle.handle).toList();
     if (handles.any((h) => h == null)) throw StateError('no handles for some cells');

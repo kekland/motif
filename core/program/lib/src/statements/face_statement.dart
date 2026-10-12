@@ -58,6 +58,13 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
   );
 
   @override
+  FaceStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    style: partial.field(#faceStyle),
+  );
+
+  @override
   FaceStatement copyWithFaceStyle({FaceStyle? style}) => copyWith(style: style);
 
   @override

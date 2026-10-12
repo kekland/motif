@@ -85,7 +85,7 @@ final class SceneSelection with ChangeNotifier {
     for (final r in _refSources) _refs.addAll(e.lineage.descendantsOf(r).where((r) => e.bundle.isLive(r.cell)));
     _statements.clear();
     _statements.addAll(_statementSources.where((s) => e.statement(s) != null));
-    _statements.addAll(_refs.map((ref) => e.rootOf(ref.statementId)));
+    _statements.addAll(_refs.map((ref) => ref.statementId));
     for (final s in _statementSources) _refs.addAll(e.productsOf(s).where(e.bundle.isLive));
 
     _cells.clear();

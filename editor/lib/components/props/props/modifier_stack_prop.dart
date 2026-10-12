@@ -28,7 +28,10 @@ final class const ModifierStackPropWidget({
     final isMixed = useProxyComputedValue(computed, (v) => v.isMixed);
 
     if (isMixed) {
-      return Text('Mixed modifiers');
+      return Padding(
+        padding: PropWidget.padding,
+        child: Text('Mixed modifiers', style: context.typography.caption.tertiary),
+      );
     }
 
     final isNotEmpty = useProxyComputedValue(value, (v) => v!.isNotEmpty);

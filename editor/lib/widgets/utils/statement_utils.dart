@@ -5,6 +5,8 @@ extension StatementUtils on Statement {
     if (name != null) return name!;
 
     return switch (this) {
+      PrefabOriginStatement() => 'Prefab',
+      PrefabInstanceStatement() => 'Instance',
       VertexStatement() => 'Vertex',
       EdgeStatement() => 'Edge',
       FaceStatement() => 'Face',
@@ -31,6 +33,8 @@ extension StatementUtils on Statement {
   }
 
   Widget resolveIcon(BuildContext context) => switch (this) {
+    PrefabOriginStatement() => Icons.prefabOrigin(),
+    PrefabInstanceStatement() => Icons.prefabInstance(),
     VertexStatement() => Icons.vertex(),
     EdgeStatement() => Icons.edge(),
     FaceStatement() => Icons.face(),

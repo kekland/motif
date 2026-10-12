@@ -50,6 +50,14 @@ final class VertexStatement extends Statement with VertexStyledStatement, Placed
   );
 
   @override
+  VertexStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    position: partial.field(#position),
+    style: partial.field(#vertexStyle),
+  );
+
+  @override
   VertexStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(style: style);
 
   @override

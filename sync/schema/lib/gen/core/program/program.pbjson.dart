@@ -384,6 +384,24 @@ const Statement$json = {
       '9': 0,
       '10': 'reorder'
     },
+    {
+      '1': 'prefab_origin',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.PrefabOriginStatement',
+      '9': 0,
+      '10': 'prefabOrigin'
+    },
+    {
+      '1': 'prefab_instance',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.PrefabInstanceStatement',
+      '9': 0,
+      '10': 'prefabInstance'
+    },
   ],
   '8': [
     {'1': 'value'},
@@ -410,7 +428,9 @@ final $typed_data.Uint8List statementDescriptor = $convert.base64Decode(
     'ZW50SABSBWdyb3VwEjkKCWdlbmVyYXRvchgWIAEoCzIZLm1vdGlmLkdlbmVyYXRvclN0YXRlbW'
     'VudEgAUglnZW5lcmF0b3ISKgoEdGV4dBgXIAEoCzIULm1vdGlmLlRleHRTdGF0ZW1lbnRIAFIE'
     'dGV4dBIzCgdyZW9yZGVyGBggASgLMhcubW90aWYuUmVvcmRlclN0YXRlbWVudEgAUgdyZW9yZG'
-    'VyQgcKBXZhbHVlQgcKBV9uYW1l');
+    'VyEkMKDXByZWZhYl9vcmlnaW4YGSABKAsyHC5tb3RpZi5QcmVmYWJPcmlnaW5TdGF0ZW1lbnRI'
+    'AFIMcHJlZmFiT3JpZ2luEkkKD3ByZWZhYl9pbnN0YW5jZRgaIAEoCzIeLm1vdGlmLlByZWZhYk'
+    'luc3RhbmNlU3RhdGVtZW50SABSDnByZWZhYkluc3RhbmNlQgcKBXZhbHVlQgcKBV9uYW1l');
 
 @$core.Deprecated('Use u64Descriptor instead')
 const U64$json = {
@@ -1901,6 +1921,189 @@ final $typed_data.Uint8List reorderStatementDescriptor = $convert.base64Decode(
     'dBIXCgRyYW5rGAMgASgFSABSBHJhbmuIAQESMgoHc2libGluZxgEIAEoCzITLm1vdGlmLkNlbG'
     'xTZWxlY3RvckgBUgdzaWJsaW5niAEBQgcKBV9yYW5rQgoKCF9zaWJsaW5n');
 
+@$core.Deprecated('Use prefabOriginStatementDescriptor instead')
+const PrefabOriginStatement$json = {
+  '1': 'PrefabOriginStatement',
+  '2': [
+    {
+      '1': 'layout',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout',
+      '10': 'layout'
+    },
+    {
+      '1': 'size',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `PrefabOriginStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List prefabOriginStatementDescriptor = $convert.base64Decode(
+    'ChVQcmVmYWJPcmlnaW5TdGF0ZW1lbnQSJQoGbGF5b3V0GAEgASgLMg0ubW90aWYuTGF5b3V0Ug'
+    'ZsYXlvdXQSJQoEc2l6ZRgCIAEoCzIRLm1vdGlmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNm'
+    'b3JtGAMgASgLMgsubW90aWYuTWF0NFIJdHJhbnNmb3JtEigKBXNoYXBlGAQgASgLMhIubW90aW'
+    'YuT2JqZWN0U2hhcGVSBXNoYXBlEjUKDHZlcnRleF9zdHlsZRgFIAEoCzISLm1vdGlmLlZlcnRl'
+    'eFN0eWxlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAYgASgLMhAubW90aWYuRWRnZVN0eW'
+    'xlUgllZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgHIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIJZmFj'
+    'ZVN0eWxlEisKBnBhcmVudBgIIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB1'
+    '9wYXJlbnQ=');
+
+@$core.Deprecated('Use prefabInstanceStatementDescriptor instead')
+const PrefabInstanceStatement$json = {
+  '1': 'PrefabInstanceStatement',
+  '2': [
+    {
+      '1': 'prefab_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementId',
+      '10': 'prefabId'
+    },
+    {
+      '1': 'layout',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout',
+      '10': 'layout'
+    },
+    {
+      '1': 'size',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '10': 'size'
+    },
+    {
+      '1': 'transform',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '10': 'transform'
+    },
+    {
+      '1': 'shape',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape',
+      '10': 'shape'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'parent',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CellRef',
+      '9': 0,
+      '10': 'parent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_parent'},
+  ],
+};
+
+/// Descriptor for `PrefabInstanceStatement`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List prefabInstanceStatementDescriptor = $convert.base64Decode(
+    'ChdQcmVmYWJJbnN0YW5jZVN0YXRlbWVudBIvCglwcmVmYWJfaWQYASABKAsyEi5tb3RpZi5TdG'
+    'F0ZW1lbnRJZFIIcHJlZmFiSWQSJQoGbGF5b3V0GAIgASgLMg0ubW90aWYuTGF5b3V0UgZsYXlv'
+    'dXQSJQoEc2l6ZRgDIAEoCzIRLm1vdGlmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNmb3JtGA'
+    'QgASgLMgsubW90aWYuTWF0NFIJdHJhbnNmb3JtEigKBXNoYXBlGAUgASgLMhIubW90aWYuT2Jq'
+    'ZWN0U2hhcGVSBXNoYXBlEjUKDHZlcnRleF9zdHlsZRgGIAEoCzISLm1vdGlmLlZlcnRleFN0eW'
+    'xlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAcgASgLMhAubW90aWYuRWRnZVN0eWxlUgll'
+    'ZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgIIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0eW'
+    'xlEisKBnBhcmVudBgJIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB19wYXJl'
+    'bnQ=');
+
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {
   '1': 'ObjectShape',
@@ -2188,9 +2391,10 @@ const Layout_Flex_Direction$json = {
 const Layout_Align$json = {
   '1': 'Align',
   '2': [
-    {'1': 'LAYOUT_ALIGN_START', '2': 0},
-    {'1': 'LAYOUT_ALIGN_CENTER', '2': 1},
-    {'1': 'LAYOUT_ALIGN_END', '2': 2},
+    {'1': 'LAYOUT_ALIGN_NONE', '2': 0},
+    {'1': 'LAYOUT_ALIGN_START', '2': 1},
+    {'1': 'LAYOUT_ALIGN_CENTER', '2': 2},
+    {'1': 'LAYOUT_ALIGN_END', '2': 3},
   ],
 };
 
@@ -2220,11 +2424,11 @@ final $typed_data.Uint8List layoutDescriptor = $convert.base64Decode(
     'AyABKA4yEy5tb3RpZi5MYXlvdXQuQWxpZ25SCmNyb3NzQWxpZ24SEAoDZ2FwGAQgASgBUgNnYX'
     'ASLgoHcGFkZGluZxgFIAEoCzIULm1vdGlmLkxheW91dC5JbnNldHNSB3BhZGRpbmciTAoJRGly'
     'ZWN0aW9uEh0KGUxBWU9VVF9GTEVYX0RJUkVDVElPTl9ST1cQABIgChxMQVlPVVRfRkxFWF9ESV'
-    'JFQ1RJT05fQ09MVU1OEAEiTgoFQWxpZ24SFgoSTEFZT1VUX0FMSUdOX1NUQVJUEAASFwoTTEFZ'
-    'T1VUX0FMSUdOX0NFTlRFUhABEhQKEExBWU9VVF9BTElHTl9FTkQQAiJ4CgdKdXN0aWZ5EhgKFE'
-    'xBWU9VVF9KVVNUSUZZX1NUQVJUEAASGQoVTEFZT1VUX0pVU1RJRllfQ0VOVEVSEAESFgoSTEFZ'
-    'T1VUX0pVU1RJRllfRU5EEAISIAocTEFZT1VUX0pVU1RJRllfU1BBQ0VfQkVUV0VFThADQgcKBX'
-    'ZhbHVl');
+    'JFQ1RJT05fQ09MVU1OEAEiZQoFQWxpZ24SFQoRTEFZT1VUX0FMSUdOX05PTkUQABIWChJMQVlP'
+    'VVRfQUxJR05fU1RBUlQQARIXChNMQVlPVVRfQUxJR05fQ0VOVEVSEAISFAoQTEFZT1VUX0FMSU'
+    'dOX0VORBADIngKB0p1c3RpZnkSGAoUTEFZT1VUX0pVU1RJRllfU1RBUlQQABIZChVMQVlPVVRf'
+    'SlVTVElGWV9DRU5URVIQARIWChJMQVlPVVRfSlVTVElGWV9FTkQQAhIgChxMQVlPVVRfSlVTVE'
+    'lGWV9TUEFDRV9CRVRXRUVOEANCBwoFdmFsdWU=');
 
 @$core.Deprecated('Use textFormatDescriptor instead')
 const TextFormat$json = {

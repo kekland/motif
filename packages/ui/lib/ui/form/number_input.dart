@@ -23,8 +23,8 @@ class ExpressionInputField<T> extends ValueTextInputField<T> {
        );
 }
 
-class IntExpressionInputField extends ExpressionInputField<int> {
-  IntExpressionInputField({
+class IntInputField extends ExpressionInputField<int> {
+  IntInputField({
     super.key,
     required super.value,
     super.sessionCallbacks,
@@ -39,8 +39,8 @@ class IntExpressionInputField extends ExpressionInputField<int> {
        );
 }
 
-class DoubleExpressionInputField extends ExpressionInputField<double> {
-  DoubleExpressionInputField({
+class DoubleInputField extends ExpressionInputField<double> {
+  DoubleInputField({
     super.key,
     required super.value,
     super.sessionCallbacks,

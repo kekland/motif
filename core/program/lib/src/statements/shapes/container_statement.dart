@@ -29,7 +29,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
     Layout? layout,
     LayoutSize? size,
     Mat4? transform,
-    RectangleObjectShape? shape,
+    ObjectShape? shape,
     VertexStyle? vertexStyle,
     EdgeStyle? edgeStyle,
     FaceStyle? faceStyle,
@@ -46,5 +46,18 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
     edgeStyle: edgeStyle ?? this.edgeStyle,
     faceStyle: faceStyle ?? this.faceStyle,
     parent: parent ?? this.parent?.ref,
+  );
+
+  @override
+  ContainerStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    layout: partial.field(#layout),
+    size: partial.field(#layoutSize),
+    transform: partial.field(#transform),
+    shape: partial.field(#objectShape),
+    vertexStyle: partial.field(#vertexStyle),
+    edgeStyle: partial.field(#edgeStyle),
+    faceStyle: partial.field(#faceStyle),
   );
 }

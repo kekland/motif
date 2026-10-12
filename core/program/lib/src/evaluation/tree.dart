@@ -54,14 +54,17 @@ final class EvalTree {
     return out;
   }
 
-  /// Returns [node] and everything in its subtree in evaluation order
+  /// Returns [node] and everything in its subtree in evaluation order.
   Iterable<EvalNode> subtree(EvalNode node) sync* {
     yield node;
     for (final child in node.children) yield* subtree(child);
   }
 
-  /// Returns the IDs of [node] and all nodes in its subtree.
+  /// Returns the IDs of [id]'s subtree.
   Iterable<StatementId> subtreeIds(StatementId id) => subtree(_nodes[id]!).map((n) => n.id);
+
+  /// Returns the statements of [id]'s subtree.
+  Iterable<Statement> subtreeStatements(StatementId id) => subtree(_nodes[id]!).map((n) => n.statement);
 
   /// Whether [a] is evaluated after [b].
   bool isAfter(EvalNode a, EvalNode b) => order(a, b) > 0;

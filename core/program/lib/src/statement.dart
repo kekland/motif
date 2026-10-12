@@ -29,6 +29,8 @@ sealed class Statement {
     String? name,
   });
 
+  Statement applyPartial(StatementPartial partial);
+
   /// Tries to apply a given [remap] to the statement and its selectors. Returns `null` if the remap is refused.
   Statement? maybeRemap(Remap remap) {
     final copy = copyWith();
@@ -63,4 +65,43 @@ sealed class Statement {
   DissolveIntent routeDissolve(Set<CellRef> targeted) => .new(targeted);
   ReparentRoute routeReparent(CellRef target) => .refuse;
   Statement absorbReparent(FrameRef to, Mat4 parentTransform) => this;
+}
+
+class StatementPartial<S extends Statement>(final Map<Symbol, Object?> fields) extends Partial<S> {
+  static StatementPartial merged(Iterable<StatementPartial> partials) {
+    final mergedFields = <Symbol, Object?>{};
+    for (final partial in partials) mergedFields.addAll(partial.fields);
+    return .new(mergedFields);
+  }
+
+  StatementPartial.modifiers(ModifierStack modifiers) : this({#modifiers: modifiers});
+  StatementPartial.name(String name) : this({#name: name});
+
+  StatementPartial.transform(Mat4 transform) : this({#transform: transform});
+  StatementPartial.layoutSize(LayoutSize layoutSize) : this({#layoutSize: layoutSize});
+
+  StatementPartial.vertexStyle(VertexStyle vertexStyle) : this({#vertexStyle: vertexStyle});
+  StatementPartial.edgeStyle(EdgeStyle edgeStyle) : this({#edgeStyle: edgeStyle});
+  StatementPartial.faceStyle(FaceStyle faceStyle) : this({#faceStyle: faceStyle});
+
+  StatementPartial.objectShape(ObjectShape objectShape) : this({#objectShape: objectShape});
+
+  StatementPartial.position(Vec2 position) : this({#position: position});
+
+  StatementPartial.text(String text) : this({#text: text});
+  StatementPartial.textFormat(TextFormat textFormat) : this({#textFormat: textFormat});
+  StatementPartial.paragraphFormat(ParagraphFormat paragraphFormat) : this({#paragraphFormat: paragraphFormat});
+
+  StatementPartial.corners(Map<int, CornerRadius> corners) : this({#corners: corners});
+  StatementPartial.radius(CornerRadius radius) : this({#radius: radius});
+
+  StatementPartial.glueVerticesPosition(GlueVerticesPosition glueVerticesPosition)
+    : this({#glueVerticesPosition: glueVerticesPosition});
+
+  StatementPartial.layout(Layout layout) : this({#layout: layout});
+
+  T? field<T>(Symbol id) => fields[id] as T?;
+
+  @override
+  S apply(S statement) => statement.applyPartial(this) as S;
 }

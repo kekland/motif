@@ -2,19 +2,55 @@ part of '../../_program.dart';
 
 enum LayoutJustify { start, center, end, spaceBetween }
 
-final class FlexLayout extends Layout {
+sealed class FlexLayout extends Layout {
   const FlexLayout({
-    required this.direction,
     this.gap = 0.0,
     this.justify = .start,
     this.crossAlign = .start,
     super.padding,
   });
 
-  final FlexDirection direction;
+  factory FlexLayout.create({
+    required FlexDirection direction,
+    double gap = 0.0,
+    LayoutJustify justify = .start,
+    LayoutAlign crossAlign = .start,
+    LayoutInsets padding = .zero,
+  }) => switch (direction) {
+    .row => FlexRowLayout(
+      gap: gap,
+      justify: justify,
+      crossAlign: crossAlign,
+      padding: padding,
+    ),
+    .column => FlexColumnLayout(
+      gap: gap,
+      justify: justify,
+      crossAlign: crossAlign,
+      padding: padding,
+    ),
+  };
+
+  FlexDirection get direction;
+
   final LayoutJustify justify;
   final LayoutAlign crossAlign;
   final double gap;
+
+  @override
+  FlexLayout copyWith({
+    FlexDirection? direction,
+    LayoutJustify? justify,
+    LayoutAlign? crossAlign,
+    double? gap,
+    LayoutInsets? padding,
+  }) => .create(
+    direction: direction ?? this.direction,
+    justify: justify ?? this.justify,
+    crossAlign: crossAlign ?? this.crossAlign,
+    gap: gap ?? this.gap,
+    padding: padding ?? this.padding,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -27,6 +63,32 @@ final class FlexLayout extends Layout {
 
   @override
   int get hashCode => Object.hash(direction, gap, justify, crossAlign, padding);
+}
+
+final class const FlexRowLayout({
+  super.gap,
+  super.justify,
+  super.crossAlign,
+  super.padding,
+}) extends FlexLayout {
+  @override
+  final FlexDirection direction = .row;
+
+  @override
+  LayoutKind get kind => .flexRow;
+}
+
+final class const FlexColumnLayout({
+  super.gap,
+  super.justify,
+  super.crossAlign,
+  super.padding,
+}) extends FlexLayout {
+  @override
+  final FlexDirection direction = .column;
+
+  @override
+  LayoutKind get kind => .flexColumn;
 }
 
 enum FlexDirection {
@@ -73,7 +135,6 @@ extension _FlexLayoutImpl on LayoutTree {
     final sizes = List<Size2?>.filled(k, null);
     final bounds = List<Aabb2?>.filled(k, null);
 
-    final main = List.filled(k, 0.0);
     var used = gaps, expanding = 0;
     for (var i = 0; i < k; i++) {
       final child = children[i];
@@ -102,9 +163,7 @@ extension _FlexLayoutImpl on LayoutTree {
       }
     }
 
-    var consumed = gaps;
-    for (final m in main) consumed += m;
-    final slack = innerMain - consumed;
+    final slack = innerMain - used;
     final (start, between) = switch (l.justify) {
       .start => (0.0, l.gap),
       .center => (slack / 2.0, l.gap),

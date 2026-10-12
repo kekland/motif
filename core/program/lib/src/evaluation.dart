@@ -13,6 +13,7 @@ final class Evaluation {
     tree = .new(this);
     layout = .new(this);
     transientTransform = .new();
+    prefabs = .new(this);
 
     assetCache?.addFetchListener(_onAssetLoaded);
   }
@@ -26,6 +27,7 @@ final class Evaluation {
   late final StyleIndex style;
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
+  late final PrefabIndex prefabs;
 
   AssetManifest get assetManifest => program.assetManifest;
 
@@ -148,7 +150,10 @@ final class Evaluation {
 
   void _onAssetLoaded(StatementId id) {
     final pass = beginPass();
-    pass.queue.add(id);
+    pass.queue.add(rootOf(id));
+
+    final origin = prefabs.originOf(id)?.id;
+    if (origin != null) pass._markPrefabsDirty([origin]);
     pass.drain();
   }
 

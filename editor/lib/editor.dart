@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/tab_bar.dart';
-import 'package:editor/widgets/tool/tool_options_panel.dart';
+import 'package:editor/widgets/tool/canvas_tool_options_panel.dart';
 import 'package:flutter/services.dart' hide AssetManifest, Clipboard;
 
 export 'widgets/editor_widget.dart';
@@ -83,8 +83,8 @@ final class Editor extends Controller {
   final tickerProviderKey = GlobalKey<TickerProviderStateMixin>();
   TickerProviderStateMixin get tickerProvider => tickerProviderKey.currentState!;
 
-  late final toolOptionsWindow = WindowEntry(
-    builder: (context) => ToolOptionsWindow(editor: this),
+  late final canvasToolOptionsWindow = WindowEntry(
+    builder: (context) => CanvasToolOptionsWindow(editor: this),
   );
 
   late final tab = $signal<EditorTab?>(null);

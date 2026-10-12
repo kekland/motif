@@ -291,21 +291,24 @@ class LayoutDimension_Type extends $pb.ProtobufEnum {
 }
 
 class Layout_Align extends $pb.ProtobufEnum {
+  static const Layout_Align LAYOUT_ALIGN_NONE =
+      Layout_Align._(0, _omitEnumNames ? '' : 'LAYOUT_ALIGN_NONE');
   static const Layout_Align LAYOUT_ALIGN_START =
-      Layout_Align._(0, _omitEnumNames ? '' : 'LAYOUT_ALIGN_START');
+      Layout_Align._(1, _omitEnumNames ? '' : 'LAYOUT_ALIGN_START');
   static const Layout_Align LAYOUT_ALIGN_CENTER =
-      Layout_Align._(1, _omitEnumNames ? '' : 'LAYOUT_ALIGN_CENTER');
+      Layout_Align._(2, _omitEnumNames ? '' : 'LAYOUT_ALIGN_CENTER');
   static const Layout_Align LAYOUT_ALIGN_END =
-      Layout_Align._(2, _omitEnumNames ? '' : 'LAYOUT_ALIGN_END');
+      Layout_Align._(3, _omitEnumNames ? '' : 'LAYOUT_ALIGN_END');
 
   static const $core.List<Layout_Align> values = <Layout_Align>[
+    LAYOUT_ALIGN_NONE,
     LAYOUT_ALIGN_START,
     LAYOUT_ALIGN_CENTER,
     LAYOUT_ALIGN_END,
   ];
 
   static final $core.List<Layout_Align?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
   static Layout_Align? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

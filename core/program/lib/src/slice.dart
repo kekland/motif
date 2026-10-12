@@ -28,11 +28,35 @@ final class ProgramSlice {
   final List<Statement> statements;
   int get length => statements.length;
 
-  ProgramSlice materialize(StatementId Function(Statement) idOf) {
+  ProgramSlice materialize(StatementId Function(int, Statement) idOf) {
     final idMap = <StatementId, StatementId>{};
     for (var i = 0; i < statements.length; i++) {
       final s = statements[i];
-      final id = idOf(s);
+      final id = idOf(i, s);
+      idMap[s.id] = id;
+    }
+
+    final remap = Remap.statements(idMap);
+    final prefabs = SlicePrefabIndex(slice: this);
+    final output = <Statement>[];
+
+    for (final s in statements) {
+      if (s is PrefabOriginStatement) {
+        final instance = PrefabInstanceStatement.fromOrigin(s, id: idMap[s.id]);
+        output.add(instance.remap(remap));
+      } else if (prefabs.originOf(s.id) == null) {
+        output.add(s.remap(remap));
+      }
+    }
+
+    return ProgramSlice(statements: output);
+  }
+
+  ProgramSlice materializeRaw(StatementId Function(int, Statement) idOf) {
+    final idMap = <StatementId, StatementId>{};
+    for (var i = 0; i < statements.length; i++) {
+      final s = statements[i];
+      final id = idOf(i, s);
       idMap[s.id] = id;
     }
 
@@ -43,4 +67,13 @@ final class ProgramSlice {
   }
 
   ProgramSlice extend(ProgramSlice other) => .new(statements: [...statements, ...other.statements]);
+
+  Statement operator [](StatementId id) => statements.firstWhere((s) => s.id == id);
+  void operator []=(StatementId id, Statement statement) {
+    final index = statements.indexWhere((s) => s.id == id);
+    if (index == -1) throw ArgumentError('Statement with id $id not found');
+    statements[index] = statement;
+  }
+
+  ProgramSlice clone() => .new(statements: statements.toList());
 }

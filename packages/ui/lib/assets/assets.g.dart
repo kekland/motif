@@ -492,6 +492,24 @@ class Icons extends _BaseIcon {
   const Icons.brightnessLight({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_7_rounded);
   const Icons.brightnessDark({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_2_rounded);
   const Icons.brightnessSystem({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_auto_rounded);
+  const Icons.prefabOrigin({super.key, super.size, super.color}): super.iconData(icon: Symbols.nearby_rounded);
+  const Icons.prefabInstance({super.key, super.size, super.color}): super.iconData(icon: Symbols.nearby_rounded);
+  const Icons.alignVerticalTop({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_top_rounded);
+  const Icons.alignVerticalCenter({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_center_rounded);
+  const Icons.alignVerticalBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_bottom_rounded);
+  const Icons.alignHorizontalLeft({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_horizontal_left_rounded);
+  const Icons.alignHorizontalCenter({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_horizontal_center_rounded);
+  const Icons.alignHorizontalRight({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_horizontal_right_rounded);
+  const Icons.justifyStart({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_justify_flex_start_rounded);
+  const Icons.justifyCenter({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_flex_center_rounded);
+  const Icons.justifyEnd({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_justify_flex_end_rounded);
+  const Icons.justifySpaceBetween({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_justify_space_between_rounded);
+  const Icons.paddingAxis({super.key, super.size, super.color}): super.iconData(icon: Symbols.width_full_rounded);
+  const Icons.paddingTop({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_top_rounded);
+  const Icons.paddingBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_bottom_rounded);
+  const Icons.paddingLeft({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_left_rounded);
+  const Icons.paddingRight({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_right_rounded);
+  const Icons.gap({super.key, super.size, super.color}): super.iconData(icon: Symbols.space_bar_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

@@ -137,10 +137,10 @@ final class MoveActivity extends TransformActivity {
     }
 
     final FrameRef parentFrame = parent != null ? frameOf(parent) : .root;
-    txn!.reparent(layoutBoxes.map((b) => b.frame), parentFrame, before: before);
+    final result = txn!.reparent(layoutBoxes.map((b) => b.frame), parentFrame, before: before);
     txn!.flush();
 
-    Haptics.click();
+    if (result is ReparentSuccess) Haptics.click();
   }
 
   void _updateTransients(Vec2 delta) {

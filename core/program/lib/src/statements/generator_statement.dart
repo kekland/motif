@@ -84,6 +84,14 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   );
 
   @override
+  GeneratorStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    generator: partial.field(#generator),
+    transform: partial.field(#transform),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
 
   @override
@@ -108,4 +116,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
 
   @override
   Statement absorbReparent(FrameRef to, Mat4 parentTransform) => copyWith(parent: to, transform: parentTransform);
+
+  @override
+  GeneratorStatement? absorbChildUpdate(StatementId child, StatementPartial<Statement> update) => null;
 }

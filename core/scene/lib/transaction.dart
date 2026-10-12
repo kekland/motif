@@ -66,11 +66,29 @@ final class SceneTransaction {
   T update<T extends Statement>(StatementId target, T Function(T) update) {
     _checkOpen();
 
+    final root = evaluation.rootOf(target);
+    if (root != target) {
+      throw StateError('cannot update non-root statement $target, use [updatePartial].');
+    }
+
     final statement = _resolveStatement<T>(target);
     final updated = update(statement);
     if (statement == updated) return statement;
     replace(target, [updated]);
     return updated;
+  }
+
+  bool updatePartial<T extends Statement>(StatementId target, StatementPartial<T> partial) {
+    _checkOpen();
+    final root = evaluation.rootOf(target);
+    if (root == target) {
+      update<T>(target, (v) => partial.apply(v));
+      return true;
+    }
+
+    final result = (evaluation.statement(root) as GeneratingStatement).absorbChildUpdate(target, partial);
+    if (result != null) update(root, (_) => result);
+    return result != null;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -79,12 +97,16 @@ final class SceneTransaction {
 
   void attach(StatementId host, Modifier modifier) {
     _checkOpen();
-    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.append(modifier)));
+    final modifiers = evaluation.statement(host)?.modifiers;
+    if (modifiers == null) return;
+    updatePartial(host, .modifiers(modifiers.append(modifier)));
   }
 
   void detach(StatementId host, int index) {
     _checkOpen();
-    update<Statement>(host, (s) => s.copyWith(modifiers: s.modifiers.remove(index)));
+    final modifiers = evaluation.statement(host)?.modifiers;
+    if (modifiers == null) return;
+    updatePartial(host, .modifiers(modifiers.remove(index)));
   }
 
   // -------------------------------------------------------------------------------------------------------------------

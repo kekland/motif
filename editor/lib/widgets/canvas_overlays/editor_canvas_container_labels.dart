@@ -49,6 +49,26 @@ final class const _ContainerLabel({
 
     final scale = this.transform.getMaxScaleOnAxis2D();
 
+    final Widget label = switch (node.statement) {
+      PrefabOriginStatement() => Row(
+        spacing: 2.0,
+        crossAxisAlignment: .center,
+        children: [
+          Icons.prefabOrigin(color: context.colors.selectionAlt.primary, size: 12.0),
+          Text(name, style: context.typography.caption.copyWith(color: context.colors.selectionAlt.primary)),
+        ],
+      ),
+      PrefabInstanceStatement() => Row(
+        spacing: 2.0,
+        crossAxisAlignment: .center,
+        children: [
+          Icons.prefabInstance(color: context.colors.display.tertiary, size: 12.0),
+          Text(name, style: context.typography.caption.tertiary),
+        ],
+      ),
+      _ => Text(name, style: context.typography.caption.tertiary),
+    };
+
     return Transform(
       transform: transform.asVM(),
       child: FractionalTranslation(
@@ -58,7 +78,7 @@ final class const _ContainerLabel({
           alignment: .bottomLeft,
           child: Padding(
             padding: .only(bottom: 4.0),
-            child: Text(name, style: context.typography.caption.tertiary),
+            child: label,
           ),
         ),
       ),

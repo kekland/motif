@@ -44,6 +44,12 @@ final class GroupStatement extends Statement with PlacedStatement, FramedStateme
   }
 
   @override
+  GroupStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) {
     final children = context.bundle.frameChildren(context.handle(frame));
     return .forward(children.map((c) => c.ref(context.bundle)).toList());

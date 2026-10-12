@@ -69,6 +69,36 @@ extension RouteReparent on Evaluation {
       return f != null && bundle.isAncestorOf(destination, ancestor: f);
     });
 
+    if (into != .root) {
+      final intoId = into.statementId;
+
+      // cannot reparent into generated/modifier frames
+      if (rootOf(intoId) != intoId) return .failure({intoId});
+
+      final StatementId? dstOriginId;
+
+      if (statement(intoId) is PrefabOriginStatement) {
+        dstOriginId = intoId;
+      } else {
+        dstOriginId = bundle.query
+            .ancestorChain(into)
+            .where((f) => f != .root && statement(f.statementId) is PrefabOriginStatement)
+            .singleOrNull
+            ?.statementId;
+      }
+
+      if (dstOriginId != null) {
+        // cannot reparent origins into origins
+        for (final id in accepted.keys.toList()) {
+          final subtree = tree.subtreeStatements(id);
+          final subtreePrefabs = <StatementId>{for (final s in subtree) ...prefabs.prefabsIn(s.id)};
+          if (subtreePrefabs.contains(dstOriginId)) {
+            accepted.remove(id);
+          }
+        }
+      }
+    }
+
     if (accepted.isEmpty) return .empty();
 
     final members = accepted.keys.toSet();

@@ -66,7 +66,7 @@ final class ColorInputField extends InputField<ColorDataPartial> {
       ),
     );
 
-    final opacityInput = DoubleExpressionInputField(
+    final opacityInput = DoubleInputField(
       value: alpha,
       fractionDigits: 1,
       onChanged: (a) => onChanged?.call(.withAlpha(a / 100)),

@@ -6,8 +6,13 @@ extension Evaluator on EvalPass {
   // -------------------------------------------------------------------------------------------------------------------
 
   void edit(int index, List<Statement> removed, List<Statement> inserted, {bool initialPass = false}) {
+    final changedPrefabs = <StatementId>{};
+
     final incoming = inserted.map((s) => s.id).toList();
     for (final s in removed.reversed) {
+      final origin = evaluation.prefabs.originOf(s.id);
+      if (origin != null) changedPrefabs.add(origin.id);
+
       for (final r in graph.dependents([s.id])) {
         final n = tree[r]!;
         n.markDirty();
@@ -23,7 +28,17 @@ extension Evaluator on EvalPass {
     }
 
     if (!initialPass) program._replace(index, removed, inserted);
-    for (final s in inserted) queue.add(s.id);
+
+    // TODO: optimize
+    evaluation.prefabs._build();
+
+    for (final s in inserted) {
+      final origin = evaluation.prefabs.originOf(s.id);
+      if (origin != null) changedPrefabs.add(origin.id);
+      queue.add(s.id);
+    }
+
+    _markPrefabsDirty(changedPrefabs);
   }
 
   void drain() {
@@ -320,6 +335,21 @@ extension Evaluator on EvalPass {
       node.markDirty();
       if (next != null && node.root == next.root && !tree.isAfter(next, node)) continue;
       queue.add(node.root.id);
+    }
+  }
+
+  void _markPrefabsDirty(Iterable<StatementId> ids) {
+    if (ids.isEmpty) return;
+    for (final id in ids) {
+      final instances = evaluation.prefabs.instancesOf(id);
+      for (final i in instances) {
+        final node = tree[i];
+        if (node != null) {
+          node.markDirty();
+          node.lastProduced = null;
+          queue.add(node.root.id);
+        }
+      }
     }
   }
 

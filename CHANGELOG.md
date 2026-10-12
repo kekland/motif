@@ -1,3 +1,12 @@
+# 0.1.8
+
+* Rework tool options placement. Now global options (e.g. snap to pixel) are located in the canvas options panel, while per-tool options replace the selection panel entirely.
+* Expanded the auto layout props. Now everything is supported for both stack/flex layouts.
+* Prefabs: added support for prefab origins and instances. Prefabs represent reusable components that can be instantiated multiple times, and changes to the origin are reflected in all instances.
+* Prefabs: added override support for instances. Instances can now have their own and children properties overridden independently of the origin.
+* Reparent router: fixed edge-cases where it's possible to create circular prefab references (e.g. instance into its own origin, directly or transitively), and disallowed reparenting into generated statement frames.
+* Scene tree: only show `PlacedStatement`s in the hierarchy.
+
 # 0.1.7
 
 * Tree panel, statement panel: added name text fields

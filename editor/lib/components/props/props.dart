@@ -16,6 +16,7 @@ export 'props/text_format_prop.dart';
 export 'props/transform_prop.dart';
 export 'props/string_prop.dart';
 export 'props/modifier_stack_prop.dart';
+export 'props/double_prop.dart';
 
 export 'widgets/prop_widget.dart';
 export 'widgets/builder.dart';

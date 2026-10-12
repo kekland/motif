@@ -115,6 +115,28 @@ final class const _SceneNodeWidget({
 
     final hasSelection = isSelected || isImplicitlySelected;
 
+    var hasPrefabParent = false;
+    SceneNode? n = node;
+    while (n is ObjectSceneNode) {
+      if (n.statement is PrefabOriginStatement) {
+        hasPrefabParent = true;
+        break;
+      }
+      n = n.parent;
+    }
+
+    final iconColor = switch (statement) {
+      _ when hasPrefabParent => context.colors.selectionAlt.primary,
+      _ when hasSelection => context.colors.accent.primary,
+      _ => context.colors.display.tertiary,
+    };
+
+    final textColor = switch (statement) {
+      _ when hasPrefabParent => context.colors.selectionAlt.primary,
+      _ when hasSelection => context.colors.accent.primary,
+      _ => context.colors.display.secondary,
+    };
+
     return ListItem(
       height: TreePanel.itemHeight,
       onTap: onTap,
@@ -124,12 +146,12 @@ final class const _SceneNodeWidget({
         options: .new(
           ignoreGestures: true,
           leading: DefaultForegroundStyle(
-            color: hasSelection ? context.colors.accent.primary : context.colors.display.tertiary,
+            color: iconColor,
             iconFill: hasSelection ? 1.0 : null,
             child: statement.resolveIcon(context),
           ),
           textStyle: context.typography.body.copyWith(
-            color: hasSelection ? context.colors.accent.primary : context.colors.display.secondary,
+            color: textColor,
           ),
           color: Colors.transparent,
           isFlat: true,

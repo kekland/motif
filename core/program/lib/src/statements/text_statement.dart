@@ -104,6 +104,20 @@ final class TextStatement extends Statement
   );
 
   @override
+  TextStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    size: partial.field(#layoutSize),
+    transform: partial.field(#transform),
+    text: partial.field(#text),
+    textFormat: partial.field(#textFormat),
+    paragraphFormat: partial.field(#paragraphFormat),
+    vertexStyle: partial.field(#vertexStyle),
+    edgeStyle: partial.field(#edgeStyle),
+    faceStyle: partial.field(#faceStyle),
+  );
+
+  @override
   TextStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(vertexStyle: style);
 
   @override

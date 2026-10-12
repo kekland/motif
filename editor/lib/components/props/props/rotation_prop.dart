@@ -32,7 +32,7 @@ final class RotationPropWidget extends HookWidget with PropWidget {
 
     return Padding(
       padding: resolvedPadding,
-      child: DoubleExpressionInputField(
+      child: DoubleInputField(
         value: useMemoComputed(() => computed.value.resolve()?.deg, keys: [computed]),
         onChanged: (v) => prop.set(txn, .fromDeg(v)),
         sessionCallbacks: txn.sessionCallbacks,

@@ -126,11 +126,13 @@ final class SceneTree with ChangeNotifier {
     final nodes = <StatementId, ObjectSceneNode>{};
     for (final handle in bundle.frameChildren(bundle.frame(frame)!)) {
       final ref = handle.ref(bundle);
+      final id = ref.statementId;
+      final statement = evaluation.statement(id);
+      if (statement is! PlacedStatement) continue;
       if (parent is ObjectSceneNode) {
-        if (ref.statementId == parent.id) continue;
+        if (id == parent.id) continue;
       }
 
-      final id = ref.statementId;
       final node = nodes.putIfAbsent(ref.statementId, () {
         final ObjectSceneNode n;
         if (_byId[id] != null) {

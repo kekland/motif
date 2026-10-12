@@ -26,21 +26,23 @@ message Statement {
   optional string name      = 3;
 
   oneof value {
-    VertexStatement       vertex         = 10;
-    EdgeStatement         edge           = 11;
-    FaceStatement         face           = 12;
-    CutEdgeStatement      cut_edge       = 13;
-    MultiCutEdgeStatement multi_cut_edge = 14;
-    FilletFaceStatement   fillet_face    = 15;
-    GlueVerticesStatement glue_vertices  = 16;
-    RectangleStatement    rectangle      = 17;
-    PolygonStatement      polygon        = 18;
-    EllipseStatement      ellipse        = 19;
-    ContainerStatement    container      = 20;
-    GroupStatement        group          = 21;
-    GeneratorStatement    generator      = 22;
-    TextStatement         text           = 23;
-    ReorderStatement      reorder        = 24;
+    VertexStatement         vertex          = 10;
+    EdgeStatement           edge            = 11;
+    FaceStatement           face            = 12;
+    CutEdgeStatement        cut_edge        = 13;
+    MultiCutEdgeStatement   multi_cut_edge  = 14;
+    FilletFaceStatement     fillet_face     = 15;
+    GlueVerticesStatement   glue_vertices   = 16;
+    RectangleStatement      rectangle       = 17;
+    PolygonStatement        polygon         = 18;
+    EllipseStatement        ellipse         = 19;
+    ContainerStatement      container       = 20;
+    GroupStatement          group           = 21;
+    GeneratorStatement      generator       = 22;
+    TextStatement           text            = 23;
+    ReorderStatement        reorder         = 24;
+    PrefabOriginStatement   prefab_origin   = 25;
+    PrefabInstanceStatement prefab_instance = 26;
   }
 }
 
@@ -338,6 +340,29 @@ message ReorderStatement {
   optional CellSelector sibling   = 4;
 }
 
+message PrefabOriginStatement {
+  Layout           layout       = 1;
+  LayoutSize       size         = 2;
+  Mat4             transform    = 3;
+  ObjectShape      shape        = 4;
+  VertexStyle      vertex_style = 5;
+  EdgeStyle        edge_style   = 6;
+  FaceStyle        face_style   = 7;
+  optional CellRef parent       = 8;
+}
+
+message PrefabInstanceStatement {
+  StatementId      prefab_id    = 1;
+  Layout           layout       = 2;
+  LayoutSize       size         = 3;
+  Mat4             transform    = 4;
+  ObjectShape      shape        = 5;
+  VertexStyle      vertex_style = 6;
+  EdgeStyle        edge_style   = 7;
+  FaceStyle        face_style   = 8;
+  optional CellRef parent       = 9;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Shapes
 // ---------------------------------------------------------------------------------------------------------------------
@@ -382,9 +407,10 @@ message LayoutDimension {
 
 message Layout {
   enum Align {
-    LAYOUT_ALIGN_START  = 0;
-    LAYOUT_ALIGN_CENTER = 1;
-    LAYOUT_ALIGN_END    = 2;
+    LAYOUT_ALIGN_NONE   = 0;
+    LAYOUT_ALIGN_START  = 1;
+    LAYOUT_ALIGN_CENTER = 2;
+    LAYOUT_ALIGN_END    = 3;
   }
 
   enum Justify {

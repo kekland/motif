@@ -1,8 +1,11 @@
 part of '../_program.dart';
 
-extension type const LayoutInsets._((double left, double top, double right, double bottom) _) {
-  const LayoutInsets(double left, double top, double right, double bottom) : this._((left, top, right, bottom));
-
+final class const LayoutInsets(
+  final double left,
+  final double top,
+  final double right,
+  final double bottom,
+) {
   const LayoutInsets.all(double value) : this(value, value, value, value);
 
   const LayoutInsets.symmetric({
@@ -19,13 +22,20 @@ extension type const LayoutInsets._((double left, double top, double right, doub
 
   static const zero = LayoutInsets(0, 0, 0, 0);
 
-  double get left => _.$1;
-  double get top => _.$2;
-  double get right => _.$3;
-  double get bottom => _.$4;
-
   double get horizontal => left + right;
   double get vertical => top + bottom;
 
   Vec2 get origin => Vec2(left, top);
+
+  LayoutInsets copyWith({
+    double? left,
+    double? top,
+    double? right,
+    double? bottom,
+  }) => .new(
+    left ?? this.left,
+    top ?? this.top,
+    right ?? this.right,
+    bottom ?? this.bottom,
+  );
 }

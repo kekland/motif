@@ -85,7 +85,20 @@ sealed class ShapeStatement<S extends ObjectShape> extends Statement
     EdgeStyle? edgeStyle,
     FaceStyle? faceStyle,
     FrameRef? parent,
+    S? shape,
   });
+
+  @override
+  ShapeStatement<S> applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    size: partial.field(#layoutSize),
+    transform: partial.field(#transform),
+    shape: partial.field(#objectShape),
+    vertexStyle: partial.field(#vertexStyle),
+    edgeStyle: partial.field(#edgeStyle),
+    faceStyle: partial.field(#faceStyle),
+  );
 
   @override
   ShapeStatement<S> copyWithVertexStyle({VertexStyle? style}) => copyWith(vertexStyle: style);

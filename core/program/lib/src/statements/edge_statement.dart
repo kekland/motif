@@ -70,6 +70,15 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
   );
 
   @override
+  EdgeStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    startTangent: partial.field(#startTangent),
+    endTangent: partial.field(#endTangent),
+    style: partial.field(#edgeStyle),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => switch (target) {
     CellRef(kind: .edge) => .forward([
       context.resolve(start),

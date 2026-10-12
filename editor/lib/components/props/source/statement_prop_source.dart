@@ -24,7 +24,7 @@ StringProp resolveStatementNameProp(BuildContext context, Scene scene, Statement
         id,
         scene: scene,
         get: (scene, s) => s.name ?? s.resolveName(context),
-        set: (scene, s, value) => s.copyWith(name: value.isNotEmpty ? value : null),
+        set: (scene, value) => .name(value),
       ),
     ],
     label: 'Name',
@@ -37,7 +37,7 @@ Iterable<PropSource> _statementProps(Scene scene, Statement s) sync* {
     s.id,
     scene: scene,
     get: (scene, s) => s.modifiers,
-    set: (scene, s, value) => s.copyWith(modifiers: value),
+    set: (scene, value) => .modifiers(value),
   );
 }
 
@@ -56,7 +56,7 @@ Iterable<PropSource> _edgeStatementProps(Scene scene, EdgeStatement s) sync* {
     s.id,
     scene: scene,
     get: (scene, s) => s.style,
-    set: (scene, s, value) => s.copyWith(style: value),
+    set: (scene, value) => .edgeStyle(value),
   );
 }
 
@@ -65,7 +65,7 @@ Iterable<PropSource> _faceStatementProps(Scene scene, FaceStatement s) sync* {
     s.id,
     scene: scene,
     get: (scene, s) => s.style,
-    set: (scene, s, value) => s.copyWith(style: value),
+    set: (scene, value) => .faceStyle(value),
   );
 }
 
@@ -87,7 +87,7 @@ Iterable<PropSource> _layoutBoxStatementProps(Scene scene, LayoutBoxStatement s)
     s.id,
     scene: scene,
     get: (scene, s) => s.size,
-    set: (scene, s, value) => s.copyWith(size: value),
+    set: (scene, value) => .layoutSize(value),
     override: (scene, s) {
       final layout = scene.layoutOf(s.id);
       if (layout == null) return null;
@@ -107,25 +107,25 @@ Iterable<PropSource> _shapeStatementProps(Scene scene, ShapeStatement s) sync* {
     s.id,
     scene: scene,
     get: (scene, s) => s.faceStyle,
-    set: (scene, s, value) => s.copyWith(faceStyle: value),
+    set: (scene, value) => .faceStyle(value),
   );
 
   yield PropKind.edgeStyle.statement<ShapeStatement>(
     s.id,
     scene: scene,
     get: (scene, s) => s.edgeStyle,
-    set: (scene, s, value) => s.copyWith(edgeStyle: value),
+    set: (scene, value) => .edgeStyle(value),
   );
 }
 
 Iterable<PropSource> _containerStatementProps(Scene scene, ContainerStatement s) sync* {
   yield* _shapeStatementProps(scene, s);
 
-  yield PropKind.layout.of<ContainerStatement>(
+  yield PropKind.layout.statement<ContainerStatement>(
     s.id,
     scene: scene,
     get: (scene, s) => s.layout,
-    set: (scene, s, value) => s.copyWith(layout: value),
+    set: (scene, value) => .layout(value),
   );
 }
 
@@ -136,27 +136,27 @@ Iterable<PropSource> _textStatementProps(Scene scene, TextStatement s) sync* {
     s.id,
     scene: scene,
     get: (scene, s) => s.textFormat,
-    set: (scene, s, value) => s.copyWith(textFormat: value),
+    set: (scene, value) => .textFormat(value),
   );
 
   yield PropKind.paragraphFormat.statement<TextStatement>(
     s.id,
     scene: scene,
     get: (scene, s) => s.paragraphFormat,
-    set: (scene, s, value) => s.copyWith(paragraphFormat: value),
+    set: (scene, value) => .paragraphFormat(value),
   );
 
   yield PropKind.faceStyle.statement<TextStatement>(
     s.id,
     scene: scene,
     get: (scene, s) => s.faceStyle,
-    set: (scene, s, value) => s.copyWith(faceStyle: value),
+    set: (scene, value) => .faceStyle(value),
   );
 
   yield PropKind.edgeStyle.statement<TextStatement>(
     s.id,
     scene: scene,
     get: (scene, s) => s.edgeStyle,
-    set: (scene, s, value) => s.copyWith(edgeStyle: value),
+    set: (scene, value) => .edgeStyle(value),
   );
 }

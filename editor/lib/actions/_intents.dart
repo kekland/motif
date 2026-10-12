@@ -15,6 +15,7 @@ part 'set_z_order_bottom.dart';
 part 'glue_selected_vertices.dart';
 part 'group_selection.dart';
 part 'selection.dart';
+part 'prefab.dart';
 
 final intents = (
   selectRef: SelectRefIntent.new,
@@ -36,6 +37,7 @@ final intents = (
   selectFirstChild: SelectFirstChildIntent.new,
   selectParent: SelectParentIntent.new,
   showSelectionOnScreen: ShowSelectionOnScreenIntent.new,
+  createPrefab: CreatePrefabIntent.new,
 );
 
 final actions = <Type, Action>{
@@ -57,6 +59,7 @@ final actions = <Type, Action>{
   SelectFirstChildIntent: SelectFirstChildAction(),
   SelectParentIntent: SelectParentAction(),
   ShowSelectionOnScreenIntent: ShowSelectionOnScreenAction(),
+  CreatePrefabIntent: CreatePrefabAction(),
 };
 
 Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {

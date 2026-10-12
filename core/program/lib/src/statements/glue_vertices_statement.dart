@@ -38,6 +38,13 @@ final class GlueVerticesStatement extends Statement {
   );
 
   @override
+  GlueVerticesStatement applyPartial(StatementPartial partial) => copyWith(
+    modifiers: partial.field(#modifiers),
+    name: partial.field(#name),
+    position: partial.field(#glueVerticesPosition),
+  );
+
+  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .forward(
     vertices.map((s) => context.resolve(s)).toList(),
   );

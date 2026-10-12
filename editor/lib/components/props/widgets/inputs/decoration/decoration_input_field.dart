@@ -63,7 +63,7 @@ final class const DecorationInputField({
       },
     );
 
-    final opacityInput = DoubleExpressionInputField(
+    final opacityInput = DoubleInputField(
       value: opacity,
       fractionDigits: 1,
       onChanged: (a) => onChanged?.call(value().withOpacity(a / 100)),

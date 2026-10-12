@@ -16,7 +16,10 @@ import 'package:blueprint/core.dart' as bp;
 // Program
 // ---------------------------------------------------------------------------------------------------------------------
 
-final programCodec = $codec<Program, gen.Program>(
+extension ProgramEncode on Program { gen.Program encode() => _programCodec.encode(this); }
+extension ProgramDecode on gen.Program { Program decode() => _programCodec.decode(this); }
+
+final _programCodec = $codec<Program, gen.Program>(
   decoder: (v) => .new(
     $map(v.statements, (v) => v.decode()),
     styles: v.style.decode(),
@@ -31,7 +34,10 @@ final programCodec = $codec<Program, gen.Program>(
   ),
 );
 
-final programSliceCodec = $codec<ProgramSlice, gen.ProgramSlice>(
+extension ProgramSliceEncode on ProgramSlice { gen.ProgramSlice encode() => _programSliceCodec.encode(this); }
+extension ProgramSliceDecode on gen.ProgramSlice { ProgramSlice decode() => _programSliceCodec.decode(this); }
+
+final _programSliceCodec = $codec<ProgramSlice, gen.ProgramSlice>(
   decoder: (v) => .new(
     statements: $map(v.statements, (v) => v.decode()),
     // styles: v.style.decode(),
@@ -438,9 +444,13 @@ final _statementCodec = $codec<Statement, gen.Statement>(
     .generator => _generatorStatementCodec.decode(v),
     .text => _textStatementCodec.decode(v),
     .reorder => _reorderStatementCodec.decode(v),
+    .prefabOrigin => _prefabOriginStatementCodec.decode(v),
+    .prefabInstance => _prefabInstanceStatementCodec.decode(v),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
+    PrefabOriginStatement v => _prefabOriginStatementCodec.encode(v),
+    PrefabInstanceStatement v => _prefabInstanceStatementCodec.encode(v),
     VertexStatement v => _vertexStatementCodec.encode(v),
     EdgeStatement v => _edgeStatementCodec.encode(v),
     FaceStatement v => _faceStatementCodec.encode(v),
@@ -845,6 +855,70 @@ final _reorderStatementCodec = $codec<ReorderStatement, gen.Statement>(
   ),
 );
 
+final _prefabOriginStatementCodec = $codec<PrefabOriginStatement, gen.Statement>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
+    transform: v.prefabOrigin.transform.decode(),
+    layout: v.prefabOrigin.layout.decode(),
+    size: v.prefabOrigin.size.decode(),
+    parent: $opt(v.prefabOrigin.hasParent, () => v.prefabOrigin.parent.decode()),
+    vertexStyle: v.prefabOrigin.vertexStyle.decode(),
+    edgeStyle: v.prefabOrigin.edgeStyle.decode(),
+    faceStyle: v.prefabOrigin.faceStyle.decode(),
+    shape: v.prefabOrigin.shape.decode(),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    modifiers: v.modifiers.encode(),
+    name: v.name,
+    prefabOrigin: .new(
+      transform: v.transform.encode(),
+      layout: v.layout.encode(),
+      size: v.size.encode(),
+      parent: v.parent?.ref.encode(),
+      vertexStyle: v.vertexStyle.encode(),
+      edgeStyle: v.edgeStyle.encode(),
+      faceStyle: v.faceStyle.encode(),
+      shape: v.shape.encode(),
+    ),
+  ),
+);
+
+final _prefabInstanceStatementCodec = $codec<PrefabInstanceStatement, gen.Statement>(
+  decoder: (v) => .new(
+    id: v.id.decode(),
+    modifiers: v.modifiers.decode(),
+    name: $opt(v.hasName, () => v.name),
+    prefabId: v.prefabInstance.prefabId.decode(),
+    transform: v.prefabInstance.transform.decode(),
+    layout: v.prefabInstance.layout.decode(),
+    size: v.prefabInstance.size.decode(),
+    parent: $opt(v.prefabInstance.hasParent, () => v.prefabInstance.parent.decode()),
+    vertexStyle: v.prefabInstance.vertexStyle.decode(),
+    edgeStyle: v.prefabInstance.edgeStyle.decode(),
+    faceStyle: v.prefabInstance.faceStyle.decode(),
+    shape: v.prefabInstance.shape.decode(),
+  ),
+  encoder: (v) => .new(
+    id: v.id.encode(),
+    modifiers: v.modifiers.encode(),
+    name: v.name,
+    prefabInstance: .new(
+      prefabId: v.prefabId.encode(),
+      transform: v.transform.encode(),
+      layout: v.layout.encode(),
+      size: v.size.encode(),
+      parent: v.parent?.ref.encode(),
+      vertexStyle: v.vertexStyle.encode(),
+      edgeStyle: v.edgeStyle.encode(),
+      faceStyle: v.faceStyle.encode(),
+      shape: v.shape.encode(),
+    ),
+  ),
+);
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Shape
 // ---------------------------------------------------------------------------------------------------------------------
@@ -935,10 +1009,10 @@ final _filletModifierCodec = $codec<FilletModifier, gen.FilletModifier>(
 // Deltas/changes
 // ---------------------------------------------------------------------------------------------------------------------
 
-extension _ProgramDeltaEncode on ProgramDelta { gen.ProgramDelta encode() => programDeltaCodec.encode(this); }
-extension _ProgramDeltaDecode on gen.ProgramDelta { ProgramDelta decode() => programDeltaCodec.decode(this); }
+extension ProgramDeltaEncode on ProgramDelta { gen.ProgramDelta encode() => _programDeltaCodec.encode(this); }
+extension ProgramDeltaDecode on gen.ProgramDelta { ProgramDelta decode() => _programDeltaCodec.decode(this); }
 
-final programDeltaCodec = $codec<ProgramDelta, gen.ProgramDelta>(
+final _programDeltaCodec = $codec<ProgramDelta, gen.ProgramDelta>(
   decoder: (v) => .new(
     v.changes.map((e) => e.decode()).toList(),
   ),
@@ -1111,12 +1185,14 @@ extension _LayoutAlignDecode on gen.Layout_Align { LayoutAlign decode() => _layo
 
 final _layoutAlignCodec = $codec<LayoutAlign, gen.Layout_Align>(
   decoder: (v) => switch (v) {
+    .LAYOUT_ALIGN_NONE => .none,
     .LAYOUT_ALIGN_START => .start,
     .LAYOUT_ALIGN_CENTER => .center,
     .LAYOUT_ALIGN_END => .end,
     _ => throw ArgumentError(),
   },
   encoder: (v) => switch (v) {
+    .none => .LAYOUT_ALIGN_NONE,
     .start => .LAYOUT_ALIGN_START,
     .center => .LAYOUT_ALIGN_CENTER,
     .end => .LAYOUT_ALIGN_END,
@@ -1155,13 +1231,13 @@ extension _LayoutStackDecode on gen.Layout_Stack { StackLayout decode() => _layo
 
 final _layoutStackCodec = $codec<StackLayout, gen.Layout_Stack>(
   decoder: (v) => .new(
-    alignHorizontal: $opt(v.hasAlignHorizontal, () => v.alignHorizontal.decode()),
-    alignVertical: $opt(v.hasAlignVertical, () => v.alignVertical.decode()),
+    alignHorizontal: v.alignHorizontal.decode(),
+    alignVertical: v.alignVertical.decode(),
     padding: v.padding.decode(),
   ),
   encoder: (v) => .new(
-    alignHorizontal: v.alignHorizontal?.encode(),
-    alignVertical: v.alignVertical?.encode(),
+    alignHorizontal: v.alignHorizontal.encode(),
+    alignVertical: v.alignVertical.encode(),
     padding: v.padding.encode(),
   ),
 );
@@ -1185,7 +1261,7 @@ extension _LayoutFlexEncode on FlexLayout { gen.Layout_Flex encode() => _layoutF
 extension _LayoutFlexDecode on gen.Layout_Flex { FlexLayout decode() => _layoutFlexCodec.decode(this); }
 
 final _layoutFlexCodec = $codec<FlexLayout, gen.Layout_Flex>(
-  decoder: (v) => .new(
+  decoder: (v) => .create(
     direction: v.direction.decode(),
     justify: v.justify.decode(),
     crossAlign: v.crossAlign.decode(),

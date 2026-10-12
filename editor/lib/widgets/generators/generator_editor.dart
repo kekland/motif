@@ -59,7 +59,7 @@ class _IntegerSocketValueBuilder extends BlueprintSocketValueBuilder<int> {
     ReadonlySignal<Object?> value,
     void Function(int value)? onChanged,
   ) {
-    return IntExpressionInputField(
+    return IntInputField(
       value: useComputed(() => value() as int?),
       onChanged: (v) => onChanged?.call(v),
     );
@@ -89,7 +89,7 @@ class _DoubleSocketValueBuilder extends BlueprintSocketValueBuilder<double> {
     ReadonlySignal<Object?> value,
     void Function(double value)? onChanged,
   ) {
-    return DoubleExpressionInputField(
+    return DoubleInputField(
       value: useComputed(() => value() as double?),
       onChanged: (v) => onChanged?.call(v),
     );
@@ -108,13 +108,13 @@ class _Vector22SocketValueBuilder extends BlueprintSocketValueBuilder<Vec2> {
 
     return Column(
       children: [
-        DoubleExpressionInputField(
+        DoubleInputField(
           value: useComputed(() => _value().x),
           onChanged: (v) => onChanged?.call(.new(v, _value().y)),
           options: .new(leading: Icons.x()),
         ),
         const SizedBox(height: 4.0),
-        DoubleExpressionInputField(
+        DoubleInputField(
           value: useComputed(() => _value().y),
           onChanged: (v) => onChanged?.call(.new(_value().x, v)),
           options: .new(leading: Icons.y()),

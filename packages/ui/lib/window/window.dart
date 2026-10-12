@@ -73,7 +73,7 @@ class WindowScaffold extends StatelessWidget {
                 color: context.colors.surface.secondary,
                 leading: leading,
                 height: headerHeight,
-                padding: largeHeader ? const .only(left: 8.0, right: 8.0) : const .only(left: 8.0, right: 6.0),
+                padding: largeHeader ? const .only(left: 6.0, right: 8.0) : null,
                 trailing: IconButton.flat(
                   onTap: () => Navigator.of(context).maybePop(),
                   child: Icons.close(),
