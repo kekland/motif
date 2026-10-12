@@ -425,7 +425,7 @@ final class FrameHandleRenderObject extends HandleRenderObject<FrameRef> {
     }
 
     bbox = bundle.query.bbox(ref, space: ref)!;
-    transform = bundle.query.localToWorld(ref)!;
+    transform = bundle.query.localToWorld(ref);
   }
 
   @override

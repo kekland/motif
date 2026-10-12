@@ -28,6 +28,12 @@ final class ProgramSlice {
   final List<Statement> statements;
   int get length => statements.length;
 
+  ProgramSlice transform(Statement Function(int, Statement) transformer) {
+    final transformed = <Statement>[];
+    for (var i = 0; i < statements.length; i++) transformed.add(transformer(i, statements[i]));
+    return ProgramSlice(statements: transformed);
+  }
+
   ProgramSlice materialize(StatementId Function(int, Statement) idOf) {
     final idMap = <StatementId, StatementId>{};
     for (var i = 0; i < statements.length; i++) {
@@ -52,7 +58,7 @@ final class ProgramSlice {
     return ProgramSlice(statements: output);
   }
 
-  ProgramSlice materializeRaw(StatementId Function(int, Statement) idOf) {
+  (Remap, ProgramSlice) materializeRaw(StatementId Function(int, Statement) idOf) {
     final idMap = <StatementId, StatementId>{};
     for (var i = 0; i < statements.length; i++) {
       final s = statements[i];
@@ -61,8 +67,9 @@ final class ProgramSlice {
     }
 
     final remap = Remap.statements(idMap);
-    return ProgramSlice(
-      statements: statements.map((s) => s.remap(remap)).toList(),
+    return (
+      remap,
+      .new(statements: statements.map((s) => s.remap(remap)).toList()),
     );
   }
 

@@ -46,18 +46,18 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   }
 
   @override
-  Iterable<Statement> generate(EvalContext context) {
+  Iterable<GeneratedStatement> generate(EvalContext context) {
     final statements = inputs.map(context.resolve).toList();
     final slice = ProgramSlice(statements: statements);
     final output = generator.execute(context, slice).statements;
     final generatedIds = output.map((s) => s.id).toSet();
 
-    final result = <Statement>[];
+    final result = <GeneratedStatement>[];
     for (final s in output) {
       if (s is PlacedStatement && !generatedIds.contains(s.parent?.ref.statementId)) {
-        result.add(s.absorbReparent(frame, .identity()));
+        result.add((null, s.absorbReparent(frame, .identity())));
       } else {
-        result.add(s);
+        result.add((null, s));
       }
     }
 
@@ -118,5 +118,11 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
   Statement absorbReparent(FrameRef to, Mat4 parentTransform) => copyWith(parent: to, transform: parentTransform);
 
   @override
-  GeneratorStatement? absorbChildUpdate(StatementId child, StatementPartial<Statement> update) => null;
+  GeneratorStatement? absorbChildUpdate(
+    EvalContext context,
+    List<StatementId> path,
+    StatementPartial<Statement> update,
+  ) {
+    return null;
+  }
 }

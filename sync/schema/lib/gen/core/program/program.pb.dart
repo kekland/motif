@@ -2909,88 +2909,15 @@ class MultiCutEdgeStatement extends $pb.GeneratedMessage {
   $pb.PbList<$core.double> get ts => $_getList(1);
 }
 
-class FilletFaceStatement_CornerEntry extends $pb.GeneratedMessage {
-  factory FilletFaceStatement_CornerEntry({
-    $core.int? index,
-    CornerRadius? radius,
-  }) {
-    final result = create();
-    if (index != null) result.index = index;
-    if (radius != null) result.radius = radius;
-    return result;
-  }
-
-  FilletFaceStatement_CornerEntry._();
-
-  factory FilletFaceStatement_CornerEntry.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory FilletFaceStatement_CornerEntry.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'FilletFaceStatement.CornerEntry',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'index')
-    ..aOM<CornerRadius>(2, _omitFieldNames ? '' : 'radius',
-        subBuilder: CornerRadius.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FilletFaceStatement_CornerEntry clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  FilletFaceStatement_CornerEntry copyWith(
-          void Function(FilletFaceStatement_CornerEntry) updates) =>
-      super.copyWith(
-              (message) => updates(message as FilletFaceStatement_CornerEntry))
-          as FilletFaceStatement_CornerEntry;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static FilletFaceStatement_CornerEntry create() =>
-      FilletFaceStatement_CornerEntry._();
-  @$core.override
-  FilletFaceStatement_CornerEntry createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static FilletFaceStatement_CornerEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FilletFaceStatement_CornerEntry>(
-          create);
-  static FilletFaceStatement_CornerEntry? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get index => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set index($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasIndex() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearIndex() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  CornerRadius get radius => $_getN(1);
-  @$pb.TagNumber(2)
-  set radius(CornerRadius value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasRadius() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearRadius() => $_clearField(2);
-  @$pb.TagNumber(2)
-  CornerRadius ensureRadius() => $_ensure(1);
-}
-
 class FilletFaceStatement extends $pb.GeneratedMessage {
   factory FilletFaceStatement({
     SingleSelector? face,
-    $core.Iterable<FilletFaceStatement_CornerEntry>? corners,
+    CornerRadii? corners,
     CornerRadius? radius,
   }) {
     final result = create();
     if (face != null) result.face = face;
-    if (corners != null) result.corners.addAll(corners);
+    if (corners != null) result.corners = corners;
     if (radius != null) result.radius = radius;
     return result;
   }
@@ -3010,8 +2937,8 @@ class FilletFaceStatement extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<SingleSelector>(1, _omitFieldNames ? '' : 'face',
         subBuilder: SingleSelector.create)
-    ..pPM<FilletFaceStatement_CornerEntry>(2, _omitFieldNames ? '' : 'corners',
-        subBuilder: FilletFaceStatement_CornerEntry.create)
+    ..aOM<CornerRadii>(2, _omitFieldNames ? '' : 'corners',
+        subBuilder: CornerRadii.create)
     ..aOM<CornerRadius>(3, _omitFieldNames ? '' : 'radius',
         subBuilder: CornerRadius.create)
     ..hasRequiredFields = false;
@@ -3047,7 +2974,15 @@ class FilletFaceStatement extends $pb.GeneratedMessage {
   SingleSelector ensureFace() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<FilletFaceStatement_CornerEntry> get corners => $_getList(1);
+  CornerRadii get corners => $_getN(1);
+  @$pb.TagNumber(2)
+  set corners(CornerRadii value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCorners() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCorners() => $_clearField(2);
+  @$pb.TagNumber(2)
+  CornerRadii ensureCorners() => $_ensure(1);
 
   @$pb.TagNumber(3)
   CornerRadius get radius => $_getN(2);
@@ -4303,6 +4238,83 @@ class PrefabOriginStatement extends $pb.GeneratedMessage {
   CellRef ensureParent() => $_ensure(7);
 }
 
+class PrefabInstanceStatement_Override extends $pb.GeneratedMessage {
+  factory PrefabInstanceStatement_Override({
+    StatementId? id,
+    StatementPartial? partial,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (partial != null) result.partial = partial;
+    return result;
+  }
+
+  PrefabInstanceStatement_Override._();
+
+  factory PrefabInstanceStatement_Override.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrefabInstanceStatement_Override.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrefabInstanceStatement.Override',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
+        subBuilder: StatementId.create)
+    ..aOM<StatementPartial>(2, _omitFieldNames ? '' : 'partial',
+        subBuilder: StatementPartial.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabInstanceStatement_Override clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrefabInstanceStatement_Override copyWith(
+          void Function(PrefabInstanceStatement_Override) updates) =>
+      super.copyWith(
+              (message) => updates(message as PrefabInstanceStatement_Override))
+          as PrefabInstanceStatement_Override;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrefabInstanceStatement_Override create() =>
+      PrefabInstanceStatement_Override._();
+  @$core.override
+  PrefabInstanceStatement_Override createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static PrefabInstanceStatement_Override getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrefabInstanceStatement_Override>(
+          create);
+  static PrefabInstanceStatement_Override? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  StatementId get id => $_getN(0);
+  @$pb.TagNumber(1)
+  set id(StatementId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StatementId ensureId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  StatementPartial get partial => $_getN(1);
+  @$pb.TagNumber(2)
+  set partial(StatementPartial value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPartial() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPartial() => $_clearField(2);
+  @$pb.TagNumber(2)
+  StatementPartial ensurePartial() => $_ensure(1);
+}
+
 class PrefabInstanceStatement extends $pb.GeneratedMessage {
   factory PrefabInstanceStatement({
     StatementId? prefabId,
@@ -4314,6 +4326,7 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
     EdgeStyle? edgeStyle,
     FaceStyle? faceStyle,
     CellRef? parent,
+    $core.Iterable<PrefabInstanceStatement_Override>? overrides,
   }) {
     final result = create();
     if (prefabId != null) result.prefabId = prefabId;
@@ -4325,6 +4338,7 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
     if (edgeStyle != null) result.edgeStyle = edgeStyle;
     if (faceStyle != null) result.faceStyle = faceStyle;
     if (parent != null) result.parent = parent;
+    if (overrides != null) result.overrides.addAll(overrides);
     return result;
   }
 
@@ -4357,6 +4371,9 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
         subBuilder: FaceStyle.create)
     ..aOM<CellRef>(9, _omitFieldNames ? '' : 'parent',
         subBuilder: CellRef.create)
+    ..pPM<PrefabInstanceStatement_Override>(
+        10, _omitFieldNames ? '' : 'overrides',
+        subBuilder: PrefabInstanceStatement_Override.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4477,6 +4494,411 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
   void clearParent() => $_clearField(9);
   @$pb.TagNumber(9)
   CellRef ensureParent() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $pb.PbList<PrefabInstanceStatement_Override> get overrides => $_getList(9);
+}
+
+enum StatementPartial_Value_Kind {
+  modifiers,
+  name,
+  transform,
+  layoutSize,
+  vertexStyle,
+  edgeStyle,
+  faceStyle,
+  objectShape,
+  position,
+  text,
+  textFormat,
+  paragraphFormat,
+  corners,
+  radius,
+  glueVerticesPosition,
+  layout,
+  notSet
+}
+
+class StatementPartial_Value extends $pb.GeneratedMessage {
+  factory StatementPartial_Value({
+    ModifierStack? modifiers,
+    $core.String? name,
+    Mat4? transform,
+    LayoutSize? layoutSize,
+    VertexStyle? vertexStyle,
+    EdgeStyle? edgeStyle,
+    FaceStyle? faceStyle,
+    ObjectShape? objectShape,
+    Vec2? position,
+    $core.String? text,
+    TextFormat? textFormat,
+    ParagraphFormat? paragraphFormat,
+    CornerRadii? corners,
+    CornerRadius? radius,
+    GlueVerticesStatement_Position? glueVerticesPosition,
+    Layout? layout,
+  }) {
+    final result = create();
+    if (modifiers != null) result.modifiers = modifiers;
+    if (name != null) result.name = name;
+    if (transform != null) result.transform = transform;
+    if (layoutSize != null) result.layoutSize = layoutSize;
+    if (vertexStyle != null) result.vertexStyle = vertexStyle;
+    if (edgeStyle != null) result.edgeStyle = edgeStyle;
+    if (faceStyle != null) result.faceStyle = faceStyle;
+    if (objectShape != null) result.objectShape = objectShape;
+    if (position != null) result.position = position;
+    if (text != null) result.text = text;
+    if (textFormat != null) result.textFormat = textFormat;
+    if (paragraphFormat != null) result.paragraphFormat = paragraphFormat;
+    if (corners != null) result.corners = corners;
+    if (radius != null) result.radius = radius;
+    if (glueVerticesPosition != null)
+      result.glueVerticesPosition = glueVerticesPosition;
+    if (layout != null) result.layout = layout;
+    return result;
+  }
+
+  StatementPartial_Value._();
+
+  factory StatementPartial_Value.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StatementPartial_Value.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, StatementPartial_Value_Kind>
+      _StatementPartial_Value_KindByTag = {
+    1: StatementPartial_Value_Kind.modifiers,
+    2: StatementPartial_Value_Kind.name,
+    3: StatementPartial_Value_Kind.transform,
+    4: StatementPartial_Value_Kind.layoutSize,
+    5: StatementPartial_Value_Kind.vertexStyle,
+    6: StatementPartial_Value_Kind.edgeStyle,
+    7: StatementPartial_Value_Kind.faceStyle,
+    8: StatementPartial_Value_Kind.objectShape,
+    9: StatementPartial_Value_Kind.position,
+    10: StatementPartial_Value_Kind.text,
+    11: StatementPartial_Value_Kind.textFormat,
+    12: StatementPartial_Value_Kind.paragraphFormat,
+    13: StatementPartial_Value_Kind.corners,
+    14: StatementPartial_Value_Kind.radius,
+    15: StatementPartial_Value_Kind.glueVerticesPosition,
+    16: StatementPartial_Value_Kind.layout,
+    0: StatementPartial_Value_Kind.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StatementPartial.Value',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+    ..aOM<ModifierStack>(1, _omitFieldNames ? '' : 'modifiers',
+        subBuilder: ModifierStack.create)
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOM<Mat4>(3, _omitFieldNames ? '' : 'transform', subBuilder: Mat4.create)
+    ..aOM<LayoutSize>(4, _omitFieldNames ? '' : 'layoutSize',
+        subBuilder: LayoutSize.create)
+    ..aOM<VertexStyle>(5, _omitFieldNames ? '' : 'vertexStyle',
+        subBuilder: VertexStyle.create)
+    ..aOM<EdgeStyle>(6, _omitFieldNames ? '' : 'edgeStyle',
+        subBuilder: EdgeStyle.create)
+    ..aOM<FaceStyle>(7, _omitFieldNames ? '' : 'faceStyle',
+        subBuilder: FaceStyle.create)
+    ..aOM<ObjectShape>(8, _omitFieldNames ? '' : 'objectShape',
+        subBuilder: ObjectShape.create)
+    ..aOM<Vec2>(9, _omitFieldNames ? '' : 'position', subBuilder: Vec2.create)
+    ..aOS(10, _omitFieldNames ? '' : 'text')
+    ..aOM<TextFormat>(11, _omitFieldNames ? '' : 'textFormat',
+        subBuilder: TextFormat.create)
+    ..aOM<ParagraphFormat>(12, _omitFieldNames ? '' : 'paragraphFormat',
+        subBuilder: ParagraphFormat.create)
+    ..aOM<CornerRadii>(13, _omitFieldNames ? '' : 'corners',
+        subBuilder: CornerRadii.create)
+    ..aOM<CornerRadius>(14, _omitFieldNames ? '' : 'radius',
+        subBuilder: CornerRadius.create)
+    ..aE<GlueVerticesStatement_Position>(
+        15, _omitFieldNames ? '' : 'glueVerticesPosition',
+        enumValues: GlueVerticesStatement_Position.values)
+    ..aOM<Layout>(16, _omitFieldNames ? '' : 'layout',
+        subBuilder: Layout.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementPartial_Value clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementPartial_Value copyWith(
+          void Function(StatementPartial_Value) updates) =>
+      super.copyWith((message) => updates(message as StatementPartial_Value))
+          as StatementPartial_Value;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StatementPartial_Value create() => StatementPartial_Value._();
+  @$core.override
+  StatementPartial_Value createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StatementPartial_Value getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StatementPartial_Value>(create);
+  static StatementPartial_Value? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
+  @$pb.TagNumber(15)
+  @$pb.TagNumber(16)
+  StatementPartial_Value_Kind whichKind() =>
+      _StatementPartial_Value_KindByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
+  @$pb.TagNumber(3)
+  @$pb.TagNumber(4)
+  @$pb.TagNumber(5)
+  @$pb.TagNumber(6)
+  @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
+  @$pb.TagNumber(15)
+  @$pb.TagNumber(16)
+  void clearKind() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  ModifierStack get modifiers => $_getN(0);
+  @$pb.TagNumber(1)
+  set modifiers(ModifierStack value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModifiers() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModifiers() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ModifierStack ensureModifiers() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  Mat4 get transform => $_getN(2);
+  @$pb.TagNumber(3)
+  set transform(Mat4 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTransform() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTransform() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Mat4 ensureTransform() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  LayoutSize get layoutSize => $_getN(3);
+  @$pb.TagNumber(4)
+  set layoutSize(LayoutSize value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLayoutSize() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLayoutSize() => $_clearField(4);
+  @$pb.TagNumber(4)
+  LayoutSize ensureLayoutSize() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  VertexStyle get vertexStyle => $_getN(4);
+  @$pb.TagNumber(5)
+  set vertexStyle(VertexStyle value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVertexStyle() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVertexStyle() => $_clearField(5);
+  @$pb.TagNumber(5)
+  VertexStyle ensureVertexStyle() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  EdgeStyle get edgeStyle => $_getN(5);
+  @$pb.TagNumber(6)
+  set edgeStyle(EdgeStyle value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEdgeStyle() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEdgeStyle() => $_clearField(6);
+  @$pb.TagNumber(6)
+  EdgeStyle ensureEdgeStyle() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  FaceStyle get faceStyle => $_getN(6);
+  @$pb.TagNumber(7)
+  set faceStyle(FaceStyle value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFaceStyle() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFaceStyle() => $_clearField(7);
+  @$pb.TagNumber(7)
+  FaceStyle ensureFaceStyle() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  ObjectShape get objectShape => $_getN(7);
+  @$pb.TagNumber(8)
+  set objectShape(ObjectShape value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasObjectShape() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearObjectShape() => $_clearField(8);
+  @$pb.TagNumber(8)
+  ObjectShape ensureObjectShape() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  Vec2 get position => $_getN(8);
+  @$pb.TagNumber(9)
+  set position(Vec2 value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPosition() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPosition() => $_clearField(9);
+  @$pb.TagNumber(9)
+  Vec2 ensurePosition() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $core.String get text => $_getSZ(9);
+  @$pb.TagNumber(10)
+  set text($core.String value) => $_setString(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasText() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearText() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  TextFormat get textFormat => $_getN(10);
+  @$pb.TagNumber(11)
+  set textFormat(TextFormat value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasTextFormat() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearTextFormat() => $_clearField(11);
+  @$pb.TagNumber(11)
+  TextFormat ensureTextFormat() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  ParagraphFormat get paragraphFormat => $_getN(11);
+  @$pb.TagNumber(12)
+  set paragraphFormat(ParagraphFormat value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasParagraphFormat() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearParagraphFormat() => $_clearField(12);
+  @$pb.TagNumber(12)
+  ParagraphFormat ensureParagraphFormat() => $_ensure(11);
+
+  @$pb.TagNumber(13)
+  CornerRadii get corners => $_getN(12);
+  @$pb.TagNumber(13)
+  set corners(CornerRadii value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasCorners() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearCorners() => $_clearField(13);
+  @$pb.TagNumber(13)
+  CornerRadii ensureCorners() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  CornerRadius get radius => $_getN(13);
+  @$pb.TagNumber(14)
+  set radius(CornerRadius value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasRadius() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearRadius() => $_clearField(14);
+  @$pb.TagNumber(14)
+  CornerRadius ensureRadius() => $_ensure(13);
+
+  @$pb.TagNumber(15)
+  GlueVerticesStatement_Position get glueVerticesPosition => $_getN(14);
+  @$pb.TagNumber(15)
+  set glueVerticesPosition(GlueVerticesStatement_Position value) =>
+      $_setField(15, value);
+  @$pb.TagNumber(15)
+  $core.bool hasGlueVerticesPosition() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearGlueVerticesPosition() => $_clearField(15);
+
+  @$pb.TagNumber(16)
+  Layout get layout => $_getN(15);
+  @$pb.TagNumber(16)
+  set layout(Layout value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasLayout() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearLayout() => $_clearField(16);
+  @$pb.TagNumber(16)
+  Layout ensureLayout() => $_ensure(15);
+}
+
+class StatementPartial extends $pb.GeneratedMessage {
+  factory StatementPartial({
+    $core.Iterable<StatementPartial_Value>? fields,
+  }) {
+    final result = create();
+    if (fields != null) result.fields.addAll(fields);
+    return result;
+  }
+
+  StatementPartial._();
+
+  factory StatementPartial.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory StatementPartial.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StatementPartial',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..pPM<StatementPartial_Value>(1, _omitFieldNames ? '' : 'fields',
+        subBuilder: StatementPartial_Value.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementPartial clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  StatementPartial copyWith(void Function(StatementPartial) updates) =>
+      super.copyWith((message) => updates(message as StatementPartial))
+          as StatementPartial;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static StatementPartial create() => StatementPartial._();
+  @$core.override
+  StatementPartial createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static StatementPartial getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<StatementPartial>(create);
+  static StatementPartial? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<StatementPartial_Value> get fields => $_getList(0);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {
@@ -8294,6 +8716,60 @@ class Size2 extends $pb.GeneratedMessage {
   $core.bool hasHeight() => $_has(1);
   @$pb.TagNumber(2)
   void clearHeight() => $_clearField(2);
+}
+
+class CornerRadii extends $pb.GeneratedMessage {
+  factory CornerRadii({
+    $core.Iterable<$core.MapEntry<$core.int, CornerRadius>>? corners,
+  }) {
+    final result = create();
+    if (corners != null) result.corners.addEntries(corners);
+    return result;
+  }
+
+  CornerRadii._();
+
+  factory CornerRadii.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CornerRadii.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CornerRadii',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..m<$core.int, CornerRadius>(1, _omitFieldNames ? '' : 'corners',
+        entryClassName: 'CornerRadii.CornersEntry',
+        keyFieldType: $pb.PbFieldType.O3,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: CornerRadius.create,
+        valueDefaultOrMaker: CornerRadius.getDefault,
+        packageName: const $pb.PackageName('motif'))
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CornerRadii clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CornerRadii copyWith(void Function(CornerRadii) updates) =>
+      super.copyWith((message) => updates(message as CornerRadii))
+          as CornerRadii;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CornerRadii create() => CornerRadii._();
+  @$core.override
+  CornerRadii createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CornerRadii getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CornerRadii>(create);
+  static CornerRadii? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbMap<$core.int, CornerRadius> get corners => $_getMap(0);
 }
 
 class CornerRadius extends $pb.GeneratedMessage {

@@ -12,6 +12,19 @@ final class PrefabIndex extends PrefabIndexBase {
 
   @override
   Iterable<Statement> get statements => program.statements;
+
+  PrefabInstanceStatement? instanceOf(StatementId id) {
+    final node = evaluation.tree[id];
+    if (node == null) return null;
+
+    var current = node.parent;
+    while (current != null) {
+      final statement = current.statement;
+      if (statement is PrefabInstanceStatement) return statement;
+      current = current.parent;
+    }
+    return null;
+  }
 }
 
 final class SlicePrefabIndex extends PrefabIndexBase {
@@ -25,6 +38,8 @@ final class SlicePrefabIndex extends PrefabIndexBase {
   Iterable<Statement> get statements => slice.statements;
 }
 
+extension type const PrefabId(StatementId value) implements StatementId;
+
 abstract class PrefabIndexBase {
   PrefabIndexBase() {
     _build();
@@ -33,9 +48,11 @@ abstract class PrefabIndexBase {
   Statement? statement(StatementId id);
   Iterable<Statement> get statements;
 
-  final _prefabs = <StatementId, ProgramSlice>{};
-  final _prefabChildren = <StatementId, List<StatementId>>{};
-  final _instances = <StatementId, List<StatementId>>{};
+  final _prefabs = <PrefabId, ProgramSlice>{};
+  final _prefabChildren = <PrefabId, List<StatementId>>{};
+  final _instances = <PrefabId, List<StatementId>>{};
+
+  Iterable<PrefabId> get origins => _prefabs.keys;
 
   PrefabOriginStatement? originOf(StatementId id) {
     final stmt = statement(id);
@@ -64,9 +81,8 @@ abstract class PrefabIndexBase {
     _ => null,
   };
 
-  ProgramSlice sliceOf(StatementId origin) => _prefabs[origin]!;
-
-  Iterable<StatementId> instancesOf(StatementId origin) {
+  ProgramSlice sliceOf(PrefabId origin) => _prefabs[origin]!;
+  Iterable<StatementId> instancesOf(PrefabId origin) {
     return _instances[origin] ?? const [];
   }
 
@@ -80,7 +96,7 @@ abstract class PrefabIndexBase {
     return const [];
   }
 
-  Iterable<StatementId> childrenOf(StatementId origin) {
+  Iterable<StatementId> childrenOf(PrefabId origin) {
     return _prefabChildren[origin] ?? const [];
   }
 

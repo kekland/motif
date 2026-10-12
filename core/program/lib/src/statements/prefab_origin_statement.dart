@@ -32,6 +32,9 @@ final class PrefabOriginStatement extends ContainerStatement {
         isDeleted: false,
       );
 
+  @override
+  PrefabId get id => .new(super.id);
+
   final bool isDeleted;
 
   @override

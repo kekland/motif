@@ -14,6 +14,7 @@ class EvalContext {
   final _styles = <CellRef, CellStyle>{};
 
   Bundle get bundle => _evaluation.bundle;
+  PrefabIndex get prefabs => _evaluation.prefabs;
 
   StatementId derive(U64 key, {Object? origin}) => id.derive(key);
 

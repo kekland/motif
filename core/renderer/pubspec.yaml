@@ -16,6 +16,7 @@ dependencies:
   scene:
   color:
   skia:
+  ui:
 
   vector_math: ^2.2.0
 

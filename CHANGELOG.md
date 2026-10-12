@@ -1,3 +1,9 @@
+# 0.1.9
+
+* Added support for rendering the current scene using different frames as the root frame.
+* Added the prefabs panel, which shows the current prefabs in the scene.
+* Prefabs: improved support for overrides in prefab instances. Instances can now have nested overrides, as well as top-level overrides (to the produced container).
+
 # 0.1.8
 
 * Rework tool options placement. Now global options (e.g. snap to pixel) are located in the canvas options panel, while per-tool options replace the selection panel entirely.

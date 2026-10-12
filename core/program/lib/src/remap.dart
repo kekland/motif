@@ -70,5 +70,12 @@ final class Remap {
   void add(Remap other) {
     _cells.addAll(other._cells);
     _statements.addAll(other._statements);
+    _inverseStatements = null;
+  }
+
+  Map<StatementId, StatementId>? _inverseStatements;
+  StatementId? statementInverse(StatementId id) {
+    _inverseStatements ??= _statements.map((k, v) => MapEntry(v, k));
+    return _inverseStatements![id];
   }
 }

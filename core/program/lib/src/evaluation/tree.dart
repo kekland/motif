@@ -108,6 +108,7 @@ final class EvalNode {
   int dirtyBelow = 0;
   Statement? lastProduced;
   Statement? lastStatement;
+  StatementId? source;
 
   bool get childrenStale => !identical(lastProduced, statement);
 

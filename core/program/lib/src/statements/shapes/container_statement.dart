@@ -19,6 +19,7 @@ final class ContainerStatement extends ShapeStatement implements LayoutContainer
   bool get isLeaf => false;
 
   @override
+  Layout resolveLayout(EvalContext context) => layout;
   final Layout layout;
 
   @override

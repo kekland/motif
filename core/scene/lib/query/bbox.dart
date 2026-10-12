@@ -4,6 +4,11 @@ import 'package:program/program.dart';
 import 'package:scene/scene.dart';
 
 extension SceneBboxQuery on SceneQuery {
+  Aabb2 get sceneBbox {
+    if (scene.program.statements.isEmpty) return .empty();
+    return bbox(scene.program.statements.map((s) => s.id));
+  }
+
   Aabb2 bbox(Iterable<StatementId> ids) {
     if (ids.isEmpty) return .empty();
 

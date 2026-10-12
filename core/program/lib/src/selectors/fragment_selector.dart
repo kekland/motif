@@ -11,19 +11,18 @@ final class FragmentSelector extends Selector<Statement> {
   Statement _resolve(EvalContext context) {
     final s = context._evaluation.statement(id)!;
     if (modifierIndex == null) return s;
-    return s.copyWith(modifiers: s.modifiers.sublist(0, modifierIndex!));
+    return s.copyWith(modifiers: s.modifiers!.sublist(0, modifierIndex!));
   }
 
   @override
   Iterable<CellRef<CellHandle>> resolved(EvalContext context) sync* {
     final node = context._evaluation.tree[id]!;
-    final live = context.bundle.isLive;
     final added = node.commit?.added;
-    if (added != null) yield* added.where(live);
+    if (added != null) yield* added;
 
     final children = node.children;
     for (final c in modifierIndex != null ? children.take(modifierIndex!) : children) {
-      yield* context.productsOf(c.id).where(live);
+      yield* context.productsOf(c.id);
     }
   }
 

@@ -7,6 +7,7 @@ extension StatementProps on Statement {
       EdgeStatement s => _edgeStatementProps(scene, s),
       FaceStatement s => _faceStatementProps(scene, s),
       ContainerStatement s => _containerStatementProps(scene, s),
+      PrefabInstanceStatement s => _prefabInstanceStatementProps(scene, s),
       ShapeStatement s => _shapeStatementProps(scene, s),
       TextStatement s => _textStatementProps(scene, s),
       LayoutBoxStatement s => _layoutBoxStatementProps(scene, s),
@@ -36,7 +37,7 @@ Iterable<PropSource> _statementProps(Scene scene, Statement s) sync* {
   yield PropKind.modifierStack.of<Statement>(
     s.id,
     scene: scene,
-    get: (scene, s) => s.modifiers,
+    get: (scene, s) => s.resolveModifiers(scene.evaluation.contextFor(s.id)),
     set: (scene, value) => .modifiers(value),
   );
 }
@@ -86,15 +87,16 @@ Iterable<PropSource> _layoutBoxStatementProps(Scene scene, LayoutBoxStatement s)
   yield PropKind.layoutSize.statement<LayoutBoxStatement>(
     s.id,
     scene: scene,
-    get: (scene, s) => s.size,
+    get: (scene, s) => s.resolveSize(scene.evaluation.contextFor(s.id)),
     set: (scene, value) => .layoutSize(value),
     override: (scene, s) {
       final layout = scene.layoutOf(s.id);
       if (layout == null) return null;
 
+      final size = s.resolveSize(scene.evaluation.contextFor(s.id));
       return .new(
-        width: !s.size.width.isFixed ? .new(layout.size.width, s.size.width.type, s.size.width.range) : null,
-        height: !s.size.height.isFixed ? .new(layout.size.height, s.size.height.type, s.size.height.range) : null,
+        width: !size.width.isFixed ? .new(layout.size.width, size.width.type, size.width.range) : null,
+        height: !size.height.isFixed ? .new(layout.size.height, size.height.type, size.height.range) : null,
       );
     },
   );
@@ -158,5 +160,37 @@ Iterable<PropSource> _textStatementProps(Scene scene, TextStatement s) sync* {
     scene: scene,
     get: (scene, s) => s.edgeStyle,
     set: (scene, value) => .edgeStyle(value),
+  );
+}
+
+Iterable<PropSource> _prefabInstanceStatementProps(Scene scene, PrefabInstanceStatement s) sync* {
+  yield* _layoutBoxStatementProps(scene, s);
+
+  // yield PropKind.vertexStyle.statement<PrefabInstanceStatement>(
+  //   s.id,
+  //   scene: scene,
+  //   get: (scene, s) => s.vertexStyle,
+  //   set: (scene, value) => .vertexStyle(value),
+  // );
+
+  yield PropKind.faceStyle.statement<PrefabInstanceStatement>(
+    s.id,
+    scene: scene,
+    get: (scene, s) => s.resolveFaceStyle(scene.evaluation.contextFor(s.id)),
+    set: (scene, value) => .faceStyle(value),
+  );
+
+  yield PropKind.edgeStyle.statement<PrefabInstanceStatement>(
+    s.id,
+    scene: scene,
+    get: (scene, s) => s.resolveEdgeStyle(scene.evaluation.contextFor(s.id)),
+    set: (scene, value) => .edgeStyle(value),
+  );
+
+  yield PropKind.layout.statement<PrefabInstanceStatement>(
+    s.id,
+    scene: scene,
+    get: (scene, s) => s.resolveLayout(scene.evaluation.contextFor(s.id)),
+    set: (scene, value) => .layout(value),
   );
 }

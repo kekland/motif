@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:kernel/kernel.dart';
 import 'package:renderer/dbg_renderer.dart';
 import 'package:renderer/renderer.dart';
 import 'package:scene/scene.dart';
@@ -7,11 +8,13 @@ class SceneWidget extends StatefulWidget {
   const SceneWidget({
     super.key,
     required this.scene,
+    this.root,
     this.debug = false,
     this.debugArrangement = false,
   });
 
   final Scene scene;
+  final FrameRef? root;
   final bool debug;
   final bool debugArrangement;
 
@@ -27,17 +30,17 @@ class _SceneWidgetState extends State<SceneWidget> {
   void initState() {
     super.initState();
     scene.addListener(_onSceneChanged);
-    renderer = .new(scene);
+    renderer = .new(scene, root: widget.root);
   }
 
   @override
   void didUpdateWidget(SceneWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.scene != scene) {
+    if (oldWidget.scene != scene || oldWidget.root != widget.root) {
       renderer?.dispose();
       oldWidget.scene.removeListener(_onSceneChanged);
       scene.addListener(_onSceneChanged);
-      renderer = .new(scene);
+      renderer = .new(scene, root: widget.root);
     }
   }
 
@@ -78,7 +81,8 @@ class _SceneWidgetState extends State<SceneWidget> {
       );
     }
 
-    return SceneTickerProvider(scene: scene, child: child);
+    if (widget.root == null) return SceneTickerProvider(scene: scene, child: child);
+    return child;
   }
 }
 

@@ -52,6 +52,7 @@ class IconsAssets {
   static const m = AssetBytesLoader('assets/gen/icons/m.vec', packageName: 'ui');
   static const z = AssetBytesLoader('assets/gen/icons/z.vec', packageName: 'ui');
   static const i = AssetBytesLoader('assets/gen/icons/i.vec', packageName: 'ui');
+  static const prefabInstance = AssetBytesLoader('assets/gen/icons/prefab-instance.vec', packageName: 'ui');
   static const layoutRow = AssetBytesLoader('assets/gen/icons/layout-row.vec', packageName: 'ui');
   static const bend = AssetBytesLoader('assets/gen/icons/bend.vec', packageName: 'ui');
   static const zFill = AssetBytesLoader('assets/gen/icons/z-fill.vec', packageName: 'ui');
@@ -129,6 +130,7 @@ const iconsAssets = (
   m: IconsAssets.m,
   z: IconsAssets.z,
   i: IconsAssets.i,
+  prefabInstance: IconsAssets.prefabInstance,
   layoutRow: IconsAssets.layoutRow,
   bend: IconsAssets.bend,
   zFill: IconsAssets.zFill,
@@ -356,6 +358,7 @@ class Icons extends _BaseIcon {
   const Icons.m({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.m, filledLoader: IconsAssets.mFill, autocolor: true);
   const Icons.z({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.z, filledLoader: IconsAssets.zFill, autocolor: true);
   const Icons.i({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.i, filledLoader: IconsAssets.iFill, autocolor: true);
+  const Icons.prefabInstance({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.prefabInstance, filledLoader: null, autocolor: true);
   const Icons.layoutRow({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.layoutRow, filledLoader: IconsAssets.layoutRowFill, autocolor: true);
   const Icons.bend({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.bend, filledLoader: IconsAssets.bendFill, autocolor: true);
   const Icons.zFill({super.key, super.size, super.color}) : super.vgBasic(loader: IconsAssets.zFill, filledLoader: null, autocolor: true);
@@ -493,7 +496,6 @@ class Icons extends _BaseIcon {
   const Icons.brightnessDark({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_2_rounded);
   const Icons.brightnessSystem({super.key, super.size, super.color}): super.iconData(icon: Symbols.brightness_auto_rounded);
   const Icons.prefabOrigin({super.key, super.size, super.color}): super.iconData(icon: Symbols.nearby_rounded);
-  const Icons.prefabInstance({super.key, super.size, super.color}): super.iconData(icon: Symbols.nearby_rounded);
   const Icons.alignVerticalTop({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_top_rounded);
   const Icons.alignVerticalCenter({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_center_rounded);
   const Icons.alignVerticalBottom({super.key, super.size, super.color}): super.iconData(icon: Symbols.align_vertical_bottom_rounded);

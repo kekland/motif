@@ -249,13 +249,8 @@ message MultiCutEdgeStatement {
 }
 
 message FilletFaceStatement {
-  message CornerEntry {
-    int32        index  = 1;
-    CornerRadius radius = 2;
-  }
-
   SingleSelector        face    = 1;
-  repeated CornerEntry  corners = 2;
+  CornerRadii           corners = 2;
   optional CornerRadius radius  = 3;
 }
 
@@ -352,15 +347,46 @@ message PrefabOriginStatement {
 }
 
 message PrefabInstanceStatement {
-  StatementId      prefab_id    = 1;
-  Layout           layout       = 2;
-  LayoutSize       size         = 3;
-  Mat4             transform    = 4;
-  ObjectShape      shape        = 5;
-  VertexStyle      vertex_style = 6;
-  EdgeStyle        edge_style   = 7;
-  FaceStyle        face_style   = 8;
-  optional CellRef parent       = 9;
+  message Override {
+    StatementId      id      = 1;
+    StatementPartial partial = 2;
+  }
+
+  StatementId       prefab_id    = 1;
+  Layout            layout       = 2;
+  LayoutSize        size         = 3;
+  Mat4              transform    = 4;
+  ObjectShape       shape        = 5;
+  VertexStyle       vertex_style = 6;
+  EdgeStyle         edge_style   = 7;
+  FaceStyle         face_style   = 8;
+  optional CellRef  parent       = 9;
+  repeated Override overrides    = 10;
+}
+
+message StatementPartial {
+  message Value {
+    oneof kind {
+      ModifierStack                  modifiers              = 1;
+      string                         name                   = 2;
+      Mat4                           transform              = 3;
+      LayoutSize                     layout_size            = 4;
+      VertexStyle                    vertex_style           = 5;
+      EdgeStyle                      edge_style             = 6;
+      FaceStyle                      face_style             = 7;
+      ObjectShape                    object_shape           = 8;
+      Vec2                           position               = 9;
+      string                         text                   = 10;
+      TextFormat                     text_format            = 11;
+      ParagraphFormat                paragraph_format       = 12;
+      CornerRadii                    corners                = 13;
+      CornerRadius                   radius                 = 14;
+      GlueVerticesStatement.Position glue_vertices_position = 15;
+      Layout                         layout                 = 16;
+    }
+  }
+
+  repeated Value fields = 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -727,6 +753,10 @@ message Vec2 {
 message Size2 {
   double width  = 1;
   double height = 2;
+}
+
+message CornerRadii {
+  map<int32, CornerRadius> corners = 1;
 }
 
 message CornerRadius {

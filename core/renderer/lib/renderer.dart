@@ -8,14 +8,16 @@ import 'package:scene/scene.dart';
 import 'paint.dart' as painter;
 
 export 'widget.dart';
+export 'slice_widget.dart';
 
 final class SceneRenderer {
-  new(this.scene) {
+  new(this.scene, {this.root}) {
     scene.evaluation.addUpdateListener(_onEvaluationUpdate);
     scene.assetCache.addFetchListener(_onAssetFetched);
   }
 
   final Scene scene;
+  final FrameRef? root;
   Bundle get bundle => scene.bundle;
   Evaluation get evaluation => scene.evaluation;
 
@@ -61,7 +63,12 @@ final class SceneRenderer {
   }
 
   void paint(ui.Canvas canvas) {
-    _paintFrame(canvas, .root, .root, 0, .identity());
+    if (root != null) {
+      final handle = bundle.frame(root!)!;
+      _paintFrame(canvas, root!, handle, 0, .identity());
+    } else {
+      _paintFrame(canvas, .root, .root, 0, .identity());
+    }
   }
 
   void _paintFrame(ui.Canvas canvas, FrameRef ref, FrameHandle frame, int depth, Mat4 parentToWorld) {

@@ -41,14 +41,15 @@ final class TextStatement extends Statement
   final FaceStyle faceStyle;
 
   @override
-  final LayoutSize size;
-
-  @override
   final Mat4 transform;
 
   @override
-  Size2 intrinsicSize(Evaluation e) {
-    final paragraph = buildParagraph(e);
+  LayoutSize resolveSize(EvalContext context) => size;
+  final LayoutSize size;
+
+  @override
+  Size2 intrinsicSize(Evaluation evaluation) {
+    final paragraph = buildParagraph(evaluation);
     paragraph.layout(double.infinity);
     return Size2(paragraph.maxIntrinsicWidth, paragraph.height);
   }
@@ -116,15 +117,6 @@ final class TextStatement extends Statement
     edgeStyle: partial.field(#edgeStyle),
     faceStyle: partial.field(#faceStyle),
   );
-
-  @override
-  TextStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(vertexStyle: style);
-
-  @override
-  TextStatement copyWithEdgeStyle({EdgeStyle? style}) => copyWith(edgeStyle: style);
-
-  @override
-  TextStatement copyWithFaceStyle({FaceStyle? style}) => copyWith(faceStyle: style);
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;

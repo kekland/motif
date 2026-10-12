@@ -4,20 +4,15 @@ final class LayoutTree {
   LayoutTree(this._evaluation);
   final Evaluation _evaluation;
 
-  final _nodes = <StatementId, _LayoutNode>{};
-  final _children = <StatementId, List<_LayoutNode>>{};
-  final _dirty = <_LayoutNode>{};
+  final _nodes = <StatementId, LayoutNode>{};
+  final _children = <StatementId, List<LayoutNode>>{};
+  final _dirty = <LayoutNode>{};
   bool get isDirty => _dirty.isNotEmpty;
 
-  Layout? layoutOf(StatementId id) {
-    final box = _nodes[id]?.box;
-    if (box is! LayoutContainer) return null;
-    return box.layout;
-  }
-
+  Layout? layoutOf(StatementId id) => _nodes[id]?.layout;
   Placement? placementOf(StatementId id) => _nodes[id]?.placement;
 
-  _LayoutNode? _parentOf(_LayoutNode n) {
+  LayoutNode? _parentOf(LayoutNode n) {
     final p = n.box.parentId;
     if (p == null) return null;
     final parent = _nodes[p];
@@ -40,7 +35,7 @@ final class LayoutTree {
   @pragma('vm:prefer-inline')
   int compare(StatementId a, StatementId b) => _evaluation.evalOrder(a, b);
 
-  List<_LayoutNode> _childrenOf(_LayoutNode n) {
+  List<LayoutNode> _childrenOf(LayoutNode n) {
     assert(n.box is LayoutContainer, 'node ${n.box.id} is not a container');
     return _children[n.box.id] ?? const [];
   }
@@ -56,16 +51,18 @@ final class LayoutTree {
   // Attachment/detachment
   // -------------------------------------------------------------------------------------------------------------------
 
-  void attachOrUpdate(LayoutBox box) {
+  void attachOrUpdate(EvalContext context, LayoutBox box) {
     if (_nodes.containsKey(box.id)) {
-      update(box);
+      update(context, box);
     } else {
-      attach(box);
+      attach(context, box);
     }
   }
 
-  void attach(LayoutBox box) {
-    final node = _LayoutNode(box);
+  void attach(EvalContext context, LayoutBox box) {
+    final node = LayoutNode(box);
+    _resolveNode(context, node);
+
     _nodes[box.id] = node;
 
     final parent = box.parentId;
@@ -88,17 +85,15 @@ final class LayoutTree {
     }
   }
 
-  void update(LayoutBox box) {
+  void update(EvalContext context, LayoutBox box) {
     final n = _nodes[box.id]!;
     if (n.box.parentId != box.parentId) {
       detach(n.box.id);
-      attach(box);
+      attach(context, box);
       return;
     }
 
-    final oldBox = n.box;
     n.box = box;
-
     final parent = box.parentId;
     if (parent != null) {
       final siblings = _children[parent]!;
@@ -108,13 +103,22 @@ final class LayoutTree {
       if (siblings.indexOf(n) != before) _dirtyParent(n);
     }
 
-    if (!LayoutBox.isLayoutEqual(_evaluation, oldBox, box, oldIntrinsicSize: n.intrinsicSize)) {
+    if (!LayoutBox.isLayoutEqual(context, n, box)) {
+      _resolveNode(context, n);
       _dirty.add(n);
       _dirtyParent(n);
     }
   }
 
-  void _insertChild(StatementId parent, _LayoutNode child) {
+  void _resolveNode(EvalContext context, LayoutNode n) {
+    final box = n.box;
+
+    n.transform = box.transform;
+    n.size = box.resolveSize(context);
+    if (box is LayoutContainer) n.layout = box.resolveLayout(context);
+  }
+
+  void _insertChild(StatementId parent, LayoutNode child) {
     final siblings = _children.putIfAbsent(parent, () => []);
     final id = child.box.id;
     var at = siblings.length;
@@ -128,7 +132,7 @@ final class LayoutTree {
     siblings.insert(at, child);
   }
 
-  void _dirtyParent(_LayoutNode n) {
+  void _dirtyParent(LayoutNode n) {
     final p = _parentOf(n);
     if (p != null) _dirty.add(p);
   }
@@ -137,15 +141,15 @@ final class LayoutTree {
   // Measure
   // -------------------------------------------------------------------------------------------------------------------
 
-  Size2 _measure(_LayoutNode n) {
+  Size2 _measure(LayoutNode n) {
     final box = n.box;
     final intrinsic = box.intrinsicSize(_evaluation);
     n.intrinsicSize = intrinsic;
     if (box is! LayoutContainer) {
-      return box.size.fit(intrinsic, intrinsic);
+      return n.size.fit(intrinsic, intrinsic);
     }
 
-    final layout = box.layout;
+    final layout = n.layout!;
     final children = _childrenOf(n);
 
     final content = switch (layout) {
@@ -154,7 +158,7 @@ final class LayoutTree {
     };
 
     final own = content.inflate(layout.padding.horizontal, layout.padding.vertical);
-    return n.box.size.fit(own, own);
+    return n.size.fit(own, own);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -165,10 +169,10 @@ final class LayoutTree {
     final changed = <StatementId, Placement>{};
     if (_dirty.isEmpty) return changed;
 
-    final queue = SplayTreeSet<_LayoutNode>((a, b) => compare(b.box.id, a.box.id));
+    final queue = SplayTreeSet<LayoutNode>((a, b) => compare(b.box.id, a.box.id));
     queue.addAll(_dirty);
 
-    final replace = <_LayoutNode>{..._dirty};
+    final replace = <LayoutNode>{..._dirty};
     while (queue.isNotEmpty) {
       final n = queue.first;
       queue.remove(n);
@@ -186,7 +190,7 @@ final class LayoutTree {
       }
     }
 
-    final done = <_LayoutNode>{};
+    final done = <LayoutNode>{};
     final work = replace.toList()..sort((a, b) => compare(a.box.id, b.box.id));
     for (final n in work) {
       if (!done.add(n)) continue;
@@ -203,9 +207,9 @@ final class LayoutTree {
   }
 
   void _placeChildren(
-    _LayoutNode n,
-    Set<_LayoutNode> replace,
-    Set<_LayoutNode> done,
+    LayoutNode n,
+    Set<LayoutNode> replace,
+    Set<LayoutNode> done,
     Map<StatementId, Placement> changed,
   ) {
     final box = n.box;
@@ -215,7 +219,7 @@ final class LayoutTree {
     final placement = n.placement;
     if (children.isEmpty || placement == null) return;
 
-    final layout = box.layout;
+    final layout = n.layout!;
     final inner = placement.size.deflate(layout.padding.horizontal, layout.padding.vertical);
     final placements = switch (layout) {
       StackLayout l => _placeStack(children, inner, l),

@@ -65,9 +65,6 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
   );
 
   @override
-  FaceStatement copyWithFaceStyle({FaceStyle? style}) => copyWith(style: style);
-
-  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .forward([
     ...context.resolve(outer),
     for (final h in holes) ...context.resolve(h),

@@ -11,17 +11,18 @@ part of '_program.dart';
 sealed class Statement {
   Statement({
     StatementId? id,
-    this.modifiers = const .empty(),
+    this.modifiers,
     String? name,
   }) : id = id ?? .allocate(),
        name = name != null && name.isNotEmpty ? name : null;
 
   final StatementId id;
-  final ModifierStack modifiers;
+  final ModifierStack? modifiers;
   late final List<Selector> selectors;
   final String? name;
 
   Iterable<Op> execute(EvalContext context);
+  ModifierStack resolveModifiers(EvalContext context) => modifiers ?? .empty();
 
   Statement copyWith({
     StatementId? id,
@@ -68,7 +69,9 @@ sealed class Statement {
 }
 
 class StatementPartial<S extends Statement>(final Map<Symbol, Object?> fields) extends Partial<S> {
-  static StatementPartial merged(Iterable<StatementPartial> partials) {
+  static StatementPartial? merged(Iterable<StatementPartial> partials) {
+    if (partials.isEmpty) return null;
+
     final mergedFields = <Symbol, Object?>{};
     for (final partial in partials) mergedFields.addAll(partial.fields);
     return .new(mergedFields);

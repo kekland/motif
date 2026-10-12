@@ -44,9 +44,6 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
   }
 
   @override
-  EdgeStatement copyWithEdgeStyle({EdgeStyle? style}) => copyWith(style: style);
-
-  @override
   EdgeStatement copyWith({
     StatementId? id,
     ModifierStack? modifiers,

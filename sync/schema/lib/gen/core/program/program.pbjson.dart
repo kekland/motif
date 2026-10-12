@@ -1303,9 +1303,9 @@ const FilletFaceStatement$json = {
     {
       '1': 'corners',
       '3': 2,
-      '4': 3,
+      '4': 1,
       '5': 11,
-      '6': '.motif.FilletFaceStatement.CornerEntry',
+      '6': '.motif.CornerRadii',
       '10': 'corners'
     },
     {
@@ -1319,35 +1319,17 @@ const FilletFaceStatement$json = {
       '17': true
     },
   ],
-  '3': [FilletFaceStatement_CornerEntry$json],
   '8': [
     {'1': '_radius'},
-  ],
-};
-
-@$core.Deprecated('Use filletFaceStatementDescriptor instead')
-const FilletFaceStatement_CornerEntry$json = {
-  '1': 'CornerEntry',
-  '2': [
-    {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
-    {
-      '1': 'radius',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.CornerRadius',
-      '10': 'radius'
-    },
   ],
 };
 
 /// Descriptor for `FilletFaceStatement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List filletFaceStatementDescriptor = $convert.base64Decode(
     'ChNGaWxsZXRGYWNlU3RhdGVtZW50EikKBGZhY2UYASABKAsyFS5tb3RpZi5TaW5nbGVTZWxlY3'
-    'RvclIEZmFjZRJACgdjb3JuZXJzGAIgAygLMiYubW90aWYuRmlsbGV0RmFjZVN0YXRlbWVudC5D'
-    'b3JuZXJFbnRyeVIHY29ybmVycxIwCgZyYWRpdXMYAyABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdX'
-    'NIAFIGcmFkaXVziAEBGlAKC0Nvcm5lckVudHJ5EhQKBWluZGV4GAEgASgFUgVpbmRleBIrCgZy'
-    'YWRpdXMYAiABKAsyEy5tb3RpZi5Db3JuZXJSYWRpdXNSBnJhZGl1c0IJCgdfcmFkaXVz');
+    'RvclIEZmFjZRIsCgdjb3JuZXJzGAIgASgLMhIubW90aWYuQ29ybmVyUmFkaWlSB2Nvcm5lcnMS'
+    'MAoGcmFkaXVzGAMgASgLMhMubW90aWYuQ29ybmVyUmFkaXVzSABSBnJhZGl1c4gBAUIJCgdfcm'
+    'FkaXVz');
 
 @$core.Deprecated('Use glueVerticesStatementDescriptor instead')
 const GlueVerticesStatement$json = {
@@ -2086,9 +2068,34 @@ const PrefabInstanceStatement$json = {
       '10': 'parent',
       '17': true
     },
+    {
+      '1': 'overrides',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.PrefabInstanceStatement.Override',
+      '10': 'overrides'
+    },
   ],
+  '3': [PrefabInstanceStatement_Override$json],
   '8': [
     {'1': '_parent'},
+  ],
+};
+
+@$core.Deprecated('Use prefabInstanceStatementDescriptor instead')
+const PrefabInstanceStatement_Override$json = {
+  '1': 'Override',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+    {
+      '1': 'partial',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementPartial',
+      '10': 'partial'
+    },
   ],
 };
 
@@ -2101,8 +2108,185 @@ final $typed_data.Uint8List prefabInstanceStatementDescriptor = $convert.base64D
     'ZWN0U2hhcGVSBXNoYXBlEjUKDHZlcnRleF9zdHlsZRgGIAEoCzISLm1vdGlmLlZlcnRleFN0eW'
     'xlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAcgASgLMhAubW90aWYuRWRnZVN0eWxlUgll'
     'ZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgIIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0eW'
-    'xlEisKBnBhcmVudBgJIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBQgkKB19wYXJl'
-    'bnQ=');
+    'xlEisKBnBhcmVudBgJIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEkUKCW92ZXJy'
+    'aWRlcxgKIAMoCzInLm1vdGlmLlByZWZhYkluc3RhbmNlU3RhdGVtZW50Lk92ZXJyaWRlUglvdm'
+    'VycmlkZXMaYQoIT3ZlcnJpZGUSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQS'
+    'MQoHcGFydGlhbBgCIAEoCzIXLm1vdGlmLlN0YXRlbWVudFBhcnRpYWxSB3BhcnRpYWxCCQoHX3'
+    'BhcmVudA==');
+
+@$core.Deprecated('Use statementPartialDescriptor instead')
+const StatementPartial$json = {
+  '1': 'StatementPartial',
+  '2': [
+    {
+      '1': 'fields',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.StatementPartial.Value',
+      '10': 'fields'
+    },
+  ],
+  '3': [StatementPartial_Value$json],
+};
+
+@$core.Deprecated('Use statementPartialDescriptor instead')
+const StatementPartial_Value$json = {
+  '1': 'Value',
+  '2': [
+    {
+      '1': 'modifiers',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ModifierStack',
+      '9': 0,
+      '10': 'modifiers'
+    },
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'name'},
+    {
+      '1': 'transform',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Mat4',
+      '9': 0,
+      '10': 'transform'
+    },
+    {
+      '1': 'layout_size',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.LayoutSize',
+      '9': 0,
+      '10': 'layoutSize'
+    },
+    {
+      '1': 'vertex_style',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.VertexStyle',
+      '9': 0,
+      '10': 'vertexStyle'
+    },
+    {
+      '1': 'edge_style',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.EdgeStyle',
+      '9': 0,
+      '10': 'edgeStyle'
+    },
+    {
+      '1': 'face_style',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.FaceStyle',
+      '9': 0,
+      '10': 'faceStyle'
+    },
+    {
+      '1': 'object_shape',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ObjectShape',
+      '9': 0,
+      '10': 'objectShape'
+    },
+    {
+      '1': 'position',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'position'
+    },
+    {'1': 'text', '3': 10, '4': 1, '5': 9, '9': 0, '10': 'text'},
+    {
+      '1': 'text_format',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.TextFormat',
+      '9': 0,
+      '10': 'textFormat'
+    },
+    {
+      '1': 'paragraph_format',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ParagraphFormat',
+      '9': 0,
+      '10': 'paragraphFormat'
+    },
+    {
+      '1': 'corners',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadii',
+      '9': 0,
+      '10': 'corners'
+    },
+    {
+      '1': 'radius',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '9': 0,
+      '10': 'radius'
+    },
+    {
+      '1': 'glue_vertices_position',
+      '3': 15,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.GlueVerticesStatement.Position',
+      '9': 0,
+      '10': 'glueVerticesPosition'
+    },
+    {
+      '1': 'layout',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Layout',
+      '9': 0,
+      '10': 'layout'
+    },
+  ],
+  '8': [
+    {'1': 'kind'},
+  ],
+};
+
+/// Descriptor for `StatementPartial`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List statementPartialDescriptor = $convert.base64Decode(
+    'ChBTdGF0ZW1lbnRQYXJ0aWFsEjUKBmZpZWxkcxgBIAMoCzIdLm1vdGlmLlN0YXRlbWVudFBhcn'
+    'RpYWwuVmFsdWVSBmZpZWxkcxq5BgoFVmFsdWUSNAoJbW9kaWZpZXJzGAEgASgLMhQubW90aWYu'
+    'TW9kaWZpZXJTdGFja0gAUgltb2RpZmllcnMSFAoEbmFtZRgCIAEoCUgAUgRuYW1lEisKCXRyYW'
+    '5zZm9ybRgDIAEoCzILLm1vdGlmLk1hdDRIAFIJdHJhbnNmb3JtEjQKC2xheW91dF9zaXplGAQg'
+    'ASgLMhEubW90aWYuTGF5b3V0U2l6ZUgAUgpsYXlvdXRTaXplEjcKDHZlcnRleF9zdHlsZRgFIA'
+    'EoCzISLm1vdGlmLlZlcnRleFN0eWxlSABSC3ZlcnRleFN0eWxlEjEKCmVkZ2Vfc3R5bGUYBiAB'
+    'KAsyEC5tb3RpZi5FZGdlU3R5bGVIAFIJZWRnZVN0eWxlEjEKCmZhY2Vfc3R5bGUYByABKAsyEC'
+    '5tb3RpZi5GYWNlU3R5bGVIAFIJZmFjZVN0eWxlEjcKDG9iamVjdF9zaGFwZRgIIAEoCzISLm1v'
+    'dGlmLk9iamVjdFNoYXBlSABSC29iamVjdFNoYXBlEikKCHBvc2l0aW9uGAkgASgLMgsubW90aW'
+    'YuVmVjMkgAUghwb3NpdGlvbhIUCgR0ZXh0GAogASgJSABSBHRleHQSNAoLdGV4dF9mb3JtYXQY'
+    'CyABKAsyES5tb3RpZi5UZXh0Rm9ybWF0SABSCnRleHRGb3JtYXQSQwoQcGFyYWdyYXBoX2Zvcm'
+    '1hdBgMIAEoCzIWLm1vdGlmLlBhcmFncmFwaEZvcm1hdEgAUg9wYXJhZ3JhcGhGb3JtYXQSLgoH'
+    'Y29ybmVycxgNIAEoCzISLm1vdGlmLkNvcm5lclJhZGlpSABSB2Nvcm5lcnMSLQoGcmFkaXVzGA'
+    '4gASgLMhMubW90aWYuQ29ybmVyUmFkaXVzSABSBnJhZGl1cxJdChZnbHVlX3ZlcnRpY2VzX3Bv'
+    'c2l0aW9uGA8gASgOMiUubW90aWYuR2x1ZVZlcnRpY2VzU3RhdGVtZW50LlBvc2l0aW9uSABSFG'
+    'dsdWVWZXJ0aWNlc1Bvc2l0aW9uEicKBmxheW91dBgQIAEoCzINLm1vdGlmLkxheW91dEgAUgZs'
+    'YXlvdXRCBgoEa2luZA==');
 
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {
@@ -3521,6 +3705,45 @@ const Size2$json = {
 /// Descriptor for `Size2`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List size2Descriptor = $convert.base64Decode(
     'CgVTaXplMhIUCgV3aWR0aBgBIAEoAVIFd2lkdGgSFgoGaGVpZ2h0GAIgASgBUgZoZWlnaHQ=');
+
+@$core.Deprecated('Use cornerRadiiDescriptor instead')
+const CornerRadii$json = {
+  '1': 'CornerRadii',
+  '2': [
+    {
+      '1': 'corners',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.CornerRadii.CornersEntry',
+      '10': 'corners'
+    },
+  ],
+  '3': [CornerRadii_CornersEntry$json],
+};
+
+@$core.Deprecated('Use cornerRadiiDescriptor instead')
+const CornerRadii_CornersEntry$json = {
+  '1': 'CornersEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 5, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.CornerRadius',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
+/// Descriptor for `CornerRadii`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cornerRadiiDescriptor = $convert.base64Decode(
+    'CgtDb3JuZXJSYWRpaRI5Cgdjb3JuZXJzGAEgAygLMh8ubW90aWYuQ29ybmVyUmFkaWkuQ29ybm'
+    'Vyc0VudHJ5Ugdjb3JuZXJzGk8KDENvcm5lcnNFbnRyeRIQCgNrZXkYASABKAVSA2tleRIpCgV2'
+    'YWx1ZRgCIAEoCzITLm1vdGlmLkNvcm5lclJhZGl1c1IFdmFsdWU6AjgB');
 
 @$core.Deprecated('Use cornerRadiusDescriptor instead')
 const CornerRadius$json = {

@@ -37,9 +37,10 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     required this.id,
     required this.program,
     this.assetResolver,
+    SceneAssetCache? assetCache,
   }) {
-    assetCache = .new(this);
-    evaluation = .new(program, assetCache: assetCache);
+    this.assetCache = assetCache ?? .new(this);
+    evaluation = .new(program, assetCache: this.assetCache);
     selection = .new(this);
     query = .new(this);
     history = .new(this);
@@ -89,7 +90,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   // Initialization
   // -------------------------------------------------------------------------------------------------------------------
 
-  Future<void> prepare() async {
+  void prepare() {
     evaluation.performInitialPass();
   }
 
@@ -134,8 +135,8 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
 
   @override
   void dispose() {
+    if (assetCache.scene == this) assetCache.dispose();
     transientTransformAnimator.dispose();
-    assetCache.dispose();
     notifier.dispose();
     evaluation.dispose();
     selection.dispose();

@@ -5,19 +5,19 @@ abstract interface class LayoutBox {
   StatementId? get parentId;
 
   Mat4 get transform;
-  LayoutSize get size;
+  LayoutSize resolveSize(EvalContext context);
   Size2 intrinsicSize(Evaluation evaluation);
 
-  static bool isLayoutEqual(Evaluation e, LayoutBox a, LayoutBox b, {Size2? oldIntrinsicSize}) {
-    if (a.runtimeType != b.runtimeType) return false;
-    if (!a.transform.equals(b.transform)) return false;
+  static bool isLayoutEqual(EvalContext context, LayoutNode old, LayoutBox incoming) {
+    if (old.box.runtimeType != incoming.runtimeType) return false;
+    if (!old.transform.equals(incoming.transform)) return false;
 
-    final intrinsicSize = oldIntrinsicSize ?? a.intrinsicSize(e);
-    if (!intrinsicSize.equals(b.intrinsicSize(e))) return false;
+    final intrinsicSize = old.intrinsicSize;
+    if (!intrinsicSize.equals(incoming.intrinsicSize(context._evaluation))) return false;
 
-    if (a.size != b.size) return false;
-    if (a is LayoutContainer && b is LayoutContainer) {
-      if (a.layout != b.layout) return false;
+    if (old.size != incoming.resolveSize(context)) return false;
+    if (old.layout != null && incoming is LayoutContainer) {
+      if (old.layout != incoming.resolveLayout(context)) return false;
     }
 
     return true;
@@ -25,7 +25,7 @@ abstract interface class LayoutBox {
 }
 
 abstract interface class LayoutContainer extends LayoutBox {
-  Layout get layout;
+  Layout resolveLayout(EvalContext context);
 }
 
 enum LayoutKind { stack, flexRow, flexColumn }
@@ -70,16 +70,20 @@ final class const Placement(final Vec2? offset, final Size2 size) {
   }
 }
 
-final class _LayoutNode {
-  _LayoutNode(this.box);
+final class LayoutNode {
+  LayoutNode(this.box);
 
   LayoutBox box;
+  late LayoutSize size;
+  late Mat4 transform;
+  late Size2 intrinsicSize;
+  Layout? layout;
+
   Size2? natural;
   Placement? placement;
-  Size2? intrinsicSize;
   var dirty = false;
 
-  Size2 fitSize(Size2 available) => box.size.fit(natural!, available);
-  Aabb2 bounds(Size2 size) => size.toAabb()..transformDelta(box.transform);
+  Size2 fitSize(Size2 available) => size.fit(natural!, available);
+  Aabb2 bounds(Size2 size) => size.toAabb()..transformDelta(transform);
   Size2 get naturalBounds => bounds(natural!).size;
 }

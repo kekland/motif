@@ -86,7 +86,16 @@ final class SceneTransaction {
       return true;
     }
 
-    final result = (evaluation.statement(root) as GeneratingStatement).absorbChildUpdate(target, partial);
+    final sourcePath = <StatementId>[];
+    for (var node = evaluation.tree[target]!; node.id != root; node = node.parent!) {
+      final source = node.source;
+      if (source == null) return false;
+      sourcePath.add(source);
+    }
+
+    final context = evaluation.contextFor(root);
+    final path = sourcePath.reversed.toList();
+    final result = (evaluation.statement(root) as GeneratingStatement).absorbChildUpdate(context, path, partial);
     if (result != null) update(root, (_) => result);
     return result != null;
   }
@@ -97,14 +106,14 @@ final class SceneTransaction {
 
   void attach(StatementId host, Modifier modifier) {
     _checkOpen();
-    final modifiers = evaluation.statement(host)?.modifiers;
+    final modifiers = evaluation.statement(host)?.resolveModifiers(evaluation.contextFor(host));
     if (modifiers == null) return;
     updatePartial(host, .modifiers(modifiers.append(modifier)));
   }
 
   void detach(StatementId host, int index) {
     _checkOpen();
-    final modifiers = evaluation.statement(host)?.modifiers;
+    final modifiers = evaluation.statement(host)?.resolveModifiers(evaluation.contextFor(host));
     if (modifiers == null) return;
     updatePartial(host, .modifiers(modifiers.remove(index)));
   }

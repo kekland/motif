@@ -19,9 +19,13 @@ class CopySelectionAction extends CommandAction<CopySelectionIntent> with Canvas
     if (selection.isEmpty) return;
 
     final slice = editor.scene.evaluation.routeSlice(selection.refs.cells);
-    final data = slice.encode().writeToBuffer();
-    Clipboard.set([
-      .custom({'motif.program-slice': data}),
-    ]);
+    performCopy(slice);
   }
+}
+
+void performCopy(ProgramSlice slice) {
+  final data = slice.encode().writeToBuffer();
+  Clipboard.set([
+    .custom({'motif.program-slice': data}),
+  ]);
 }

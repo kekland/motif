@@ -58,9 +58,6 @@ final class VertexStatement extends Statement with VertexStyledStatement, Placed
   );
 
   @override
-  VertexStatement copyWithVertexStyle({VertexStyle? style}) => copyWith(style: style);
-
-  @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;
 
   @override

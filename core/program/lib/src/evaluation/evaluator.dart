@@ -6,7 +6,7 @@ extension Evaluator on EvalPass {
   // -------------------------------------------------------------------------------------------------------------------
 
   void edit(int index, List<Statement> removed, List<Statement> inserted, {bool initialPass = false}) {
-    final changedPrefabs = <StatementId>{};
+    final changedPrefabs = <PrefabId>{};
 
     final incoming = inserted.map((s) => s.id).toList();
     for (final s in removed.reversed) {
@@ -93,7 +93,10 @@ extension Evaluator on EvalPass {
   List<EvalNode> _produce(EvalNode node) {
     final statement = node.statement;
     final produced = <Statement>[];
-    for (final (i, m) in statement.modifiers.entries.indexed) {
+    final sources = <StatementId, StatementId>{};
+
+    final modifiers = statement.resolveModifiers(evaluation.contextFor(node.id));
+    for (final (i, m) in modifiers.entries.indexed) {
       if (!m.enabled) continue;
 
       final id = statement.id.derive(.of(0, i));
@@ -103,11 +106,17 @@ extension Evaluator on EvalPass {
     }
 
     if (statement is GeneratingStatement) {
-      produced.addAll(statement.generate(evaluation.contextFor(node.id)));
+      final result = statement.generate(evaluation.contextFor(node.id));
+      for (final (source, s) in result) {
+        produced.add(s);
+        if (source != null) sources[s.id] = source;
+      }
     }
 
     for (final old in tree.difference(node, produced)) _drop(old);
-    return tree.adopt(node, produced);
+    final children = tree.adopt(node, produced);
+    for (final child in children) child.source = sources[child.id];
+    return children;
   }
 
   /// Removes [node] and its subtree from the eval tree.
@@ -320,7 +329,7 @@ extension Evaluator on EvalPass {
   void _attachLayout(List<EvalNode> nodes) {
     for (final n in nodes) {
       final statement = n.statement;
-      if (statement is LayoutBox) layout.attachOrUpdate(statement as LayoutBox);
+      if (statement is LayoutBox) layout.attachOrUpdate(evaluation.contextFor(statement.id), statement as LayoutBox);
     }
 
     if (nodes.isNotEmpty) _solveLayout(nodes.first);
@@ -338,7 +347,7 @@ extension Evaluator on EvalPass {
     }
   }
 
-  void _markPrefabsDirty(Iterable<StatementId> ids) {
+  void _markPrefabsDirty(Iterable<PrefabId> ids) {
     if (ids.isEmpty) return;
     for (final id in ids) {
       final instances = evaluation.prefabs.instancesOf(id);

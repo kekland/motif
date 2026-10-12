@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:geometry/geometry.dart';
 
-extension type const Mat4._(Float64x2List storage) {
+extension type const Mat4._(Float64x2List storage) implements Object {
   Mat4.fromList(List<Float64x2> storage) : this._(Float64x2List.fromList(storage));
   Mat4.fromListFloat64(List<double> storage) : this._(Float64List.fromList(storage).buffer.asFloat64x2List());
   Mat4.zero() : this._(Float64x2List(8));

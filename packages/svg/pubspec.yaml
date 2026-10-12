@@ -1,0 +1,13 @@
+name: svg
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  
+dependencies:
+  css:
+
+  petitparser: ^7.0.2
+  path_parsing: ^1.1.0
+  xml: ^6.6.1

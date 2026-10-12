@@ -1,53 +1,79 @@
 part of '../_program.dart';
 
-final class PrefabInstanceStatement extends ContainerStatement with GeneratingStatement {
+final class PrefabInstanceStatement extends Statement
+    with PlacedStatement, FramedStatement, LayoutBoxStatement, GeneratingStatement
+    implements LayoutContainer {
   PrefabInstanceStatement({
     required this.prefabId,
-    this.overrides = const {},
-    super.layout,
-    super.size,
-    super.transform,
-    super.shape,
-    super.vertexStyle,
-    super.edgeStyle,
-    super.faceStyle,
-    super.parent,
+    this.overrides = const .new(),
+    Mat4? transform,
+    FrameRef? parent,
+    this.size,
+    this.layout,
+    this.vertexStyle,
+    this.edgeStyle,
+    this.faceStyle,
     super.id,
     super.modifiers,
     super.name,
-  });
+  }) : transform = transform ?? .identity(),
+       parent = .of(parent) {
+    selectors = [?this.parent];
+  }
+
+  PrefabOriginStatement origin(PrefabIndex index) => index.originOf(prefabId)!;
+
+  @override
+  final ParentSelector? parent;
+
+  @override
+  FrameRef get frame => id.cell(.frame, 0);
+
+  @override
+  final Mat4 transform;
+
+  @override
+  Layout resolveLayout(EvalContext context) => layout ?? origin(context.prefabs).resolveLayout(context);
+  final Layout? layout;
+
+  @override
+  Size2 intrinsicSize(Evaluation evaluation) => origin(evaluation.prefabs).intrinsicSize(evaluation);
+
+  @override
+  LayoutSize resolveSize(EvalContext context) => size ?? origin(context.prefabs).resolveSize(context);
+  final LayoutSize? size;
+
+  final VertexStyle? vertexStyle;
+  final EdgeStyle? edgeStyle;
+  final FaceStyle? faceStyle;
+
+  VertexStyle resolveVertexStyle(EvalContext context) => vertexStyle ?? origin(context.prefabs).vertexStyle;
+  EdgeStyle resolveEdgeStyle(EvalContext context) => edgeStyle ?? origin(context.prefabs).edgeStyle;
+  FaceStyle resolveFaceStyle(EvalContext context) => faceStyle ?? origin(context.prefabs).faceStyle;
+
+  @override
+  bool get isLeaf => false;
+
+  @override
+  ModifierStack resolveModifiers(EvalContext context) => modifiers ?? origin(context.prefabs).modifiers ?? .empty();
 
   PrefabInstanceStatement.fromOrigin(PrefabOriginStatement origin, {StatementId? id})
-    : this(
-        prefabId: origin.id,
-        layout: origin.layout,
-        size: origin.size,
-        transform: origin.transform,
-        shape: origin.shape,
-        vertexStyle: origin.vertexStyle,
-        edgeStyle: origin.edgeStyle,
-        faceStyle: origin.faceStyle,
-        parent: origin.parent?.ref,
-        id: id,
-        modifiers: origin.modifiers,
-        name: origin.name,
-      );
+    : this(id: id, prefabId: origin.id, name: origin.name);
 
-  final StatementId prefabId;
-  final Map<StatementId, StatementPartial> overrides;
+  final PrefabId prefabId;
+  final GeneratorOverrides overrides;
 
   @override
   Iterable<Op> execute(EvalContext context) {
-    final origin = context._evaluation.prefabs.originOf(prefabId);
-    if (origin == null) throw Exception('prefab origin not found: $prefabId');
+    final origin = this.origin(context.prefabs);
 
     final container = ContainerStatement(
-      layout: origin.layout,
       shape: origin.shape,
-      vertexStyle: origin.vertexStyle,
-      edgeStyle: origin.edgeStyle,
-      faceStyle: origin.faceStyle,
-      size: size,
+      layout: layout ?? origin.layout,
+      vertexStyle: vertexStyle ?? origin.vertexStyle,
+      edgeStyle: edgeStyle ?? origin.edgeStyle,
+      faceStyle: faceStyle ?? origin.faceStyle,
+      size: size ?? origin.size,
       transform: transform,
       parent: parent?.ref,
       id: id,
@@ -57,25 +83,26 @@ final class PrefabInstanceStatement extends ContainerStatement with GeneratingSt
   }
 
   @override
-  Iterable<Statement> generate(EvalContext context) {
-    final origin = context._evaluation.prefabs.originOf(prefabId);
-    if (origin == null) throw Exception('prefab origin not found: $prefabId');
+  Iterable<GeneratedStatement> generate(EvalContext context) {
+    final sourceSlice = context.prefabs.sliceOf(prefabId);
+    final overridden = sourceSlice.transform((i, s) {
+      if (i == 0) return s;
 
-    final rawSlice = context._evaluation.prefabs.sliceOf(origin.id);
-    final slice = rawSlice.materializeRaw((i, s) {
-      if (i == 0) return id;
-      return context.derive(s.id.value);
+      final overrides = this.overrides[s.id];
+      if (overrides == null) return s;
+
+      var out = overrides.partial?.apply(s) ?? s;
+      if (out is PrefabInstanceStatement && overrides.children.isNotEmpty) {
+        out = out.copyWith(overrides: .merged(out.overrides, overrides.children));
+      }
+      return out;
     });
 
-    final output = <Statement>[];
-    for (var i = 1; i < slice.statements.length; i++) {
-      final stmt = slice.statements[i];
-      final override = overrides[stmt.id];
-      if (override != null) {
-        output.add(override.apply(stmt));
-      } else {
-        output.add(stmt);
-      }
+    final output = <GeneratedStatement>[];
+    final materialized = overridden.materializeRaw((i, s) => i == 0 ? id : context.derive(s.id.value));
+
+    for (var i = 1; i < sourceSlice.statements.length; i++) {
+      output.add((sourceSlice.statements[i].id, materialized.$2.statements[i]));
     }
 
     return output;
@@ -86,8 +113,8 @@ final class PrefabInstanceStatement extends ContainerStatement with GeneratingSt
     StatementId? id,
     ModifierStack? modifiers,
     String? name,
-    StatementId? prefabId,
-    Map<StatementId, StatementPartial>? overrides,
+    PrefabId? prefabId,
+    GeneratorOverrides? overrides,
     Layout? layout,
     LayoutSize? size,
     Mat4? transform,
@@ -102,10 +129,10 @@ final class PrefabInstanceStatement extends ContainerStatement with GeneratingSt
     name: name ?? this.name,
     prefabId: prefabId ?? this.prefabId,
     overrides: overrides ?? this.overrides,
-    layout: layout ?? this.layout,
-    size: size ?? this.size,
     transform: transform ?? this.transform,
-    shape: shape ?? this.shape,
+    size: size ?? this.size,
+    layout: layout ?? this.layout,
+    // shape: shape ?? this.shape,
     vertexStyle: vertexStyle ?? this.vertexStyle,
     edgeStyle: edgeStyle ?? this.edgeStyle,
     faceStyle: faceStyle ?? this.faceStyle,
@@ -127,16 +154,7 @@ final class PrefabInstanceStatement extends ContainerStatement with GeneratingSt
   );
 
   @override
-  PrefabInstanceStatement? absorbChildUpdate(StatementId child, StatementPartial<Statement> update) {
-    final override = overrides[child];
-    final newOverrides = {...overrides};
-
-    if (override != null) {
-      newOverrides[child] = .merged([override, update]);
-    } else {
-      newOverrides[child] = update;
-    }
-
-    return copyWith(overrides: newOverrides);
+  PrefabInstanceStatement? absorbChildUpdate(EvalContext context, List<StatementId> path, StatementPartial update) {
+    return copyWith(overrides: .merged(overrides, .at(path, update)));
   }
 }

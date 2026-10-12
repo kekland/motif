@@ -1,6 +1,6 @@
 part of '../_program.dart';
 
-final class FilletModifier extends Modifier<FacedStatement> {
+final class FilletModifier extends Modifier {
   FilletModifier({
     this.radius,
     this.corners = const {},
@@ -14,9 +14,12 @@ final class FilletModifier extends Modifier<FacedStatement> {
   ModifierKind get kind => .fillet;
 
   @override
-  FilletFaceStatement produce(ModifierEvalContext<FacedStatement> context) {
+  FilletFaceStatement produce(ModifierEvalContext context) {
+    final cells = context.fragment.resolved(context);
+    final face = cells.whereFace().first;
+
     return .new(
-      context.base.face.selector(),
+      face.selector(),
       id: context.id,
       radius: radius,
       corners: corners,

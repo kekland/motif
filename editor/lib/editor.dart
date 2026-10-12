@@ -37,7 +37,8 @@ final class Editor extends Controller {
       }
     });
 
-    scene.prepare().then((_) => isLoaded.value = true);
+    scene.prepare();
+    isLoaded.value = true;
     Clipboard.addCustomTypes(['motif.program-slice']);
   }
 

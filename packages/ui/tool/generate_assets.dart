@@ -97,7 +97,6 @@ Future<void> main() async {
     .new('brightnessDark', 'Symbols.brightness_2_rounded'),
     .new('brightnessSystem', 'Symbols.brightness_auto_rounded'),
     .new('prefabOrigin', 'Symbols.nearby_rounded'),
-    .new('prefabInstance', 'Symbols.nearby_rounded'),
     .new('alignVerticalTop', 'Symbols.align_vertical_top_rounded'),
     .new('alignVerticalCenter', 'Symbols.align_vertical_center_rounded'),
     .new('alignVerticalBottom', 'Symbols.align_vertical_bottom_rounded'),

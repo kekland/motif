@@ -114,7 +114,7 @@ enum FlexDirection {
 }
 
 extension _FlexLayoutImpl on LayoutTree {
-  Size2 _measureFlex(List<_LayoutNode> children, Size2 intrinsic, FlexLayout l) {
+  Size2 _measureFlex(List<LayoutNode> children, Size2 intrinsic, FlexLayout l) {
     final dir = l.direction;
     var main = 0.0, cross = 0.0;
     for (final c in children) {
@@ -127,7 +127,7 @@ extension _FlexLayoutImpl on LayoutTree {
     return dir.size(main: main, cross: cross).hull(intrinsic);
   }
 
-  List<Placement> _placeFlex(List<_LayoutNode> children, Size2 inner, FlexLayout l) {
+  List<Placement> _placeFlex(List<LayoutNode> children, Size2 inner, FlexLayout l) {
     final dir = l.direction, k = children.length;
     final innerMain = dir.mainOfSize(inner), innerCross = dir.crossOfSize(inner);
     final gaps = k > 1 ? l.gap * (k - 1) : 0.0;
@@ -138,7 +138,7 @@ extension _FlexLayoutImpl on LayoutTree {
     var used = gaps, expanding = 0;
     for (var i = 0; i < k; i++) {
       final child = children[i];
-      final dimension = dir.mainOf(child.box.size);
+      final dimension = dir.mainOf(child.size);
       if (dimension.isExpand) {
         expanding++;
       } else {
@@ -155,7 +155,7 @@ extension _FlexLayoutImpl on LayoutTree {
       final share = math.max(0.0, (innerMain - used) / expanding);
       for (var i = 0; i < k; i++) {
         final child = children[i];
-        if (!dir.mainOf(child.box.size).isExpand) continue;
+        if (!dir.mainOf(child.size).isExpand) continue;
 
         final size = child.fitSize(dir.size(main: share, cross: innerCross));
         sizes[i] = size;
