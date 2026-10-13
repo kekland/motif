@@ -34,7 +34,10 @@ class BlueprintColorResolvers {
 }
 
 class BlueprintNodeFactory {
-  BlueprintNodeFactory({required this.name, required this.create});
+  BlueprintNodeFactory({
+    required this.name,
+    required this.create,
+  });
 
   final String name;
   final Node Function() create;
@@ -46,13 +49,13 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
     required this.editor,
     this.socketValueBuilders = const [],
     this.colorResolvers,
-    this.nodeFactories = const [],
+    this.nodeFactories = const {},
   });
 
   final BlueprintEditor<B> editor;
   final List<BlueprintSocketValueBuilder> socketValueBuilders;
   final BlueprintColorResolvers? colorResolvers;
-  final List<BlueprintNodeFactory> nodeFactories;
+  final Map<String, List<BlueprintNodeFactory>> nodeFactories;
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +63,11 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
     final builders = useMemoized(() => BlueprintSocketValueBuilders(socketValueBuilders), [...socketValueBuilders]);
     final colorResolvers = useMemoized(() => this.colorResolvers ?? .empty(), [this.colorResolvers]);
 
-    final children = <Widget>[];
-
-    for (final node in editor.nodes) {
-      children.add(NodeWidget(key: ValueKey(node.id), editor: editor, id: node.id));
-    }
+    final child = EditorActions(
+      child: EditorShortcuts(
+        child: EditorCanvas(),
+      ),
+    );
 
     return Provider.value(
       value: builders,
@@ -78,19 +81,7 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
               onAddNode: (position, node) => editor.add(node, position: position),
               onDeleteNode: (node) => editor.remove(node.id),
               nodeFactories: nodeFactories,
-              child: InteractiveCanvas(
-                backgroundColor: context.colors.surface.primary,
-                child: ConnectionsWidget(
-                  key: editor.renderKey,
-                  editor: editor,
-                  child: OverflowHitTestableStack(
-                    clipBehavior: .none,
-                    children: [
-                      ...children,
-                    ],
-                  ),
-                ),
-              ),
+              child: child,
             ),
           ),
         ),
@@ -103,15 +94,15 @@ class BlueprintContextMenuWidget extends StatelessWidget {
   const BlueprintContextMenuWidget({
     super.key,
     required this.child,
-    this.nodeFactories = const [],
     required this.onAddNode,
     required this.onDeleteNode,
+    this.nodeFactories = const {},
   });
 
-  final List<BlueprintNodeFactory> nodeFactories;
   final Widget child;
   final void Function(Vec2, Node) onAddNode;
   final void Function(Node) onDeleteNode;
+  final Map<String, List<BlueprintNodeFactory>> nodeFactories;
   // final void Function(Connection) onDeleteConnection;
 
   @override
@@ -119,6 +110,7 @@ class BlueprintContextMenuWidget extends StatelessWidget {
     final editor = BlueprintEditor.of(context);
 
     return GestureDetector(
+      behavior: .opaque,
       onSecondaryTapDown: (details) async {
         final nodeEntries = editor.hitTestNodes(details.globalPosition);
         var node = nodeEntries.lastOrNull?.node;
@@ -126,13 +118,26 @@ class BlueprintContextMenuWidget extends StatelessWidget {
           node = null;
         }
 
+        final entries = <ContextMenuEntry>[];
+        for (final category in nodeFactories.keys) {
+          final categoryEntries = nodeFactories[category]!;
+          entries.add(
+            .submenu(
+              entries: categoryEntries.map((f) => ContextMenuItem(f, label: f.name)).toList(),
+              label: category,
+            ),
+          );
+        }
+
         final result = await ContextMenu.push(
           context,
           .new(
             [
-              ...nodeFactories.map((f) => .item(f, label: f.name)),
-              .divider,
-              if (node != null) .item(#delete, label: 'Delete'),
+              ...entries,
+              if (node != null) ...[
+                .divider,
+                .item(#delete, label: 'Delete'),
+              ],
             ],
           ),
           details: details,

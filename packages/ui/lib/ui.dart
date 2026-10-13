@@ -33,8 +33,10 @@ export 'package:flutter/material.dart'
         VoidCallback,
         Tooltip,
         Decoration,
-        TooltipState;
+        TooltipState,
+        ContextMenuController;
 
+export 'package:shared/shared.dart';
 export 'package:state/state.dart';
 
 export 'package:defer_pointer/defer_pointer.dart';
@@ -54,6 +56,7 @@ export 'theme/theme.dart';
 export 'utils/utils.dart';
 export 'window/window.dart';
 
+export 'ui/marquee.dart';
 export 'ui/button.dart';
 export 'ui/card.dart';
 export 'ui/color/color_input_window.dart';

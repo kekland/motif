@@ -29,6 +29,7 @@ class EditorCanvas extends HookWidget {
       ],
       minScale: EditorCanvasUtils.minScale,
       maxScale: EditorCanvasUtils.maxScale,
+      onPointerPositionChanged: editor.onPointerPositionChanged,
       child: SceneWidget(
         key: editor.sceneKey,
         scene: editor.scene,
@@ -39,7 +40,7 @@ class EditorCanvas extends HookWidget {
 
     child = Overlay.wrap(
       child: Surface(
-        child: EditorCanvasPointerUpdateWidget(child: child),
+        child: child,
       ),
     );
 

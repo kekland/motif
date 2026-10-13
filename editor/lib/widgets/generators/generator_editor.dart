@@ -15,21 +15,33 @@ class GeneratorEditor extends HookWidget {
   Widget build(BuildContext context) {
     return BlueprintEditorWidget(
       editor: editor,
-      nodeFactories: [
-        .new(name: 'Array', create: () => ArrayNode()),
-        .new(name: 'Fillet', create: () => FilletNode()),
-        .new(name: 'Vertices', create: () => VerticesNode()),
-        .new(name: 'Random vector', create: () => RandomVectorNode()),
-        .new(name: 'Connect vertices', create: () => ConnectVerticesNode()),
-        .new(name: 'Number', create: () => NumberNode()),
-        .new(name: 'Vector', create: () => VectorNode()),
-        .new(name: 'Scale vector', create: () => ScaleVectorNode()),
-        .new(name: 'Index', create: () => IndexNode()),
-        .new(name: 'Face', create: () => FaceNode()),
-        .new(name: 'Polar', create: () => PolarNode()),
-        .new(name: 'Pi', create: () => PiNode()),
-        .new(name: 'Divide', create: () => DivideNode()),
-      ],
+      nodeFactories: {
+        'Math': [
+          .new(name: 'Polar', create: () => PolarNode()),
+          .new(name: 'Pi', create: () => PiNode()),
+          .new(name: 'Divide', create: () => DivideNode()),
+          .new(name: 'Number', create: () => NumberNode()),
+          .new(name: 'Vector', create: () => VectorNode()),
+        ],
+        'Geometry': [
+          .new(name: 'Vertices', create: () => VerticesNode()),
+          .new(name: 'Connect vertices', create: () => ConnectVerticesNode()),
+          .new(name: 'Face', create: () => FaceNode()),
+        ],
+        'Random': [
+          .new(name: 'Random vector', create: () => RandomVectorNode()),
+        ],
+        'Modifications': [
+          .new(name: 'Array', create: () => ArrayNode()),
+          .new(name: 'Fillet', create: () => FilletNode()),
+        ],
+        'Transform': [
+          .new(name: 'Scale vector', create: () => ScaleVectorNode()),
+        ],
+        'Utilities': [
+          .new(name: 'Index', create: () => IndexNode()),
+        ],
+      },
       colorResolvers: .new(
         (category) => switch (category) {
           #int => context.colors.blueprint.int,

@@ -1,8 +1,9 @@
 import 'package:editor/imports.dart';
+import 'package:flutter/gestures.dart';
 
 class SelectRectActivity extends MarqueeActivity {
   SelectRectActivity({
-    required super.editor,
+    required this.editor,
     super.onLocalRectChanged,
     super.onStart,
     super.onUpdate,
@@ -16,6 +17,14 @@ class SelectRectActivity extends MarqueeActivity {
            editor.selection.setMultiple(refs);
          },
        );
+  
+  @override
+  void onStart(PositionedGestureDetails details) {
+    super.onStart(details);
+    editor.selection.clear();
+  }
+
+  final Editor editor;
 }
 
 class SelectRectDetector extends HookWidget {

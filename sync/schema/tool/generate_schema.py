@@ -15,6 +15,7 @@ protos = [
   root / 'core' / 'program' / 'program.proto',
   root / 'core' / 'asset' / 'asset.proto',
   root / 'packages' / 'skia_common' / 'skia_common.proto',
+  root / 'packages' / 'blueprint' / 'blueprint.proto',
 ]
 
 

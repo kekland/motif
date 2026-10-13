@@ -37,6 +37,7 @@ class ContextMenuRootState extends State<ContextMenuRoot> {
         context,
         rect: rect,
         alignment: .bottomCenter,
+        padding: .zero,
       ),
     );
   }

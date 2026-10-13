@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+import 'dart:typed_data';
+
 import 'package:geometry/geometry.dart';
 import 'package:shared/shared.dart';
 
@@ -5,16 +8,26 @@ part 'socket.dart';
 part 'node.dart';
 part 'field.dart';
 part 'execution.dart';
+part 'slice.dart';
+
+final _random = math.Random();
 
 extension type const NodeId(int value) implements Object {
-  NodeId.generate() : this(_seq++);
-  static int _seq = 1;
+  NodeId.generate() : this(_random.nextInt(1 << 32));
 }
 
 extension type const SocketRef._((NodeId node, int index) _) implements Object {
   const SocketRef(NodeId node, int index) : this._((node, index));
   NodeId get node => _.$1;
   int get index => _.$2;
+
+  SocketRef copyWith({
+    NodeId? node,
+    int? index,
+  }) => .new(
+    node ?? this.node,
+    index ?? this.index,
+  );
 }
 
 extension type const Connection._((SocketRef output, SocketRef input) _) implements Object {
@@ -23,6 +36,14 @@ extension type const Connection._((SocketRef output, SocketRef input) _) impleme
   SocketRef get input => _.$2;
 
   bool hasNode(NodeId id) => output.node == id || input.node == id;
+
+  Connection copyWith({
+    SocketRef? output,
+    SocketRef? input,
+  }) => .new(
+    output ?? this.output,
+    input ?? this.input,
+  );
 }
 
 Map<SocketRef, List<SocketRef>> _buildConnectionsCache(
@@ -104,6 +125,10 @@ abstract class Blueprint<B extends Blueprint<B>> {
     positions: {...positions, id: position},
   );
 
+  B moveMany(Map<NodeId, Vec2> positions) => copyWith(
+    positions: {...this.positions, ...positions},
+  );
+
   B setFixed(NodeId id, bool isFixed) => copyWith(
     fixed: isFixed ? {...fixed, id} : ({...fixed}..remove(id)),
   );
@@ -154,4 +179,27 @@ abstract class Blueprint<B extends Blueprint<B>> {
     Map<NodeId, Vec2>? positions,
     Set<NodeId>? fixed,
   });
+
+  BlueprintSlice slice(Set<NodeId> nodes) {
+    final acceptedNodes = <NodeId>{};
+    final positions = <NodeId, Vec2>{};
+    for (final id in nodes) {
+      if (isFixed(id)) continue;
+      acceptedNodes.add(id);
+      positions[id] = positionOf(id);
+    }
+
+    final acceptedConnections = connections
+        .where((c) => acceptedNodes.contains(c.input.node) && acceptedNodes.contains(c.output.node))
+        .toList();
+
+    return .new(
+      nodes: acceptedNodes.map((id) => node(id)).toList(),
+      connections: acceptedConnections,
+      positions: positions,
+    );
+  }
+
+  Uint8List encodeSlice(BlueprintSlice slice);
+  BlueprintSlice decodeSlice(Uint8List data);
 }

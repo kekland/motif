@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:ui/ui.dart';
+
+import 'context_menu_controller.dart';
 
 part 'context_menu_manager.dart';
 
@@ -11,11 +14,11 @@ final class ContextMenu(
 }) {
   late final length = entries.length;
   late final items = entries.whereType<ContextMenuItem>().toList();
-  late final itemCount = items.length;
+  late final selectables = entries.where((e) => e is! ContextMenuDivider).toList();
 
   static const double itemExtent = 32.0;
   static const double dividerExtent = 8.0;
-  static const double maxHeight = 200.0;
+  static const double maxHeight = 240.0;
 
   static ContextMenuRootState of(BuildContext context) => context.findAncestorStateOfType<ContextMenuRootState>()!;
 
@@ -23,7 +26,7 @@ final class ContextMenu(
     return of(context).push(context, menu, details: details);
   }
 
-  ContextMenuItem? resolveSelectedItem() {
+  ContextMenuEntry? resolveSelectedItem() {
     if (selectedValue == null) return null;
     return items.firstWhereOrNull((item) => item.value == selectedValue);
   }
@@ -31,11 +34,12 @@ final class ContextMenu(
   int? resolveSelectedIndex() {
     final selectedItem = resolveSelectedItem();
     if (selectedItem == null) return null;
-    return items.indexOf(selectedItem);
+    return selectables.indexOf(selectedItem);
   }
 
   double _extentFor(ContextMenuEntry e) => switch (e) {
     ContextMenuItem() => ContextMenu.itemExtent,
+    ContextMenuSubmenu() => ContextMenu.itemExtent,
     ContextMenuDivider() => ContextMenu.dividerExtent,
   };
 
@@ -60,6 +64,12 @@ sealed class const ContextMenuEntry() {
     SingleActivator? shortcut,
   }) => .new(value, label: label, icon: icon, shortcut: shortcut);
 
+  static ContextMenuSubmenu submenu({
+    required String label,
+    required List<ContextMenuEntry> entries,
+    Widget? icon,
+  }) => .new(label: label, entries: entries, icon: icon);
+
   static const ContextMenuDivider divider = ContextMenuDivider();
 }
 
@@ -70,23 +80,71 @@ final class const ContextMenuItem<T>(
   final SingleActivator? shortcut,
 }) extends ContextMenuEntry;
 
+final class const ContextMenuSubmenu({
+  required final String label,
+  required final List<ContextMenuEntry> entries,
+  final Widget? icon,
+}) extends ContextMenuEntry;
+
 final class const ContextMenuDivider() extends ContextMenuEntry;
 
 class ContextMenuWidget extends HookWidget {
   const new({
     super.key,
     required this.menu,
+    this.controller,
+    this.depth = 0,
+    this.onSubmit,
   });
 
   final ContextMenu menu;
+  final int depth;
+  final ContextMenuController? controller;
+  final ValueChanged<ContextMenuItem?>? onSubmit;
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useScrollController(
-      initialScrollOffset: menu.resolveOffsets().$1,
+    final scrollController = useScrollController(initialScrollOffset: menu.resolveOffsets().$1);
+    final controller = useManagedResource(
+      create: () => ContextMenuController(menu: menu, onExit: () => Navigator.pop(context)),
+      dispose: (v) => v.dispose(),
+      value: this.controller,
     );
 
-    return ConstrainedBox(
+    final currentActiveSubmenu = useRef<ContextMenuSubmenu?>(null);
+    final submenuManager = usePortalEntryManager();
+
+    void onSubmit(ContextMenuItem? item) {
+      if (this.onSubmit != null) return this.onSubmit!(item);
+      return Navigator.pop(context, item?.value);
+    }
+
+    useStaticListenerEffect(controller, () {
+      final activeSubmenu = controller.activeSubmenus.elementAtOrNull(depth);
+      if (currentActiveSubmenu.value != activeSubmenu?.$2) {
+        currentActiveSubmenu.value = activeSubmenu?.$2;
+
+        if (activeSubmenu != null) {
+          final (context, entry) = activeSubmenu;
+          submenuManager.push(
+            context,
+            .new(
+              builder: (_) => ContextMenuWidget(
+                menu: .new(entry.entries),
+                depth: depth + 1,
+                controller: controller,
+                onSubmit: onSubmit,
+              ),
+            ),
+            anchor: .compute(context, axis: .horizontal),
+          );
+        } else {
+          submenuManager.pop();
+        }
+      }
+    });
+
+    final child = ConstrainedBox(
       constraints: .new(maxHeight: ContextMenu.maxHeight),
       child: Surface(
         width: 160.0,
@@ -96,9 +154,23 @@ class ContextMenuWidget extends HookWidget {
         shadows: context.shadows.window,
         child: SearchableSelectableList(
           focusNode: FocusScope.of(context),
-          items: menu.items,
+          items: menu.selectables,
           selection: menu.resolveSelectedItem(),
-          onSubmit: (item) => Navigator.pop(context, item?.value),
+          onExpand: (item) {
+            if (item is ContextMenuSubmenu) {
+              controller.onSubmenuTap(context, item, depth);
+              return true;
+            }
+            return false;
+          },
+          onCollapse: depth > 0 ? () => controller.onSubmenuPop(depth - 1) : null,
+          onSubmit: (item) {
+            if (item is ContextMenuItem) {
+              onSubmit(item);
+            } else if (item is ContextMenuSubmenu) {
+              controller.onSubmenuTap(context, item, depth);
+            }
+          },
           builder: (context, _) => ListView.builder(
             controller: scrollController,
             itemCount: menu.length,
@@ -107,24 +179,53 @@ class ContextMenuWidget extends HookWidget {
               final entry = menu.entries[index];
               if (entry is ContextMenuDivider) return const Divider(height: ContextMenu.dividerExtent);
 
-              final item = entry as ContextMenuItem;
-              final result = SelectableListItem(
-                value: item,
-                builder: (context, isSelected) => ListItem(
-                  onTap: () => Navigator.pop(context, item.value),
-                  height: ContextMenu.itemExtent,
-                  isSelected: isSelected,
-                  leading: item.icon,
-                  title: Text(item.label, style: context.typography.body),
-                  trailing: item.shortcut != null ? SingleActivatorWidget(value: item.shortcut!) : null,
+              final Widget child;
+
+              if (entry is ContextMenuItem) {
+                child = SelectableListItem(
+                  value: entry,
+                  builder: (context, isSelected) => ListItem(
+                    onTap: () => onSubmit(entry),
+                    height: ContextMenu.itemExtent,
+                    isSelected: isSelected,
+                    leading: entry.icon,
+                    title: Text(entry.label, style: context.typography.body),
+                    trailing: entry.shortcut != null ? SingleActivatorWidget(value: entry.shortcut!) : null,
+                  ),
+                );
+              } else if (entry is ContextMenuSubmenu) {
+                child = SelectableListItem(
+                  value: entry,
+                  builder: (context, isSelected) => ListItem(
+                    onTap: () => controller.onSubmenuTap(context, entry, depth),
+                    height: ContextMenu.itemExtent,
+                    isSelected: isSelected,
+                    leading: entry.icon,
+                    title: Text(entry.label, style: context.typography.body),
+                    trailing: Icons.chevronRight(),
+                  ),
+                );
+              } else {
+                unreachable();
+              }
+
+              return Builder(
+                builder: (context) => MouseRegion(
+                  hitTestBehavior: .translucent,
+                  onEnter: (_) => controller.onItemHover(context, entry, depth),
+                  child: child,
                 ),
               );
-
-              return result;
             },
           ),
         ),
       ),
+    );
+
+    return MouseRegion(
+      hitTestBehavior: .translucent,
+      onExit: (_) => controller.onMenuExit(),
+      child: child,
     );
   }
 }

@@ -1,5 +1,6 @@
 part 'node_generator.dart';
 part 'socket_generator.dart';
+part 'codec_generator.dart';
 
 enum SocketType {
   constant,

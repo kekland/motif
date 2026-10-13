@@ -111,7 +111,7 @@ class CommanderOverlay extends HookWidget {
     );
 
     void submit(CommandAction action) {
-      final intent = action.descriptor.build(outerContext, []);
+      final intent = action.descriptor.build!(outerContext, []);
       outerContext.invoke(intent);
       Navigator.pop(context);
     }

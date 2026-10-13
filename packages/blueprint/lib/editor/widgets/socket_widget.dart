@@ -39,25 +39,16 @@ class BaseSocketWidget extends StatelessWidget {
       child: MouseRegion(
         hitTestBehavior: .translucent,
         cursor: Cursors.toolCursorControlPoint,
-        child: DragActivityDetector(
-          behavior: .translucent,
-          activityFactory: (_) => ConnectSocketActivity(
-            editor: .of(context),
-            socket: socket,
-          ),
-          child: Center(child: child),
-        ),
+        child: Center(child: child),
       ),
     );
 
     child = SizedOverflowBox(
       size: Size.zero,
       alignment: .center,
-      child: DeferPointer(
-        child: _SocketWidget(
-          socket: socket,
-          child: child,
-        ),
+      child: _SocketWidget(
+        socket: socket,
+        child: child,
       ),
     );
 
@@ -155,9 +146,4 @@ class RenderSocket extends RenderProxyBox {
     _connections = null;
     super.detach();
   }
-
-  @override
-  void paint(PaintingContext context, Offset offset) {}
-
-  void paintSocket(PaintingContext context, Offset offset) => super.paint(context, offset);
 }

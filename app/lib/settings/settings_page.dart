@@ -1,5 +1,6 @@
 import 'package:app/imports.dart';
 import 'package:app/main.dart';
+import 'package:app/settings/licenses_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -56,10 +57,6 @@ class SettingsDialog extends HookWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Header(
-            title: Text('Theme'),
-          ),
-          Divider(),
           ListItem(
             title: Text('Brightness'),
             trailing: ToggleableButtonRow(
@@ -94,7 +91,7 @@ class SettingsDialog extends HookWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: swatches.length,
-            padding: .only(left: 8.0, right: 8.0, bottom: 8.0),
+            padding: .only(left: 12.0, right: 12.0, bottom: 8.0),
             itemBuilder: (context, i) {
               final swatch = swatches[i];
               final isSelected = swatch.toARGB32() == selectedAccentColor.toARGB32();
@@ -153,6 +150,12 @@ class SettingsDialog extends HookWidget {
             subtitle: Text('https://ko-fi.com/kekland'),
             trailing: Icons.link(),
             onTap: () => launchUrl(Uri.parse('https://ko-fi.com/kekland')),
+          ),
+          Divider(),
+          ListItem(
+            title: Text('Licenses'),
+            trailing: Icons.chevronRight(),
+            onTap: () => context.pushDialog((_) => const LicensesPage()),
           ),
         ],
       ),

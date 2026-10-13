@@ -40,10 +40,13 @@ abstract class DragActivity {
     _onStart?.call();
   }
 
+  void onDidDrag() {}
+
   @mustCallSuper
   void onUpdate(DragUpdateDetails details) {
-    if ((details.globalPosition - startDetails.globalPosition).distance > tapSlop) {
+    if (!_didDrag && (details.globalPosition - startDetails.globalPosition).distance > tapSlop) {
       _didDrag = true;
+      onDidDrag();
     }
 
     _lastUpdateDetails = details;

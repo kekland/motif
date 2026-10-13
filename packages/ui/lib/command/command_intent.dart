@@ -21,13 +21,13 @@ class PlatformSingleActivator extends SingleActivator {
 
 class CommandIntentDescriptor<I extends Intent> {
   CommandIntentDescriptor({
-    required this.build,
+    this.build,
     required this.command,
     this._resolveDescription,
     this._resolveShortcut,
   });
 
-  final I Function(BuildContext context, List<CommandArg<dynamic>> args) build;
+  final I Function(BuildContext context, List<CommandArg<dynamic>> args)? build;
   final String command;
   final String? Function(BuildContext context)? _resolveDescription;
   final List<SingleActivator> Function(BuildContext context)? _resolveShortcut;

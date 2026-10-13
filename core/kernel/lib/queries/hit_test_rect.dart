@@ -1,11 +1,5 @@
 part of '../kernel.dart';
 
-enum HitTestRectMode {
-  intersect,
-  contain,
-  normal,
-}
-
 extension HitTestRectQuery on TopologyQuery {
   HitResult hitTestRect(Aabb2 rect, {HitTestRectMode mode = .normal}) {
     final entries = <HitEntry>[];

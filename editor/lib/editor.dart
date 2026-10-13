@@ -39,7 +39,7 @@ final class Editor extends Controller {
 
     scene.prepare();
     isLoaded.value = true;
-    Clipboard.addCustomTypes(['motif.program-slice']);
+    Clipboard.addCustomTypes(['motif.program-slice', 'motif.blueprint-slice']);
   }
 
   static Editor of(BuildContext context) => context.read<Editor>();
@@ -107,6 +107,11 @@ final class Editor extends Controller {
   // Move this somewhere else, but it's ok for now
   StatementId? cursorTextEditStatement;
   Vec2? cursorCanvasPosition;
+
+  void onPointerPositionChanged(Offset? offset) {
+    cursorCanvasPosition = offset != null ? globalToScene(offset) : null;
+    sync.updatePresence(pointerPosition: cursorCanvasPosition);
+  }
 
   Vec2 get canvasCenter {
     final size = renderCanvas.size;

@@ -40,7 +40,7 @@ class CanvasContextMenu extends HookWidget {
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (action != null && context.mounted) {
-            final intent = action.descriptor.build(context, []);
+            final intent = action.descriptor.build!(context, []);
             context.invoke(intent);
           }
         });

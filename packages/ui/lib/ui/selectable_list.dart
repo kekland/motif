@@ -7,6 +7,8 @@ class SearchableSelectableList<T> extends StatefulWidget {
     required this.focusNode,
     required this.items,
     required this.builder,
+    this.onExpand,
+    this.onCollapse,
     this.onSubmit,
     this.query,
     this.filter,
@@ -17,6 +19,8 @@ class SearchableSelectableList<T> extends StatefulWidget {
   final FocusNode focusNode;
   final List<T> items;
   final void Function(T?)? onSubmit;
+  final bool Function(T)? onExpand;
+  final VoidCallback? onCollapse;
   final String? query;
   final List<T> Function(String query)? filter;
   final Widget Function(BuildContext context, List<T> items) builder;
@@ -97,6 +101,15 @@ class SearchableSelectableListState<T> extends State<SearchableSelectableList<T>
         return true;
       }
 
+      if (event.logicalKey == .arrowRight && selectedValue != null) {
+        return widget.onExpand?.call(selectedValue as T) ?? false;
+      }
+
+      if (widget.onCollapse != null && event.logicalKey == .arrowLeft) {
+        widget.onCollapse!();
+        return true;
+      }
+
       final indexOffset = switch (event.logicalKey) {
         .arrowUp => -1,
         .arrowDown => 1,
@@ -144,7 +157,7 @@ class SelectableListItem<T> extends StatefulWidget {
 
 class SelectableListItemState<T> extends State<SelectableListItem<T>> {
   var _isSelected = false;
-  SearchableSelectableListState<T>? _parentState;
+  SearchableSelectableListState? _parentState;
 
   T get value => widget.value;
 
@@ -156,7 +169,7 @@ class SelectableListItemState<T> extends State<SelectableListItem<T>> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final newParent = context.findAncestorStateOfType<SearchableSelectableListState<T>>();
+    final newParent = context.findAncestorStateOfType<SearchableSelectableListState>();
     if (_parentState != newParent) {
       _parentState?._selectionNotifier.removeListener(_updateSelected);
       _parentState?._detach(this);

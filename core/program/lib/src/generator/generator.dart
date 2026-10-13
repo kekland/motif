@@ -1,11 +1,14 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:blueprint/core.dart';
 import 'package:geometry/geometry.dart';
 import 'package:program/program.dart';
+import 'package:schema/program.dart' as gen;
 import 'package:shared/shared.dart';
 
 import 'generator.g.dart';
+export 'generator.codec.g.dart';
 
 part 'nodes/array.dart';
 part 'nodes/fields.dart';
@@ -62,6 +65,18 @@ class Generator extends Blueprint<Generator> {
     positions: positions ?? this.positions,
     fixed: fixed ?? this.fixed,
   );
+
+  @override
+  BlueprintSlice decodeSlice(Uint8List data) {
+    final pb = gen.GeneratorSlice.fromBuffer(data);
+    return pb.decode();
+  }
+
+  @override
+  Uint8List encodeSlice(BlueprintSlice slice) {
+    final pb = slice.encode();
+    return pb.writeToBuffer();
+  }
 }
 
 extension GeneratorBlueprintExecution on BlueprintExecution {

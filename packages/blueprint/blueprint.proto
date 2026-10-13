@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package motif;
+
+message NodeId {
+  uint32 value = 1;
+}
+
+message SocketRef {
+  NodeId node  = 1;
+  uint32 index = 2;
+}
+
+message Connection {
+  SocketRef output = 1;
+  SocketRef input  = 2;
+}

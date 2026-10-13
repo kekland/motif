@@ -9,6 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared:
   geometry:
   state:
   mouse_cursor:

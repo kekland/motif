@@ -1,4 +1,4 @@
-import 'package:blueprint/generator.dart';
+import 'package:blueprint/blueprint_generator.dart';
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Sockets

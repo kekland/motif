@@ -75,8 +75,8 @@ Map<SingleActivator, Intent> buildShortcuts(BuildContext context) {
     final shortcut = descriptor.resolveShortcut(context);
     if (shortcut.isEmpty) continue;
 
-    final intent = descriptor.build(context, []);
-    for (final s in shortcut) shortcuts[s] = intent;
+    final intent = descriptor.build?.call(context, []);
+    if (intent != null) for (final s in shortcut) shortcuts[s] = intent;
   }
 
   return shortcuts;

@@ -2,48 +2,6 @@ import 'dart:math' as math;
 
 import 'package:editor/imports.dart';
 
-class EditorCanvasPointerUpdateWidget extends StatelessWidget {
-  const new({
-    super.key,
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final editor = context.editor;
-
-    return MouseRegion(
-      hitTestBehavior: .translucent,
-      opaque: false,
-      onEnter: (e) {
-        final position = editor.globalToScene(e.position);
-        editor.cursorCanvasPosition = position;
-        editor.sync.updatePresence(pointerPosition: position);
-      },
-      onExit: (e) {
-        editor.cursorCanvasPosition = null;
-        editor.sync.updatePresence(pointerPosition: null);
-      },
-      child: Listener(
-        behavior: .translucent,
-        onPointerHover: (e) {
-          final position = editor.globalToScene(e.position);
-          editor.sync.updatePresence(pointerPosition: position);
-          editor.cursorCanvasPosition = position;
-        },
-        onPointerMove: (e) {
-          final position = editor.globalToScene(e.position);
-          editor.sync.updatePresence(pointerPosition: position);
-          editor.cursorCanvasPosition = position;
-        },
-        child: child,
-      ),
-    );
-  }
-}
-
 class EditorCanvasPeersWidget extends HookWidget {
   const new({
     super.key,

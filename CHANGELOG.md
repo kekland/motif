@@ -1,3 +1,12 @@
+# 0.2.0
+
+* Context menu: now supports nested submenus.
+* Added licenses page.
+* Blueprint editor: now supports proper gesture, hotkeys, and context menu grouping.
+* Blueprint editor: now has its own history.
+* Blueprint generator: now automatically generates the proto definitions and the codec.
+* Marquee: moved into `ui`, since it's now shared between the blueprint editor and the main editor.
+
 # 0.1.9
 
 * Added support for rendering the current scene using different frames as the root frame.

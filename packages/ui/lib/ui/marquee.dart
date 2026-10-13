@@ -1,11 +1,10 @@
-import 'package:editor/imports.dart';
-import 'package:flutter/gestures.dart';
+import 'package:geometry/geometry.dart';
+import 'package:ui/ui.dart';
 
 typedef MarqueeValue = (Rect, HitTestRectMode);
 
 class MarqueeActivity extends DragActivity {
   MarqueeActivity({
-    required this.editor,
     this.onLocalRectChanged,
     this.onGlobalRectChanged,
     super.onStart,
@@ -14,33 +13,33 @@ class MarqueeActivity extends DragActivity {
     super.onCancel,
   });
 
-  final Editor editor;
   final ValueChanged<MarqueeValue?>? onLocalRectChanged;
   final ValueChanged<MarqueeValue?>? onGlobalRectChanged;
 
   @override
-  void onStart(PositionedGestureDetails details) {
-    super.onStart(details);
+  void onDidDrag() {
+    final details = startDetails;
     onLocalRectChanged?.call((.fromPoints(details.localPosition, details.localPosition), .contain));
     onGlobalRectChanged?.call((.fromPoints(details.globalPosition, details.globalPosition), .contain));
-    editor.selection.clear();
   }
 
   @override
   void onUpdate(DragUpdateDetails details) {
-    final start = startDetails.localPosition;
-    final end = details.localPosition;
-    late final HitTestRectMode mode;
-    if (end.dx > start.dx) {
-      mode = .contain;
-    } else {
-      mode = .intersect;
-    }
+    if (didDrag) {
+      final start = startDetails.localPosition;
+      final end = details.localPosition;
+      late final HitTestRectMode mode;
+      if (end.dx > start.dx) {
+        mode = .contain;
+      } else {
+        mode = .intersect;
+      }
 
-    final localRect = Rect.fromPoints(start, end);
-    final globalRect = Rect.fromPoints(startDetails.globalPosition, details.globalPosition);
-    onLocalRectChanged?.call((localRect, mode));
-    onGlobalRectChanged?.call((globalRect, mode));
+      final localRect = Rect.fromPoints(start, end);
+      final globalRect = Rect.fromPoints(startDetails.globalPosition, details.globalPosition);
+      onLocalRectChanged?.call((localRect, mode));
+      onGlobalRectChanged?.call((globalRect, mode));
+    }
 
     super.onUpdate(details);
   }
@@ -80,7 +79,6 @@ class MarqueeDetector extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = Editor.watch(context);
     final state = useState<MarqueeValue?>(null);
 
     void onLocalRectChanged(MarqueeValue? value) {
@@ -95,7 +93,6 @@ class MarqueeDetector extends HookWidget {
         activityFactory: (_) {
           if (activityFactory != null) return activityFactory!(onLocalRectChanged);
           return MarqueeActivity(
-            editor: editor,
             onLocalRectChanged: onLocalRectChanged,
             onGlobalRectChanged: onGlobalRectChanged,
             onStart: onStart,
@@ -113,6 +110,22 @@ class MarqueeDetector extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+final class const MarqueeOverlayBuilder({
+  super.key,
+  required final ValueListenable<MarqueeValue?> value,
+  final Color? color,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final value = useValueListenable(this.value);
+    return MarqueeOverlay(
+      rect: value?.$1,
+      mode: value?.$2,
+      color: color,
     );
   }
 }
@@ -156,7 +169,7 @@ class _MarqueeOverlayPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color.withScaledAlpha(0.2)
-      ..style = PaintingStyle.fill;
+      ..style = .fill;
 
     final borderPaint = Paint()
       ..color = color

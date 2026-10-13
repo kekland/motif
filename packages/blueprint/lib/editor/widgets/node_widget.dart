@@ -13,49 +13,61 @@ class NodeWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final node = useExistingSignal(editor.node(id)).value;
-    final panStartPosition = useState<Vec2?>(null);
-    final panStartLocalPosition = useState<Vec2?>(null);
-
+    final isSelected = useListenable(editor.selection).isNodeSelected(id);
     final color = context.watch<BlueprintColorResolvers>();
 
-    final child = _NodeWidget(
-      node: node,
-      child: Surface(
-        width: 160.0,
-        color: context.colors.surface.primary,
-        borderSide: .new(color: context.colors.divider),
-        clipBehavior: .none,
-        shadows: context.shadows.small,
-        borderRadius: .circular(4.0),
-        child: Column(
-          mainAxisSize: .min,
-          children: [
-            SizedBox(
-              width: .infinity,
-              height: 24.0,
-              child: Surface(
-                color: color.resolve(node.category) ?? context.colors.surface.secondary,
-                borderRadius: .vertical(top: .circular(4.0)),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      node.name,
-                      style: context.typography.body,
-                    ),
+    Widget child = GestureSurface(
+      onTap: () => context.invoke(intents.selectNode(id)),
+      width: 160.0,
+      color: context.colors.surface.primary,
+      clipBehavior: .none,
+      shadows: context.shadows.small,
+      borderRadius: .circular(4.0),
+      child: Column(
+        mainAxisSize: .min,
+        children: [
+          SizedBox(
+            width: .infinity,
+            height: 24.0,
+            child: Surface(
+              color: color.resolve(node.category) ?? context.colors.surface.secondary,
+              borderRadius: .vertical(top: .circular(4.0)),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    node.name,
+                    style: context.typography.body,
                   ),
                 ),
               ),
             ),
-            Divider(),
-            const SizedBox(height: 4.0),
-            for (final input in node.inputs) NodeInputSocketWidget(editor: editor, socket: input),
-            for (final output in node.outputs) NodeOutputSocketWidget(socket: output),
-            const SizedBox(height: 4.0),
-          ],
-        ),
+          ),
+          Divider(),
+          const SizedBox(height: 4.0),
+          for (final input in node.inputs) NodeInputSocketWidget(editor: editor, socket: input),
+          for (final output in node.outputs) NodeOutputSocketWidget(socket: output),
+          const SizedBox(height: 4.0),
+        ],
       ),
+    );
+
+    child = DecoratedBox(
+      decoration: BoxDecoration(
+        border: .all(
+          color: isSelected ? context.colors.accent.primary : context.colors.divider,
+          width: isSelected ? 2.0 : 1.0,
+          strokeAlign: BorderSide.strokeAlignOutside,
+        ),
+        borderRadius: .circular(4.0),
+      ),
+      child: child,
+    );
+
+    child = _NodeWidget(
+      node: node,
+      child: child,
     );
 
     final position = editor.positionOf(id);
@@ -63,20 +75,7 @@ class NodeWidget extends HookWidget {
     return Positioned(
       left: position.x,
       top: position.y,
-      child: DeferredPointerHandler(
-        child: GestureDetector(
-          onPanStart: (d) {
-            panStartPosition.value = position;
-            panStartLocalPosition.value = d.localPosition.vec2;
-          },
-          onPanUpdate: (d) {
-            final delta = d.localPosition.vec2 - panStartLocalPosition.value!;
-            editor.move(id, panStartPosition.value! + delta);
-          },
-          onPanEnd: (d) {},
-          child: child,
-        ),
-      ),
+      child: child,
     );
   }
 }
@@ -177,23 +176,39 @@ class _NodeWidget extends SingleChildRenderObjectWidget {
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return NodeRenderObject(node: node);
+    return RenderNode(node: node);
   }
 
   @override
-  void updateRenderObject(BuildContext context, NodeRenderObject renderObject) {
+  void updateRenderObject(BuildContext context, RenderNode renderObject) {
     renderObject.node = node;
   }
 }
 
-class NodeRenderObject extends RenderProxyBox {
-  NodeRenderObject({required this._node});
+class RenderNode extends RenderProxyBox {
+  RenderNode({required this._node});
 
   Node _node;
   Node get node => _node;
   set node(Node value) {
     _node = value;
     markNeedsLayout();
+  }
+
+  RenderConnections? _connections;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _connections = findAncestorRenderObjectOfType<RenderConnections>();
+    _connections?.attachNode(this);
+  }
+
+  @override
+  void detach() {
+    _connections?.detachNode(this);
+    _connections = null;
+    super.detach();
   }
 
   @override
@@ -205,5 +220,39 @@ class NodeRenderObject extends RenderProxyBox {
       }
     }
     return false;
+  }
+}
+
+class MoveSelectedNodesActivity extends DragActivity {
+  MoveSelectedNodesActivity({
+    required this.editor,
+    super.onStart,
+  });
+
+  final BlueprintEditor editor;
+
+  late final List<NodeId> nodes;
+  late final List<Vec2> startPositions;
+
+  final mergeKey = Object();
+
+  @override
+  void onStart(PositionedGestureDetails details) {
+    super.onStart(details);
+
+    nodes = editor.selection.nodes.toList();
+    startPositions = nodes.map((nodeId) => editor.positionOf(nodeId)).toList();
+  }
+
+  @override
+  void onUpdate(DragUpdateDetails details) {
+    super.onUpdate(details);
+    final delta = editor.globalToLocal(details.globalPosition) - editor.globalToLocal(startDetails.globalPosition);
+    final positions = <NodeId, Vec2>{};
+    for (final (i, id) in nodes.indexed) {
+      positions[id] = startPositions[i] + delta.vec2;
+    }
+
+    editor.edit(() => editor.moveMany(positions), mergeKey: mergeKey);
   }
 }

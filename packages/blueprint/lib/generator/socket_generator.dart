@@ -1,4 +1,4 @@
-part of 'generator.dart';
+part of 'blueprint_generator.dart';
 
 List<String> generateSocket(SocketDescription description) {
   final code = <String>[];

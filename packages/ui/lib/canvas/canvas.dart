@@ -20,9 +20,11 @@ class InteractiveCanvas extends StatefulWidget {
     this.backgroundColor,
     this.minScale = 1 / 16.0,
     this.maxScale = 256.0,
+    this.onPointerPositionChanged,
     required this.child,
   });
 
+  final ValueChanged<Offset?>? onPointerPositionChanged;
   final TransformationController? transformationController;
   final List<Widget Function(BuildContext context, Matrix4 transform)> overlayBuilders;
   final bool centerOrigin;
@@ -31,12 +33,15 @@ class InteractiveCanvas extends StatefulWidget {
   final Widget child;
 
   @override
-  State<InteractiveCanvas> createState() => _InteractiveCanvasState();
+  State<InteractiveCanvas> createState() => InteractiveCanvasState();
 }
 
-class _InteractiveCanvasState extends State<InteractiveCanvas> {
+class InteractiveCanvasState extends State<InteractiveCanvas> {
   final _internalController = TransformationController();
   TransformationController get controller => widget.transformationController ?? _internalController;
+
+  Offset? _pointerPosition;
+  Offset? get pointerPosition => _pointerPosition;
 
   @override
   void dispose() {
@@ -46,7 +51,7 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+    Widget child = LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;
 
@@ -107,6 +112,32 @@ class _InteractiveCanvasState extends State<InteractiveCanvas> {
           },
         );
       },
+    );
+
+    return MouseRegion(
+      hitTestBehavior: .translucent,
+      opaque: false,
+      onEnter: (e) {
+        _pointerPosition = e.position;
+        widget.onPointerPositionChanged?.call(e.position);
+        FocusScope.of(context).requestFocus();
+      },
+      onExit: (e) {
+        _pointerPosition = null;
+        widget.onPointerPositionChanged?.call(null);
+      },
+      child: Listener(
+        behavior: .translucent,
+        onPointerHover: (e) {
+          _pointerPosition = e.position;
+          widget.onPointerPositionChanged?.call(e.position);
+        },
+        onPointerMove: (e) {
+          _pointerPosition = e.position;
+          widget.onPointerPositionChanged?.call(e.position);
+        },
+        child: child,
+      ),
     );
   }
 }

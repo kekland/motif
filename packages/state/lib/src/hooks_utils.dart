@@ -109,6 +109,14 @@ void useListenerEffect(ChangeNotifier notifier, VoidCallback listener, {bool cal
   }, [notifier, listener]);
 }
 
+void useStaticListenerEffect(ChangeNotifier notifier, VoidCallback listener, {bool callImmediately = false}) {
+  useEffect(() {
+    notifier.addListener(listener);
+    if (callImmediately) listener();
+    return () => notifier.removeListener(listener);
+  }, [notifier]);
+}
+
 void useControllerTextEffect(
   TextEditingController controller,
   void Function(String text) listener,

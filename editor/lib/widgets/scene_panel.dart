@@ -26,7 +26,7 @@ class ScenePanel extends HookWidget {
               Expanded(
                 child: ListItem(
                   leading: Icons.tree(),
-                  title: Text('Tree'),
+                  title: Text('Objects'),
                   onTap: () => mode.value = .tree,
                   isSelected: mode.value == .tree,
                 ),

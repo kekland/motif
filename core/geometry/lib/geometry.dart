@@ -7,6 +7,7 @@ export 'size/size.dart';
 export 'stroke/stroke.dart';
 export 'utils/constants.dart';
 export 'utils/corner_radius.dart';
+export 'utils/hit_test_rect_mode.dart';
 export 'utils/intersection.dart';
 export 'utils/rotation.dart';
 export 'vector/vector_test.dart';
