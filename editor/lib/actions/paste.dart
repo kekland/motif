@@ -26,24 +26,6 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
         final slice = ProgramSlice.decodeRaw(sliceData);
         if (slice == null) return;
         insertions = slice;
-        // editor.edit((txn) {
-        //   for (final s in remapped.statements) txn.insert(s);
-        //   // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
-        // }, mergeKey: mergeKey);
-
-        // final bbox = editor.scene.query.bbox(remapped.statements.map((s) => s.id));
-
-        // editor.edit((txn) {
-        //   final session = TransformSession.statements(
-        //     editor.scene,
-        //     remapped.statements.map((s) => s.id),
-        //     transaction: txn,
-        //   );
-
-        //   final center = bbox.center;
-        //   session.apply(Mat4.translation2(editor.canvasPosition - center));
-        // }, mergeKey: mergeKey);
-        // editor.selection.setStatements(remapped.statements.map((s) => s.id));
       } catch (e, st) {
         logger.warning('failed to paste slice', e, st);
       }
@@ -153,7 +135,6 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
           var frame = targetFrame;
           while (frame != .root) {
             final result = txn.evaluation.routeReparent(targets, frame);
-            print('frame: ${editor.statement(frame.statementId)}, result: $result');
 
             if (result is! ReparentSuccess) {
               frame = editor.bundle.query.parent(frame)!;
@@ -173,11 +154,10 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
           if (frame != .root) txn.reparent(targets, frame);
           txn.flush();
 
-          final bbox = editor.scene.query.bbox(ids, space: frame);
-
           if (frame == .root) {
-            totalBbox.hull(bbox);
+            totalBbox.hull(editor.scene.query.bbox(ids, space: .root));
           } else {
+            final bbox = editor.scene.query.bbox(ids, space: frame);
             final session = TransformSession.statements(editor.scene, ids, transaction: txn);
             final parentBbox = editor.bundle.query.bbox(frame)!;
             final offset = bbox.center - parentBbox.center;

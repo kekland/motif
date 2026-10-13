@@ -2008,7 +2008,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.Layout',
-      '10': 'layout'
+      '9': 0,
+      '10': 'layout',
+      '17': true
     },
     {
       '1': 'size',
@@ -2016,7 +2018,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.LayoutSize',
-      '10': 'size'
+      '9': 1,
+      '10': 'size',
+      '17': true
     },
     {
       '1': 'transform',
@@ -2032,7 +2036,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.ObjectShape',
-      '10': 'shape'
+      '9': 2,
+      '10': 'shape',
+      '17': true
     },
     {
       '1': 'vertex_style',
@@ -2040,7 +2046,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.VertexStyle',
-      '10': 'vertexStyle'
+      '9': 3,
+      '10': 'vertexStyle',
+      '17': true
     },
     {
       '1': 'edge_style',
@@ -2048,7 +2056,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.EdgeStyle',
-      '10': 'edgeStyle'
+      '9': 4,
+      '10': 'edgeStyle',
+      '17': true
     },
     {
       '1': 'face_style',
@@ -2056,7 +2066,9 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.FaceStyle',
-      '10': 'faceStyle'
+      '9': 5,
+      '10': 'faceStyle',
+      '17': true
     },
     {
       '1': 'parent',
@@ -2064,21 +2076,27 @@ const PrefabInstanceStatement$json = {
       '4': 1,
       '5': 11,
       '6': '.motif.CellRef',
-      '9': 0,
+      '9': 6,
       '10': 'parent',
       '17': true
     },
     {
       '1': 'overrides',
       '3': 10,
-      '4': 3,
+      '4': 1,
       '5': 11,
-      '6': '.motif.PrefabInstanceStatement.Override',
+      '6': '.motif.GeneratorOverrides',
       '10': 'overrides'
     },
   ],
   '3': [PrefabInstanceStatement_Override$json],
   '8': [
+    {'1': '_layout'},
+    {'1': '_size'},
+    {'1': '_shape'},
+    {'1': '_vertex_style'},
+    {'1': '_edge_style'},
+    {'1': '_face_style'},
     {'1': '_parent'},
   ],
 };
@@ -2102,17 +2120,18 @@ const PrefabInstanceStatement_Override$json = {
 /// Descriptor for `PrefabInstanceStatement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List prefabInstanceStatementDescriptor = $convert.base64Decode(
     'ChdQcmVmYWJJbnN0YW5jZVN0YXRlbWVudBIvCglwcmVmYWJfaWQYASABKAsyEi5tb3RpZi5TdG'
-    'F0ZW1lbnRJZFIIcHJlZmFiSWQSJQoGbGF5b3V0GAIgASgLMg0ubW90aWYuTGF5b3V0UgZsYXlv'
-    'dXQSJQoEc2l6ZRgDIAEoCzIRLm1vdGlmLkxheW91dFNpemVSBHNpemUSKQoJdHJhbnNmb3JtGA'
-    'QgASgLMgsubW90aWYuTWF0NFIJdHJhbnNmb3JtEigKBXNoYXBlGAUgASgLMhIubW90aWYuT2Jq'
-    'ZWN0U2hhcGVSBXNoYXBlEjUKDHZlcnRleF9zdHlsZRgGIAEoCzISLm1vdGlmLlZlcnRleFN0eW'
-    'xlUgt2ZXJ0ZXhTdHlsZRIvCgplZGdlX3N0eWxlGAcgASgLMhAubW90aWYuRWRnZVN0eWxlUgll'
-    'ZGdlU3R5bGUSLwoKZmFjZV9zdHlsZRgIIAEoCzIQLm1vdGlmLkZhY2VTdHlsZVIJZmFjZVN0eW'
-    'xlEisKBnBhcmVudBgJIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEkUKCW92ZXJy'
-    'aWRlcxgKIAMoCzInLm1vdGlmLlByZWZhYkluc3RhbmNlU3RhdGVtZW50Lk92ZXJyaWRlUglvdm'
-    'VycmlkZXMaYQoIT3ZlcnJpZGUSIgoCaWQYASABKAsyEi5tb3RpZi5TdGF0ZW1lbnRJZFICaWQS'
-    'MQoHcGFydGlhbBgCIAEoCzIXLm1vdGlmLlN0YXRlbWVudFBhcnRpYWxSB3BhcnRpYWxCCQoHX3'
-    'BhcmVudA==');
+    'F0ZW1lbnRJZFIIcHJlZmFiSWQSKgoGbGF5b3V0GAIgASgLMg0ubW90aWYuTGF5b3V0SABSBmxh'
+    'eW91dIgBARIqCgRzaXplGAMgASgLMhEubW90aWYuTGF5b3V0U2l6ZUgBUgRzaXpliAEBEikKCX'
+    'RyYW5zZm9ybRgEIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybRItCgVzaGFwZRgFIAEoCzIS'
+    'Lm1vdGlmLk9iamVjdFNoYXBlSAJSBXNoYXBliAEBEjoKDHZlcnRleF9zdHlsZRgGIAEoCzISLm'
+    '1vdGlmLlZlcnRleFN0eWxlSANSC3ZlcnRleFN0eWxliAEBEjQKCmVkZ2Vfc3R5bGUYByABKAsy'
+    'EC5tb3RpZi5FZGdlU3R5bGVIBFIJZWRnZVN0eWxliAEBEjQKCmZhY2Vfc3R5bGUYCCABKAsyEC'
+    '5tb3RpZi5GYWNlU3R5bGVIBVIJZmFjZVN0eWxliAEBEisKBnBhcmVudBgJIAEoCzIOLm1vdGlm'
+    'LkNlbGxSZWZIBlIGcGFyZW50iAEBEjcKCW92ZXJyaWRlcxgKIAEoCzIZLm1vdGlmLkdlbmVyYX'
+    'Rvck92ZXJyaWRlc1IJb3ZlcnJpZGVzGmEKCE92ZXJyaWRlEiIKAmlkGAEgASgLMhIubW90aWYu'
+    'U3RhdGVtZW50SWRSAmlkEjEKB3BhcnRpYWwYAiABKAsyFy5tb3RpZi5TdGF0ZW1lbnRQYXJ0aW'
+    'FsUgdwYXJ0aWFsQgkKB19sYXlvdXRCBwoFX3NpemVCCAoGX3NoYXBlQg8KDV92ZXJ0ZXhfc3R5'
+    'bGVCDQoLX2VkZ2Vfc3R5bGVCDQoLX2ZhY2Vfc3R5bGVCCQoHX3BhcmVudA==');
 
 @$core.Deprecated('Use statementPartialDescriptor instead')
 const StatementPartial$json = {
@@ -2287,6 +2306,79 @@ final $typed_data.Uint8List statementPartialDescriptor = $convert.base64Decode(
     'c2l0aW9uGA8gASgOMiUubW90aWYuR2x1ZVZlcnRpY2VzU3RhdGVtZW50LlBvc2l0aW9uSABSFG'
     'dsdWVWZXJ0aWNlc1Bvc2l0aW9uEicKBmxheW91dBgQIAEoCzINLm1vdGlmLkxheW91dEgAUgZs'
     'YXlvdXRCBgoEa2luZA==');
+
+@$core.Deprecated('Use generatorOverridesDescriptor instead')
+const GeneratorOverrides$json = {
+  '1': 'GeneratorOverrides',
+  '2': [
+    {
+      '1': 'children',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.GeneratorOverrideNode.Entry',
+      '10': 'children'
+    },
+  ],
+};
+
+/// Descriptor for `GeneratorOverrides`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generatorOverridesDescriptor = $convert.base64Decode(
+    'ChJHZW5lcmF0b3JPdmVycmlkZXMSPgoIY2hpbGRyZW4YASADKAsyIi5tb3RpZi5HZW5lcmF0b3'
+    'JPdmVycmlkZU5vZGUuRW50cnlSCGNoaWxkcmVu');
+
+@$core.Deprecated('Use generatorOverrideNodeDescriptor instead')
+const GeneratorOverrideNode$json = {
+  '1': 'GeneratorOverrideNode',
+  '2': [
+    {
+      '1': 'partial',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.StatementPartial',
+      '9': 0,
+      '10': 'partial',
+      '17': true
+    },
+    {
+      '1': 'children',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.motif.GeneratorOverrideNode.Entry',
+      '10': 'children'
+    },
+  ],
+  '3': [GeneratorOverrideNode_Entry$json],
+  '8': [
+    {'1': '_partial'},
+  ],
+};
+
+@$core.Deprecated('Use generatorOverrideNodeDescriptor instead')
+const GeneratorOverrideNode_Entry$json = {
+  '1': 'Entry',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.StatementId', '10': 'id'},
+    {
+      '1': 'node',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.GeneratorOverrideNode',
+      '10': 'node'
+    },
+  ],
+};
+
+/// Descriptor for `GeneratorOverrideNode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generatorOverrideNodeDescriptor = $convert.base64Decode(
+    'ChVHZW5lcmF0b3JPdmVycmlkZU5vZGUSNgoHcGFydGlhbBgBIAEoCzIXLm1vdGlmLlN0YXRlbW'
+    'VudFBhcnRpYWxIAFIHcGFydGlhbIgBARI+CghjaGlsZHJlbhgCIAMoCzIiLm1vdGlmLkdlbmVy'
+    'YXRvck92ZXJyaWRlTm9kZS5FbnRyeVIIY2hpbGRyZW4aXQoFRW50cnkSIgoCaWQYASABKAsyEi'
+    '5tb3RpZi5TdGF0ZW1lbnRJZFICaWQSMAoEbm9kZRgCIAEoCzIcLm1vdGlmLkdlbmVyYXRvck92'
+    'ZXJyaWRlTm9kZVIEbm9kZUIKCghfcGFydGlhbA==');
 
 @$core.Deprecated('Use objectShapeDescriptor instead')
 const ObjectShape$json = {

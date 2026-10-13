@@ -352,16 +352,16 @@ message PrefabInstanceStatement {
     StatementPartial partial = 2;
   }
 
-  StatementId       prefab_id    = 1;
-  Layout            layout       = 2;
-  LayoutSize        size         = 3;
-  Mat4              transform    = 4;
-  ObjectShape       shape        = 5;
-  VertexStyle       vertex_style = 6;
-  EdgeStyle         edge_style   = 7;
-  FaceStyle         face_style   = 8;
-  optional CellRef  parent       = 9;
-  repeated Override overrides    = 10;
+  StatementId                 prefab_id    = 1;
+  optional Layout             layout       = 2;
+  optional LayoutSize         size         = 3;
+  Mat4                        transform    = 4;
+  optional ObjectShape        shape        = 5;
+  optional VertexStyle        vertex_style = 6;
+  optional EdgeStyle          edge_style   = 7;
+  optional FaceStyle          face_style   = 8;
+  optional CellRef            parent       = 9;
+  GeneratorOverrides overrides    = 10;
 }
 
 message StatementPartial {
@@ -387,6 +387,20 @@ message StatementPartial {
   }
 
   repeated Value fields = 1;
+}
+
+message GeneratorOverrides {
+  repeated GeneratorOverrideNode.Entry children = 1;
+}
+
+message GeneratorOverrideNode {
+  message Entry {
+    StatementId           id   = 1;
+    GeneratorOverrideNode node = 2;
+  }
+
+  optional StatementPartial partial  = 1;
+  repeated Entry            children = 2;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

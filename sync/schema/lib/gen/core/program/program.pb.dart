@@ -4326,7 +4326,7 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
     EdgeStyle? edgeStyle,
     FaceStyle? faceStyle,
     CellRef? parent,
-    $core.Iterable<PrefabInstanceStatement_Override>? overrides,
+    GeneratorOverrides? overrides,
   }) {
     final result = create();
     if (prefabId != null) result.prefabId = prefabId;
@@ -4338,7 +4338,7 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
     if (edgeStyle != null) result.edgeStyle = edgeStyle;
     if (faceStyle != null) result.faceStyle = faceStyle;
     if (parent != null) result.parent = parent;
-    if (overrides != null) result.overrides.addAll(overrides);
+    if (overrides != null) result.overrides = overrides;
     return result;
   }
 
@@ -4371,9 +4371,8 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
         subBuilder: FaceStyle.create)
     ..aOM<CellRef>(9, _omitFieldNames ? '' : 'parent',
         subBuilder: CellRef.create)
-    ..pPM<PrefabInstanceStatement_Override>(
-        10, _omitFieldNames ? '' : 'overrides',
-        subBuilder: PrefabInstanceStatement_Override.create)
+    ..aOM<GeneratorOverrides>(10, _omitFieldNames ? '' : 'overrides',
+        subBuilder: GeneratorOverrides.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4496,7 +4495,15 @@ class PrefabInstanceStatement extends $pb.GeneratedMessage {
   CellRef ensureParent() => $_ensure(8);
 
   @$pb.TagNumber(10)
-  $pb.PbList<PrefabInstanceStatement_Override> get overrides => $_getList(9);
+  GeneratorOverrides get overrides => $_getN(9);
+  @$pb.TagNumber(10)
+  set overrides(GeneratorOverrides value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasOverrides() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearOverrides() => $_clearField(10);
+  @$pb.TagNumber(10)
+  GeneratorOverrides ensureOverrides() => $_ensure(9);
 }
 
 enum StatementPartial_Value_Kind {
@@ -4899,6 +4906,195 @@ class StatementPartial extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<StatementPartial_Value> get fields => $_getList(0);
+}
+
+class GeneratorOverrides extends $pb.GeneratedMessage {
+  factory GeneratorOverrides({
+    $core.Iterable<GeneratorOverrideNode_Entry>? children,
+  }) {
+    final result = create();
+    if (children != null) result.children.addAll(children);
+    return result;
+  }
+
+  GeneratorOverrides._();
+
+  factory GeneratorOverrides.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GeneratorOverrides.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratorOverrides',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..pPM<GeneratorOverrideNode_Entry>(1, _omitFieldNames ? '' : 'children',
+        subBuilder: GeneratorOverrideNode_Entry.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrides clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrides copyWith(void Function(GeneratorOverrides) updates) =>
+      super.copyWith((message) => updates(message as GeneratorOverrides))
+          as GeneratorOverrides;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrides create() => GeneratorOverrides._();
+  @$core.override
+  GeneratorOverrides createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrides getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratorOverrides>(create);
+  static GeneratorOverrides? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<GeneratorOverrideNode_Entry> get children => $_getList(0);
+}
+
+class GeneratorOverrideNode_Entry extends $pb.GeneratedMessage {
+  factory GeneratorOverrideNode_Entry({
+    StatementId? id,
+    GeneratorOverrideNode? node,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (node != null) result.node = node;
+    return result;
+  }
+
+  GeneratorOverrideNode_Entry._();
+
+  factory GeneratorOverrideNode_Entry.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GeneratorOverrideNode_Entry.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratorOverrideNode.Entry',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<StatementId>(1, _omitFieldNames ? '' : 'id',
+        subBuilder: StatementId.create)
+    ..aOM<GeneratorOverrideNode>(2, _omitFieldNames ? '' : 'node',
+        subBuilder: GeneratorOverrideNode.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrideNode_Entry clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrideNode_Entry copyWith(
+          void Function(GeneratorOverrideNode_Entry) updates) =>
+      super.copyWith(
+              (message) => updates(message as GeneratorOverrideNode_Entry))
+          as GeneratorOverrideNode_Entry;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrideNode_Entry create() =>
+      GeneratorOverrideNode_Entry._();
+  @$core.override
+  GeneratorOverrideNode_Entry createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrideNode_Entry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratorOverrideNode_Entry>(create);
+  static GeneratorOverrideNode_Entry? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  StatementId get id => $_getN(0);
+  @$pb.TagNumber(1)
+  set id(StatementId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StatementId ensureId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  GeneratorOverrideNode get node => $_getN(1);
+  @$pb.TagNumber(2)
+  set node(GeneratorOverrideNode value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNode() => $_clearField(2);
+  @$pb.TagNumber(2)
+  GeneratorOverrideNode ensureNode() => $_ensure(1);
+}
+
+class GeneratorOverrideNode extends $pb.GeneratedMessage {
+  factory GeneratorOverrideNode({
+    StatementPartial? partial,
+    $core.Iterable<GeneratorOverrideNode_Entry>? children,
+  }) {
+    final result = create();
+    if (partial != null) result.partial = partial;
+    if (children != null) result.children.addAll(children);
+    return result;
+  }
+
+  GeneratorOverrideNode._();
+
+  factory GeneratorOverrideNode.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GeneratorOverrideNode.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratorOverrideNode',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<StatementPartial>(1, _omitFieldNames ? '' : 'partial',
+        subBuilder: StatementPartial.create)
+    ..pPM<GeneratorOverrideNode_Entry>(2, _omitFieldNames ? '' : 'children',
+        subBuilder: GeneratorOverrideNode_Entry.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrideNode clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorOverrideNode copyWith(
+          void Function(GeneratorOverrideNode) updates) =>
+      super.copyWith((message) => updates(message as GeneratorOverrideNode))
+          as GeneratorOverrideNode;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrideNode create() => GeneratorOverrideNode._();
+  @$core.override
+  GeneratorOverrideNode createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GeneratorOverrideNode getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratorOverrideNode>(create);
+  static GeneratorOverrideNode? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  StatementPartial get partial => $_getN(0);
+  @$pb.TagNumber(1)
+  set partial(StatementPartial value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPartial() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPartial() => $_clearField(1);
+  @$pb.TagNumber(1)
+  StatementPartial ensurePartial() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<GeneratorOverrideNode_Entry> get children => $_getList(1);
 }
 
 class ObjectShape_Rectangle extends $pb.GeneratedMessage {

@@ -892,15 +892,15 @@ final _prefabInstanceStatementCodec = $codec<PrefabInstanceStatement, gen.Statem
     modifiers: $opt(v.hasModifiers, () => v.modifiers.decode()),
     name: $opt(v.hasName, () => v.name),
     prefabId: .new(v.prefabInstance.prefabId.decode()),
-    // transform: v.prefabInstance.transform.decode(),
-    // layout: v.prefabInstance.layout.decode(),
-    // size: v.prefabInstance.size.decode(),
+    transform: v.prefabInstance.transform.decode(),
+    layout: $opt(v.prefabInstance.hasLayout, () => v.prefabInstance.layout.decode()),
+    size: $opt(v.prefabInstance.hasSize, () => v.prefabInstance.size.decode()),
     parent: $opt(v.prefabInstance.hasParent, () => v.prefabInstance.parent.decode()),
-    // vertexStyle: v.prefabInstance.vertexStyle.decode(),
-    // edgeStyle: v.prefabInstance.edgeStyle.decode(),
-    // faceStyle: v.prefabInstance.faceStyle.decode(),
+    vertexStyle: $opt(v.prefabInstance.hasVertexStyle, () => v.prefabInstance.vertexStyle.decode()),
+    edgeStyle: $opt(v.prefabInstance.hasEdgeStyle, () => v.prefabInstance.edgeStyle.decode()),
+    faceStyle: $opt(v.prefabInstance.hasFaceStyle, () => v.prefabInstance.faceStyle.decode()),
     // shape: v.prefabInstance.shape.decode(),
-    // overrides: $mapFrom(v.prefabInstance.overrides, (v) => v.id.decode(), (v) => v.partial.decode()),
+    overrides: v.prefabInstance.overrides.decode(),
   ),
   encoder: (v) => .new(
     id: v.id.encode(),
@@ -908,15 +908,15 @@ final _prefabInstanceStatementCodec = $codec<PrefabInstanceStatement, gen.Statem
     name: v.name,
     prefabInstance: .new(
       prefabId: v.prefabId.encode(),
-      // transform: v.transform.encode(),
-      // layout: v.layout.encode(),
-      // size: v.size.encode(),
+      transform: v.transform.encode(),
+      layout: v.layout?.encode(),
+      size: v.size?.encode(),
       parent: v.parent?.ref.encode(),
-      // vertexStyle: v.vertexStyle.encode(),
-      // edgeStyle: v.edgeStyle.encode(),
-      // faceStyle: v.faceStyle.encode(),
+      vertexStyle: v.vertexStyle?.encode(),
+      edgeStyle: v.edgeStyle?.encode(),
+      faceStyle: v.faceStyle?.encode(),
       // shape: v.shape.encode(),
-      // overrides: $map(v.overrides.entries, (e) => .new(id: e.key.encode(), partial: e.value.encode())),
+      overrides: v.overrides.encode(),
     ),
   ),
 );
@@ -968,6 +968,32 @@ final _statementPartialValueCodec = $codec<MapEntry<Symbol, Object?>, gen.Statem
     #layout => .new(layout: (v.value as Layout).encode()),
     _ => throw ArgumentError(),
   },
+);
+
+extension _GeneratorOverridesEncode on GeneratorOverrides { gen.GeneratorOverrides encode() => _generatorOverridesCodec.encode(this); }
+extension _GeneratorOverridesDecode on gen.GeneratorOverrides { GeneratorOverrides decode() => _generatorOverridesCodec.decode(this); }
+
+final _generatorOverridesCodec = $codec<GeneratorOverrides, gen.GeneratorOverrides>(
+  encoder: (v) => .new(
+    children: $fromMap(v.children, (k, v) => .new(id: k.encode(), node: v.encode()))
+  ),
+  decoder: (v) => .new(
+    $mapFrom(v.children, (v) => v.id.decode(), (v) => v.node.decode()),
+  ),
+);
+
+extension _GeneratorOverrideNodeEncode on GeneratorOverrideNode { gen.GeneratorOverrideNode encode() => _generatorOverrideNodeCodec.encode(this); }
+extension _GeneratorOverrideNodeDecode on gen.GeneratorOverrideNode { GeneratorOverrideNode decode() => _generatorOverrideNodeCodec.decode(this); }
+
+final _generatorOverrideNodeCodec = $codec<GeneratorOverrideNode, gen.GeneratorOverrideNode>(
+  encoder: (v) => .new(
+    partial: v.partial?.encode(),
+    children: $fromMap(v.children, (k, v) => .new(id: k.encode(), node: v.encode()))
+  ),
+  decoder: (v) => .new(
+    partial: $opt(v.hasPartial, () => v.partial.decode()),
+    children: .new($mapFrom(v.children, (v) => v.id.decode(), (v) => v.node.decode())),
+  ),
 );
 
 // ---------------------------------------------------------------------------------------------------------------------

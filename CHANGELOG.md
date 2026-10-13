@@ -3,6 +3,8 @@
 * Added support for rendering the current scene using different frames as the root frame.
 * Added the prefabs panel, which shows the current prefabs in the scene.
 * Prefabs: improved support for overrides in prefab instances. Instances can now have nested overrides, as well as top-level overrides (to the produced container).
+* Moved the object tree into the evaluation layer, since it's needed for proper prefab management.
+* Paste action: now pastes statements into the selected containers.
 
 # 0.1.8
 
