@@ -8,6 +8,8 @@ final class EvalTree {
   final _nodes = <StatementId, EvalNode>{};
   EvalNode? operator [](StatementId id) => _nodes[id];
 
+  final _bySourceId = <StatementId, HashSet<StatementId>>{};
+
   EvalNode _nodeFor(Statement statement, EvalNode? parent) {
     final id = statement.id;
     var node = _nodes[id];
@@ -25,9 +27,18 @@ final class EvalTree {
   EvalNode root(Statement s) => _nodeFor(s, null);
 
   /// Adopts the given [produced] statements as children of the specified [node]
-  List<EvalNode> adopt(EvalNode node, List<Statement> produced) {
+  List<EvalNode> adopt(EvalNode node, List<GeneratedStatement> produced) {
     final children = <EvalNode>[];
-    for (final p in produced) children.add(_nodeFor(p, node));
+    for (final (source, p) in produced) {
+      final childNode = _nodeFor(p, node);
+      children.add(childNode);
+
+      if (source != null) {
+        childNode.source = source;
+        _bySourceId.putIfAbsent(source, HashSet.new).add(childNode.id);
+      }
+    }
+
     assert(children.toSet().length == children.length);
 
     for (var i = 0; i < children.length; i++) children[i].index = i;
@@ -42,10 +53,11 @@ final class EvalTree {
     node.children.clear();
     node.markClean();
     _nodes.remove(node.id);
+    if (node.source != null) _bySourceId[node.source!]?.remove(node.id);
   }
 
   /// Returns the list of child nodes of [node] that are not present in the [produced] statements.
-  List<EvalNode> difference(EvalNode node, List<Statement> produced) {
+  List<EvalNode> difference(EvalNode node, Iterable<Statement> produced) {
     final ids = produced.map((s) => s.id).toSet();
     final out = <EvalNode>[];
     for (final c in node.children) {
@@ -68,6 +80,9 @@ final class EvalTree {
 
   /// Whether [a] is evaluated after [b].
   bool isAfter(EvalNode a, EvalNode b) => order(a, b) > 0;
+
+  /// Returns a list of all nodes that were sourced by the given statement ID.
+  Iterable<StatementId> bySource(StatementId source) => _bySourceId[source] ?? const {};
 
   /// Returns the relative evaluation order of [a] and [b]
   int order(EvalNode a, EvalNode b) {

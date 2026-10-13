@@ -92,8 +92,7 @@ extension Evaluator on EvalPass {
   /// Replaces the [node]'s children with the new products.
   List<EvalNode> _produce(EvalNode node) {
     final statement = node.statement;
-    final produced = <Statement>[];
-    final sources = <StatementId, StatementId>{};
+    final produced = <GeneratedStatement>[];
 
     final modifiers = statement.resolveModifiers(evaluation.contextFor(node.id));
     for (final (i, m) in modifiers.entries.indexed) {
@@ -102,20 +101,16 @@ extension Evaluator on EvalPass {
       final id = statement.id.derive(.of(0, i));
       final fragment = FragmentSelector(node.id, modifierIndex: i);
       final context = m.createContext(evaluation, id, fragment);
-      produced.add(m.produce(context));
+      produced.add((null, m.produce(context)));
     }
 
     if (statement is GeneratingStatement) {
       final result = statement.generate(evaluation.contextFor(node.id));
-      for (final (source, s) in result) {
-        produced.add(s);
-        if (source != null) sources[s.id] = source;
-      }
+      produced.addAll(result);
     }
 
-    for (final old in tree.difference(node, produced)) _drop(old);
+    for (final old in tree.difference(node, produced.map((e) => e.$2))) _drop(old);
     final children = tree.adopt(node, produced);
-    for (final child in children) child.source = sources[child.id];
     return children;
   }
 
@@ -349,15 +344,20 @@ extension Evaluator on EvalPass {
 
   void _markPrefabsDirty(Iterable<PrefabId> ids) {
     if (ids.isEmpty) return;
+
     for (final id in ids) {
       final instances = evaluation.prefabs.instancesOf(id);
+
       for (final i in instances) {
         final node = tree[i];
-        if (node != null) {
-          node.markDirty();
-          node.lastProduced = null;
-          queue.add(node.root.id);
-        }
+        if (node == null) continue;
+
+        node.markDirty();
+        node.lastProduced = null;
+        queue.add(node.root.id);
+
+        final origin = evaluation.prefabs.originOf(i);
+        if (origin != null) _markPrefabsDirty([origin.id]);
       }
     }
   }
