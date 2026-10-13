@@ -19,7 +19,6 @@ part 'transaction.dart';
 part 'selection.dart';
 part 'history.dart';
 part 'notifier.dart';
-part 'tree.dart';
 part 'asset_cache.dart';
 
 part 'utils/embed_vertex.dart';
@@ -45,7 +44,6 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     query = .new(this);
     history = .new(this);
     notifier = .new(this);
-    tree = .new(this);
     tickerProviderKey = .new();
     transientTransformAnimator = .new(this);
 
@@ -69,13 +67,13 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   late final SceneQuery query;
   late final SceneHistory history;
   late final SceneNotifier notifier;
-  late final SceneTree tree;
   late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final TransientTransformAnimator transientTransformAnimator;
 
   late final signal = Signal(this);
 
   Bundle get bundle => evaluation.bundle;
+  ObjectTree get tree => evaluation.object;
 
   S? statement<S extends Statement>(StatementId id) => evaluation.statement<S>(id);
   Iterable<CellRef> productsOf(StatementId id) => evaluation.productsOf(id);
@@ -141,7 +139,6 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     evaluation.dispose();
     selection.dispose();
     signal.dispose();
-    tree.dispose();
     super.dispose();
   }
 }

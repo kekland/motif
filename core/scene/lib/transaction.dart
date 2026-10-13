@@ -89,7 +89,7 @@ final class SceneTransaction {
     final sourcePath = <StatementId>[];
     for (var node = evaluation.tree[target]!; node.id != root; node = node.parent!) {
       final source = node.source;
-      if (source == null) return false;
+      if (source is! StatementId) return false;
       sourcePath.add(source);
     }
 

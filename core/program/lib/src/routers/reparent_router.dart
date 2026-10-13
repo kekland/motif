@@ -71,13 +71,14 @@ extension RouteReparent on Evaluation {
 
     if (into != .root) {
       final intoId = into.statementId;
+      final intoStatement = statement(intoId);
 
       // cannot reparent into generated/modifier frames
       if (rootOf(intoId) != intoId) return .failure({intoId});
 
       final StatementId? dstOriginId;
 
-      if (statement(intoId) is PrefabOriginStatement) {
+      if (intoStatement is PrefabOriginStatement) {
         dstOriginId = intoId;
       } else {
         dstOriginId = bundle.query
@@ -96,6 +97,11 @@ extension RouteReparent on Evaluation {
             accepted.remove(id);
           }
         }
+      }
+
+      // cannot reparent into leaf frames
+      if (intoStatement is LayoutBoxStatement) {
+        if (intoStatement.isLeaf) return .failure({intoId});
       }
     }
 

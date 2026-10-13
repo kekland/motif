@@ -47,6 +47,7 @@ part 'evaluation/commit.dart';
 part 'evaluation/tree.dart';
 part 'evaluation/pass.dart';
 part 'evaluation/evaluator.dart';
+part 'evaluation/indexes/object.dart';
 part 'evaluation/indexes/graph.dart';
 part 'evaluation/indexes/lineage.dart';
 part 'evaluation/indexes/live.dart';

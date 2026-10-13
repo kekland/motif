@@ -50,7 +50,20 @@ extension RouteTransform on Evaluation {
       if (routed.add(r)) pending.putIfAbsent(owner, () => {}).add(r);
     }
 
-    for (final t in targets) add(t);
+    final resolvedTargets = targets.toSet();
+    for (final t in targets) {
+      final dependents = bundle.cellDirectDependents(t.cell);
+      resolvedTargets.removeAll(dependents);
+
+      for (final parent in bundle.query.ancestorChain(t.cell)) {
+        if (resolvedTargets.contains(parent)) {
+          resolvedTargets.remove(t.cell);
+          break;
+        }
+      }
+    }
+
+    for (final t in resolvedTargets) add(t);
 
     while (pending.isNotEmpty) {
       final id = pending.keys.first;

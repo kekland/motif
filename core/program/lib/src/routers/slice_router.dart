@@ -12,10 +12,36 @@ extension RouteSlice on Evaluation {
       for (final child in children) walkCell(child.ref(bundle));
     }
 
-    for (final c in targets) walkCell(c);
+    final resolvedTargets = targets.toSet();
+    for (final t in targets) {
+      final dependents = bundle.cellDirectDependents(t.cell);
+      resolvedTargets.removeAll(dependents);
+
+      for (final parent in bundle.query.ancestorChain(t.cell)) {
+        if (resolvedTargets.contains(parent)) {
+          resolvedTargets.remove(t.cell);
+          break;
+        }
+      }
+    }
+
+    for (final c in resolvedTargets) walkCell(c);
 
     final copies = <StatementId>{};
-    for (final t in cells) copies.add(rootOf(t.statementId));
+    final children = <StatementId>{};
+    for (final t in cells) {
+      final obj = object.of(t.statementId);
+      if (obj == null) continue;
+
+      final statement = obj.statement;
+      if (statement is PrefabInstanceStatement) {
+        children.addAll(object.subtree(obj.id).skip(1).map((n) => n.id));
+      }
+
+      copies.add(obj.id);
+    }
+
+    copies.removeAll(children);
 
     final ground = <CellRef>{};
     final gone = <CellRef>{};

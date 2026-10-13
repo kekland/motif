@@ -48,9 +48,9 @@ final class SelectPreviousAction extends CommandAction<SelectPreviousIntent> {
     final selection = context.editor.selection;
     final tree = context.editor.scene.tree;
 
-    final range = tree.rangeOf(selection.statements);
+    final range = tree.flattenedRangeOf(selection.statements);
     if (range == null) {
-      final last = tree.root.children.last;
+      final last = tree.children.last;
       selection.setStatement(last.id);
     } else {
       final (start, end) = range;
@@ -77,9 +77,9 @@ final class SelectNextAction extends CommandAction<SelectNextIntent> {
     final selection = context.editor.selection;
     final tree = context.editor.scene.tree;
 
-    final range = tree.rangeOf(selection.statements);
+    final range = tree.flattenedRangeOf(selection.statements);
     if (range == null) {
-      final first = tree.root.children.first;
+      final first = tree.children.first;
       selection.setStatement(first.id);
     } else {
       final (start, end) = range;
@@ -124,11 +124,10 @@ final class SelectParentAction extends CommandAction<SelectParentIntent> {
     final selection = context.editor.selection;
     final tree = context.editor.scene.tree;
 
-    final nodes = selection.statements.map((id) => tree.nodeOf(id)?.parent).nonNulls.toSet();
+    final nodes = selection.statements.map((id) => tree.parentOf(id)).nonNulls.toSet();
     if (nodes.length != 1) return;
 
     final parent = nodes.first;
-    if (parent is! ObjectSceneNode) return;
     selection.setStatement(parent.id);
     context.editor.canvasUtils.showSelection();
   }

@@ -26,13 +26,13 @@ class TreePanel extends HookWidget {
       if (context.keyboard.isCtrlPressed) {
         context.editor.selection.toggleStatement(id);
       } else if (context.keyboard.isShiftPressed) {
-        final selectionRange = tree.rangeOf(selection.statements);
+        final selectionRange = tree.flattenedRangeOf(selection.statements);
         final target = tree.indexOf(id);
 
         if (selectionRange != null && target != null) {
           final (start, end) = selectionRange;
           final range = (min(start, target), max(end, target));
-          final statements = tree.nodesInRange(range.$1, range.$2).map((n) => n.id);
+          final statements = tree.nodesInFlattenedRange(range.$1, range.$2).map((n) => n.id);
           context.editor.selection.setStatements(statements);
         } else {
           context.editor.selection.setStatement(id);
@@ -97,7 +97,7 @@ class TreePanel extends HookWidget {
 
 final class const _SceneNodeWidget({
   super.key,
-  required final ObjectSceneNode node,
+  required final ObjectNode node,
   required final bool isExpanded,
   required final bool isSelected,
   required final bool isImplicitlySelected,
@@ -116,8 +116,8 @@ final class const _SceneNodeWidget({
     final hasSelection = isSelected || isImplicitlySelected;
 
     var hasPrefabParent = false;
-    SceneNode? n = node;
-    while (n is ObjectSceneNode) {
+    ObjectNode? n = node;
+    while (n is ObjectNode) {
       if (n.statement is PrefabOriginStatement) {
         hasPrefabParent = true;
         break;

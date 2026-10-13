@@ -101,7 +101,7 @@ extension Evaluator on EvalPass {
       final id = statement.id.derive(.of(0, i));
       final fragment = FragmentSelector(node.id, modifierIndex: i);
       final context = m.createContext(evaluation, id, fragment);
-      produced.add((null, m.produce(context)));
+      produced.add((i, m.produce(context)));
     }
 
     if (statement is GeneratingStatement) {
@@ -184,6 +184,7 @@ extension Evaluator on EvalPass {
     evaluation.lineage.attach(commit);
     evaluation.graph.attach(commit);
     evaluation.live.attach(commit);
+    evaluation.object.attach(commit);
     restyled.addAll(evaluation.style.attach(commit));
     added.addAll(commit.added);
     deleted.addAll(commit.deleted);
@@ -197,6 +198,7 @@ extension Evaluator on EvalPass {
     evaluation.graph.detach(commit);
     evaluation.live.detach(commit);
     evaluation.style.detach(commit);
+    evaluation.object.detach(commit);
     deleted.addAll(commit.added);
     added.addAll(commit.deleted);
     _unapply(commit);
@@ -304,6 +306,7 @@ extension Evaluator on EvalPass {
 
   void _onDelta(Delta delta) {
     movedFrames.addAll(delta.movedFrames);
+    evaluation.object.onMovedFrames(delta.movedFrames);
   }
 
   void _onMoved(Iterable<CellRef> cells) {

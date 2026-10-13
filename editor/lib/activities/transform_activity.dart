@@ -37,15 +37,19 @@ abstract class TransformActivity extends DragActivity with ExclusiveCursorDragAc
 
   List<StatementId> _resolveSelectedLayoutBoxes() {
     final statements = <StatementId>{};
+
     for (final id in session.absorbers) {
-      final statement = evaluation.statement(id);
+      final statement = evaluation.rootStatement(id);
       if (statement is LayoutBox) {
         final parent = (statement as LayoutBox).parentId;
-        if (parent == null || evaluation.statement(parent) is LayoutBox) {
+        final parentStatement = parent != null ? evaluation.statement(parent) : null;
+        if (parentStatement is PrefabInstanceStatement) continue;
+        if (parent == null || parentStatement is LayoutBox) {
           statements.add(id);
         }
       }
     }
+
     return statements.toList()..sort(evaluation.evalOrder);
   }
 

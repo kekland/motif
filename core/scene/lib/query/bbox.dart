@@ -9,7 +9,7 @@ extension SceneBboxQuery on SceneQuery {
     return bbox(scene.program.statements.map((s) => s.id));
   }
 
-  Aabb2 bbox(Iterable<StatementId> ids) {
+  Aabb2 bbox(Iterable<StatementId> ids, {FrameRef? space}) {
     if (ids.isEmpty) return .empty();
 
     var totalBbox = Aabb2.invertedInfinity();
@@ -17,7 +17,7 @@ extension SceneBboxQuery on SceneQuery {
     for (final id in ids) {
       final products = scene.productsOf(scene.evaluation.rootOf(id));
       for (final product in products) {
-        final productBbox = bundle.query.bbox(product, space: .root);
+        final productBbox = bundle.query.bbox(product, space: space ?? .root);
         if (productBbox != null) totalBbox.hull(productBbox);
       }
     }

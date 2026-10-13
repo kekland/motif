@@ -17,33 +17,33 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
 
     final value = await intent.resolve();
     final sliceData = value.custom('motif.program-slice');
+
+    ProgramSlice? insertions;
+    List<StatementId>? selection;
+
     if (sliceData != null) {
       try {
         final slice = ProgramSlice.decodeRaw(sliceData);
         if (slice == null) return;
+        insertions = slice;
+        // editor.edit((txn) {
+        //   for (final s in remapped.statements) txn.insert(s);
+        //   // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
+        // }, mergeKey: mergeKey);
 
-        final remapped = slice.materialize((_, s) => .allocate());
-        final mergeKey = Object();
-        editor.edit((txn) {
-          for (final s in remapped.statements) txn.insert(s);
-          // for (final o in remapped.styleOverrides.entries) txn.decorate(o.key, o.value);
-        }, mergeKey: mergeKey);
+        // final bbox = editor.scene.query.bbox(remapped.statements.map((s) => s.id));
 
-        final bbox = editor.scene.query.bbox(remapped.statements.map((s) => s.id));
+        // editor.edit((txn) {
+        //   final session = TransformSession.statements(
+        //     editor.scene,
+        //     remapped.statements.map((s) => s.id),
+        //     transaction: txn,
+        //   );
 
-        editor.edit((txn) {
-          final session = TransformSession.statements(
-            editor.scene,
-            remapped.statements.map((s) => s.id),
-            transaction: txn,
-          );
-
-          final center = bbox.center;
-          session.apply(Mat4.translation2(editor.canvasPosition - center));
-        }, mergeKey: mergeKey);
-
-        editor.selection.setStatements(remapped.statements.map((s) => s.id));
-        return;
+        //   final center = bbox.center;
+        //   session.apply(Mat4.translation2(editor.canvasPosition - center));
+        // }, mergeKey: mergeKey);
+        // editor.selection.setStatements(remapped.statements.map((s) => s.id));
       } catch (e, st) {
         logger.warning('failed to paste slice', e, st);
       }
@@ -73,11 +73,12 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
               }
             });
 
+            selection = statements.map((s) => s.id).toList();
             return;
           }
         }
 
-        Vec2 offset = editor.canvasPosition;
+        Vec2 offset = .zero();
         final statements = <Statement>[];
 
         for (final imageData in images) {
@@ -93,7 +94,7 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
           offset = .new(offset.x + asset.width.toDouble(), offset.y);
         }
 
-        editor.edit((txn) => txn.insertAll(statements));
+        insertions = .new(statements: statements);
         return;
       } catch (e, st) {
         logger.warning('failed to paste image', e, st);
@@ -109,20 +110,96 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
         final asset = family.assetFor(face);
         editor.maybeAddAsset(asset);
 
-        final statement = TextStatement(
-          transform: .translation2(editor.canvasPosition),
-          textFormat: textFormat,
-          edgeStyle: .none,
-          faceStyle: .new(decorations: .white),
-          size: .contain(),
-          text: text,
+        insertions = .new(
+          statements: [
+            TextStatement(
+              textFormat: textFormat,
+              edgeStyle: .none,
+              faceStyle: .new(decorations: .white),
+              size: .contain(),
+              text: text,
+            ),
+          ],
         );
-
-        editor.edit((txn) => txn.insert(statement));
-        return;
       } catch (e, st) {
         logger.warning('failed to paste text', e, st);
       }
+    }
+
+    if (insertions != null) {
+      final parents = <FrameRef>{};
+      final created = <FrameRef, List<StatementId>>{};
+
+      editor.edit((txn) {
+        final selected = editor.selection.statements.map(editor.statement);
+        final targetParents = selected.whereType<FramedStatement>().map((f) => f.frame).toSet();
+
+        var totalBbox = Aabb2.invertedInfinity();
+
+        if (targetParents.isEmpty) {
+          targetParents.add(.root);
+        }
+
+        for (final targetFrame in targetParents) {
+          final materialized = insertions!.materialize((_, _) => .allocate());
+          final ids = materialized.statements.map((s) => s.id).toList();
+          txn.insertAll(materialized.statements);
+          txn.flush();
+
+          final targets = <CellRef>{};
+          for (final id in ids) targets.addAll(editor.productsOf(id));
+
+          // try to find a parent
+          var frame = targetFrame;
+          while (frame != .root) {
+            final result = txn.evaluation.routeReparent(targets, frame);
+            print('frame: ${editor.statement(frame.statementId)}, result: $result');
+
+            if (result is! ReparentSuccess) {
+              frame = editor.bundle.query.parent(frame)!;
+            } else {
+              break;
+            }
+          }
+
+          if (!parents.add(frame)) {
+            for (final id in ids) txn.remove(id);
+            continue;
+          }
+
+          created[frame] ??= [];
+          created[frame]!.addAll(ids);
+
+          if (frame != .root) txn.reparent(targets, frame);
+          txn.flush();
+
+          final bbox = editor.scene.query.bbox(ids, space: frame);
+
+          if (frame == .root) {
+            totalBbox.hull(bbox);
+          } else {
+            final session = TransformSession.statements(editor.scene, ids, transaction: txn);
+            final parentBbox = editor.bundle.query.bbox(frame)!;
+            final offset = bbox.center - parentBbox.center;
+            session.apply(Mat4.translation2(-offset));
+          }
+        }
+
+        final offset = editor.canvasPosition - totalBbox.center;
+        final session = TransformSession.statements(
+          editor.scene,
+          created[FrameRef.root] ?? <StatementId>[],
+          transaction: txn,
+        );
+        session.apply(Mat4.translation2(offset));
+      });
+
+      selection = created.values.expand((ids) => ids).toList();
+    }
+
+    if (selection != null) {
+      editor.selection.setStatements(selection);
+      editor.canvasUtils.showOnScreen(selection);
     }
   }
 }

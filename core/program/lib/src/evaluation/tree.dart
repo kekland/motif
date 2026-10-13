@@ -8,8 +8,6 @@ final class EvalTree {
   final _nodes = <StatementId, EvalNode>{};
   EvalNode? operator [](StatementId id) => _nodes[id];
 
-  final _bySourceId = <StatementId, HashSet<StatementId>>{};
-
   EvalNode _nodeFor(Statement statement, EvalNode? parent) {
     final id = statement.id;
     var node = _nodes[id];
@@ -35,7 +33,6 @@ final class EvalTree {
 
       if (source != null) {
         childNode.source = source;
-        _bySourceId.putIfAbsent(source, HashSet.new).add(childNode.id);
       }
     }
 
@@ -53,7 +50,6 @@ final class EvalTree {
     node.children.clear();
     node.markClean();
     _nodes.remove(node.id);
-    if (node.source != null) _bySourceId[node.source!]?.remove(node.id);
   }
 
   /// Returns the list of child nodes of [node] that are not present in the [produced] statements.
@@ -80,9 +76,6 @@ final class EvalTree {
 
   /// Whether [a] is evaluated after [b].
   bool isAfter(EvalNode a, EvalNode b) => order(a, b) > 0;
-
-  /// Returns a list of all nodes that were sourced by the given statement ID.
-  Iterable<StatementId> bySource(StatementId source) => _bySourceId[source] ?? const {};
 
   /// Returns the relative evaluation order of [a] and [b]
   int order(EvalNode a, EvalNode b) {
@@ -123,7 +116,7 @@ final class EvalNode {
   int dirtyBelow = 0;
   Statement? lastProduced;
   Statement? lastStatement;
-  StatementId? source;
+  Object? source;
 
   bool get childrenStale => !identical(lastProduced, statement);
 

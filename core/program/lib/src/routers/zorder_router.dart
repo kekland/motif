@@ -7,7 +7,7 @@ extension RouteZOrder on Evaluation {
       while (true) {
         final s = statement(target.statementId);
         if (s == null) return null;
-        if (s is! ShapeStatement || s.frame == target) return target;
+        if (s is! FramedStatement || s.frame == target) return target;
         target = s.frame;
       }
     }

@@ -31,15 +31,7 @@ final class TransformSession {
     Object? mergeKey,
   }) {
     final products = <Ref>{};
-    for (final id in ids) {
-      products.addAll(scene.productsOf(id));
-    }
-
-    for (final p in products.toList()) {
-      final dependents = scene.bundle.cellDirectDependents(p.cell);
-      products.removeAll(dependents);
-    }
-
+    for (final id in ids) products.addAll(scene.productsOf(id));
     return .of(scene, products, transaction: transaction, mergeKey: mergeKey);
   }
 

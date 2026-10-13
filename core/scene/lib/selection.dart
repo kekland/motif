@@ -153,9 +153,8 @@ final class SceneSelection with ChangeNotifier {
   bool isImplicitlySelected(StatementId id) {
     if (_statements.contains(id)) return true;
 
-    final node = scene.tree.nodeOf(id);
-    final parent = node?.parent;
-    if (parent is ObjectSceneNode) return isImplicitlySelected(parent.id);
+    final parent = scene.tree.parentOf(id);
+    if (parent != null) return isImplicitlySelected(parent.id);
     return false;
   }
 }

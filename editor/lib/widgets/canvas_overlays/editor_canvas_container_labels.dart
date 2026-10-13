@@ -8,9 +8,9 @@ final class const EditorCanvasContainersLabels({
   Widget build(BuildContext context) {
     final scene = context.editor.scene;
     final containers = useListenableSelector(scene, () {
-      final containers = <ObjectSceneNode>[];
+      final containers = <ObjectNode>[];
 
-      for (final node in scene.tree.root.children) {
+      for (final node in scene.tree.children) {
         if (node.statement is ContainerStatement) {
           containers.add(node);
         }
@@ -35,7 +35,7 @@ final class const EditorCanvasContainersLabels({
 final class const _ContainerLabel({
   super.key,
   required final Scene scene,
-  required final ObjectSceneNode node,
+  required final ObjectNode node,
   required final Matrix4 transform,
 }) extends HookWidget {
   @override

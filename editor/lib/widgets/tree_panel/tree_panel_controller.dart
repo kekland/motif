@@ -47,7 +47,7 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
   }
 
   final Editor editor;
-  final SceneTree tree;
+  final ObjectTree tree;
   final SceneSelection selection;
   final GlobalKey listKey;
   final ScrollController scrollController;
@@ -62,8 +62,8 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
     notifyListeners();
   }
 
-  final _nodes = <ObjectSceneNode>[];
-  List<ObjectSceneNode> get nodes => _nodes;
+  final _nodes = <ObjectNode>[];
+  List<ObjectNode> get nodes => _nodes;
 
   final _nodeIndices = <StatementId, int>{};
   int indexOf(StatementId id) => _nodeIndices[id] ?? -1;
@@ -96,7 +96,7 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
     var changed = false;
     for (final s in selected) {
       var parent = tree.nodeOf(s)?.parent;
-      while (parent is ObjectSceneNode) {
+      while (parent is ObjectNode) {
         final didChange = _expanded.add(parent.id);
         if (didChange) changed = true;
         parent = parent.parent;
@@ -109,6 +109,7 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
     final minIndex = indices.reduce(min);
     final offset = minIndex * TreePanel.itemHeight;
 
+    if (!scrollController.hasClients) return;
     final position = scrollController.position;
 
     final viewportMin = position.extentBefore;
@@ -135,16 +136,16 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
     _nodes.clear();
     _nodeIndices.clear();
 
-    void walk(ObjectSceneNode node) {
+    void walk(ObjectNode node) {
       _nodeIndices[node.id] = _nodes.length;
       _nodes.add(node);
 
       if (isExpanded(node.statement.id)) {
-        for (final c in node.children.whereType<ObjectSceneNode>()) walk(c);
+        for (final c in node.children.whereType<ObjectNode>()) walk(c);
       }
     }
 
-    for (final n in tree.root.children.whereType<ObjectSceneNode>()) walk(n);
+    for (final n in tree.children.whereType<ObjectNode>()) walk(n);
     notifyListeners();
   }
 
@@ -175,8 +176,8 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
       final targets = selection.map((id) => editor.productsOf(id)).expand((e) => e).toSet();
       final into = switch (anchor) {
         SceneTreeDragAnchorInside() => node.frame!,
-        SceneTreeDragAnchorBefore() => node.parent!.frame!,
-        SceneTreeDragAnchorAfter() => node.parent!.frame!,
+        SceneTreeDragAnchorBefore() => node.parent?.frame! ?? .root,
+        SceneTreeDragAnchorAfter() => node.parent?.frame! ?? .root,
       };
 
       final before = switch (anchor) {
@@ -328,10 +329,10 @@ final class SceneTreeDragController with ChangeNotifier, ChangeNotifierDisposabl
     return .after(_findAncestorAtDepth(a, clampedDepth).id);
   }
 
-  ObjectSceneNode _findAncestorAtDepth(ObjectSceneNode node, int targetDepth) {
+  ObjectNode _findAncestorAtDepth(ObjectNode node, int targetDepth) {
     var current = node;
-    while (current.depth > targetDepth && current.parent is! RootSceneNode) {
-      current = current.parent! as ObjectSceneNode;
+    while (current.depth > targetDepth && current.parent != null) {
+      current = current.parent!;
     }
     return current;
   }

@@ -1,6 +1,6 @@
 part of '../../_program.dart';
 
-typedef GeneratedStatement = (StatementId? source, Statement statement);
+typedef GeneratedStatement = (Object? source, Statement statement);
 
 mixin GeneratingStatement on Statement {
   Iterable<GeneratedStatement> generate(EvalContext context);

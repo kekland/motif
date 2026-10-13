@@ -14,6 +14,7 @@ final class Evaluation {
     layout = .new(this);
     transientTransform = .new();
     prefabs = .new(this);
+    object = .new(this);
 
     assetCache?.addFetchListener(_onAssetLoaded);
   }
@@ -28,6 +29,7 @@ final class Evaluation {
   late final LayoutTree layout;
   late final TransientTransforms transientTransform;
   late final PrefabIndex prefabs;
+  late final ObjectTree object;
 
   AssetManifest get assetManifest => program.assetManifest;
 
@@ -134,6 +136,7 @@ final class Evaluation {
   }
 
   void dispose() {
+    object.dispose();
     assetCache?.removeFetchListener(_onAssetLoaded);
     _updateNotifier.dispose();
   }
