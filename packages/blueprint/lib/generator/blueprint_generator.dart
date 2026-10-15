@@ -14,6 +14,8 @@ class SocketDescription {
     required this.category,
     required this.defaultValue,
     this.multi = false,
+    this.enum_ = false,
+    this.enumValues,
   });
 
   final String name;
@@ -21,6 +23,8 @@ class SocketDescription {
   final String category;
   final String defaultValue;
   final bool multi;
+  final bool enum_;
+  final List<String>? enumValues;
 
   String get baseClassName => '${name}Socket';
   String get inputClassName => '${name}InputSocket';
@@ -54,7 +58,26 @@ abstract class VariableDescription {
 }
 
 class InputVariableDescription extends VariableDescription {
-  const InputVariableDescription({required super.name, required super.type, super.socketType});
+  const InputVariableDescription({
+    required super.name,
+    required super.type,
+    super.socketType,
+    this.defaultValue,
+  });
+
+  const InputVariableDescription.constant({
+    required super.name,
+    required super.type,
+    this.defaultValue,
+  }) : super(socketType: .constant);
+
+  const InputVariableDescription.dynamic({
+    required super.name,
+    required super.type,
+    this.defaultValue,
+  }) : super(socketType: .dynamic);
+
+  final String? defaultValue;
 
   // dart format off
   @override String get ioClassName => type.resolveInputName(socketType);
@@ -63,6 +86,16 @@ class InputVariableDescription extends VariableDescription {
 
 class OutputVariableDescription extends VariableDescription {
   const OutputVariableDescription({required super.name, required super.type, super.socketType});
+
+  const OutputVariableDescription.constant({
+    required super.name,
+    required super.type,
+  }) : super(socketType: .constant);
+
+  const OutputVariableDescription.dynamic({
+    required super.name,
+    required super.type,
+  }) : super(socketType: .dynamic);
 
   // dart format off
   @override String get ioClassName => type.resolveOutputName(socketType);
@@ -119,8 +152,11 @@ List<String> generateBlueprint({
   }
 
   for (final socket in _sockets.values) {
-    code.addAll(generateSocket(socket));
-    code.add('');
+    final generatedSocket = generateSocket(socket);
+    if (generatedSocket.isNotEmpty) {
+      code.addAll(generatedSocket);
+      code.add('');
+    }
   }
 
   code.add('// dart format on');

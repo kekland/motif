@@ -21,8 +21,10 @@ abstract class Node {
   late final List<Socket> _sockets;
   Iterable<Socket> get sockets => _sockets;
 
+  Iterable<Object> get properties;
+
   Node copyWith({NodeId? id});
-  Node copyWithInline(int index, Object? value);
+  Node copyWithProperty(int index, Object? value);
 
   void execute(BlueprintExecution execution);
 }

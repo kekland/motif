@@ -242,6 +242,133 @@ class TextVerticalAlignment extends $pb.ProtobufEnum {
   const TextVerticalAlignment._(super.value, super.name);
 }
 
+class MathOperatorType extends $pb.ProtobufEnum {
+  static const MathOperatorType MATH_OPERATOR_TYPE_ADD =
+      MathOperatorType._(0, _omitEnumNames ? '' : 'MATH_OPERATOR_TYPE_ADD');
+  static const MathOperatorType MATH_OPERATOR_TYPE_SUBTRACT =
+      MathOperatorType._(
+          1, _omitEnumNames ? '' : 'MATH_OPERATOR_TYPE_SUBTRACT');
+  static const MathOperatorType MATH_OPERATOR_TYPE_MULTIPLY =
+      MathOperatorType._(
+          2, _omitEnumNames ? '' : 'MATH_OPERATOR_TYPE_MULTIPLY');
+  static const MathOperatorType MATH_OPERATOR_TYPE_DIVIDE =
+      MathOperatorType._(3, _omitEnumNames ? '' : 'MATH_OPERATOR_TYPE_DIVIDE');
+
+  static const $core.List<MathOperatorType> values = <MathOperatorType>[
+    MATH_OPERATOR_TYPE_ADD,
+    MATH_OPERATOR_TYPE_SUBTRACT,
+    MATH_OPERATOR_TYPE_MULTIPLY,
+    MATH_OPERATOR_TYPE_DIVIDE,
+  ];
+
+  static final $core.List<MathOperatorType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static MathOperatorType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MathOperatorType._(super.value, super.name);
+}
+
+class VectorMathOperatorType extends $pb.ProtobufEnum {
+  static const VectorMathOperatorType VECTOR_MATH_OPERATOR_TYPE_ADD =
+      VectorMathOperatorType._(
+          0, _omitEnumNames ? '' : 'VECTOR_MATH_OPERATOR_TYPE_ADD');
+  static const VectorMathOperatorType VECTOR_MATH_OPERATOR_TYPE_SUBTRACT =
+      VectorMathOperatorType._(
+          1, _omitEnumNames ? '' : 'VECTOR_MATH_OPERATOR_TYPE_SUBTRACT');
+
+  static const $core.List<VectorMathOperatorType> values =
+      <VectorMathOperatorType>[
+    VECTOR_MATH_OPERATOR_TYPE_ADD,
+    VECTOR_MATH_OPERATOR_TYPE_SUBTRACT,
+  ];
+
+  static final $core.List<VectorMathOperatorType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static VectorMathOperatorType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const VectorMathOperatorType._(super.value, super.name);
+}
+
+class TrigMathOperatorType extends $pb.ProtobufEnum {
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_SIN =
+      TrigMathOperatorType._(
+          0, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_SIN');
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_COS =
+      TrigMathOperatorType._(
+          1, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_COS');
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_TAN =
+      TrigMathOperatorType._(
+          2, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_TAN');
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_ARCSIN =
+      TrigMathOperatorType._(
+          3, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_ARCSIN');
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_ARCCOS =
+      TrigMathOperatorType._(
+          4, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_ARCCOS');
+  static const TrigMathOperatorType TRIG_MATH_OPERATOR_TYPE_ARCTAN =
+      TrigMathOperatorType._(
+          5, _omitEnumNames ? '' : 'TRIG_MATH_OPERATOR_TYPE_ARCTAN');
+
+  static const $core.List<TrigMathOperatorType> values = <TrigMathOperatorType>[
+    TRIG_MATH_OPERATOR_TYPE_SIN,
+    TRIG_MATH_OPERATOR_TYPE_COS,
+    TRIG_MATH_OPERATOR_TYPE_TAN,
+    TRIG_MATH_OPERATOR_TYPE_ARCSIN,
+    TRIG_MATH_OPERATOR_TYPE_ARCCOS,
+    TRIG_MATH_OPERATOR_TYPE_ARCTAN,
+  ];
+
+  static final $core.List<TrigMathOperatorType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
+  static TrigMathOperatorType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const TrigMathOperatorType._(super.value, super.name);
+}
+
+class MathConstantType extends $pb.ProtobufEnum {
+  static const MathConstantType MATH_CONSTANT_TYPE_PI =
+      MathConstantType._(0, _omitEnumNames ? '' : 'MATH_CONSTANT_TYPE_PI');
+  static const MathConstantType MATH_CONSTANT_TYPE_E =
+      MathConstantType._(1, _omitEnumNames ? '' : 'MATH_CONSTANT_TYPE_E');
+
+  static const $core.List<MathConstantType> values = <MathConstantType>[
+    MATH_CONSTANT_TYPE_PI,
+    MATH_CONSTANT_TYPE_E,
+  ];
+
+  static final $core.List<MathConstantType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static MathConstantType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MathConstantType._(super.value, super.name);
+}
+
+class MathRoundType extends $pb.ProtobufEnum {
+  static const MathRoundType MATH_ROUND_TYPE_FLOOR =
+      MathRoundType._(0, _omitEnumNames ? '' : 'MATH_ROUND_TYPE_FLOOR');
+  static const MathRoundType MATH_ROUND_TYPE_CEIL =
+      MathRoundType._(1, _omitEnumNames ? '' : 'MATH_ROUND_TYPE_CEIL');
+  static const MathRoundType MATH_ROUND_TYPE_ROUND =
+      MathRoundType._(2, _omitEnumNames ? '' : 'MATH_ROUND_TYPE_ROUND');
+
+  static const $core.List<MathRoundType> values = <MathRoundType>[
+    MATH_ROUND_TYPE_FLOOR,
+    MATH_ROUND_TYPE_CEIL,
+    MATH_ROUND_TYPE_ROUND,
+  ];
+
+  static final $core.List<MathRoundType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static MathRoundType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MathRoundType._(super.value, super.name);
+}
+
 class GlueVerticesStatement_Position extends $pb.ProtobufEnum {
   static const GlueVerticesStatement_Position
       GLUE_VERTICES_STATEMENT_POSITION_FIRST = GlueVerticesStatement_Position._(

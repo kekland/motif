@@ -61,10 +61,12 @@ const Connection$json = {
       '6': '.motif.SocketRef',
       '10': 'input'
     },
+    {'1': 'index', '3': 3, '4': 1, '5': 5, '10': 'index'},
   ],
 };
 
 /// Descriptor for `Connection`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List connectionDescriptor = $convert.base64Decode(
     'CgpDb25uZWN0aW9uEigKBm91dHB1dBgBIAEoCzIQLm1vdGlmLlNvY2tldFJlZlIGb3V0cHV0Ei'
-    'YKBWlucHV0GAIgASgLMhAubW90aWYuU29ja2V0UmVmUgVpbnB1dA==');
+    'YKBWlucHV0GAIgASgLMhAubW90aWYuU29ja2V0UmVmUgVpbnB1dBIUCgVpbmRleBgDIAEoBVIF'
+    'aW5kZXg=');

@@ -708,21 +708,28 @@ message Node {
   NodeId id = 1;
 
   oneof kind {
-    GeneratorInput  generator_input  = 10;
+    GeneratorInput generator_input = 10;
     GeneratorOutput generator_output = 11;
-    Array           array            = 12;
-    Fillet          fillet           = 13;
-    Number          number           = 14;
-    Vector          vector           = 15;
-    Vertices        vertices         = 16;
-    RandomVector    random_vector    = 17;
-    Index           index            = 18;
-    ScaleVector     scale_vector     = 19;
-    ConnectVertices connect_vertices = 20;
-    Face            face             = 21;
-    Polar           polar            = 22;
-    Pi              pi               = 23;
-    Divide          divide           = 24;
+    Merge merge = 12;
+    Vertex vertex = 13;
+    Rectangle rectangle = 14;
+    Array array = 15;
+    Transform transform = 16;
+    ConnectVertices connect_vertices = 17;
+    MakeFace make_face = 18;
+    BoundingBox bounding_box = 19;
+    Index index = 20;
+    Math math = 21;
+    VectorMath vector_math = 22;
+    TrigMath trig_math = 23;
+    Expression expression = 24;
+    MathConstant math_constant = 25;
+    MathRound math_round = 26;
+    CombineXY combine_x_y = 27;
+    SeparateXY separate_x_y = 28;
+    Polar polar = 29;
+    RandomFloat random_float = 30;
+    RandomVector random_vector = 31;
   }
 
   message GeneratorInput {
@@ -731,63 +738,131 @@ message Node {
   message GeneratorOutput {
   }
 
+  message Merge {
+  }
+
+  message Vertex {
+    optional Vec2 position = 1;
+  }
+
+  message Rectangle {
+    optional Vec2 center = 1;
+    optional Vec2 size = 2;
+  }
+
   message Array {
-    optional ProgramSlice slice  = 1;
-    optional Vec2         count  = 2;
-    optional Vec2         offset = 3;
+    optional ProgramSlice slice = 1;
+    optional Vec2 offset = 2;
+    optional Vec2 count = 3;
   }
 
-  message Fillet {
-    optional ProgramSlice slice  = 1;
-    optional Vec2         radius = 2;
+  message Transform {
+    optional ProgramSlice slice = 1;
+    optional Vec2 translation = 2;
+    optional Vec2 scale = 3;
+    optional double rotation = 4;
   }
 
-  message Number {
-    optional double value = 1;
+  message ConnectVertices {
+    optional bool closed = 1;
+    optional ProgramSlice slice = 2;
   }
 
-  message Vector {
-    optional Vec2 value = 1;
+  message MakeFace {
+    optional ProgramSlice slice = 1;
   }
 
-  message Vertices {
-    optional int32 count    = 1;
-    optional Vec2  position = 2;
-  }
-
-  message RandomVector {
-    optional int32 seed = 1;
-    optional Vec2  min  = 2;
-    optional Vec2  max  = 3;
+  message BoundingBox {
+    optional ProgramSlice slice = 1;
   }
 
   message Index {
   }
 
-  message ScaleVector {
-    optional Vec2   vector = 1;
-    optional double factor = 2;
+  message Math {
+    optional double a = 1;
+    optional double b = 2;
+    optional MathOperatorType operator = 3;
   }
 
-  message ConnectVertices {
-    optional ProgramSlice slice  = 1;
-    optional bool         closed = 2;
+  message VectorMath {
+    optional Vec2 a = 1;
+    optional Vec2 b = 2;
+    optional VectorMathOperatorType operator = 3;
   }
 
-  message Face {
-    optional ProgramSlice slice = 1;
+  message TrigMath {
+    optional double input = 1;
+    optional TrigMathOperatorType operator = 2;
+  }
+
+  message Expression {
+    optional string expression = 1;
+  }
+
+  message MathConstant {
+    optional MathConstantType constant = 1;
+  }
+
+  message MathRound {
+    optional double value = 1;
+    optional MathRoundType mode = 2;
+  }
+
+  message CombineXY {
+    optional double x = 1;
+    optional double y = 2;
+  }
+
+  message SeparateXY {
+    optional Vec2 value = 1;
   }
 
   message Polar {
     optional double radius = 1;
-    optional double angle  = 2;
+    optional double angle = 2;
   }
 
-  message Pi {
+  message RandomFloat {
+    optional int32 seed = 1;
+    optional double min = 2;
+    optional double max = 3;
   }
 
-  message Divide {
-    optional double numerator   = 1;
-    optional double denominator = 2;
+  message RandomVector {
+    optional int32 seed = 1;
+    optional Vec2 min = 2;
+    optional Vec2 max = 3;
   }
+}
+enum MathOperatorType {
+  MATH_OPERATOR_TYPE_ADD = 0;
+  MATH_OPERATOR_TYPE_SUBTRACT = 1;
+  MATH_OPERATOR_TYPE_MULTIPLY = 2;
+  MATH_OPERATOR_TYPE_DIVIDE = 3;
+}
+
+enum VectorMathOperatorType {
+  VECTOR_MATH_OPERATOR_TYPE_ADD = 0;
+  VECTOR_MATH_OPERATOR_TYPE_SUBTRACT = 1;
+}
+
+enum TrigMathOperatorType {
+  TRIG_MATH_OPERATOR_TYPE_SIN = 0;
+  TRIG_MATH_OPERATOR_TYPE_COS = 1;
+  TRIG_MATH_OPERATOR_TYPE_TAN = 2;
+  TRIG_MATH_OPERATOR_TYPE_ARCSIN = 3;
+  TRIG_MATH_OPERATOR_TYPE_ARCCOS = 4;
+  TRIG_MATH_OPERATOR_TYPE_ARCTAN = 5;
+}
+
+enum MathConstantType {
+  MATH_CONSTANT_TYPE_PI = 0;
+  MATH_CONSTANT_TYPE_E = 1;
+}
+
+enum MathRoundType {
+  MATH_ROUND_TYPE_FLOOR = 0;
+  MATH_ROUND_TYPE_CEIL = 1;
+  MATH_ROUND_TYPE_ROUND = 2;
 }

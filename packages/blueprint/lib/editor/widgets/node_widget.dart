@@ -15,10 +15,11 @@ class NodeWidget extends HookWidget {
     final node = useExistingSignal(editor.node(id)).value;
     final isSelected = useListenable(editor.selection).isNodeSelected(id);
     final color = context.watch<BlueprintColorResolvers>();
+    final enums = context.watch<BlueprintEnums>();
 
     Widget child = GestureSurface(
       onTap: () => context.invoke(intents.selectNode(id)),
-      width: 160.0,
+      width: 200.0,
       color: context.colors.surface.primary,
       clipBehavior: .none,
       shadows: context.shadows.small,
@@ -46,7 +47,18 @@ class NodeWidget extends HookWidget {
           ),
           Divider(),
           const SizedBox(height: 4.0),
-          for (final input in node.inputs) NodeInputSocketWidget(editor: editor, socket: input),
+          for (final (i, p) in node.properties.indexed)
+            ?switch (p) {
+              ListInputSocket s => NodeListInputSocketWidget(editor: editor, socket: s),
+              InputSocket s => NodeInputSocketWidget(editor: editor, socket: s),
+              Enum e => NodeEnumWidget(
+                editor: editor,
+                enums: enums,
+                value: e,
+                onChanged: (e) => editor.replace(node.copyWithProperty(i, e)),
+              ),
+              _ => null,
+            },
           for (final output in node.outputs) NodeOutputSocketWidget(socket: output),
           const SizedBox(height: 4.0),
         ],
@@ -101,13 +113,14 @@ class NodeInputSocketWidget extends HookWidget {
     final value = useComputed<Object?>(() => signal().inlineValue);
 
     late final Widget? trailing;
+    final isInline = valueBuilder?.isInline ?? false;
 
     if (!isConnected && valueBuilder != null) {
       trailing = valueBuilder.build(
         context,
         socket,
         value,
-        (v) => editor.replace(socket.node.copyWithInline(socket.index, v)),
+        (v) => editor.replace(socket.node.copyWithProperty(socket.index, v)),
       );
     } else {
       trailing = null;
@@ -119,22 +132,68 @@ class NodeInputSocketWidget extends HookWidget {
           height: 24.0,
           child: Row(
             children: [
-              BaseSocketWidget(socket: socket, dx: -1.0),
+              BaseSocketWidget(socket: socket, index: 0, dx: -1.0),
               const SizedBox(width: 12.0),
-              Text(
-                socket.name,
-                style: context.typography.body.secondary,
+              Expanded(
+                child: Text(
+                  socket.name,
+                  style: context.typography.body.secondary,
+                ),
               ),
+              if (isInline) ...[
+                const SizedBox(width: 12.0),
+                ?trailing,
+                const SizedBox(width: 4.0),
+              ],
             ],
           ),
         ),
-        if (trailing != null) ...[
+        if (trailing != null && !isInline) ...[
           const SizedBox(height: 4.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: trailing,
           ),
           const SizedBox(height: 8.0),
+        ],
+      ],
+    );
+  }
+}
+
+final class const NodeListInputSocketWidget({
+  super.key,
+  required final BlueprintEditor editor,
+  required final ListInputSocket socket,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final signal = editor.socket<InputSocket>(this.socket.ref);
+    final socket = useExistingSignal(signal).value;
+    final connections = editor.socketConnections(socket.ref);
+    final maxIndex = connections.isEmpty ? -1 : connections.map((c) => c.index).reduce(max);
+
+    return Column(
+      children: [
+        for (var i = 0; i <= maxIndex + 1; i++) ...[
+          SizedBox(
+            height: 24.0,
+            child: Row(
+              children: [
+                BaseSocketWidget(
+                  key: ValueKey(i),
+                  socket: socket,
+                  index: i,
+                  dx: -1.0,
+                ),
+                const SizedBox(width: 12.0),
+                Text(
+                  socket.name,
+                  style: context.typography.body.secondary,
+                ),
+              ],
+            ),
+          ),
         ],
       ],
     );
@@ -158,7 +217,7 @@ class NodeOutputSocketWidget extends StatelessWidget {
             style: context.typography.body.secondary,
           ),
           const SizedBox(width: 12.0),
-          BaseSocketWidget(socket: socket, dx: 1.0),
+          BaseSocketWidget(socket: socket, index: 0, dx: 1.0),
         ],
       ),
     );
@@ -254,5 +313,34 @@ class MoveSelectedNodesActivity extends DragActivity {
     }
 
     editor.edit(() => editor.moveMany(positions), mergeKey: mergeKey);
+  }
+}
+
+final class const NodeEnumWidget({
+  super.key,
+  required final BlueprintEditor editor,
+  required final Enum value,
+  required final BlueprintEnums enums,
+  required final ValueChanged<Enum> onChanged,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final input = useSignal(value);
+    useSimpleEffect(() => input.value = value, [value]);
+
+    final values = enums.values[value.runtimeType];
+    if (values == null) {
+      _logger.warning('no enum values found for enum type ${value.runtimeType}');
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const .symmetric(horizontal: 12.0, vertical: 8.0),
+      child: EnumInputField(
+        values: values,
+        value: input,
+        onChanged: onChanged,
+      ),
+    );
   }
 }

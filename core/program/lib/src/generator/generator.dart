@@ -3,21 +3,20 @@ import 'dart:typed_data';
 
 import 'package:blueprint/core.dart';
 import 'package:geometry/geometry.dart';
+import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:schema/program.dart' as gen;
 import 'package:shared/shared.dart';
 
-import 'generator.g.dart';
-export 'generator.codec.g.dart';
+export 'generator.g.dart';
+export 'generator_codec.dart';
 
-part 'nodes/array.dart';
-part 'nodes/fields.dart';
-part 'nodes/generator_input.dart';
-part 'nodes/generator_output.dart';
-part 'nodes/fillet.dart';
-part 'nodes/primitives.dart';
-part 'nodes/values.dart';
-part 'nodes/math.dart';
+part 'nodes/io_nodes.dart';
+part 'nodes/math_nodes.dart';
+part 'nodes/primitive_nodes.dart';
+part 'nodes/query_nodes.dart';
+part 'nodes/geometry_nodes.dart';
+part 'nodes/field_nodes.dart';
 
 class Generator extends Blueprint<Generator> {
   Generator({super.nodes, super.connections, super.positions, super.fixed}) {
@@ -32,7 +31,7 @@ class Generator extends Blueprint<Generator> {
       nodes: [inputNode, outputNode],
       connections: [.new(inputNode.o.slice.ref, outputNode.i.slices.ref)],
       fixed: {inputNode.id, outputNode.id},
-      positions: {inputNode.id: .new(0.0, 0.0), outputNode.id: .new(200.0, 0.0)},
+      positions: {inputNode.id: .new(0.0, 0.0), outputNode.id: .new(360.0, 0.0)},
     );
 
     return generator;
@@ -84,7 +83,7 @@ extension GeneratorBlueprintExecution on BlueprintExecution {
 
   StatementId derive(Node node, FieldContext context) {
     final base = U64.of(0, node.id.value);
-    final key = Mix64.mix(base, context.id!);
+    final key = Mix64.mix(base, context.id ?? .zero);
     return evalContext.derive(key, origin: node);
   }
 
@@ -94,22 +93,25 @@ extension GeneratorBlueprintExecution on BlueprintExecution {
     return evalContext.derive(key, origin: node);
   }
 
-  Iterable<FieldContext> sliceContext(ProgramSlice slice) sync* {
-    for (var i = 0; i < slice.length; i++) {
-      final s = slice.statements[i];
-      yield FieldContext(this, index: i, id: s.id.value, element: s);
-    }
-  }
+  // -------------------------------------------------------------------------------------------------------------------
+  // Sub-evaluations
+  // -------------------------------------------------------------------------------------------------------------------
 
-  Iterable<FieldContext> freshContext(Node node, {required int count}) sync* {
-    final base = U64.of(0, node.id.value);
-    for (var i = 0; i < count; i++) {
-      final key = Mix64.mixWithKey(base, i);
-      yield FieldContext(this, index: i, id: key, element: null);
-    }
+  static final _evaluationCache = Expando<Evaluation>();
+
+  Evaluation evaluate(ProgramSlice slice) {
+    final cached = _evaluationCache[slice];
+    if (cached != null) return cached;
+
+    final evaluation = evalContext.evaluation.subEvaluation(slice);
+    evaluation.performInitialPass();
+
+    _evaluationCache[slice] = evaluation;
+    return evaluation;
   }
 }
 
 extension GeneratorFieldContext on FieldContext {
   Statement get statement => element as Statement;
+  StatementId deriveId(Node node) => execution.derive(node, this);
 }

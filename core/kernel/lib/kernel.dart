@@ -62,6 +62,7 @@ part 'ops/glue_vertices.dart';
 part 'cache/arrangement.dart';
 part 'cache/intersections.dart';
 
+part 'queries/refs.dart';
 part 'queries/nearest_vertex.dart';
 part 'queries/nearest_edge.dart';
 part 'queries/faces_at.dart';

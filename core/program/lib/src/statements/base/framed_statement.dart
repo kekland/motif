@@ -7,7 +7,7 @@ mixin FramedStatement on Statement {
 
   Mat4 frameTransformOf(EvalContext context, Mat4 own, {FrameRef? parent}) {
     var t = own;
-    final transients = context._evaluation.transientTransform;
+    final transients = context.evaluation.transientTransform;
     final global = transients.globalOf(id);
     final local = transients.localOf(id);
 

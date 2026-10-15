@@ -1,10 +1,10 @@
 part of 'editor.dart';
 
-
 class TransientConnection with ChangeNotifier {
-  TransientConnection({required this.source, required this._position});
+  TransientConnection({required this.source, required this.sourceIndex, required this._position});
 
-  final Socket source;
+  final SocketRef source;
+  final int sourceIndex;
   Offset _position;
   Offset get position => _position;
   set position(Offset value) {
@@ -20,8 +20,8 @@ class TransientConnections with ChangeNotifier {
   final _connections = <TransientConnection>[];
   Iterable<TransientConnection> get connections => _connections;
 
-  TransientConnection add(Socket source, Offset position) {
-    final connection = TransientConnection(source: source, position: position);
+  TransientConnection add(SocketRef source, int sourceIndex, Offset position) {
+    final connection = TransientConnection(source: source, sourceIndex: sourceIndex, position: position);
     _connections.add(connection);
     notifyListeners();
     return connection;

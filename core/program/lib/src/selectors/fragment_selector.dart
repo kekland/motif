@@ -9,14 +9,14 @@ final class FragmentSelector extends Selector<Statement> {
 
   @override
   Statement _resolve(EvalContext context) {
-    final s = context._evaluation.statement(id)!;
+    final s = context.evaluation.statement(id)!;
     if (modifierIndex == null) return s;
     return s.copyWith(modifiers: s.modifiers!.sublist(0, modifierIndex!));
   }
 
   @override
   Iterable<CellRef<CellHandle>> resolved(EvalContext context) sync* {
-    final node = context._evaluation.tree[id]!;
+    final node = context.evaluation.tree[id]!;
     final added = node.commit?.added;
     if (added != null) yield* added;
 

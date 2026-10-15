@@ -5,7 +5,15 @@ List<String> generateNode(NodeDescription description) {
   var className = description.baseClassName;
   className += 'Base';
 
-    final inline = [for (final i in description.inputs) if (!i.type.multi) i];
+  final inline = [
+    for (final i in description.inputs)
+      if (!i.type.multi && !i.type.enum_) i,
+  ];
+
+  final enums = [
+    for (final i in description.inputs)
+      if (i.type.enum_) i,
+  ];
 
   code.add('abstract class $className extends bp.Node {');
   code.add('  $className({');
@@ -15,6 +23,10 @@ List<String> generateNode(NodeDescription description) {
     code.add('    ${input.type.type}? ${input.name},');
   }
 
+  for (final e in enums) {
+    code.add('    this.${e.name} = ${e.defaultValue ?? e.type.defaultValue},');
+  }
+
   code.add('  }) : super(');
   code.add('    name: \'${description.name}\',');
   code.add('    category: #${description.category},');
@@ -22,7 +34,12 @@ List<String> generateNode(NodeDescription description) {
   if (description.inputs.isNotEmpty) {
     code.add('    inputs: [');
     for (final input in description.inputs) {
-      final args = input.type.multi ? '' : ', inlineValue: ${input.name}';
+      if (input.type.enum_) continue;
+
+      var inlineValue = input.name;
+      if (input.defaultValue != null) inlineValue = '$inlineValue ?? ${input.defaultValue}';
+
+      final args = input.type.multi ? '' : ', inlineValue: $inlineValue';
       code.add('      ${input.ioClassName}(name: \'${input.name}\'$args),');
     }
     code.add('    ],');
@@ -45,6 +62,7 @@ List<String> generateNode(NodeDescription description) {
     code.add('');
     code.add('  late final i = (');
     for (final (i, input) in description.inputs.indexed) {
+      if (input.type.enum_) continue;
       code.add('    ${input.name}: inputs[$i] as ${input.ioClassName},');
     }
     code.add('  );');
@@ -58,11 +76,31 @@ List<String> generateNode(NodeDescription description) {
     }
     code.add('  );');
   }
+
+  if (enums.isNotEmpty) {
+    code.add('');
+    for (final e in enums) {
+      code.add('  final ${e.type.type} ${e.name};');
+    }
+  }
+
   code.add('');
+  code.add('  @override');
+  code.add('  Iterable<Object> get properties => [');
+  for (final i in description.inputs) {
+    if (i.type.enum_) continue;
+    code.add('    i.${i.name},');
+  }
+  for (final e in enums) {
+    code.add('    ${e.name},');
+  }
+  code.add('  ];');
+  code.add('');
+
   code.add('  @override');
   code.add('  ${description.baseClassName} copyWith({');
   code.add('    bp.NodeId? id,');
-  for (final i in inline) {
+  for (final i in [...inline, ...enums]) {
     code.add('    ${i.type.type}? ${i.name},');
   }
   code.add('  }) => .new(');
@@ -70,10 +108,15 @@ List<String> generateNode(NodeDescription description) {
   for (final i in inline) {
     code.add('    ${i.name}: ${i.name} ?? i.${i.name}.inlineValue,');
   }
+
+  for (final e in enums) {
+    code.add('    ${e.name}: ${e.name} ?? this.${e.name},');
+  }
+
   code.add('  );');
   code.add('');
   code.add('  @override');
-  code.add('  ${description.baseClassName} copyWithInline(int index, Object? value) => switch(index) {');
+  code.add('  ${description.baseClassName} copyWithProperty(int index, Object? value) => switch(index) {');
   for (final (i, input) in description.inputs.indexed) {
     if (input.type.multi) continue;
     code.add('    $i => copyWith(${input.name}: value as ${input.type.type}),');

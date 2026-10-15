@@ -52,7 +52,7 @@ final class const CopySelectionIntent() extends Intent;
 final class const UndoIntent() extends Intent;
 final class const RedoIntent() extends Intent;
 
-final class SelectAllAction extends CommandAction<SelectAllIntent> {
+final class SelectAllAction extends CommandAction<SelectAllIntent> with CanvasFocusAction {
   SelectAllAction()
     : super(
         .new(
@@ -69,7 +69,7 @@ final class SelectAllAction extends CommandAction<SelectAllIntent> {
   }
 }
 
-final class SelectNodeAction extends CommandAction<SelectNodeIntent> {
+final class SelectNodeAction extends CommandAction<SelectNodeIntent> with CanvasFocusAction {
   SelectNodeAction() : super(.new(command: 'select-node'));
 
   @override
@@ -84,7 +84,7 @@ final class SelectNodeAction extends CommandAction<SelectNodeIntent> {
   }
 }
 
-final class SelectConnectionAction extends CommandAction<SelectConnectionIntent> {
+final class SelectConnectionAction extends CommandAction<SelectConnectionIntent> with CanvasFocusAction {
   SelectConnectionAction() : super(.new(command: 'select-connection'));
 
   @override
@@ -99,7 +99,7 @@ final class SelectConnectionAction extends CommandAction<SelectConnectionIntent>
   }
 }
 
-final class ClearSelectionAction extends CommandAction<ClearSelectionIntent> {
+final class ClearSelectionAction extends CommandAction<ClearSelectionIntent> with CanvasFocusAction {
   ClearSelectionAction()
     : super(
         .new(
@@ -116,7 +116,7 @@ final class ClearSelectionAction extends CommandAction<ClearSelectionIntent> {
   }
 }
 
-final class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> {
+final class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> with CanvasFocusAction {
   DeleteSelectionAction()
     : super(
         .new(
@@ -132,7 +132,7 @@ final class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> {
 
     editor.edit(() {
       for (final connection in editor.selection.connections) {
-        editor.disconnect(connection.input, connection.output);
+        editor.disconnect(connection.input, connection.output, index: connection.index);
       }
 
       for (final node in editor.selection.nodes) {
@@ -143,7 +143,7 @@ final class DeleteSelectionAction extends CommandAction<DeleteSelectionIntent> {
   }
 }
 
-final class CopySelectionAction extends CommandAction<CopySelectionIntent> {
+final class CopySelectionAction extends CommandAction<CopySelectionIntent> with CanvasFocusAction {
   CopySelectionAction()
     : super(
         .new(
@@ -168,7 +168,7 @@ void performCopy(BlueprintEditor editor, BlueprintSlice slice) {
   ]);
 }
 
-final class PasteAction extends CommandAction<PasteIntent> {
+final class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
   new()
     : super(
         .new(
@@ -195,7 +195,7 @@ final class PasteAction extends CommandAction<PasteIntent> {
   }
 }
 
-final class RedoAction extends CommandAction<RedoIntent> {
+final class RedoAction extends CommandAction<RedoIntent> with CanvasFocusAction {
   new()
     : super(
         .new(
@@ -215,7 +215,7 @@ final class RedoAction extends CommandAction<RedoIntent> {
   }
 }
 
-final class UndoAction extends CommandAction<UndoIntent> {
+final class UndoAction extends CommandAction<UndoIntent> with CanvasFocusAction {
   new()
     : super(
         .new(
@@ -229,5 +229,14 @@ final class UndoAction extends CommandAction<UndoIntent> {
   void performInvoke(BuildContext context, UndoIntent intent) {
     final editor = BlueprintEditor.of(context);
     editor.history.undo();
+  }
+}
+
+mixin CanvasFocusAction<T extends Intent> on ContextAction<T> {
+  @override
+  bool isEnabled(T intent, [BuildContext? context]) {
+    final editor = BlueprintEditor.of(context!);
+    if (!editor.canvasHasFocus) return false;
+    return super.isEnabled(intent, context);
   }
 }

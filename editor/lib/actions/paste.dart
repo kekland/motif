@@ -77,7 +77,6 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
         }
 
         insertions = .new(statements: statements);
-        return;
       } catch (e, st) {
         logger.warning('failed to paste image', e, st);
       }

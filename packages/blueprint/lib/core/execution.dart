@@ -17,7 +17,14 @@ final class BlueprintExecution {
 
     if (input is ListInputSocket) {
       final list = input as ListInputSocket;
-      final result = Field.zip<T>([for (final o in incoming) _valueOf(o)], (values) => list._castList(values) as T);
+      final listIncoming = blueprint.listIncoming(list);
+
+      final result = Field.zip<T>(
+        scalar,
+        [for (final o in listIncoming) o != null ? _valueOf(o) : null],
+        (context, values) =>
+            ((input.elementType == _typeOf<Object?>()) ? values : list._castList(values.nonNulls.toList())) as T,
+      );
       if (input.isConstant && result is! ConstantField) {
         throw StateError('dynamic field passed to a constant input socket');
       }
@@ -29,7 +36,8 @@ final class BlueprintExecution {
       throw StateError('dynamic field passed to a constant input socket');
     }
 
-    if (T == double && result is Field<int>) return result.map((v) => v.toDouble()) as Field<T>;
+    if (T == double) return result.map<double>((v) => v.toDouble()) as Field<T>;
+    if (incoming.single.type == _typeOf<Object?>()) return result.map((v) => v as T);
     return result as Field<T>;
   }
 
@@ -60,3 +68,5 @@ final class BlueprintExecution {
     return _values[output.ref] ?? (throw StateError('${output.node.name} did not set ${output.name}'));
   }
 }
+
+Type _typeOf<T>() => T;

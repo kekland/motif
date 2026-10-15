@@ -16,7 +16,7 @@ abstract class GeneratorInputNodeBase extends bp.Node {
     required super.id,
   }) : super(
     name: 'GeneratorInput',
-    category: #geometry,
+    category: #io,
     inputs: const [],
     outputs: [
       ProgramSliceConstantOutputSocket(name: 'slice'),
@@ -26,6 +26,10 @@ abstract class GeneratorInputNodeBase extends bp.Node {
   late final o = (
     slice: outputs[0] as ProgramSliceConstantOutputSocket,
   );
+
+  @override
+  Iterable<Object> get properties => [
+  ];
 
   @override
   GeneratorInputNode copyWith({
@@ -35,7 +39,7 @@ abstract class GeneratorInputNodeBase extends bp.Node {
   );
 
   @override
-  GeneratorInputNode copyWithInline(int index, Object? value) => switch(index) {
+  GeneratorInputNode copyWithProperty(int index, Object? value) => switch(index) {
     _ => throw RangeError.index(index, inputs),
   };
 }
@@ -45,16 +49,21 @@ abstract class GeneratorOutputNodeBase extends bp.Node {
     required super.id,
   }) : super(
     name: 'GeneratorOutput',
-    category: #geometry,
+    category: #io,
     inputs: [
-      ProgramSliceListConstantInputSocket(name: 'slices'),
+      ProgramSliceListDynamicInputSocket(name: 'slices'),
     ],
     outputs: const [],
   );
 
   late final i = (
-    slices: inputs[0] as ProgramSliceListConstantInputSocket,
+    slices: inputs[0] as ProgramSliceListDynamicInputSocket,
   );
+
+  @override
+  Iterable<Object> get properties => [
+    i.slices,
+  ];
 
   @override
   GeneratorOutputNode copyWith({
@@ -64,7 +73,142 @@ abstract class GeneratorOutputNodeBase extends bp.Node {
   );
 
   @override
-  GeneratorOutputNode copyWithInline(int index, Object? value) => switch(index) {
+  GeneratorOutputNode copyWithProperty(int index, Object? value) => switch(index) {
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class MergeNodeBase extends bp.Node {
+  MergeNodeBase({
+    required super.id,
+  }) : super(
+    name: 'Merge',
+    category: #geometry,
+    inputs: [
+      ProgramSliceListConstantInputSocket(name: 'slices'),
+    ],
+    outputs: [
+      ProgramSliceConstantOutputSocket(name: 'slice'),
+    ],
+  );
+
+  late final i = (
+    slices: inputs[0] as ProgramSliceListConstantInputSocket,
+  );
+
+  late final o = (
+    slice: outputs[0] as ProgramSliceConstantOutputSocket,
+  );
+
+  @override
+  Iterable<Object> get properties => [
+    i.slices,
+  ];
+
+  @override
+  MergeNode copyWith({
+    bp.NodeId? id,
+  }) => .new(
+    id: id ?? this.id,
+  );
+
+  @override
+  MergeNode copyWithProperty(int index, Object? value) => switch(index) {
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class VertexNodeBase extends bp.Node {
+  VertexNodeBase({
+    required super.id,
+    Vec2? position,
+  }) : super(
+    name: 'Vertex',
+    category: #primitive,
+    inputs: [
+      VectorDynamicInputSocket(name: 'position', inlineValue: position),
+    ],
+    outputs: [
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
+    ],
+  );
+
+  late final i = (
+    position: inputs[0] as VectorDynamicInputSocket,
+  );
+
+  late final o = (
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
+  );
+
+  @override
+  Iterable<Object> get properties => [
+    i.position,
+  ];
+
+  @override
+  VertexNode copyWith({
+    bp.NodeId? id,
+    Vec2? position,
+  }) => .new(
+    id: id ?? this.id,
+    position: position ?? i.position.inlineValue,
+  );
+
+  @override
+  VertexNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(position: value as Vec2),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class RectangleNodeBase extends bp.Node {
+  RectangleNodeBase({
+    required super.id,
+    Vec2? center,
+    Vec2? size,
+  }) : super(
+    name: 'Rectangle',
+    category: #primitive,
+    inputs: [
+      VectorDynamicInputSocket(name: 'center', inlineValue: center),
+      VectorDynamicInputSocket(name: 'size', inlineValue: size ?? .new(100.0, 100.0)),
+    ],
+    outputs: [
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
+    ],
+  );
+
+  late final i = (
+    center: inputs[0] as VectorDynamicInputSocket,
+    size: inputs[1] as VectorDynamicInputSocket,
+  );
+
+  late final o = (
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
+  );
+
+  @override
+  Iterable<Object> get properties => [
+    i.center,
+    i.size,
+  ];
+
+  @override
+  RectangleNode copyWith({
+    bp.NodeId? id,
+    Vec2? center,
+    Vec2? size,
+  }) => .new(
+    id: id ?? this.id,
+    center: center ?? i.center.inlineValue,
+    size: size ?? i.size.inlineValue,
+  );
+
+  @override
+  RectangleNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(center: value as Vec2),
+    1 => copyWith(size: value as Vec2),
     _ => throw RangeError.index(index, inputs),
   };
 }
@@ -73,268 +217,268 @@ abstract class ArrayNodeBase extends bp.Node {
   ArrayNodeBase({
     required super.id,
     ProgramSlice? slice,
-    Vec2? count,
     Vec2? offset,
+    Vec2? count,
   }) : super(
     name: 'Array',
     category: #geometry,
     inputs: [
-      ProgramSliceConstantInputSocket(name: 'slice', inlineValue: slice),
-      VectorConstantInputSocket(name: 'count', inlineValue: count),
-      VectorConstantInputSocket(name: 'offset', inlineValue: offset),
+      ProgramSliceDynamicInputSocket(name: 'slice', inlineValue: slice),
+      VectorDynamicInputSocket(name: 'offset', inlineValue: offset),
+      VectorDynamicInputSocket(name: 'count', inlineValue: count ?? .new(1, 1)),
     ],
     outputs: [
-      ProgramSliceConstantOutputSocket(name: 'slice'),
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
     ],
   );
 
   late final i = (
-    slice: inputs[0] as ProgramSliceConstantInputSocket,
-    count: inputs[1] as VectorConstantInputSocket,
-    offset: inputs[2] as VectorConstantInputSocket,
+    slice: inputs[0] as ProgramSliceDynamicInputSocket,
+    offset: inputs[1] as VectorDynamicInputSocket,
+    count: inputs[2] as VectorDynamicInputSocket,
   );
 
   late final o = (
-    slice: outputs[0] as ProgramSliceConstantOutputSocket,
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
   );
+
+  @override
+  Iterable<Object> get properties => [
+    i.slice,
+    i.offset,
+    i.count,
+  ];
 
   @override
   ArrayNode copyWith({
     bp.NodeId? id,
     ProgramSlice? slice,
-    Vec2? count,
     Vec2? offset,
+    Vec2? count,
   }) => .new(
     id: id ?? this.id,
     slice: slice ?? i.slice.inlineValue,
-    count: count ?? i.count.inlineValue,
     offset: offset ?? i.offset.inlineValue,
+    count: count ?? i.count.inlineValue,
   );
 
   @override
-  ArrayNode copyWithInline(int index, Object? value) => switch(index) {
+  ArrayNode copyWithProperty(int index, Object? value) => switch(index) {
     0 => copyWith(slice: value as ProgramSlice),
-    1 => copyWith(count: value as Vec2),
-    2 => copyWith(offset: value as Vec2),
+    1 => copyWith(offset: value as Vec2),
+    2 => copyWith(count: value as Vec2),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class FilletNodeBase extends bp.Node {
-  FilletNodeBase({
+abstract class TransformNodeBase extends bp.Node {
+  TransformNodeBase({
     required super.id,
     ProgramSlice? slice,
-    Vec2? radius,
+    Vec2? translation,
+    Vec2? scale,
+    double? rotation,
   }) : super(
-    name: 'Fillet',
+    name: 'Transform',
     category: #geometry,
     inputs: [
-      ProgramSliceConstantInputSocket(name: 'slice', inlineValue: slice),
-      VectorDynamicInputSocket(name: 'radius', inlineValue: radius),
+      ProgramSliceDynamicInputSocket(name: 'slice', inlineValue: slice),
+      VectorDynamicInputSocket(name: 'translation', inlineValue: translation),
+      VectorDynamicInputSocket(name: 'scale', inlineValue: scale ?? .new(1.0, 1.0)),
+      FloatDynamicInputSocket(name: 'rotation', inlineValue: rotation ?? 0.0),
     ],
     outputs: [
-      ProgramSliceConstantOutputSocket(name: 'slice'),
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
     ],
   );
 
   late final i = (
-    slice: inputs[0] as ProgramSliceConstantInputSocket,
-    radius: inputs[1] as VectorDynamicInputSocket,
+    slice: inputs[0] as ProgramSliceDynamicInputSocket,
+    translation: inputs[1] as VectorDynamicInputSocket,
+    scale: inputs[2] as VectorDynamicInputSocket,
+    rotation: inputs[3] as FloatDynamicInputSocket,
   );
 
   late final o = (
-    slice: outputs[0] as ProgramSliceConstantOutputSocket,
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
   );
 
   @override
-  FilletNode copyWith({
+  Iterable<Object> get properties => [
+    i.slice,
+    i.translation,
+    i.scale,
+    i.rotation,
+  ];
+
+  @override
+  TransformNode copyWith({
     bp.NodeId? id,
     ProgramSlice? slice,
-    Vec2? radius,
+    Vec2? translation,
+    Vec2? scale,
+    double? rotation,
   }) => .new(
     id: id ?? this.id,
     slice: slice ?? i.slice.inlineValue,
-    radius: radius ?? i.radius.inlineValue,
+    translation: translation ?? i.translation.inlineValue,
+    scale: scale ?? i.scale.inlineValue,
+    rotation: rotation ?? i.rotation.inlineValue,
   );
 
   @override
-  FilletNode copyWithInline(int index, Object? value) => switch(index) {
+  TransformNode copyWithProperty(int index, Object? value) => switch(index) {
     0 => copyWith(slice: value as ProgramSlice),
-    1 => copyWith(radius: value as Vec2),
+    1 => copyWith(translation: value as Vec2),
+    2 => copyWith(scale: value as Vec2),
+    3 => copyWith(rotation: value as double),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class NumberNodeBase extends bp.Node {
-  NumberNodeBase({
+abstract class ConnectVerticesNodeBase extends bp.Node {
+  ConnectVerticesNodeBase({
     required super.id,
-    double? value,
+    bool? closed,
+    ProgramSlice? slice,
   }) : super(
-    name: 'Number',
-    category: #value,
+    name: 'ConnectVertices',
+    category: #geometry,
     inputs: [
-      FloatConstantInputSocket(name: 'value', inlineValue: value),
+      BooleanConstantInputSocket(name: 'closed', inlineValue: closed),
+      ProgramSliceDynamicInputSocket(name: 'slice', inlineValue: slice),
     ],
     outputs: [
-      FloatConstantOutputSocket(name: 'value'),
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
     ],
   );
 
   late final i = (
-    value: inputs[0] as FloatConstantInputSocket,
+    closed: inputs[0] as BooleanConstantInputSocket,
+    slice: inputs[1] as ProgramSliceDynamicInputSocket,
   );
 
   late final o = (
-    value: outputs[0] as FloatConstantOutputSocket,
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
   );
 
   @override
-  NumberNode copyWith({
+  Iterable<Object> get properties => [
+    i.closed,
+    i.slice,
+  ];
+
+  @override
+  ConnectVerticesNode copyWith({
     bp.NodeId? id,
-    double? value,
+    bool? closed,
+    ProgramSlice? slice,
   }) => .new(
     id: id ?? this.id,
-    value: value ?? i.value.inlineValue,
+    closed: closed ?? i.closed.inlineValue,
+    slice: slice ?? i.slice.inlineValue,
   );
 
   @override
-  NumberNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(value: value as double),
+  ConnectVerticesNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(closed: value as bool),
+    1 => copyWith(slice: value as ProgramSlice),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class VectorNodeBase extends bp.Node {
-  VectorNodeBase({
+abstract class MakeFaceNodeBase extends bp.Node {
+  MakeFaceNodeBase({
     required super.id,
-    Vec2? value,
+    ProgramSlice? slice,
   }) : super(
-    name: 'Vector',
-    category: #value,
+    name: 'MakeFace',
+    category: #geometry,
     inputs: [
-      VectorConstantInputSocket(name: 'value', inlineValue: value),
+      ProgramSliceDynamicInputSocket(name: 'slice', inlineValue: slice),
     ],
     outputs: [
-      VectorConstantOutputSocket(name: 'value'),
+      ProgramSliceDynamicOutputSocket(name: 'slice'),
     ],
   );
 
   late final i = (
-    value: inputs[0] as VectorConstantInputSocket,
+    slice: inputs[0] as ProgramSliceDynamicInputSocket,
   );
 
   late final o = (
-    value: outputs[0] as VectorConstantOutputSocket,
+    slice: outputs[0] as ProgramSliceDynamicOutputSocket,
   );
 
   @override
-  VectorNode copyWith({
+  Iterable<Object> get properties => [
+    i.slice,
+  ];
+
+  @override
+  MakeFaceNode copyWith({
     bp.NodeId? id,
-    Vec2? value,
+    ProgramSlice? slice,
   }) => .new(
     id: id ?? this.id,
-    value: value ?? i.value.inlineValue,
+    slice: slice ?? i.slice.inlineValue,
   );
 
   @override
-  VectorNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(value: value as Vec2),
+  MakeFaceNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(slice: value as ProgramSlice),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class VerticesNodeBase extends bp.Node {
-  VerticesNodeBase({
+abstract class BoundingBoxNodeBase extends bp.Node {
+  BoundingBoxNodeBase({
     required super.id,
-    int? count,
-    Vec2? position,
+    ProgramSlice? slice,
   }) : super(
-    name: 'Vertices',
-    category: #primitive,
+    name: 'BoundingBox',
+    category: #query,
     inputs: [
-      IntegerConstantInputSocket(name: 'count', inlineValue: count),
-      VectorDynamicInputSocket(name: 'position', inlineValue: position),
+      ProgramSliceDynamicInputSocket(name: 'slice', inlineValue: slice),
     ],
     outputs: [
-      ProgramSliceConstantOutputSocket(name: 'slice'),
+      BoundsDynamicOutputSocket(name: 'bbox'),
+      VectorDynamicOutputSocket(name: 'min'),
+      VectorDynamicOutputSocket(name: 'max'),
+      VectorDynamicOutputSocket(name: 'center'),
+      VectorDynamicOutputSocket(name: 'size'),
     ],
   );
 
   late final i = (
-    count: inputs[0] as IntegerConstantInputSocket,
-    position: inputs[1] as VectorDynamicInputSocket,
+    slice: inputs[0] as ProgramSliceDynamicInputSocket,
   );
 
   late final o = (
-    slice: outputs[0] as ProgramSliceConstantOutputSocket,
+    bbox: outputs[0] as BoundsDynamicOutputSocket,
+    min: outputs[1] as VectorDynamicOutputSocket,
+    max: outputs[2] as VectorDynamicOutputSocket,
+    center: outputs[3] as VectorDynamicOutputSocket,
+    size: outputs[4] as VectorDynamicOutputSocket,
   );
 
   @override
-  VerticesNode copyWith({
+  Iterable<Object> get properties => [
+    i.slice,
+  ];
+
+  @override
+  BoundingBoxNode copyWith({
     bp.NodeId? id,
-    int? count,
-    Vec2? position,
+    ProgramSlice? slice,
   }) => .new(
     id: id ?? this.id,
-    count: count ?? i.count.inlineValue,
-    position: position ?? i.position.inlineValue,
+    slice: slice ?? i.slice.inlineValue,
   );
 
   @override
-  VerticesNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(count: value as int),
-    1 => copyWith(position: value as Vec2),
-    _ => throw RangeError.index(index, inputs),
-  };
-}
-
-abstract class RandomVectorNodeBase extends bp.Node {
-  RandomVectorNodeBase({
-    required super.id,
-    int? seed,
-    Vec2? min,
-    Vec2? max,
-  }) : super(
-    name: 'RandomVector',
-    category: #value,
-    inputs: [
-      IntegerConstantInputSocket(name: 'seed', inlineValue: seed),
-      VectorDynamicInputSocket(name: 'min', inlineValue: min),
-      VectorDynamicInputSocket(name: 'max', inlineValue: max),
-    ],
-    outputs: [
-      VectorDynamicOutputSocket(name: 'value'),
-    ],
-  );
-
-  late final i = (
-    seed: inputs[0] as IntegerConstantInputSocket,
-    min: inputs[1] as VectorDynamicInputSocket,
-    max: inputs[2] as VectorDynamicInputSocket,
-  );
-
-  late final o = (
-    value: outputs[0] as VectorDynamicOutputSocket,
-  );
-
-  @override
-  RandomVectorNode copyWith({
-    bp.NodeId? id,
-    int? seed,
-    Vec2? min,
-    Vec2? max,
-  }) => .new(
-    id: id ?? this.id,
-    seed: seed ?? i.seed.inlineValue,
-    min: min ?? i.min.inlineValue,
-    max: max ?? i.max.inlineValue,
-  );
-
-  @override
-  RandomVectorNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(seed: value as int),
-    1 => copyWith(min: value as Vec2),
-    2 => copyWith(max: value as Vec2),
+  BoundingBoxNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(slice: value as ProgramSlice),
     _ => throw RangeError.index(index, inputs),
   };
 }
@@ -344,16 +488,20 @@ abstract class IndexNodeBase extends bp.Node {
     required super.id,
   }) : super(
     name: 'Index',
-    category: #value,
+    category: #field,
     inputs: const [],
     outputs: [
-      IntegerDynamicOutputSocket(name: 'value'),
+      IntegerDynamicOutputSocket(name: 'index'),
     ],
   );
 
   late final o = (
-    value: outputs[0] as IntegerDynamicOutputSocket,
+    index: outputs[0] as IntegerDynamicOutputSocket,
   );
+
+  @override
+  Iterable<Object> get properties => [
+  ];
 
   @override
   IndexNode copyWith({
@@ -363,22 +511,81 @@ abstract class IndexNodeBase extends bp.Node {
   );
 
   @override
-  IndexNode copyWithInline(int index, Object? value) => switch(index) {
+  IndexNode copyWithProperty(int index, Object? value) => switch(index) {
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class ScaleVectorNodeBase extends bp.Node {
-  ScaleVectorNodeBase({
+abstract class MathNodeBase extends bp.Node {
+  MathNodeBase({
     required super.id,
-    Vec2? vector,
-    double? factor,
+    double? a,
+    double? b,
+    this.operator = .add,
   }) : super(
-    name: 'ScaleVector',
-    category: #value,
+    name: 'Math',
+    category: #math,
     inputs: [
-      VectorDynamicInputSocket(name: 'vector', inlineValue: vector),
-      FloatDynamicInputSocket(name: 'factor', inlineValue: factor),
+      FloatDynamicInputSocket(name: 'a', inlineValue: a),
+      FloatDynamicInputSocket(name: 'b', inlineValue: b),
+    ],
+    outputs: [
+      FloatDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    a: inputs[0] as FloatDynamicInputSocket,
+    b: inputs[1] as FloatDynamicInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as FloatDynamicOutputSocket,
+  );
+
+  final MathOperatorType operator;
+
+  @override
+  Iterable<Object> get properties => [
+    i.a,
+    i.b,
+    operator,
+  ];
+
+  @override
+  MathNode copyWith({
+    bp.NodeId? id,
+    double? a,
+    double? b,
+    MathOperatorType? operator,
+  }) => .new(
+    id: id ?? this.id,
+    a: a ?? i.a.inlineValue,
+    b: b ?? i.b.inlineValue,
+    operator: operator ?? this.operator,
+  );
+
+  @override
+  MathNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(a: value as double),
+    1 => copyWith(b: value as double),
+    2 => copyWith(operator: value as MathOperatorType),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class VectorMathNodeBase extends bp.Node {
+  VectorMathNodeBase({
+    required super.id,
+    Vec2? a,
+    Vec2? b,
+    this.operator = .add,
+  }) : super(
+    name: 'VectorMath',
+    category: #math,
+    inputs: [
+      VectorDynamicInputSocket(name: 'a', inlineValue: a),
+      VectorDynamicInputSocket(name: 'b', inlineValue: b),
     ],
     outputs: [
       VectorDynamicOutputSocket(name: 'value'),
@@ -386,8 +593,258 @@ abstract class ScaleVectorNodeBase extends bp.Node {
   );
 
   late final i = (
-    vector: inputs[0] as VectorDynamicInputSocket,
-    factor: inputs[1] as FloatDynamicInputSocket,
+    a: inputs[0] as VectorDynamicInputSocket,
+    b: inputs[1] as VectorDynamicInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as VectorDynamicOutputSocket,
+  );
+
+  final VectorMathOperatorType operator;
+
+  @override
+  Iterable<Object> get properties => [
+    i.a,
+    i.b,
+    operator,
+  ];
+
+  @override
+  VectorMathNode copyWith({
+    bp.NodeId? id,
+    Vec2? a,
+    Vec2? b,
+    VectorMathOperatorType? operator,
+  }) => .new(
+    id: id ?? this.id,
+    a: a ?? i.a.inlineValue,
+    b: b ?? i.b.inlineValue,
+    operator: operator ?? this.operator,
+  );
+
+  @override
+  VectorMathNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(a: value as Vec2),
+    1 => copyWith(b: value as Vec2),
+    2 => copyWith(operator: value as VectorMathOperatorType),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class TrigMathNodeBase extends bp.Node {
+  TrigMathNodeBase({
+    required super.id,
+    double? input,
+    this.operator = .sin,
+  }) : super(
+    name: 'TrigMath',
+    category: #math,
+    inputs: [
+      FloatDynamicInputSocket(name: 'input', inlineValue: input),
+    ],
+    outputs: [
+      FloatDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    input: inputs[0] as FloatDynamicInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as FloatDynamicOutputSocket,
+  );
+
+  final TrigMathOperatorType operator;
+
+  @override
+  Iterable<Object> get properties => [
+    i.input,
+    operator,
+  ];
+
+  @override
+  TrigMathNode copyWith({
+    bp.NodeId? id,
+    double? input,
+    TrigMathOperatorType? operator,
+  }) => .new(
+    id: id ?? this.id,
+    input: input ?? i.input.inlineValue,
+    operator: operator ?? this.operator,
+  );
+
+  @override
+  TrigMathNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(input: value as double),
+    1 => copyWith(operator: value as TrigMathOperatorType),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class ExpressionNodeBase extends bp.Node {
+  ExpressionNodeBase({
+    required super.id,
+    String? expression,
+  }) : super(
+    name: 'Expression',
+    category: #math,
+    inputs: [
+      AnyListDynamicInputSocket(name: 'args'),
+      StringConstantInputSocket(name: 'expression', inlineValue: expression),
+    ],
+    outputs: [
+      AnyDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    args: inputs[0] as AnyListDynamicInputSocket,
+    expression: inputs[1] as StringConstantInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as AnyDynamicOutputSocket,
+  );
+
+  @override
+  Iterable<Object> get properties => [
+    i.args,
+    i.expression,
+  ];
+
+  @override
+  ExpressionNode copyWith({
+    bp.NodeId? id,
+    String? expression,
+  }) => .new(
+    id: id ?? this.id,
+    expression: expression ?? i.expression.inlineValue,
+  );
+
+  @override
+  ExpressionNode copyWithProperty(int index, Object? value) => switch(index) {
+    1 => copyWith(expression: value as String),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class MathConstantNodeBase extends bp.Node {
+  MathConstantNodeBase({
+    required super.id,
+    this.constant = .pi,
+  }) : super(
+    name: 'MathConstant',
+    category: #math,
+    inputs: [
+    ],
+    outputs: [
+      FloatConstantOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+  );
+
+  late final o = (
+    value: outputs[0] as FloatConstantOutputSocket,
+  );
+
+  final MathConstantType constant;
+
+  @override
+  Iterable<Object> get properties => [
+    constant,
+  ];
+
+  @override
+  MathConstantNode copyWith({
+    bp.NodeId? id,
+    MathConstantType? constant,
+  }) => .new(
+    id: id ?? this.id,
+    constant: constant ?? this.constant,
+  );
+
+  @override
+  MathConstantNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(constant: value as MathConstantType),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class MathRoundNodeBase extends bp.Node {
+  MathRoundNodeBase({
+    required super.id,
+    double? value,
+    this.mode = .round,
+  }) : super(
+    name: 'MathRound',
+    category: #math,
+    inputs: [
+      FloatDynamicInputSocket(name: 'value', inlineValue: value),
+    ],
+    outputs: [
+      IntegerDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    value: inputs[0] as FloatDynamicInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as IntegerDynamicOutputSocket,
+  );
+
+  final MathRoundType mode;
+
+  @override
+  Iterable<Object> get properties => [
+    i.value,
+    mode,
+  ];
+
+  @override
+  MathRoundNode copyWith({
+    bp.NodeId? id,
+    double? value,
+    MathRoundType? mode,
+  }) => .new(
+    id: id ?? this.id,
+    value: value ?? i.value.inlineValue,
+    mode: mode ?? this.mode,
+  );
+
+  @override
+  MathRoundNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(value: value as double),
+    1 => copyWith(mode: value as MathRoundType),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class CombineXYNodeBase extends bp.Node {
+  CombineXYNodeBase({
+    required super.id,
+    double? x,
+    double? y,
+  }) : super(
+    name: 'CombineXY',
+    category: #math,
+    inputs: [
+      FloatDynamicInputSocket(name: 'x', inlineValue: x),
+      FloatDynamicInputSocket(name: 'y', inlineValue: y),
+    ],
+    outputs: [
+      VectorDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    x: inputs[0] as FloatDynamicInputSocket,
+    y: inputs[1] as FloatDynamicInputSocket,
   );
 
   late final o = (
@@ -395,104 +852,72 @@ abstract class ScaleVectorNodeBase extends bp.Node {
   );
 
   @override
-  ScaleVectorNode copyWith({
+  Iterable<Object> get properties => [
+    i.x,
+    i.y,
+  ];
+
+  @override
+  CombineXYNode copyWith({
     bp.NodeId? id,
-    Vec2? vector,
-    double? factor,
+    double? x,
+    double? y,
   }) => .new(
     id: id ?? this.id,
-    vector: vector ?? i.vector.inlineValue,
-    factor: factor ?? i.factor.inlineValue,
+    x: x ?? i.x.inlineValue,
+    y: y ?? i.y.inlineValue,
   );
 
   @override
-  ScaleVectorNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(vector: value as Vec2),
-    1 => copyWith(factor: value as double),
+  CombineXYNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(x: value as double),
+    1 => copyWith(y: value as double),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class ConnectVerticesNodeBase extends bp.Node {
-  ConnectVerticesNodeBase({
+abstract class SeparateXYNodeBase extends bp.Node {
+  SeparateXYNodeBase({
     required super.id,
-    ProgramSlice? slice,
-    bool? closed,
+    Vec2? value,
   }) : super(
-    name: 'ConnectVertices',
-    category: #geometry,
+    name: 'SeparateXY',
+    category: #math,
     inputs: [
-      ProgramSliceConstantInputSocket(name: 'slice', inlineValue: slice),
-      BooleanConstantInputSocket(name: 'closed', inlineValue: closed),
+      VectorDynamicInputSocket(name: 'value', inlineValue: value),
     ],
     outputs: [
-      ProgramSliceConstantOutputSocket(name: 'slice'),
+      FloatDynamicOutputSocket(name: 'x'),
+      FloatDynamicOutputSocket(name: 'y'),
     ],
   );
 
   late final i = (
-    slice: inputs[0] as ProgramSliceConstantInputSocket,
-    closed: inputs[1] as BooleanConstantInputSocket,
+    value: inputs[0] as VectorDynamicInputSocket,
   );
 
   late final o = (
-    slice: outputs[0] as ProgramSliceConstantOutputSocket,
+    x: outputs[0] as FloatDynamicOutputSocket,
+    y: outputs[1] as FloatDynamicOutputSocket,
   );
 
   @override
-  ConnectVerticesNode copyWith({
+  Iterable<Object> get properties => [
+    i.value,
+  ];
+
+  @override
+  SeparateXYNode copyWith({
     bp.NodeId? id,
-    ProgramSlice? slice,
-    bool? closed,
+    Vec2? value,
   }) => .new(
     id: id ?? this.id,
-    slice: slice ?? i.slice.inlineValue,
-    closed: closed ?? i.closed.inlineValue,
+    value: value ?? i.value.inlineValue,
   );
 
   @override
-  ConnectVerticesNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(slice: value as ProgramSlice),
-    1 => copyWith(closed: value as bool),
-    _ => throw RangeError.index(index, inputs),
-  };
-}
-
-abstract class FaceNodeBase extends bp.Node {
-  FaceNodeBase({
-    required super.id,
-    ProgramSlice? slice,
-  }) : super(
-    name: 'Face',
-    category: #geometry,
-    inputs: [
-      ProgramSliceConstantInputSocket(name: 'slice', inlineValue: slice),
-    ],
-    outputs: [
-      ProgramSliceConstantOutputSocket(name: 'slice'),
-    ],
-  );
-
-  late final i = (
-    slice: inputs[0] as ProgramSliceConstantInputSocket,
-  );
-
-  late final o = (
-    slice: outputs[0] as ProgramSliceConstantOutputSocket,
-  );
-
-  @override
-  FaceNode copyWith({
-    bp.NodeId? id,
-    ProgramSlice? slice,
-  }) => .new(
-    id: id ?? this.id,
-    slice: slice ?? i.slice.inlineValue,
-  );
-
-  @override
-  FaceNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(slice: value as ProgramSlice),
+  SeparateXYNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(value: value as Vec2),
     _ => throw RangeError.index(index, inputs),
   };
 }
@@ -524,6 +949,12 @@ abstract class PolarNodeBase extends bp.Node {
   );
 
   @override
+  Iterable<Object> get properties => [
+    i.radius,
+    i.angle,
+  ];
+
+  @override
   PolarNode copyWith({
     bp.NodeId? id,
     double? radius,
@@ -535,53 +966,26 @@ abstract class PolarNodeBase extends bp.Node {
   );
 
   @override
-  PolarNode copyWithInline(int index, Object? value) => switch(index) {
+  PolarNode copyWithProperty(int index, Object? value) => switch(index) {
     0 => copyWith(radius: value as double),
     1 => copyWith(angle: value as double),
     _ => throw RangeError.index(index, inputs),
   };
 }
 
-abstract class PiNodeBase extends bp.Node {
-  PiNodeBase({
+abstract class RandomFloatNodeBase extends bp.Node {
+  RandomFloatNodeBase({
     required super.id,
+    int? seed,
+    double? min,
+    double? max,
   }) : super(
-    name: 'Pi',
-    category: #math,
-    inputs: const [],
-    outputs: [
-      FloatConstantOutputSocket(name: 'value'),
-    ],
-  );
-
-  late final o = (
-    value: outputs[0] as FloatConstantOutputSocket,
-  );
-
-  @override
-  PiNode copyWith({
-    bp.NodeId? id,
-  }) => .new(
-    id: id ?? this.id,
-  );
-
-  @override
-  PiNode copyWithInline(int index, Object? value) => switch(index) {
-    _ => throw RangeError.index(index, inputs),
-  };
-}
-
-abstract class DivideNodeBase extends bp.Node {
-  DivideNodeBase({
-    required super.id,
-    double? numerator,
-    double? denominator,
-  }) : super(
-    name: 'Divide',
+    name: 'RandomFloat',
     category: #math,
     inputs: [
-      FloatDynamicInputSocket(name: 'numerator', inlineValue: numerator),
-      FloatDynamicInputSocket(name: 'denominator', inlineValue: denominator),
+      IntegerConstantInputSocket(name: 'seed', inlineValue: seed),
+      FloatConstantInputSocket(name: 'min', inlineValue: min ?? 0.0),
+      FloatConstantInputSocket(name: 'max', inlineValue: max ?? 1.0),
     ],
     outputs: [
       FloatDynamicOutputSocket(name: 'value'),
@@ -589,8 +993,9 @@ abstract class DivideNodeBase extends bp.Node {
   );
 
   late final i = (
-    numerator: inputs[0] as FloatDynamicInputSocket,
-    denominator: inputs[1] as FloatDynamicInputSocket,
+    seed: inputs[0] as IntegerConstantInputSocket,
+    min: inputs[1] as FloatConstantInputSocket,
+    max: inputs[2] as FloatConstantInputSocket,
   );
 
   late final o = (
@@ -598,23 +1003,149 @@ abstract class DivideNodeBase extends bp.Node {
   );
 
   @override
-  DivideNode copyWith({
+  Iterable<Object> get properties => [
+    i.seed,
+    i.min,
+    i.max,
+  ];
+
+  @override
+  RandomFloatNode copyWith({
     bp.NodeId? id,
-    double? numerator,
-    double? denominator,
+    int? seed,
+    double? min,
+    double? max,
   }) => .new(
     id: id ?? this.id,
-    numerator: numerator ?? i.numerator.inlineValue,
-    denominator: denominator ?? i.denominator.inlineValue,
+    seed: seed ?? i.seed.inlineValue,
+    min: min ?? i.min.inlineValue,
+    max: max ?? i.max.inlineValue,
   );
 
   @override
-  DivideNode copyWithInline(int index, Object? value) => switch(index) {
-    0 => copyWith(numerator: value as double),
-    1 => copyWith(denominator: value as double),
+  RandomFloatNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(seed: value as int),
+    1 => copyWith(min: value as double),
+    2 => copyWith(max: value as double),
     _ => throw RangeError.index(index, inputs),
   };
 }
+
+abstract class RandomVectorNodeBase extends bp.Node {
+  RandomVectorNodeBase({
+    required super.id,
+    int? seed,
+    Vec2? min,
+    Vec2? max,
+  }) : super(
+    name: 'RandomVector',
+    category: #math,
+    inputs: [
+      IntegerConstantInputSocket(name: 'seed', inlineValue: seed),
+      VectorConstantInputSocket(name: 'min', inlineValue: min ?? .new(0.0, 0.0)),
+      VectorConstantInputSocket(name: 'max', inlineValue: max ?? .new(1.0, 1.0)),
+    ],
+    outputs: [
+      VectorDynamicOutputSocket(name: 'value'),
+    ],
+  );
+
+  late final i = (
+    seed: inputs[0] as IntegerConstantInputSocket,
+    min: inputs[1] as VectorConstantInputSocket,
+    max: inputs[2] as VectorConstantInputSocket,
+  );
+
+  late final o = (
+    value: outputs[0] as VectorDynamicOutputSocket,
+  );
+
+  @override
+  Iterable<Object> get properties => [
+    i.seed,
+    i.min,
+    i.max,
+  ];
+
+  @override
+  RandomVectorNode copyWith({
+    bp.NodeId? id,
+    int? seed,
+    Vec2? min,
+    Vec2? max,
+  }) => .new(
+    id: id ?? this.id,
+    seed: seed ?? i.seed.inlineValue,
+    min: min ?? i.min.inlineValue,
+    max: max ?? i.max.inlineValue,
+  );
+
+  @override
+  RandomVectorNode copyWithProperty(int index, Object? value) => switch(index) {
+    0 => copyWith(seed: value as int),
+    1 => copyWith(min: value as Vec2),
+    2 => copyWith(max: value as Vec2),
+    _ => throw RangeError.index(index, inputs),
+  };
+}
+
+abstract class AnySocket extends bp.Socket<Object?> {
+  AnySocket({required super.name});
+
+  @override
+  Symbol get category => #any;
+}
+
+abstract class AnyInputSocket extends AnySocket with bp.InputSocket<Object?> {
+  AnyInputSocket({required super.name, Object? inlineValue}) {
+    this.inlineValue = inlineValue ?? defaultValue;
+  }
+
+  @override
+  Object? get defaultValue => null;
+}
+
+abstract class AnyOutputSocket extends AnySocket with bp.OutputSocket<Object?> {
+  AnyOutputSocket({required super.name});
+}
+
+class AnyConstantInputSocket extends AnyInputSocket with bp.ConstantSocket<Object?> {
+  AnyConstantInputSocket({required super.name, super.inlineValue});
+}
+
+class AnyConstantOutputSocket extends AnyOutputSocket with bp.ConstantSocket<Object?> {
+  AnyConstantOutputSocket({required super.name});
+}
+
+class AnyDynamicInputSocket extends AnyInputSocket with bp.DynamicSocket<Object?> {
+  AnyDynamicInputSocket({required super.name, super.inlineValue});
+}
+
+class AnyDynamicOutputSocket extends AnyOutputSocket with bp.DynamicSocket<Object?> {
+  AnyDynamicOutputSocket({required super.name});
+}
+
+abstract class AnyListSocket extends bp.Socket<List<Object?>> {
+  AnyListSocket({required super.name});
+
+  @override
+  Symbol get category => #any;
+}
+
+abstract class AnyListInputSocket extends AnyListSocket with bp.InputSocket<List<Object?>>, bp.ListInputSocket<Object?, List<Object?>> {
+  AnyListInputSocket({required super.name}) {
+    inlineValue = defaultValue;
+  }
+}
+
+class AnyListConstantInputSocket extends AnyListInputSocket with bp.ConstantSocket<List<Object?>> {
+  AnyListConstantInputSocket({required super.name});
+}
+
+class AnyListDynamicInputSocket extends AnyListInputSocket with bp.DynamicSocket<List<Object?>> {
+  AnyListDynamicInputSocket({required super.name});
+}
+
 
 abstract class VectorSocket extends bp.Socket<Vec2> {
   VectorSocket({required super.name});
@@ -722,6 +1253,42 @@ class FloatDynamicInputSocket extends FloatInputSocket with bp.DynamicSocket<dou
 
 class FloatDynamicOutputSocket extends FloatOutputSocket with bp.DynamicSocket<double> {
   FloatDynamicOutputSocket({required super.name});
+}
+
+abstract class StringSocket extends bp.Socket<String> {
+  StringSocket({required super.name});
+
+  @override
+  Symbol get category => #string;
+}
+
+abstract class StringInputSocket extends StringSocket with bp.InputSocket<String> {
+  StringInputSocket({required super.name, String? inlineValue}) {
+    this.inlineValue = inlineValue ?? defaultValue;
+  }
+
+  @override
+  String get defaultValue => '';
+}
+
+abstract class StringOutputSocket extends StringSocket with bp.OutputSocket<String> {
+  StringOutputSocket({required super.name});
+}
+
+class StringConstantInputSocket extends StringInputSocket with bp.ConstantSocket<String> {
+  StringConstantInputSocket({required super.name, super.inlineValue});
+}
+
+class StringConstantOutputSocket extends StringOutputSocket with bp.ConstantSocket<String> {
+  StringConstantOutputSocket({required super.name});
+}
+
+class StringDynamicInputSocket extends StringInputSocket with bp.DynamicSocket<String> {
+  StringDynamicInputSocket({required super.name, super.inlineValue});
+}
+
+class StringDynamicOutputSocket extends StringOutputSocket with bp.DynamicSocket<String> {
+  StringDynamicOutputSocket({required super.name});
 }
 
 abstract class ProgramSliceSocket extends bp.Socket<ProgramSlice> {
@@ -868,6 +1435,38 @@ class BoundsDynamicOutputSocket extends BoundsOutputSocket with bp.DynamicSocket
   BoundsDynamicOutputSocket({required super.name});
 }
 
+enum MathOperatorType {
+  add,
+  subtract,
+  multiply,
+  divide,
+}
+
+enum VectorMathOperatorType {
+  add,
+  subtract,
+}
+
+enum TrigMathOperatorType {
+  sin,
+  cos,
+  tan,
+  arcsin,
+  arccos,
+  arctan,
+}
+
+enum MathConstantType {
+  pi,
+  e,
+}
+
+enum MathRoundType {
+  floor,
+  ceil,
+  round,
+}
+
 abstract class ProgramSliceListSocket extends bp.Socket<List<ProgramSlice>> {
   ProgramSliceListSocket({required super.name});
 
@@ -877,7 +1476,7 @@ abstract class ProgramSliceListSocket extends bp.Socket<List<ProgramSlice>> {
 
 abstract class ProgramSliceListInputSocket extends ProgramSliceListSocket with bp.InputSocket<List<ProgramSlice>>, bp.ListInputSocket<ProgramSlice, List<ProgramSlice>> {
   ProgramSliceListInputSocket({required super.name}) {
-    this.inlineValue = defaultValue;
+    inlineValue = defaultValue;
   }
 }
 

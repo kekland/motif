@@ -1,7 +1,6 @@
 export 'border_utils.dart';
 export 'box.dart';
 export 'color_utils.dart';
-export 'expression.dart';
 export 'geometry_utils.dart';
 export 'hooks.dart';
 export 'intents.dart';

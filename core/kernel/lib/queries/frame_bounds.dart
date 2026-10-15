@@ -1,6 +1,28 @@
 part of '../kernel.dart';
 
 extension FrameBoundsQuery on TopologyQuery {
+  Aabb2 hullAll({FrameRef? space}) {
+    final hull = Aabb2.invertedInfinity();
+    final spaceHandle = space != null ? bundle.frame(space)! : null;
+
+    for (final f in bundle.frames) {
+      final bbox = _cellBbox(f, space: spaceHandle);
+      if (bbox != null) hull.hull(bbox);
+    }
+
+    for (final v in bundle.vertices) {
+      final bbox = _cellBbox(v, space: spaceHandle);
+      if (bbox != null) hull.hull(bbox);
+    }
+
+    for (final e in bundle.edges) {
+      final bbox = _cellBbox(e, space: spaceHandle);
+      if (bbox != null) hull.hull(bbox);
+    }
+
+    return hull;
+  }
+
   Aabb2 hull(Iterable<Ref> refs, {FrameRef? space}) {
     final hull = Aabb2.invertedInfinity();
 

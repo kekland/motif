@@ -72,7 +72,7 @@ final class Program {
   Program clone() => .new(
     _statements.toList(),
     styles: styles.clone(),
-    assetManifest: assetManifest,
+    assetManifest: assetManifest.clone(),
     assetResolver: assetResolver,
   );
 }

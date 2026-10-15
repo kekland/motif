@@ -17,9 +17,9 @@ Feel free to [try it out now](https://kekland.github.io/motif) in your browser!
 > [!TIP]
 > I'm constantly working on improving the project and welcome any feedback or contributions. If you would like to support the project financially, see the [Support](#support) section below.
 
-<p align="center">
-<img src="./.github/assets/screenshot4.jpeg" alt="Screenshot" width="42%">
-<img src="./.github/assets/screenshot3.png" alt="Screenshot" width="49%">
+<p >
+<img src="./.github/assets/screenshot4.jpeg" alt="Screenshot" width="53%">
+<img src="./.github/assets/screenshot5.png" alt="Screenshot" width="46%">
 </p>
 
 ## Goals

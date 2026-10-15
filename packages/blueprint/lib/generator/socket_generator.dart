@@ -2,6 +2,17 @@ part of 'blueprint_generator.dart';
 
 List<String> generateSocket(SocketDescription description) {
   final code = <String>[];
+
+  if (description.enum_) {
+    if (description.enumValues == null) return const [];
+    code.add('enum ${description.type} {');
+    for (final value in description.enumValues!) {
+      code.add('  $value,');
+    }
+    code.add('}');
+    return code;
+  }
+
   final isList = description.multi;
 
   var type = description.type;
@@ -24,8 +35,10 @@ List<String> generateSocket(SocketDescription description) {
   final inputBase = 'abstract class $inputClassName extends ${name}Socket with bp.InputSocket<$type>';
 
   if (!isList) {
+    final inlineValueType = type.endsWith('?') ? type : '$type?';
+
     code.add('$inputBase {');
-    code.add('  $inputClassName({required super.name, $type? inlineValue}) {');
+    code.add('  $inputClassName({required super.name, $inlineValueType inlineValue}) {');
     code.add('    this.inlineValue = inlineValue ?? defaultValue;');
     code.add('  }');
     code.add('');
@@ -36,7 +49,7 @@ List<String> generateSocket(SocketDescription description) {
   } else {
     code.add('$inputBase, bp.ListInputSocket<${description.type}, $type> {');
     code.add('  $inputClassName({required super.name}) {');
-    code.add('    this.inlineValue = defaultValue;');
+    code.add('    inlineValue = defaultValue;');
     code.add('  }');
     code.add('}');
     code.add('');

@@ -13,7 +13,7 @@ abstract interface class LayoutBox {
     if (!old.transform.equals(incoming.transform)) return false;
 
     final intrinsicSize = old.intrinsicSize;
-    if (!intrinsicSize.equals(incoming.intrinsicSize(context._evaluation))) return false;
+    if (!intrinsicSize.equals(incoming.intrinsicSize(context.evaluation))) return false;
 
     if (old.size != incoming.resolveSize(context)) return false;
     if (old.layout != null && incoming is LayoutContainer) {

@@ -24,6 +24,7 @@ String _upperCamel(String input) {
 
 List<String> generateBlueprintProto({
   List<NodeDescription> nodes = const [],
+  List<SocketDescription> sockets = const [],
 }) {
   final code = <String>[
     'message Node {',
@@ -57,6 +58,7 @@ List<String> generateBlueprintProto({
     for (final (i, (type, name)) in entry.value.indexed) {
       final pbType = switch (type) {
         'int' => 'int32',
+        'String' => 'string',
         _ => type,
       };
 
@@ -69,11 +71,26 @@ List<String> generateBlueprintProto({
   code.removeLast();
   code.add('}');
 
+  // Enum declarations
+  for (final socket in sockets) {
+    if (socket.enumValues != null) {
+      final pbName = _camelToSnake(socket.type).toUpperCase();
+      code.add('enum ${socket.type} {');
+      for (final (i, value) in socket.enumValues!.indexed) {
+        final valueName = '${pbName}_${_camelToSnake(value).toUpperCase()}';
+        code.add('  $valueName = $i;');
+      }
+      code.add('}');
+      code.add('');
+    }
+  }
+
   return code;
 }
 
 List<String> generateBlueprintCodec({
   List<NodeDescription> nodes = const [],
+  List<SocketDescription> sockets = const [],
 }) {
   final code = <String>[
     'import \'package:program/program.dart\';',
@@ -91,9 +108,14 @@ List<String> generateBlueprintCodec({
     code.add('    id: v.id.decode(),');
 
     for (final input in node.inputs) {
+      final name = input.name;
       if (input.type.multi) continue;
 
-      final name = input.name;
+      if (input.type.enum_) {
+        code.add('    $name: v.$nodeName.$name.decode(),');
+        continue;
+      }
+
       final isPassthrough = passthroughTypes.contains(input.type.type);
       if (isPassthrough) {
         code.add('    $name: \$opt(v.$nodeName.has${_upperCamel(name)}, () => v.$nodeName.$name),');
@@ -106,9 +128,14 @@ List<String> generateBlueprintCodec({
     code.add('    id: v.id.encode(),');
     code.add('    $nodeName: .new(');
     for (final input in node.inputs) {
+      final name = input.name;
       if (input.type.multi) continue;
 
-      final name = input.name;
+      if (input.type.enum_) {
+        code.add('      $name: v.$name.encode(),');
+        continue;
+      }
+
       final isPassthrough = passthroughTypes.contains(input.type.type);
       if (isPassthrough) {
         code.add('      $name: v.i.$name.inlineValue,');
@@ -149,6 +176,39 @@ List<String> generateBlueprintCodec({
   code.add('  },');
   code.add(');');
   code.add('');
+
+  // Enum codecs
+  for (final socket in sockets) {
+    final pbName = _camelToSnake(socket.type).toUpperCase();
+    if (socket.enumValues != null) {
+      final codecName = '_${_lowerCamel(socket.type)}Codec';
+      code.add(
+        'extension ${socket.type}Encode on ${socket.type} { gen.${socket.type} encode() => $codecName.encode(this); }',
+      );
+      code.add(
+        'extension ${socket.type}Decode on gen.${socket.type} { ${socket.type} decode() => $codecName.decode(this); }',
+      );
+      code.add('');
+
+      code.add('final $codecName = \$codec<${socket.type}, gen.${socket.type}>(');
+      code.add('  decoder: (v) => switch(v) {');
+
+      for (final value in socket.enumValues!) {
+        final pbValueName = '${pbName}_${_camelToSnake(value).toUpperCase()}';
+        code.add('    .$pbValueName => .$value,');
+      }
+      code.add('    _ => throw ArgumentError(),');
+      code.add('  },');
+      code.add('  encoder: (v) => switch(v) {');
+      for (final value in socket.enumValues!) {
+        final pbValueName = '${pbName}_${_camelToSnake(value).toUpperCase()}';
+        code.add('    .$value => .$pbValueName,');
+      }
+      code.add('  },');
+      code.add(');');
+      code.add('');
+    }
+  }
 
   return code;
 }

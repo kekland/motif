@@ -34,7 +34,7 @@ final class BlueprintSlice {
     final newConnections = connections.map((c) {
       final newInput = c.input.copyWith(node: nodeIdMapping[c.input.node]!);
       final newOutput = c.output.copyWith(node: nodeIdMapping[c.output.node]!);
-      return c.copyWith(input: newInput, output: newOutput);
+      return c.copyWith(input: newInput, output: newOutput, index: c.index);
     });
 
     return BlueprintSlice(

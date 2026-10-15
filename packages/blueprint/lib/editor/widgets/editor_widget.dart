@@ -3,6 +3,8 @@ part of '../editor.dart';
 abstract class BlueprintSocketValueBuilder<T> {
   const BlueprintSocketValueBuilder();
 
+  bool get isInline => false;
+
   Widget build(
     BuildContext context,
     InputSocket<T> socket,
@@ -33,6 +35,13 @@ class BlueprintColorResolvers {
   final Color? Function(Symbol type) resolve;
 }
 
+class BlueprintEnums {
+  new(this.values);
+  BlueprintEnums.empty() : values = const {};
+
+  final Map<Type, List<Enum>> values;
+}
+
 class BlueprintNodeFactory {
   BlueprintNodeFactory({
     required this.name,
@@ -50,18 +59,21 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
     this.socketValueBuilders = const [],
     this.colorResolvers,
     this.nodeFactories = const {},
+    this.enums,
   });
 
   final BlueprintEditor<B> editor;
   final List<BlueprintSocketValueBuilder> socketValueBuilders;
   final BlueprintColorResolvers? colorResolvers;
   final Map<String, List<BlueprintNodeFactory>> nodeFactories;
+  final BlueprintEnums? enums;
 
   @override
   Widget build(BuildContext context) {
     final editor = useListenable(this.editor);
     final builders = useMemoized(() => BlueprintSocketValueBuilders(socketValueBuilders), [...socketValueBuilders]);
     final colorResolvers = useMemoized(() => this.colorResolvers ?? .empty(), [this.colorResolvers]);
+    final enums = useMemoized(() => this.enums ?? .empty(), [this.enums]);
 
     final child = EditorActions(
       child: EditorShortcuts(
@@ -69,20 +81,21 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
       ),
     );
 
-    return Provider.value(
-      value: builders,
-      child: Provider.value(
-        value: colorResolvers,
-        child: ChangeNotifierProvider<BlueprintEditor>.value(
-          value: editor,
-          child: Surface(
-            clipBehavior: .hardEdge,
-            child: BlueprintContextMenuWidget(
-              onAddNode: (position, node) => editor.add(node, position: position),
-              onDeleteNode: (node) => editor.remove(node.id),
-              nodeFactories: nodeFactories,
-              child: child,
-            ),
+    return MultiProvider(
+      providers: [
+        Provider.value(value: builders),
+        Provider.value(value: colorResolvers),
+        Provider.value(value: enums),
+      ],
+      child: ChangeNotifierProvider<BlueprintEditor>.value(
+        value: editor,
+        child: Surface(
+          clipBehavior: .hardEdge,
+          child: BlueprintContextMenuWidget(
+            onAddNode: (position, node) => editor.add(node, position: position),
+            onDeleteNode: (node) => editor.remove(node.id),
+            nodeFactories: nodeFactories,
+            child: child,
           ),
         ),
       ),

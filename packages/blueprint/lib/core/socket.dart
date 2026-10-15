@@ -28,7 +28,8 @@ mixin InputSocket<T> on Socket<T> {
   late final T inlineValue;
 
   bool accepts(OutputSocket o) =>
-      (o.type == elementType || _widens(o.type, elementType)) && !(isConstant && o.isDynamic);
+      elementType == _typeOf<Object?>() ||
+      (o.type == _typeOf<Object?>() || o.type == elementType || _widens(o.type, elementType));
 
   static bool _widens(Type from, Type to) => from == int && to == double;
 }

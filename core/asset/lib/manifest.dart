@@ -38,4 +38,6 @@ final class AssetManifest({
   Iterable<FontAsset> get fonts => _fonts ??= entries.values.whereType<FontAsset>().toList();
   Iterable<ImageAsset> get images => _images ??= entries.values.whereType<ImageAsset>().toList();
   FontCatalog get fontCatalog => _fontCatalog ??= .fromAssets(fonts);
+
+  AssetManifest clone() => .new(entries: .from(entries));
 }

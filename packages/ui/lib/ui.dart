@@ -39,7 +39,6 @@ export 'package:flutter/material.dart'
 export 'package:shared/shared.dart';
 export 'package:state/state.dart';
 
-export 'package:defer_pointer/defer_pointer.dart';
 export 'package:vector_graphics/vector_graphics.dart';
 
 export 'slate.dart';
@@ -67,6 +66,7 @@ export 'ui/divider.dart';
 export 'ui/form/checkbox.dart';
 export 'ui/form/color_input_field.dart';
 export 'ui/form/number_input.dart';
+export 'ui/form/enum_input_field.dart';
 export 'ui/form/input_field_base.dart';
 export 'ui/form/input_field.dart';
 export 'ui/form/text_field.dart';

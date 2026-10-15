@@ -25,6 +25,6 @@ extension ConnectionEncode on Connection { gen.Connection encode() => _connectio
 extension ConnectionDecode on gen.Connection { Connection decode() => _connectionCodec.decode(this); }
 
 final _connectionCodec = $codec<Connection, gen.Connection>(
-  decoder: (v) => .new(v.output.decode(), v.input.decode()),
-  encoder: (v) => .new(output: v.output.encode(), input: v.input.encode()),
+  decoder: (v) => .new(v.output.decode(), v.input.decode(), index: v.index),
+  encoder: (v) => .new(output: v.output.encode(), input: v.input.encode(), index: v.index),
 );

@@ -16,31 +16,58 @@ class GeneratorEditor extends HookWidget {
     return BlueprintEditorWidget(
       editor: editor,
       nodeFactories: {
-        'Math': [
-          .new(name: 'Polar', create: () => PolarNode()),
-          .new(name: 'Pi', create: () => PiNode()),
-          .new(name: 'Divide', create: () => DivideNode()),
-          .new(name: 'Number', create: () => NumberNode()),
-          .new(name: 'Vector', create: () => VectorNode()),
+        'I/O': [
+          .new(name: 'Merge', create: () => MergeNode()),
+        ],
+        'Primitives': [
+          .new(name: 'Vertex', create: () => VertexNode()),
+          .new(name: 'Rectangle', create: () => RectangleNode()),
         ],
         'Geometry': [
-          .new(name: 'Vertices', create: () => VerticesNode()),
-          .new(name: 'Connect vertices', create: () => ConnectVerticesNode()),
-          .new(name: 'Face', create: () => FaceNode()),
-        ],
-        'Random': [
-          .new(name: 'Random vector', create: () => RandomVectorNode()),
-        ],
-        'Modifications': [
           .new(name: 'Array', create: () => ArrayNode()),
-          .new(name: 'Fillet', create: () => FilletNode()),
+          .new(name: 'Transform', create: () => TransformNode()),
+          .new(name: 'Connect Vertices', create: () => ConnectVerticesNode()),
+          .new(name: 'Make Face', create: () => MakeFaceNode()),
         ],
-        'Transform': [
-          .new(name: 'Scale vector', create: () => ScaleVectorNode()),
+        'Query': [
+          .new(name: 'Bounding Box', create: () => BoundingBoxNode()),
         ],
-        'Utilities': [
+        'Field': [
           .new(name: 'Index', create: () => IndexNode()),
         ],
+        'Math': [
+          .new(name: 'Math', create: () => MathNode()),
+          .new(name: 'Vector Math', create: () => VectorMathNode()),
+          .new(name: 'Trig Math', create: () => TrigMathNode()),
+          .new(name: 'Expression', create: () => ExpressionNode()),
+          .new(name: 'Constant', create: () => MathConstantNode()),
+          .new(name: 'Round', create: () => MathRoundNode()),
+          .new(name: 'Combine XY', create: () => CombineXYNode()),
+          .new(name: 'Separate XY', create: () => SeparateXYNode()),
+          .new(name: 'Polar', create: () => PolarNode()),
+          .new(name: 'Random Float', create: () => RandomFloatNode()),
+          .new(name: 'Random Vector', create: () => RandomVectorNode()),
+          // .new(name: 'Number', create: () => NumberNode()),
+          // .new(name: 'Vector', create: () => VectorNode()),
+        ],
+        // 'Geometry': [
+        //   .new(name: 'Vertices', create: () => VerticesNode()),
+        //   .new(name: 'Connect vertices', create: () => ConnectVerticesNode()),
+        //   .new(name: 'Face', create: () => FaceNode()),
+        // ],
+        // 'Random': [
+        //   .new(name: 'Random vector', create: () => RandomVectorNode()),
+        // ],
+        // 'Modifications': [
+        //   .new(name: 'Array', create: () => ArrayNode()),
+        //   .new(name: 'Fillet', create: () => FilletNode()),
+        // ],
+        // 'Transform': [
+        //   .new(name: 'Scale vector', create: () => ScaleVectorNode()),
+        // ],
+        // 'Utilities': [
+        //   .new(name: 'Index', create: () => IndexNode()),
+        // ],
       },
       colorResolvers: .new(
         (category) => switch (category) {
@@ -58,7 +85,14 @@ class GeneratorEditor extends HookWidget {
         _IntegerSocketValueBuilder(),
         _DoubleSocketValueBuilder(),
         _Vector22SocketValueBuilder(),
+        _StringValueBuilder(),
       ],
+      enums: .new({
+        MathOperatorType: MathOperatorType.values,
+        VectorMathOperatorType: VectorMathOperatorType.values,
+        MathConstantType: MathConstantType.values,
+        MathRoundType: MathRoundType.values,
+      }),
     );
   }
 }
@@ -79,6 +113,9 @@ class _IntegerSocketValueBuilder extends BlueprintSocketValueBuilder<int> {
 }
 
 class _BoolSocketValueBuilder extends BlueprintSocketValueBuilder<bool> {
+  @override
+  bool get isInline => true;
+
   @override
   Widget build(
     BuildContext context,
@@ -104,6 +141,22 @@ class _DoubleSocketValueBuilder extends BlueprintSocketValueBuilder<double> {
     return DoubleInputField(
       value: useComputed(() => value() as double?),
       onChanged: (v) => onChanged?.call(v),
+    );
+  }
+}
+
+class _StringValueBuilder extends BlueprintSocketValueBuilder<String> {
+  @override
+  Widget build(
+    BuildContext context,
+    InputSocket<String> socket,
+    ReadonlySignal<Object?> value,
+    void Function(String value)? onChanged,
+  ) {
+    return TextInputField(
+      value: useComputed(() => value() as String?),
+      onChanged: (v) => onChanged?.call(v),
+      options: .new(),
     );
   }
 }

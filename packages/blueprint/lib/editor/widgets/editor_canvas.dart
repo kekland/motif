@@ -8,7 +8,6 @@ class EditorCanvas extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final editor = useListenable(BlueprintEditor.watch(context));
-    final focusScopeNode = useFocusScopeNode();
     final marqueeValue = useValueNotifier<MarqueeValue?>(null);
 
     final children = <Widget>[];
@@ -18,7 +17,7 @@ class EditorCanvas extends HookWidget {
     }
 
     Widget child = InteractiveCanvasFocus(
-      focusScopeNode: focusScopeNode,
+      focusScopeNode: editor.canvasFocusScopeNode,
       child: InteractiveCanvas(
         key: editor.canvasKey,
         transformationController: editor.canvasTransformationController,
@@ -61,7 +60,11 @@ class EditorCanvas extends HookWidget {
             activityFactory: (e) {
               final socketHitTest = editor.hitTestSockets(e.position);
               if (socketHitTest.isNotEmpty) {
-                return ConnectSocketActivity(editor: editor, socket: socketHitTest.first.socket);
+                return ConnectSocketActivity(
+                  editor: editor,
+                  socket: socketHitTest.first.socket,
+                  index: socketHitTest.first.index,
+                );
               }
 
               final nodeHitTest = editor.hitTestNodes(e.position);

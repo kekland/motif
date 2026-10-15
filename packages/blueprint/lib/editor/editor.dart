@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blueprint/editor/actions/actions.dart';
 import 'package:blueprint/editor/widgets/editor_actions.dart';
 import 'package:blueprint/editor/widgets/editor_canvas.dart';
@@ -12,6 +14,8 @@ part 'widgets/connections_widget.dart';
 part 'widgets/editor_widget.dart';
 part 'widgets/node_widget.dart';
 part 'widgets/socket_widget.dart';
+
+final _logger = Logger('BlueprintEditor');
 
 class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifierDisposable {
   BlueprintEditor(B value) {
@@ -55,6 +59,8 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   bool isFixed(NodeId id) => value.isFixed(id);
   bool isConnected(Socket socket) => value.isConnected(socket);
   Iterable<Connection> connectionsOf(NodeId id) => value.connectionsOf(id);
+  Iterable<Connection> socketConnections(SocketRef socket) => value.socketConnections(socket);
+  
   Iterable<OutputSocket> incoming(InputSocket s) => value.incoming(s);
   Iterable<InputSocket> outgoing(OutputSocket s) => value.outgoing(s);
 
@@ -65,6 +71,7 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   final canvasKey = GlobalKey();
   RenderBox get renderCanvas => canvasKey.currentContext!.findRenderObject() as RenderBox;
   late final canvasTransformationController = $customDisposable(TransformationController(), (v) => v.dispose());
+  late final canvasFocusScopeNode = FocusScopeNode();
 
   late final transientConnections = $customDisposable(TransientConnections(), (d) => d.dispose());
   final renderKey = GlobalKey();
@@ -88,6 +95,22 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   Offset? cursorCanvasPosition;
   void onPointerPositionChanged(Offset? offset) {
     cursorCanvasPosition = offset != null ? globalToLocal(offset) : null;
+  }
+
+  bool get canvasHasFocus {
+    if (canvasFocusScopeNode.hasPrimaryFocus) return true;
+
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    var willGetFocus = false;
+    if (primaryFocus == null) {
+      willGetFocus = true;
+    } else if (primaryFocus.ancestors.isEmpty) {
+      willGetFocus = true;
+    } else if (primaryFocus == canvasFocusScopeNode.enclosingScope) {
+      willGetFocus = true;
+    }
+
+    return willGetFocus;
   }
 
   Vec2 get canvasCenter {
@@ -171,13 +194,13 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
     changedNodes: [id],
   );
 
-  void connect(SocketRef a, SocketRef b) => _commit(
-    value.connect(a, b),
+  void connect(SocketRef a, SocketRef b, {int index = 0}) => _commit(
+    value.connect(a, b, index: index),
     changedSockets: [a, b],
   );
 
-  void disconnect(SocketRef a, SocketRef b) => _commit(
-    value.disconnect(a, b),
+  void disconnect(SocketRef a, SocketRef b, {int index = 0}) => _commit(
+    value.disconnect(a, b, index: index),
     changedSockets: [a, b],
   );
 

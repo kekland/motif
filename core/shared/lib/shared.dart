@@ -2,6 +2,7 @@ export 'package:collection/collection.dart';
 export 'package:equatable/equatable.dart';
 export 'package:listen/listen.dart';
 
+export 'expression/expression.dart';
 export 'log/log.dart';
 export 'storage/storage.dart';
 export 'hash/hash.dart';

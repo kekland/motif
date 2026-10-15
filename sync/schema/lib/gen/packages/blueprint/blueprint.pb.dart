@@ -140,10 +140,12 @@ class Connection extends $pb.GeneratedMessage {
   factory Connection({
     SocketRef? output,
     SocketRef? input,
+    $core.int? index,
   }) {
     final result = create();
     if (output != null) result.output = output;
     if (input != null) result.input = input;
+    if (index != null) result.index = index;
     return result;
   }
 
@@ -164,6 +166,7 @@ class Connection extends $pb.GeneratedMessage {
         subBuilder: SocketRef.create)
     ..aOM<SocketRef>(2, _omitFieldNames ? '' : 'input',
         subBuilder: SocketRef.create)
+    ..aI(3, _omitFieldNames ? '' : 'index')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -205,6 +208,15 @@ class Connection extends $pb.GeneratedMessage {
   void clearInput() => $_clearField(2);
   @$pb.TagNumber(2)
   SocketRef ensureInput() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.int get index => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set index($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasIndex() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIndex() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

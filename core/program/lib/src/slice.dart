@@ -3,6 +3,7 @@ part of '_program.dart';
 final class ProgramSlice {
   new({required this.statements});
   ProgramSlice.empty() : statements = [];
+  ProgramSlice.single(Statement statement) : statements = [statement];
 
   factory ProgramSlice.decode(gen.ProgramSlice program) => ProgramCodec.decodeProgramSlice(program);
   static ProgramSlice? decodeRaw(Uint8List data) => codec.decodeRaw(() => .decode(.fromBuffer(data)));
@@ -74,6 +75,11 @@ final class ProgramSlice {
   }
 
   ProgramSlice extend(ProgramSlice other) => .new(statements: [...statements, ...other.statements]);
+
+  ProgramSlice replace(Map<StatementId, Statement> replacements) {
+    final newStatements = statements.map((s) => replacements[s.id] ?? s).toList();
+    return ProgramSlice(statements: newStatements);
+  }
 
   Statement operator [](StatementId id) => statements.firstWhere((s) => s.id == id);
   void operator []=(StatementId id, Statement statement) {

@@ -98,11 +98,11 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
 
   TransientConnections get transientConnections => _controller.transientConnections;
 
-  final _sockets = <SocketRef, RenderSocket>{};
-  void attachSocket(RenderSocket socket) => _sockets[socket.ref] = socket;
-  void detachSocket(RenderSocket socket) => _sockets.remove(socket.ref);
-  Offset getSocketPosition(SocketRef socket) {
-    final renderSocket = _sockets[socket]!;
+  final _sockets = <(SocketRef, int?), RenderSocket>{};
+  void attachSocket(RenderSocket socket) => _sockets[(socket.ref, socket.index)] = socket;
+  void detachSocket(RenderSocket socket) => _sockets.remove((socket.ref, socket.index));
+  Offset getSocketPosition(SocketRef socket, int index) {
+    final renderSocket = _sockets[(socket, index)]!;
     final socketRect = MatrixUtils.transformRect(
       renderSocket.getTransformTo(this),
       Offset.zero & renderSocket.size,
@@ -137,8 +137,8 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
   void _onTransientConnectionChanged() => markNeedsPaint();
 
   Cubic2 _getConnectionCubic(Connection connection) {
-    final start = getSocketPosition(connection.input).vec2;
-    final end = getSocketPosition(connection.output).vec2;
+    final start = getSocketPosition(connection.input, connection.index).vec2;
+    final end = getSocketPosition(connection.output, 0).vec2;
     return _getConnectionCubicRaw(start, end);
   }
 
@@ -181,14 +181,15 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
 
     final transientConnections = this.transientConnections.connections.toList();
     for (final connection in transientConnections) {
-      var start = getSocketPosition(connection.source.ref);
+      var start = getSocketPosition(connection.source, connection.sourceIndex);
       var end = connection.position;
+      final source = _sockets[(connection.source, 0)]!._socket;
 
-      if (connection.source is OutputSocket) {
+      if (source is OutputSocket) {
         (start, end) = (end, start);
       }
 
-      final color = colorResolvers.resolve(connection.source.category) ?? connectionsColor;
+      final color = colorResolvers.resolve(source.category) ?? connectionsColor;
       final cubic = _getConnectionCubicRaw(start.vec2, end.vec2);
       _drawConnection(canvas, cubic, color);
     }
@@ -234,7 +235,14 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
 
       if (socketRect.contains(position)) {
         final localPosition = position - socketRect.topLeft;
-        result.add(SocketHitTestEntry(socket, localPosition, socket: socket.socket));
+        result.add(
+          SocketHitTestEntry(
+            socket,
+            localPosition,
+            socket: socket.socket,
+            index: socket.index,
+          ),
+        );
       }
     }
 
@@ -275,9 +283,15 @@ class RenderConnections extends RenderProxyBox with OverflowHitTestable {
 }
 
 class SocketHitTestEntry extends BoxHitTestEntry {
-  SocketHitTestEntry(super.target, super.localPosition, {required this.socket});
+  SocketHitTestEntry(
+    super.target,
+    super.localPosition, {
+    required this.socket,
+    required this.index,
+  });
 
   final Socket socket;
+  final int index;
 }
 
 class NodeHitTestEntry extends BoxHitTestEntry {

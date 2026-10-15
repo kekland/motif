@@ -30,19 +30,23 @@ extension type const SocketRef._((NodeId node, int index) _) implements Object {
   );
 }
 
-extension type const Connection._((SocketRef output, SocketRef input) _) implements Object {
-  const Connection(SocketRef output, SocketRef input) : this._((output, input));
+extension type const Connection._((SocketRef output, SocketRef input, int index) _) implements Object {
+  const Connection(SocketRef output, SocketRef input, {int index = 0}) : this._((output, input, index));
   SocketRef get output => _.$1;
   SocketRef get input => _.$2;
+  int get index => _.$3;
 
   bool hasNode(NodeId id) => output.node == id || input.node == id;
+  bool hasSocket(SocketRef ref) => output == ref || input == ref;
 
   Connection copyWith({
     SocketRef? output,
     SocketRef? input,
+    int? index,
   }) => .new(
     output ?? this.output,
     input ?? this.input,
+    index: index ?? this.index,
   );
 }
 
@@ -88,8 +92,23 @@ abstract class Blueprint<B extends Blueprint<B>> {
   bool hasNode(NodeId id) => _nodeMap.containsKey(id);
 
   Iterable<Connection> connectionsOf(NodeId id) => connections.where((c) => c.hasNode(id));
+  Iterable<Connection> socketConnections(SocketRef ref) => connections.where((c) => c.hasSocket(ref));
   Iterable<OutputSocket> incoming(InputSocket s) => _incoming[s.ref]?.map(socket) ?? const [];
   Iterable<InputSocket> outgoing(OutputSocket s) => _outgoing[s.ref]?.map(socket) ?? const [];
+
+  int listIncomingLength(ListInputSocket s) {
+    final incoming = socketConnections(s.ref);
+    return incoming.isEmpty ? 0 : incoming.map((c) => c.index).reduce(math.max) + 1;
+  }
+
+  Iterable<OutputSocket?> listIncoming(ListInputSocket s) {
+    final length = listIncomingLength(s);
+    if (length == 0) return const [];
+    return List.generate(length, (i) {
+      final c = socketConnections(s.ref).firstWhereOrNull((c) => c.index == i)?.output;
+      return c != null ? socket(c) : null;
+    });
+  }
 
   bool isConnected(Socket s) => switch (s) {
     InputSocket() => _incoming.containsKey(s.ref),
@@ -147,11 +166,11 @@ abstract class Blueprint<B extends Blueprint<B>> {
     }
   }
 
-  B connect(SocketRef a, SocketRef b) {
+  B connect(SocketRef a, SocketRef b, {int index = 0}) {
     final (output, input) = _orientConnection(a, b);
     assert(input.accepts(output), 'cannot connect ${output.type} to ${input.type}');
 
-    final c = Connection(output.ref, input.ref);
+    final c = Connection(output.ref, input.ref, index: index);
     if (connections.contains(c)) return this as B;
 
     return copyWith(
@@ -163,9 +182,9 @@ abstract class Blueprint<B extends Blueprint<B>> {
     );
   }
 
-  B disconnect(SocketRef a, SocketRef b) {
+  B disconnect(SocketRef a, SocketRef b, {int index = 0}) {
     final (output, input) = _orientConnection(a, b);
-    final c = Connection(output.ref, input.ref);
+    final c = Connection(output.ref, input.ref, index: index);
     if (!connections.contains(c)) return this as B;
 
     return copyWith(

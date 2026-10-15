@@ -1,3 +1,7 @@
+# 0.2.1
+
+* Generators: added a bunch more nodes and improvements.
+
 # 0.2.0
 
 * Context menu: now supports nested submenus.

@@ -135,3 +135,10 @@ void useControllerTextEffect(
     return () => controller.removeListener(_listener);
   }, [controller, listener]);
 }
+
+void useSimpleEffect(VoidCallback callback, [List<Object?> keys = const []]) {
+  useEffect(() {
+    callback();
+    return null;
+  }, keys);
+}

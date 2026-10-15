@@ -4,27 +4,31 @@ class BaseSocketWidget extends StatelessWidget {
   const BaseSocketWidget({
     super.key,
     required this.socket,
+    required this.index,
     this.dx = 0.0,
   });
 
   final Socket socket;
+  final int index;
   final double dx;
 
   @override
   Widget build(BuildContext context) {
-    final size = socket.isDynamic ? 10.0 : 8.0;
-    final shape = socket.isDynamic ? BeveledRectangleBorder(borderRadius: .circular(16.0)) : StadiumBorder();
-    final color = context.watch<BlueprintColorResolvers>();
+    final (size, borderWidth) = switch (socket.isDynamic) {
+      true => (12.0, 0.5),
+      false => (8.0, 1.0),
+    };
 
-    final height = socket.isList ? 16.0 : size;
+    final shape = socket.isDynamic ? BeveledRectangleBorder(borderRadius: .circular(size / 2.0)) : StadiumBorder();
+    final color = context.watch<BlueprintColorResolvers>();
 
     Widget child = Container(
       width: size,
-      height: height,
+      height: size,
       decoration: ShapeDecoration(
         shape: shape.copyWithBorderSide(
           .new(
-            width: 1.0,
+            width: borderWidth,
             color: context.colors.surface.tertiary,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),
@@ -48,6 +52,7 @@ class BaseSocketWidget extends StatelessWidget {
       alignment: .center,
       child: _SocketWidget(
         socket: socket,
+        index: index,
         child: child,
       ),
     );
@@ -60,12 +65,14 @@ class ConnectSocketActivity extends DragActivity {
   ConnectSocketActivity({
     required this.editor,
     required this.socket,
+    required this.index,
   });
 
   final BlueprintEditor editor;
   final Socket socket;
+  final int index;
 
-  late final Socket targetSocket;
+  late final SocketRef targetSocket;
   late final TransientConnection connection;
 
   @override
@@ -73,16 +80,21 @@ class ConnectSocketActivity extends DragActivity {
     super.onStart(details);
 
     final socket = this.socket;
-    if (socket is InputSocket && editor.incoming(socket).isNotEmpty) {
-      // Disconnect any existing connection on the input socket
-      final output = editor.incoming(socket).first;
-      editor.disconnect(output.ref, socket.ref);
-      connection = editor.transientConnections.add(output, editor.globalToLocal(details.globalPosition));
-      targetSocket = output;
-    } else {
-      connection = editor.transientConnections.add(socket, editor.globalToLocal(details.globalPosition));
-      targetSocket = socket;
+    if (socket is InputSocket) {
+      final connections = editor.socketConnections(socket.ref);
+      final existing = connections.firstWhereOrNull((c) => c.index == index);
+      if (existing != null) {
+        final output = existing.output;
+        editor.disconnect(existing.output, socket.ref, index: index);
+
+        connection = editor.transientConnections.add(output, 0, editor.globalToLocal(details.globalPosition));
+        targetSocket = output;
+        return;
+      }
     }
+
+    connection = editor.transientConnections.add(socket.ref, index, editor.globalToLocal(details.globalPosition));
+    targetSocket = socket.ref;
   }
 
   @override
@@ -98,20 +110,26 @@ class ConnectSocketActivity extends DragActivity {
 
     final endHitTest = editor.hitTestSockets(details.globalPosition);
     for (final hit in endHitTest) {
-      editor.connect(targetSocket.ref, hit.socket.ref);
+      editor.connect(targetSocket, hit.socket.ref, index: hit.index);
       break;
     }
   }
 }
 
 class _SocketWidget extends SingleChildRenderObjectWidget {
-  const _SocketWidget({super.key, super.child, required this.socket});
+  const _SocketWidget({
+    super.key,
+    super.child,
+    required this.socket,
+    required this.index,
+  });
 
   final Socket socket;
+  final int index;
 
   @override
   RenderSocket createRenderObject(BuildContext context) {
-    return RenderSocket(socket: socket);
+    return RenderSocket(socket: socket, index: index);
   }
 
   @override
@@ -119,7 +137,7 @@ class _SocketWidget extends SingleChildRenderObjectWidget {
 }
 
 class RenderSocket extends RenderProxyBox {
-  RenderSocket({required this._socket});
+  RenderSocket({required this._socket, required this._index});
 
   SocketRef get ref => socket.ref;
 
@@ -128,6 +146,14 @@ class RenderSocket extends RenderProxyBox {
   set socket(Socket value) {
     if (_socket == value) return;
     _socket = value;
+    markNeedsLayout();
+  }
+
+  int _index;
+  int get index => _index;
+  set index(int value) {
+    if (_index == value) return;
+    _index = value;
     markNeedsLayout();
   }
 

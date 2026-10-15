@@ -26,7 +26,7 @@ void main() {
   );
 
   File(outputPath).writeAsStringSync(code.join('\n'));
-  File(outputCodecPath).writeAsStringSync(generateBlueprintCodec(nodes: nodes).join('\n'));
+  File(outputCodecPath).writeAsStringSync(generateBlueprintCodec(nodes: nodes, sockets: sockets).join('\n'));
 
   final protoCode = File(outputProtoPath).readAsLinesSync();
   const mark = '// % GENERATOR MARK';
@@ -34,7 +34,7 @@ void main() {
   if (markIndex == -1) throw Exception('Generator mark not found in proto file');
   protoCode.removeRange(markIndex + 1, protoCode.length);
   protoCode.add('');
-  protoCode.addAll(generateBlueprintProto(nodes: nodes));
+  protoCode.addAll(generateBlueprintProto(nodes: nodes, sockets: sockets));
   File(outputProtoPath).writeAsStringSync(protoCode.join('\n'));
 
   print('Generated blueprint code written to $outputPath');

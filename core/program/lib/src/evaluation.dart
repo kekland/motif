@@ -162,6 +162,12 @@ final class Evaluation {
 
   // A? resolveAsset<A extends Asset>(AssetId id) => program.assetManifest[id] as A?;
   void loadAsset(StatementId? id, Asset asset) => assetCache?.fetch(id, asset);
+
+  /// Creates a child evaluation for the given program slice.
+  Evaluation subEvaluation(ProgramSlice slice) {
+    final evaluation = Evaluation(.new(slice.statements), assetCache: assetCache);
+    return evaluation;
+  }
 }
 
 class AlwaysNotifier<T> extends ChangeNotifier implements ValueListenable<T> {

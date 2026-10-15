@@ -3,18 +3,18 @@ part of '../_program.dart';
 /// A context given by the evaluation during statement execution.
 class EvalContext {
   EvalContext(
-    this._evaluation,
+    this.evaluation,
     this.id, {
     Map<Selector, Object?>? resolutions,
   }) : _resolutions = resolutions ?? {};
 
-  final Evaluation _evaluation;
+  final Evaluation evaluation;
   final StatementId id;
   final Map<Selector, Object?> _resolutions;
   final _styles = <CellRef, CellStyle>{};
 
-  Bundle get bundle => _evaluation.bundle;
-  PrefabIndex get prefabs => _evaluation.prefabs;
+  Bundle get bundle => evaluation.bundle;
+  PrefabIndex get prefabs => evaluation.prefabs;
 
   StatementId derive(U64 key, {Object? origin}) => id.derive(key);
 
@@ -25,17 +25,17 @@ class EvalContext {
     return bundle.handle(ref) ?? (throw UnresolvedRef('$ref not found in bundle'));
   }
 
-  Iterable<CellRef> descendants(CellRef ref) => _evaluation.lineage.descendantsOf(ref);
-  Iterable<CellRef> productsOf(StatementId id) => _evaluation.productsOf(id);
+  Iterable<CellRef> descendants(CellRef ref) => evaluation.lineage.descendantsOf(ref);
+  Iterable<CellRef> productsOf(StatementId id) => evaluation.productsOf(id);
 
   void style(CellRef ref, CellStyle style) => _styles[ref] = style;
-  CellStyle styleOf(CellRef ref) => _evaluation.style.of(ref)!;
-  Placement placementOf(StatementId id) => _evaluation.layout.placementOf(id)!;
+  CellStyle styleOf(CellRef ref) => evaluation.style.of(ref)!;
+  Placement placementOf(StatementId id) => evaluation.layout.placementOf(id)!;
 
   Mat4 worldToLocal(FrameRef ref) => bundle.query.worldToLocal(ref);
 
   // A? resolveAsset<A extends Asset>(AssetId id) => _evaluation.resolveAsset<A>(id);
-  void loadAsset(Asset asset) => _evaluation.loadAsset(id, asset);
+  void loadAsset(Asset asset) => evaluation.loadAsset(id, asset);
 }
 
 class ModifierEvalContext<B extends Statement> extends EvalContext {
