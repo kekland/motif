@@ -49,4 +49,14 @@ final class ModifierStack {
     out[index] = d;
     return .new(out);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ModifierStack) return false;
+    return listEquals(_entries, other._entries);
+  }
+
+  @override
+  int get hashCode => Object.hashAll(_entries);
 }

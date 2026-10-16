@@ -70,10 +70,11 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final editor = useListenable(this.editor);
     final builders = useMemoized(() => BlueprintSocketValueBuilders(socketValueBuilders), [...socketValueBuilders]);
     final colorResolvers = useMemoized(() => this.colorResolvers ?? .empty(), [this.colorResolvers]);
     final enums = useMemoized(() => this.enums ?? .empty(), [this.enums]);
+
+    print('build editor');
 
     final child = EditorActions(
       child: EditorShortcuts(
@@ -86,17 +87,15 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
         Provider.value(value: builders),
         Provider.value(value: colorResolvers),
         Provider.value(value: enums),
+        Provider<BlueprintEditor>.value(value: editor),
       ],
-      child: ChangeNotifierProvider<BlueprintEditor>.value(
-        value: editor,
-        child: Surface(
-          clipBehavior: .hardEdge,
-          child: BlueprintContextMenuWidget(
-            onAddNode: (position, node) => editor.add(node, position: position),
-            onDeleteNode: (node) => editor.remove(node.id),
-            nodeFactories: nodeFactories,
-            child: child,
-          ),
+      child: Surface(
+        clipBehavior: .hardEdge,
+        child: BlueprintContextMenuWidget(
+          onAddNode: (position, node) => editor.add(node, position: position),
+          onDeleteNode: (node) => editor.remove(node.id),
+          nodeFactories: nodeFactories,
+          child: child,
         ),
       ),
     );

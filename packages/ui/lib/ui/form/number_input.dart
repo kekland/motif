@@ -35,7 +35,7 @@ class IntInputField extends ExpressionInputField<int> {
            if (v == null) return '';
            return v.toString();
          },
-         evaluateExpression: (s) => evaluateExpression<num>(s).toInt(),
+         evaluateExpression: (s) => evaluateExpression<num>(parseExpression(s)).toInt(),
        );
 }
 
@@ -57,7 +57,7 @@ class DoubleInputField extends ExpressionInputField<double> {
            final str = v.toStringAsFixed(fractionDigits);
            return str;
          },
-         evaluateExpression: (s) => evaluateExpression<num>(s).toDouble(),
+         evaluateExpression: (s) => evaluateExpression<num>(parseExpression(s)).toDouble(),
        );
 
   final int fractionDigits;

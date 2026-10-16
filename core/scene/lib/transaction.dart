@@ -5,7 +5,7 @@ final class SceneTransaction {
 
   final Scene scene;
   Program get program => scene.program;
-  Evaluation get evaluation => scene.evaluation;
+  SceneEvaluation get evaluation => scene.evaluation;
 
   var _closed = false;
   var _dirty = false;

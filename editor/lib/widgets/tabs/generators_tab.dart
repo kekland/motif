@@ -13,9 +13,20 @@ class GeneratorsTab extends HookWidget {
 
     if (generatorStatements.isEmpty) {
       return Center(
-        child: Text(
-          'No generator statements selected.',
-          style: context.typography.subtitle.tertiary,
+        child: Column(
+          mainAxisSize: .min,
+          crossAxisAlignment: .center,
+          spacing: 8.0,
+          children: [
+            Text(
+              'No generator statements selected.',
+              style: context.typography.subtitle.tertiary,
+            ),
+            Button(
+              leading: Icons.add(),
+              child: Text('Create new'),
+            ),
+          ],
         ),
       );
     }

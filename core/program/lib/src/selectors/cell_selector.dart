@@ -7,6 +7,9 @@ final class CellSelector<H extends CellHandle> extends Selector<CellRef<H>> {
   CellRef<H> get ref => _ref;
 
   @override
+  SelectorKind get kind => .cell;
+
+  @override
   CellRef<H> _resolve(EvalContext context) {
     final results = context.descendants(ref).where((r) => r.kind == ref.kind);
     if (results.length != 1) throw UnresolvedRef('no unique descendant of $ref');
@@ -27,12 +30,12 @@ final class CellSelector<H extends CellHandle> extends Selector<CellRef<H>> {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, _ref.hashCode);
+  int get hashCode => Object.hash(kind, _ref.hashCode);
 
   @override
   bool operator ==(Object other) {
     if (other is! CellSelector<H>) return false;
-    if (other.runtimeType != runtimeType) return false;
+    if (other.kind != kind) return false;
     if (other.ref != ref) return false;
     return true;
   }

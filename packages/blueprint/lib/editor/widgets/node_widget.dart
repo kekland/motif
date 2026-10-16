@@ -12,7 +12,7 @@ class NodeWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final node = useExistingSignal(editor.node(id)).value;
+    final node = useListenable(editor.node(id)).value;
     final isSelected = useListenable(editor.selection).isNodeSelected(id);
     final color = context.watch<BlueprintColorResolvers>();
     final enums = context.watch<BlueprintEnums>();
@@ -104,13 +104,16 @@ class NodeInputSocketWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signal = editor.socket<InputSocket>(this.socket.ref);
-    final socket = useExistingSignal(signal).value;
+    final notifier = editor.socket<InputSocket>(this.socket.ref);
+    final socket = useListenable(notifier).value;
     final isConnected = editor.isConnected(socket);
 
     final valueBuilders = context.watch<BlueprintSocketValueBuilders>();
     final valueBuilder = valueBuilders.builderFor(socket.type);
-    final value = useComputed<Object?>(() => signal().inlineValue);
+    final value = useSignal(socket.inlineValue);
+    useOnListenableChange(notifier, () {
+      value.value = socket.inlineValue;
+    });
 
     late final Widget? trailing;
     final isInline = valueBuilder?.isInline ?? false;
@@ -168,8 +171,8 @@ final class const NodeListInputSocketWidget({
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final signal = editor.socket<InputSocket>(this.socket.ref);
-    final socket = useExistingSignal(signal).value;
+    final notifier = editor.socket<InputSocket>(this.socket.ref);
+    final socket = useValueListenable(notifier);
     final connections = editor.socketConnections(socket.ref);
     final maxIndex = connections.isEmpty ? -1 : connections.map((c) => c.index).reduce(max);
 

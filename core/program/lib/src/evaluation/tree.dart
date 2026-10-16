@@ -118,12 +118,14 @@ final class EvalNode {
   Statement? lastStatement;
   Object? source;
 
-  bool get childrenStale => !identical(lastProduced, statement);
+  bool get childrenStale => !identical(lastProduced, statement) && !(lastProduced?.isEquivalentTo(statement) ?? false);
 
   void update(Statement newStatement) {
     if (identical(statement, newStatement)) return;
     lastStatement = statement;
     statement = newStatement;
+
+    if (lastStatement!.isEquivalentTo(statement)) return;
     markDirty();
   }
 

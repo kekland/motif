@@ -51,7 +51,7 @@ final class const Decorations(final List<Decoration> entries) {
   bool get isNotEmpty => entries.isNotEmpty;
 
   @override
-  int get hashCode => Object.hash(runtimeType, Object.hashAll(entries));
+  int get hashCode => Object.hashAll(entries);
 
   @override
   bool operator ==(Object other) {

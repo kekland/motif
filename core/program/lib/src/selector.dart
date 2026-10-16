@@ -1,5 +1,7 @@
 part of '_program.dart';
 
+enum SelectorKind { cell, chain, fragment, parent }
+
 /// A [Selector] represents a [Statement]'s dependency on a cell or a [Statement].
 ///
 /// Selectors may carry semantic meaning, which are used by routers to determine certain actions. For example, a
@@ -8,6 +10,8 @@ part of '_program.dart';
 /// related to the frame.
 sealed class Selector<T> {
   Selector(this.refs);
+
+  SelectorKind get kind;
 
   T _resolve(EvalContext context);
 

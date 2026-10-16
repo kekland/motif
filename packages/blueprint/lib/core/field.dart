@@ -98,6 +98,24 @@ class DynamicField<T> extends Field<T> {
   DynamicField(this.evaluator);
   final FieldEvaluator<T> evaluator;
 
+  U64? _lastId;
+  Object? _lastElement;
+  T? _lastValue;
+
   @override
-  T evaluate(FieldContext context) => evaluator(context);
+  T evaluate(FieldContext context) {
+    final id = context.id;
+    if (_lastValue != null && _lastId != null && _lastId == id && identical(context.element, _lastElement)) {
+      return _lastValue as T;
+    }
+
+    final value = evaluator(context);
+    if (id != null) {
+      _lastId = id;
+      _lastElement = context.element;
+      _lastValue = value;
+    }
+
+    return value;
+  }
 }

@@ -17,14 +17,14 @@ class TreePanel extends HookWidget {
     final tree = useListenable(editor.scene.tree);
     final selection = useListenable(editor.selection);
     final listKey = useMemoized(() => GlobalKey());
-    final controller = useDisposable(() => SceneTreeController(editor, tree, selection, listKey, scrollController));
+    final controller = useDisposable(() => SceneTreeController(editor, listKey, scrollController));
     final propTransaction = useMemoized(() => ScenePropTransaction(editor.scene), [editor]);
     final nodes = controller.nodes;
     useListenable(controller);
 
     void onTap(StatementId id) {
       if (context.keyboard.isCtrlPressed) {
-        context.editor.selection.toggleStatement(id);
+        selection.toggleStatement(id);
       } else if (context.keyboard.isShiftPressed) {
         final selectionRange = tree.flattenedRangeOf(selection.statements);
         final target = tree.indexOf(id);
@@ -33,12 +33,12 @@ class TreePanel extends HookWidget {
           final (start, end) = selectionRange;
           final range = (min(start, target), max(end, target));
           final statements = tree.nodesInFlattenedRange(range.$1, range.$2).map((n) => n.id);
-          context.editor.selection.setStatements(statements);
+          selection.setStatements(statements);
         } else {
-          context.editor.selection.setStatement(id);
+          selection.setStatement(id);
         }
       } else {
-        context.editor.selection.setStatement(id);
+        selection.setStatement(id);
       }
     }
 

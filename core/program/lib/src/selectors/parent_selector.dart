@@ -2,6 +2,9 @@ part of '../_program.dart';
 
 final class ParentSelector(super.ref) extends CellSelector<FrameHandle> {
   @override
+  SelectorKind get kind => .parent;
+
+  @override
   ParentSelector clone() => .new(ref);
 
   static ParentSelector? of(CellRef<FrameHandle>? ref) {
@@ -29,12 +32,12 @@ final class ParentSelector(super.ref) extends CellSelector<FrameHandle> {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, ref.hashCode);
+  int get hashCode => Object.hash(kind, ref.hashCode);
 
   @override
   bool operator ==(Object other) {
     if (other is! ParentSelector) return false;
-    if (other.runtimeType != runtimeType) return false;
+    if (other.kind != kind) return false;
     if (other.ref != ref) return false;
     return true;
   }

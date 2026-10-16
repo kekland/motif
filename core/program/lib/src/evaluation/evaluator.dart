@@ -184,10 +184,10 @@ extension Evaluator on EvalPass {
     evaluation.lineage.attach(commit);
     evaluation.graph.attach(commit);
     evaluation.live.attach(commit);
-    evaluation.object.attach(commit);
     restyled.addAll(evaluation.style.attach(commit));
     added.addAll(commit.added);
     deleted.addAll(commit.deleted);
+    evaluation._install(commit);
   }
 
   void _uninstall(EvalNode node) {
@@ -198,7 +198,7 @@ extension Evaluator on EvalPass {
     evaluation.graph.detach(commit);
     evaluation.live.detach(commit);
     evaluation.style.detach(commit);
-    evaluation.object.detach(commit);
+    evaluation._uninstall(commit);
     deleted.addAll(commit.added);
     added.addAll(commit.deleted);
     _unapply(commit);
@@ -306,7 +306,7 @@ extension Evaluator on EvalPass {
 
   void _onDelta(Delta delta) {
     movedFrames.addAll(delta.movedFrames);
-    evaluation.object.onMovedFrames(delta.movedFrames);
+    evaluation._onDelta(delta);
   }
 
   void _onMoved(Iterable<CellRef> cells) {

@@ -47,10 +47,15 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
 
   @override
   Iterable<GeneratedStatement> generate(EvalContext context) {
+    final stopwatch = Stopwatch()..start();
+
     final statements = inputs.map(context.resolve).toList();
     final slice = ProgramSlice(statements: statements);
     final output = generator.execute(context, slice).statements;
     final generatedIds = output.map((s) => s.id).toSet();
+
+    stopwatch.stop();
+    print('GeneratorStatement executed in ${stopwatch.elapsedMilliseconds} ms');
 
     final result = <GeneratedStatement>[];
     for (final s in output) {
@@ -90,6 +95,15 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
     generator: partial.field(#generator),
     transform: partial.field(#transform),
   );
+
+  @override
+  bool isEquivalentTo(GeneratorStatement other) {
+    if (modifiers != other.modifiers) return false;
+    if (!listEquals(inputs, other.inputs)) return false;
+    if (!generator.isEquivalentTo(other.generator)) return false;
+    if (!transform.equals(other.transform)) return false;
+    return true;
+  }
 
   @override
   TransformRoute routeTransform(EvalContext context, Ref target) => .absorb;

@@ -4,7 +4,6 @@ export 'src/disposable.dart';
 export 'src/hooks_utils.dart';
 export 'src/listen_shims.dart';
 export 'src/log.dart';
-export 'src/utils.dart';
 
 export 'package:shared/shared.dart';
 export 'package:async/async.dart';

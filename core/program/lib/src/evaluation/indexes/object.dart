@@ -1,7 +1,7 @@
 part of '../../_program.dart';
 
 /// Represents the object tree of the program.
-final class ObjectTree with ChangeNotifier {
+class ObjectTree {
   ObjectTree(this.evaluation);
   final Evaluation evaluation;
   Bundle get bundle => evaluation.bundle;
@@ -147,8 +147,10 @@ final class ObjectTree with ChangeNotifier {
 
     if (!changed) return;
     _flattened = null;
-    notifyListeners();
+    _notifyListeners();
   }
+
+  void _notifyListeners() {}
 
   void onMovedFrames(Set<FrameRef> movedFrames) => _onChanged(movedFrames, .empty());
   void attach(Commit c) => _onChanged(c.moved, c.deleted);
@@ -196,5 +198,14 @@ final class ObjectNode {
     if (index == null) return null;
     if (index! < (_parentChildren.length - 1)) return _parentChildren[index! + 1];
     return null;
+  }
+}
+
+final class SceneObjectTree extends ObjectTree with ChangeNotifier {
+  SceneObjectTree(super.evaluation);
+
+  @override
+  void _notifyListeners() {
+    notifyListeners();
   }
 }

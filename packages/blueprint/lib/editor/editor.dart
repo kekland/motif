@@ -36,17 +36,20 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   // Signals
   // -------------------------------------------------------------------------------------------------------------------
 
-  final _nodeSignals = <NodeId, ObjectSignal<Node>>{};
-  final _socketSignals = <SocketRef, ObjectSignal<Socket>>{};
+  final _nodeKeys = <NodeId, GlobalKey>{};
+  final _nodeNotifiers = <NodeId, AlwaysNotifier<Node>>{};
+  final _socketNotifiers = <SocketRef, AlwaysNotifier<Socket>>{};
 
-  ReadonlySignal<N> node<N extends Node>(NodeId id) {
-    _nodeSignals[id] ??= ObjectSignal<N>(value.node<N>(id));
-    return _nodeSignals[id]! as ReadonlySignal<N>;
+  GlobalKey nodeKey(NodeId id) => _nodeKeys.putIfAbsent(id, () => GlobalKey());
+
+  AlwaysNotifier<N> node<N extends Node>(NodeId id) {
+    _nodeNotifiers[id] ??= AlwaysNotifier<N>(value.node<N>(id));
+    return _nodeNotifiers[id]! as AlwaysNotifier<N>;
   }
 
-  ReadonlySignal<S> socket<S extends Socket>(SocketRef ref) {
-    _socketSignals[ref] ??= ObjectSignal<S>(value.socket<S>(ref));
-    return _socketSignals[ref]! as ReadonlySignal<S>;
+  AlwaysNotifier<S> socket<S extends Socket>(SocketRef ref) {
+    _socketNotifiers[ref] ??= AlwaysNotifier<S>(value.socket<S>(ref));
+    return _socketNotifiers[ref]! as AlwaysNotifier<S>;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -60,7 +63,7 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
   bool isConnected(Socket socket) => value.isConnected(socket);
   Iterable<Connection> connectionsOf(NodeId id) => value.connectionsOf(id);
   Iterable<Connection> socketConnections(SocketRef socket) => value.socketConnections(socket);
-  
+
   Iterable<OutputSocket> incoming(InputSocket s) => value.incoming(s);
   Iterable<InputSocket> outgoing(OutputSocket s) => value.outgoing(s);
 
@@ -139,17 +142,18 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
     _value.value = next;
     for (final id in changedNodes) {
       if (next.hasNode(id)) {
-        _nodeSignals[id]?.value = next.node(id);
+        _nodeNotifiers[id]?.value = next.node(id);
       } else {
-        _nodeSignals.remove(id)?.dispose();
+        _nodeKeys.remove(id);
+        _nodeNotifiers.remove(id)?.dispose();
       }
     }
 
     for (final ref in changedSockets) {
       if (next.hasNode(ref.node)) {
-        _socketSignals[ref]?.value = next.socket(ref);
+        _socketNotifiers[ref]?.value = next.socket(ref);
       } else {
-        _socketSignals.remove(ref)?.dispose();
+        _socketNotifiers.remove(ref)?.dispose();
       }
     }
 
@@ -223,10 +227,10 @@ class BlueprintEditor<B extends Blueprint<B>> with ChangeNotifier, ChangeNotifie
 
   @override
   void dispose() {
-    for (final signal in _nodeSignals.values) signal.dispose();
-    for (final signal in _socketSignals.values) signal.dispose();
-    _nodeSignals.clear();
-    _socketSignals.clear();
+    for (final n in _nodeNotifiers.values) n.dispose();
+    for (final n in _socketNotifiers.values) n.dispose();
+    _nodeNotifiers.clear();
+    _socketNotifiers.clear();
     super.dispose();
   }
 

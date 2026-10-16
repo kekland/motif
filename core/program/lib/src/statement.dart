@@ -56,6 +56,9 @@ sealed class Statement {
     return result;
   }
 
+  /// Returns [true] if this statement would produce the same result.
+  bool isEquivalentTo(covariant Statement other) => false;
+
   // ----
   // Routers
   // ----

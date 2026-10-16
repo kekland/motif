@@ -89,4 +89,6 @@ final class ProgramSlice {
   }
 
   ProgramSlice clone() => .new(statements: statements.toList());
+
+  ProgramSlice normalize() => materialize((i, _) => .raw(.of(0, i)));
 }

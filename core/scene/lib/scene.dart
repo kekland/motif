@@ -39,29 +39,24 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     SceneAssetCache? assetCache,
   }) {
     this.assetCache = assetCache ?? .new(this);
-    evaluation = .new(program, assetCache: this.assetCache);
+    evaluation = SceneEvaluation(program, assetCache: this.assetCache);
     selection = .new(this);
     query = .new(this);
     history = .new(this);
     notifier = .new(this);
     tickerProviderKey = .new();
     transientTransformAnimator = .new(this);
-
-    evaluation.addUpdateListener((pass) {
-      selection._onEvaluated();
-      signal.set(this, force: true);
-      notifier._update(pass);
-      notifyListeners();
-    });
-
+    evaluation.addUpdateListener(_onPassComplete);
     program.assetResolver = assetResolver;
+
+    tree.addListener(_onTreeChanged);
   }
 
   final String id;
   final Program program;
   final AssetResolver? assetResolver;
 
-  late final Evaluation evaluation;
+  late SceneEvaluation evaluation;
   late final SceneAssetCache assetCache;
   late final SceneSelection selection;
   late final SceneQuery query;
@@ -73,7 +68,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   late final signal = Signal(this);
 
   Bundle get bundle => evaluation.bundle;
-  ObjectTree get tree => evaluation.object;
+  SceneObjectTree get tree => evaluation.object;
 
   S? statement<S extends Statement>(StatementId id) => evaluation.statement<S>(id);
   Iterable<CellRef> productsOf(StatementId id) => evaluation.productsOf(id);
@@ -88,8 +83,42 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   // Initialization
   // -------------------------------------------------------------------------------------------------------------------
 
+  late final _updateNotifier = AlwaysNotifier<EvalPass>(.new(evaluation));
+  late final _treeNotifier = ChangeNotifier();
+
+  void addUpdateListener(void Function(EvalPass) listener) {
+    _updateNotifier.addListener(() => listener(_updateNotifier.value));
+  }
+
+  void removeUpdateListener(void Function(EvalPass) listener) {
+    _updateNotifier.removeListener(() => listener(_updateNotifier.value));
+  }
+
+  void addTreeListener(void Function() listener) => _treeNotifier.addListener(listener);
+  void removeTreeListener(void Function() listener) => _treeNotifier.removeListener(listener);
+
+  void _onTreeChanged() {
+    _treeNotifier.notifyListeners();
+  }
+
+  void _onPassComplete(EvalPass pass) {
+    _updateNotifier.value = pass;
+    selection._onEvaluated();
+    signal.set(this, force: true);
+    notifier._update(pass);
+    notifyListeners();
+  }
+
   void prepare() {
     evaluation.performInitialPass();
+  }
+
+  void reassemble() {
+    evaluation.dispose();
+    evaluation = SceneEvaluation(program, assetCache: assetCache);
+    evaluation.addUpdateListener(_onPassComplete);
+
+    prepare();
   }
 
   // -------------------------------------------------------------------------------------------------------------------

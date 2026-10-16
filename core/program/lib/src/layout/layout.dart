@@ -9,7 +9,7 @@ abstract interface class LayoutBox {
   Size2 intrinsicSize(Evaluation evaluation);
 
   static bool isLayoutEqual(EvalContext context, LayoutNode old, LayoutBox incoming) {
-    if (old.box.runtimeType != incoming.runtimeType) return false;
+    if ((old is LayoutContainer) != (incoming is LayoutContainer)) return false;
     if (!old.transform.equals(incoming.transform)) return false;
 
     final intrinsicSize = old.intrinsicSize;

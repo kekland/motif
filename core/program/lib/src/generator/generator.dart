@@ -100,13 +100,14 @@ extension GeneratorBlueprintExecution on BlueprintExecution {
   static final _evaluationCache = Expando<Evaluation>();
 
   Evaluation evaluate(ProgramSlice slice) {
-    final cached = _evaluationCache[slice];
+    final normalized = slice.normalize();
+    final cached = _evaluationCache[normalized];
     if (cached != null) return cached;
 
     final evaluation = evalContext.evaluation.subEvaluation(slice);
     evaluation.performInitialPass();
 
-    _evaluationCache[slice] = evaluation;
+    _evaluationCache[normalized] = evaluation;
     return evaluation;
   }
 }

@@ -39,18 +39,21 @@ final class const SceneNodeDraggable({
 }
 
 final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
-  SceneTreeController(this.editor, this.tree, this.selection, this.listKey, this.scrollController) {
-    $listen(tree, _recomputeTree);
+  SceneTreeController(this.editor, this.listKey, this.scrollController) {
     $listen(selection, _onSelectionChanged);
+    editor.scene.addTreeListener(_recomputeTree);
+
     _onSelectionChanged();
     _recomputeTree();
   }
 
   final Editor editor;
-  final ObjectTree tree;
-  final SceneSelection selection;
   final GlobalKey listKey;
   final ScrollController scrollController;
+
+  Scene get scene => editor.scene;
+  SceneSelection get selection => editor.selection;
+  SceneObjectTree get tree => scene.tree;
 
   RenderBox get listRenderBox => listKey.currentContext!.findRenderObject() as RenderBox;
   ScrollableState get scrollable => scrollController.position.context as ScrollableState;
@@ -189,6 +192,12 @@ final class SceneTreeController with ChangeNotifier, ChangeNotifierDisposable {
       txn.reparent(targets, into, before: before);
     });
   }
+
+  @override
+  void dispose() {
+    scene.removeTreeListener(_recomputeTree);
+    super.dispose();
+  }
 }
 
 sealed class const SceneTreeDragAnchor(final StatementId id) {
@@ -210,7 +219,7 @@ sealed class const SceneTreeDragAnchor(final StatementId id) {
 
 final class const SceneTreeDragAnchorBefore(super.id) extends SceneTreeDragAnchor {
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(0, id);
 
   @override
   bool operator ==(Object other) => other is SceneTreeDragAnchorBefore && other.id == id;
@@ -218,7 +227,7 @@ final class const SceneTreeDragAnchorBefore(super.id) extends SceneTreeDragAncho
 
 final class const SceneTreeDragAnchorInside(super.id) extends SceneTreeDragAnchor {
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(1, id);
 
   @override
   bool operator ==(Object other) => other is SceneTreeDragAnchorInside && other.id == id;
@@ -226,7 +235,7 @@ final class const SceneTreeDragAnchorInside(super.id) extends SceneTreeDragAncho
 
 final class const SceneTreeDragAnchorAfter(super.id) extends SceneTreeDragAnchor {
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(2, id);
 
   @override
   bool operator ==(Object other) => other is SceneTreeDragAnchorAfter && other.id == id;

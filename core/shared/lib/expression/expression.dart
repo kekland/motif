@@ -125,17 +125,18 @@ final _evaluator = expr.ExpressionEvaluator(
 //   });
 // }
 
-T evaluateExpression<T>(String expression, {List<Object?>? args}) {
+expr.Expression parseExpression(String expression) {
+  return expr.Expression.parse(expression);
+}
+
+T evaluateExpression<T>(expr.Expression expression, {List<Object?>? args}) {
   // final isColor = T == vm.Vector4;
   // if (isColor && _parseHexColor(expression) != null) return _parseHexColor(expression) as T;
 
-  var _expression = expression;
   // if (isColor) _expression = _replaceHexColors(_expression);
 
   final remappedArgs = args?.map(_remapArg).toList();
-
-  final parsedExpression = expr.Expression.parse(_expression);
-  var result = _evaluator.eval(parsedExpression, {..._context, 'in': remappedArgs ?? []});
+  var result = _evaluator.eval(expression, {..._context, 'in': remappedArgs ?? []});
   result = _remapResult(result);
 
   if (result is! T) {

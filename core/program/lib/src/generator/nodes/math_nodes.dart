@@ -56,7 +56,7 @@ final class ExpressionNode extends ExpressionNodeBase {
   @override
   void execute(BlueprintExecution execution) {
     final args = execution.resolve(i.args);
-    final expression = execution.evaluateScalar(i.expression);
+    final expression = parseExpression(execution.evaluateScalar(i.expression));
 
     execution.set(
       o.value,

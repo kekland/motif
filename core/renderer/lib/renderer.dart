@@ -12,14 +12,14 @@ export 'slice_widget.dart';
 
 final class SceneRenderer {
   new(this.scene, {this.root}) {
-    scene.evaluation.addUpdateListener(_onEvaluationUpdate);
+    scene.addUpdateListener(_onEvaluationUpdate);
     scene.assetCache.addFetchListener(_onAssetFetched);
   }
 
   final Scene scene;
   final FrameRef? root;
   Bundle get bundle => scene.bundle;
-  Evaluation get evaluation => scene.evaluation;
+  SceneEvaluation get evaluation => scene.evaluation;
 
   final _cache = <FrameRef, List<DrawEntry>>{};
 

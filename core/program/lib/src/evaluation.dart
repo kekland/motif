@@ -1,33 +1,32 @@
 part of '_program.dart';
 
-/// A live evaluation of a [Program].
-///
-/// Holds the live [Bundle], indexes for statements, and other runtime information.
-final class Evaluation {
-  Evaluation(this.program, {this.assetCache}) {
+class Evaluation {
+  Evaluation(
+    this.program, {
+    this.assetCache,
+    ObjectTree Function(Evaluation)? createObjectTree,
+  }) {
     bundle = .new(order: cellEvalOrder);
     graph = .new(this);
     lineage = .new(this);
-    live = .new(this);
     style = .new(this);
     tree = .new(this);
+    object = createObjectTree?.call(this) ?? .new(this);
     layout = .new(this);
-    transientTransform = .new();
     prefabs = .new(this);
-    object = .new(this);
-
-    assetCache?.addFetchListener(_onAssetLoaded);
+    transientTransform = .new();
+    live = .new(this);
   }
 
   final Program program;
   final AssetCache? assetCache;
+  late final LiveIndex live;
   late final Bundle bundle;
   late final DependencyGraph graph;
   late final LineageIndex lineage;
-  late final LiveIndex live;
   late final StyleIndex style;
-  late final LayoutTree layout;
   late final TransientTransforms transientTransform;
+  late final LayoutTree layout;
   late final PrefabIndex prefabs;
   late final ObjectTree object;
 
@@ -119,27 +118,13 @@ final class Evaluation {
   // Update propagation
   // -------------------------------------------------------------------------------------------------------------------
 
-  late var _lastPass = EvalPass(this);
-  late final _updateNotifier = AlwaysNotifier<EvalPass>(_lastPass);
+  void _onPassComplete(EvalPass pass) {}
 
-  void addUpdateListener(void Function(EvalPass) listener) {
-    _updateNotifier.addListener(() => listener(_updateNotifier.value));
-  }
+  void _onDelta(Delta delta) {}
 
-  void removeUpdateListener(void Function(EvalPass) listener) {
-    _updateNotifier.removeListener(() => listener(_updateNotifier.value));
-  }
+  void _install(Commit commit) {}
 
-  void _onPassComplete(EvalPass pass) {
-    _lastPass = pass;
-    _updateNotifier.value = pass;
-  }
-
-  void dispose() {
-    object.dispose();
-    assetCache?.removeFetchListener(_onAssetLoaded);
-    _updateNotifier.dispose();
-  }
+  void _uninstall(Commit commit) {}
 
   void performInitialPass() {
     final pass = beginPass();
@@ -151,16 +136,6 @@ final class Evaluation {
   // Asset resolution
   // -------------------------------------------------------------------------------------------------------------------
 
-  void _onAssetLoaded(StatementId id) {
-    final pass = beginPass();
-    pass.queue.add(rootOf(id));
-
-    final origin = prefabs.originOf(id)?.id;
-    if (origin != null) pass._markPrefabsDirty([origin]);
-    pass.drain();
-  }
-
-  // A? resolveAsset<A extends Asset>(AssetId id) => program.assetManifest[id] as A?;
   void loadAsset(StatementId? id, Asset asset) => assetCache?.fetch(id, asset);
 
   /// Creates a child evaluation for the given program slice.
@@ -170,14 +145,65 @@ final class Evaluation {
   }
 }
 
-class AlwaysNotifier<T> extends ChangeNotifier implements ValueListenable<T> {
-  AlwaysNotifier(this._value);
+/// A live evaluation of a [Program].
+///
+/// Holds the live [Bundle], indexes for statements, and other runtime information.
+final class SceneEvaluation extends Evaluation {
+  SceneEvaluation(super.program, {super.assetCache}) : super(createObjectTree: SceneObjectTree.new) {
+    assetCache?.addFetchListener(_onAssetLoaded);
+  }
 
   @override
-  T get value => _value;
-  T _value;
-  set value(T newValue) {
-    _value = newValue;
-    notifyListeners();
+  SceneObjectTree get object => super.object as SceneObjectTree;
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Update propagation
+  // -------------------------------------------------------------------------------------------------------------------
+
+  late var _lastPass = EvalPass(this);
+  late final _updateNotifier = AlwaysNotifier<EvalPass>(_lastPass);
+
+  void addUpdateListener(void Function(EvalPass) listener) {
+    _updateNotifier.addListener(() => listener(_updateNotifier.value));
+  }
+
+  void removeUpdateListener(void Function(EvalPass) listener) {
+    _updateNotifier.removeListener(() => listener(_updateNotifier.value));
+  }
+
+  @override
+  void _install(Commit commit) {
+    object.attach(commit);
+  }
+
+  @override
+  void _uninstall(Commit commit) {
+    object.detach(commit);
+  }
+
+  @override
+  void _onDelta(Delta delta) {
+    object.onMovedFrames(delta.movedFrames);
+  }
+
+  @override
+  void _onPassComplete(EvalPass pass) {
+    _lastPass = pass;
+    _updateNotifier.value = pass;
+  }
+
+  void dispose() {
+    assetCache?.removeFetchListener(_onAssetLoaded);
+    object.dispose();
+    _updateNotifier.dispose();
+  }
+
+  void _onAssetLoaded(StatementId id) {
+    final pass = beginPass();
+    pass.queue.add(rootOf(id));
+
+    final origin = prefabs.originOf(id)?.id;
+    if (origin != null) pass._markPrefabsDirty([origin]);
+    pass.drain();
   }
 }

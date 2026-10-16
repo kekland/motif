@@ -16,6 +16,7 @@ class EditorCanvas extends HookWidget {
       children.add(NodeWidget(key: ValueKey(node.id), editor: editor, id: node.id));
     }
 
+
     Widget child = InteractiveCanvasFocus(
       focusScopeNode: editor.canvasFocusScopeNode,
       child: InteractiveCanvas(

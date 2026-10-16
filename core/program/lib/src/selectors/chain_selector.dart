@@ -3,6 +3,9 @@ part of '../_program.dart';
 final class ChainSelector extends Selector<List<EdgeRef>> {
   ChainSelector(this._edges) : super(_edges);
 
+  @override
+  final SelectorKind kind = .chain;
+
   List<EdgeRef> _edges;
   List<EdgeRef> get edges => _edges;
 
@@ -34,12 +37,12 @@ final class ChainSelector extends Selector<List<EdgeRef>> {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, listHash(edges));
+  int get hashCode => Object.hash(kind, listHash(edges));
 
   @override
   bool operator ==(Object other) {
     if (other is! ChainSelector) return false;
-    if (other.runtimeType != runtimeType) return false;
+    if (other.kind != kind) return false;
     if (!listEquals(other.edges, edges)) return false;
     return true;
   }

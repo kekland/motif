@@ -50,6 +50,10 @@ class ConnectedEditorWidget extends HookWidget {
     final isLoaded = useExistingSignal(editor.isLoaded).value;
     if (!isLoaded) return const SizedBox.shrink();
 
+    useReassemble(() {
+      editor.reassemble();
+    });
+
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,

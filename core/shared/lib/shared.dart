@@ -12,3 +12,4 @@ export 'utils/lerp.dart';
 export 'utils/partial.dart';
 export 'utils/unreachable.dart';
 export 'utils/uuid.dart';
+export 'utils/notifier.dart';

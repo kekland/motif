@@ -3,6 +3,9 @@ part of '../_program.dart';
 final class FragmentSelector extends Selector<Statement> {
   FragmentSelector(this._id, {this.modifierIndex}) : super([]);
 
+  @override
+  final SelectorKind kind = .fragment;
+
   StatementId _id;
   StatementId get id => _id;
   final int? modifierIndex;
@@ -44,12 +47,12 @@ final class FragmentSelector extends Selector<Statement> {
   FragmentSelector clone() => .new(id, modifierIndex: modifierIndex);
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, modifierIndex);
+  int get hashCode => Object.hash(kind, id, modifierIndex);
 
   @override
   bool operator ==(Object other) {
     if (other is! FragmentSelector) return false;
-    if (other.runtimeType != runtimeType) return false;
+    if (other.kind != kind) return false;
     if (other.id != id) return false;
     if (other.modifierIndex != modifierIndex) return false;
     return true;

@@ -165,6 +165,10 @@ final class Editor extends Controller {
     scene.editTransient((txn) => txn.addAsset(asset));
   }
 
+  void reassemble() {
+    scene.reassemble();
+  }
+
   @override
   void dispose() {
     scene.dispose();

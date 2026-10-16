@@ -1,6 +1,6 @@
 import 'package:geometry/geometry.dart';
 
-extension type const CornerRadius._(Vec2 _v) implements Object {
+extension type const CornerRadius._(Vec2 _v) implements Vec2 {
   CornerRadius(double x, double y) : _v = .new(x, y);
   CornerRadius.vec(Vec2 v) : _v = v;
 

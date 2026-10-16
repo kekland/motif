@@ -12,7 +12,7 @@ part 'slice.dart';
 
 final _random = math.Random();
 
-extension type const NodeId(int value) implements Object {
+extension type const NodeId(int value) implements int {
   NodeId.generate() : this(_random.nextInt(1 << 32));
 }
 
@@ -221,4 +221,23 @@ abstract class Blueprint<B extends Blueprint<B>> {
 
   Uint8List encodeSlice(BlueprintSlice slice);
   BlueprintSlice decodeSlice(Uint8List data);
+
+  /// Whether this and [other] are structurally equivalent.
+  bool isEquivalentTo(B other) {
+    if (nodes.length != other.nodes.length) return false;
+    if (connections.length != other.connections.length) return false;
+
+    final _otherNodes = other.nodes.toSet();
+    final _otherConnections = other.connections.toSet();
+
+    for (final node in nodes) {
+      if (!_otherNodes.contains(node)) return false;
+    }
+
+    for (final connection in connections) {
+      if (!_otherConnections.contains(connection)) return false;
+    }
+
+    return true;
+  }
 }
