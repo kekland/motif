@@ -17,7 +17,3 @@ dependencies:
   color:
   skia:
   ui:
-
-  vector_math: ^2.2.0
-
-  listen: ^1.0.1

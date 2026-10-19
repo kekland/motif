@@ -16,6 +16,7 @@ workspace:
   - core/program
   - core/scene
   - core/renderer
+  - core/renderer2
 
   - packages/native
   - packages/blueprint
@@ -31,6 +32,8 @@ workspace:
   - packages/skia_flutter
   - packages/skia_common
   - packages/svg
+  - packages/wgpu
+  - packages/wgslgen
 
   - sync/schema
   - sync/sync

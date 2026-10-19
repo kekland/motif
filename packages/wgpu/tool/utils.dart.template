@@ -1,0 +1,150 @@
+
+// {NULL, WGPU_STRLEN}: the null value.
+// {non_null_pointer, WGPU_STRLEN}: a null-terminated string view.
+// {any, 0}: the empty string.
+// {NULL, non_zero_length}: not allowed (null dereference).
+// {non_null_pointer, non_zero_length}: an explictly-sized string view with
+// size non_zero_length (in bytes).
+extension _StringViewExt on bindings.WGPUStringView {
+  String toDartString() {
+    if (data == ffi.nullptr) return '';
+    if (length == STRLEN) return data.cast<Utf8>().toDartString();
+    if (length == 0) return '';
+    return data.cast<Utf8>().toDartString(length: length);
+  }
+}
+
+extension _StringExt on String {
+  bindings.WGPUStringView toStringView(ffi.Allocator allocator) {
+    final ptr = allocator<bindings.WGPUStringView>();
+    final data = toNativeUtf8(allocator: allocator);
+
+    ptr.ref.data = data.cast();
+    ptr.ref.length = length;
+
+    return ptr.ref;
+  }
+}
+
+abstract class _CallbackRegistry<T extends Function, TN extends ffi.NativeFunction> {
+  int _nextId = 1;
+  final Map<int, T> _futures = {};
+  final Map<int, T> _repeating = {};
+
+  CallbackMode get callbackMode => .waitAnyOnly;
+
+  ffi.Pointer<ffi.Void> register(T handler) {
+    final id = _nextId++;
+    _futures[id] = handler;
+    return ffi.Pointer<ffi.Void>.fromAddress(id);
+  }
+
+  void unregister(ffi.Pointer<ffi.Void> handle) {
+    final id = handle.address;
+    _futures.remove(id);
+    _repeating.remove(id);
+  }
+
+  T? lookup(ffi.Pointer<ffi.Void> handle) {
+    final id = handle.address;
+    final future = _futures.remove(id);
+    if (future != null) return future;
+    return _repeating[id];
+  }
+
+  ffi.Pointer<TN> get nativeFunction;
+}
+
+abstract class _CallbackListener<T extends Function, TN extends ffi.NativeFunction> {
+  _CallbackListener(T handler, this._registry) : _id = _registry.register(handler).address;
+
+  final int _id;
+  final _CallbackRegistry<T, TN> _registry;
+  bool _cancelled = false;
+
+  ffi.Pointer<TN> get nativeFunction => _registry.nativeFunction;
+  ffi.Pointer<ffi.Void> get userdata => .fromAddress(_id);
+
+  CallbackMode get callbackMode => .waitAnyOnly;
+
+  void cancel() {
+    if (_cancelled) return;
+    _cancelled = true;
+  }
+}
+
+abstract class _Opaque<T extends ffi.NativeType> implements ffi.Finalizable {
+  _Opaque._(this.__ptr) { _finalizer.attach(this, __ptr.cast(), detach: this); }
+  _Opaque._borrowed(this.__ptr);
+
+  ffi.Pointer<T> __ptr;
+
+  ffi.Pointer<T> get _ptr {
+    if (__ptr.address == 0) throw StateError('pointer is null');
+    return __ptr;
+  }
+
+  ffi.NativeFinalizer get _finalizer;
+
+  void _dispose(void Function(ffi.Pointer<T>) deleter) {
+    if (__ptr.address != 0) {
+      _finalizer.detach(this);
+      deleter(__ptr);
+      __ptr = ffi.nullptr;
+    }
+  }
+
+  void dispose();
+}
+
+class _AsyncResult<T> {
+  _AsyncResult();
+
+  T? result;
+  (Object, StackTrace)? err;
+  var done = false;
+
+  void complete(T value) {
+    result = value;
+    done = true;
+  }
+
+  void completeError(Object error, StackTrace stackTrace) {
+    err = (error, stackTrace);
+    done = true;
+  }
+
+  Future<T> waitUntilDone(void Function() poll) async {
+    await Future<void>.delayed(.zero);
+    while (!done) {
+      poll();
+      await Future<void>.delayed(.zero);
+    }
+    if (err != null) Error.throwWithStackTrace(err!.$1, err!.$2);
+    return result as dynamic;
+  }
+}
+
+class _SyncResult<T> {
+  _SyncResult();
+
+  T? result;
+  (Object, StackTrace)? err;
+  var done = false;
+
+  void complete(T value) {
+    result = value;
+    done = true;
+  }
+
+  void completeError(Object error, StackTrace stackTrace) {
+    err = (error, stackTrace);
+    done = true;
+  }
+
+  T waitUntilDone(void Function() poll) {
+    while (!done) poll();
+    if (err != null) Error.throwWithStackTrace(err!.$1, err!.$2);
+    return result as dynamic;
+  }
+}
