@@ -17,3 +17,7 @@ dependencies:
   color:
   skia:
   ui:
+  webgpu:
+
+dev_dependencies:
+  wgslgen:

@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/packages/skia/",
                 "${workspaceFolder}/packages/skia/include/",
-                "${workspaceFolder}/packages/skia/include/src/"
+                "${workspaceFolder}/packages/skia/include/src/",
+                "${workspaceFolder}/packages/webgpu/src/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import 'parser.dart';
 
-class WgslReflectionInfo with EquatableMixin {
+class WgslReflectionInfo with Equatable {
   const WgslReflectionInfo({
     this.entry = const EntryFunctions(),
     this.uniforms = const [],
@@ -50,7 +50,7 @@ class WgslReflectionInfo with EquatableMixin {
   ];
 }
 
-class Attribute with EquatableMixin {
+class Attribute with Equatable {
   const Attribute({required this.name, this.value = const []});
 
   final String name;
@@ -60,7 +60,7 @@ class Attribute with EquatableMixin {
   List<Object?> get props => [name, value];
 }
 
-class TypeInfo with EquatableMixin {
+class TypeInfo with Equatable {
   const TypeInfo({required this.name, this.size = 0, this.attributes = const []});
 
   final String name;
@@ -83,7 +83,7 @@ class TypeInfo with EquatableMixin {
   List<Object?> get props => [name, size, attributes];
 }
 
-class MemberInfo with EquatableMixin {
+class MemberInfo with Equatable {
   const MemberInfo({
     required this.name,
     required this.type,
@@ -224,7 +224,7 @@ enum ResourceType {
   storageTexture,
 }
 
-class VariableInfo with EquatableMixin {
+class VariableInfo with Equatable {
   const VariableInfo({
     required this.name,
     required this.type,
@@ -265,7 +265,7 @@ class VariableInfo with EquatableMixin {
   List<Object?> get props => [name, type, group, binding, resourceType, access, relations, attributes];
 }
 
-class AliasInfo with EquatableMixin {
+class AliasInfo with Equatable {
   const AliasInfo({required this.name, required this.type});
 
   final String name;
@@ -275,7 +275,7 @@ class AliasInfo with EquatableMixin {
   List<Object?> get props => [name, type];
 }
 
-class InputInfo with EquatableMixin {
+class InputInfo with Equatable {
   const InputInfo({
     required this.name,
     required this.type,
@@ -294,7 +294,7 @@ class InputInfo with EquatableMixin {
   List<Object?> get props => [name, type, locationType, location, interpolation];
 }
 
-class OutputInfo with EquatableMixin {
+class OutputInfo with Equatable {
   const OutputInfo({
     required this.name,
     required this.type,
@@ -311,7 +311,7 @@ class OutputInfo with EquatableMixin {
   List<Object?> get props => [name, type, locationType, location];
 }
 
-class OverrideInfo with EquatableMixin {
+class OverrideInfo with Equatable {
   const OverrideInfo({required this.id, required this.name, required this.type, this.attributes = const []});
 
   final int id;
@@ -323,7 +323,7 @@ class OverrideInfo with EquatableMixin {
   List<Object?> get props => [id, name, type, attributes];
 }
 
-class ArgumentInfo with EquatableMixin {
+class ArgumentInfo with Equatable {
   const ArgumentInfo({required this.name, required this.type, this.attributes = const []});
 
   final String name;
@@ -336,7 +336,7 @@ class ArgumentInfo with EquatableMixin {
 
 typedef FunctionResourceInfo = ({String name, int group, int binding});
 
-class FunctionInfo with EquatableMixin {
+class FunctionInfo with Equatable {
   const FunctionInfo({
     required this.name,
     this.stage,
@@ -363,7 +363,7 @@ class FunctionInfo with EquatableMixin {
   List<Object?> get props => [name, stage, inputs, outputs, arguments, returnType, resources, attributes, inUse];
 }
 
-class EntryFunctions with EquatableMixin {
+class EntryFunctions with Equatable {
   const EntryFunctions({this.vertex = const [], this.fragment = const [], this.compute = const []});
 
   final List<FunctionInfo> vertex;

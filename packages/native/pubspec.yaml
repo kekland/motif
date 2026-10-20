@@ -15,7 +15,7 @@ dependencies:
   web: ^1.1.1
 
 dev_dependencies: 
-  ffigen: ^21.0.0
+  ffigen: ^23.0.0
 
 flutter:
   plugin:

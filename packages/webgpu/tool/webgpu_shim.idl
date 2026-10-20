@@ -1,0 +1,27 @@
+interface EventTarget {};
+interface EventHandler {};
+interface Event {};
+dictionary EventInit {
+  boolean bubbles = false;
+  boolean cancelable = false;
+  boolean composed = false;
+};
+
+interface DOMException {};
+
+interface ImageData {};
+interface ImageBitmap {};
+interface HTMLImageElement {};
+interface HTMLVideoElement {};
+interface VideoFrame {};
+interface HTMLCanvasElement {};
+interface OffscreenCanvas {};
+
+enum PredefinedColorSpace { "srgb", "srgb-linear", "display-p3", "display-p3-linear" };
+
+typedef (Int8Array or Int16Array or Int32Array or
+         Uint8Array or Uint16Array or Uint32Array or Uint8ClampedArray or
+         BigInt64Array or BigUint64Array or
+         Float16Array or Float32Array or Float64Array or DataView) ArrayBufferView;
+
+typedef (ArrayBuffer or SharedArrayBuffer or [AllowShared] ArrayBufferView) AllowSharedBufferSource;

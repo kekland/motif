@@ -28,23 +28,27 @@ void main() {
   }
 
   final generator = ffigen.FfiGenerator(
+    input: .new(
+      entryPoints: headers.map((f) => f.uri).toList(),
+    ),
     output: .new(
-      dartFile: outFfiFile,
+      dart: .new(path: outFfiFile),
       style: ffigen.NativeExternalBindings(assetId: 'package:skia/src/asset.dart'),
       preamble: '// ignore_for_file: unused_import, unused_local_variable, unused_element, unused_field',
     ),
-    headers: .new(
-      entryPoints: headers.map((f) => f.uri).toList(),
-    ),
-    typedefs: .includeAll,
-    functions: .new(
-      include: (decl) => true,
-      includeSymbolAddress: (decl) => decl.originalName.endsWith('_destroy'),
-    ),
-    globals: .includeAll,
-    enums: .includeAll,
-    structs: .includeAll,
-    unions: .includeAll,
+    visitors: [
+      .new(
+        typealias: (n) => n.isIncluded = .always,
+        func: (n) {
+          n.isIncluded = true;
+          n.exposeSymbolAddress = n.originalName.endsWith('_destroy');
+        },
+        global: (n) => n.isIncluded = true,
+        enumClass: (n) => n.isIncluded = true,
+        struct: (n) => n.isIncluded = true,
+        union: (n) => n.isIncluded = true,
+      ),
+    ],
   );
 
   generator.generate();
