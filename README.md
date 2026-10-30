@@ -20,6 +20,7 @@ Feel free to [try it out now](https://kekland.github.io/motif) in your browser!
 <p >
 <img src="./.github/assets/screenshot4.jpeg" alt="Screenshot" width="53%">
 <img src="./.github/assets/screenshot5.png" alt="Screenshot" width="46%">
+<img src="./.github/assets/screenshot6.png" alt="Screenshot" width="100%">
 </p>
 
 ## Goals
