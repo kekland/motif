@@ -1,6 +1,6 @@
 import 'package:blueprint/editor.dart';
 import 'package:editor/imports.dart';
-import 'package:editor/widgets/generators/generator_editor.dart';
+import 'package:editor/widgets/blueprints/generator_editor.dart';
 
 class GeneratorsTab extends HookWidget {
   const new({super.key});
@@ -62,8 +62,8 @@ class GeneratorEditorWidget extends HookWidget {
     this.onChanged,
   });
 
-  final Generator generator;
-  final ValueChanged<Generator>? onChanged;
+  final GeneratorBlueprint generator;
+  final ValueChanged<GeneratorBlueprint>? onChanged;
 
   @override
   Widget build(BuildContext context) {

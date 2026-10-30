@@ -159,11 +159,19 @@ message Decoration {
 
   message Image {
     optional string value = 1;
+    double opacity = 2;
   }
 
+  message Shader {
+    ShaderBlueprint value = 1;
+    double opacity = 2;
+  }
+
+  string id = 1;
   oneof kind {
-    Color color = 1;
-    Image image = 2;
+    Color color = 10;
+    Image image = 11;
+    Shader shader = 12;
   }
 }
 
@@ -311,7 +319,7 @@ message GroupStatement {
 }
 
 message GeneratorStatement {
-  Generator                 generator = 1;
+  GeneratorBlueprint        generator = 1;
   repeated FragmentSelector inputs    = 2;
   optional CellRef          parent    = 3;
   Mat4                      transform = 4;
@@ -564,10 +572,10 @@ message ParagraphFormat {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Generator nodes
+// Blueprints
 // ---------------------------------------------------------------------------------------------------------------------
 
-message Generator {
+message Blueprint {
   message PositionEntry {
     NodeId node     = 1;
     Vec2   position = 2;
@@ -579,10 +587,18 @@ message Generator {
   repeated NodeId        fixed       = 4;
 }
 
-message GeneratorSlice {
+message BlueprintSlice {
   repeated Node                    nodes       = 1;
   repeated Connection              connections = 2;
-  repeated Generator.PositionEntry positions   = 3;
+  repeated Blueprint.PositionEntry positions   = 3;
+}
+
+message GeneratorBlueprint {
+  Blueprint blueprint = 1;
+}
+
+message ShaderBlueprint {
+  Blueprint blueprint = 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -695,11 +711,18 @@ message ColorData {
     double v = 3;
   }
 
-  oneof value {
-    Hsv hsv = 1;
+  message Rgb {
+    double r = 1;
+    double g = 2;
+    double b = 3;
   }
 
-  double alpha = 5;
+  oneof value {
+    Hsv hsv = 1;
+    Rgb rgb = 2;
+  }
+
+  double alpha = 10;
 }
 
 // % GENERATOR MARK
@@ -708,28 +731,193 @@ message Node {
   NodeId id = 1;
 
   oneof kind {
-    GeneratorInput generator_input = 10;
-    GeneratorOutput generator_output = 11;
-    Merge merge = 12;
-    Vertex vertex = 13;
-    Rectangle rectangle = 14;
-    Array array = 15;
-    Transform transform = 16;
-    ConnectVertices connect_vertices = 17;
-    MakeFace make_face = 18;
-    BoundingBox bounding_box = 19;
-    Index index = 20;
-    Math math = 21;
-    VectorMath vector_math = 22;
-    TrigMath trig_math = 23;
-    Expression expression = 24;
-    MathConstant math_constant = 25;
-    MathRound math_round = 26;
-    CombineXY combine_x_y = 27;
-    SeparateXY separate_x_y = 28;
-    Polar polar = 29;
-    RandomFloat random_float = 30;
-    RandomVector random_vector = 31;
+    Math math = 10;
+    VectorMath vector_math = 11;
+    TrigMath trig_math = 12;
+    Expression expression = 13;
+    MathConstant math_constant = 14;
+    MathRound math_round = 15;
+    CombineXY combine_x_y = 16;
+    SeparateXY separate_x_y = 17;
+    Polar polar = 18;
+    Wrap wrap = 19;
+    WrapVector wrap_vector = 20;
+    Abs abs = 21;
+    AbsVector abs_vector = 22;
+    Sign sign = 23;
+    SignVector sign_vector = 24;
+    RotateVector rotate_vector = 25;
+    VectorMagnitude vector_magnitude = 26;
+    RandomFloat random_float = 27;
+    RandomVector random_vector = 28;
+    Compare compare = 29;
+    BooleanToFloat boolean_to_float = 30;
+    MapRange map_range = 31;
+    Deg2Rad deg_2_rad = 32;
+    Rad2Deg rad_2_deg = 33;
+    ColorFromRGBA color_from_r_g_b_a = 34;
+    ColorToRGBA color_to_r_g_b_a = 35;
+    ColorMix color_mix = 36;
+    ShaderInput shader_input = 37;
+    ShaderOutput shader_output = 38;
+    GeneratorInput generator_input = 39;
+    GeneratorOutput generator_output = 40;
+    Merge merge = 41;
+    Vertex vertex = 42;
+    Rectangle rectangle = 43;
+    Array array = 44;
+    Transform transform = 45;
+    ConnectVertices connect_vertices = 46;
+    MakeFace make_face = 47;
+    BoundingBox bounding_box = 48;
+    Index index = 49;
+  }
+
+  message Math {
+    optional double a = 1;
+    optional double b = 2;
+    optional MathOperatorType operator = 3;
+  }
+
+  message VectorMath {
+    optional Vec2 a = 1;
+    optional Vec2 b = 2;
+    optional VectorMathOperatorType operator = 3;
+  }
+
+  message TrigMath {
+    optional double input = 1;
+    optional TrigMathOperatorType operator = 2;
+  }
+
+  message Expression {
+    optional string expression = 1;
+  }
+
+  message MathConstant {
+    optional MathConstantType constant = 1;
+  }
+
+  message MathRound {
+    optional double value = 1;
+    optional MathRoundType mode = 2;
+  }
+
+  message CombineXY {
+    optional double x = 1;
+    optional double y = 2;
+  }
+
+  message SeparateXY {
+    optional Vec2 value = 1;
+  }
+
+  message Polar {
+    optional double radius = 1;
+    optional double angle = 2;
+  }
+
+  message Wrap {
+    optional double value = 1;
+    optional double min = 2;
+    optional double max = 3;
+  }
+
+  message WrapVector {
+    optional Vec2 value = 1;
+    optional Vec2 min = 2;
+    optional Vec2 max = 3;
+  }
+
+  message Abs {
+    optional double value = 1;
+  }
+
+  message AbsVector {
+    optional Vec2 value = 1;
+  }
+
+  message Sign {
+    optional double value = 1;
+  }
+
+  message SignVector {
+    optional Vec2 value = 1;
+  }
+
+  message RotateVector {
+    optional Vec2 vector = 1;
+    optional double angle = 2;
+    optional Vec2 pivot = 3;
+  }
+
+  message VectorMagnitude {
+    optional Vec2 vector = 1;
+  }
+
+  message RandomFloat {
+    optional int32 seed = 1;
+    optional double min = 2;
+    optional double max = 3;
+  }
+
+  message RandomVector {
+    optional int32 seed = 1;
+    optional Vec2 min = 2;
+    optional Vec2 max = 3;
+  }
+
+  message Compare {
+    optional double a = 1;
+    optional double b = 2;
+    optional double epsilon = 3;
+    optional MathCompareType type = 4;
+  }
+
+  message BooleanToFloat {
+    optional bool value = 1;
+  }
+
+  message MapRange {
+    optional double value = 1;
+    optional double from_min = 2;
+    optional double from_max = 3;
+    optional double out_min = 4;
+    optional double out_max = 5;
+    optional bool clamp = 6;
+    optional InterpolationType interpolation = 7;
+  }
+
+  message Deg2Rad {
+    optional double value = 1;
+  }
+
+  message Rad2Deg {
+    optional double value = 1;
+  }
+
+  message ColorFromRGBA {
+    optional double r = 1;
+    optional double g = 2;
+    optional double b = 3;
+    optional double a = 4;
+  }
+
+  message ColorToRGBA {
+    optional ColorData value = 1;
+  }
+
+  message ColorMix {
+    optional ColorData a = 1;
+    optional ColorData b = 2;
+    optional double t = 3;
+  }
+
+  message ShaderInput {
+  }
+
+  message ShaderOutput {
+    optional ColorData color = 1;
   }
 
   message GeneratorInput {
@@ -778,62 +966,6 @@ message Node {
 
   message Index {
   }
-
-  message Math {
-    optional double a = 1;
-    optional double b = 2;
-    optional MathOperatorType operator = 3;
-  }
-
-  message VectorMath {
-    optional Vec2 a = 1;
-    optional Vec2 b = 2;
-    optional VectorMathOperatorType operator = 3;
-  }
-
-  message TrigMath {
-    optional double input = 1;
-    optional TrigMathOperatorType operator = 2;
-  }
-
-  message Expression {
-    optional string expression = 1;
-  }
-
-  message MathConstant {
-    optional MathConstantType constant = 1;
-  }
-
-  message MathRound {
-    optional double value = 1;
-    optional MathRoundType mode = 2;
-  }
-
-  message CombineXY {
-    optional double x = 1;
-    optional double y = 2;
-  }
-
-  message SeparateXY {
-    optional Vec2 value = 1;
-  }
-
-  message Polar {
-    optional double radius = 1;
-    optional double angle = 2;
-  }
-
-  message RandomFloat {
-    optional int32 seed = 1;
-    optional double min = 2;
-    optional double max = 3;
-  }
-
-  message RandomVector {
-    optional int32 seed = 1;
-    optional Vec2 min = 2;
-    optional Vec2 max = 3;
-  }
 }
 enum MathOperatorType {
   MATH_OPERATOR_TYPE_ADD = 0;
@@ -865,4 +997,19 @@ enum MathRoundType {
   MATH_ROUND_TYPE_FLOOR = 0;
   MATH_ROUND_TYPE_CEIL = 1;
   MATH_ROUND_TYPE_ROUND = 2;
+}
+
+enum MathCompareType {
+  MATH_COMPARE_TYPE_EQUAL = 0;
+  MATH_COMPARE_TYPE_NOT_EQUAL = 1;
+  MATH_COMPARE_TYPE_LESS = 2;
+  MATH_COMPARE_TYPE_LESS_OR_EQUAL = 3;
+  MATH_COMPARE_TYPE_GREATER = 4;
+  MATH_COMPARE_TYPE_GREATER_OR_EQUAL = 5;
+}
+
+enum InterpolationType {
+  INTERPOLATION_TYPE_LINEAR = 0;
+  INTERPOLATION_TYPE_STEP = 1;
+  INTERPOLATION_TYPE_SMOOTHSTEP = 2;
 }

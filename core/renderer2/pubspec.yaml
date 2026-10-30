@@ -12,11 +12,13 @@ dependencies:
   shared:
   geometry:
   kernel:
+  blueprint:
   program:
   scene:
   color:
   skia:
   ui:
+  
   webgpu:
 
 dev_dependencies:

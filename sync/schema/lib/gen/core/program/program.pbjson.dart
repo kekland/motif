@@ -243,6 +243,42 @@ final $typed_data.Uint8List mathRoundTypeDescriptor = $convert.base64Decode(
     'Cg1NYXRoUm91bmRUeXBlEhkKFU1BVEhfUk9VTkRfVFlQRV9GTE9PUhAAEhgKFE1BVEhfUk9VTk'
     'RfVFlQRV9DRUlMEAESGQoVTUFUSF9ST1VORF9UWVBFX1JPVU5EEAI=');
 
+@$core.Deprecated('Use mathCompareTypeDescriptor instead')
+const MathCompareType$json = {
+  '1': 'MathCompareType',
+  '2': [
+    {'1': 'MATH_COMPARE_TYPE_EQUAL', '2': 0},
+    {'1': 'MATH_COMPARE_TYPE_NOT_EQUAL', '2': 1},
+    {'1': 'MATH_COMPARE_TYPE_LESS', '2': 2},
+    {'1': 'MATH_COMPARE_TYPE_LESS_OR_EQUAL', '2': 3},
+    {'1': 'MATH_COMPARE_TYPE_GREATER', '2': 4},
+    {'1': 'MATH_COMPARE_TYPE_GREATER_OR_EQUAL', '2': 5},
+  ],
+};
+
+/// Descriptor for `MathCompareType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List mathCompareTypeDescriptor = $convert.base64Decode(
+    'Cg9NYXRoQ29tcGFyZVR5cGUSGwoXTUFUSF9DT01QQVJFX1RZUEVfRVFVQUwQABIfChtNQVRIX0'
+    'NPTVBBUkVfVFlQRV9OT1RfRVFVQUwQARIaChZNQVRIX0NPTVBBUkVfVFlQRV9MRVNTEAISIwof'
+    'TUFUSF9DT01QQVJFX1RZUEVfTEVTU19PUl9FUVVBTBADEh0KGU1BVEhfQ09NUEFSRV9UWVBFX0'
+    'dSRUFURVIQBBImCiJNQVRIX0NPTVBBUkVfVFlQRV9HUkVBVEVSX09SX0VRVUFMEAU=');
+
+@$core.Deprecated('Use interpolationTypeDescriptor instead')
+const InterpolationType$json = {
+  '1': 'InterpolationType',
+  '2': [
+    {'1': 'INTERPOLATION_TYPE_LINEAR', '2': 0},
+    {'1': 'INTERPOLATION_TYPE_STEP', '2': 1},
+    {'1': 'INTERPOLATION_TYPE_SMOOTHSTEP', '2': 2},
+  ],
+};
+
+/// Descriptor for `InterpolationType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List interpolationTypeDescriptor = $convert.base64Decode(
+    'ChFJbnRlcnBvbGF0aW9uVHlwZRIdChlJTlRFUlBPTEFUSU9OX1RZUEVfTElORUFSEAASGwoXSU'
+    '5URVJQT0xBVElPTl9UWVBFX1NURVAQARIhCh1JTlRFUlBPTEFUSU9OX1RZUEVfU01PT1RIU1RF'
+    'UBAC');
+
 @$core.Deprecated('Use programDescriptor instead')
 const Program$json = {
   '1': 'Program',
@@ -890,9 +926,10 @@ final $typed_data.Uint8List faceStyleDescriptor = $convert.base64Decode(
 const Decoration$json = {
   '1': 'Decoration',
   '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     {
       '1': 'color',
-      '3': 1,
+      '3': 10,
       '4': 1,
       '5': 11,
       '6': '.motif.Decoration.Color',
@@ -901,15 +938,24 @@ const Decoration$json = {
     },
     {
       '1': 'image',
-      '3': 2,
+      '3': 11,
       '4': 1,
       '5': 11,
       '6': '.motif.Decoration.Image',
       '9': 0,
       '10': 'image'
     },
+    {
+      '1': 'shader',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Decoration.Shader',
+      '9': 0,
+      '10': 'shader'
+    },
   ],
-  '3': [Decoration_Color$json, Decoration_Image$json],
+  '3': [Decoration_Color$json, Decoration_Image$json, Decoration_Shader$json],
   '8': [
     {'1': 'kind'},
   ],
@@ -935,18 +981,39 @@ const Decoration_Image$json = {
   '1': 'Image',
   '2': [
     {'1': 'value', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'value', '17': true},
+    {'1': 'opacity', '3': 2, '4': 1, '5': 1, '10': 'opacity'},
   ],
   '8': [
     {'1': '_value'},
   ],
 };
 
+@$core.Deprecated('Use decorationDescriptor instead')
+const Decoration_Shader$json = {
+  '1': 'Shader',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ShaderBlueprint',
+      '10': 'value'
+    },
+    {'1': 'opacity', '3': 2, '4': 1, '5': 1, '10': 'opacity'},
+  ],
+};
+
 /// Descriptor for `Decoration`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List decorationDescriptor = $convert.base64Decode(
-    'CgpEZWNvcmF0aW9uEi8KBWNvbG9yGAEgASgLMhcubW90aWYuRGVjb3JhdGlvbi5Db2xvckgAUg'
-    'Vjb2xvchIvCgVpbWFnZRgCIAEoCzIXLm1vdGlmLkRlY29yYXRpb24uSW1hZ2VIAFIFaW1hZ2Ua'
-    'LwoFQ29sb3ISJgoFdmFsdWUYASABKAsyEC5tb3RpZi5Db2xvckRhdGFSBXZhbHVlGiwKBUltYW'
-    'dlEhkKBXZhbHVlGAEgASgJSABSBXZhbHVliAEBQggKBl92YWx1ZUIGCgRraW5k');
+    'CgpEZWNvcmF0aW9uEg4KAmlkGAEgASgJUgJpZBIvCgVjb2xvchgKIAEoCzIXLm1vdGlmLkRlY2'
+    '9yYXRpb24uQ29sb3JIAFIFY29sb3ISLwoFaW1hZ2UYCyABKAsyFy5tb3RpZi5EZWNvcmF0aW9u'
+    'LkltYWdlSABSBWltYWdlEjIKBnNoYWRlchgMIAEoCzIYLm1vdGlmLkRlY29yYXRpb24uU2hhZG'
+    'VySABSBnNoYWRlchovCgVDb2xvchImCgV2YWx1ZRgBIAEoCzIQLm1vdGlmLkNvbG9yRGF0YVIF'
+    'dmFsdWUaRgoFSW1hZ2USGQoFdmFsdWUYASABKAlIAFIFdmFsdWWIAQESGAoHb3BhY2l0eRgCIA'
+    'EoAVIHb3BhY2l0eUIICgZfdmFsdWUaUAoGU2hhZGVyEiwKBXZhbHVlGAEgASgLMhYubW90aWYu'
+    'U2hhZGVyQmx1ZXByaW50UgV2YWx1ZRIYCgdvcGFjaXR5GAIgASgBUgdvcGFjaXR5QgYKBGtpbm'
+    'Q=');
 
 @$core.Deprecated('Use decorationsDescriptor instead')
 const Decorations$json = {
@@ -1809,7 +1876,7 @@ const GeneratorStatement$json = {
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.motif.Generator',
+      '6': '.motif.GeneratorBlueprint',
       '10': 'generator'
     },
     {
@@ -1846,10 +1913,11 @@ const GeneratorStatement$json = {
 
 /// Descriptor for `GeneratorStatement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List generatorStatementDescriptor = $convert.base64Decode(
-    'ChJHZW5lcmF0b3JTdGF0ZW1lbnQSLgoJZ2VuZXJhdG9yGAEgASgLMhAubW90aWYuR2VuZXJhdG'
-    '9yUglnZW5lcmF0b3ISLwoGaW5wdXRzGAIgAygLMhcubW90aWYuRnJhZ21lbnRTZWxlY3RvclIG'
-    'aW5wdXRzEisKBnBhcmVudBgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW50iAEBEikKCX'
-    'RyYW5zZm9ybRgEIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybUIJCgdfcGFyZW50');
+    'ChJHZW5lcmF0b3JTdGF0ZW1lbnQSNwoJZ2VuZXJhdG9yGAEgASgLMhkubW90aWYuR2VuZXJhdG'
+    '9yQmx1ZXByaW50UglnZW5lcmF0b3ISLwoGaW5wdXRzGAIgAygLMhcubW90aWYuRnJhZ21lbnRT'
+    'ZWxlY3RvclIGaW5wdXRzEisKBnBhcmVudBgDIAEoCzIOLm1vdGlmLkNlbGxSZWZIAFIGcGFyZW'
+    '50iAEBEikKCXRyYW5zZm9ybRgEIAEoCzILLm1vdGlmLk1hdDRSCXRyYW5zZm9ybUIJCgdfcGFy'
+    'ZW50');
 
 @$core.Deprecated('Use textStatementDescriptor instead')
 const TextStatement$json = {
@@ -2883,9 +2951,9 @@ final $typed_data.Uint8List paragraphFormatDescriptor = $convert.base64Decode(
     'ZXJ0aWNhbEFsaWdubWVudFIRdmVydGljYWxBbGlnbm1lbnQSHwoIZWxsaXBzaXMYAyABKAlIAF'
     'IIZWxsaXBzaXOIAQFCCwoJX2VsbGlwc2lz');
 
-@$core.Deprecated('Use generatorDescriptor instead')
-const Generator$json = {
-  '1': 'Generator',
+@$core.Deprecated('Use blueprintDescriptor instead')
+const Blueprint$json = {
+  '1': 'Blueprint',
   '2': [
     {'1': 'nodes', '3': 1, '4': 3, '5': 11, '6': '.motif.Node', '10': 'nodes'},
     {
@@ -2901,7 +2969,7 @@ const Generator$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.motif.Generator.PositionEntry',
+      '6': '.motif.Blueprint.PositionEntry',
       '10': 'positions'
     },
     {
@@ -2913,11 +2981,11 @@ const Generator$json = {
       '10': 'fixed'
     },
   ],
-  '3': [Generator_PositionEntry$json],
+  '3': [Blueprint_PositionEntry$json],
 };
 
-@$core.Deprecated('Use generatorDescriptor instead')
-const Generator_PositionEntry$json = {
+@$core.Deprecated('Use blueprintDescriptor instead')
+const Blueprint_PositionEntry$json = {
   '1': 'PositionEntry',
   '2': [
     {'1': 'node', '3': 1, '4': 1, '5': 11, '6': '.motif.NodeId', '10': 'node'},
@@ -2932,18 +3000,18 @@ const Generator_PositionEntry$json = {
   ],
 };
 
-/// Descriptor for `Generator`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List generatorDescriptor = $convert.base64Decode(
-    'CglHZW5lcmF0b3ISIQoFbm9kZXMYASADKAsyCy5tb3RpZi5Ob2RlUgVub2RlcxIzCgtjb25uZW'
+/// Descriptor for `Blueprint`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List blueprintDescriptor = $convert.base64Decode(
+    'CglCbHVlcHJpbnQSIQoFbm9kZXMYASADKAsyCy5tb3RpZi5Ob2RlUgVub2RlcxIzCgtjb25uZW'
     'N0aW9ucxgCIAMoCzIRLm1vdGlmLkNvbm5lY3Rpb25SC2Nvbm5lY3Rpb25zEjwKCXBvc2l0aW9u'
-    'cxgDIAMoCzIeLm1vdGlmLkdlbmVyYXRvci5Qb3NpdGlvbkVudHJ5Uglwb3NpdGlvbnMSIwoFZm'
+    'cxgDIAMoCzIeLm1vdGlmLkJsdWVwcmludC5Qb3NpdGlvbkVudHJ5Uglwb3NpdGlvbnMSIwoFZm'
     'l4ZWQYBCADKAsyDS5tb3RpZi5Ob2RlSWRSBWZpeGVkGlsKDVBvc2l0aW9uRW50cnkSIQoEbm9k'
     'ZRgBIAEoCzINLm1vdGlmLk5vZGVJZFIEbm9kZRInCghwb3NpdGlvbhgCIAEoCzILLm1vdGlmLl'
     'ZlYzJSCHBvc2l0aW9u');
 
-@$core.Deprecated('Use generatorSliceDescriptor instead')
-const GeneratorSlice$json = {
-  '1': 'GeneratorSlice',
+@$core.Deprecated('Use blueprintSliceDescriptor instead')
+const BlueprintSlice$json = {
+  '1': 'BlueprintSlice',
   '2': [
     {'1': 'nodes', '3': 1, '4': 3, '5': 11, '6': '.motif.Node', '10': 'nodes'},
     {
@@ -2959,18 +3027,58 @@ const GeneratorSlice$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.motif.Generator.PositionEntry',
+      '6': '.motif.Blueprint.PositionEntry',
       '10': 'positions'
     },
   ],
 };
 
-/// Descriptor for `GeneratorSlice`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List generatorSliceDescriptor = $convert.base64Decode(
-    'Cg5HZW5lcmF0b3JTbGljZRIhCgVub2RlcxgBIAMoCzILLm1vdGlmLk5vZGVSBW5vZGVzEjMKC2'
+/// Descriptor for `BlueprintSlice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List blueprintSliceDescriptor = $convert.base64Decode(
+    'Cg5CbHVlcHJpbnRTbGljZRIhCgVub2RlcxgBIAMoCzILLm1vdGlmLk5vZGVSBW5vZGVzEjMKC2'
     'Nvbm5lY3Rpb25zGAIgAygLMhEubW90aWYuQ29ubmVjdGlvblILY29ubmVjdGlvbnMSPAoJcG9z'
-    'aXRpb25zGAMgAygLMh4ubW90aWYuR2VuZXJhdG9yLlBvc2l0aW9uRW50cnlSCXBvc2l0aW9ucw'
+    'aXRpb25zGAMgAygLMh4ubW90aWYuQmx1ZXByaW50LlBvc2l0aW9uRW50cnlSCXBvc2l0aW9ucw'
     '==');
+
+@$core.Deprecated('Use generatorBlueprintDescriptor instead')
+const GeneratorBlueprint$json = {
+  '1': 'GeneratorBlueprint',
+  '2': [
+    {
+      '1': 'blueprint',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Blueprint',
+      '10': 'blueprint'
+    },
+  ],
+};
+
+/// Descriptor for `GeneratorBlueprint`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generatorBlueprintDescriptor = $convert.base64Decode(
+    'ChJHZW5lcmF0b3JCbHVlcHJpbnQSLgoJYmx1ZXByaW50GAEgASgLMhAubW90aWYuQmx1ZXByaW'
+    '50UglibHVlcHJpbnQ=');
+
+@$core.Deprecated('Use shaderBlueprintDescriptor instead')
+const ShaderBlueprint$json = {
+  '1': 'ShaderBlueprint',
+  '2': [
+    {
+      '1': 'blueprint',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Blueprint',
+      '10': 'blueprint'
+    },
+  ],
+};
+
+/// Descriptor for `ShaderBlueprint`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List shaderBlueprintDescriptor = $convert.base64Decode(
+    'Cg9TaGFkZXJCbHVlcHJpbnQSLgoJYmx1ZXByaW50GAEgASgLMhAubW90aWYuQmx1ZXByaW50Ug'
+    'libHVlcHJpbnQ=');
 
 @$core.Deprecated('Use modifierStackDescriptor instead')
 const ModifierStack$json = {
@@ -3434,9 +3542,18 @@ const ColorData$json = {
       '9': 0,
       '10': 'hsv'
     },
-    {'1': 'alpha', '3': 5, '4': 1, '5': 1, '10': 'alpha'},
+    {
+      '1': 'rgb',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData.Rgb',
+      '9': 0,
+      '10': 'rgb'
+    },
+    {'1': 'alpha', '3': 10, '4': 1, '5': 1, '10': 'alpha'},
   ],
-  '3': [ColorData_Hsv$json],
+  '3': [ColorData_Hsv$json, ColorData_Rgb$json],
   '8': [
     {'1': 'value'},
   ],
@@ -3452,11 +3569,23 @@ const ColorData_Hsv$json = {
   ],
 };
 
+@$core.Deprecated('Use colorDataDescriptor instead')
+const ColorData_Rgb$json = {
+  '1': 'Rgb',
+  '2': [
+    {'1': 'r', '3': 1, '4': 1, '5': 1, '10': 'r'},
+    {'1': 'g', '3': 2, '4': 1, '5': 1, '10': 'g'},
+    {'1': 'b', '3': 3, '4': 1, '5': 1, '10': 'b'},
+  ],
+};
+
 /// Descriptor for `ColorData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List colorDataDescriptor = $convert.base64Decode(
-    'CglDb2xvckRhdGESKAoDaHN2GAEgASgLMhQubW90aWYuQ29sb3JEYXRhLkhzdkgAUgNoc3YSFA'
-    'oFYWxwaGEYBSABKAFSBWFscGhhGi8KA0hzdhIMCgFoGAEgASgBUgFoEgwKAXMYAiABKAFSAXMS'
-    'DAoBdhgDIAEoAVIBdkIHCgV2YWx1ZQ==');
+    'CglDb2xvckRhdGESKAoDaHN2GAEgASgLMhQubW90aWYuQ29sb3JEYXRhLkhzdkgAUgNoc3YSKA'
+    'oDcmdiGAIgASgLMhQubW90aWYuQ29sb3JEYXRhLlJnYkgAUgNyZ2ISFAoFYWxwaGEYCiABKAFS'
+    'BWFscGhhGi8KA0hzdhIMCgFoGAEgASgBUgFoEgwKAXMYAiABKAFSAXMSDAoBdhgDIAEoAVIBdh'
+    'ovCgNSZ2ISDAoBchgBIAEoAVIBchIMCgFnGAIgASgBUgFnEgwKAWIYAyABKAFSAWJCBwoFdmFs'
+    'dWU=');
 
 @$core.Deprecated('Use nodeDescriptor instead')
 const Node$json = {
@@ -3464,107 +3593,8 @@ const Node$json = {
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.motif.NodeId', '10': 'id'},
     {
-      '1': 'generator_input',
-      '3': 10,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.GeneratorInput',
-      '9': 0,
-      '10': 'generatorInput'
-    },
-    {
-      '1': 'generator_output',
-      '3': 11,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.GeneratorOutput',
-      '9': 0,
-      '10': 'generatorOutput'
-    },
-    {
-      '1': 'merge',
-      '3': 12,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Merge',
-      '9': 0,
-      '10': 'merge'
-    },
-    {
-      '1': 'vertex',
-      '3': 13,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Vertex',
-      '9': 0,
-      '10': 'vertex'
-    },
-    {
-      '1': 'rectangle',
-      '3': 14,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Rectangle',
-      '9': 0,
-      '10': 'rectangle'
-    },
-    {
-      '1': 'array',
-      '3': 15,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Array',
-      '9': 0,
-      '10': 'array'
-    },
-    {
-      '1': 'transform',
-      '3': 16,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Transform',
-      '9': 0,
-      '10': 'transform'
-    },
-    {
-      '1': 'connect_vertices',
-      '3': 17,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.ConnectVertices',
-      '9': 0,
-      '10': 'connectVertices'
-    },
-    {
-      '1': 'make_face',
-      '3': 18,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.MakeFace',
-      '9': 0,
-      '10': 'makeFace'
-    },
-    {
-      '1': 'bounding_box',
-      '3': 19,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.BoundingBox',
-      '9': 0,
-      '10': 'boundingBox'
-    },
-    {
-      '1': 'index',
-      '3': 20,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Node.Index',
-      '9': 0,
-      '10': 'index'
-    },
-    {
       '1': 'math',
-      '3': 21,
+      '3': 10,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.Math',
@@ -3573,7 +3603,7 @@ const Node$json = {
     },
     {
       '1': 'vector_math',
-      '3': 22,
+      '3': 11,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.VectorMath',
@@ -3582,7 +3612,7 @@ const Node$json = {
     },
     {
       '1': 'trig_math',
-      '3': 23,
+      '3': 12,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.TrigMath',
@@ -3591,7 +3621,7 @@ const Node$json = {
     },
     {
       '1': 'expression',
-      '3': 24,
+      '3': 13,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.Expression',
@@ -3600,7 +3630,7 @@ const Node$json = {
     },
     {
       '1': 'math_constant',
-      '3': 25,
+      '3': 14,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.MathConstant',
@@ -3609,7 +3639,7 @@ const Node$json = {
     },
     {
       '1': 'math_round',
-      '3': 26,
+      '3': 15,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.MathRound',
@@ -3618,7 +3648,7 @@ const Node$json = {
     },
     {
       '1': 'combine_x_y',
-      '3': 27,
+      '3': 16,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.CombineXY',
@@ -3627,7 +3657,7 @@ const Node$json = {
     },
     {
       '1': 'separate_x_y',
-      '3': 28,
+      '3': 17,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.SeparateXY',
@@ -3636,7 +3666,7 @@ const Node$json = {
     },
     {
       '1': 'polar',
-      '3': 29,
+      '3': 18,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.Polar',
@@ -3644,8 +3674,80 @@ const Node$json = {
       '10': 'polar'
     },
     {
+      '1': 'wrap',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Wrap',
+      '9': 0,
+      '10': 'wrap'
+    },
+    {
+      '1': 'wrap_vector',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.WrapVector',
+      '9': 0,
+      '10': 'wrapVector'
+    },
+    {
+      '1': 'abs',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Abs',
+      '9': 0,
+      '10': 'abs'
+    },
+    {
+      '1': 'abs_vector',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.AbsVector',
+      '9': 0,
+      '10': 'absVector'
+    },
+    {
+      '1': 'sign',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Sign',
+      '9': 0,
+      '10': 'sign'
+    },
+    {
+      '1': 'sign_vector',
+      '3': 24,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.SignVector',
+      '9': 0,
+      '10': 'signVector'
+    },
+    {
+      '1': 'rotate_vector',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.RotateVector',
+      '9': 0,
+      '10': 'rotateVector'
+    },
+    {
+      '1': 'vector_magnitude',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.VectorMagnitude',
+      '9': 0,
+      '10': 'vectorMagnitude'
+    },
+    {
       '1': 'random_float',
-      '3': 30,
+      '3': 27,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.RandomFloat',
@@ -3654,15 +3756,233 @@ const Node$json = {
     },
     {
       '1': 'random_vector',
-      '3': 31,
+      '3': 28,
       '4': 1,
       '5': 11,
       '6': '.motif.Node.RandomVector',
       '9': 0,
       '10': 'randomVector'
     },
+    {
+      '1': 'compare',
+      '3': 29,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Compare',
+      '9': 0,
+      '10': 'compare'
+    },
+    {
+      '1': 'boolean_to_float',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.BooleanToFloat',
+      '9': 0,
+      '10': 'booleanToFloat'
+    },
+    {
+      '1': 'map_range',
+      '3': 31,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.MapRange',
+      '9': 0,
+      '10': 'mapRange'
+    },
+    {
+      '1': 'deg_2_rad',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Deg2Rad',
+      '9': 0,
+      '10': 'deg2Rad'
+    },
+    {
+      '1': 'rad_2_deg',
+      '3': 33,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Rad2Deg',
+      '9': 0,
+      '10': 'rad2Deg'
+    },
+    {
+      '1': 'color_from_r_g_b_a',
+      '3': 34,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ColorFromRGBA',
+      '9': 0,
+      '10': 'colorFromRGBA'
+    },
+    {
+      '1': 'color_to_r_g_b_a',
+      '3': 35,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ColorToRGBA',
+      '9': 0,
+      '10': 'colorToRGBA'
+    },
+    {
+      '1': 'color_mix',
+      '3': 36,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ColorMix',
+      '9': 0,
+      '10': 'colorMix'
+    },
+    {
+      '1': 'shader_input',
+      '3': 37,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ShaderInput',
+      '9': 0,
+      '10': 'shaderInput'
+    },
+    {
+      '1': 'shader_output',
+      '3': 38,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ShaderOutput',
+      '9': 0,
+      '10': 'shaderOutput'
+    },
+    {
+      '1': 'generator_input',
+      '3': 39,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.GeneratorInput',
+      '9': 0,
+      '10': 'generatorInput'
+    },
+    {
+      '1': 'generator_output',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.GeneratorOutput',
+      '9': 0,
+      '10': 'generatorOutput'
+    },
+    {
+      '1': 'merge',
+      '3': 41,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Merge',
+      '9': 0,
+      '10': 'merge'
+    },
+    {
+      '1': 'vertex',
+      '3': 42,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Vertex',
+      '9': 0,
+      '10': 'vertex'
+    },
+    {
+      '1': 'rectangle',
+      '3': 43,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Rectangle',
+      '9': 0,
+      '10': 'rectangle'
+    },
+    {
+      '1': 'array',
+      '3': 44,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Array',
+      '9': 0,
+      '10': 'array'
+    },
+    {
+      '1': 'transform',
+      '3': 45,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Transform',
+      '9': 0,
+      '10': 'transform'
+    },
+    {
+      '1': 'connect_vertices',
+      '3': 46,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.ConnectVertices',
+      '9': 0,
+      '10': 'connectVertices'
+    },
+    {
+      '1': 'make_face',
+      '3': 47,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.MakeFace',
+      '9': 0,
+      '10': 'makeFace'
+    },
+    {
+      '1': 'bounding_box',
+      '3': 48,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.BoundingBox',
+      '9': 0,
+      '10': 'boundingBox'
+    },
+    {
+      '1': 'index',
+      '3': 49,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Node.Index',
+      '9': 0,
+      '10': 'index'
+    },
   ],
   '3': [
+    Node_Math$json,
+    Node_VectorMath$json,
+    Node_TrigMath$json,
+    Node_Expression$json,
+    Node_MathConstant$json,
+    Node_MathRound$json,
+    Node_CombineXY$json,
+    Node_SeparateXY$json,
+    Node_Polar$json,
+    Node_Wrap$json,
+    Node_WrapVector$json,
+    Node_Abs$json,
+    Node_AbsVector$json,
+    Node_Sign$json,
+    Node_SignVector$json,
+    Node_RotateVector$json,
+    Node_VectorMagnitude$json,
+    Node_RandomFloat$json,
+    Node_RandomVector$json,
+    Node_Compare$json,
+    Node_BooleanToFloat$json,
+    Node_MapRange$json,
+    Node_Deg2Rad$json,
+    Node_Rad2Deg$json,
+    Node_ColorFromRGBA$json,
+    Node_ColorToRGBA$json,
+    Node_ColorMix$json,
+    Node_ShaderInput$json,
+    Node_ShaderOutput$json,
     Node_GeneratorInput$json,
     Node_GeneratorOutput$json,
     Node_Merge$json,
@@ -3673,21 +3993,651 @@ const Node$json = {
     Node_ConnectVertices$json,
     Node_MakeFace$json,
     Node_BoundingBox$json,
-    Node_Index$json,
-    Node_Math$json,
-    Node_VectorMath$json,
-    Node_TrigMath$json,
-    Node_Expression$json,
-    Node_MathConstant$json,
-    Node_MathRound$json,
-    Node_CombineXY$json,
-    Node_SeparateXY$json,
-    Node_Polar$json,
-    Node_RandomFloat$json,
-    Node_RandomVector$json
+    Node_Index$json
   ],
   '8': [
     {'1': 'kind'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Math$json = {
+  '1': 'Math',
+  '2': [
+    {'1': 'a', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'a', '17': true},
+    {'1': 'b', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'b', '17': true},
+    {
+      '1': 'operator',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.MathOperatorType',
+      '9': 2,
+      '10': 'operator',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_a'},
+    {'1': '_b'},
+    {'1': '_operator'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_VectorMath$json = {
+  '1': 'VectorMath',
+  '2': [
+    {
+      '1': 'a',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'a',
+      '17': true
+    },
+    {
+      '1': 'b',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 1,
+      '10': 'b',
+      '17': true
+    },
+    {
+      '1': 'operator',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.VectorMathOperatorType',
+      '9': 2,
+      '10': 'operator',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_a'},
+    {'1': '_b'},
+    {'1': '_operator'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_TrigMath$json = {
+  '1': 'TrigMath',
+  '2': [
+    {'1': 'input', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'input', '17': true},
+    {
+      '1': 'operator',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.TrigMathOperatorType',
+      '9': 1,
+      '10': 'operator',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_input'},
+    {'1': '_operator'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Expression$json = {
+  '1': 'Expression',
+  '2': [
+    {
+      '1': 'expression',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'expression',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_expression'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_MathConstant$json = {
+  '1': 'MathConstant',
+  '2': [
+    {
+      '1': 'constant',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.MathConstantType',
+      '9': 0,
+      '10': 'constant',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_constant'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_MathRound$json = {
+  '1': 'MathRound',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+    {
+      '1': 'mode',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.MathRoundType',
+      '9': 1,
+      '10': 'mode',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+    {'1': '_mode'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_CombineXY$json = {
+  '1': 'CombineXY',
+  '2': [
+    {'1': 'x', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'x', '17': true},
+    {'1': 'y', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'y', '17': true},
+  ],
+  '8': [
+    {'1': '_x'},
+    {'1': '_y'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_SeparateXY$json = {
+  '1': 'SeparateXY',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'value',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Polar$json = {
+  '1': 'Polar',
+  '2': [
+    {'1': 'radius', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'radius', '17': true},
+    {'1': 'angle', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'angle', '17': true},
+  ],
+  '8': [
+    {'1': '_radius'},
+    {'1': '_angle'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Wrap$json = {
+  '1': 'Wrap',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+    {'1': 'min', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'min', '17': true},
+    {'1': 'max', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'max', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+    {'1': '_min'},
+    {'1': '_max'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_WrapVector$json = {
+  '1': 'WrapVector',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'value',
+      '17': true
+    },
+    {
+      '1': 'min',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 1,
+      '10': 'min',
+      '17': true
+    },
+    {
+      '1': 'max',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 2,
+      '10': 'max',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+    {'1': '_min'},
+    {'1': '_max'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Abs$json = {
+  '1': 'Abs',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_AbsVector$json = {
+  '1': 'AbsVector',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'value',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Sign$json = {
+  '1': 'Sign',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_SignVector$json = {
+  '1': 'SignVector',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'value',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_RotateVector$json = {
+  '1': 'RotateVector',
+  '2': [
+    {
+      '1': 'vector',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'vector',
+      '17': true
+    },
+    {'1': 'angle', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'angle', '17': true},
+    {
+      '1': 'pivot',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 2,
+      '10': 'pivot',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_vector'},
+    {'1': '_angle'},
+    {'1': '_pivot'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_VectorMagnitude$json = {
+  '1': 'VectorMagnitude',
+  '2': [
+    {
+      '1': 'vector',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 0,
+      '10': 'vector',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_vector'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_RandomFloat$json = {
+  '1': 'RandomFloat',
+  '2': [
+    {'1': 'seed', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'seed', '17': true},
+    {'1': 'min', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'min', '17': true},
+    {'1': 'max', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'max', '17': true},
+  ],
+  '8': [
+    {'1': '_seed'},
+    {'1': '_min'},
+    {'1': '_max'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_RandomVector$json = {
+  '1': 'RandomVector',
+  '2': [
+    {'1': 'seed', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'seed', '17': true},
+    {
+      '1': 'min',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 1,
+      '10': 'min',
+      '17': true
+    },
+    {
+      '1': 'max',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.Vec2',
+      '9': 2,
+      '10': 'max',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_seed'},
+    {'1': '_min'},
+    {'1': '_max'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Compare$json = {
+  '1': 'Compare',
+  '2': [
+    {'1': 'a', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'a', '17': true},
+    {'1': 'b', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'b', '17': true},
+    {
+      '1': 'epsilon',
+      '3': 3,
+      '4': 1,
+      '5': 1,
+      '9': 2,
+      '10': 'epsilon',
+      '17': true
+    },
+    {
+      '1': 'type',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.MathCompareType',
+      '9': 3,
+      '10': 'type',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_a'},
+    {'1': '_b'},
+    {'1': '_epsilon'},
+    {'1': '_type'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_BooleanToFloat$json = {
+  '1': 'BooleanToFloat',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 8, '9': 0, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_MapRange$json = {
+  '1': 'MapRange',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+    {
+      '1': 'from_min',
+      '3': 2,
+      '4': 1,
+      '5': 1,
+      '9': 1,
+      '10': 'fromMin',
+      '17': true
+    },
+    {
+      '1': 'from_max',
+      '3': 3,
+      '4': 1,
+      '5': 1,
+      '9': 2,
+      '10': 'fromMax',
+      '17': true
+    },
+    {
+      '1': 'out_min',
+      '3': 4,
+      '4': 1,
+      '5': 1,
+      '9': 3,
+      '10': 'outMin',
+      '17': true
+    },
+    {
+      '1': 'out_max',
+      '3': 5,
+      '4': 1,
+      '5': 1,
+      '9': 4,
+      '10': 'outMax',
+      '17': true
+    },
+    {'1': 'clamp', '3': 6, '4': 1, '5': 8, '9': 5, '10': 'clamp', '17': true},
+    {
+      '1': 'interpolation',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.motif.InterpolationType',
+      '9': 6,
+      '10': 'interpolation',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+    {'1': '_from_min'},
+    {'1': '_from_max'},
+    {'1': '_out_min'},
+    {'1': '_out_max'},
+    {'1': '_clamp'},
+    {'1': '_interpolation'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Deg2Rad$json = {
+  '1': 'Deg2Rad',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_Rad2Deg$json = {
+  '1': 'Rad2Deg',
+  '2': [
+    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_ColorFromRGBA$json = {
+  '1': 'ColorFromRGBA',
+  '2': [
+    {'1': 'r', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'r', '17': true},
+    {'1': 'g', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'g', '17': true},
+    {'1': 'b', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'b', '17': true},
+    {'1': 'a', '3': 4, '4': 1, '5': 1, '9': 3, '10': 'a', '17': true},
+  ],
+  '8': [
+    {'1': '_r'},
+    {'1': '_g'},
+    {'1': '_b'},
+    {'1': '_a'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_ColorToRGBA$json = {
+  '1': 'ColorToRGBA',
+  '2': [
+    {
+      '1': 'value',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 0,
+      '10': 'value',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_value'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_ColorMix$json = {
+  '1': 'ColorMix',
+  '2': [
+    {
+      '1': 'a',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 0,
+      '10': 'a',
+      '17': true
+    },
+    {
+      '1': 'b',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 1,
+      '10': 'b',
+      '17': true
+    },
+    {'1': 't', '3': 3, '4': 1, '5': 1, '9': 2, '10': 't', '17': true},
+  ],
+  '8': [
+    {'1': '_a'},
+    {'1': '_b'},
+    {'1': '_t'},
+  ],
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_ShaderInput$json = {
+  '1': 'ShaderInput',
+};
+
+@$core.Deprecated('Use nodeDescriptor instead')
+const Node_ShaderOutput$json = {
+  '1': 'ShaderOutput',
+  '2': [
+    {
+      '1': 'color',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.motif.ColorData',
+      '9': 0,
+      '10': 'color',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_color'},
   ],
 };
 
@@ -3918,308 +4868,116 @@ const Node_Index$json = {
   '1': 'Index',
 };
 
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_Math$json = {
-  '1': 'Math',
-  '2': [
-    {'1': 'a', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'a', '17': true},
-    {'1': 'b', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'b', '17': true},
-    {
-      '1': 'operator',
-      '3': 3,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.MathOperatorType',
-      '9': 2,
-      '10': 'operator',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_a'},
-    {'1': '_b'},
-    {'1': '_operator'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_VectorMath$json = {
-  '1': 'VectorMath',
-  '2': [
-    {
-      '1': 'a',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Vec2',
-      '9': 0,
-      '10': 'a',
-      '17': true
-    },
-    {
-      '1': 'b',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Vec2',
-      '9': 1,
-      '10': 'b',
-      '17': true
-    },
-    {
-      '1': 'operator',
-      '3': 3,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.VectorMathOperatorType',
-      '9': 2,
-      '10': 'operator',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_a'},
-    {'1': '_b'},
-    {'1': '_operator'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_TrigMath$json = {
-  '1': 'TrigMath',
-  '2': [
-    {'1': 'input', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'input', '17': true},
-    {
-      '1': 'operator',
-      '3': 2,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.TrigMathOperatorType',
-      '9': 1,
-      '10': 'operator',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_input'},
-    {'1': '_operator'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_Expression$json = {
-  '1': 'Expression',
-  '2': [
-    {
-      '1': 'expression',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '9': 0,
-      '10': 'expression',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_expression'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_MathConstant$json = {
-  '1': 'MathConstant',
-  '2': [
-    {
-      '1': 'constant',
-      '3': 1,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.MathConstantType',
-      '9': 0,
-      '10': 'constant',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_constant'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_MathRound$json = {
-  '1': 'MathRound',
-  '2': [
-    {'1': 'value', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'value', '17': true},
-    {
-      '1': 'mode',
-      '3': 2,
-      '4': 1,
-      '5': 14,
-      '6': '.motif.MathRoundType',
-      '9': 1,
-      '10': 'mode',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_value'},
-    {'1': '_mode'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_CombineXY$json = {
-  '1': 'CombineXY',
-  '2': [
-    {'1': 'x', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'x', '17': true},
-    {'1': 'y', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'y', '17': true},
-  ],
-  '8': [
-    {'1': '_x'},
-    {'1': '_y'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_SeparateXY$json = {
-  '1': 'SeparateXY',
-  '2': [
-    {
-      '1': 'value',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Vec2',
-      '9': 0,
-      '10': 'value',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_value'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_Polar$json = {
-  '1': 'Polar',
-  '2': [
-    {'1': 'radius', '3': 1, '4': 1, '5': 1, '9': 0, '10': 'radius', '17': true},
-    {'1': 'angle', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'angle', '17': true},
-  ],
-  '8': [
-    {'1': '_radius'},
-    {'1': '_angle'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_RandomFloat$json = {
-  '1': 'RandomFloat',
-  '2': [
-    {'1': 'seed', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'seed', '17': true},
-    {'1': 'min', '3': 2, '4': 1, '5': 1, '9': 1, '10': 'min', '17': true},
-    {'1': 'max', '3': 3, '4': 1, '5': 1, '9': 2, '10': 'max', '17': true},
-  ],
-  '8': [
-    {'1': '_seed'},
-    {'1': '_min'},
-    {'1': '_max'},
-  ],
-};
-
-@$core.Deprecated('Use nodeDescriptor instead')
-const Node_RandomVector$json = {
-  '1': 'RandomVector',
-  '2': [
-    {'1': 'seed', '3': 1, '4': 1, '5': 5, '9': 0, '10': 'seed', '17': true},
-    {
-      '1': 'min',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Vec2',
-      '9': 1,
-      '10': 'min',
-      '17': true
-    },
-    {
-      '1': 'max',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.motif.Vec2',
-      '9': 2,
-      '10': 'max',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_seed'},
-    {'1': '_min'},
-    {'1': '_max'},
-  ],
-};
-
 /// Descriptor for `Node`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List nodeDescriptor = $convert.base64Decode(
-    'CgROb2RlEh0KAmlkGAEgASgLMg0ubW90aWYuTm9kZUlkUgJpZBJFCg9nZW5lcmF0b3JfaW5wdX'
-    'QYCiABKAsyGi5tb3RpZi5Ob2RlLkdlbmVyYXRvcklucHV0SABSDmdlbmVyYXRvcklucHV0EkgK'
-    'EGdlbmVyYXRvcl9vdXRwdXQYCyABKAsyGy5tb3RpZi5Ob2RlLkdlbmVyYXRvck91dHB1dEgAUg'
-    '9nZW5lcmF0b3JPdXRwdXQSKQoFbWVyZ2UYDCABKAsyES5tb3RpZi5Ob2RlLk1lcmdlSABSBW1l'
-    'cmdlEiwKBnZlcnRleBgNIAEoCzISLm1vdGlmLk5vZGUuVmVydGV4SABSBnZlcnRleBI1CglyZW'
-    'N0YW5nbGUYDiABKAsyFS5tb3RpZi5Ob2RlLlJlY3RhbmdsZUgAUglyZWN0YW5nbGUSKQoFYXJy'
-    'YXkYDyABKAsyES5tb3RpZi5Ob2RlLkFycmF5SABSBWFycmF5EjUKCXRyYW5zZm9ybRgQIAEoCz'
-    'IVLm1vdGlmLk5vZGUuVHJhbnNmb3JtSABSCXRyYW5zZm9ybRJIChBjb25uZWN0X3ZlcnRpY2Vz'
-    'GBEgASgLMhsubW90aWYuTm9kZS5Db25uZWN0VmVydGljZXNIAFIPY29ubmVjdFZlcnRpY2VzEj'
-    'MKCW1ha2VfZmFjZRgSIAEoCzIULm1vdGlmLk5vZGUuTWFrZUZhY2VIAFIIbWFrZUZhY2USPAoM'
-    'Ym91bmRpbmdfYm94GBMgASgLMhcubW90aWYuTm9kZS5Cb3VuZGluZ0JveEgAUgtib3VuZGluZ0'
-    'JveBIpCgVpbmRleBgUIAEoCzIRLm1vdGlmLk5vZGUuSW5kZXhIAFIFaW5kZXgSJgoEbWF0aBgV'
-    'IAEoCzIQLm1vdGlmLk5vZGUuTWF0aEgAUgRtYXRoEjkKC3ZlY3Rvcl9tYXRoGBYgASgLMhYubW'
-    '90aWYuTm9kZS5WZWN0b3JNYXRoSABSCnZlY3Rvck1hdGgSMwoJdHJpZ19tYXRoGBcgASgLMhQu'
-    'bW90aWYuTm9kZS5UcmlnTWF0aEgAUgh0cmlnTWF0aBI4CgpleHByZXNzaW9uGBggASgLMhYubW'
-    '90aWYuTm9kZS5FeHByZXNzaW9uSABSCmV4cHJlc3Npb24SPwoNbWF0aF9jb25zdGFudBgZIAEo'
-    'CzIYLm1vdGlmLk5vZGUuTWF0aENvbnN0YW50SABSDG1hdGhDb25zdGFudBI2CgptYXRoX3JvdW'
-    '5kGBogASgLMhUubW90aWYuTm9kZS5NYXRoUm91bmRIAFIJbWF0aFJvdW5kEjcKC2NvbWJpbmVf'
-    'eF95GBsgASgLMhUubW90aWYuTm9kZS5Db21iaW5lWFlIAFIJY29tYmluZVhZEjoKDHNlcGFyYX'
-    'RlX3hfeRgcIAEoCzIWLm1vdGlmLk5vZGUuU2VwYXJhdGVYWUgAUgpzZXBhcmF0ZVhZEikKBXBv'
-    'bGFyGB0gASgLMhEubW90aWYuTm9kZS5Qb2xhckgAUgVwb2xhchI8CgxyYW5kb21fZmxvYXQYHi'
-    'ABKAsyFy5tb3RpZi5Ob2RlLlJhbmRvbUZsb2F0SABSC3JhbmRvbUZsb2F0Ej8KDXJhbmRvbV92'
-    'ZWN0b3IYHyABKAsyGC5tb3RpZi5Ob2RlLlJhbmRvbVZlY3RvckgAUgxyYW5kb21WZWN0b3IaEA'
-    'oOR2VuZXJhdG9ySW5wdXQaEQoPR2VuZXJhdG9yT3V0cHV0GgcKBU1lcmdlGkMKBlZlcnRleBIs'
-    'Cghwb3NpdGlvbhgBIAEoCzILLm1vdGlmLlZlYzJIAFIIcG9zaXRpb26IAQFCCwoJX3Bvc2l0aW'
-    '9uGm8KCVJlY3RhbmdsZRIoCgZjZW50ZXIYASABKAsyCy5tb3RpZi5WZWMySABSBmNlbnRlcogB'
-    'ARIkCgRzaXplGAIgASgLMgsubW90aWYuVmVjMkgBUgRzaXpliAEBQgkKB19jZW50ZXJCBwoFX3'
-    'NpemUaqAEKBUFycmF5Ei4KBXNsaWNlGAEgASgLMhMubW90aWYuUHJvZ3JhbVNsaWNlSABSBXNs'
-    'aWNliAEBEigKBm9mZnNldBgCIAEoCzILLm1vdGlmLlZlYzJIAVIGb2Zmc2V0iAEBEiYKBWNvdW'
-    '50GAMgASgLMgsubW90aWYuVmVjMkgCUgVjb3VudIgBAUIICgZfc2xpY2VCCQoHX29mZnNldEII'
-    'CgZfY291bnQa6QEKCVRyYW5zZm9ybRIuCgVzbGljZRgBIAEoCzITLm1vdGlmLlByb2dyYW1TbG'
-    'ljZUgAUgVzbGljZYgBARIyCgt0cmFuc2xhdGlvbhgCIAEoCzILLm1vdGlmLlZlYzJIAVILdHJh'
-    'bnNsYXRpb26IAQESJgoFc2NhbGUYAyABKAsyCy5tb3RpZi5WZWMySAJSBXNjYWxliAEBEh8KCH'
-    'JvdGF0aW9uGAQgASgBSANSCHJvdGF0aW9uiAEBQggKBl9zbGljZUIOCgxfdHJhbnNsYXRpb25C'
-    'CAoGX3NjYWxlQgsKCV9yb3RhdGlvbhpzCg9Db25uZWN0VmVydGljZXMSGwoGY2xvc2VkGAEgAS'
-    'gISABSBmNsb3NlZIgBARIuCgVzbGljZRgCIAEoCzITLm1vdGlmLlByb2dyYW1TbGljZUgBUgVz'
-    'bGljZYgBAUIJCgdfY2xvc2VkQggKBl9zbGljZRpECghNYWtlRmFjZRIuCgVzbGljZRgBIAEoCz'
-    'ITLm1vdGlmLlByb2dyYW1TbGljZUgAUgVzbGljZYgBAUIICgZfc2xpY2UaRwoLQm91bmRpbmdC'
-    'b3gSLgoFc2xpY2UYASABKAsyEy5tb3RpZi5Qcm9ncmFtU2xpY2VIAFIFc2xpY2WIAQFCCAoGX3'
-    'NsaWNlGgcKBUluZGV4Gn8KBE1hdGgSEQoBYRgBIAEoAUgAUgFhiAEBEhEKAWIYAiABKAFIAVIB'
-    'YogBARI4CghvcGVyYXRvchgDIAEoDjIXLm1vdGlmLk1hdGhPcGVyYXRvclR5cGVIAlIIb3Blcm'
-    'F0b3KIAQFCBAoCX2FCBAoCX2JCCwoJX29wZXJhdG9yGqUBCgpWZWN0b3JNYXRoEh4KAWEYASAB'
-    'KAsyCy5tb3RpZi5WZWMySABSAWGIAQESHgoBYhgCIAEoCzILLm1vdGlmLlZlYzJIAVIBYogBAR'
-    'I+CghvcGVyYXRvchgDIAEoDjIdLm1vdGlmLlZlY3Rvck1hdGhPcGVyYXRvclR5cGVIAlIIb3Bl'
-    'cmF0b3KIAQFCBAoCX2FCBAoCX2JCCwoJX29wZXJhdG9yGnoKCFRyaWdNYXRoEhkKBWlucHV0GA'
-    'EgASgBSABSBWlucHV0iAEBEjwKCG9wZXJhdG9yGAIgASgOMhsubW90aWYuVHJpZ01hdGhPcGVy'
-    'YXRvclR5cGVIAVIIb3BlcmF0b3KIAQFCCAoGX2lucHV0QgsKCV9vcGVyYXRvchpACgpFeHByZX'
-    'NzaW9uEiMKCmV4cHJlc3Npb24YASABKAlIAFIKZXhwcmVzc2lvbogBAUINCgtfZXhwcmVzc2lv'
-    'bhpVCgxNYXRoQ29uc3RhbnQSOAoIY29uc3RhbnQYASABKA4yFy5tb3RpZi5NYXRoQ29uc3Rhbn'
-    'RUeXBlSABSCGNvbnN0YW50iAEBQgsKCV9jb25zdGFudBpoCglNYXRoUm91bmQSGQoFdmFsdWUY'
-    'ASABKAFIAFIFdmFsdWWIAQESLQoEbW9kZRgCIAEoDjIULm1vdGlmLk1hdGhSb3VuZFR5cGVIAV'
-    'IEbW9kZYgBAUIICgZfdmFsdWVCBwoFX21vZGUaPQoJQ29tYmluZVhZEhEKAXgYASABKAFIAFIB'
-    'eIgBARIRCgF5GAIgASgBSAFSAXmIAQFCBAoCX3hCBAoCX3kaPgoKU2VwYXJhdGVYWRImCgV2YW'
-    'x1ZRgBIAEoCzILLm1vdGlmLlZlYzJIAFIFdmFsdWWIAQFCCAoGX3ZhbHVlGlQKBVBvbGFyEhsK'
-    'BnJhZGl1cxgBIAEoAUgAUgZyYWRpdXOIAQESGQoFYW5nbGUYAiABKAFIAVIFYW5nbGWIAQFCCQ'
-    'oHX3JhZGl1c0IICgZfYW5nbGUabQoLUmFuZG9tRmxvYXQSFwoEc2VlZBgBIAEoBUgAUgRzZWVk'
-    'iAEBEhUKA21pbhgCIAEoAUgBUgNtaW6IAQESFQoDbWF4GAMgASgBSAJSA21heIgBAUIHCgVfc2'
-    'VlZEIGCgRfbWluQgYKBF9tYXgaiAEKDFJhbmRvbVZlY3RvchIXCgRzZWVkGAEgASgFSABSBHNl'
-    'ZWSIAQESIgoDbWluGAIgASgLMgsubW90aWYuVmVjMkgBUgNtaW6IAQESIgoDbWF4GAMgASgLMg'
-    'subW90aWYuVmVjMkgCUgNtYXiIAQFCBwoFX3NlZWRCBgoEX21pbkIGCgRfbWF4QgYKBGtpbmQ=');
+    'CgROb2RlEh0KAmlkGAEgASgLMg0ubW90aWYuTm9kZUlkUgJpZBImCgRtYXRoGAogASgLMhAubW'
+    '90aWYuTm9kZS5NYXRoSABSBG1hdGgSOQoLdmVjdG9yX21hdGgYCyABKAsyFi5tb3RpZi5Ob2Rl'
+    'LlZlY3Rvck1hdGhIAFIKdmVjdG9yTWF0aBIzCgl0cmlnX21hdGgYDCABKAsyFC5tb3RpZi5Ob2'
+    'RlLlRyaWdNYXRoSABSCHRyaWdNYXRoEjgKCmV4cHJlc3Npb24YDSABKAsyFi5tb3RpZi5Ob2Rl'
+    'LkV4cHJlc3Npb25IAFIKZXhwcmVzc2lvbhI/Cg1tYXRoX2NvbnN0YW50GA4gASgLMhgubW90aW'
+    'YuTm9kZS5NYXRoQ29uc3RhbnRIAFIMbWF0aENvbnN0YW50EjYKCm1hdGhfcm91bmQYDyABKAsy'
+    'FS5tb3RpZi5Ob2RlLk1hdGhSb3VuZEgAUgltYXRoUm91bmQSNwoLY29tYmluZV94X3kYECABKA'
+    'syFS5tb3RpZi5Ob2RlLkNvbWJpbmVYWUgAUgljb21iaW5lWFkSOgoMc2VwYXJhdGVfeF95GBEg'
+    'ASgLMhYubW90aWYuTm9kZS5TZXBhcmF0ZVhZSABSCnNlcGFyYXRlWFkSKQoFcG9sYXIYEiABKA'
+    'syES5tb3RpZi5Ob2RlLlBvbGFySABSBXBvbGFyEiYKBHdyYXAYEyABKAsyEC5tb3RpZi5Ob2Rl'
+    'LldyYXBIAFIEd3JhcBI5Cgt3cmFwX3ZlY3RvchgUIAEoCzIWLm1vdGlmLk5vZGUuV3JhcFZlY3'
+    'RvckgAUgp3cmFwVmVjdG9yEiMKA2FicxgVIAEoCzIPLm1vdGlmLk5vZGUuQWJzSABSA2FicxI2'
+    'CgphYnNfdmVjdG9yGBYgASgLMhUubW90aWYuTm9kZS5BYnNWZWN0b3JIAFIJYWJzVmVjdG9yEi'
+    'YKBHNpZ24YFyABKAsyEC5tb3RpZi5Ob2RlLlNpZ25IAFIEc2lnbhI5CgtzaWduX3ZlY3RvchgY'
+    'IAEoCzIWLm1vdGlmLk5vZGUuU2lnblZlY3RvckgAUgpzaWduVmVjdG9yEj8KDXJvdGF0ZV92ZW'
+    'N0b3IYGSABKAsyGC5tb3RpZi5Ob2RlLlJvdGF0ZVZlY3RvckgAUgxyb3RhdGVWZWN0b3ISSAoQ'
+    'dmVjdG9yX21hZ25pdHVkZRgaIAEoCzIbLm1vdGlmLk5vZGUuVmVjdG9yTWFnbml0dWRlSABSD3'
+    'ZlY3Rvck1hZ25pdHVkZRI8CgxyYW5kb21fZmxvYXQYGyABKAsyFy5tb3RpZi5Ob2RlLlJhbmRv'
+    'bUZsb2F0SABSC3JhbmRvbUZsb2F0Ej8KDXJhbmRvbV92ZWN0b3IYHCABKAsyGC5tb3RpZi5Ob2'
+    'RlLlJhbmRvbVZlY3RvckgAUgxyYW5kb21WZWN0b3ISLwoHY29tcGFyZRgdIAEoCzITLm1vdGlm'
+    'Lk5vZGUuQ29tcGFyZUgAUgdjb21wYXJlEkYKEGJvb2xlYW5fdG9fZmxvYXQYHiABKAsyGi5tb3'
+    'RpZi5Ob2RlLkJvb2xlYW5Ub0Zsb2F0SABSDmJvb2xlYW5Ub0Zsb2F0EjMKCW1hcF9yYW5nZRgf'
+    'IAEoCzIULm1vdGlmLk5vZGUuTWFwUmFuZ2VIAFIIbWFwUmFuZ2USMQoJZGVnXzJfcmFkGCAgAS'
+    'gLMhMubW90aWYuTm9kZS5EZWcyUmFkSABSB2RlZzJSYWQSMQoJcmFkXzJfZGVnGCEgASgLMhMu'
+    'bW90aWYuTm9kZS5SYWQyRGVnSABSB3JhZDJEZWcSRgoSY29sb3JfZnJvbV9yX2dfYl9hGCIgAS'
+    'gLMhkubW90aWYuTm9kZS5Db2xvckZyb21SR0JBSABSDWNvbG9yRnJvbVJHQkESQAoQY29sb3Jf'
+    'dG9fcl9nX2JfYRgjIAEoCzIXLm1vdGlmLk5vZGUuQ29sb3JUb1JHQkFIAFILY29sb3JUb1JHQk'
+    'ESMwoJY29sb3JfbWl4GCQgASgLMhQubW90aWYuTm9kZS5Db2xvck1peEgAUghjb2xvck1peBI8'
+    'CgxzaGFkZXJfaW5wdXQYJSABKAsyFy5tb3RpZi5Ob2RlLlNoYWRlcklucHV0SABSC3NoYWRlck'
+    'lucHV0Ej8KDXNoYWRlcl9vdXRwdXQYJiABKAsyGC5tb3RpZi5Ob2RlLlNoYWRlck91dHB1dEgA'
+    'UgxzaGFkZXJPdXRwdXQSRQoPZ2VuZXJhdG9yX2lucHV0GCcgASgLMhoubW90aWYuTm9kZS5HZW'
+    '5lcmF0b3JJbnB1dEgAUg5nZW5lcmF0b3JJbnB1dBJIChBnZW5lcmF0b3Jfb3V0cHV0GCggASgL'
+    'MhsubW90aWYuTm9kZS5HZW5lcmF0b3JPdXRwdXRIAFIPZ2VuZXJhdG9yT3V0cHV0EikKBW1lcm'
+    'dlGCkgASgLMhEubW90aWYuTm9kZS5NZXJnZUgAUgVtZXJnZRIsCgZ2ZXJ0ZXgYKiABKAsyEi5t'
+    'b3RpZi5Ob2RlLlZlcnRleEgAUgZ2ZXJ0ZXgSNQoJcmVjdGFuZ2xlGCsgASgLMhUubW90aWYuTm'
+    '9kZS5SZWN0YW5nbGVIAFIJcmVjdGFuZ2xlEikKBWFycmF5GCwgASgLMhEubW90aWYuTm9kZS5B'
+    'cnJheUgAUgVhcnJheRI1Cgl0cmFuc2Zvcm0YLSABKAsyFS5tb3RpZi5Ob2RlLlRyYW5zZm9ybU'
+    'gAUgl0cmFuc2Zvcm0SSAoQY29ubmVjdF92ZXJ0aWNlcxguIAEoCzIbLm1vdGlmLk5vZGUuQ29u'
+    'bmVjdFZlcnRpY2VzSABSD2Nvbm5lY3RWZXJ0aWNlcxIzCgltYWtlX2ZhY2UYLyABKAsyFC5tb3'
+    'RpZi5Ob2RlLk1ha2VGYWNlSABSCG1ha2VGYWNlEjwKDGJvdW5kaW5nX2JveBgwIAEoCzIXLm1v'
+    'dGlmLk5vZGUuQm91bmRpbmdCb3hIAFILYm91bmRpbmdCb3gSKQoFaW5kZXgYMSABKAsyES5tb3'
+    'RpZi5Ob2RlLkluZGV4SABSBWluZGV4Gn8KBE1hdGgSEQoBYRgBIAEoAUgAUgFhiAEBEhEKAWIY'
+    'AiABKAFIAVIBYogBARI4CghvcGVyYXRvchgDIAEoDjIXLm1vdGlmLk1hdGhPcGVyYXRvclR5cG'
+    'VIAlIIb3BlcmF0b3KIAQFCBAoCX2FCBAoCX2JCCwoJX29wZXJhdG9yGqUBCgpWZWN0b3JNYXRo'
+    'Eh4KAWEYASABKAsyCy5tb3RpZi5WZWMySABSAWGIAQESHgoBYhgCIAEoCzILLm1vdGlmLlZlYz'
+    'JIAVIBYogBARI+CghvcGVyYXRvchgDIAEoDjIdLm1vdGlmLlZlY3Rvck1hdGhPcGVyYXRvclR5'
+    'cGVIAlIIb3BlcmF0b3KIAQFCBAoCX2FCBAoCX2JCCwoJX29wZXJhdG9yGnoKCFRyaWdNYXRoEh'
+    'kKBWlucHV0GAEgASgBSABSBWlucHV0iAEBEjwKCG9wZXJhdG9yGAIgASgOMhsubW90aWYuVHJp'
+    'Z01hdGhPcGVyYXRvclR5cGVIAVIIb3BlcmF0b3KIAQFCCAoGX2lucHV0QgsKCV9vcGVyYXRvch'
+    'pACgpFeHByZXNzaW9uEiMKCmV4cHJlc3Npb24YASABKAlIAFIKZXhwcmVzc2lvbogBAUINCgtf'
+    'ZXhwcmVzc2lvbhpVCgxNYXRoQ29uc3RhbnQSOAoIY29uc3RhbnQYASABKA4yFy5tb3RpZi5NYX'
+    'RoQ29uc3RhbnRUeXBlSABSCGNvbnN0YW50iAEBQgsKCV9jb25zdGFudBpoCglNYXRoUm91bmQS'
+    'GQoFdmFsdWUYASABKAFIAFIFdmFsdWWIAQESLQoEbW9kZRgCIAEoDjIULm1vdGlmLk1hdGhSb3'
+    'VuZFR5cGVIAVIEbW9kZYgBAUIICgZfdmFsdWVCBwoFX21vZGUaPQoJQ29tYmluZVhZEhEKAXgY'
+    'ASABKAFIAFIBeIgBARIRCgF5GAIgASgBSAFSAXmIAQFCBAoCX3hCBAoCX3kaPgoKU2VwYXJhdG'
+    'VYWRImCgV2YWx1ZRgBIAEoCzILLm1vdGlmLlZlYzJIAFIFdmFsdWWIAQFCCAoGX3ZhbHVlGlQK'
+    'BVBvbGFyEhsKBnJhZGl1cxgBIAEoAUgAUgZyYWRpdXOIAQESGQoFYW5nbGUYAiABKAFIAVIFYW'
+    '5nbGWIAQFCCQoHX3JhZGl1c0IICgZfYW5nbGUaaQoEV3JhcBIZCgV2YWx1ZRgBIAEoAUgAUgV2'
+    'YWx1ZYgBARIVCgNtaW4YAiABKAFIAVIDbWluiAEBEhUKA21heBgDIAEoAUgCUgNtYXiIAQFCCA'
+    'oGX3ZhbHVlQgYKBF9taW5CBgoEX21heBqWAQoKV3JhcFZlY3RvchImCgV2YWx1ZRgBIAEoCzIL'
+    'Lm1vdGlmLlZlYzJIAFIFdmFsdWWIAQESIgoDbWluGAIgASgLMgsubW90aWYuVmVjMkgBUgNtaW'
+    '6IAQESIgoDbWF4GAMgASgLMgsubW90aWYuVmVjMkgCUgNtYXiIAQFCCAoGX3ZhbHVlQgYKBF9t'
+    'aW5CBgoEX21heBoqCgNBYnMSGQoFdmFsdWUYASABKAFIAFIFdmFsdWWIAQFCCAoGX3ZhbHVlGj'
+    '0KCUFic1ZlY3RvchImCgV2YWx1ZRgBIAEoCzILLm1vdGlmLlZlYzJIAFIFdmFsdWWIAQFCCAoG'
+    'X3ZhbHVlGisKBFNpZ24SGQoFdmFsdWUYASABKAFIAFIFdmFsdWWIAQFCCAoGX3ZhbHVlGj4KCl'
+    'NpZ25WZWN0b3ISJgoFdmFsdWUYASABKAsyCy5tb3RpZi5WZWMySABSBXZhbHVliAEBQggKBl92'
+    'YWx1ZRqaAQoMUm90YXRlVmVjdG9yEigKBnZlY3RvchgBIAEoCzILLm1vdGlmLlZlYzJIAFIGdm'
+    'VjdG9yiAEBEhkKBWFuZ2xlGAIgASgBSAFSBWFuZ2xliAEBEiYKBXBpdm90GAMgASgLMgsubW90'
+    'aWYuVmVjMkgCUgVwaXZvdIgBAUIJCgdfdmVjdG9yQggKBl9hbmdsZUIICgZfcGl2b3QaRgoPVm'
+    'VjdG9yTWFnbml0dWRlEigKBnZlY3RvchgBIAEoCzILLm1vdGlmLlZlYzJIAFIGdmVjdG9yiAEB'
+    'QgkKB192ZWN0b3IabQoLUmFuZG9tRmxvYXQSFwoEc2VlZBgBIAEoBUgAUgRzZWVkiAEBEhUKA2'
+    '1pbhgCIAEoAUgBUgNtaW6IAQESFQoDbWF4GAMgASgBSAJSA21heIgBAUIHCgVfc2VlZEIGCgRf'
+    'bWluQgYKBF9tYXgaiAEKDFJhbmRvbVZlY3RvchIXCgRzZWVkGAEgASgFSABSBHNlZWSIAQESIg'
+    'oDbWluGAIgASgLMgsubW90aWYuVmVjMkgBUgNtaW6IAQESIgoDbWF4GAMgASgLMgsubW90aWYu'
+    'VmVjMkgCUgNtYXiIAQFCBwoFX3NlZWRCBgoEX21pbkIGCgRfbWF4GqABCgdDb21wYXJlEhEKAW'
+    'EYASABKAFIAFIBYYgBARIRCgFiGAIgASgBSAFSAWKIAQESHQoHZXBzaWxvbhgDIAEoAUgCUgdl'
+    'cHNpbG9uiAEBEi8KBHR5cGUYBCABKA4yFi5tb3RpZi5NYXRoQ29tcGFyZVR5cGVIA1IEdHlwZY'
+    'gBAUIECgJfYUIECgJfYkIKCghfZXBzaWxvbkIHCgVfdHlwZRo1Cg5Cb29sZWFuVG9GbG9hdBIZ'
+    'CgV2YWx1ZRgBIAEoCEgAUgV2YWx1ZYgBAUIICgZfdmFsdWUa2QIKCE1hcFJhbmdlEhkKBXZhbH'
+    'VlGAEgASgBSABSBXZhbHVliAEBEh4KCGZyb21fbWluGAIgASgBSAFSB2Zyb21NaW6IAQESHgoI'
+    'ZnJvbV9tYXgYAyABKAFIAlIHZnJvbU1heIgBARIcCgdvdXRfbWluGAQgASgBSANSBm91dE1pbo'
+    'gBARIcCgdvdXRfbWF4GAUgASgBSARSBm91dE1heIgBARIZCgVjbGFtcBgGIAEoCEgFUgVjbGFt'
+    'cIgBARJDCg1pbnRlcnBvbGF0aW9uGAcgASgOMhgubW90aWYuSW50ZXJwb2xhdGlvblR5cGVIBl'
+    'INaW50ZXJwb2xhdGlvbogBAUIICgZfdmFsdWVCCwoJX2Zyb21fbWluQgsKCV9mcm9tX21heEIK'
+    'Cghfb3V0X21pbkIKCghfb3V0X21heEIICgZfY2xhbXBCEAoOX2ludGVycG9sYXRpb24aLgoHRG'
+    'VnMlJhZBIZCgV2YWx1ZRgBIAEoAUgAUgV2YWx1ZYgBAUIICgZfdmFsdWUaLgoHUmFkMkRlZxIZ'
+    'CgV2YWx1ZRgBIAEoAUgAUgV2YWx1ZYgBAUIICgZfdmFsdWUacwoNQ29sb3JGcm9tUkdCQRIRCg'
+    'FyGAEgASgBSABSAXKIAQESEQoBZxgCIAEoAUgBUgFniAEBEhEKAWIYAyABKAFIAlIBYogBARIR'
+    'CgFhGAQgASgBSANSAWGIAQFCBAoCX3JCBAoCX2dCBAoCX2JCBAoCX2EaRAoLQ29sb3JUb1JHQk'
+    'ESKwoFdmFsdWUYASABKAsyEC5tb3RpZi5Db2xvckRhdGFIAFIFdmFsdWWIAQFCCAoGX3ZhbHVl'
+    'GnkKCENvbG9yTWl4EiMKAWEYASABKAsyEC5tb3RpZi5Db2xvckRhdGFIAFIBYYgBARIjCgFiGA'
+    'IgASgLMhAubW90aWYuQ29sb3JEYXRhSAFSAWKIAQESEQoBdBgDIAEoAUgCUgF0iAEBQgQKAl9h'
+    'QgQKAl9iQgQKAl90Gg0KC1NoYWRlcklucHV0GkUKDFNoYWRlck91dHB1dBIrCgVjb2xvchgBIA'
+    'EoCzIQLm1vdGlmLkNvbG9yRGF0YUgAUgVjb2xvcogBAUIICgZfY29sb3IaEAoOR2VuZXJhdG9y'
+    'SW5wdXQaEQoPR2VuZXJhdG9yT3V0cHV0GgcKBU1lcmdlGkMKBlZlcnRleBIsCghwb3NpdGlvbh'
+    'gBIAEoCzILLm1vdGlmLlZlYzJIAFIIcG9zaXRpb26IAQFCCwoJX3Bvc2l0aW9uGm8KCVJlY3Rh'
+    'bmdsZRIoCgZjZW50ZXIYASABKAsyCy5tb3RpZi5WZWMySABSBmNlbnRlcogBARIkCgRzaXplGA'
+    'IgASgLMgsubW90aWYuVmVjMkgBUgRzaXpliAEBQgkKB19jZW50ZXJCBwoFX3NpemUaqAEKBUFy'
+    'cmF5Ei4KBXNsaWNlGAEgASgLMhMubW90aWYuUHJvZ3JhbVNsaWNlSABSBXNsaWNliAEBEigKBm'
+    '9mZnNldBgCIAEoCzILLm1vdGlmLlZlYzJIAVIGb2Zmc2V0iAEBEiYKBWNvdW50GAMgASgLMgsu'
+    'bW90aWYuVmVjMkgCUgVjb3VudIgBAUIICgZfc2xpY2VCCQoHX29mZnNldEIICgZfY291bnQa6Q'
+    'EKCVRyYW5zZm9ybRIuCgVzbGljZRgBIAEoCzITLm1vdGlmLlByb2dyYW1TbGljZUgAUgVzbGlj'
+    'ZYgBARIyCgt0cmFuc2xhdGlvbhgCIAEoCzILLm1vdGlmLlZlYzJIAVILdHJhbnNsYXRpb26IAQ'
+    'ESJgoFc2NhbGUYAyABKAsyCy5tb3RpZi5WZWMySAJSBXNjYWxliAEBEh8KCHJvdGF0aW9uGAQg'
+    'ASgBSANSCHJvdGF0aW9uiAEBQggKBl9zbGljZUIOCgxfdHJhbnNsYXRpb25CCAoGX3NjYWxlQg'
+    'sKCV9yb3RhdGlvbhpzCg9Db25uZWN0VmVydGljZXMSGwoGY2xvc2VkGAEgASgISABSBmNsb3Nl'
+    'ZIgBARIuCgVzbGljZRgCIAEoCzITLm1vdGlmLlByb2dyYW1TbGljZUgBUgVzbGljZYgBAUIJCg'
+    'dfY2xvc2VkQggKBl9zbGljZRpECghNYWtlRmFjZRIuCgVzbGljZRgBIAEoCzITLm1vdGlmLlBy'
+    'b2dyYW1TbGljZUgAUgVzbGljZYgBAUIICgZfc2xpY2UaRwoLQm91bmRpbmdCb3gSLgoFc2xpY2'
+    'UYASABKAsyEy5tb3RpZi5Qcm9ncmFtU2xpY2VIAFIFc2xpY2WIAQFCCAoGX3NsaWNlGgcKBUlu'
+    'ZGV4QgYKBGtpbmQ=');

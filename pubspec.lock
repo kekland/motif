@@ -49,22 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  built_collection:
-    dependency: transitive
-    description:
-      name: built_collection
-      sha256: "44922ecebd8e3d0cef743dadd3b54df4e87e2a4c52a29465a1872aa9e192caa8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.2"
-  built_value:
-    dependency: transitive
-    description:
-      name: built_value
-      sha256: f87ea98192116f7093cb214551ce1929caae0681fdba282b3d8b4462adee7bb7
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.13.0"
   canvas:
     dependency: transitive
     description:
@@ -113,14 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  code_builder:
-    dependency: transitive
-    description:
-      name: code_builder
-      sha256: "811709c1badd02fc054039a13f66e0db1961865f9a314175f68c3eaeebec786f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.13.0"
   collection:
     dependency: transitive
     description:
@@ -419,24 +395,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  js_interop:
-    dependency: transitive
-    description:
-      path: js_interop
-      ref: "63e6662dc7022a54439d4da6016685c49a0d6018"
-      resolved-ref: "63e6662dc7022a54439d4da6016685c49a0d6018"
-      url: "https://github.com/dart-lang/web"
-    source: git
-    version: "0.1.0-beta"
-  js_interop_gen:
-    dependency: transitive
-    description:
-      path: js_interop_gen
-      ref: main
-      resolved-ref: "63e6662dc7022a54439d4da6016685c49a0d6018"
-      url: "https://github.com/dart-lang/web"
-    source: git
-    version: "1.0.0-wip"
   lints:
     dependency: transitive
     description:
@@ -1139,6 +1097,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  webgpu:
+    dependency: "direct overridden"
+    description:
+      path: "../webgpu"
+      relative: true
+    source: path
+    version: "0.0.0"
   webkit_inspection_protocol:
     dependency: transitive
     description:
@@ -1147,6 +1112,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  wgslgen:
+    dependency: "direct overridden"
+    description:
+      path: "../webgpu/wgslgen"
+      relative: true
+    source: path
+    version: "0.0.0"
   win32:
     dependency: transitive
     description:

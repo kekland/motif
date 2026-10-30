@@ -373,7 +373,10 @@ extension TopologyMethods on Bundle {
 
     if (repointed) {
       _cellCrossUpdate(e.cellIndex);
-      for (final f in _edgeFaces(e.index)) _cellCrossUpdate(f.cell);
+      for (final f in _edgeFaces(e.index)) {
+        _cellCrossUpdate(f.cell);
+        _face.touch(f);
+      }
     }
   }
 

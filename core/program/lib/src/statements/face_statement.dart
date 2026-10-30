@@ -4,7 +4,7 @@ final class FaceStatement extends Statement with FaceStyledStatement, PlacedStat
   new(
     ChainSelector outer, {
     List<ChainSelector> holes = const [],
-    this.style = .default_,
+    this.style = .none,
     super.id,
     super.modifiers,
     super.name,

@@ -1,7 +1,7 @@
 part of '../_program.dart';
 
-final class EvalPass {
-  EvalPass(this.evaluation);
+final class EvalPass extends EvalPassData {
+  EvalPass(this.evaluation) : super.empty();
 
   final Evaluation evaluation;
   Program get program => evaluation.program;
@@ -16,6 +16,25 @@ final class EvalPass {
   /// Currently evaluated statement.
   StatementId? _current;
 
+  FrameRef? frameOf(CellRef r) {
+    final h = bundle.handle(r);
+    if (h == null) return null;
+
+    final f = bundle.parentOf(h);
+    return f == null ? null : bundle.frameRef(f);
+  }
+
+  @override
+  void reset() {
+    _current = null;
+    queue.clear();
+    super.reset();
+  }
+}
+
+class EvalPassData {
+  EvalPassData.empty();
+
   final added = HashSet<CellRef>();
   final deleted = HashSet<CellRef>();
   final changed = HashSet<CellRef>();
@@ -25,17 +44,18 @@ final class EvalPass {
   final relayouted = HashSet<StatementId>();
   final restyled = HashSet<CellRef>();
 
-  FrameRef? frameOf(CellRef r) {
-    final h = bundle.handle(r);
-    if (h == null) return null;
-
-    final f = bundle.parentOf(h);
-    return f == null ? null : bundle.frameRef(f);
+  void add(EvalPassData other) {
+    added.addAll(other.added);
+    deleted.addAll(other.deleted);
+    changed.addAll(other.changed);
+    moved.addAll(other.moved);
+    movedFrames.addAll(other.movedFrames);
+    evaluated.addAll(other.evaluated);
+    relayouted.addAll(other.relayouted);
+    restyled.addAll(other.restyled);
   }
 
   void reset() {
-    _current = null;
-    queue.clear();
     added.clear();
     deleted.clear();
     changed.clear();

@@ -3,7 +3,6 @@ part of '../_program.dart';
 final class const FaceStyle({
   required final Decorations decorations,
 }) extends CellStyle<FaceHandle> with Equatable {
-  static const default_ = FaceStyle(decorations: .white);
   static const none = FaceStyle(decorations: .none);
 
   FaceStyle copyWith({

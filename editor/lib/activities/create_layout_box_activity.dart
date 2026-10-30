@@ -8,7 +8,7 @@ sealed class CreateLayoutBoxActivity<S extends LayoutBoxStatement> extends DragA
   CreateLayoutBoxActivity(
     this.editor, {
     this.edgeStyle = .none,
-    this.faceStyle = .default_,
+    this.faceStyle = .none,
     this.snapToPixel = false,
     this.onCreated,
     super.onEnd,

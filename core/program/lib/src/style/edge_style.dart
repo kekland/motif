@@ -5,7 +5,6 @@ final class const EdgeStyle({
   required final Decorations decorations,
 }) extends CellStyle<EdgeHandle> with Equatable {
   static const none = EdgeStyle(width: 0.0, decorations: .none);
-  static const default_ = EdgeStyle(width: 1.0, decorations: .white);
 
   EdgeStyle copyWith({
     double? width,

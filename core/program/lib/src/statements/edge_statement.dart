@@ -6,7 +6,7 @@ final class EdgeStatement extends Statement with EdgeStyledStatement, PlacedStat
     VertexSelector end, {
     this.startTangent,
     this.endTangent,
-    this.style = .default_,
+    this.style = .none,
     super.id,
     super.modifiers,
     super.name,

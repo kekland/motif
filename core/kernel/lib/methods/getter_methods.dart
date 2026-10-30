@@ -6,7 +6,7 @@ extension GetterMethods on Bundle {
   // Frame
   // -------------------------------------------------------------------------------------------------------------------
 
-  Iterable<CellIndex> _frameChildren(FrameIndex f) sync* {
+  Iterable<CellIndex> frameChildrenRaw(FrameIndex f) sync* {
     for (var c = _frame.childHead[f]; c != .none; c = _treeSiblingNext(c)) yield c;
   }
 
@@ -202,6 +202,14 @@ extension GetterMethods on Bundle {
     return out;
   }
 
+  List<CoedgeIndex> faceBoundaryRaw(FaceIndex f) {
+    final out = <CoedgeIndex>[];
+    for (final head in _faceBoundary(f)) {
+      out.addAll(_cycleCoedges(head));
+    }
+    return out;
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   // Cell
   // -------------------------------------------------------------------------------------------------------------------
@@ -228,7 +236,7 @@ extension GetterMethods on Bundle {
 
   Iterable<CellIndex> _cellDependents(CellIndex c) {
     return switch (c.kind) {
-      .frame => _frameChildren(c.asFrame),
+      .frame => frameChildrenRaw(c.asFrame),
       .vertex => _vertexEdges(c.asVertex).map((e) => e.cell),
       .edge => _edgeFaces(c.asEdge).map((f) => f.cell),
       .face => .empty(),

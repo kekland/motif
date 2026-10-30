@@ -18,9 +18,9 @@ sealed class ObjectShape {
     Mat4 transform,
     Size2 size, {
     FrameRef? parent,
-    VertexStyle vertexStyle = .default_,
-    EdgeStyle edgeStyle = .default_,
-    FaceStyle faceStyle = .default_,
+    VertexStyle vertexStyle = .none,
+    EdgeStyle edgeStyle = .none,
+    FaceStyle faceStyle = .none,
   }) {
     final builder = ShapeBuilder(context, vertexStyle: vertexStyle, edgeStyle: edgeStyle, faceStyle: faceStyle);
     final frame = builder.frame(transform, size: size, parent: parent);
@@ -34,9 +34,9 @@ sealed class ObjectShape {
 final class ShapeBuilder {
   ShapeBuilder(
     this.context, {
-    this.vertexStyle = .default_,
-    this.edgeStyle = .default_,
-    this.faceStyle = .default_,
+    this.vertexStyle = .none,
+    this.edgeStyle = .none,
+    this.faceStyle = .none,
   });
 
   final EvalContext context;

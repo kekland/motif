@@ -30,4 +30,5 @@ abstract final class Mix64 {
 
   static U64 mixWithKey(U64 a, int key) => mix(a, .of(key ~/ _two32, key % _two32));
   static int hash(U64 a) => hash32(a.hi, a.lo);
+  static int hashInt(int a) => hash32(a ~/ _two32, a % _two32);
 }

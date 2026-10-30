@@ -61,7 +61,7 @@ final class PencilFreehandStrokeActivity extends DragActivity {
     this.editor, {
     this.topological = true,
     this.destructive = true,
-    this.edgeStyle = .default_,
+    this.edgeStyle = .none,
     super.onStart,
     super.onUpdate,
     super.onEnd,

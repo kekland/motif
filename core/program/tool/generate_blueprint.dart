@@ -5,19 +5,19 @@
 import 'dart:io';
 
 import 'package:blueprint/blueprint_generator.dart';
-import 'package:program/src/generator/generator_description.dart';
+
+import 'package:program/src/blueprints/blueprint_description.dart' as description;
 
 void main() {
   final root = Directory.fromUri(Platform.script.resolve('..'));
-  final outputPath = root.uri.resolve('lib/src/generator/generator.g.dart').toFilePath();
-  final outputCodecPath = root.uri.resolve('lib/src/generator/generator.codec.g.dart').toFilePath();
+
+  final outputBlueprintPath = root.uri.resolve('lib/src/blueprints/blueprint.g.dart').toFilePath();
+  final outputCodecPath = root.uri.resolve('lib/src/blueprints/codec/blueprint_codec.g.dart').toFilePath();
   final outputProtoPath = root.uri.resolve('program.proto').toFilePath();
 
-  final generateProtoPath = root.uri.resolve('../../sync/schema/tool/generate_schema.py');
-
-  final code = generateBlueprint(
-    nodes: nodes,
-    sockets: sockets,
+  final codes = generateFullBlueprint(
+    nodes: description.nodes,
+    sockets: description.sockets,
     prelude: [
       'import \'package:geometry/geometry.dart\';',
       'import \'package:program/program.dart\';',
@@ -25,21 +25,20 @@ void main() {
     ],
   );
 
-  File(outputPath).writeAsStringSync(code.join('\n'));
-  File(outputCodecPath).writeAsStringSync(generateBlueprintCodec(nodes: nodes, sockets: sockets).join('\n'));
+  File(outputBlueprintPath).writeAsStringSync(codes.blueprintCode.join('\n'));
+  File(outputCodecPath).writeAsStringSync(codes.codecCode.join('\n'));
 
-  final protoCode = File(outputProtoPath).readAsLinesSync();
+  // Rewrite proto
+  final generateProtoPath = root.uri.resolve('../../sync/schema/tool/generate_schema.py');
+  final protoLines = File(outputProtoPath).readAsLinesSync();
   const mark = '// % GENERATOR MARK';
-  final markIndex = protoCode.indexWhere((line) => line.contains(mark));
+  final markIndex = protoLines.indexWhere((line) => line.contains(mark));
   if (markIndex == -1) throw Exception('Generator mark not found in proto file');
-  protoCode.removeRange(markIndex + 1, protoCode.length);
-  protoCode.add('');
-  protoCode.addAll(generateBlueprintProto(nodes: nodes, sockets: sockets));
-  File(outputProtoPath).writeAsStringSync(protoCode.join('\n'));
-
-  print('Generated blueprint code written to $outputPath');
+  protoLines.removeRange(markIndex + 1, protoLines.length);
+  protoLines.add('');
+  protoLines.addAll(codes.protoCode);
+  File(outputProtoPath).writeAsStringSync(protoLines.join('\n'));
   print('Generated blueprint proto written to $outputProtoPath');
-  print('Generated blueprint codec written to $outputCodecPath');
 
   final result = Process.runSync(generateProtoPath.toFilePath(), [], runInShell: true);
   print(result.stdout);

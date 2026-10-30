@@ -309,31 +309,56 @@ extension _DecorationDecode on gen.Decoration { Decoration decode() => _decorati
 
 final _decorationCodec = $codec<Decoration, gen.Decoration>(
   decoder: (v) => switch(v.whichKind()) {
-    .image => _imageDecorationCodec.decode(v),
     .color => _colorDecorationCodec.decode(v),
+    .image => _imageDecorationCodec.decode(v),
+    .shader => _shaderDecorationCodec.decode(v),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
     ColorDecoration d => _colorDecorationCodec.encode(d),
     ImageDecoration d => _imageDecorationCodec.encode(d),
+    ShaderDecoration d => _shaderDecorationCodec.encode(d),
   },
 );
 
 final _colorDecorationCodec = $codec<ColorDecoration, gen.Decoration>(
   decoder: (v) => .new(
+    v.id,
     v.color.value.decode(),
   ),
   encoder: (v) => .new(
+    id: v.id,
     color: .new(value: v.color.encode()),
   ),
 );
 
 final _imageDecorationCodec = $codec<ImageDecoration, gen.Decoration>(
   decoder: (v) => .new(
+    v.id,
     $opt(v.image.hasValue, () => .raw(v.image.value)),
+    opacity: v.image.opacity,
   ),
   encoder: (v) => .new(
-    image: .new(value: v.image?.value),
+    id: v.id,
+    image: .new(
+      value: v.image?.value,
+      opacity: v.opacity,
+    ),
+  ),
+);
+
+final _shaderDecorationCodec = $codec<ShaderDecoration, gen.Decoration>(
+  decoder: (v) => .new(
+    v.id,
+    v.shader.value.decode(),
+    opacity: v.shader.opacity,
+  ),
+  encoder: (v) => .new(
+    id: v.id,
+    shader: .new(
+      value: v.shader.encode(),
+      opacity: v.opacity,
+    ),
   ),
 );
 
@@ -1584,15 +1609,17 @@ final _cornerRadiusCodec = $codec<CornerRadius, gen.CornerRadius>(
   encoder: (v) => .new(x: v.x, y: v.y),
 );
 
-extension _ColorDataEncode on ColorData { gen.ColorData encode() => _colorDataCodec.encode(this); }
-extension _ColorDataDecode on gen.ColorData { ColorData decode() => _colorDataCodec.decode(this); }
+extension ColorDataEncode on ColorData { gen.ColorData encode() => _colorDataCodec.encode(this); }
+extension ColorDataDecode on gen.ColorData { ColorData decode() => _colorDataCodec.decode(this); }
 
 final _colorDataCodec = $codec<ColorData, gen.ColorData>(
   decoder: (v) => switch(v.whichValue()) {
-    .hsv => ColorData.hsv(h: v.hsv.h, s: v.hsv.s, v: v.hsv.v, alpha: v.alpha),
+    .hsv => .hsv(h: v.hsv.h, s: v.hsv.s, v: v.hsv.v, alpha: v.alpha),
+    .rgb => .rgb(r: v.rgb.r, g: v.rgb.g, b: v.rgb.b, alpha: v.alpha),
     .notSet => throw ArgumentError(),
   },
   encoder: (v) => switch(v) {
     HsvColorData v => .new(hsv: .new(h: v.h, s: v.s, v: v.v), alpha: v.alpha),
+    RgbColorData v => .new(rgb: .new(r: v.r, g: v.g, b: v.b), alpha: v.alpha),
   }
 );

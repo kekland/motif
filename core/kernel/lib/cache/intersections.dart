@@ -95,17 +95,17 @@ final class IntersectionCache {
 
   void _flush() {
     if (!isDirty) return;
-    for (final e in _edgeObserver._retired) _detach(e);
-    for (final f in _frameObserver.touched) {
-      _edgeObserver._touched.addAll(bundle._frameDependentCells(f, kind: .edge).map((e) => e.asEdge));
+    for (final e in _edgeObserver.retired) _detach(e);
+    for (final f in _frameObserver.createdOrTouched) {
+      _edgeObserver.touched.addAll(bundle._frameDependentCells(f, kind: .edge).map((e) => e.asEdge));
     }
 
-    final dirty = _edgeObserver._touched.where((e) => bundle._edge.isLive(e));
+    final dirty = _edgeObserver.createdOrTouched.where((e) => bundle._edge.isLive(e));
     for (final e in dirty) _detach(e);
 
     final done = HashSet<EdgeIndex>();
     for (final e in dirty) {
-      final cubic = bundle._edgeCubic(e, space: .root);
+      final cubic = bundle.edgeCubicRaw(e, space: .root);
       final bbox = bundle._edgeBbox(e, space: .root);
 
       final self = cubic.selfIntersect();
@@ -150,7 +150,7 @@ final class IntersectionCache {
   }
 
   Intersections? _intersect(Cubic2 cubic, EdgeIndex edge, {VertexIndex? start, VertexIndex? end}) {
-    final result = cubic.intersect(bundle._edgeCubic(edge, space: .root));
+    final result = cubic.intersect(bundle.edgeCubicRaw(edge, space: .root));
     if (result.isEmpty) return null;
 
     final keptIntersections = result.intersections.toList();

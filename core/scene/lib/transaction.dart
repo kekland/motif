@@ -176,7 +176,7 @@ final class SceneTransaction {
     return result;
   }
 
-  GeneratorStatement wrapGenerator(Iterable<StatementId> ids, {Generator? generator}) {
+  GeneratorStatement wrapGenerator(Iterable<StatementId> ids, {GeneratorBlueprint? generator}) {
     final edit = _route(() => evaluation.routeGenerate(ids, generator ?? .empty()));
     apply(edit);
     return edit.created.single as GeneratorStatement;

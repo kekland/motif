@@ -17,6 +17,11 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
 
   final _observers = <ArenaObserver<I>>[];
   void observe(ArenaObserver<I> observer) => _observers.add(observer);
+  void unobserve(ArenaObserver<I> observer) => _observers.remove(observer);
+
+  void _notifyCreated(I i) {
+    for (final o in _observers) o.onCreated(i);
+  }
 
   void _notifyTouched(I i) {
     for (final o in _observers) o.onTouched(i);
@@ -50,7 +55,7 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
     _liveCount++;
 
     final index = _wrapIndex(i);
-    _notifyTouched(index);
+    _notifyCreated(index);
     return index;
   }
 
@@ -71,7 +76,7 @@ abstract class ArenaStorage<I extends ElementIndex, THandle, T extends ArenaStor
     assert(state[index.i] == _ghost, 'relinking a non-ghost index $index');
     state[index.i] = _live;
     _liveCount++;
-    _notifyTouched(index);
+    _notifyCreated(index);
   }
 
   void free(I index) {
@@ -149,19 +154,27 @@ final class IdTable<R extends CellRef, I extends ElementIndex> {
 }
 
 abstract interface class ArenaObserver<I extends ElementIndex> {
+  void onCreated(I index);
   void onTouched(I index);
   void onRetired(I index);
 }
 
 final class CacheArenaObserver<I extends ElementIndex> implements ArenaObserver<I> {
+  final _created = HashSet<I>();
   final _touched = HashSet<I>();
   final _retired = HashSet<I>();
 
+  Set<I> get created => _created;
   Set<I> get touched => _touched;
   Set<I> get retired => _retired;
 
-  bool get isNotEmpty => _touched.isNotEmpty || _retired.isNotEmpty;
-  bool get isEmpty => _touched.isEmpty && _retired.isEmpty;
+  Iterable<I> get createdOrTouched => _created.followedBy(_touched);
+
+  bool get isNotEmpty => _created.isNotEmpty || _touched.isNotEmpty || _retired.isNotEmpty;
+  bool get isEmpty => _created.isEmpty && _touched.isEmpty && _retired.isEmpty;
+
+  @override
+  void onCreated(I index) => _created.add(index);
 
   @override
   void onTouched(I index) => _touched.add(index);
@@ -170,6 +183,7 @@ final class CacheArenaObserver<I extends ElementIndex> implements ArenaObserver<
   void onRetired(I index) => _retired.add(index);
 
   void clear() {
+    _created.clear();
     _touched.clear();
     _retired.clear();
   }

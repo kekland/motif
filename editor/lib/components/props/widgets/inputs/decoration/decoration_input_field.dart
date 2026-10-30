@@ -44,6 +44,14 @@ final class const DecorationInputField({
           return RawImage(image: scene.assetCache.image[id]);
         },
       ),
+      .shader => HookBuilder(
+        builder: (context) {
+          return Container(
+            color: context.colors.surface.tertiary,
+            child: Icons.shaders(size: 12.0),
+          );
+        },
+      ),
     };
 
     final leading = GestureSurface(
@@ -60,6 +68,7 @@ final class const DecorationInputField({
       (value) => switch (value) {
         ColorDecoration(:final color) => color.alpha * 100.0,
         ImageDecoration(:final opacity) => opacity * 100.0,
+        ShaderDecoration(:final opacity) => opacity * 100.0,
       },
     );
 
@@ -93,6 +102,11 @@ final class const DecorationInputField({
         options: bodyOptions,
       ),
       .image => _ImageDecorationBody(
+        value: value,
+        options: bodyOptions,
+        onTap: () => window.push(context),
+      ),
+      .shader => _ShaderDecorationBody(
         value: value,
         options: bodyOptions,
         onTap: () => window.push(context),
@@ -146,7 +160,7 @@ final class const _ColorDecorationBody({
 
     return ExpressionInputField<ColorDataPartial>(
       value: useProxyComputed(_value, (v) => v.color.partial),
-      onChanged: (v) => onChanged?.call(.color(v.apply(_value().color))),
+      onChanged: (v) => onChanged?.call(_value().copyWith(color: v.apply(_value().color))),
       valueToString: (value) => value?.canConstruct == true ? value!.apply(.black).toString() : 'Mixed',
       evaluateExpression: (str) => null,
       options: options,
@@ -164,9 +178,26 @@ final class const _ImageDecorationBody({
   Widget build(BuildContext context) {
     return ValueInputField(
       value: value,
-      options: options,
+      options: options.copyWith(textStyle: .new(color: context.colors.display.tertiary)),
       onTap: onTap,
       valueToString: (d) => 'Image',
+    );
+  }
+}
+
+final class const _ShaderDecorationBody({
+  super.key,
+  required final ReadonlySignal<Decoration> value,
+  required final InputFieldOptions options,
+  final VoidCallback? onTap,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ValueInputField(
+      value: value,
+      options: options.copyWith(textStyle: .new(color: context.colors.display.tertiary)),
+      onTap: onTap,
+      valueToString: (d) => 'Shader',
     );
   }
 }

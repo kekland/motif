@@ -55,7 +55,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     SceneHitResult? endHitTest, {
     bool topological = true,
     bool destructive = true,
-    EdgeStyle edgeStyle = .default_,
+    EdgeStyle edgeStyle = .none,
   }) {
     if (_end == null) return [];
 
@@ -86,7 +86,7 @@ class TransientEdge with ChangeNotifier, ChangeNotifierDisposable {
     bool startNewEdge = false,
     bool topological = true,
     bool destructive = true,
-    EdgeStyle edgeStyle = .default_,
+    EdgeStyle edgeStyle = .none,
   }) {
     return editor.transientEdges.commit(
       this,
@@ -135,7 +135,7 @@ class TransientEdges with ChangeNotifier, ChangeNotifierDisposable {
     bool startNewEdge = false,
     bool topological = true,
     bool destructive = true,
-    EdgeStyle edgeStyle = .default_,
+    EdgeStyle edgeStyle = .none,
   }) {
     final newEdges = edge._performCommit(
       endHitTest,

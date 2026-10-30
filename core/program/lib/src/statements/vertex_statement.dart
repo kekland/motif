@@ -3,7 +3,7 @@ part of '../_program.dart';
 final class VertexStatement extends Statement with VertexStyledStatement, PlacedStatement {
   new(
     this.position, {
-    this.style = .default_,
+    this.style = .none,
     super.id,
     super.modifiers,
     super.name,

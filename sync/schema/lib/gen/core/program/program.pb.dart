@@ -1772,9 +1772,11 @@ class Decoration_Color extends $pb.GeneratedMessage {
 class Decoration_Image extends $pb.GeneratedMessage {
   factory Decoration_Image({
     $core.String? value,
+    $core.double? opacity,
   }) {
     final result = create();
     if (value != null) result.value = value;
+    if (opacity != null) result.opacity = opacity;
     return result;
   }
 
@@ -1792,6 +1794,7 @@ class Decoration_Image extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'value')
+    ..aD(2, _omitFieldNames ? '' : 'opacity')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1821,18 +1824,100 @@ class Decoration_Image extends $pb.GeneratedMessage {
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
   void clearValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get opacity => $_getN(1);
+  @$pb.TagNumber(2)
+  set opacity($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOpacity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOpacity() => $_clearField(2);
 }
 
-enum Decoration_Kind { color, image, notSet }
+class Decoration_Shader extends $pb.GeneratedMessage {
+  factory Decoration_Shader({
+    ShaderBlueprint? value,
+    $core.double? opacity,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    if (opacity != null) result.opacity = opacity;
+    return result;
+  }
+
+  Decoration_Shader._();
+
+  factory Decoration_Shader.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Decoration_Shader.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Decoration.Shader',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ShaderBlueprint>(1, _omitFieldNames ? '' : 'value',
+        subBuilder: ShaderBlueprint.create)
+    ..aD(2, _omitFieldNames ? '' : 'opacity')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Decoration_Shader clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Decoration_Shader copyWith(void Function(Decoration_Shader) updates) =>
+      super.copyWith((message) => updates(message as Decoration_Shader))
+          as Decoration_Shader;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Decoration_Shader create() => Decoration_Shader._();
+  @$core.override
+  Decoration_Shader createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Decoration_Shader getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Decoration_Shader>(create);
+  static Decoration_Shader? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ShaderBlueprint get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(ShaderBlueprint value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ShaderBlueprint ensureValue() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.double get opacity => $_getN(1);
+  @$pb.TagNumber(2)
+  set opacity($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOpacity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOpacity() => $_clearField(2);
+}
+
+enum Decoration_Kind { color, image, shader, notSet }
 
 class Decoration extends $pb.GeneratedMessage {
   factory Decoration({
+    $core.String? id,
     Decoration_Color? color,
     Decoration_Image? image,
+    Decoration_Shader? shader,
   }) {
     final result = create();
+    if (id != null) result.id = id;
     if (color != null) result.color = color;
     if (image != null) result.image = image;
+    if (shader != null) result.shader = shader;
     return result;
   }
 
@@ -1846,19 +1931,23 @@ class Decoration extends $pb.GeneratedMessage {
       create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Decoration_Kind> _Decoration_KindByTag = {
-    1: Decoration_Kind.color,
-    2: Decoration_Kind.image,
+    10: Decoration_Kind.color,
+    11: Decoration_Kind.image,
+    12: Decoration_Kind.shader,
     0: Decoration_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Decoration',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2])
-    ..aOM<Decoration_Color>(1, _omitFieldNames ? '' : 'color',
+    ..oo(0, [10, 11, 12])
+    ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..aOM<Decoration_Color>(10, _omitFieldNames ? '' : 'color',
         subBuilder: Decoration_Color.create)
-    ..aOM<Decoration_Image>(2, _omitFieldNames ? '' : 'image',
+    ..aOM<Decoration_Image>(11, _omitFieldNames ? '' : 'image',
         subBuilder: Decoration_Image.create)
+    ..aOM<Decoration_Shader>(12, _omitFieldNames ? '' : 'shader',
+        subBuilder: Decoration_Shader.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1879,34 +1968,56 @@ class Decoration extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<Decoration>(create);
   static Decoration? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
   Decoration_Kind whichKind() => _Decoration_KindByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(10)
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  Decoration_Color get color => $_getN(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set color(Decoration_Color value) => $_setField(1, value);
+  set id($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasColor() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearColor() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Decoration_Color ensureColor() => $_ensure(0);
+  void clearId() => $_clearField(1);
 
-  @$pb.TagNumber(2)
-  Decoration_Image get image => $_getN(1);
-  @$pb.TagNumber(2)
-  set image(Decoration_Image value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasImage() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearImage() => $_clearField(2);
-  @$pb.TagNumber(2)
-  Decoration_Image ensureImage() => $_ensure(1);
+  @$pb.TagNumber(10)
+  Decoration_Color get color => $_getN(1);
+  @$pb.TagNumber(10)
+  set color(Decoration_Color value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasColor() => $_has(1);
+  @$pb.TagNumber(10)
+  void clearColor() => $_clearField(10);
+  @$pb.TagNumber(10)
+  Decoration_Color ensureColor() => $_ensure(1);
+
+  @$pb.TagNumber(11)
+  Decoration_Image get image => $_getN(2);
+  @$pb.TagNumber(11)
+  set image(Decoration_Image value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasImage() => $_has(2);
+  @$pb.TagNumber(11)
+  void clearImage() => $_clearField(11);
+  @$pb.TagNumber(11)
+  Decoration_Image ensureImage() => $_ensure(2);
+
+  @$pb.TagNumber(12)
+  Decoration_Shader get shader => $_getN(3);
+  @$pb.TagNumber(12)
+  set shader(Decoration_Shader value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasShader() => $_has(3);
+  @$pb.TagNumber(12)
+  void clearShader() => $_clearField(12);
+  @$pb.TagNumber(12)
+  Decoration_Shader ensureShader() => $_ensure(3);
 }
 
 class Decorations extends $pb.GeneratedMessage {
@@ -3717,7 +3828,7 @@ class GroupStatement extends $pb.GeneratedMessage {
 
 class GeneratorStatement extends $pb.GeneratedMessage {
   factory GeneratorStatement({
-    Generator? generator,
+    GeneratorBlueprint? generator,
     $core.Iterable<FragmentSelector>? inputs,
     CellRef? parent,
     Mat4? transform,
@@ -3743,8 +3854,8 @@ class GeneratorStatement extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'GeneratorStatement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..aOM<Generator>(1, _omitFieldNames ? '' : 'generator',
-        subBuilder: Generator.create)
+    ..aOM<GeneratorBlueprint>(1, _omitFieldNames ? '' : 'generator',
+        subBuilder: GeneratorBlueprint.create)
     ..pPM<FragmentSelector>(2, _omitFieldNames ? '' : 'inputs',
         subBuilder: FragmentSelector.create)
     ..aOM<CellRef>(3, _omitFieldNames ? '' : 'parent',
@@ -3772,15 +3883,15 @@ class GeneratorStatement extends $pb.GeneratedMessage {
   static GeneratorStatement? _defaultInstance;
 
   @$pb.TagNumber(1)
-  Generator get generator => $_getN(0);
+  GeneratorBlueprint get generator => $_getN(0);
   @$pb.TagNumber(1)
-  set generator(Generator value) => $_setField(1, value);
+  set generator(GeneratorBlueprint value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasGenerator() => $_has(0);
   @$pb.TagNumber(1)
   void clearGenerator() => $_clearField(1);
   @$pb.TagNumber(1)
-  Generator ensureGenerator() => $_ensure(0);
+  GeneratorBlueprint ensureGenerator() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $pb.PbList<FragmentSelector> get inputs => $_getList(1);
@@ -6140,8 +6251,8 @@ class ParagraphFormat extends $pb.GeneratedMessage {
   void clearEllipsis() => $_clearField(3);
 }
 
-class Generator_PositionEntry extends $pb.GeneratedMessage {
-  factory Generator_PositionEntry({
+class Blueprint_PositionEntry extends $pb.GeneratedMessage {
+  factory Blueprint_PositionEntry({
     $1.NodeId? node,
     Vec2? position,
   }) {
@@ -6151,17 +6262,17 @@ class Generator_PositionEntry extends $pb.GeneratedMessage {
     return result;
   }
 
-  Generator_PositionEntry._();
+  Blueprint_PositionEntry._();
 
-  factory Generator_PositionEntry.fromBuffer($core.List<$core.int> data,
+  factory Blueprint_PositionEntry.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory Generator_PositionEntry.fromJson($core.String json,
+  factory Blueprint_PositionEntry.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Generator.PositionEntry',
+      _omitMessageNames ? '' : 'Blueprint.PositionEntry',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..aOM<$1.NodeId>(1, _omitFieldNames ? '' : 'node',
@@ -6170,24 +6281,24 @@ class Generator_PositionEntry extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Generator_PositionEntry clone() => deepCopy();
+  Blueprint_PositionEntry clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Generator_PositionEntry copyWith(
-          void Function(Generator_PositionEntry) updates) =>
-      super.copyWith((message) => updates(message as Generator_PositionEntry))
-          as Generator_PositionEntry;
+  Blueprint_PositionEntry copyWith(
+          void Function(Blueprint_PositionEntry) updates) =>
+      super.copyWith((message) => updates(message as Blueprint_PositionEntry))
+          as Blueprint_PositionEntry;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static Generator_PositionEntry create() => Generator_PositionEntry._();
+  static Blueprint_PositionEntry create() => Blueprint_PositionEntry._();
   @$core.override
-  Generator_PositionEntry createEmptyInstance() => create();
+  Blueprint_PositionEntry createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static Generator_PositionEntry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Generator_PositionEntry>(create);
-  static Generator_PositionEntry? _defaultInstance;
+  static Blueprint_PositionEntry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Blueprint_PositionEntry>(create);
+  static Blueprint_PositionEntry? _defaultInstance;
 
   @$pb.TagNumber(1)
   $1.NodeId get node => $_getN(0);
@@ -6212,11 +6323,11 @@ class Generator_PositionEntry extends $pb.GeneratedMessage {
   Vec2 ensurePosition() => $_ensure(1);
 }
 
-class Generator extends $pb.GeneratedMessage {
-  factory Generator({
+class Blueprint extends $pb.GeneratedMessage {
+  factory Blueprint({
     $core.Iterable<Node>? nodes,
     $core.Iterable<$1.Connection>? connections,
-    $core.Iterable<Generator_PositionEntry>? positions,
+    $core.Iterable<Blueprint_PositionEntry>? positions,
     $core.Iterable<$1.NodeId>? fixed,
   }) {
     final result = create();
@@ -6227,45 +6338,45 @@ class Generator extends $pb.GeneratedMessage {
     return result;
   }
 
-  Generator._();
+  Blueprint._();
 
-  factory Generator.fromBuffer($core.List<$core.int> data,
+  factory Blueprint.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory Generator.fromJson($core.String json,
+  factory Blueprint.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Generator',
+      _omitMessageNames ? '' : 'Blueprint',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..pPM<Node>(1, _omitFieldNames ? '' : 'nodes', subBuilder: Node.create)
     ..pPM<$1.Connection>(2, _omitFieldNames ? '' : 'connections',
         subBuilder: $1.Connection.create)
-    ..pPM<Generator_PositionEntry>(3, _omitFieldNames ? '' : 'positions',
-        subBuilder: Generator_PositionEntry.create)
+    ..pPM<Blueprint_PositionEntry>(3, _omitFieldNames ? '' : 'positions',
+        subBuilder: Blueprint_PositionEntry.create)
     ..pPM<$1.NodeId>(4, _omitFieldNames ? '' : 'fixed',
         subBuilder: $1.NodeId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Generator clone() => deepCopy();
+  Blueprint clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Generator copyWith(void Function(Generator) updates) =>
-      super.copyWith((message) => updates(message as Generator)) as Generator;
+  Blueprint copyWith(void Function(Blueprint) updates) =>
+      super.copyWith((message) => updates(message as Blueprint)) as Blueprint;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static Generator create() => Generator._();
+  static Blueprint create() => Blueprint._();
   @$core.override
-  Generator createEmptyInstance() => create();
+  Blueprint createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static Generator getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Generator>(create);
-  static Generator? _defaultInstance;
+  static Blueprint getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Blueprint>(create);
+  static Blueprint? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<Node> get nodes => $_getList(0);
@@ -6274,17 +6385,17 @@ class Generator extends $pb.GeneratedMessage {
   $pb.PbList<$1.Connection> get connections => $_getList(1);
 
   @$pb.TagNumber(3)
-  $pb.PbList<Generator_PositionEntry> get positions => $_getList(2);
+  $pb.PbList<Blueprint_PositionEntry> get positions => $_getList(2);
 
   @$pb.TagNumber(4)
   $pb.PbList<$1.NodeId> get fixed => $_getList(3);
 }
 
-class GeneratorSlice extends $pb.GeneratedMessage {
-  factory GeneratorSlice({
+class BlueprintSlice extends $pb.GeneratedMessage {
+  factory BlueprintSlice({
     $core.Iterable<Node>? nodes,
     $core.Iterable<$1.Connection>? connections,
-    $core.Iterable<Generator_PositionEntry>? positions,
+    $core.Iterable<Blueprint_PositionEntry>? positions,
   }) {
     final result = create();
     if (nodes != null) result.nodes.addAll(nodes);
@@ -6293,44 +6404,44 @@ class GeneratorSlice extends $pb.GeneratedMessage {
     return result;
   }
 
-  GeneratorSlice._();
+  BlueprintSlice._();
 
-  factory GeneratorSlice.fromBuffer($core.List<$core.int> data,
+  factory BlueprintSlice.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GeneratorSlice.fromJson($core.String json,
+  factory BlueprintSlice.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GeneratorSlice',
+      _omitMessageNames ? '' : 'BlueprintSlice',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
     ..pPM<Node>(1, _omitFieldNames ? '' : 'nodes', subBuilder: Node.create)
     ..pPM<$1.Connection>(2, _omitFieldNames ? '' : 'connections',
         subBuilder: $1.Connection.create)
-    ..pPM<Generator_PositionEntry>(3, _omitFieldNames ? '' : 'positions',
-        subBuilder: Generator_PositionEntry.create)
+    ..pPM<Blueprint_PositionEntry>(3, _omitFieldNames ? '' : 'positions',
+        subBuilder: Blueprint_PositionEntry.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GeneratorSlice clone() => deepCopy();
+  BlueprintSlice clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GeneratorSlice copyWith(void Function(GeneratorSlice) updates) =>
-      super.copyWith((message) => updates(message as GeneratorSlice))
-          as GeneratorSlice;
+  BlueprintSlice copyWith(void Function(BlueprintSlice) updates) =>
+      super.copyWith((message) => updates(message as BlueprintSlice))
+          as BlueprintSlice;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GeneratorSlice create() => GeneratorSlice._();
+  static BlueprintSlice create() => BlueprintSlice._();
   @$core.override
-  GeneratorSlice createEmptyInstance() => create();
+  BlueprintSlice createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GeneratorSlice getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GeneratorSlice>(create);
-  static GeneratorSlice? _defaultInstance;
+  static BlueprintSlice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BlueprintSlice>(create);
+  static BlueprintSlice? _defaultInstance;
 
   @$pb.TagNumber(1)
   $pb.PbList<Node> get nodes => $_getList(0);
@@ -6339,7 +6450,121 @@ class GeneratorSlice extends $pb.GeneratedMessage {
   $pb.PbList<$1.Connection> get connections => $_getList(1);
 
   @$pb.TagNumber(3)
-  $pb.PbList<Generator_PositionEntry> get positions => $_getList(2);
+  $pb.PbList<Blueprint_PositionEntry> get positions => $_getList(2);
+}
+
+class GeneratorBlueprint extends $pb.GeneratedMessage {
+  factory GeneratorBlueprint({
+    Blueprint? blueprint,
+  }) {
+    final result = create();
+    if (blueprint != null) result.blueprint = blueprint;
+    return result;
+  }
+
+  GeneratorBlueprint._();
+
+  factory GeneratorBlueprint.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GeneratorBlueprint.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratorBlueprint',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Blueprint>(1, _omitFieldNames ? '' : 'blueprint',
+        subBuilder: Blueprint.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorBlueprint clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratorBlueprint copyWith(void Function(GeneratorBlueprint) updates) =>
+      super.copyWith((message) => updates(message as GeneratorBlueprint))
+          as GeneratorBlueprint;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GeneratorBlueprint create() => GeneratorBlueprint._();
+  @$core.override
+  GeneratorBlueprint createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GeneratorBlueprint getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratorBlueprint>(create);
+  static GeneratorBlueprint? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Blueprint get blueprint => $_getN(0);
+  @$pb.TagNumber(1)
+  set blueprint(Blueprint value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBlueprint() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBlueprint() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Blueprint ensureBlueprint() => $_ensure(0);
+}
+
+class ShaderBlueprint extends $pb.GeneratedMessage {
+  factory ShaderBlueprint({
+    Blueprint? blueprint,
+  }) {
+    final result = create();
+    if (blueprint != null) result.blueprint = blueprint;
+    return result;
+  }
+
+  ShaderBlueprint._();
+
+  factory ShaderBlueprint.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ShaderBlueprint.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ShaderBlueprint',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Blueprint>(1, _omitFieldNames ? '' : 'blueprint',
+        subBuilder: Blueprint.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ShaderBlueprint clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ShaderBlueprint copyWith(void Function(ShaderBlueprint) updates) =>
+      super.copyWith((message) => updates(message as ShaderBlueprint))
+          as ShaderBlueprint;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ShaderBlueprint create() => ShaderBlueprint._();
+  @$core.override
+  ShaderBlueprint createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ShaderBlueprint getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ShaderBlueprint>(create);
+  static ShaderBlueprint? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Blueprint get blueprint => $_getN(0);
+  @$pb.TagNumber(1)
+  set blueprint(Blueprint value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBlueprint() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBlueprint() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Blueprint ensureBlueprint() => $_ensure(0);
 }
 
 class ModifierStack extends $pb.GeneratedMessage {
@@ -7747,15 +7972,95 @@ class ColorData_Hsv extends $pb.GeneratedMessage {
   void clearV() => $_clearField(3);
 }
 
-enum ColorData_Value { hsv, notSet }
+class ColorData_Rgb extends $pb.GeneratedMessage {
+  factory ColorData_Rgb({
+    $core.double? r,
+    $core.double? g,
+    $core.double? b,
+  }) {
+    final result = create();
+    if (r != null) result.r = r;
+    if (g != null) result.g = g;
+    if (b != null) result.b = b;
+    return result;
+  }
+
+  ColorData_Rgb._();
+
+  factory ColorData_Rgb.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ColorData_Rgb.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ColorData.Rgb',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'r')
+    ..aD(2, _omitFieldNames ? '' : 'g')
+    ..aD(3, _omitFieldNames ? '' : 'b')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ColorData_Rgb clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ColorData_Rgb copyWith(void Function(ColorData_Rgb) updates) =>
+      super.copyWith((message) => updates(message as ColorData_Rgb))
+          as ColorData_Rgb;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ColorData_Rgb create() => ColorData_Rgb._();
+  @$core.override
+  ColorData_Rgb createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ColorData_Rgb getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ColorData_Rgb>(create);
+  static ColorData_Rgb? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get r => $_getN(0);
+  @$pb.TagNumber(1)
+  set r($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasR() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearR() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get g => $_getN(1);
+  @$pb.TagNumber(2)
+  set g($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasG() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearG() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get b => $_getN(2);
+  @$pb.TagNumber(3)
+  set b($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasB() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearB() => $_clearField(3);
+}
+
+enum ColorData_Value { hsv, rgb, notSet }
 
 class ColorData extends $pb.GeneratedMessage {
   factory ColorData({
     ColorData_Hsv? hsv,
+    ColorData_Rgb? rgb,
     $core.double? alpha,
   }) {
     final result = create();
     if (hsv != null) result.hsv = hsv;
+    if (rgb != null) result.rgb = rgb;
     if (alpha != null) result.alpha = alpha;
     return result;
   }
@@ -7771,16 +8076,19 @@ class ColorData extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, ColorData_Value> _ColorData_ValueByTag = {
     1: ColorData_Value.hsv,
+    2: ColorData_Value.rgb,
     0: ColorData_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ColorData',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
       createEmptyInstance: create)
-    ..oo(0, [1])
+    ..oo(0, [1, 2])
     ..aOM<ColorData_Hsv>(1, _omitFieldNames ? '' : 'hsv',
         subBuilder: ColorData_Hsv.create)
-    ..aD(5, _omitFieldNames ? '' : 'alpha')
+    ..aOM<ColorData_Rgb>(2, _omitFieldNames ? '' : 'rgb',
+        subBuilder: ColorData_Rgb.create)
+    ..aD(10, _omitFieldNames ? '' : 'alpha')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -7802,8 +8110,10 @@ class ColorData extends $pb.GeneratedMessage {
   static ColorData? _defaultInstance;
 
   @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   ColorData_Value whichValue() => _ColorData_ValueByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -7817,14 +8127,1999 @@ class ColorData extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   ColorData_Hsv ensureHsv() => $_ensure(0);
 
+  @$pb.TagNumber(2)
+  ColorData_Rgb get rgb => $_getN(1);
+  @$pb.TagNumber(2)
+  set rgb(ColorData_Rgb value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRgb() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRgb() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ColorData_Rgb ensureRgb() => $_ensure(1);
+
+  @$pb.TagNumber(10)
+  $core.double get alpha => $_getN(2);
+  @$pb.TagNumber(10)
+  set alpha($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAlpha() => $_has(2);
+  @$pb.TagNumber(10)
+  void clearAlpha() => $_clearField(10);
+}
+
+class Node_Math extends $pb.GeneratedMessage {
+  factory Node_Math({
+    $core.double? a,
+    $core.double? b,
+    MathOperatorType? operator,
+  }) {
+    final result = create();
+    if (a != null) result.a = a;
+    if (b != null) result.b = b;
+    if (operator != null) result.operator = operator;
+    return result;
+  }
+
+  Node_Math._();
+
+  factory Node_Math.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Math.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Math',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'a')
+    ..aD(2, _omitFieldNames ? '' : 'b')
+    ..aE<MathOperatorType>(3, _omitFieldNames ? '' : 'operator',
+        enumValues: MathOperatorType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Math clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Math copyWith(void Function(Node_Math) updates) =>
+      super.copyWith((message) => updates(message as Node_Math)) as Node_Math;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Math create() => Node_Math._();
+  @$core.override
+  Node_Math createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Math getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Node_Math>(create);
+  static Node_Math? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get a => $_getN(0);
+  @$pb.TagNumber(1)
+  set a($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasA() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearA() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get b => $_getN(1);
+  @$pb.TagNumber(2)
+  set b($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasB() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearB() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  MathOperatorType get operator => $_getN(2);
+  @$pb.TagNumber(3)
+  set operator(MathOperatorType value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOperator() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOperator() => $_clearField(3);
+}
+
+class Node_VectorMath extends $pb.GeneratedMessage {
+  factory Node_VectorMath({
+    Vec2? a,
+    Vec2? b,
+    VectorMathOperatorType? operator,
+  }) {
+    final result = create();
+    if (a != null) result.a = a;
+    if (b != null) result.b = b;
+    if (operator != null) result.operator = operator;
+    return result;
+  }
+
+  Node_VectorMath._();
+
+  factory Node_VectorMath.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_VectorMath.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.VectorMath',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'a', subBuilder: Vec2.create)
+    ..aOM<Vec2>(2, _omitFieldNames ? '' : 'b', subBuilder: Vec2.create)
+    ..aE<VectorMathOperatorType>(3, _omitFieldNames ? '' : 'operator',
+        enumValues: VectorMathOperatorType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_VectorMath clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_VectorMath copyWith(void Function(Node_VectorMath) updates) =>
+      super.copyWith((message) => updates(message as Node_VectorMath))
+          as Node_VectorMath;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_VectorMath create() => Node_VectorMath._();
+  @$core.override
+  Node_VectorMath createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_VectorMath getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_VectorMath>(create);
+  static Node_VectorMath? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get a => $_getN(0);
+  @$pb.TagNumber(1)
+  set a(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasA() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearA() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureA() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  Vec2 get b => $_getN(1);
+  @$pb.TagNumber(2)
+  set b(Vec2 value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasB() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearB() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Vec2 ensureB() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  VectorMathOperatorType get operator => $_getN(2);
+  @$pb.TagNumber(3)
+  set operator(VectorMathOperatorType value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOperator() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOperator() => $_clearField(3);
+}
+
+class Node_TrigMath extends $pb.GeneratedMessage {
+  factory Node_TrigMath({
+    $core.double? input,
+    TrigMathOperatorType? operator,
+  }) {
+    final result = create();
+    if (input != null) result.input = input;
+    if (operator != null) result.operator = operator;
+    return result;
+  }
+
+  Node_TrigMath._();
+
+  factory Node_TrigMath.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_TrigMath.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.TrigMath',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'input')
+    ..aE<TrigMathOperatorType>(2, _omitFieldNames ? '' : 'operator',
+        enumValues: TrigMathOperatorType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_TrigMath clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_TrigMath copyWith(void Function(Node_TrigMath) updates) =>
+      super.copyWith((message) => updates(message as Node_TrigMath))
+          as Node_TrigMath;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_TrigMath create() => Node_TrigMath._();
+  @$core.override
+  Node_TrigMath createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_TrigMath getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_TrigMath>(create);
+  static Node_TrigMath? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get input => $_getN(0);
+  @$pb.TagNumber(1)
+  set input($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInput() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInput() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  TrigMathOperatorType get operator => $_getN(1);
+  @$pb.TagNumber(2)
+  set operator(TrigMathOperatorType value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOperator() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOperator() => $_clearField(2);
+}
+
+class Node_Expression extends $pb.GeneratedMessage {
+  factory Node_Expression({
+    $core.String? expression,
+  }) {
+    final result = create();
+    if (expression != null) result.expression = expression;
+    return result;
+  }
+
+  Node_Expression._();
+
+  factory Node_Expression.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Expression.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Expression',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'expression')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Expression clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Expression copyWith(void Function(Node_Expression) updates) =>
+      super.copyWith((message) => updates(message as Node_Expression))
+          as Node_Expression;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Expression create() => Node_Expression._();
+  @$core.override
+  Node_Expression createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Expression getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_Expression>(create);
+  static Node_Expression? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get expression => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set expression($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasExpression() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExpression() => $_clearField(1);
+}
+
+class Node_MathConstant extends $pb.GeneratedMessage {
+  factory Node_MathConstant({
+    MathConstantType? constant,
+  }) {
+    final result = create();
+    if (constant != null) result.constant = constant;
+    return result;
+  }
+
+  Node_MathConstant._();
+
+  factory Node_MathConstant.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_MathConstant.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.MathConstant',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aE<MathConstantType>(1, _omitFieldNames ? '' : 'constant',
+        enumValues: MathConstantType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MathConstant clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MathConstant copyWith(void Function(Node_MathConstant) updates) =>
+      super.copyWith((message) => updates(message as Node_MathConstant))
+          as Node_MathConstant;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_MathConstant create() => Node_MathConstant._();
+  @$core.override
+  Node_MathConstant createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_MathConstant getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_MathConstant>(create);
+  static Node_MathConstant? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  MathConstantType get constant => $_getN(0);
+  @$pb.TagNumber(1)
+  set constant(MathConstantType value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConstant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConstant() => $_clearField(1);
+}
+
+class Node_MathRound extends $pb.GeneratedMessage {
+  factory Node_MathRound({
+    $core.double? value,
+    MathRoundType? mode,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    if (mode != null) result.mode = mode;
+    return result;
+  }
+
+  Node_MathRound._();
+
+  factory Node_MathRound.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_MathRound.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.MathRound',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..aE<MathRoundType>(2, _omitFieldNames ? '' : 'mode',
+        enumValues: MathRoundType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MathRound clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MathRound copyWith(void Function(Node_MathRound) updates) =>
+      super.copyWith((message) => updates(message as Node_MathRound))
+          as Node_MathRound;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_MathRound create() => Node_MathRound._();
+  @$core.override
+  Node_MathRound createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_MathRound getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_MathRound>(create);
+  static Node_MathRound? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  MathRoundType get mode => $_getN(1);
+  @$pb.TagNumber(2)
+  set mode(MathRoundType value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMode() => $_clearField(2);
+}
+
+class Node_CombineXY extends $pb.GeneratedMessage {
+  factory Node_CombineXY({
+    $core.double? x,
+    $core.double? y,
+  }) {
+    final result = create();
+    if (x != null) result.x = x;
+    if (y != null) result.y = y;
+    return result;
+  }
+
+  Node_CombineXY._();
+
+  factory Node_CombineXY.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_CombineXY.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.CombineXY',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'x')
+    ..aD(2, _omitFieldNames ? '' : 'y')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_CombineXY clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_CombineXY copyWith(void Function(Node_CombineXY) updates) =>
+      super.copyWith((message) => updates(message as Node_CombineXY))
+          as Node_CombineXY;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_CombineXY create() => Node_CombineXY._();
+  @$core.override
+  Node_CombineXY createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_CombineXY getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_CombineXY>(create);
+  static Node_CombineXY? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get x => $_getN(0);
+  @$pb.TagNumber(1)
+  set x($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasX() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearX() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get y => $_getN(1);
+  @$pb.TagNumber(2)
+  set y($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasY() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearY() => $_clearField(2);
+}
+
+class Node_SeparateXY extends $pb.GeneratedMessage {
+  factory Node_SeparateXY({
+    Vec2? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_SeparateXY._();
+
+  factory Node_SeparateXY.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_SeparateXY.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.SeparateXY',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'value', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_SeparateXY clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_SeparateXY copyWith(void Function(Node_SeparateXY) updates) =>
+      super.copyWith((message) => updates(message as Node_SeparateXY))
+          as Node_SeparateXY;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_SeparateXY create() => Node_SeparateXY._();
+  @$core.override
+  Node_SeparateXY createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_SeparateXY getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_SeparateXY>(create);
+  static Node_SeparateXY? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureValue() => $_ensure(0);
+}
+
+class Node_Polar extends $pb.GeneratedMessage {
+  factory Node_Polar({
+    $core.double? radius,
+    $core.double? angle,
+  }) {
+    final result = create();
+    if (radius != null) result.radius = radius;
+    if (angle != null) result.angle = angle;
+    return result;
+  }
+
+  Node_Polar._();
+
+  factory Node_Polar.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Polar.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Polar',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'radius')
+    ..aD(2, _omitFieldNames ? '' : 'angle')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Polar clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Polar copyWith(void Function(Node_Polar) updates) =>
+      super.copyWith((message) => updates(message as Node_Polar)) as Node_Polar;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Polar create() => Node_Polar._();
+  @$core.override
+  Node_Polar createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Polar getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_Polar>(create);
+  static Node_Polar? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get radius => $_getN(0);
+  @$pb.TagNumber(1)
+  set radius($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRadius() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRadius() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get angle => $_getN(1);
+  @$pb.TagNumber(2)
+  set angle($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAngle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAngle() => $_clearField(2);
+}
+
+class Node_Wrap extends $pb.GeneratedMessage {
+  factory Node_Wrap({
+    $core.double? value,
+    $core.double? min,
+    $core.double? max,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    return result;
+  }
+
+  Node_Wrap._();
+
+  factory Node_Wrap.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Wrap.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Wrap',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..aD(2, _omitFieldNames ? '' : 'min')
+    ..aD(3, _omitFieldNames ? '' : 'max')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Wrap clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Wrap copyWith(void Function(Node_Wrap) updates) =>
+      super.copyWith((message) => updates(message as Node_Wrap)) as Node_Wrap;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Wrap create() => Node_Wrap._();
+  @$core.override
+  Node_Wrap createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Wrap getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Node_Wrap>(create);
+  static Node_Wrap? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get min => $_getN(1);
+  @$pb.TagNumber(2)
+  set min($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMin() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get max => $_getN(2);
+  @$pb.TagNumber(3)
+  set max($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMax() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMax() => $_clearField(3);
+}
+
+class Node_WrapVector extends $pb.GeneratedMessage {
+  factory Node_WrapVector({
+    Vec2? value,
+    Vec2? min,
+    Vec2? max,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    return result;
+  }
+
+  Node_WrapVector._();
+
+  factory Node_WrapVector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_WrapVector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.WrapVector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'value', subBuilder: Vec2.create)
+    ..aOM<Vec2>(2, _omitFieldNames ? '' : 'min', subBuilder: Vec2.create)
+    ..aOM<Vec2>(3, _omitFieldNames ? '' : 'max', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_WrapVector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_WrapVector copyWith(void Function(Node_WrapVector) updates) =>
+      super.copyWith((message) => updates(message as Node_WrapVector))
+          as Node_WrapVector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_WrapVector create() => Node_WrapVector._();
+  @$core.override
+  Node_WrapVector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_WrapVector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_WrapVector>(create);
+  static Node_WrapVector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureValue() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  Vec2 get min => $_getN(1);
+  @$pb.TagNumber(2)
+  set min(Vec2 value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMin() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Vec2 ensureMin() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  Vec2 get max => $_getN(2);
+  @$pb.TagNumber(3)
+  set max(Vec2 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMax() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMax() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Vec2 ensureMax() => $_ensure(2);
+}
+
+class Node_Abs extends $pb.GeneratedMessage {
+  factory Node_Abs({
+    $core.double? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_Abs._();
+
+  factory Node_Abs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Abs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Abs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Abs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Abs copyWith(void Function(Node_Abs) updates) =>
+      super.copyWith((message) => updates(message as Node_Abs)) as Node_Abs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Abs create() => Node_Abs._();
+  @$core.override
+  Node_Abs createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Abs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Node_Abs>(create);
+  static Node_Abs? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+}
+
+class Node_AbsVector extends $pb.GeneratedMessage {
+  factory Node_AbsVector({
+    Vec2? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_AbsVector._();
+
+  factory Node_AbsVector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_AbsVector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.AbsVector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'value', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_AbsVector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_AbsVector copyWith(void Function(Node_AbsVector) updates) =>
+      super.copyWith((message) => updates(message as Node_AbsVector))
+          as Node_AbsVector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_AbsVector create() => Node_AbsVector._();
+  @$core.override
+  Node_AbsVector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_AbsVector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_AbsVector>(create);
+  static Node_AbsVector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureValue() => $_ensure(0);
+}
+
+class Node_Sign extends $pb.GeneratedMessage {
+  factory Node_Sign({
+    $core.double? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_Sign._();
+
+  factory Node_Sign.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Sign.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Sign',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Sign clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Sign copyWith(void Function(Node_Sign) updates) =>
+      super.copyWith((message) => updates(message as Node_Sign)) as Node_Sign;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Sign create() => Node_Sign._();
+  @$core.override
+  Node_Sign createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Sign getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Node_Sign>(create);
+  static Node_Sign? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+}
+
+class Node_SignVector extends $pb.GeneratedMessage {
+  factory Node_SignVector({
+    Vec2? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_SignVector._();
+
+  factory Node_SignVector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_SignVector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.SignVector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'value', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_SignVector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_SignVector copyWith(void Function(Node_SignVector) updates) =>
+      super.copyWith((message) => updates(message as Node_SignVector))
+          as Node_SignVector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_SignVector create() => Node_SignVector._();
+  @$core.override
+  Node_SignVector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_SignVector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_SignVector>(create);
+  static Node_SignVector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureValue() => $_ensure(0);
+}
+
+class Node_RotateVector extends $pb.GeneratedMessage {
+  factory Node_RotateVector({
+    Vec2? vector,
+    $core.double? angle,
+    Vec2? pivot,
+  }) {
+    final result = create();
+    if (vector != null) result.vector = vector;
+    if (angle != null) result.angle = angle;
+    if (pivot != null) result.pivot = pivot;
+    return result;
+  }
+
+  Node_RotateVector._();
+
+  factory Node_RotateVector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_RotateVector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.RotateVector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'vector', subBuilder: Vec2.create)
+    ..aD(2, _omitFieldNames ? '' : 'angle')
+    ..aOM<Vec2>(3, _omitFieldNames ? '' : 'pivot', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RotateVector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RotateVector copyWith(void Function(Node_RotateVector) updates) =>
+      super.copyWith((message) => updates(message as Node_RotateVector))
+          as Node_RotateVector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_RotateVector create() => Node_RotateVector._();
+  @$core.override
+  Node_RotateVector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_RotateVector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_RotateVector>(create);
+  static Node_RotateVector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get vector => $_getN(0);
+  @$pb.TagNumber(1)
+  set vector(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVector() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVector() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureVector() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.double get angle => $_getN(1);
+  @$pb.TagNumber(2)
+  set angle($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAngle() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAngle() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  Vec2 get pivot => $_getN(2);
+  @$pb.TagNumber(3)
+  set pivot(Vec2 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPivot() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPivot() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Vec2 ensurePivot() => $_ensure(2);
+}
+
+class Node_VectorMagnitude extends $pb.GeneratedMessage {
+  factory Node_VectorMagnitude({
+    Vec2? vector,
+  }) {
+    final result = create();
+    if (vector != null) result.vector = vector;
+    return result;
+  }
+
+  Node_VectorMagnitude._();
+
+  factory Node_VectorMagnitude.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_VectorMagnitude.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.VectorMagnitude',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'vector', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_VectorMagnitude clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_VectorMagnitude copyWith(void Function(Node_VectorMagnitude) updates) =>
+      super.copyWith((message) => updates(message as Node_VectorMagnitude))
+          as Node_VectorMagnitude;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_VectorMagnitude create() => Node_VectorMagnitude._();
+  @$core.override
+  Node_VectorMagnitude createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_VectorMagnitude getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_VectorMagnitude>(create);
+  static Node_VectorMagnitude? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Vec2 get vector => $_getN(0);
+  @$pb.TagNumber(1)
+  set vector(Vec2 value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVector() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVector() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Vec2 ensureVector() => $_ensure(0);
+}
+
+class Node_RandomFloat extends $pb.GeneratedMessage {
+  factory Node_RandomFloat({
+    $core.int? seed,
+    $core.double? min,
+    $core.double? max,
+  }) {
+    final result = create();
+    if (seed != null) result.seed = seed;
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    return result;
+  }
+
+  Node_RandomFloat._();
+
+  factory Node_RandomFloat.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_RandomFloat.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.RandomFloat',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'seed')
+    ..aD(2, _omitFieldNames ? '' : 'min')
+    ..aD(3, _omitFieldNames ? '' : 'max')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RandomFloat clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RandomFloat copyWith(void Function(Node_RandomFloat) updates) =>
+      super.copyWith((message) => updates(message as Node_RandomFloat))
+          as Node_RandomFloat;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_RandomFloat create() => Node_RandomFloat._();
+  @$core.override
+  Node_RandomFloat createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_RandomFloat getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_RandomFloat>(create);
+  static Node_RandomFloat? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get seed => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set seed($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSeed() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSeed() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get min => $_getN(1);
+  @$pb.TagNumber(2)
+  set min($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMin() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get max => $_getN(2);
+  @$pb.TagNumber(3)
+  set max($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMax() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMax() => $_clearField(3);
+}
+
+class Node_RandomVector extends $pb.GeneratedMessage {
+  factory Node_RandomVector({
+    $core.int? seed,
+    Vec2? min,
+    Vec2? max,
+  }) {
+    final result = create();
+    if (seed != null) result.seed = seed;
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    return result;
+  }
+
+  Node_RandomVector._();
+
+  factory Node_RandomVector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_RandomVector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.RandomVector',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'seed')
+    ..aOM<Vec2>(2, _omitFieldNames ? '' : 'min', subBuilder: Vec2.create)
+    ..aOM<Vec2>(3, _omitFieldNames ? '' : 'max', subBuilder: Vec2.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RandomVector clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_RandomVector copyWith(void Function(Node_RandomVector) updates) =>
+      super.copyWith((message) => updates(message as Node_RandomVector))
+          as Node_RandomVector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_RandomVector create() => Node_RandomVector._();
+  @$core.override
+  Node_RandomVector createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_RandomVector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_RandomVector>(create);
+  static Node_RandomVector? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get seed => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set seed($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSeed() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSeed() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  Vec2 get min => $_getN(1);
+  @$pb.TagNumber(2)
+  set min(Vec2 value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMin() => $_clearField(2);
+  @$pb.TagNumber(2)
+  Vec2 ensureMin() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  Vec2 get max => $_getN(2);
+  @$pb.TagNumber(3)
+  set max(Vec2 value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMax() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMax() => $_clearField(3);
+  @$pb.TagNumber(3)
+  Vec2 ensureMax() => $_ensure(2);
+}
+
+class Node_Compare extends $pb.GeneratedMessage {
+  factory Node_Compare({
+    $core.double? a,
+    $core.double? b,
+    $core.double? epsilon,
+    MathCompareType? type,
+  }) {
+    final result = create();
+    if (a != null) result.a = a;
+    if (b != null) result.b = b;
+    if (epsilon != null) result.epsilon = epsilon;
+    if (type != null) result.type = type;
+    return result;
+  }
+
+  Node_Compare._();
+
+  factory Node_Compare.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Compare.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Compare',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'a')
+    ..aD(2, _omitFieldNames ? '' : 'b')
+    ..aD(3, _omitFieldNames ? '' : 'epsilon')
+    ..aE<MathCompareType>(4, _omitFieldNames ? '' : 'type',
+        enumValues: MathCompareType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Compare clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Compare copyWith(void Function(Node_Compare) updates) =>
+      super.copyWith((message) => updates(message as Node_Compare))
+          as Node_Compare;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Compare create() => Node_Compare._();
+  @$core.override
+  Node_Compare createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Compare getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_Compare>(create);
+  static Node_Compare? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get a => $_getN(0);
+  @$pb.TagNumber(1)
+  set a($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasA() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearA() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get b => $_getN(1);
+  @$pb.TagNumber(2)
+  set b($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasB() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearB() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get epsilon => $_getN(2);
+  @$pb.TagNumber(3)
+  set epsilon($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEpsilon() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEpsilon() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  MathCompareType get type => $_getN(3);
+  @$pb.TagNumber(4)
+  set type(MathCompareType value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasType() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearType() => $_clearField(4);
+}
+
+class Node_BooleanToFloat extends $pb.GeneratedMessage {
+  factory Node_BooleanToFloat({
+    $core.bool? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_BooleanToFloat._();
+
+  factory Node_BooleanToFloat.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_BooleanToFloat.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.BooleanToFloat',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_BooleanToFloat clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_BooleanToFloat copyWith(void Function(Node_BooleanToFloat) updates) =>
+      super.copyWith((message) => updates(message as Node_BooleanToFloat))
+          as Node_BooleanToFloat;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_BooleanToFloat create() => Node_BooleanToFloat._();
+  @$core.override
+  Node_BooleanToFloat createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_BooleanToFloat getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_BooleanToFloat>(create);
+  static Node_BooleanToFloat? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get value => $_getBF(0);
+  @$pb.TagNumber(1)
+  set value($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+}
+
+class Node_MapRange extends $pb.GeneratedMessage {
+  factory Node_MapRange({
+    $core.double? value,
+    $core.double? fromMin,
+    $core.double? fromMax,
+    $core.double? outMin,
+    $core.double? outMax,
+    $core.bool? clamp,
+    InterpolationType? interpolation,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    if (fromMin != null) result.fromMin = fromMin;
+    if (fromMax != null) result.fromMax = fromMax;
+    if (outMin != null) result.outMin = outMin;
+    if (outMax != null) result.outMax = outMax;
+    if (clamp != null) result.clamp = clamp;
+    if (interpolation != null) result.interpolation = interpolation;
+    return result;
+  }
+
+  Node_MapRange._();
+
+  factory Node_MapRange.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_MapRange.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.MapRange',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..aD(2, _omitFieldNames ? '' : 'fromMin')
+    ..aD(3, _omitFieldNames ? '' : 'fromMax')
+    ..aD(4, _omitFieldNames ? '' : 'outMin')
+    ..aD(5, _omitFieldNames ? '' : 'outMax')
+    ..aOB(6, _omitFieldNames ? '' : 'clamp')
+    ..aE<InterpolationType>(7, _omitFieldNames ? '' : 'interpolation',
+        enumValues: InterpolationType.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MapRange clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_MapRange copyWith(void Function(Node_MapRange) updates) =>
+      super.copyWith((message) => updates(message as Node_MapRange))
+          as Node_MapRange;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_MapRange create() => Node_MapRange._();
+  @$core.override
+  Node_MapRange createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_MapRange getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_MapRange>(create);
+  static Node_MapRange? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get fromMin => $_getN(1);
+  @$pb.TagNumber(2)
+  set fromMin($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFromMin() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFromMin() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get fromMax => $_getN(2);
+  @$pb.TagNumber(3)
+  set fromMax($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFromMax() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFromMax() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get outMin => $_getN(3);
+  @$pb.TagNumber(4)
+  set outMin($core.double value) => $_setDouble(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOutMin() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOutMin() => $_clearField(4);
+
   @$pb.TagNumber(5)
-  $core.double get alpha => $_getN(1);
+  $core.double get outMax => $_getN(4);
   @$pb.TagNumber(5)
-  set alpha($core.double value) => $_setDouble(1, value);
+  set outMax($core.double value) => $_setDouble(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasAlpha() => $_has(1);
+  $core.bool hasOutMax() => $_has(4);
   @$pb.TagNumber(5)
-  void clearAlpha() => $_clearField(5);
+  void clearOutMax() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get clamp => $_getBF(5);
+  @$pb.TagNumber(6)
+  set clamp($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasClamp() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearClamp() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  InterpolationType get interpolation => $_getN(6);
+  @$pb.TagNumber(7)
+  set interpolation(InterpolationType value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasInterpolation() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearInterpolation() => $_clearField(7);
+}
+
+class Node_Deg2Rad extends $pb.GeneratedMessage {
+  factory Node_Deg2Rad({
+    $core.double? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_Deg2Rad._();
+
+  factory Node_Deg2Rad.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Deg2Rad.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Deg2Rad',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Deg2Rad clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Deg2Rad copyWith(void Function(Node_Deg2Rad) updates) =>
+      super.copyWith((message) => updates(message as Node_Deg2Rad))
+          as Node_Deg2Rad;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Deg2Rad create() => Node_Deg2Rad._();
+  @$core.override
+  Node_Deg2Rad createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Deg2Rad getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_Deg2Rad>(create);
+  static Node_Deg2Rad? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+}
+
+class Node_Rad2Deg extends $pb.GeneratedMessage {
+  factory Node_Rad2Deg({
+    $core.double? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_Rad2Deg._();
+
+  factory Node_Rad2Deg.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_Rad2Deg.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.Rad2Deg',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Rad2Deg clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_Rad2Deg copyWith(void Function(Node_Rad2Deg) updates) =>
+      super.copyWith((message) => updates(message as Node_Rad2Deg))
+          as Node_Rad2Deg;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_Rad2Deg create() => Node_Rad2Deg._();
+  @$core.override
+  Node_Rad2Deg createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_Rad2Deg getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_Rad2Deg>(create);
+  static Node_Rad2Deg? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+}
+
+class Node_ColorFromRGBA extends $pb.GeneratedMessage {
+  factory Node_ColorFromRGBA({
+    $core.double? r,
+    $core.double? g,
+    $core.double? b,
+    $core.double? a,
+  }) {
+    final result = create();
+    if (r != null) result.r = r;
+    if (g != null) result.g = g;
+    if (b != null) result.b = b;
+    if (a != null) result.a = a;
+    return result;
+  }
+
+  Node_ColorFromRGBA._();
+
+  factory Node_ColorFromRGBA.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_ColorFromRGBA.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.ColorFromRGBA',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aD(1, _omitFieldNames ? '' : 'r')
+    ..aD(2, _omitFieldNames ? '' : 'g')
+    ..aD(3, _omitFieldNames ? '' : 'b')
+    ..aD(4, _omitFieldNames ? '' : 'a')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorFromRGBA clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorFromRGBA copyWith(void Function(Node_ColorFromRGBA) updates) =>
+      super.copyWith((message) => updates(message as Node_ColorFromRGBA))
+          as Node_ColorFromRGBA;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorFromRGBA create() => Node_ColorFromRGBA._();
+  @$core.override
+  Node_ColorFromRGBA createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorFromRGBA getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_ColorFromRGBA>(create);
+  static Node_ColorFromRGBA? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get r => $_getN(0);
+  @$pb.TagNumber(1)
+  set r($core.double value) => $_setDouble(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasR() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearR() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get g => $_getN(1);
+  @$pb.TagNumber(2)
+  set g($core.double value) => $_setDouble(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasG() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearG() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get b => $_getN(2);
+  @$pb.TagNumber(3)
+  set b($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasB() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearB() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get a => $_getN(3);
+  @$pb.TagNumber(4)
+  set a($core.double value) => $_setDouble(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasA() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearA() => $_clearField(4);
+}
+
+class Node_ColorToRGBA extends $pb.GeneratedMessage {
+  factory Node_ColorToRGBA({
+    ColorData? value,
+  }) {
+    final result = create();
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  Node_ColorToRGBA._();
+
+  factory Node_ColorToRGBA.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_ColorToRGBA.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.ColorToRGBA',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ColorData>(1, _omitFieldNames ? '' : 'value',
+        subBuilder: ColorData.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorToRGBA clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorToRGBA copyWith(void Function(Node_ColorToRGBA) updates) =>
+      super.copyWith((message) => updates(message as Node_ColorToRGBA))
+          as Node_ColorToRGBA;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorToRGBA create() => Node_ColorToRGBA._();
+  @$core.override
+  Node_ColorToRGBA createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorToRGBA getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_ColorToRGBA>(create);
+  static Node_ColorToRGBA? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ColorData get value => $_getN(0);
+  @$pb.TagNumber(1)
+  set value(ColorData value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValue() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValue() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ColorData ensureValue() => $_ensure(0);
+}
+
+class Node_ColorMix extends $pb.GeneratedMessage {
+  factory Node_ColorMix({
+    ColorData? a,
+    ColorData? b,
+    $core.double? t,
+  }) {
+    final result = create();
+    if (a != null) result.a = a;
+    if (b != null) result.b = b;
+    if (t != null) result.t = t;
+    return result;
+  }
+
+  Node_ColorMix._();
+
+  factory Node_ColorMix.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_ColorMix.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.ColorMix',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ColorData>(1, _omitFieldNames ? '' : 'a',
+        subBuilder: ColorData.create)
+    ..aOM<ColorData>(2, _omitFieldNames ? '' : 'b',
+        subBuilder: ColorData.create)
+    ..aD(3, _omitFieldNames ? '' : 't')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorMix clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ColorMix copyWith(void Function(Node_ColorMix) updates) =>
+      super.copyWith((message) => updates(message as Node_ColorMix))
+          as Node_ColorMix;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorMix create() => Node_ColorMix._();
+  @$core.override
+  Node_ColorMix createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_ColorMix getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_ColorMix>(create);
+  static Node_ColorMix? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ColorData get a => $_getN(0);
+  @$pb.TagNumber(1)
+  set a(ColorData value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasA() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearA() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ColorData ensureA() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ColorData get b => $_getN(1);
+  @$pb.TagNumber(2)
+  set b(ColorData value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasB() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearB() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ColorData ensureB() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.double get t => $_getN(2);
+  @$pb.TagNumber(3)
+  set t($core.double value) => $_setDouble(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasT() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearT() => $_clearField(3);
+}
+
+class Node_ShaderInput extends $pb.GeneratedMessage {
+  factory Node_ShaderInput() => create();
+
+  Node_ShaderInput._();
+
+  factory Node_ShaderInput.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_ShaderInput.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.ShaderInput',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ShaderInput clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ShaderInput copyWith(void Function(Node_ShaderInput) updates) =>
+      super.copyWith((message) => updates(message as Node_ShaderInput))
+          as Node_ShaderInput;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_ShaderInput create() => Node_ShaderInput._();
+  @$core.override
+  Node_ShaderInput createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_ShaderInput getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_ShaderInput>(create);
+  static Node_ShaderInput? _defaultInstance;
+}
+
+class Node_ShaderOutput extends $pb.GeneratedMessage {
+  factory Node_ShaderOutput({
+    ColorData? color,
+  }) {
+    final result = create();
+    if (color != null) result.color = color;
+    return result;
+  }
+
+  Node_ShaderOutput._();
+
+  factory Node_ShaderOutput.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Node_ShaderOutput.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Node.ShaderOutput',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
+      createEmptyInstance: create)
+    ..aOM<ColorData>(1, _omitFieldNames ? '' : 'color',
+        subBuilder: ColorData.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ShaderOutput clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Node_ShaderOutput copyWith(void Function(Node_ShaderOutput) updates) =>
+      super.copyWith((message) => updates(message as Node_ShaderOutput))
+          as Node_ShaderOutput;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Node_ShaderOutput create() => Node_ShaderOutput._();
+  @$core.override
+  Node_ShaderOutput createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Node_ShaderOutput getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Node_ShaderOutput>(create);
+  static Node_ShaderOutput? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ColorData get color => $_getN(0);
+  @$pb.TagNumber(1)
+  set color(ColorData value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasColor() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearColor() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ColorData ensureColor() => $_ensure(0);
 }
 
 class Node_GeneratorInput extends $pb.GeneratedMessage {
@@ -8468,758 +10763,36 @@ class Node_Index extends $pb.GeneratedMessage {
   static Node_Index? _defaultInstance;
 }
 
-class Node_Math extends $pb.GeneratedMessage {
-  factory Node_Math({
-    $core.double? a,
-    $core.double? b,
-    MathOperatorType? operator,
-  }) {
-    final result = create();
-    if (a != null) result.a = a;
-    if (b != null) result.b = b;
-    if (operator != null) result.operator = operator;
-    return result;
-  }
-
-  Node_Math._();
-
-  factory Node_Math.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_Math.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.Math',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'a')
-    ..aD(2, _omitFieldNames ? '' : 'b')
-    ..aE<MathOperatorType>(3, _omitFieldNames ? '' : 'operator',
-        enumValues: MathOperatorType.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Math clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Math copyWith(void Function(Node_Math) updates) =>
-      super.copyWith((message) => updates(message as Node_Math)) as Node_Math;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_Math create() => Node_Math._();
-  @$core.override
-  Node_Math createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_Math getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Node_Math>(create);
-  static Node_Math? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.double get a => $_getN(0);
-  @$pb.TagNumber(1)
-  set a($core.double value) => $_setDouble(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasA() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearA() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get b => $_getN(1);
-  @$pb.TagNumber(2)
-  set b($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasB() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearB() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  MathOperatorType get operator => $_getN(2);
-  @$pb.TagNumber(3)
-  set operator(MathOperatorType value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasOperator() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearOperator() => $_clearField(3);
-}
-
-class Node_VectorMath extends $pb.GeneratedMessage {
-  factory Node_VectorMath({
-    Vec2? a,
-    Vec2? b,
-    VectorMathOperatorType? operator,
-  }) {
-    final result = create();
-    if (a != null) result.a = a;
-    if (b != null) result.b = b;
-    if (operator != null) result.operator = operator;
-    return result;
-  }
-
-  Node_VectorMath._();
-
-  factory Node_VectorMath.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_VectorMath.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.VectorMath',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'a', subBuilder: Vec2.create)
-    ..aOM<Vec2>(2, _omitFieldNames ? '' : 'b', subBuilder: Vec2.create)
-    ..aE<VectorMathOperatorType>(3, _omitFieldNames ? '' : 'operator',
-        enumValues: VectorMathOperatorType.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_VectorMath clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_VectorMath copyWith(void Function(Node_VectorMath) updates) =>
-      super.copyWith((message) => updates(message as Node_VectorMath))
-          as Node_VectorMath;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_VectorMath create() => Node_VectorMath._();
-  @$core.override
-  Node_VectorMath createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_VectorMath getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_VectorMath>(create);
-  static Node_VectorMath? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  Vec2 get a => $_getN(0);
-  @$pb.TagNumber(1)
-  set a(Vec2 value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasA() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearA() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Vec2 ensureA() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  Vec2 get b => $_getN(1);
-  @$pb.TagNumber(2)
-  set b(Vec2 value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasB() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearB() => $_clearField(2);
-  @$pb.TagNumber(2)
-  Vec2 ensureB() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  VectorMathOperatorType get operator => $_getN(2);
-  @$pb.TagNumber(3)
-  set operator(VectorMathOperatorType value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasOperator() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearOperator() => $_clearField(3);
-}
-
-class Node_TrigMath extends $pb.GeneratedMessage {
-  factory Node_TrigMath({
-    $core.double? input,
-    TrigMathOperatorType? operator,
-  }) {
-    final result = create();
-    if (input != null) result.input = input;
-    if (operator != null) result.operator = operator;
-    return result;
-  }
-
-  Node_TrigMath._();
-
-  factory Node_TrigMath.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_TrigMath.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.TrigMath',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'input')
-    ..aE<TrigMathOperatorType>(2, _omitFieldNames ? '' : 'operator',
-        enumValues: TrigMathOperatorType.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_TrigMath clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_TrigMath copyWith(void Function(Node_TrigMath) updates) =>
-      super.copyWith((message) => updates(message as Node_TrigMath))
-          as Node_TrigMath;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_TrigMath create() => Node_TrigMath._();
-  @$core.override
-  Node_TrigMath createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_TrigMath getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_TrigMath>(create);
-  static Node_TrigMath? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.double get input => $_getN(0);
-  @$pb.TagNumber(1)
-  set input($core.double value) => $_setDouble(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasInput() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearInput() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  TrigMathOperatorType get operator => $_getN(1);
-  @$pb.TagNumber(2)
-  set operator(TrigMathOperatorType value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasOperator() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearOperator() => $_clearField(2);
-}
-
-class Node_Expression extends $pb.GeneratedMessage {
-  factory Node_Expression({
-    $core.String? expression,
-  }) {
-    final result = create();
-    if (expression != null) result.expression = expression;
-    return result;
-  }
-
-  Node_Expression._();
-
-  factory Node_Expression.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_Expression.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.Expression',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'expression')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Expression clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Expression copyWith(void Function(Node_Expression) updates) =>
-      super.copyWith((message) => updates(message as Node_Expression))
-          as Node_Expression;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_Expression create() => Node_Expression._();
-  @$core.override
-  Node_Expression createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_Expression getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_Expression>(create);
-  static Node_Expression? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get expression => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set expression($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasExpression() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearExpression() => $_clearField(1);
-}
-
-class Node_MathConstant extends $pb.GeneratedMessage {
-  factory Node_MathConstant({
-    MathConstantType? constant,
-  }) {
-    final result = create();
-    if (constant != null) result.constant = constant;
-    return result;
-  }
-
-  Node_MathConstant._();
-
-  factory Node_MathConstant.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_MathConstant.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.MathConstant',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aE<MathConstantType>(1, _omitFieldNames ? '' : 'constant',
-        enumValues: MathConstantType.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_MathConstant clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_MathConstant copyWith(void Function(Node_MathConstant) updates) =>
-      super.copyWith((message) => updates(message as Node_MathConstant))
-          as Node_MathConstant;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_MathConstant create() => Node_MathConstant._();
-  @$core.override
-  Node_MathConstant createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_MathConstant getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_MathConstant>(create);
-  static Node_MathConstant? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  MathConstantType get constant => $_getN(0);
-  @$pb.TagNumber(1)
-  set constant(MathConstantType value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasConstant() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearConstant() => $_clearField(1);
-}
-
-class Node_MathRound extends $pb.GeneratedMessage {
-  factory Node_MathRound({
-    $core.double? value,
-    MathRoundType? mode,
-  }) {
-    final result = create();
-    if (value != null) result.value = value;
-    if (mode != null) result.mode = mode;
-    return result;
-  }
-
-  Node_MathRound._();
-
-  factory Node_MathRound.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_MathRound.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.MathRound',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'value')
-    ..aE<MathRoundType>(2, _omitFieldNames ? '' : 'mode',
-        enumValues: MathRoundType.values)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_MathRound clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_MathRound copyWith(void Function(Node_MathRound) updates) =>
-      super.copyWith((message) => updates(message as Node_MathRound))
-          as Node_MathRound;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_MathRound create() => Node_MathRound._();
-  @$core.override
-  Node_MathRound createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_MathRound getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_MathRound>(create);
-  static Node_MathRound? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.double get value => $_getN(0);
-  @$pb.TagNumber(1)
-  set value($core.double value) => $_setDouble(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasValue() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearValue() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  MathRoundType get mode => $_getN(1);
-  @$pb.TagNumber(2)
-  set mode(MathRoundType value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMode() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMode() => $_clearField(2);
-}
-
-class Node_CombineXY extends $pb.GeneratedMessage {
-  factory Node_CombineXY({
-    $core.double? x,
-    $core.double? y,
-  }) {
-    final result = create();
-    if (x != null) result.x = x;
-    if (y != null) result.y = y;
-    return result;
-  }
-
-  Node_CombineXY._();
-
-  factory Node_CombineXY.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_CombineXY.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.CombineXY',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'x')
-    ..aD(2, _omitFieldNames ? '' : 'y')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_CombineXY clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_CombineXY copyWith(void Function(Node_CombineXY) updates) =>
-      super.copyWith((message) => updates(message as Node_CombineXY))
-          as Node_CombineXY;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_CombineXY create() => Node_CombineXY._();
-  @$core.override
-  Node_CombineXY createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_CombineXY getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_CombineXY>(create);
-  static Node_CombineXY? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.double get x => $_getN(0);
-  @$pb.TagNumber(1)
-  set x($core.double value) => $_setDouble(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasX() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearX() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get y => $_getN(1);
-  @$pb.TagNumber(2)
-  set y($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasY() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearY() => $_clearField(2);
-}
-
-class Node_SeparateXY extends $pb.GeneratedMessage {
-  factory Node_SeparateXY({
-    Vec2? value,
-  }) {
-    final result = create();
-    if (value != null) result.value = value;
-    return result;
-  }
-
-  Node_SeparateXY._();
-
-  factory Node_SeparateXY.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_SeparateXY.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.SeparateXY',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aOM<Vec2>(1, _omitFieldNames ? '' : 'value', subBuilder: Vec2.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_SeparateXY clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_SeparateXY copyWith(void Function(Node_SeparateXY) updates) =>
-      super.copyWith((message) => updates(message as Node_SeparateXY))
-          as Node_SeparateXY;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_SeparateXY create() => Node_SeparateXY._();
-  @$core.override
-  Node_SeparateXY createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_SeparateXY getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_SeparateXY>(create);
-  static Node_SeparateXY? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  Vec2 get value => $_getN(0);
-  @$pb.TagNumber(1)
-  set value(Vec2 value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasValue() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearValue() => $_clearField(1);
-  @$pb.TagNumber(1)
-  Vec2 ensureValue() => $_ensure(0);
-}
-
-class Node_Polar extends $pb.GeneratedMessage {
-  factory Node_Polar({
-    $core.double? radius,
-    $core.double? angle,
-  }) {
-    final result = create();
-    if (radius != null) result.radius = radius;
-    if (angle != null) result.angle = angle;
-    return result;
-  }
-
-  Node_Polar._();
-
-  factory Node_Polar.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_Polar.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.Polar',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'radius')
-    ..aD(2, _omitFieldNames ? '' : 'angle')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Polar clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_Polar copyWith(void Function(Node_Polar) updates) =>
-      super.copyWith((message) => updates(message as Node_Polar)) as Node_Polar;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_Polar create() => Node_Polar._();
-  @$core.override
-  Node_Polar createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_Polar getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_Polar>(create);
-  static Node_Polar? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.double get radius => $_getN(0);
-  @$pb.TagNumber(1)
-  set radius($core.double value) => $_setDouble(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasRadius() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearRadius() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get angle => $_getN(1);
-  @$pb.TagNumber(2)
-  set angle($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAngle() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAngle() => $_clearField(2);
-}
-
-class Node_RandomFloat extends $pb.GeneratedMessage {
-  factory Node_RandomFloat({
-    $core.int? seed,
-    $core.double? min,
-    $core.double? max,
-  }) {
-    final result = create();
-    if (seed != null) result.seed = seed;
-    if (min != null) result.min = min;
-    if (max != null) result.max = max;
-    return result;
-  }
-
-  Node_RandomFloat._();
-
-  factory Node_RandomFloat.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_RandomFloat.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.RandomFloat',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'seed')
-    ..aD(2, _omitFieldNames ? '' : 'min')
-    ..aD(3, _omitFieldNames ? '' : 'max')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_RandomFloat clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_RandomFloat copyWith(void Function(Node_RandomFloat) updates) =>
-      super.copyWith((message) => updates(message as Node_RandomFloat))
-          as Node_RandomFloat;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_RandomFloat create() => Node_RandomFloat._();
-  @$core.override
-  Node_RandomFloat createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_RandomFloat getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_RandomFloat>(create);
-  static Node_RandomFloat? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get seed => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set seed($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasSeed() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSeed() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get min => $_getN(1);
-  @$pb.TagNumber(2)
-  set min($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMin() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMin() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.double get max => $_getN(2);
-  @$pb.TagNumber(3)
-  set max($core.double value) => $_setDouble(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasMax() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearMax() => $_clearField(3);
-}
-
-class Node_RandomVector extends $pb.GeneratedMessage {
-  factory Node_RandomVector({
-    $core.int? seed,
-    Vec2? min,
-    Vec2? max,
-  }) {
-    final result = create();
-    if (seed != null) result.seed = seed;
-    if (min != null) result.min = min;
-    if (max != null) result.max = max;
-    return result;
-  }
-
-  Node_RandomVector._();
-
-  factory Node_RandomVector.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory Node_RandomVector.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'Node.RandomVector',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'motif'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'seed')
-    ..aOM<Vec2>(2, _omitFieldNames ? '' : 'min', subBuilder: Vec2.create)
-    ..aOM<Vec2>(3, _omitFieldNames ? '' : 'max', subBuilder: Vec2.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_RandomVector clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Node_RandomVector copyWith(void Function(Node_RandomVector) updates) =>
-      super.copyWith((message) => updates(message as Node_RandomVector))
-          as Node_RandomVector;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static Node_RandomVector create() => Node_RandomVector._();
-  @$core.override
-  Node_RandomVector createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static Node_RandomVector getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<Node_RandomVector>(create);
-  static Node_RandomVector? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get seed => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set seed($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasSeed() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSeed() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  Vec2 get min => $_getN(1);
-  @$pb.TagNumber(2)
-  set min(Vec2 value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasMin() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMin() => $_clearField(2);
-  @$pb.TagNumber(2)
-  Vec2 ensureMin() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  Vec2 get max => $_getN(2);
-  @$pb.TagNumber(3)
-  set max(Vec2 value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasMax() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearMax() => $_clearField(3);
-  @$pb.TagNumber(3)
-  Vec2 ensureMax() => $_ensure(2);
-}
-
 enum Node_Kind {
+  math,
+  vectorMath,
+  trigMath,
+  expression,
+  mathConstant,
+  mathRound,
+  combineXY,
+  separateXY,
+  polar,
+  wrap,
+  wrapVector,
+  abs,
+  absVector,
+  sign,
+  signVector,
+  rotateVector,
+  vectorMagnitude,
+  randomFloat,
+  randomVector,
+  compare,
+  booleanToFloat,
+  mapRange,
+  deg2Rad,
+  rad2Deg,
+  colorFromRGBA,
+  colorToRGBA,
+  colorMix,
+  shaderInput,
+  shaderOutput,
   generatorInput,
   generatorOutput,
   merge,
@@ -9231,23 +10804,41 @@ enum Node_Kind {
   makeFace,
   boundingBox,
   index_,
-  math,
-  vectorMath,
-  trigMath,
-  expression,
-  mathConstant,
-  mathRound,
-  combineXY,
-  separateXY,
-  polar,
-  randomFloat,
-  randomVector,
   notSet
 }
 
 class Node extends $pb.GeneratedMessage {
   factory Node({
     $1.NodeId? id,
+    Node_Math? math,
+    Node_VectorMath? vectorMath,
+    Node_TrigMath? trigMath,
+    Node_Expression? expression,
+    Node_MathConstant? mathConstant,
+    Node_MathRound? mathRound,
+    Node_CombineXY? combineXY,
+    Node_SeparateXY? separateXY,
+    Node_Polar? polar,
+    Node_Wrap? wrap,
+    Node_WrapVector? wrapVector,
+    Node_Abs? abs,
+    Node_AbsVector? absVector,
+    Node_Sign? sign,
+    Node_SignVector? signVector,
+    Node_RotateVector? rotateVector,
+    Node_VectorMagnitude? vectorMagnitude,
+    Node_RandomFloat? randomFloat,
+    Node_RandomVector? randomVector,
+    Node_Compare? compare,
+    Node_BooleanToFloat? booleanToFloat,
+    Node_MapRange? mapRange,
+    Node_Deg2Rad? deg2Rad,
+    Node_Rad2Deg? rad2Deg,
+    Node_ColorFromRGBA? colorFromRGBA,
+    Node_ColorToRGBA? colorToRGBA,
+    Node_ColorMix? colorMix,
+    Node_ShaderInput? shaderInput,
+    Node_ShaderOutput? shaderOutput,
     Node_GeneratorInput? generatorInput,
     Node_GeneratorOutput? generatorOutput,
     Node_Merge? merge,
@@ -9259,20 +10850,38 @@ class Node extends $pb.GeneratedMessage {
     Node_MakeFace? makeFace,
     Node_BoundingBox? boundingBox,
     Node_Index? index,
-    Node_Math? math,
-    Node_VectorMath? vectorMath,
-    Node_TrigMath? trigMath,
-    Node_Expression? expression,
-    Node_MathConstant? mathConstant,
-    Node_MathRound? mathRound,
-    Node_CombineXY? combineXY,
-    Node_SeparateXY? separateXY,
-    Node_Polar? polar,
-    Node_RandomFloat? randomFloat,
-    Node_RandomVector? randomVector,
   }) {
     final result = create();
     if (id != null) result.id = id;
+    if (math != null) result.math = math;
+    if (vectorMath != null) result.vectorMath = vectorMath;
+    if (trigMath != null) result.trigMath = trigMath;
+    if (expression != null) result.expression = expression;
+    if (mathConstant != null) result.mathConstant = mathConstant;
+    if (mathRound != null) result.mathRound = mathRound;
+    if (combineXY != null) result.combineXY = combineXY;
+    if (separateXY != null) result.separateXY = separateXY;
+    if (polar != null) result.polar = polar;
+    if (wrap != null) result.wrap = wrap;
+    if (wrapVector != null) result.wrapVector = wrapVector;
+    if (abs != null) result.abs = abs;
+    if (absVector != null) result.absVector = absVector;
+    if (sign != null) result.sign = sign;
+    if (signVector != null) result.signVector = signVector;
+    if (rotateVector != null) result.rotateVector = rotateVector;
+    if (vectorMagnitude != null) result.vectorMagnitude = vectorMagnitude;
+    if (randomFloat != null) result.randomFloat = randomFloat;
+    if (randomVector != null) result.randomVector = randomVector;
+    if (compare != null) result.compare = compare;
+    if (booleanToFloat != null) result.booleanToFloat = booleanToFloat;
+    if (mapRange != null) result.mapRange = mapRange;
+    if (deg2Rad != null) result.deg2Rad = deg2Rad;
+    if (rad2Deg != null) result.rad2Deg = rad2Deg;
+    if (colorFromRGBA != null) result.colorFromRGBA = colorFromRGBA;
+    if (colorToRGBA != null) result.colorToRGBA = colorToRGBA;
+    if (colorMix != null) result.colorMix = colorMix;
+    if (shaderInput != null) result.shaderInput = shaderInput;
+    if (shaderOutput != null) result.shaderOutput = shaderOutput;
     if (generatorInput != null) result.generatorInput = generatorInput;
     if (generatorOutput != null) result.generatorOutput = generatorOutput;
     if (merge != null) result.merge = merge;
@@ -9284,17 +10893,6 @@ class Node extends $pb.GeneratedMessage {
     if (makeFace != null) result.makeFace = makeFace;
     if (boundingBox != null) result.boundingBox = boundingBox;
     if (index != null) result.index = index;
-    if (math != null) result.math = math;
-    if (vectorMath != null) result.vectorMath = vectorMath;
-    if (trigMath != null) result.trigMath = trigMath;
-    if (expression != null) result.expression = expression;
-    if (mathConstant != null) result.mathConstant = mathConstant;
-    if (mathRound != null) result.mathRound = mathRound;
-    if (combineXY != null) result.combineXY = combineXY;
-    if (separateXY != null) result.separateXY = separateXY;
-    if (polar != null) result.polar = polar;
-    if (randomFloat != null) result.randomFloat = randomFloat;
-    if (randomVector != null) result.randomVector = randomVector;
     return result;
   }
 
@@ -9308,28 +10906,46 @@ class Node extends $pb.GeneratedMessage {
       create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Node_Kind> _Node_KindByTag = {
-    10: Node_Kind.generatorInput,
-    11: Node_Kind.generatorOutput,
-    12: Node_Kind.merge,
-    13: Node_Kind.vertex,
-    14: Node_Kind.rectangle,
-    15: Node_Kind.array,
-    16: Node_Kind.transform,
-    17: Node_Kind.connectVertices,
-    18: Node_Kind.makeFace,
-    19: Node_Kind.boundingBox,
-    20: Node_Kind.index_,
-    21: Node_Kind.math,
-    22: Node_Kind.vectorMath,
-    23: Node_Kind.trigMath,
-    24: Node_Kind.expression,
-    25: Node_Kind.mathConstant,
-    26: Node_Kind.mathRound,
-    27: Node_Kind.combineXY,
-    28: Node_Kind.separateXY,
-    29: Node_Kind.polar,
-    30: Node_Kind.randomFloat,
-    31: Node_Kind.randomVector,
+    10: Node_Kind.math,
+    11: Node_Kind.vectorMath,
+    12: Node_Kind.trigMath,
+    13: Node_Kind.expression,
+    14: Node_Kind.mathConstant,
+    15: Node_Kind.mathRound,
+    16: Node_Kind.combineXY,
+    17: Node_Kind.separateXY,
+    18: Node_Kind.polar,
+    19: Node_Kind.wrap,
+    20: Node_Kind.wrapVector,
+    21: Node_Kind.abs,
+    22: Node_Kind.absVector,
+    23: Node_Kind.sign,
+    24: Node_Kind.signVector,
+    25: Node_Kind.rotateVector,
+    26: Node_Kind.vectorMagnitude,
+    27: Node_Kind.randomFloat,
+    28: Node_Kind.randomVector,
+    29: Node_Kind.compare,
+    30: Node_Kind.booleanToFloat,
+    31: Node_Kind.mapRange,
+    32: Node_Kind.deg2Rad,
+    33: Node_Kind.rad2Deg,
+    34: Node_Kind.colorFromRGBA,
+    35: Node_Kind.colorToRGBA,
+    36: Node_Kind.colorMix,
+    37: Node_Kind.shaderInput,
+    38: Node_Kind.shaderOutput,
+    39: Node_Kind.generatorInput,
+    40: Node_Kind.generatorOutput,
+    41: Node_Kind.merge,
+    42: Node_Kind.vertex,
+    43: Node_Kind.rectangle,
+    44: Node_Kind.array,
+    45: Node_Kind.transform,
+    46: Node_Kind.connectVertices,
+    47: Node_Kind.makeFace,
+    48: Node_Kind.boundingBox,
+    49: Node_Kind.index_,
     0: Node_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -9358,54 +10974,108 @@ class Node extends $pb.GeneratedMessage {
       28,
       29,
       30,
-      31
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
     ])
     ..aOM<$1.NodeId>(1, _omitFieldNames ? '' : 'id',
         subBuilder: $1.NodeId.create)
-    ..aOM<Node_GeneratorInput>(10, _omitFieldNames ? '' : 'generatorInput',
-        subBuilder: Node_GeneratorInput.create)
-    ..aOM<Node_GeneratorOutput>(11, _omitFieldNames ? '' : 'generatorOutput',
-        subBuilder: Node_GeneratorOutput.create)
-    ..aOM<Node_Merge>(12, _omitFieldNames ? '' : 'merge',
-        subBuilder: Node_Merge.create)
-    ..aOM<Node_Vertex>(13, _omitFieldNames ? '' : 'vertex',
-        subBuilder: Node_Vertex.create)
-    ..aOM<Node_Rectangle>(14, _omitFieldNames ? '' : 'rectangle',
-        subBuilder: Node_Rectangle.create)
-    ..aOM<Node_Array>(15, _omitFieldNames ? '' : 'array',
-        subBuilder: Node_Array.create)
-    ..aOM<Node_Transform>(16, _omitFieldNames ? '' : 'transform',
-        subBuilder: Node_Transform.create)
-    ..aOM<Node_ConnectVertices>(17, _omitFieldNames ? '' : 'connectVertices',
-        subBuilder: Node_ConnectVertices.create)
-    ..aOM<Node_MakeFace>(18, _omitFieldNames ? '' : 'makeFace',
-        subBuilder: Node_MakeFace.create)
-    ..aOM<Node_BoundingBox>(19, _omitFieldNames ? '' : 'boundingBox',
-        subBuilder: Node_BoundingBox.create)
-    ..aOM<Node_Index>(20, _omitFieldNames ? '' : 'index',
-        subBuilder: Node_Index.create)
-    ..aOM<Node_Math>(21, _omitFieldNames ? '' : 'math',
+    ..aOM<Node_Math>(10, _omitFieldNames ? '' : 'math',
         subBuilder: Node_Math.create)
-    ..aOM<Node_VectorMath>(22, _omitFieldNames ? '' : 'vectorMath',
+    ..aOM<Node_VectorMath>(11, _omitFieldNames ? '' : 'vectorMath',
         subBuilder: Node_VectorMath.create)
-    ..aOM<Node_TrigMath>(23, _omitFieldNames ? '' : 'trigMath',
+    ..aOM<Node_TrigMath>(12, _omitFieldNames ? '' : 'trigMath',
         subBuilder: Node_TrigMath.create)
-    ..aOM<Node_Expression>(24, _omitFieldNames ? '' : 'expression',
+    ..aOM<Node_Expression>(13, _omitFieldNames ? '' : 'expression',
         subBuilder: Node_Expression.create)
-    ..aOM<Node_MathConstant>(25, _omitFieldNames ? '' : 'mathConstant',
+    ..aOM<Node_MathConstant>(14, _omitFieldNames ? '' : 'mathConstant',
         subBuilder: Node_MathConstant.create)
-    ..aOM<Node_MathRound>(26, _omitFieldNames ? '' : 'mathRound',
+    ..aOM<Node_MathRound>(15, _omitFieldNames ? '' : 'mathRound',
         subBuilder: Node_MathRound.create)
-    ..aOM<Node_CombineXY>(27, _omitFieldNames ? '' : 'combineXY',
+    ..aOM<Node_CombineXY>(16, _omitFieldNames ? '' : 'combineXY',
         subBuilder: Node_CombineXY.create)
-    ..aOM<Node_SeparateXY>(28, _omitFieldNames ? '' : 'separateXY',
+    ..aOM<Node_SeparateXY>(17, _omitFieldNames ? '' : 'separateXY',
         subBuilder: Node_SeparateXY.create)
-    ..aOM<Node_Polar>(29, _omitFieldNames ? '' : 'polar',
+    ..aOM<Node_Polar>(18, _omitFieldNames ? '' : 'polar',
         subBuilder: Node_Polar.create)
-    ..aOM<Node_RandomFloat>(30, _omitFieldNames ? '' : 'randomFloat',
+    ..aOM<Node_Wrap>(19, _omitFieldNames ? '' : 'wrap',
+        subBuilder: Node_Wrap.create)
+    ..aOM<Node_WrapVector>(20, _omitFieldNames ? '' : 'wrapVector',
+        subBuilder: Node_WrapVector.create)
+    ..aOM<Node_Abs>(21, _omitFieldNames ? '' : 'abs',
+        subBuilder: Node_Abs.create)
+    ..aOM<Node_AbsVector>(22, _omitFieldNames ? '' : 'absVector',
+        subBuilder: Node_AbsVector.create)
+    ..aOM<Node_Sign>(23, _omitFieldNames ? '' : 'sign',
+        subBuilder: Node_Sign.create)
+    ..aOM<Node_SignVector>(24, _omitFieldNames ? '' : 'signVector',
+        subBuilder: Node_SignVector.create)
+    ..aOM<Node_RotateVector>(25, _omitFieldNames ? '' : 'rotateVector',
+        subBuilder: Node_RotateVector.create)
+    ..aOM<Node_VectorMagnitude>(26, _omitFieldNames ? '' : 'vectorMagnitude',
+        subBuilder: Node_VectorMagnitude.create)
+    ..aOM<Node_RandomFloat>(27, _omitFieldNames ? '' : 'randomFloat',
         subBuilder: Node_RandomFloat.create)
-    ..aOM<Node_RandomVector>(31, _omitFieldNames ? '' : 'randomVector',
+    ..aOM<Node_RandomVector>(28, _omitFieldNames ? '' : 'randomVector',
         subBuilder: Node_RandomVector.create)
+    ..aOM<Node_Compare>(29, _omitFieldNames ? '' : 'compare',
+        subBuilder: Node_Compare.create)
+    ..aOM<Node_BooleanToFloat>(30, _omitFieldNames ? '' : 'booleanToFloat',
+        subBuilder: Node_BooleanToFloat.create)
+    ..aOM<Node_MapRange>(31, _omitFieldNames ? '' : 'mapRange',
+        subBuilder: Node_MapRange.create)
+    ..aOM<Node_Deg2Rad>(32, _omitFieldNames ? '' : 'deg2Rad',
+        protoName: 'deg_2_rad', subBuilder: Node_Deg2Rad.create)
+    ..aOM<Node_Rad2Deg>(33, _omitFieldNames ? '' : 'rad2Deg',
+        protoName: 'rad_2_deg', subBuilder: Node_Rad2Deg.create)
+    ..aOM<Node_ColorFromRGBA>(34, _omitFieldNames ? '' : 'colorFromRGBA',
+        subBuilder: Node_ColorFromRGBA.create)
+    ..aOM<Node_ColorToRGBA>(35, _omitFieldNames ? '' : 'colorToRGBA',
+        subBuilder: Node_ColorToRGBA.create)
+    ..aOM<Node_ColorMix>(36, _omitFieldNames ? '' : 'colorMix',
+        subBuilder: Node_ColorMix.create)
+    ..aOM<Node_ShaderInput>(37, _omitFieldNames ? '' : 'shaderInput',
+        subBuilder: Node_ShaderInput.create)
+    ..aOM<Node_ShaderOutput>(38, _omitFieldNames ? '' : 'shaderOutput',
+        subBuilder: Node_ShaderOutput.create)
+    ..aOM<Node_GeneratorInput>(39, _omitFieldNames ? '' : 'generatorInput',
+        subBuilder: Node_GeneratorInput.create)
+    ..aOM<Node_GeneratorOutput>(40, _omitFieldNames ? '' : 'generatorOutput',
+        subBuilder: Node_GeneratorOutput.create)
+    ..aOM<Node_Merge>(41, _omitFieldNames ? '' : 'merge',
+        subBuilder: Node_Merge.create)
+    ..aOM<Node_Vertex>(42, _omitFieldNames ? '' : 'vertex',
+        subBuilder: Node_Vertex.create)
+    ..aOM<Node_Rectangle>(43, _omitFieldNames ? '' : 'rectangle',
+        subBuilder: Node_Rectangle.create)
+    ..aOM<Node_Array>(44, _omitFieldNames ? '' : 'array',
+        subBuilder: Node_Array.create)
+    ..aOM<Node_Transform>(45, _omitFieldNames ? '' : 'transform',
+        subBuilder: Node_Transform.create)
+    ..aOM<Node_ConnectVertices>(46, _omitFieldNames ? '' : 'connectVertices',
+        subBuilder: Node_ConnectVertices.create)
+    ..aOM<Node_MakeFace>(47, _omitFieldNames ? '' : 'makeFace',
+        subBuilder: Node_MakeFace.create)
+    ..aOM<Node_BoundingBox>(48, _omitFieldNames ? '' : 'boundingBox',
+        subBuilder: Node_BoundingBox.create)
+    ..aOM<Node_Index>(49, _omitFieldNames ? '' : 'index',
+        subBuilder: Node_Index.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -9448,6 +11118,24 @@ class Node extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(37)
+  @$pb.TagNumber(38)
+  @$pb.TagNumber(39)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
+  @$pb.TagNumber(43)
+  @$pb.TagNumber(44)
+  @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
+  @$pb.TagNumber(49)
   Node_Kind whichKind() => _Node_KindByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
@@ -9471,6 +11159,24 @@ class Node extends $pb.GeneratedMessage {
   @$pb.TagNumber(29)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(33)
+  @$pb.TagNumber(34)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(37)
+  @$pb.TagNumber(38)
+  @$pb.TagNumber(39)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
+  @$pb.TagNumber(42)
+  @$pb.TagNumber(43)
+  @$pb.TagNumber(44)
+  @$pb.TagNumber(45)
+  @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
+  @$pb.TagNumber(49)
   void clearKind() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -9485,246 +11191,444 @@ class Node extends $pb.GeneratedMessage {
   $1.NodeId ensureId() => $_ensure(0);
 
   @$pb.TagNumber(10)
-  Node_GeneratorInput get generatorInput => $_getN(1);
+  Node_Math get math => $_getN(1);
   @$pb.TagNumber(10)
-  set generatorInput(Node_GeneratorInput value) => $_setField(10, value);
+  set math(Node_Math value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasGeneratorInput() => $_has(1);
+  $core.bool hasMath() => $_has(1);
   @$pb.TagNumber(10)
-  void clearGeneratorInput() => $_clearField(10);
+  void clearMath() => $_clearField(10);
   @$pb.TagNumber(10)
-  Node_GeneratorInput ensureGeneratorInput() => $_ensure(1);
+  Node_Math ensureMath() => $_ensure(1);
 
   @$pb.TagNumber(11)
-  Node_GeneratorOutput get generatorOutput => $_getN(2);
+  Node_VectorMath get vectorMath => $_getN(2);
   @$pb.TagNumber(11)
-  set generatorOutput(Node_GeneratorOutput value) => $_setField(11, value);
+  set vectorMath(Node_VectorMath value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasGeneratorOutput() => $_has(2);
+  $core.bool hasVectorMath() => $_has(2);
   @$pb.TagNumber(11)
-  void clearGeneratorOutput() => $_clearField(11);
+  void clearVectorMath() => $_clearField(11);
   @$pb.TagNumber(11)
-  Node_GeneratorOutput ensureGeneratorOutput() => $_ensure(2);
+  Node_VectorMath ensureVectorMath() => $_ensure(2);
 
   @$pb.TagNumber(12)
-  Node_Merge get merge => $_getN(3);
+  Node_TrigMath get trigMath => $_getN(3);
   @$pb.TagNumber(12)
-  set merge(Node_Merge value) => $_setField(12, value);
+  set trigMath(Node_TrigMath value) => $_setField(12, value);
   @$pb.TagNumber(12)
-  $core.bool hasMerge() => $_has(3);
+  $core.bool hasTrigMath() => $_has(3);
   @$pb.TagNumber(12)
-  void clearMerge() => $_clearField(12);
+  void clearTrigMath() => $_clearField(12);
   @$pb.TagNumber(12)
-  Node_Merge ensureMerge() => $_ensure(3);
+  Node_TrigMath ensureTrigMath() => $_ensure(3);
 
   @$pb.TagNumber(13)
-  Node_Vertex get vertex => $_getN(4);
+  Node_Expression get expression => $_getN(4);
   @$pb.TagNumber(13)
-  set vertex(Node_Vertex value) => $_setField(13, value);
+  set expression(Node_Expression value) => $_setField(13, value);
   @$pb.TagNumber(13)
-  $core.bool hasVertex() => $_has(4);
+  $core.bool hasExpression() => $_has(4);
   @$pb.TagNumber(13)
-  void clearVertex() => $_clearField(13);
+  void clearExpression() => $_clearField(13);
   @$pb.TagNumber(13)
-  Node_Vertex ensureVertex() => $_ensure(4);
+  Node_Expression ensureExpression() => $_ensure(4);
 
   @$pb.TagNumber(14)
-  Node_Rectangle get rectangle => $_getN(5);
+  Node_MathConstant get mathConstant => $_getN(5);
   @$pb.TagNumber(14)
-  set rectangle(Node_Rectangle value) => $_setField(14, value);
+  set mathConstant(Node_MathConstant value) => $_setField(14, value);
   @$pb.TagNumber(14)
-  $core.bool hasRectangle() => $_has(5);
+  $core.bool hasMathConstant() => $_has(5);
   @$pb.TagNumber(14)
-  void clearRectangle() => $_clearField(14);
+  void clearMathConstant() => $_clearField(14);
   @$pb.TagNumber(14)
-  Node_Rectangle ensureRectangle() => $_ensure(5);
+  Node_MathConstant ensureMathConstant() => $_ensure(5);
 
   @$pb.TagNumber(15)
-  Node_Array get array => $_getN(6);
+  Node_MathRound get mathRound => $_getN(6);
   @$pb.TagNumber(15)
-  set array(Node_Array value) => $_setField(15, value);
+  set mathRound(Node_MathRound value) => $_setField(15, value);
   @$pb.TagNumber(15)
-  $core.bool hasArray() => $_has(6);
+  $core.bool hasMathRound() => $_has(6);
   @$pb.TagNumber(15)
-  void clearArray() => $_clearField(15);
+  void clearMathRound() => $_clearField(15);
   @$pb.TagNumber(15)
-  Node_Array ensureArray() => $_ensure(6);
+  Node_MathRound ensureMathRound() => $_ensure(6);
 
   @$pb.TagNumber(16)
-  Node_Transform get transform => $_getN(7);
+  Node_CombineXY get combineXY => $_getN(7);
   @$pb.TagNumber(16)
-  set transform(Node_Transform value) => $_setField(16, value);
+  set combineXY(Node_CombineXY value) => $_setField(16, value);
   @$pb.TagNumber(16)
-  $core.bool hasTransform() => $_has(7);
+  $core.bool hasCombineXY() => $_has(7);
   @$pb.TagNumber(16)
-  void clearTransform() => $_clearField(16);
+  void clearCombineXY() => $_clearField(16);
   @$pb.TagNumber(16)
-  Node_Transform ensureTransform() => $_ensure(7);
+  Node_CombineXY ensureCombineXY() => $_ensure(7);
 
   @$pb.TagNumber(17)
-  Node_ConnectVertices get connectVertices => $_getN(8);
+  Node_SeparateXY get separateXY => $_getN(8);
   @$pb.TagNumber(17)
-  set connectVertices(Node_ConnectVertices value) => $_setField(17, value);
+  set separateXY(Node_SeparateXY value) => $_setField(17, value);
   @$pb.TagNumber(17)
-  $core.bool hasConnectVertices() => $_has(8);
+  $core.bool hasSeparateXY() => $_has(8);
   @$pb.TagNumber(17)
-  void clearConnectVertices() => $_clearField(17);
+  void clearSeparateXY() => $_clearField(17);
   @$pb.TagNumber(17)
-  Node_ConnectVertices ensureConnectVertices() => $_ensure(8);
+  Node_SeparateXY ensureSeparateXY() => $_ensure(8);
 
   @$pb.TagNumber(18)
-  Node_MakeFace get makeFace => $_getN(9);
+  Node_Polar get polar => $_getN(9);
   @$pb.TagNumber(18)
-  set makeFace(Node_MakeFace value) => $_setField(18, value);
+  set polar(Node_Polar value) => $_setField(18, value);
   @$pb.TagNumber(18)
-  $core.bool hasMakeFace() => $_has(9);
+  $core.bool hasPolar() => $_has(9);
   @$pb.TagNumber(18)
-  void clearMakeFace() => $_clearField(18);
+  void clearPolar() => $_clearField(18);
   @$pb.TagNumber(18)
-  Node_MakeFace ensureMakeFace() => $_ensure(9);
+  Node_Polar ensurePolar() => $_ensure(9);
 
   @$pb.TagNumber(19)
-  Node_BoundingBox get boundingBox => $_getN(10);
+  Node_Wrap get wrap => $_getN(10);
   @$pb.TagNumber(19)
-  set boundingBox(Node_BoundingBox value) => $_setField(19, value);
+  set wrap(Node_Wrap value) => $_setField(19, value);
   @$pb.TagNumber(19)
-  $core.bool hasBoundingBox() => $_has(10);
+  $core.bool hasWrap() => $_has(10);
   @$pb.TagNumber(19)
-  void clearBoundingBox() => $_clearField(19);
+  void clearWrap() => $_clearField(19);
   @$pb.TagNumber(19)
-  Node_BoundingBox ensureBoundingBox() => $_ensure(10);
+  Node_Wrap ensureWrap() => $_ensure(10);
 
   @$pb.TagNumber(20)
-  Node_Index get index => $_getN(11);
+  Node_WrapVector get wrapVector => $_getN(11);
   @$pb.TagNumber(20)
-  set index(Node_Index value) => $_setField(20, value);
+  set wrapVector(Node_WrapVector value) => $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasIndex() => $_has(11);
+  $core.bool hasWrapVector() => $_has(11);
   @$pb.TagNumber(20)
-  void clearIndex() => $_clearField(20);
+  void clearWrapVector() => $_clearField(20);
   @$pb.TagNumber(20)
-  Node_Index ensureIndex() => $_ensure(11);
+  Node_WrapVector ensureWrapVector() => $_ensure(11);
 
   @$pb.TagNumber(21)
-  Node_Math get math => $_getN(12);
+  Node_Abs get abs => $_getN(12);
   @$pb.TagNumber(21)
-  set math(Node_Math value) => $_setField(21, value);
+  set abs(Node_Abs value) => $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasMath() => $_has(12);
+  $core.bool hasAbs() => $_has(12);
   @$pb.TagNumber(21)
-  void clearMath() => $_clearField(21);
+  void clearAbs() => $_clearField(21);
   @$pb.TagNumber(21)
-  Node_Math ensureMath() => $_ensure(12);
+  Node_Abs ensureAbs() => $_ensure(12);
 
   @$pb.TagNumber(22)
-  Node_VectorMath get vectorMath => $_getN(13);
+  Node_AbsVector get absVector => $_getN(13);
   @$pb.TagNumber(22)
-  set vectorMath(Node_VectorMath value) => $_setField(22, value);
+  set absVector(Node_AbsVector value) => $_setField(22, value);
   @$pb.TagNumber(22)
-  $core.bool hasVectorMath() => $_has(13);
+  $core.bool hasAbsVector() => $_has(13);
   @$pb.TagNumber(22)
-  void clearVectorMath() => $_clearField(22);
+  void clearAbsVector() => $_clearField(22);
   @$pb.TagNumber(22)
-  Node_VectorMath ensureVectorMath() => $_ensure(13);
+  Node_AbsVector ensureAbsVector() => $_ensure(13);
 
   @$pb.TagNumber(23)
-  Node_TrigMath get trigMath => $_getN(14);
+  Node_Sign get sign => $_getN(14);
   @$pb.TagNumber(23)
-  set trigMath(Node_TrigMath value) => $_setField(23, value);
+  set sign(Node_Sign value) => $_setField(23, value);
   @$pb.TagNumber(23)
-  $core.bool hasTrigMath() => $_has(14);
+  $core.bool hasSign() => $_has(14);
   @$pb.TagNumber(23)
-  void clearTrigMath() => $_clearField(23);
+  void clearSign() => $_clearField(23);
   @$pb.TagNumber(23)
-  Node_TrigMath ensureTrigMath() => $_ensure(14);
+  Node_Sign ensureSign() => $_ensure(14);
 
   @$pb.TagNumber(24)
-  Node_Expression get expression => $_getN(15);
+  Node_SignVector get signVector => $_getN(15);
   @$pb.TagNumber(24)
-  set expression(Node_Expression value) => $_setField(24, value);
+  set signVector(Node_SignVector value) => $_setField(24, value);
   @$pb.TagNumber(24)
-  $core.bool hasExpression() => $_has(15);
+  $core.bool hasSignVector() => $_has(15);
   @$pb.TagNumber(24)
-  void clearExpression() => $_clearField(24);
+  void clearSignVector() => $_clearField(24);
   @$pb.TagNumber(24)
-  Node_Expression ensureExpression() => $_ensure(15);
+  Node_SignVector ensureSignVector() => $_ensure(15);
 
   @$pb.TagNumber(25)
-  Node_MathConstant get mathConstant => $_getN(16);
+  Node_RotateVector get rotateVector => $_getN(16);
   @$pb.TagNumber(25)
-  set mathConstant(Node_MathConstant value) => $_setField(25, value);
+  set rotateVector(Node_RotateVector value) => $_setField(25, value);
   @$pb.TagNumber(25)
-  $core.bool hasMathConstant() => $_has(16);
+  $core.bool hasRotateVector() => $_has(16);
   @$pb.TagNumber(25)
-  void clearMathConstant() => $_clearField(25);
+  void clearRotateVector() => $_clearField(25);
   @$pb.TagNumber(25)
-  Node_MathConstant ensureMathConstant() => $_ensure(16);
+  Node_RotateVector ensureRotateVector() => $_ensure(16);
 
   @$pb.TagNumber(26)
-  Node_MathRound get mathRound => $_getN(17);
+  Node_VectorMagnitude get vectorMagnitude => $_getN(17);
   @$pb.TagNumber(26)
-  set mathRound(Node_MathRound value) => $_setField(26, value);
+  set vectorMagnitude(Node_VectorMagnitude value) => $_setField(26, value);
   @$pb.TagNumber(26)
-  $core.bool hasMathRound() => $_has(17);
+  $core.bool hasVectorMagnitude() => $_has(17);
   @$pb.TagNumber(26)
-  void clearMathRound() => $_clearField(26);
+  void clearVectorMagnitude() => $_clearField(26);
   @$pb.TagNumber(26)
-  Node_MathRound ensureMathRound() => $_ensure(17);
+  Node_VectorMagnitude ensureVectorMagnitude() => $_ensure(17);
 
   @$pb.TagNumber(27)
-  Node_CombineXY get combineXY => $_getN(18);
+  Node_RandomFloat get randomFloat => $_getN(18);
   @$pb.TagNumber(27)
-  set combineXY(Node_CombineXY value) => $_setField(27, value);
+  set randomFloat(Node_RandomFloat value) => $_setField(27, value);
   @$pb.TagNumber(27)
-  $core.bool hasCombineXY() => $_has(18);
+  $core.bool hasRandomFloat() => $_has(18);
   @$pb.TagNumber(27)
-  void clearCombineXY() => $_clearField(27);
+  void clearRandomFloat() => $_clearField(27);
   @$pb.TagNumber(27)
-  Node_CombineXY ensureCombineXY() => $_ensure(18);
+  Node_RandomFloat ensureRandomFloat() => $_ensure(18);
 
   @$pb.TagNumber(28)
-  Node_SeparateXY get separateXY => $_getN(19);
+  Node_RandomVector get randomVector => $_getN(19);
   @$pb.TagNumber(28)
-  set separateXY(Node_SeparateXY value) => $_setField(28, value);
+  set randomVector(Node_RandomVector value) => $_setField(28, value);
   @$pb.TagNumber(28)
-  $core.bool hasSeparateXY() => $_has(19);
+  $core.bool hasRandomVector() => $_has(19);
   @$pb.TagNumber(28)
-  void clearSeparateXY() => $_clearField(28);
+  void clearRandomVector() => $_clearField(28);
   @$pb.TagNumber(28)
-  Node_SeparateXY ensureSeparateXY() => $_ensure(19);
+  Node_RandomVector ensureRandomVector() => $_ensure(19);
 
   @$pb.TagNumber(29)
-  Node_Polar get polar => $_getN(20);
+  Node_Compare get compare => $_getN(20);
   @$pb.TagNumber(29)
-  set polar(Node_Polar value) => $_setField(29, value);
+  set compare(Node_Compare value) => $_setField(29, value);
   @$pb.TagNumber(29)
-  $core.bool hasPolar() => $_has(20);
+  $core.bool hasCompare() => $_has(20);
   @$pb.TagNumber(29)
-  void clearPolar() => $_clearField(29);
+  void clearCompare() => $_clearField(29);
   @$pb.TagNumber(29)
-  Node_Polar ensurePolar() => $_ensure(20);
+  Node_Compare ensureCompare() => $_ensure(20);
 
   @$pb.TagNumber(30)
-  Node_RandomFloat get randomFloat => $_getN(21);
+  Node_BooleanToFloat get booleanToFloat => $_getN(21);
   @$pb.TagNumber(30)
-  set randomFloat(Node_RandomFloat value) => $_setField(30, value);
+  set booleanToFloat(Node_BooleanToFloat value) => $_setField(30, value);
   @$pb.TagNumber(30)
-  $core.bool hasRandomFloat() => $_has(21);
+  $core.bool hasBooleanToFloat() => $_has(21);
   @$pb.TagNumber(30)
-  void clearRandomFloat() => $_clearField(30);
+  void clearBooleanToFloat() => $_clearField(30);
   @$pb.TagNumber(30)
-  Node_RandomFloat ensureRandomFloat() => $_ensure(21);
+  Node_BooleanToFloat ensureBooleanToFloat() => $_ensure(21);
 
   @$pb.TagNumber(31)
-  Node_RandomVector get randomVector => $_getN(22);
+  Node_MapRange get mapRange => $_getN(22);
   @$pb.TagNumber(31)
-  set randomVector(Node_RandomVector value) => $_setField(31, value);
+  set mapRange(Node_MapRange value) => $_setField(31, value);
   @$pb.TagNumber(31)
-  $core.bool hasRandomVector() => $_has(22);
+  $core.bool hasMapRange() => $_has(22);
   @$pb.TagNumber(31)
-  void clearRandomVector() => $_clearField(31);
+  void clearMapRange() => $_clearField(31);
   @$pb.TagNumber(31)
-  Node_RandomVector ensureRandomVector() => $_ensure(22);
+  Node_MapRange ensureMapRange() => $_ensure(22);
+
+  @$pb.TagNumber(32)
+  Node_Deg2Rad get deg2Rad => $_getN(23);
+  @$pb.TagNumber(32)
+  set deg2Rad(Node_Deg2Rad value) => $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasDeg2Rad() => $_has(23);
+  @$pb.TagNumber(32)
+  void clearDeg2Rad() => $_clearField(32);
+  @$pb.TagNumber(32)
+  Node_Deg2Rad ensureDeg2Rad() => $_ensure(23);
+
+  @$pb.TagNumber(33)
+  Node_Rad2Deg get rad2Deg => $_getN(24);
+  @$pb.TagNumber(33)
+  set rad2Deg(Node_Rad2Deg value) => $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasRad2Deg() => $_has(24);
+  @$pb.TagNumber(33)
+  void clearRad2Deg() => $_clearField(33);
+  @$pb.TagNumber(33)
+  Node_Rad2Deg ensureRad2Deg() => $_ensure(24);
+
+  @$pb.TagNumber(34)
+  Node_ColorFromRGBA get colorFromRGBA => $_getN(25);
+  @$pb.TagNumber(34)
+  set colorFromRGBA(Node_ColorFromRGBA value) => $_setField(34, value);
+  @$pb.TagNumber(34)
+  $core.bool hasColorFromRGBA() => $_has(25);
+  @$pb.TagNumber(34)
+  void clearColorFromRGBA() => $_clearField(34);
+  @$pb.TagNumber(34)
+  Node_ColorFromRGBA ensureColorFromRGBA() => $_ensure(25);
+
+  @$pb.TagNumber(35)
+  Node_ColorToRGBA get colorToRGBA => $_getN(26);
+  @$pb.TagNumber(35)
+  set colorToRGBA(Node_ColorToRGBA value) => $_setField(35, value);
+  @$pb.TagNumber(35)
+  $core.bool hasColorToRGBA() => $_has(26);
+  @$pb.TagNumber(35)
+  void clearColorToRGBA() => $_clearField(35);
+  @$pb.TagNumber(35)
+  Node_ColorToRGBA ensureColorToRGBA() => $_ensure(26);
+
+  @$pb.TagNumber(36)
+  Node_ColorMix get colorMix => $_getN(27);
+  @$pb.TagNumber(36)
+  set colorMix(Node_ColorMix value) => $_setField(36, value);
+  @$pb.TagNumber(36)
+  $core.bool hasColorMix() => $_has(27);
+  @$pb.TagNumber(36)
+  void clearColorMix() => $_clearField(36);
+  @$pb.TagNumber(36)
+  Node_ColorMix ensureColorMix() => $_ensure(27);
+
+  @$pb.TagNumber(37)
+  Node_ShaderInput get shaderInput => $_getN(28);
+  @$pb.TagNumber(37)
+  set shaderInput(Node_ShaderInput value) => $_setField(37, value);
+  @$pb.TagNumber(37)
+  $core.bool hasShaderInput() => $_has(28);
+  @$pb.TagNumber(37)
+  void clearShaderInput() => $_clearField(37);
+  @$pb.TagNumber(37)
+  Node_ShaderInput ensureShaderInput() => $_ensure(28);
+
+  @$pb.TagNumber(38)
+  Node_ShaderOutput get shaderOutput => $_getN(29);
+  @$pb.TagNumber(38)
+  set shaderOutput(Node_ShaderOutput value) => $_setField(38, value);
+  @$pb.TagNumber(38)
+  $core.bool hasShaderOutput() => $_has(29);
+  @$pb.TagNumber(38)
+  void clearShaderOutput() => $_clearField(38);
+  @$pb.TagNumber(38)
+  Node_ShaderOutput ensureShaderOutput() => $_ensure(29);
+
+  @$pb.TagNumber(39)
+  Node_GeneratorInput get generatorInput => $_getN(30);
+  @$pb.TagNumber(39)
+  set generatorInput(Node_GeneratorInput value) => $_setField(39, value);
+  @$pb.TagNumber(39)
+  $core.bool hasGeneratorInput() => $_has(30);
+  @$pb.TagNumber(39)
+  void clearGeneratorInput() => $_clearField(39);
+  @$pb.TagNumber(39)
+  Node_GeneratorInput ensureGeneratorInput() => $_ensure(30);
+
+  @$pb.TagNumber(40)
+  Node_GeneratorOutput get generatorOutput => $_getN(31);
+  @$pb.TagNumber(40)
+  set generatorOutput(Node_GeneratorOutput value) => $_setField(40, value);
+  @$pb.TagNumber(40)
+  $core.bool hasGeneratorOutput() => $_has(31);
+  @$pb.TagNumber(40)
+  void clearGeneratorOutput() => $_clearField(40);
+  @$pb.TagNumber(40)
+  Node_GeneratorOutput ensureGeneratorOutput() => $_ensure(31);
+
+  @$pb.TagNumber(41)
+  Node_Merge get merge => $_getN(32);
+  @$pb.TagNumber(41)
+  set merge(Node_Merge value) => $_setField(41, value);
+  @$pb.TagNumber(41)
+  $core.bool hasMerge() => $_has(32);
+  @$pb.TagNumber(41)
+  void clearMerge() => $_clearField(41);
+  @$pb.TagNumber(41)
+  Node_Merge ensureMerge() => $_ensure(32);
+
+  @$pb.TagNumber(42)
+  Node_Vertex get vertex => $_getN(33);
+  @$pb.TagNumber(42)
+  set vertex(Node_Vertex value) => $_setField(42, value);
+  @$pb.TagNumber(42)
+  $core.bool hasVertex() => $_has(33);
+  @$pb.TagNumber(42)
+  void clearVertex() => $_clearField(42);
+  @$pb.TagNumber(42)
+  Node_Vertex ensureVertex() => $_ensure(33);
+
+  @$pb.TagNumber(43)
+  Node_Rectangle get rectangle => $_getN(34);
+  @$pb.TagNumber(43)
+  set rectangle(Node_Rectangle value) => $_setField(43, value);
+  @$pb.TagNumber(43)
+  $core.bool hasRectangle() => $_has(34);
+  @$pb.TagNumber(43)
+  void clearRectangle() => $_clearField(43);
+  @$pb.TagNumber(43)
+  Node_Rectangle ensureRectangle() => $_ensure(34);
+
+  @$pb.TagNumber(44)
+  Node_Array get array => $_getN(35);
+  @$pb.TagNumber(44)
+  set array(Node_Array value) => $_setField(44, value);
+  @$pb.TagNumber(44)
+  $core.bool hasArray() => $_has(35);
+  @$pb.TagNumber(44)
+  void clearArray() => $_clearField(44);
+  @$pb.TagNumber(44)
+  Node_Array ensureArray() => $_ensure(35);
+
+  @$pb.TagNumber(45)
+  Node_Transform get transform => $_getN(36);
+  @$pb.TagNumber(45)
+  set transform(Node_Transform value) => $_setField(45, value);
+  @$pb.TagNumber(45)
+  $core.bool hasTransform() => $_has(36);
+  @$pb.TagNumber(45)
+  void clearTransform() => $_clearField(45);
+  @$pb.TagNumber(45)
+  Node_Transform ensureTransform() => $_ensure(36);
+
+  @$pb.TagNumber(46)
+  Node_ConnectVertices get connectVertices => $_getN(37);
+  @$pb.TagNumber(46)
+  set connectVertices(Node_ConnectVertices value) => $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasConnectVertices() => $_has(37);
+  @$pb.TagNumber(46)
+  void clearConnectVertices() => $_clearField(46);
+  @$pb.TagNumber(46)
+  Node_ConnectVertices ensureConnectVertices() => $_ensure(37);
+
+  @$pb.TagNumber(47)
+  Node_MakeFace get makeFace => $_getN(38);
+  @$pb.TagNumber(47)
+  set makeFace(Node_MakeFace value) => $_setField(47, value);
+  @$pb.TagNumber(47)
+  $core.bool hasMakeFace() => $_has(38);
+  @$pb.TagNumber(47)
+  void clearMakeFace() => $_clearField(47);
+  @$pb.TagNumber(47)
+  Node_MakeFace ensureMakeFace() => $_ensure(38);
+
+  @$pb.TagNumber(48)
+  Node_BoundingBox get boundingBox => $_getN(39);
+  @$pb.TagNumber(48)
+  set boundingBox(Node_BoundingBox value) => $_setField(48, value);
+  @$pb.TagNumber(48)
+  $core.bool hasBoundingBox() => $_has(39);
+  @$pb.TagNumber(48)
+  void clearBoundingBox() => $_clearField(48);
+  @$pb.TagNumber(48)
+  Node_BoundingBox ensureBoundingBox() => $_ensure(39);
+
+  @$pb.TagNumber(49)
+  Node_Index get index => $_getN(40);
+  @$pb.TagNumber(49)
+  set index(Node_Index value) => $_setField(49, value);
+  @$pb.TagNumber(49)
+  $core.bool hasIndex() => $_has(40);
+  @$pb.TagNumber(49)
+  void clearIndex() => $_clearField(49);
+  @$pb.TagNumber(49)
+  Node_Index ensureIndex() => $_ensure(40);
 }
 
 const $core.bool _omitFieldNames =

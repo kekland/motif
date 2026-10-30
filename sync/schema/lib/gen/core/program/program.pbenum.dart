@@ -369,6 +369,62 @@ class MathRoundType extends $pb.ProtobufEnum {
   const MathRoundType._(super.value, super.name);
 }
 
+class MathCompareType extends $pb.ProtobufEnum {
+  static const MathCompareType MATH_COMPARE_TYPE_EQUAL =
+      MathCompareType._(0, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_EQUAL');
+  static const MathCompareType MATH_COMPARE_TYPE_NOT_EQUAL =
+      MathCompareType._(1, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_NOT_EQUAL');
+  static const MathCompareType MATH_COMPARE_TYPE_LESS =
+      MathCompareType._(2, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_LESS');
+  static const MathCompareType MATH_COMPARE_TYPE_LESS_OR_EQUAL =
+      MathCompareType._(
+          3, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_LESS_OR_EQUAL');
+  static const MathCompareType MATH_COMPARE_TYPE_GREATER =
+      MathCompareType._(4, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_GREATER');
+  static const MathCompareType MATH_COMPARE_TYPE_GREATER_OR_EQUAL =
+      MathCompareType._(
+          5, _omitEnumNames ? '' : 'MATH_COMPARE_TYPE_GREATER_OR_EQUAL');
+
+  static const $core.List<MathCompareType> values = <MathCompareType>[
+    MATH_COMPARE_TYPE_EQUAL,
+    MATH_COMPARE_TYPE_NOT_EQUAL,
+    MATH_COMPARE_TYPE_LESS,
+    MATH_COMPARE_TYPE_LESS_OR_EQUAL,
+    MATH_COMPARE_TYPE_GREATER,
+    MATH_COMPARE_TYPE_GREATER_OR_EQUAL,
+  ];
+
+  static final $core.List<MathCompareType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
+  static MathCompareType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MathCompareType._(super.value, super.name);
+}
+
+class InterpolationType extends $pb.ProtobufEnum {
+  static const InterpolationType INTERPOLATION_TYPE_LINEAR =
+      InterpolationType._(0, _omitEnumNames ? '' : 'INTERPOLATION_TYPE_LINEAR');
+  static const InterpolationType INTERPOLATION_TYPE_STEP =
+      InterpolationType._(1, _omitEnumNames ? '' : 'INTERPOLATION_TYPE_STEP');
+  static const InterpolationType INTERPOLATION_TYPE_SMOOTHSTEP =
+      InterpolationType._(
+          2, _omitEnumNames ? '' : 'INTERPOLATION_TYPE_SMOOTHSTEP');
+
+  static const $core.List<InterpolationType> values = <InterpolationType>[
+    INTERPOLATION_TYPE_LINEAR,
+    INTERPOLATION_TYPE_STEP,
+    INTERPOLATION_TYPE_SMOOTHSTEP,
+  ];
+
+  static final $core.List<InterpolationType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static InterpolationType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const InterpolationType._(super.value, super.name);
+}
+
 class GlueVerticesStatement_Position extends $pb.ProtobufEnum {
   static const GlueVerticesStatement_Position
       GLUE_VERTICES_STATEMENT_POSITION_FIRST = GlueVerticesStatement_Position._(

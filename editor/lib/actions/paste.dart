@@ -45,7 +45,7 @@ class PasteAction extends CommandAction<PasteIntent> with CanvasFocusAction {
           final statements = editor.selection.statements.map(editor.scene.statement).whereType<FaceStyledStatement>();
           if (statements.isNotEmpty) {
             // Add image decorations per statement
-            final decorations = assets.map((a) => ImageDecoration(a.hash)).toList();
+            final decorations = assets.map((a) => ImageDecoration.create(a.hash)).toList();
 
             editor.edit((txn) {
               for (final statement in statements) {

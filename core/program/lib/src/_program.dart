@@ -14,8 +14,11 @@ import 'package:schema/program.dart' as gen;
 
 export 'package:asset/asset.dart';
 
-import 'generator/generator.dart';
-export 'generator/generator.dart';
+import 'blueprints/generator.dart';
+import 'blueprints/shader.dart';
+export 'blueprints/generator.dart';
+export 'blueprints/shader.dart';
+export 'blueprints/codec/blueprint_codec.dart';
 
 import 'codec.dart' as codec;
 export 'codec.dart';

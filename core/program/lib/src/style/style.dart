@@ -2,9 +2,9 @@ part of '../_program.dart';
 
 sealed class const CellStyle<H extends CellHandle>() {
   static CellStyle defaultOf(CellKind kind) => switch (kind) {
-    .vertex => VertexStyle.default_,
-    .edge => EdgeStyle.default_,
-    .face => FaceStyle.default_,
+    .vertex => VertexStyle.none,
+    .edge => EdgeStyle.none,
+    .face => FaceStyle.none,
     _ => throw ArgumentError.value(kind, 'kind', 'unsupported kind'),
   };
 

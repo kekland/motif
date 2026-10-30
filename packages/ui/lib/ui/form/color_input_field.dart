@@ -53,7 +53,7 @@ final class ColorInputField extends InputField<ColorDataPartial> {
     final colorInput = ExpressionInputField<ColorDataPartial>(
       value: value,
       onChanged: onChanged,
-      valueToString: (value) => value?.canConstruct == true ? value!.apply(.black).toString() : 'Mixed',
+      valueToString: (value) => value?.canConstruct == true ? value!.construct().toString() : 'Mixed',
       evaluateExpression: (str) => null,
       options: options.merge(
         .new(

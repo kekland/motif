@@ -45,5 +45,31 @@
       "group": "build",
       "problemMatcher": []
     },
+    {
+      "label": "packages/webgpu/generate",
+      "detail": "Generate webgpu bindings",
+      "type": "shell",
+      "command": "./packages/webgpu/tool/generate.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "packages/wgslgen/build",
+      "detail": "Build wgslgen executable",
+      "type": "shell",
+      "command": "./packages/wgslgen/tool/build.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "core/renderer2/generate_shaders",
+      "detail": "Generate shaders",
+      "type": "shell",
+      "command": "./core/renderer2/tool/generate_shaders.py",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "revealProblems": "never",
+        "focus": false,
+      }
+    }
   ],
 }

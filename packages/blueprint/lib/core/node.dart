@@ -28,3 +28,10 @@ abstract class Node {
 
   void execute(BlueprintExecution execution);
 }
+
+/// A mixin for blueprint systems that don't execute any logic, but rather are introspected to result in a final output
+/// that contains logic (e.g. shaders.)
+mixin NoOpNode on Node {
+  @override
+  void execute(BlueprintExecution execution) {}
+}

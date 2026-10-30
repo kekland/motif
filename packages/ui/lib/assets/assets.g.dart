@@ -512,6 +512,7 @@ class Icons extends _BaseIcon {
   const Icons.paddingLeft({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_left_rounded);
   const Icons.paddingRight({super.key, super.size, super.color}): super.iconData(icon: Symbols.border_right_rounded);
   const Icons.gap({super.key, super.size, super.color}): super.iconData(icon: Symbols.space_bar_rounded);
+  const Icons.shaders({super.key, super.size, super.color}): super.iconData(icon: Symbols.format_paint_rounded);
 }
 
 class CursorsIcons extends _BaseIcon {

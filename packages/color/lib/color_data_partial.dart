@@ -3,6 +3,7 @@ part of 'color_data.dart';
 extension ColorDataPartialExtension on ColorData {
   ColorDataPartial get partial => switch (this) {
     HsvColorData c => HsvColorDataPartial(h: c.h, s: c.s, v: c.v, alpha: c.alpha),
+    RgbColorData c => RgbColorDataPartial(r: c.r, g: c.g, b: c.b, alpha: c.alpha),
   };
 }
 
@@ -28,6 +29,7 @@ sealed class ColorDataPartial extends Partial<ColorData> {
 
     return switch (type) {
       .hsv => HsvColorDataPartial.fromPartialList(partials.cast()),
+      .rgb => RgbColorDataPartial.fromPartialList(partials.cast()),
     };
   }
 
@@ -75,4 +77,30 @@ final class HsvColorDataPartial extends ColorDataPartial {
 
   @override
   HsvColorData apply(ColorData current) => (current as HsvColorData).copyWith(h: h, s: s, v: v, alpha: alpha);
+}
+
+final class RgbColorDataPartial extends ColorDataPartial {
+  const RgbColorDataPartial({this.r, this.g, this.b, super.alpha}) : super(type: .rgb);
+
+  factory RgbColorDataPartial.fromPartialList(Iterable<RgbColorDataPartial> partials) {
+    return RgbColorDataPartial(
+      r: partials.map((c) => c.r).toSet().singleOrNull,
+      g: partials.map((c) => c.g).toSet().singleOrNull,
+      b: partials.map((c) => c.b).toSet().singleOrNull,
+      alpha: partials.map((c) => c.alpha).toSet().singleOrNull,
+    );
+  }
+
+  final double? r;
+  final double? g;
+  final double? b;
+
+  @override
+  bool get canConstruct => r != null && g != null && b != null;
+
+  @override
+  ColorData construct() => RgbColorData(r: r!, g: g!, b: b!, alpha: alpha ?? 1.0);
+
+  @override
+  RgbColorData apply(ColorData current) => (current as RgbColorData).copyWith(r: r, g: g, b: b, alpha: alpha);
 }

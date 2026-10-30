@@ -19,6 +19,7 @@ dependencies:
   program:
   scene:
   renderer:
+  renderer2:
 
   color:
   ui:

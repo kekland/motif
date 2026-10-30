@@ -16,7 +16,7 @@ class const DecorationInputWindow({
           IconButton.flat(
             onTap: () {
               if (kind == .color) return;
-              final decoration = ColorDecoration(.white);
+              final decoration = ColorDecoration(value().id, .white);
               field.onChanged?.call(decoration);
             },
             isSelected: kind == .color,
@@ -28,11 +28,20 @@ class const DecorationInputWindow({
           IconButton.flat(
             onTap: () {
               if (kind == .image) return;
-              final decoration = ImageDecoration(null);
+              final decoration = ImageDecoration(value().id, null);
               field.onChanged?.call(decoration);
             },
             isSelected: kind == .image,
             child: Icons.decorationImage(),
+          ),
+          IconButton.flat(
+            onTap: () {
+              if (kind == .shader) return;
+              final decoration = ShaderDecoration(value().id, .empty());
+              field.onChanged?.call(decoration);
+            },
+            isSelected: kind == .shader,
+            child: Icons.shaders(),
           ),
         ],
       ),
@@ -49,6 +58,13 @@ class const DecorationInputWindow({
               sessionCallbacks: field.sessionCallbacks,
             ),
             .image => _ImageDecorationInputBody(
+              key: ValueKey(kind),
+              editor: editor,
+              value: value,
+              onChanged: field.onChanged,
+              sessionCallbacks: field.sessionCallbacks,
+            ),
+            .shader => _ShaderDecorationInputBody(
               key: ValueKey(kind),
               editor: editor,
               value: value,
@@ -119,6 +135,31 @@ final class const _ImageDecorationInputBody({
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+final class const _ShaderDecorationInputBody({
+  super.key,
+  required final Editor editor,
+  required final ReadonlySignal<Decoration> value,
+  final ValueChanged<Decoration>? onChanged,
+  final InputSessionCallbacks? sessionCallbacks,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return Surface(
+      borderSide: .new(color: context.colors.divider),
+      borderRadius: .circular(4.0),
+      color: context.colors.surface.tertiary,
+      height: 200.0,
+      child: Center(
+        child: Button(
+          onTap: () => editor.tab.value = .shaders,
+          child: Text('Edit'),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:editor/widgets/canvas_overlays/editor_canvas_container_labels.da
 import 'package:editor/widgets/context_menu/canvas_context_menu.dart';
 import 'package:editor/widgets/canvas_overlays/editor_canvas_peers.dart';
 import 'package:renderer/renderer.dart';
+import 'package:renderer2/renderer.dart' as webgpu_renderer;
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tool/tool_overlay.dart';
 
@@ -23,24 +24,36 @@ class EditorCanvas extends HookWidget {
       centerOrigin: true,
       overlayBuilders: [
         (context, transform) => CanvasPixelGrid(transform: transform),
-        (context, transform) => EditorCanvasContainersLabels(transform: transform),
+        (context, transform) => EditorCanvasContainerLabels(transform: transform),
         (context, transform) => EditorCanvasPeersWidget(transform: transform),
         (context, transform) => ToolOverlay(tool: tool, child: SizedBox.expand()),
       ],
       minScale: EditorCanvasUtils.minScale,
       maxScale: EditorCanvasUtils.maxScale,
       onPointerPositionChanged: editor.onPointerPositionChanged,
-      child: SceneWidget(
-        key: editor.sceneKey,
-        scene: editor.scene,
-        debug: false,
-        debugArrangement: true,
+      child: Opacity(
+        opacity: 0.0,
+        child: SceneWidget(
+          key: editor.sceneKey,
+          scene: editor.scene,
+          debug: true,
+        ),
       ),
     );
 
     child = Overlay.wrap(
       child: Surface(
-        child: child,
+        child: Stack(
+          children: [
+            child,
+            IgnorePointer(
+              child: webgpu_renderer.SceneWidget(
+                scene: editor.scene,
+                transformationController: editor.canvasTransformationController,
+              ),
+            ),
+          ],
+        ),
       ),
     );
 

@@ -4,13 +4,15 @@ enum EditorTab {
   prefabs,
   generators,
   variables,
-  animation;
+  animation,
+  shaders;
 
   Widget icon(BuildContext context) => switch (this) {
     .prefabs => Icons.prefabs(),
     .generators => Icons.generator(),
     .variables => Icons.variable(),
     .animation => Icons.animation(),
+    .shaders => Icons.shaders(),
   };
 
   String name(BuildContext context) => switch (this) {
@@ -18,6 +20,7 @@ enum EditorTab {
     .generators => 'Generators',
     .variables => 'Variables',
     .animation => 'Animation',
+    .shaders => 'Shaders'
   };
 }
 

@@ -15,7 +15,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
     selectors = [...this.inputs, ?this.parent];
   }
 
-  final Generator generator;
+  final GeneratorBlueprint generator;
   final List<FragmentSelector> inputs;
   final Mat4 transform;
 
@@ -74,7 +74,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
     StatementId? id,
     ModifierStack? modifiers,
     String? name,
-    Generator? generator,
+    GeneratorBlueprint? generator,
     List<FragmentSelector>? inputs,
     Mat4? transform,
     FrameRef? parent,

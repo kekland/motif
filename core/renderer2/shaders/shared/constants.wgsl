@@ -1,0 +1,16 @@
+const CELL_KIND_FRAME = 0u;
+const CELL_KIND_VERTEX = 1u;
+const CELL_KIND_EDGE = 2u;
+const CELL_KIND_FACE = 3u;
+
+const MAX_ARC_SEGMENTS = 64u;
+const MAX_EDGE_SEGMENTS = 128u;
+
+const NONE = 0xffffffffu;
+
+const PI = 3.141592653589793;
+
+const DRAW_ENTRY_KIND_VERTEX = 0u;
+const DRAW_ENTRY_KIND_EDGE = 1u;
+const DRAW_ENTRY_KIND_FACE_FAN = 2u;
+const DRAW_ENTRY_KIND_FACE_COVER = 3u;

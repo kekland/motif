@@ -1,7 +1,7 @@
 part of '../_program.dart';
 
 extension RouteGenerate on Evaluation {
-  ProgramEdit routeGenerate(Iterable<StatementId> ids, Generator generator) {
+  ProgramEdit routeGenerate(Iterable<StatementId> ids, GeneratorBlueprint generator) {
     if (ids.isEmpty) {
       final statement = GeneratorStatement(generator: generator);
       return .build(this, (edit) => edit.insert([statement]));

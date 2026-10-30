@@ -32,8 +32,6 @@ workspace:
   - packages/skia_flutter
   - packages/skia_common
   - packages/svg
-  - packages/webgpu
-  - packages/wgslgen
 
   - sync/schema
   - sync/sync

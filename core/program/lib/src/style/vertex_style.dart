@@ -4,10 +4,7 @@ final class const VertexStyle({
   required final double radius,
   required final Decorations decorations,
 }) extends CellStyle<VertexHandle> with Equatable {
-  static const default_ = VertexStyle(
-    radius: 1.0,
-    decorations: .none,
-  );
+  static const none = VertexStyle(radius: 0.0, decorations: .none);
 
   VertexStyle copyWith({
     double? radius,
@@ -19,7 +16,7 @@ final class const VertexStyle({
 
   @override
   CellKind get kind => .vertex;
-  
+
   @override
   List<Object?> get props => [radius, decorations];
 }

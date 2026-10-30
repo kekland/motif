@@ -108,6 +108,8 @@ final class Editor extends Controller {
   StatementId? cursorTextEditStatement;
   Vec2? cursorCanvasPosition;
 
+  (StatementId, String)? shaderEditorTarget;
+
   void onPointerPositionChanged(Offset? offset) {
     cursorCanvasPosition = offset != null ? globalToScene(offset) : null;
     sync.updatePresence(pointerPosition: cursorCanvasPosition);

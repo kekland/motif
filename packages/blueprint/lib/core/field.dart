@@ -84,6 +84,44 @@ abstract class Field<T> {
       ),
     );
   }
+
+  static Field<R> zip4<R, T1, T2, T3, T4>(
+    FieldContext scalar,
+    Field<T1> f1,
+    Field<T2> f2,
+    Field<T3> f3,
+    Field<T4> f4,
+    R Function(FieldContext context, T1, T2, T3, T4) combine,
+  ) {
+    return Field.zip(
+      scalar,
+      [f1, f2, f3, f4],
+      (context, values) => combine(context, values[0] as T1, values[1] as T2, values[2] as T3, values[3] as T4),
+    );
+  }
+
+  static Field<R> zip5<R, T1, T2, T3, T4, T5>(
+    FieldContext scalar,
+    Field<T1> f1,
+    Field<T2> f2,
+    Field<T3> f3,
+    Field<T4> f4,
+    Field<T5> f5,
+    R Function(FieldContext context, T1, T2, T3, T4, T5) combine,
+  ) {
+    return Field.zip(
+      scalar,
+      [f1, f2, f3, f4, f5],
+      (context, values) => combine(
+        context,
+        values[0] as T1,
+        values[1] as T2,
+        values[2] as T3,
+        values[3] as T4,
+        values[4] as T5,
+      ),
+    );
+  }
 }
 
 class ConstantField<T> extends Field<T> {

@@ -15,6 +15,9 @@ import 'package:state/state.dart';
 import 'query.dart';
 export 'query.dart';
 
+import 'utils/shader_validator.dart';
+export 'utils/shader_validator.dart';
+
 part 'transaction.dart';
 part 'selection.dart';
 part 'history.dart';
@@ -46,6 +49,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     notifier = .new(this);
     tickerProviderKey = .new();
     transientTransformAnimator = .new(this);
+    shaderValidator = .new(this);
     evaluation.addUpdateListener(_onPassComplete);
     program.assetResolver = assetResolver;
 
@@ -64,6 +68,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   late final SceneNotifier notifier;
   late final GlobalKey<SceneTickerProviderState> tickerProviderKey;
   late final TransientTransformAnimator transientTransformAnimator;
+  late final ShaderValidator shaderValidator;
 
   late final signal = Signal(this);
 
@@ -84,14 +89,17 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   // -------------------------------------------------------------------------------------------------------------------
 
   late final _updateNotifier = AlwaysNotifier<EvalPass>(.new(evaluation));
+  final _updateNotifierClosures = <void Function(EvalPass), VoidCallback>{};
   late final _treeNotifier = ChangeNotifier();
 
   void addUpdateListener(void Function(EvalPass) listener) {
-    _updateNotifier.addListener(() => listener(_updateNotifier.value));
+    _updateNotifierClosures[listener] = () => listener(_updateNotifier.value);
+    _updateNotifier.addListener(_updateNotifierClosures[listener]!);
   }
 
   void removeUpdateListener(void Function(EvalPass) listener) {
-    _updateNotifier.removeListener(() => listener(_updateNotifier.value));
+    _updateNotifier.removeListener(_updateNotifierClosures[listener]!);
+    _updateNotifierClosures.remove(listener);
   }
 
   void addTreeListener(void Function() listener) => _treeNotifier.addListener(listener);
@@ -117,6 +125,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
     evaluation.dispose();
     evaluation = SceneEvaluation(program, assetCache: assetCache);
     evaluation.addUpdateListener(_onPassComplete);
+    tree.addListener(_onTreeChanged);
 
     prepare();
   }
@@ -163,6 +172,10 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
   @override
   void dispose() {
     if (assetCache.scene == this) assetCache.dispose();
+    shaderValidator.dispose();
+    _updateNotifierClosures.clear();
+    _updateNotifier.dispose();
+    _treeNotifier.dispose();
     transientTransformAnimator.dispose();
     notifier.dispose();
     evaluation.dispose();

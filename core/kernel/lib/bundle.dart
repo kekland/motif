@@ -15,6 +15,14 @@ final class Bundle {
   final _coedge = CoedgeStorage();
   final _face = FaceStorage();
 
+  FrameStorage get frameStorage => _frame;
+  CoframeStorage get coframeStorage => _coframe;
+  VertexStorage get vertexStorage => _vertex;
+  CovertexStorage get covertexStorage => _covertex;
+  EdgeStorage get edgeStorage => _edge;
+  CoedgeStorage get coedgeStorage => _coedge;
+  FaceStorage get faceStorage => _face;
+
   final CellOrderFn? _order;
 
   final _changeTracker = ChangeTracker();
@@ -53,7 +61,7 @@ final class Bundle {
   /// Children in paint order
   Iterable<CellHandle> frameChildren(FrameHandle h) sync* {
     assert(_checkFrame(h));
-    for (final c in _frameChildren(h.index)) yield _cellHandle(c);
+    for (final c in frameChildrenRaw(h.index)) yield _cellHandle(c);
   }
 
   Iterable<CellHandle> frameChildrenReversed(FrameHandle h) sync* {
@@ -123,7 +131,7 @@ final class Bundle {
   Vec2 vertexPosition(VertexHandle v, {FrameHandle? space}) {
     assert(_checkVertex(v));
     assert(space == null || _checkFrame(space));
-    return _vertexPosition(v.index, space: space?.index);
+    return vertexPositionRaw(v.index, space: space?.index);
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -148,7 +156,7 @@ final class Bundle {
     assert(_checkEdge(cv.edge));
     assert(space == null || _checkFrame(space));
     final i = cv.isStart ? _edge.cvStart[cv.edge.index] : _edge.cvEnd[cv.edge.index];
-    return _covertexTangent(i, space: space?.index);
+    return covertexTangentRaw(i, space: space?.index);
   }
 
   Vec2 covertexPosition(Covertex cv, {FrameHandle? space}) {
@@ -229,7 +237,7 @@ final class Bundle {
   Cubic2 edgeCubic(EdgeHandle e, {FrameHandle? space}) {
     assert(_checkEdge(e));
     assert(space == null || _checkFrame(space));
-    return _edgeCubic(e.index, space: space?.index);
+    return edgeCubicRaw(e.index, space: space?.index);
   }
 
   CubicArcIndex edgeCubicArcIndex(EdgeHandle e, {FrameHandle? space}) {
@@ -292,7 +300,7 @@ final class Bundle {
   }
 
   int faceWinding(FaceHandle f, Vec2 p, {FrameHandle? space}) {
-  assert(_checkFace(f));
+    assert(_checkFace(f));
     assert(space == null || _checkFrame(space));
     return _faceWinding(f.index, p, space: space?.index);
   }

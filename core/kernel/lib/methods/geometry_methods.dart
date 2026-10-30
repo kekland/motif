@@ -76,8 +76,8 @@ extension GeometryMethods on Bundle {
 
   Mat4 _frameTransformBetween(FrameIndex from, FrameIndex to) {
     if (from == to) return .identity();
-    if (from == .root) return _frameInverseWorldTransform(to);
-    if (to == .root) return _frameWorldTransform(from);
+    if (from == .root) return frameInverseWorldTransformRaw(to);
+    if (to == .root) return frameWorldTransformRaw(from);
 
     final chainFrom = _frameChainToRoot(from);
     final chainTo = _frameChainToRoot(to);
@@ -96,12 +96,12 @@ extension GeometryMethods on Bundle {
     return down;
   }
 
-  Mat4 _frameWorldTransform(FrameIndex f) {
+  Mat4 frameWorldTransformRaw(FrameIndex f) {
     _frameEnsureWorldTransform(f);
     return _frame.worldTransform[f].copy();
   }
 
-  Mat4 _frameInverseWorldTransform(FrameIndex f) {
+  Mat4 frameInverseWorldTransformRaw(FrameIndex f) {
     _frameEnsureWorldTransform(f);
     return _frame.inverseWorldTransform[f].copy();
   }
@@ -158,7 +158,7 @@ extension GeometryMethods on Bundle {
   // Vertex
   // -------------------------------------------------------------------------------------------------------------------
 
-  Vec2 _vertexPosition(VertexIndex v, {FrameIndex? space}) {
+  Vec2 vertexPositionRaw(VertexIndex v, {FrameIndex? space}) {
     late final f = _vertex.parent[v];
     final stale = _vertex.positionVersion[v] != _vertex.version[v.i];
     final moved = _vertex.positionEpoch[v] != _worldEpoch;
@@ -177,7 +177,7 @@ extension GeometryMethods on Bundle {
 
   void _vertexRecompute(VertexIndex v, FrameIndex parent) {
     final p = _vertex.position[v];
-    _vertex.positionWorld[v] = _frameWorldTransform(parent).transform2(p);
+    _vertex.positionWorld[v] = frameWorldTransformRaw(parent).transform2(p);
     _vertex.positionVersion[v] = _vertex.version[v.i];
     _vertex.positionEpoch[v] = _worldEpoch;
   }
@@ -212,7 +212,7 @@ extension GeometryMethods on Bundle {
     return m.transform2(p + t);
   }
 
-  Vec2 _covertexTangent(CovertexIndex cv, {FrameIndex? space}) {
+  Vec2 covertexTangentRaw(CovertexIndex cv, {FrameIndex? space}) {
     late final f = _vertex.parent[_covertex.vertex[cv]];
     final t = _covertex.tangent[cv];
     if (space == null || f == space) return t;
@@ -240,8 +240,8 @@ extension GeometryMethods on Bundle {
   // Edge
   // -------------------------------------------------------------------------------------------------------------------
 
-  Vec2 _edgeStartTangent(EdgeIndex e, {FrameIndex? space}) => _covertexTangent(_edge.cvStart[e], space: space);
-  Vec2 _edgeEndTangent(EdgeIndex e, {FrameIndex? space}) => _covertexTangent(_edge.cvEnd[e], space: space);
+  Vec2 _edgeStartTangent(EdgeIndex e, {FrameIndex? space}) => covertexTangentRaw(_edge.cvStart[e], space: space);
+  Vec2 _edgeEndTangent(EdgeIndex e, {FrameIndex? space}) => covertexTangentRaw(_edge.cvEnd[e], space: space);
 
   void _edgeSetTangents(EdgeHandle h, {Vec2? start, Vec2? end, FrameHandle? space}) {
     assert(_checkEdge(h));
@@ -251,7 +251,7 @@ extension GeometryMethods on Bundle {
     if (end != null) _covertexSetTangent(_edge.cvEnd[i], end, space: space);
   }
 
-  Cubic2 _edgeCubic(EdgeIndex e, {FrameIndex? space}) {
+  Cubic2 edgeCubicRaw(EdgeIndex e, {FrameIndex? space}) {
     final f = _edge.parent[e];
     final stale = _edge.cubicVersion[e] != _edge.version[e.i];
     final moved = _edge.cubicEpoch[e] != _worldEpoch;
@@ -319,7 +319,7 @@ extension GeometryMethods on Bundle {
       return _edgeCubicIn(e, space: space).arcIndex;
     }
 
-    _edgeCubic(e);
+    edgeCubicRaw(e);
     return _edge.cubicArcIndex[e] ??= _edge.cubic[e].arcIndex;
   }
 
@@ -328,7 +328,7 @@ extension GeometryMethods on Bundle {
       final stale = _edge.bboxWorldVersion[e] != _edge.version[e.i];
       final moved = _edge.bboxWorldEpoch[e] != _worldEpoch;
       if (stale || moved) {
-        final bbox = _edgeCubic(e, space: .root).bboxTight;
+        final bbox = edgeCubicRaw(e, space: .root).bboxTight;
         _edge.bboxWorld[e] = bbox;
         _edge.bboxWorldVersion[e] = _edge.cubicVersion[e];
         _edge.bboxWorldEpoch[e] = _worldEpoch;
@@ -337,7 +337,7 @@ extension GeometryMethods on Bundle {
       return _edge.bboxWorld[e];
     }
 
-    return _edgeCubic(e, space: space).bboxTight;
+    return edgeCubicRaw(e, space: space).bboxTight;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -347,7 +347,7 @@ extension GeometryMethods on Bundle {
   double _cycleSignedArea(Cycle cycle, {FrameIndex? space}) {
     var total = 0.0;
     for (final u in cycle) {
-      final a = _edgeCubic(u.edge.index, space: space).signedAreaIntegral;
+      final a = edgeCubicRaw(u.edge.index, space: space).signedAreaIntegral;
       total += u.forward ? a : -a;
     }
     return total;
@@ -357,7 +357,7 @@ extension GeometryMethods on Bundle {
     var winding = 0;
 
     for (final u in cycle) {
-      final w = _edgeCubic(u.edge.index, space: space).winding(p);
+      final w = edgeCubicRaw(u.edge.index, space: space).winding(p);
       winding += u.forward ? w : -w;
     }
 

@@ -46,6 +46,7 @@ class const ColorInputWindowBody({
     final color = useComputedValue(() => value());
 
     return Column(
+      mainAxisSize: .min,
       spacing: 8.0,
       children: [
         if (color is HsvColorDataPartial) ...[

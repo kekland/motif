@@ -113,6 +113,7 @@ Future<void> main() async {
     .new('paddingLeft', 'Symbols.border_left_rounded'),
     .new('paddingRight', 'Symbols.border_right_rounded'),
     .new('gap', 'Symbols.space_bar_rounded'),
+    .new('shaders', 'Symbols.format_paint_rounded'),
   ];
 
   final root = Directory.fromUri(Platform.script.resolve('..'));

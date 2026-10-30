@@ -11,7 +11,7 @@ extension EmbedEdgeTransaction on SceneTransaction {
   }) {
     final bundle = evaluation.bundle;
     final parent = bundle.query.lca(startVertex, endVertex);
-    final style_ = style ?? .default_;
+    final style_ = style ?? .none;
 
     if (!topological) return [_insertPiece(this, cubicWorld, startVertex, endVertex, parent, style_)];
 
@@ -57,7 +57,7 @@ List<EdgeRef> _commitSubCubic(
   VertexRef end,
   FrameRef parent,
   Set<StatementId> cuts, {
-  EdgeStyle edgeStyle = .default_,
+  EdgeStyle edgeStyle = .none,
 }) {
   final bundle = txn.evaluation.bundle;
 

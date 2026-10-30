@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tabs/animation_tab.dart';
 import 'package:editor/widgets/tabs/generators_tab.dart';
+import 'package:editor/widgets/tabs/shaders_tab.dart';
 import 'package:editor/widgets/tabs/variables_tab.dart';
 import 'package:editor/widgets/tabs/prefabs_tab.dart';
 
@@ -26,6 +27,7 @@ class EditorTabWidget extends HookWidget {
               .generators => GeneratorsTab(),
               .variables => VariablesTab(),
               .animation => AnimationTab(),
+              .shaders => ShadersTab(),
               null => SizedBox.shrink(),
             },
           ),

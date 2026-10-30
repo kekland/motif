@@ -7,7 +7,7 @@ final class TransientStrokes with ChangeNotifier, ChangeNotifierDisposable {
   final _instances = <TransientStroke>[];
   Iterable<TransientStroke> get instances => _instances;
 
-  TransientStroke create({EdgeStyle style = .default_}) {
+  TransientStroke create({EdgeStyle style = .none}) {
     final stroke = TransientStroke(style: style);
     _instances.add(stroke);
     notifyListeners();
@@ -22,7 +22,7 @@ final class TransientStrokes with ChangeNotifier, ChangeNotifierDisposable {
 
 final class TransientStroke extends ChangeNotifier {
   TransientStroke({
-    this.style = .default_,
+    this.style = .none,
   }) : data = .new(),
        predictions = .new();
 
