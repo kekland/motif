@@ -2,6 +2,7 @@ import 'package:app/imports.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:native/native.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:metal_capture_util/metal_capture_util.dart' as mtl;
 
 class AppNavigationBar extends StatelessWidget {
   const AppNavigationBar({
@@ -37,6 +38,12 @@ class AppNavigationBar extends StatelessWidget {
                   onTabSelected: onTabSelected,
                   onTabClosed: onTabClosed,
                 ),
+              ),
+              IconButton.flat(
+                onTap: () {
+                  mtl.MetalCapture.captureNextFrame(openFile: true, reassemble: true);
+                },
+                child: Icons.angle(),
               ),
               IconButton.flat(
                 onTap: () {

@@ -18,7 +18,7 @@ final class ShaderValidator with Disposable {
     device = await adapter.requestDevice(.new(label: 'shader-validator'));
   }
 
-  Future<List<String>> validateShader(String shaderCode) async {
+  Future<List<String>> validate(String shaderCode) async {
     await _initFuture;
 
     final shader = device.createShaderModule(.new(next: webgpu.ShaderSourceWGSL(code: shaderCode)));

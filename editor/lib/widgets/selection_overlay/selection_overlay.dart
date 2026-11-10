@@ -115,7 +115,7 @@ class CellSelectionGroupOverlay extends HookWidget {
       final bbox = editor.bundle.query.bbox(ref)!;
       final cellTransform = editor.bundle.query.localToWorld(ref);
 
-      final totalTransform = Mat4.viewFloat64(childPaintTransform.storage) * cellTransform;
+      final totalTransform = Mat4.viewFlat(childPaintTransform.storage) * cellTransform;
       totalTransform.translate(bbox.min.x, bbox.min.y);
 
       final transform = totalTransform.withNormalizedScale();
@@ -130,7 +130,7 @@ class CellSelectionGroupOverlay extends HookWidget {
       );
     } else {
       final hull = editor.bundle.query.hull(refs, space: .root);
-      final overlayHull = hull.transformed(Mat4.viewFloat64(childPaintTransform.storage));
+      final overlayHull = hull.transformed(Mat4.viewFlat(childPaintTransform.storage));
 
       return _buildSelectionControls(
         transform: .translation2(overlayHull.min),

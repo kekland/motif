@@ -14,25 +14,28 @@ class EditorTabWidget extends HookWidget {
   Widget build(BuildContext context) {
     final selectedTab = useExistingSignal(context.editor.tab).value;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return ClipRect(
-          child: OverflowBox(
-            alignment: .topCenter,
-            minHeight: 192.0,
-            maxHeight: max(192.0, constraints.maxHeight),
-            fit: .deferToChild,
-            child: switch (selectedTab) {
-              .prefabs => PrefabsTab(),
-              .generators => GeneratorsTab(),
-              .variables => VariablesTab(),
-              .animation => AnimationTab(),
-              .shaders => ShadersTab(),
-              null => SizedBox.shrink(),
-            },
-          ),
-        );
-      },
+    return Surface(
+      color: context.colors.surface.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return ClipRect(
+            child: OverflowBox(
+              alignment: .topCenter,
+              minHeight: 192.0,
+              maxHeight: max(192.0, constraints.maxHeight),
+              fit: .deferToChild,
+              child: switch (selectedTab) {
+                .prefabs => PrefabsTab(),
+                .generators => GeneratorsTab(),
+                .variables => VariablesTab(),
+                .animation => AnimationTab(),
+                .shaders => ShadersTab(),
+                null => SizedBox.shrink(),
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

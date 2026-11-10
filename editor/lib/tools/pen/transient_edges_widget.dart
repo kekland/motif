@@ -80,7 +80,7 @@ class _TransientEdgePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final t = Mat4.fromListFloat64(transform.storage);
+    final t = Mat4.viewFlat(transform.storage);
     final cubic = edge.cubic.transformed(t);
     final p0 = cubic.p0.offset, p1 = cubic.p1.offset, p2 = cubic.p2.offset, p3 = cubic.p3.offset;
     final Offset nextP1;

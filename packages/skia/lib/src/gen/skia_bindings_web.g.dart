@@ -140,9 +140,14 @@ extension type GeneratedBindings(NativeLibrary _) implements JSObject {
   external Pointer<glyph_metrics> _motif_paragraph_get_glyph_metrics(
     paragraph_t p,
   );
-  external Pointer<glyph_path> _motif_paragraph_get_glyph_path(
+  external Pointer<glyph_path> _motif_paragraph_get_glyph_path_by_index(
     paragraph_t p,
     size_t index,
+  );
+  external Pointer<glyph_path> _motif_paragraph_get_glyph_path_by_id(
+    paragraph_t p,
+    size_t font,
+    int glyph_id,
   );
   external paragraph_builder_t _motif_paragraph_builder_create(
     paragraph_style_t style,
@@ -481,11 +486,24 @@ Pointer<glyph_metrics> motif_paragraph_get_glyph_metrics(
   return Pointer<glyph_metrics>(result);
 }
 
-Pointer<glyph_path> motif_paragraph_get_glyph_path(
+Pointer<glyph_path> motif_paragraph_get_glyph_path_by_index(
   Dartparagraph_t p,
   Dartsize_t index,
 ) {
-  final result = GeneratedBindings.instance._motif_paragraph_get_glyph_path(p as Pointer<paragraph>, index);
+  final result = GeneratedBindings.instance._motif_paragraph_get_glyph_path_by_index(p as Pointer<paragraph>, index);
+  return Pointer<glyph_path>(result);
+}
+
+Pointer<glyph_path> motif_paragraph_get_glyph_path_by_id(
+  Dartparagraph_t p,
+  Dartsize_t font,
+  int glyph_id,
+) {
+  final result = GeneratedBindings.instance._motif_paragraph_get_glyph_path_by_id(
+    p as Pointer<paragraph>,
+    font,
+    glyph_id,
+  );
   return Pointer<glyph_path>(result);
 }
 
@@ -878,7 +896,7 @@ extension glyph_metricsExt on Pointer<glyph_metrics> {
   glyph_metrics get ref => toDart();
   glyph_metrics operator [](int index) => Pointer<glyph_metrics>(this.address + sizeOf * index).toDart();
   operator []=(int index, glyph_metrics value) => NativeLibrary.instance.setValue(this[index].address, value.address.toJS, '*');
-  int get sizeOf => 28;
+  int get sizeOf => 33;
 }
 
 final class glyph_metrics extends Struct {
@@ -963,10 +981,30 @@ final class glyph_metrics extends Struct {
     NativeLibrary.instance.setValue(Pointer<glyph_metrics>(this.address.addr + 26), val.toJS, 'i16');
   }
 
+  int get typeface_id {
+    final addr = Pointer<glyph_metrics>(this.address.addr + 28);
+    final value = NativeLibrary.instance.getValue(addr, 'i32').toDartInt;
+    return value;
+  }
+
+  set typeface_id(int val) {
+    NativeLibrary.instance.setValue(Pointer<glyph_metrics>(this.address.addr + 28), val.toJS, 'i32');
+  }
+
+  int get synthetic {
+    final addr = Pointer<glyph_metrics>(this.address.addr + 32);
+    final value = NativeLibrary.instance.getValue(addr, 'i8').toDartInt;
+    return value;
+  }
+
+  set synthetic(int val) {
+    NativeLibrary.instance.setValue(Pointer<glyph_metrics>(this.address.addr + 32), val.toJS, 'i8');
+  }
+
   glyph_metrics(super.address);
 
   static Pointer<glyph_metrics> stackAlloc() {
-    return Pointer<glyph_metrics>(NativeLibrary.instance.stackAlloc<glyph_metrics>(28));
+    return Pointer<glyph_metrics>(NativeLibrary.instance.stackAlloc<glyph_metrics>(33));
   }
 }
 

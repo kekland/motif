@@ -39,19 +39,18 @@ final class DecorationCache with ChangeNotifier {
   }
 
   final shaderCode = <String, String>{};
-  final _shaderCache = <String, int?>{};
+  final _shaderCache = <String, (int, ShaderDecoration)>{};
   final _shaderPreparation = <String, bool>{};
 
   ShaderDecoration? _getShaderDecoration(CellRef ref, ShaderDecoration decoration) {
     final id = decoration.id;
 
-    if (_shaderCache[id] == -1) return null;
-    if (_shaderCache[id] == decoration.shader.hashCode) {
+    if (_shaderCache[id]?.$1 == -1) return null;
+    if (_shaderCache[id]?.$1 == decoration.shader.hashCode) {
       return decoration;
     } else {
-      _shaderCache[id] = null;
       _prepareShaderDecoration(ref, decoration);
-      return null;
+      return _shaderCache[id]?.$2;
     }
   }
 
@@ -72,17 +71,16 @@ final class DecorationCache with ChangeNotifier {
       shaderCode,
     ];
 
-    final validation = await shaderValidator.validateShader(validationShaderCode.join('\n'));
+    final validation = await shaderValidator.validate(validationShaderCode.join('\n'));
     if (validation.isEmpty) {
-      _shaderCache[id] = decoration.shader.hashCode;
+      _shaderCache[id] = (decoration.shader.hashCode, decoration);
       this.shaderCode[id] = shaderCode;
       storage.shaderUpdated.add(ref);
 
       onShaderCodeUpdated();
       notifyListeners();
     } else {
-      print(validation);
-      _shaderCache[id] = -1;
+      _shaderCache[id] = (-1, decoration);
     }
 
     _shaderPreparation[id] = false;

@@ -17,6 +17,7 @@ workspace:
   - core/scene
   - core/renderer
   - core/renderer2
+  - core/renderer3
 
   - packages/native
   - packages/blueprint

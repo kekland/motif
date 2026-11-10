@@ -57,7 +57,7 @@ void _paintInternal(
       if (uiImage == null) return;
 
       paint.color = const .new(0xFFFFFFFF);
-      paint.shader = ui.ImageShader(uiImage, .clamp, .clamp, _fit(uiImage, dst).storage, filterQuality: .medium);
+      // paint.shader = ui.ImageShader(uiImage, .clamp, .clamp, _fit(uiImage, dst).storage, filterQuality: .medium);
     } else {
       throw UnimplementedError();
     }

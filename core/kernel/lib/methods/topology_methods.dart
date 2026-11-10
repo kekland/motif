@@ -234,6 +234,8 @@ extension TopologyMethods on Bundle {
   void _vertexDiskInsert(VertexIndex v, CovertexIndex cv) {
     _covertex.diskNext[cv] = _vertex.diskStart[v];
     _vertex.diskStart[v] = cv;
+    _covertex.touch(cv);
+    _vertex.touch(v);
   }
 
   void _vertexDiskUnlink(VertexIndex v, CovertexIndex cv) {
@@ -245,6 +247,8 @@ extension TopologyMethods on Bundle {
 
     while (_covertex.diskNext[cur] != cv) cur = _covertex.diskNext[cur];
     _covertex.diskNext[cur] = _covertex.diskNext[cv];
+    _covertex.touch(cv);
+    _vertex.touch(v);
   }
 
   // -------------------------------------------------------------------------------------------------------------------

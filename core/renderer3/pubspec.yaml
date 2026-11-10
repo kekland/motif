@@ -1,0 +1,27 @@
+name: renderer3
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  shared:
+  css:
+  state:
+  geometry:
+  kernel:
+  blueprint:
+  program:
+  scene:
+  color:
+  skia:
+  ui:
+  
+  webgpu:
+
+dev_dependencies:
+  wgslgen:

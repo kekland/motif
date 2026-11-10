@@ -30,10 +30,16 @@ class RatioPanelConstraints extends PanelConstraints {
 }
 
 class Panel {
-  const Panel({required this.key, required this.constraints, required this.child});
+  const Panel({
+    required this.key,
+    required this.constraints,
+    required this.child,
+    this.floating = false,
+  });
 
   final Object key;
   final PanelConstraints constraints;
+  final bool floating;
   final Widget child;
 }
 

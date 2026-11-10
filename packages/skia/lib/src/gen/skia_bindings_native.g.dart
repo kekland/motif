@@ -110,8 +110,15 @@ external int motif_paragraph_get_glyph_metrics_count(
   paragraph_t p,
 );
 
+@ffi.Native<ffi.Pointer<glyph_path> Function(paragraph_t, ffi.Size, ffi.Uint16)>()
+external ffi.Pointer<glyph_path> motif_paragraph_get_glyph_path_by_id(
+  paragraph_t p,
+  int font,
+  int glyph_id,
+);
+
 @ffi.Native<ffi.Pointer<glyph_path> Function(paragraph_t, ffi.Size)>()
-external ffi.Pointer<glyph_path> motif_paragraph_get_glyph_path(
+external ffi.Pointer<glyph_path> motif_paragraph_get_glyph_path_by_index(
   paragraph_t p,
   int index,
 );
@@ -534,6 +541,12 @@ final class glyph_metrics extends ffi.Struct {
   @ffi.Uint16()
   external int font;
 
+  @ffi.Uint32()
+  external int typeface_id;
+
+  @ffi.Uint8()
+  external int synthetic;
+
   static ffi.Pointer<glyph_metrics> $allocate(
     ffi.Allocator $allocator, {
     required double x,
@@ -544,6 +557,8 @@ final class glyph_metrics extends ffi.Struct {
     required double bottom,
     required int id,
     required int font,
+    required int typeface_id,
+    required int synthetic,
   }) => $allocator<glyph_metrics>()
     ..ref.x = x
     ..ref.y = y
@@ -552,7 +567,9 @@ final class glyph_metrics extends ffi.Struct {
     ..ref.right = right
     ..ref.bottom = bottom
     ..ref.id = id
-    ..ref.font = font;
+    ..ref.font = font
+    ..ref.typeface_id = typeface_id
+    ..ref.synthetic = synthetic;
 }
 
 final class glyph_path extends ffi.Struct {
@@ -579,6 +596,14 @@ final class glyph_path extends ffi.Struct {
     ..ref.points = points;
 }
 
+typedef int16_t = ffi.Short;
+typedef Dartint16_t = int;
+typedef int32_t = ffi.Int;
+typedef Dartint32_t = int;
+typedef int64_t = ffi.LongLong;
+typedef Dartint64_t = int;
+typedef int8_t = ffi.SignedChar;
+typedef Dartint8_t = int;
 typedef int_fast16_t = ffi.Int16;
 typedef Dartint_fast16_t = int;
 typedef int_fast32_t = ffi.Int32;
@@ -597,6 +622,7 @@ typedef int_least8_t = ffi.Int8;
 typedef Dartint_least8_t = int;
 typedef intmax_t = ffi.Long;
 typedef Dartintmax_t = int;
+typedef intptr_t = __darwin_intptr_t;
 
 final class line_metrics extends ffi.Struct {
   @ffi.Float()
@@ -658,6 +684,7 @@ typedef ptrdiff_t = __darwin_ptrdiff_t;
 typedef register_t = ffi.Int64;
 typedef Dartregister_t = int;
 typedef rsize_t = __darwin_size_t;
+typedef size_t = __darwin_size_t;
 typedef syscall_arg_t = u_int64_t;
 
 enum text_alignment {
@@ -733,6 +760,14 @@ typedef u_int64_t = ffi.UnsignedLongLong;
 typedef Dartu_int64_t = int;
 typedef u_int8_t = ffi.UnsignedChar;
 typedef Dartu_int8_t = int;
+typedef uint16_t = ffi.UnsignedShort;
+typedef Dartuint16_t = int;
+typedef uint32_t = ffi.UnsignedInt;
+typedef Dartuint32_t = int;
+typedef uint64_t = ffi.UnsignedLongLong;
+typedef Dartuint64_t = int;
+typedef uint8_t = ffi.UnsignedChar;
+typedef Dartuint8_t = int;
 typedef uint_fast16_t = ffi.Uint16;
 typedef Dartuint_fast16_t = int;
 typedef uint_fast32_t = ffi.Uint32;
@@ -751,6 +786,8 @@ typedef uint_least8_t = ffi.Uint8;
 typedef Dartuint_least8_t = int;
 typedef uintmax_t = ffi.UnsignedLong;
 typedef Dartuintmax_t = int;
+typedef uintptr_t = ffi.UnsignedLong;
+typedef Dartuintptr_t = int;
 typedef user_addr_t = u_int64_t;
 typedef user_long_t = ffi.Int64;
 typedef Dartuser_long_t = int;
@@ -762,4 +799,5 @@ typedef Dartuser_ssize_t = int;
 typedef user_time_t = ffi.Int64;
 typedef Dartuser_time_t = int;
 typedef user_ulong_t = u_int64_t;
+typedef wchar_t = __darwin_wchar_t;
 typedef wint_t = __darwin_wint_t;

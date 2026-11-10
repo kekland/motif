@@ -6,4 +6,5 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
+  shared:
   schema:

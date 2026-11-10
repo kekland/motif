@@ -74,8 +74,6 @@ class BlueprintEditorWidget<B extends Blueprint<B>> extends HookWidget {
     final colorResolvers = useMemoized(() => this.colorResolvers ?? .empty(), [this.colorResolvers]);
     final enums = useMemoized(() => this.enums ?? .empty(), [this.enums]);
 
-    print('build editor');
-
     final child = EditorActions(
       child: EditorShortcuts(
         child: EditorCanvas(),

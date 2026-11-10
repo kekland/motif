@@ -99,6 +99,8 @@ typedef struct {
   float x, y;
   float left, top, right, bottom;
   uint16_t id, font;
+  uint32_t typeface_id;
+  uint8_t synthetic;
 } glyph_metrics;
 
 typedef struct {
@@ -119,7 +121,8 @@ FFI size_t motif_paragraph_get_line_metrics_count(paragraph_t p);
 FFI const line_metrics* motif_paragraph_get_line_metrics(paragraph_t p);
 FFI size_t motif_paragraph_get_glyph_metrics_count(paragraph_t p);
 FFI const glyph_metrics* motif_paragraph_get_glyph_metrics(paragraph_t p);
-FFI const glyph_path* motif_paragraph_get_glyph_path(paragraph_t p, size_t index);
+FFI const glyph_path* motif_paragraph_get_glyph_path_by_index(paragraph_t p, size_t index);
+FFI const glyph_path* motif_paragraph_get_glyph_path_by_id(paragraph_t p, size_t font, uint16_t glyph_id);
 
 // ---------------------------------------------------------------------------------------------------------------------
 // paragraph_builder

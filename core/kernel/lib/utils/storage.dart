@@ -2,7 +2,7 @@ part of '../kernel.dart';
 
 extension type const Vec2Storage<I extends ElementIndex>._(Vec2List storage) {
   Vec2Storage() : this._(.new(_baseSize));
-  Vec2Storage.copyFrom(Vec2Storage other) : this._(.fromList(other.storage));
+  Vec2Storage.copyFrom(Vec2Storage other) : this._(.fromBuffer(other.storage.buffer));
 
   Vec2 operator [](I index) => storage[index.i];
   void operator []=(I index, Vec2 value) => storage[index.i] = value;
@@ -13,7 +13,7 @@ extension type const Vec2Storage<I extends ElementIndex>._(Vec2List storage) {
 
 extension type const Mat4Storage<I extends ElementIndex>._(Mat4List storage) {
   Mat4Storage() : this._(.new(_baseSize));
-  Mat4Storage.copyFrom(Mat4Storage other) : this._(.fromList(other.storage));
+  Mat4Storage.copyFrom(Mat4Storage other) : this._(.fromBuffer(other.storage.buffer));
 
   Mat4 operator [](I index) => storage[index.i];
   void operator []=(I index, Mat4 value) => storage[index.i] = value;
@@ -163,7 +163,7 @@ extension type const Int32Storage<I extends ElementIndex>._(Int32List storage) {
 
 extension type const Size2Storage<I extends ElementIndex>._(Vec2List storage) {
   Size2Storage() : this._(.new(_baseSize));
-  Size2Storage.copyFrom(Size2Storage other) : this._(.fromList(other.storage));
+  Size2Storage.copyFrom(Size2Storage other) : this._(.fromBuffer(other.storage.buffer));
 
   Size2 operator [](I index) => .from(storage[index.i]);
   void operator []=(I index, Size2 value) => storage[index.i] = value.vec;
@@ -174,14 +174,14 @@ extension type const Size2Storage<I extends ElementIndex>._(Vec2List storage) {
 
 extension type const Cubic2Storage<I extends ElementIndex>._(Vec2List storage) {
   Cubic2Storage() : this._(.new(_baseSize * 4));
-  Cubic2Storage.copyFrom(Cubic2Storage other) : this._(.fromList(other.storage));
+  Cubic2Storage.copyFrom(Cubic2Storage other) : this._(.fromBuffer(other.storage.buffer));
 
   Cubic2 operator [](I index) {
-    return .view(.sublistView(storage, index.i * 4, index.i * 4 + 4));
+    return .view(.sublistView(storage.buffer, index.i * 4, index.i * 4 + 4));
   }
 
   void operator []=(I index, Cubic2 value) {
-    storage.setRange(index.i * 4, index.i * 4 + 4, value.storage);
+    storage.buffer.setRange(index.i * 4, index.i * 4 + 4, value.storage.buffer);
   }
 
   int get length => storage.length ~/ 4;
@@ -204,14 +204,14 @@ extension type const ObjectStorage<I extends ElementIndex, T extends Object>._(L
 
 extension type const Aabb2Storage<I extends ElementIndex>._(Vec2List storage) {
   Aabb2Storage() : this._(.new(_baseSize * 2));
-  Aabb2Storage.copyFrom(Aabb2Storage other) : this._(.fromList(other.storage));
+  Aabb2Storage.copyFrom(Aabb2Storage other) : this._(.fromBuffer(other.storage.buffer));
 
   Aabb2 operator [](I index) {
-    return .view(.sublistView(storage, index.i * 2, index.i * 2 + 2));
+    return .view(.sublistView(storage.buffer, index.i * 2, index.i * 2 + 2));
   }
 
   void operator []=(I index, Aabb2 value) {
-    storage.setRange(index.i * 2, index.i * 2 + 2, value.storage);
+    storage.buffer.setRange(index.i * 2, index.i * 2 + 2, value.storage.buffer);
   }
 
   int get length => storage.length ~/ 2;

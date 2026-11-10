@@ -4,7 +4,7 @@ import 'package:editor/widgets/canvas_overlays/editor_canvas_container_labels.da
 import 'package:editor/widgets/context_menu/canvas_context_menu.dart';
 import 'package:editor/widgets/canvas_overlays/editor_canvas_peers.dart';
 import 'package:renderer/renderer.dart';
-import 'package:renderer2/renderer.dart' as webgpu_renderer;
+import 'package:renderer3/renderer.dart' as webgpu_renderer;
 import 'package:editor/imports.dart';
 import 'package:editor/widgets/tool/tool_overlay.dart';
 

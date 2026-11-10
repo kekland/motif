@@ -39,7 +39,7 @@ final class const DecorationsInputField({
           editor: editor,
           index: i,
           entry: computeds[i],
-          onChanged: (v) => onChanged?.call(value().update(v.id, v)),
+          onChanged: (v) => onChanged?.call(value().update(computeds[i].value!.id, v)),
           onRemoved: (v) => onChanged?.call(value().remove(v.id)),
           sessionCallbacks: sessionCallbacks,
         ),

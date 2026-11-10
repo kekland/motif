@@ -1,4 +1,4 @@
-import 'package:geometry/vector/vector.dart';
+import 'package:geometry/geometry_64.dart';
 import 'package:ink_stroke_modeler/src/params.dart';
 import 'package:ink_stroke_modeler/src/position_modeler.dart';
 import 'package:ink_stroke_modeler/src/prediction/input_predictor.dart';

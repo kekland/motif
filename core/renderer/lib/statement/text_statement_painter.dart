@@ -16,7 +16,7 @@ final class TextStatementPainter extends StatementPainter<TextStatement> {
     final path = Path();
 
     for (final (i, metrics) in paragraph.glyphMetrics.indexed) {
-      final glyphPath = paragraph.getGlyphPath(i);
+      final glyphPath = paragraph.getGlyphPathByIndex(i);
       var point = 0;
       double _x() => glyphPath.points[point++] + metrics.x;
       double _y() => glyphPath.points[point++] + metrics.y;

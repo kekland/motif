@@ -35,6 +35,7 @@ class EditorTabBar extends HookWidget {
     final selectedTab = useExistingSignal(tabSignal).value;
 
     return Surface(
+      color: context.colors.surface.primary,
       height: height,
       child: Row(
         children: [
@@ -46,7 +47,8 @@ class EditorTabBar extends HookWidget {
                 final tab = EditorTab.values[i];
                 return Row(
                   children: [
-                    ListItem(
+                    IconButton.flat(
+                      size: height,
                       isSelected: selectedTab == tab,
                       onTap: () {
                         if (context.editor.tab.value == tab) {
@@ -57,9 +59,8 @@ class EditorTabBar extends HookWidget {
                           context.editor.panels.expand(.tab);
                         }
                       },
-                      width: 160.0,
-                      leading: tab.icon(context),
-                      title: Text(tab.name(context)),
+                      tooltip: .new(tab.name(context)),
+                      child: tab.icon(context),
                     ),
                     VerticalDivider(),
                   ],

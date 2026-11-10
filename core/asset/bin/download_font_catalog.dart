@@ -22,6 +22,7 @@ Future<void> main(List<String> args) async {
   final packageRoot = Platform.script.resolve('../');
   final root = packageRoot.resolve('../../');
   final fontFileCacheRoot = packageRoot.resolve('build/cache/');
+  final filesDir = packageRoot.resolve('config/files/');
 
   final env = dotenv.DotEnv()..load([root.resolve('.env').toFilePath()]);
   final googleFontsKey = env['GOOGLE_FONTS_API_KEY'] ?? (throw ArgumentError('GOOGLE_FONTS_API_KEY not set in .env'));
@@ -49,57 +50,90 @@ Future<void> main(List<String> args) async {
 
   try {
     for (final family in families) {
-      final variantUrls = await _loadFontVariants(client, googleFontsKey, family);
-      final license = await _loadFontLicense(client, family);
-
-      fontLicenses[license.hash] = .new(
-        hash: license.hash,
-        descriptor: family,
-        kind: license.id,
-        body: utf8.decode(license.bytes),
-      );
-
       final assets = <Hash, FontAsset>{};
-
       var size = 0;
       var faceCount = 0;
 
-      for (final url in variantUrls) {
-        final urlHash = Hash.compute(utf8.encode(url));
-        final cachedFile = File.fromUri(fontFileCacheRoot.resolve(urlHash.shortHash));
-        final Uint8List bytes;
+      final hasFile = File.fromUri(filesDir.resolve('$family.ttf')).existsSync();
 
-        if (await cachedFile.exists()) {
-          bytes = await cachedFile.readAsBytes();
-        } else {
-          bytes = await client.readBytes(Uri.parse(url).replace(scheme: 'https'));
-          await Directory.fromUri(fontFileCacheRoot).create(recursive: true);
-          await cachedFile.writeAsBytes(bytes);
+      if (hasFile) {
+        final hasLicenseFile = File.fromUri(filesDir.resolve('$family.txt')).existsSync();
+        final licenseBytes = hasLicenseFile
+            ? await File.fromUri(filesDir.resolve('$family.txt')).readAsBytes()
+            : Uint8List(0);
+
+        if (hasLicenseFile) {
+          fontLicenses[Hash.compute(licenseBytes)] = .new(
+            hash: Hash.compute(licenseBytes),
+            descriptor: family,
+            kind: 'local',
+            body: utf8.decode(licenseBytes),
+          );
         }
 
+        final bytes = await File.fromUri(filesDir.resolve('$family.ttf')).readAsBytes();
         final hash = Hash.compute(bytes);
-        if (fontFiles[hash] != null) {
-          print('${hash.shortHash}: cached');
-          continue;
-        }
+        fontFiles[hash] = bytes;
 
         final faces = _parseFontFaces(bytes);
-        if (faces.isEmpty) {
-          print('${hash.shortHash}: not a font: $url');
-          continue;
-        }
-
         assets[hash] = .new(
           hash: hash,
           size: bytes.length,
           family: family,
-          license: license.hash,
+          license: Hash.compute(licenseBytes),
           faces: faces,
         );
-
-        fontFiles[hash] = bytes;
+        
         size += bytes.length;
         faceCount += faces.length;
+      } else {
+        final variantUrls = await _loadFontVariants(client, googleFontsKey, family);
+        final license = await _loadFontLicense(client, family);
+
+        fontLicenses[license.hash] = .new(
+          hash: license.hash,
+          descriptor: family,
+          kind: license.id,
+          body: utf8.decode(license.bytes),
+        );
+
+        for (final url in variantUrls) {
+          final urlHash = Hash.compute(utf8.encode(url));
+          final cachedFile = File.fromUri(fontFileCacheRoot.resolve(urlHash.shortHash));
+          final Uint8List bytes;
+
+          if (await cachedFile.exists()) {
+            bytes = await cachedFile.readAsBytes();
+          } else {
+            bytes = await client.readBytes(Uri.parse(url).replace(scheme: 'https'));
+            await Directory.fromUri(fontFileCacheRoot).create(recursive: true);
+            await cachedFile.writeAsBytes(bytes);
+          }
+
+          final hash = Hash.compute(bytes);
+          if (fontFiles[hash] != null) {
+            print('${hash.shortHash}: cached');
+            continue;
+          }
+
+          final faces = _parseFontFaces(bytes);
+          if (faces.isEmpty) {
+            print('${hash.shortHash}: not a font: $url');
+            continue;
+          }
+
+          assets[hash] = .new(
+            hash: hash,
+            size: bytes.length,
+            family: family,
+            license: license.hash,
+            faces: faces,
+          );
+
+          fontFiles[hash] = bytes;
+          size += bytes.length;
+          faceCount += faces.length;
+        }
       }
 
       if (assets.isEmpty) throw StateError('no valid font files found for $family');

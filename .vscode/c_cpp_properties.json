@@ -5,8 +5,10 @@
             "includePath": [
                 "${workspaceFolder}/packages/skia/",
                 "${workspaceFolder}/packages/skia/include/",
-                "${workspaceFolder}/packages/skia/include/src/",
-                "${workspaceFolder}/packages/webgpu/src/"
+                "${workspaceFolder}/packages/skia/include/src/"
+            ],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

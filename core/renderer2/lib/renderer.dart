@@ -1,4 +1,4 @@
-import 'package:geometry/vm/vm_utils.dart';
+import 'package:geometry/geometry.dart';
 import 'package:kernel/kernel.dart';
 import 'package:program/program.dart';
 import 'package:renderer2/src/cache/decoration_cache.dart';
@@ -356,7 +356,6 @@ final class SceneRenderer with ChangeNotifier, ChangeNotifierDisposable, Rendera
 
       var currentPipeline = -1;
       final drawEntries = storage.topology.storage.draw;
-      print('draw count: $drawCount');
       for (var i = 0; i < drawCount; i++) {
         final drawKind = drawEntries[i]!.kind;
         final pipelineKind = switch (drawKind) {

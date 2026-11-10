@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:shared/shared.dart';
+
 final class const LineMetrics({
   required final double left,
   required final double baseline,
@@ -11,6 +13,16 @@ final class const LineMetrics({
   required final int glyphEnd,
 });
 
+extension type const GlyphSynthetic(int value) implements int {
+  static const none = GlyphSynthetic(0);
+  static const embolden = GlyphSynthetic(1);
+  static const skew = GlyphSynthetic(2);
+
+  bool get isNone => value == 0;
+  bool get isEmbolden => value & 1 != 0;
+  bool get isSkew => value & 2 != 0;
+}
+
 final class const GlyphMetrics({
   required final double x,
   required final double y,
@@ -20,6 +32,8 @@ final class const GlyphMetrics({
   required final double bottom,
   required final int id,
   required final int font,
+  required final int typefaceId,
+  required final GlyphSynthetic synthetic,
 });
 
 extension type const PathVerb._(int value) {
@@ -29,6 +43,16 @@ extension type const PathVerb._(int value) {
   static const conic = PathVerb._(3);
   static const cubic = PathVerb._(4);
   static const close = PathVerb._(5);
+
+  int get points => switch (this) {
+    .move => 1,
+    .line => 1,
+    .quad => 2,
+    .conic => 2,
+    .cubic => 3,
+    .close => 0,
+    _ => unreachable(),
+  };
 }
 
 extension type const PathVerbList(Uint8List value) implements Uint8List {

@@ -75,7 +75,7 @@ final class SceneRenderer {
     final transform = bundle.frameTransform(frame);
 
     canvas.save();
-    canvas.transform(transform.storage64);
+    canvas.transform(transform.storageFlat);
 
     final entries = _cache.putIfAbsent(ref, () => painter.paintFrame(scene, ref, frame, depth));
     for (final e in entries) {

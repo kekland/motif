@@ -10,6 +10,19 @@
 #include <modules/skparagraph/include/TypefaceFontProvider.h>
 #include <ports/SkFontMgr_empty.h>
 
+#if defined(__APPLE__)
+#include <CoreText/CoreText.h>
+#include <ports/SkFontMgr_mac_ct.h>
+#elif defined(_WIN32)
+#include <ports/SkTypeface_win.h>
+#elif defined(__ANDROID__)
+#include <ports/SkFontMgr_android.h>
+#include <ports/SkFontScanner_FreeType.h>
+#elif defined(__linux__)
+#include <ports/SkFontMgr_fontconfig.h>
+#include <ports/SkFontScanner_FreeType.h>
+#endif
+
 #include "enums.hpp"
 
 using namespace skia::textlayout;
@@ -17,6 +30,20 @@ using namespace skia::textlayout;
 SkFontMgr* sk_font_mgr() {
   static const sk_sp<SkFontMgr> mgr = SkFontMgr_New_Custom_Empty();
   return mgr.get();
+}
+
+static sk_sp<SkFontMgr> sk_system_font_mgr_create() {
+#if defined(__APPLE__)
+  return SkFontMgr_New_CoreText(nullptr);
+#elif defined(_WIN32)
+  return SkFontMgr_New_DirectWrite();
+#elif defined(__ANDROID__)
+  return SkFontMgr_New_Android(nullptr, SkFontScanner_Make_FreeType());
+#elif defined(__linux__)
+  return SkFontMgr_New_FontConfig(nullptr, SkFontScanner_Make_FreeType());
+#else
+  return SkFontMgr::RefEmpty();
+#endif
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -31,7 +58,8 @@ struct font_provider {
 FFI font_provider_t motif_font_provider_create() {
   font_provider_t provider = new font_provider();
   provider->collection->setAssetFontManager(provider->value);
-  provider->collection->disableFontFallback();
+  provider->collection->setDefaultFontManager(sk_system_font_mgr_create());
+  provider->collection->enableFontFallback();
   return provider;
 }
 
@@ -48,7 +76,7 @@ FFI int32_t motif_font_provider_add(font_provider_t provider, const uint8_t* dat
   if (registered) {
     provider->collection->clearCaches();
   }
-  
+
   return registered > 0 ? 1 : 0;
 }
 
@@ -221,6 +249,9 @@ static void motif_paragraph_collect_metrics(paragraph& p) {
     if (font_it == p.fonts.end()) font_it = p.fonts.insert(font_it, run->font);
     const uint16_t font = font_it - p.fonts.begin();
 
+    const uint32_t typeface_id = run->font.getTypeface()->uniqueID();
+    const uint8_t synthetic = (run->font.isEmbolden() ? 1 : 0) | (run->font.getSkewX() != 0 ? 2 : 0);
+
     glyph_bounds.resize(run->count);
     run->font.getBounds(run->glyphs, run->count, glyph_bounds.data(), nullptr);
 
@@ -236,6 +267,8 @@ static void motif_paragraph_collect_metrics(paragraph& p) {
           box.bottom(),
           run->glyphs[i],
           font,
+          typeface_id,
+          synthetic,
       });
     }
   });
@@ -261,12 +294,17 @@ FFI const glyph_metrics* motif_paragraph_get_glyph_metrics(paragraph_t p) {
   return p->glyphs.data();
 }
 
-FFI const glyph_path* motif_paragraph_get_glyph_path(paragraph_t paragraph, size_t index) {
+FFI const glyph_path* motif_paragraph_get_glyph_path_by_index(paragraph_t paragraph, size_t index) {
   motif_paragraph_collect_metrics(*paragraph);
   const auto& glyph = paragraph->glyphs[index];
+  return motif_paragraph_get_glyph_path_by_id(paragraph, glyph.font, glyph.id);
+}
+
+FFI const glyph_path* motif_paragraph_get_glyph_path_by_id(paragraph_t paragraph, size_t font, uint16_t glyph_id) {
+  motif_paragraph_collect_metrics(*paragraph);
 
   SkPath path;
-  paragraph->fonts[glyph.font].getPath(glyph.id, &path);
+  paragraph->fonts[font].getPath(glyph_id, &path);
 
   const uint32_t verbs = path.countVerbs();
   const uint32_t points = path.countPoints();

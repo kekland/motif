@@ -55,6 +55,13 @@ final class SceneAssetCache extends AssetCache {
     return _inProgress[hash]!;
   }
 
+  @override
+  FutureOr<ImageData?> fetchImage(StatementId? statementId, ImageAsset asset) async {
+    if (image[asset.hash] != null) return image[asset.hash];
+    await fetch(statementId, asset);
+    return image[asset.hash];
+  }
+
   Future<Uint8List> _performFetch(Asset asset) async {
     final hash = asset.hash;
     final data = await scene.assetResolver!(hash);
@@ -108,16 +115,24 @@ final class SceneFontCache extends FontCache {
 }
 
 final class SceneImageCache {
-  final cache = <Hash, ui.Image>{};
+  final cache = <Hash, ImageData>{};
 
-  ui.Image? operator [](Hash hash) => cache[hash];
+  ImageData? operator [](Hash hash) => cache[hash];
 
-  Future<ui.Image> add(Hash hash, Uint8List bytes) async {
+  Future<ImageData> add(Hash hash, Uint8List bytes) async {
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
-    cache[hash] = frame.image;
+    final imageBytes = await frame.image.toByteData(format: .rawRgba);
+
+    cache[hash] = .new(
+      bytes: imageBytes!,
+      width: frame.image.width,
+      height: frame.image.height,
+    );
+
+    frame.image.dispose();
     codec.dispose();
-    return frame.image;
+    return cache[hash]!;
   }
 
   Future<ImageAsset> addLocal(Uint8List bytes, {required String mimeType}) async {
@@ -134,7 +149,6 @@ final class SceneImageCache {
   }
 
   void dispose() {
-    for (final i in cache.values) i.dispose();
     cache.clear();
   }
 }

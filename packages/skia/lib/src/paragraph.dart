@@ -21,10 +21,12 @@ GlyphMetrics _glyphMetricsFromNative(gen.glyph_metrics data) => .new(
   bottom: data.bottom,
   id: data.id,
   font: data.font,
+  typefaceId: data.typeface_id,
+  synthetic: .new(data.synthetic),
 );
 
 Path _pathFromNative(gen.glyph_path data) => Path(
-  verbs: .new(data.verbs.asTypedList(data.verb_count)),
+  verbs: .fromList(data.verbs.asTypedList(data.verb_count)),
   points: .fromList(data.points.asTypedList(data.point_count * 2)),
 );
 
@@ -51,11 +53,14 @@ final class Paragraph extends NativeObject<gen.paragraph> {
     return .generate(count, (i) => _glyphMetricsFromNative(addr[i]));
   }
 
-  Path getGlyphPath(int index) => _pathFromNative(gen.motif_paragraph_get_glyph_path(ptr, index).ref);
+  Path getGlyphPathByIndex(int index) => _pathFromNative(gen.motif_paragraph_get_glyph_path_by_index(ptr, index).ref);
+  Path getGlyphPath(int font, int glyphId) => _pathFromNative(
+    gen.motif_paragraph_get_glyph_path_by_id(ptr, font, glyphId).ref,
+  );
 
   Path getPath() {
     final metrics = glyphMetrics.toList();
-    final paths = metrics.map((m) => getGlyphPath(metrics.indexOf(m))).toList();
+    final paths = List.generate(metrics.length, getGlyphPathByIndex);
     (double, double) offset(int i) => (metrics[i].x, metrics[i].y);
     return Path.join(paths, offset: offset);
   }

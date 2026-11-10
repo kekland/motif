@@ -383,7 +383,7 @@ final class EdgeHandleRenderObject extends HandleRenderObject<EdgeRef> {
   @override
   void performPaint(Canvas canvas) {
     if (!enabled) return;
-    final cubic = this.cubic.transformed(.fromListFloat64(paintTransform.storage));
+    final cubic = this.cubic.transformed(.viewFlat(paintTransform.storage));
 
     paintEdgeHandle(
       canvas,
@@ -433,7 +433,7 @@ final class FrameHandleRenderObject extends HandleRenderObject<FrameRef> {
     if (!enabled) return;
 
     final points = bbox.corners;
-    final totalTransform = Mat4.fromListFloat64(paintTransform.storage) * transform;
+    final totalTransform = Mat4.viewFlat(paintTransform.storage) * transform;
     points.transform(totalTransform);
 
     paintFrameHandle(canvas, points, primaryColor);

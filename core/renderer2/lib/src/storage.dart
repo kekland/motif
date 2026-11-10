@@ -11,7 +11,6 @@ import 'buffers/decoration.dart';
 import 'buffers/geometry.dart';
 import 'buffers/style.dart';
 import 'buffers/topology.dart';
-import 'storage_base/gpu_storage.dart';
 
 import 'shaders/count.g.dart' as count;
 import 'shaders/structs.g.dart' as structs;
@@ -223,8 +222,6 @@ class RendererStorage {
               ? (offset: previousData.decorationStart, count: previousData.decorationCount)
               : null,
         );
-
-        print(decorationSpan);
 
         style.storage.face[handle.rawIndex] = .new(
           decorationStart: decorationSpan.offset,

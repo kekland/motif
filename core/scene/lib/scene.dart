@@ -74,6 +74,7 @@ final class Scene with ChangeNotifier, ChangeNotifierDisposable {
 
   Bundle get bundle => evaluation.bundle;
   SceneObjectTree get tree => evaluation.object;
+  AssetManifest get assetManifest => evaluation.assetManifest;
 
   S? statement<S extends Statement>(StatementId id) => evaluation.statement<S>(id);
   Iterable<CellRef> productsOf(StatementId id) => evaluation.productsOf(id);

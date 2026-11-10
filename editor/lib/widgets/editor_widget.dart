@@ -84,23 +84,34 @@ class ConnectedEditorWidget extends HookWidget {
                   Panel(
                     key: EditorPanel.main,
                     constraints: .flex(1.0),
-                    child: Panels(
-                      direction: .vertical,
-                      panels: [
-                        Panel(
-                          key: EditorPanel.canvas,
-                          constraints: .flex(1.0),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0.0,
+                          right: 0.0,
+                          top: 0.0,
+                          bottom: 36.0,
                           child: EditorCanvas(),
                         ),
-                        Panel(
-                          key: EditorPanel.tab,
-                          constraints: .pixels(0.0, maxHeight * 0.35),
-                          child: EditorTabWidget(),
-                        ),
-                        Panel(
-                          key: EditorPanel.tabBar,
-                          constraints: .pixels(36.0, 36.0),
-                          child: EditorTabBar(height: 36.0),
+                        Panels(
+                          direction: .vertical,
+                          panels: [
+                            Panel(
+                              key: EditorPanel.canvas,
+                              constraints: .flex(1.0),
+                              child: SizedBox.expand(),
+                            ),
+                            Panel(
+                              key: EditorPanel.tab,
+                              constraints: .pixels(0.0, maxHeight * 0.35),
+                              child: EditorTabWidget(),
+                            ),
+                            Panel(
+                              key: EditorPanel.tabBar,
+                              constraints: .pixels(36.0, 36.0),
+                              child: EditorTabBar(height: 36.0),
+                            ),
+                          ],
                         ),
                       ],
                     ),

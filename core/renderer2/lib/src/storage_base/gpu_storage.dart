@@ -52,24 +52,3 @@ final class GpuStorage<T extends Storage> {
     buffer.destroy();
   }
 }
-
-// flutter: % offset: 0, data: (0, 0, 128, 63, 0, 0, 0, 0, 0, 0)
-// flutter: % offset: 1024, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: % offset: 1152, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: % offset: 1408, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: % offset: 0, data: (7, 0, 0, 0, 1, 0, 0, 0, 2, 0)
-// flutter: % offset: 128, data: (0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
-// flutter: % offset: 320, data: (0, 0, 0, 0, 4, 0, 0, 0, 1, 0)
-// flutter: % offset: 512, data: (0, 0, 0, 0, 1, 0, 0, 0, 255, 255)
-// flutter: % offset: 896, data: (0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
-// flutter: % offset: 1024, data: (1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: offset: 0, data: (0, 0, 128, 63, 0, 0, 0, 0, 0, 0)
-// flutter: offset: 1024, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: offset: 1152, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: offset: 1408, data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-// flutter: offset: 0, data: (7, 0, 0, 0, 1, 0, 0, 0, 2, 0)
-// flutter: offset: 128, data: (0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
-// flutter: offset: 320, data: (0, 0, 0, 0, 4, 0, 0, 0, 1, 0)
-// flutter: offset: 512, data: (0, 0, 0, 0, 1, 0, 0, 0, 255, 255)
-// flutter: offset: 896, data: (0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
-// flutter: offset: 1024, data: (1, 0, 0, 0, 0, 0, 0, 0, 0, 0)

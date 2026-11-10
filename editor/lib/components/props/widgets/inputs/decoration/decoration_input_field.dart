@@ -41,7 +41,11 @@ final class const DecorationInputField({
         builder: (context) {
           final id = useProxyComputedValue(value, (value) => (value as ImageDecoration).image);
           if (id == null) return SizedBox.shrink();
-          return RawImage(image: scene.assetCache.image[id]);
+
+          final bytes = scene.assetCache.image[id]?.bytes;
+          if (bytes == null) return SizedBox.shrink();
+
+          return Image.memory(bytes.buffer.asUint8List(), cacheWidth: 128, cacheHeight: 128);
         },
       ),
       .shader => HookBuilder(

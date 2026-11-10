@@ -46,6 +46,14 @@
       "problemMatcher": []
     },
     {
+      "label": "packages/skia/generate_bindings",
+      "detail": "Generate Skia bindings",
+      "type": "shell",
+      "command": "./packages/skia/tool/generate_bindings.dart",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
       "label": "packages/webgpu/generate",
       "detail": "Generate webgpu bindings",
       "type": "shell",

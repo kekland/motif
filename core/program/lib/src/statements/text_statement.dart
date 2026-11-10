@@ -50,7 +50,7 @@ final class TextStatement extends Statement
   @override
   Size2 intrinsicSize(Evaluation evaluation) {
     final paragraph = buildParagraph(evaluation);
-    paragraph.layout(double.infinity);
+    paragraph.layout(size.width.isFixed ? size.width.value! : double.infinity);
     return Size2(paragraph.maxIntrinsicWidth, paragraph.height);
   }
 

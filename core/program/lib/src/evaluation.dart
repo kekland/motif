@@ -65,6 +65,9 @@ class Evaluation {
   /// Resolves the evaluation order between two cells.
   int cellEvalOrder(CellRef a, CellRef b) => evalOrder(a.statementId, b.statementId);
 
+  /// Returns a view of all resolved statements in the evaluation tree.
+  Iterable<Statement> get statements => tree._nodes.values.map((n) => n.statement);
+
   /// Returns the products (added cells) of the statement and its subtree.
   Iterable<CellRef> productsOf(StatementId id) => switch (tree[id]) {
     final node? => [for (final n in tree.subtree(node)) ...?n.commit?.added],

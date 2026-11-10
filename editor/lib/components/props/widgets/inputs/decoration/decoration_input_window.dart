@@ -107,7 +107,7 @@ final class const _ImageDecorationInputBody({
   @override
   Widget build(BuildContext context) {
     final _value = useCastComputed<ImageDecoration>(value);
-    final id = useProxyComputedValue(_value, (v) => v.image);
+    // final id = useProxyComputedValue(_value, (v) => v.image);
 
     return Surface(
       borderSide: .new(color: context.colors.divider),
@@ -116,7 +116,7 @@ final class const _ImageDecorationInputBody({
       height: 200.0,
       child: Stack(
         children: [
-          if (id != null) Center(child: RawImage(image: editor.scene.assetCache.image[id])),
+          // if (id != null) Center(child: RawImage(image: editor.scene.assetCache.image[id])),
           Center(
             child: Button(
               onTap: () async {
@@ -149,7 +149,6 @@ final class const _ShaderDecorationInputBody({
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-
     return Surface(
       borderSide: .new(color: context.colors.divider),
       borderRadius: .circular(4.0),

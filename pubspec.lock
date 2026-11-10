@@ -451,6 +451,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.0"
+  metal_capture_util:
+    dependency: transitive
+    description:
+      name: metal_capture_util
+      sha256: "52ab9cd907ad4e90a0426340db0f439d8d92b80b1ea3df13ddbc6ffbe2660af0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   mime:
     dependency: transitive
     description:
