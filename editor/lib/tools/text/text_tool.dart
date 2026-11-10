@@ -89,7 +89,7 @@ class TextStatementEditOverlay extends HookWidget {
           Transform(
             transform: transform.asVM(),
             child: SizedBox(
-              width: statement.size.width.isContain ? null : bbox.width,
+              width: statement.size.width.isContain ? null : bbox.width.ceilToDouble(),
               child: gestureBuilder.buildGestureDetector(
                 key: gestureDetectorKey,
                 behavior: .translucent,

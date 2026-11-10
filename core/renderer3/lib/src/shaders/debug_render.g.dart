@@ -2708,6 +2708,13 @@ struct Quadratic2 {
   p2: vec2f,
 }
 
+fn quadratic2_pos_tan(q: Quadratic2, t: f32) -> vec4f {
+  let u = 1.0 - t;
+  let pos = u * u * q.p0 + 2.0 * u * t * q.p1 + t * t * q.p2;
+  let tan = 2.0 * u * (q.p1 - q.p0) + 2.0 * t * (q.p2 - q.p1);
+  return vec4f(pos, tan);
+}
+
 fn quadratic2_bbox(c: Quadratic2) -> vec4f {
   var lo = min(c.p0, min(c.p1, c.p2));
   var hi = max(c.p0, max(c.p1, c.p2));
@@ -2784,6 +2791,13 @@ fn bbox_inflate(bbox: vec4f, dx: f32, dy: f32) -> vec4f {
 fn bbox_size(bbox: vec4f) -> vec2f {
   return bbox.zw - bbox.xy;
 }
+
+fn bbox_transform(bbox: vec4f, m: mat4x4f) -> vec4f {
+  return vec4f(
+    vec2_transform(m, bbox.xy),
+    vec2_transform(m, bbox.zw)
+  );
+}
 // end import "vector.wgsl"
 
 // import "matrix.wgsl"
@@ -2812,6 +2826,15 @@ fn mat4_translate2_scale2(t: vec2f, s: vec2f) -> mat4x4f {
     vec4f(0.0, 0.0, 1.0, 0.0),
     vec4f(t, 0.0, 1.0)
   );
+}
+
+fn mat4_get_scale2(m: mat4x4f) -> vec2f {
+  return vec2f(m[0][0], m[1][1]);
+}
+
+fn mat4_get_max_scale_on_axis(m: mat4x4f) -> f32 {
+  let scale = mat4_get_scale2(m);
+  return max(scale.x, scale.y);
 }
 // end import "matrix.wgsl"
 // end import "math/math.wgsl"

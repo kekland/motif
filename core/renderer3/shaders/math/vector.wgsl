@@ -42,3 +42,10 @@ fn bbox_inflate(bbox: vec4f, dx: f32, dy: f32) -> vec4f {
 fn bbox_size(bbox: vec4f) -> vec2f {
   return bbox.zw - bbox.xy;
 }
+
+fn bbox_transform(bbox: vec4f, m: mat4x4f) -> vec4f {
+  return vec4f(
+    vec2_transform(m, bbox.xy),
+    vec2_transform(m, bbox.zw)
+  );
+}

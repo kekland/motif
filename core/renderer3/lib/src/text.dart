@@ -15,6 +15,7 @@ final class TextManager {
 
   final _statements = <StatementId, TextStatement>{};
   final _spans = <StatementId, DataSpan>{};
+  final _bboxes = <StatementId, geom32.Aabb2>{};
 
   void process(TextStatement statement) {
     _statements[statement.id] = statement;
@@ -26,11 +27,13 @@ final class TextManager {
 
     final metrics = paragraph.glyphMetrics.toList();
     final data = ByteData(metrics.length * gen.GlyphInstance.unpaddedSizeInBytes);
+    final scale = statement.textFormat.fontSize;
+
+    var bbox = geom32.Aabb2.invertedInfinity();
 
     for (final (i, metrics) in metrics.indexed) {
       final id = (metrics.typefaceId, metrics.synthetic, metrics.id);
-      final glyphIndex =
-          glyph.indexOf(id) ?? glyph.put(id, statement.textFormat.fontSize, paragraph.getGlyphPathByIndex(i));
+      final glyphIndex = glyph.indexOf(id) ?? glyph.put(id, scale, paragraph.getGlyphPathByIndex(i));
 
       final offset = i * gen.GlyphInstance.unpaddedSizeInBytes;
       gen.GlyphInstance(
@@ -38,12 +41,23 @@ final class TextManager {
         styleIndex: styleIndex,
         offset: .new(metrics.x, metrics.y),
         parentIndex: renderer.bundle.frame(statement.frame)!.rawIndex,
-        scale: statement.textFormat.fontSize,
+        scale: scale,
       ).write(data, offset);
+
+      final glyphBboxRaw = glyph.bounds[id]!;
+      final glyphBbox = geom32.Aabb2(
+        glyphBboxRaw.left * scale + metrics.x,
+        glyphBboxRaw.top * scale + metrics.y,
+        glyphBboxRaw.right * scale + metrics.x,
+        glyphBboxRaw.bottom * scale + metrics.y,
+      );
+
+      bbox.hull(glyphBbox);
     }
 
     final span = instanceStorage.putRaw(data, span: _spans[statement.id]);
     _spans[statement.id] = span;
+    _bboxes[statement.id] = bbox;
     // print("[text] process text: ${metrics.length} ($span)");
   }
 
@@ -68,6 +82,7 @@ final class TextManager {
   bool isTextFrame(FrameRef ref) => _statements.containsKey(ref.statementId);
   TextStatement getTextStatement(FrameRef ref) => _statements[ref.statementId]!;
   DataSpan getInstanceSpan(FrameRef ref) => _spans[ref.statementId]!;
+  geom32.Aabb2 getBbox(FrameRef ref) => _bboxes[ref.statementId]!;
 }
 
 typedef GlyphId = (int, int, int);
@@ -81,6 +96,8 @@ final class GlyphManager {
   late final buffer = GpuStorageBuffer(renderer.device!, storage, label: 'glyph');
   late final storage = GlyphStorage();
   final mapping = <GlyphId, GlyphIndex>{};
+  final bounds = <GlyphId, geom32.Aabb2>{};
+
   var dataTop = 0;
   var boundaryTop = 0;
   var geometryTop = 0;
@@ -106,6 +123,7 @@ final class GlyphManager {
     var start = 0;
     var count = 0;
     var pi = 0;
+    var startPi = 0;
 
     for (var i = 0; i < verbs.length; i++) {
       switch (verbs[i]) {
@@ -113,9 +131,11 @@ final class GlyphManager {
           boundaries.add((start, count));
           totalCount += count;
           start = totalCount;
+          startPi = pi;
           count = 0;
           pi += 1;
         case .move:
+          startPi = pi;
           pi += 1;
         case .line:
           count += 1;
@@ -134,6 +154,11 @@ final class GlyphManager {
         case .conic:
           unreachable();
         case .close:
+          final gap = (points[pi - 1] - points[startPi]).length;
+          if (gap > fontSize * 1e-5) {
+            count += 1;
+            quadCount[i] = 1;
+          }
           if (count > 0) boundaries.add((start, count));
           totalCount += count;
           count = 0;
@@ -147,12 +172,15 @@ final class GlyphManager {
     }
 
     final quadratics = geom32.Vec2List(totalCount * 3);
+    final bbox = geom32.Aabb2.invertedInfinity();
 
     pi = 0;
+    startPi = 0;
     count = 0;
     for (var i = 0; i < verbs.length; i++) {
       switch (verbs[i]) {
         case .move:
+          startPi = pi;
           pi += 1;
         case .line:
           final p0 = points[pi - 1], p1 = points[pi];
@@ -179,9 +207,23 @@ final class GlyphManager {
             count += 1;
           });
           pi += 3;
+        case .close:
+          if (quadCount[i] == 1) {
+            final p0 = points[pi - 1];
+            final p1 = points[startPi];
+            quadratics[count * 3] = p0 * scale;
+            quadratics[count * 3 + 1] = (p0 + p1) * 0.5 * scale;
+            quadratics[count * 3 + 2] = p1 * scale;
+            count += 1;
+          }
         default:
           break;
       }
+    }
+
+    for (var i = 0; i < count; i++) {
+      final q = geom32.Quadratic2.view(quadratics.sublistView(i * 3, i * 3 + 3));
+      bbox.hull(q.bboxTight);
     }
 
     storage.data[index] = .new(boundarySpan: .new(boundaryTop, boundaries.length));
@@ -204,6 +246,9 @@ final class GlyphManager {
     storage.geometry.markRangeDirty(geometryStart, geometryEnd);
 
     geometryTop += totalCount;
+
+    bounds[id] = bbox;
+
     // print('geometry: ${geometryTop - totalCount}-${geometryTop}');
     return index;
   }
@@ -253,7 +298,7 @@ final class TextStyleManager {
   new(this.renderer);
   final Renderer renderer;
 
-  late final buffer = GpuStorageBuffer(renderer.device!, storage, label: 'text-style-buffer');
+  late final buffer = GpuStorageBuffer(renderer.device!, storage, label: 'text-style');
   late final storage = TextStyleStorage();
 
   late final _indices = <StatementId, int>{};

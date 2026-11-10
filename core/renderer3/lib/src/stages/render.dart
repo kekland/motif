@@ -1,6 +1,6 @@
 part of '../../renderer.dart';
 
-const _kDebug = true;
+const _kDebug = false;
 
 final class RenderStage {
   new(this.renderer);

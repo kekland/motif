@@ -133,6 +133,7 @@ final class DrawEntryManager {
   var _drawCounts = <int>[];
   var _entries = <gen.DrawEntry>[];
   var _isText = false;
+  late geom32.Aabb2 _localBbox;
 
   void _begin(CellIndex key, int cell, CellKind kind, int decorationStart, int decorationCount) {
     _key = key;
@@ -140,6 +141,7 @@ final class DrawEntryManager {
     _cellKind = kind;
     _decorationStart = decorationStart;
     _decorationCount = decorationCount;
+    _localBbox = .empty();
     _decorationOffset = 0;
     _pipelines = [];
     _entries = [];
@@ -148,13 +150,21 @@ final class DrawEntryManager {
     _isText = false;
   }
 
-  void _beginText(CellIndex key, DataSpan instanceSpan, int decorationStart, int decorationCount) {
+  void _beginText(
+    CellIndex key,
+    DataSpan instanceSpan,
+    geom32.Aabb2 localBbox,
+    int decorationStart,
+    int decorationCount,
+  ) {
     _begin(key, -1, .frame, decorationStart, decorationCount);
     _instanceSpan = instanceSpan;
+    _localBbox = localBbox;
     _isText = true;
   }
 
   void _push(RenderPipelineKind kind, PreparedDecoration? d) {
+    // print('push: kind=${kind.name}, decorationOffset=$_decorationOffset');
     final state = _producePipelineState(kind, d);
     if (!_hasState) {
       _state = state;
@@ -183,6 +193,7 @@ final class DrawEntryManager {
     final entry = gen.DrawEntry(
       cell: _cell,
       decorationSpan: .new(_decorationStart, _decorationOffset),
+      localBbox: .new(_localBbox.left, _localBbox.top, _localBbox.right, _localBbox.bottom),
       kind: switch (state.kind) {
         .direct when _cellKind == .vertex => 1,
         .direct when _cellKind == .edge => 2,
@@ -201,6 +212,7 @@ final class DrawEntryManager {
   }
 
   void _flushText(RenderPipelineState state) {
+    // print('flush text: $_instanceSpan (${state.kind.name}), decoration span: $_decorationStart:$_decorationOffset');
     final decorationSpan = DataSpan(_decorationStart, _decorationOffset);
     final kind = switch (state.kind) {
       .direct => 5,
@@ -214,7 +226,12 @@ final class DrawEntryManager {
     };
 
     for (var i = _instanceSpan.start; i < _instanceSpan.end; i++) {
-      final entry = gen.DrawEntry(cell: i, decorationSpan: decorationSpan, kind: kind);
+      final entry = gen.DrawEntry(
+        cell: i,
+        decorationSpan: decorationSpan,
+        localBbox: .new(_localBbox.left, _localBbox.top, _localBbox.right, _localBbox.bottom),
+        kind: kind,
+      );
       _entries.add(entry);
     }
 
@@ -274,25 +291,37 @@ final class DrawEntryManager {
 
     assert(renderer.text.isTextFrame(ref));
     final instanceSpan = renderer.text.getInstanceSpan(ref);
+    final bbox = renderer.text.getBbox(ref);
     // print('== process text $ref (${i.i}) span: ${instanceSpan}');
 
     final edgeDecorationSpan = renderer.text.style.edgeDecorationSpanOf(ref);
+    final faceDecorationSpan = renderer.text.style.faceDecorationSpanOf(ref);
     final edgeDecorations = renderer.text.style.edgeDecorationsOf(ref);
+    final faceDecorations = renderer.text.style.faceDecorationsOf(ref);
+    final hasDecorations = edgeDecorationSpan.isNotEmpty || faceDecorationSpan.isNotEmpty;
+    if (!hasDecorations) return;
+
+    _beginText(i.cell, instanceSpan, bbox, 0, 0);
+
     if (edgeDecorationSpan.isNotEmpty) {
-      _beginText(i.cell, instanceSpan, edgeDecorationSpan.x, edgeDecorationSpan.y);
+      _decorationStart = edgeDecorationSpan.x;
+      _decorationCount = edgeDecorationSpan.y;
       for (final d in edgeDecorations) _push(.direct, d);
-      _end();
     }
 
-    final faceDecorationSpan = renderer.text.style.faceDecorationSpanOf(ref);
-    final faceDecorations = renderer.text.style.faceDecorationsOf(ref);
     if (faceDecorationSpan.isNotEmpty) {
-      _beginText(i.cell, instanceSpan, faceDecorationSpan.x, faceDecorationSpan.y);
+      _flush(_state);
+      _decorationOffset = 0;
+      _hasState = false;
+
+      _decorationStart = faceDecorationSpan.x;
+      _decorationCount = faceDecorationSpan.y;
       _push(.stencil, null);
       for (final d in faceDecorations.take(faceDecorations.length - 1)) _push(.coverKeep, d);
       _push(.coverZero, faceDecorations.last);
-      _end();
     }
+
+    _end();
 
     _refCache[ref] = i.cell;
   }

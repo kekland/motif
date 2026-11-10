@@ -6,6 +6,13 @@ struct Quadratic2 {
   p2: vec2f,
 }
 
+fn quadratic2_pos_tan(q: Quadratic2, t: f32) -> vec4f {
+  let u = 1.0 - t;
+  let pos = u * u * q.p0 + 2.0 * u * t * q.p1 + t * t * q.p2;
+  let tan = 2.0 * u * (q.p1 - q.p0) + 2.0 * t * (q.p2 - q.p1);
+  return vec4f(pos, tan);
+}
+
 fn quadratic2_bbox(c: Quadratic2) -> vec4f {
   var lo = min(c.p0, min(c.p1, c.p2));
   var hi = max(c.p0, max(c.p1, c.p2));

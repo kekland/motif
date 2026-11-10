@@ -39,6 +39,9 @@ typedef U32ArrayInternal = List<wgsl.U32>;
 typedef GlyphInstanceArray = List<GlyphInstance>;
 typedef GlyphInstanceArrayInternal = List<GlyphInstanceInternal>;
 
+typedef TextStyleArray = List<TextStyle>;
+typedef TextStyleArrayInternal = List<TextStyleInternal>;
+
 typedef RenderGeometryArray = List<RenderGeometry>;
 typedef RenderGeometryArrayInternal = List<RenderGeometryInternal>;
 
@@ -862,22 +865,25 @@ extension type const GlyphInstanceInternal._((wgsl.Vec2f offset, wgsl.U32 parent
   ));
 }
 
-extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan) _) {
+extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan, wgsl.Vec4f localBbox) _) {
   const new({
     required int cell,
     required int kind,
     required wgsl.Vec2u decorationSpan,
+    required wgsl.Vec4f localBbox,
   }): this._((
     cell,
     kind,
     decorationSpan,
+    localBbox,
   ));
 
   int get cell => _.$1;
   int get kind => _.$2;
   wgsl.Vec2u get decorationSpan => _.$3;
+  wgsl.Vec4f get localBbox => _.$4;
 
-  static const int unpaddedSizeInBytes = 16;
+  static const int unpaddedSizeInBytes = 32;
 
   @pragma('vm:prefer-inline')
   static DrawEntry read(ByteData data, int offset) => DrawEntryInternal.read(data, offset).asDart;
@@ -890,18 +896,21 @@ extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan)
     .new(cell),
     .new(kind),
     decorationSpan,
+    localBbox,
   );
 }
 
-extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec2u decorationSpan) _) {
+extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec2u decorationSpan, wgsl.Vec4f localBbox) _) {
   const new(
     wgsl.U32 cell,
     wgsl.U32 kind,
     wgsl.Vec2u decorationSpan,
+    wgsl.Vec4f localBbox,
   ): this._((
     cell,
     kind,
     decorationSpan,
+    localBbox,
   ));
 
   @pragma('vm:prefer-inline')
@@ -909,6 +918,7 @@ extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec
     wgsl.U32.read(data, offset + 0),
     wgsl.U32.read(data, offset + 4),
     wgsl.Vec2u.read(data, offset + 8),
+    wgsl.Vec4f.read(data, offset + 16),
   ));
 
   @pragma('vm:prefer-inline')
@@ -916,19 +926,22 @@ extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec
     wgsl.U32(_.$1).write(data, offset + 0);
     wgsl.U32(_.$2).write(data, offset + 4);
     _.$3.write(data, offset + 8);
+    _.$4.write(data, offset + 16);
   }
 
   wgsl.U32 get cell => _.$1;
   wgsl.U32 get kind => _.$2;
   wgsl.Vec2u get decorationSpan => _.$3;
+  wgsl.Vec4f get localBbox => _.$4;
 
-  static const int unpaddedSizeInBytes = 16;
+  static const int unpaddedSizeInBytes = 32;
 
   @pragma('vm:prefer-inline')
   DrawEntry get asDart => ._((
     _.$1,
     _.$2,
     _.$3,
+    _.$4,
   ));
 }
 
@@ -2380,6 +2393,118 @@ class GlyphInstanceArrayStorageBuffer extends wgsl.ArrayStorageBuffer<GlyphInsta
   void destroy() => buffer.destroy();
 }
 
+@meta.StorageBufferView(['text_style'])
+extension type TextStyleArrayStorageBufferView(ByteData data) {
+  TextStyleArrayStorageBufferView.create(int length): this(.new(length * strideInBytes));
+
+  void writeToQueue(webgpu.Queue queue, webgpu.Buffer buffer, {int? count}) {
+    final length = count != null ? count * strideInBytes : data.lengthInBytes;
+    queue.writeBuffer(buffer, 0, ByteData.sublistView(data, 0, length));
+  }
+  void clear() => data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes).fillRange(0, data.lengthInBytes, 0);
+
+  static const int strideInBytes = 24;
+  int get sizeInBytes => data.lengthInBytes;
+  int get length => sizeInBytes ~/ strideInBytes;
+
+  static webgpu.BufferDescriptor descriptor({
+    required int length,
+    String? label,
+    webgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) => .new(
+    label: label ?? '(glyph_geometry.wgsl) array<TextStyle> buffer',
+    size: length * strideInBytes,
+    usage: usage ?? .of([.storage, .copyDst]),
+    mappedAtCreation: mappedAtCreation,
+  );
+
+  static webgpu.Buffer createBuffer(
+    webgpu.Device device, {
+    required int length,
+    String? label,
+    webgpu.BufferUsage? usage,
+    bool mappedAtCreation = false,
+  }) {
+    return device.createBuffer(descriptor(
+      length: length,
+      label: label,
+      usage: usage,
+      mappedAtCreation: mappedAtCreation,
+    ));
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(TextStyleArray value) {
+    for (var i = 0; i < value.length; i++) {
+      value[i].asInternal.write(data, 0 + i * 24);
+    }
+  }
+
+  @pragma('vm:prefer-inline')
+  TextStyleArray read() {
+    return List.generate(length, (i) {
+      return TextStyle.read(data, 0 + i * 24);
+    });
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, TextStyle value) {
+    value.asInternal.write(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  TextStyle operator [](int index) {
+    return TextStyle.read(data, index * strideInBytes);
+  }
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {wgsl.Vec2u edgeDecorationSpan = .zero, wgsl.Vec2u faceDecorationSpan = .zero, double edgeWidth = 0}) {
+    edgeDecorationSpan.write(data, index * strideInBytes + 0);
+    faceDecorationSpan.write(data, index * strideInBytes + 8);
+    wgsl.F32(edgeWidth).write(data, index * strideInBytes + 16);
+  }
+}
+
+@meta.StorageBuffer(['text_style'])
+class TextStyleArrayStorageBuffer extends wgsl.ArrayStorageBuffer<TextStyleInternal> {
+  TextStyleArrayStorageBuffer(webgpu.Device device, {required int length, String? label, webgpu.BufferUsage? usage}):
+    _view = TextStyleArrayStorageBufferView.create(length),
+    super(length, TextStyleArrayStorageBufferView.createBuffer(device, length: length, label: label, usage: usage));
+
+
+  static const int strideInBytes = 24;
+  int get sizeInBytes => _view.sizeInBytes;
+
+  final TextStyleArrayStorageBufferView _view;
+  TextStyleArrayStorageBufferView get view => _view;
+
+  @override
+  void writeToQueue(webgpu.Queue queue, {int? count}) => _view.writeToQueue(queue, buffer, count: count);
+
+  TextStyleArray readSync(webgpu.Device device) {
+    final mapped = _readbackSync(device, buffer, sizeInBytes);
+    _view.data.buffer.asUint8List(_view.data.offsetInBytes, _view.data.lengthInBytes).setAll(0, mapped.buffer.asUint8List());
+    return _view.read();
+  }
+
+  @pragma('vm:prefer-inline')
+  void write(TextStyleArray value) => _view.write(value);
+
+  @pragma('vm:prefer-inline')
+  void clear([webgpu.Queue? queue]) {
+    _view.clear();
+    if (queue != null) writeToQueue(queue);
+  }
+
+  @pragma('vm:prefer-inline')
+  void operator []=(int index, TextStyle value) => _view[index] = value;
+
+  @pragma('vm:prefer-inline')
+  void set(int index, {wgsl.Vec2u edgeDecorationSpan = .zero, wgsl.Vec2u faceDecorationSpan = .zero, double edgeWidth = 0}) => _view.set(index, edgeDecorationSpan: edgeDecorationSpan, faceDecorationSpan: faceDecorationSpan, edgeWidth: edgeWidth);
+  void destroy() => buffer.destroy();
+}
+
 @meta.StorageBufferView(['render_geometry'])
 extension type RenderGeometryArrayStorageBufferView(ByteData data) {
   RenderGeometryArrayStorageBufferView.create(int length): this(.new(length * strideInBytes));
@@ -2507,7 +2632,7 @@ webgpu.BindGroupLayoutDescriptor createBindGroup0LayoutDescriptor({webgpu.Shader
   entries: [
     .new(
       binding: 0,
-      visibility: visibility ?? .none,
+      visibility: visibility ?? .compute,
       buffer: .new(
         type: .uniform,
         minBindingSize: 80,
@@ -2643,6 +2768,15 @@ webgpu.BindGroupLayoutDescriptor createBindGroup1LayoutDescriptor({webgpu.Shader
         hasDynamicOffset: false,
       ),
     ),
+    .new(
+      binding: 7,
+      visibility: visibility ?? .compute,
+      buffer: .new(
+        type: .readOnlyStorage,
+        minBindingSize: 24,
+        hasDynamicOffset: false,
+      ),
+    ),
   ],
 );
 
@@ -2656,11 +2790,13 @@ List<webgpu.BindGroupEntry> createBindGroup1Entries({
   required webgpu.BufferView draw,
   required webgpu.BufferView glyphInstance,
   required webgpu.BufferView glyphGeometry,
+  required webgpu.BufferView textStyle,
 }) => [
   .new(binding: 1, buffer: geometry.buffer, offset: geometry.offset, size: geometry.size),
   .new(binding: 4, buffer: draw.buffer, offset: draw.offset, size: draw.size),
   .new(binding: 5, buffer: glyphInstance.buffer, offset: glyphInstance.offset, size: glyphInstance.size),
   .new(binding: 6, buffer: glyphGeometry.buffer, offset: glyphGeometry.offset, size: glyphGeometry.size),
+  .new(binding: 7, buffer: textStyle.buffer, offset: textStyle.offset, size: textStyle.size),
 ];
 
 @meta.BindGroup(1)
@@ -2671,6 +2807,7 @@ webgpu.BindGroup createBindGroup1Raw(
   required webgpu.BufferView draw,
   required webgpu.BufferView glyphInstance,
   required webgpu.BufferView glyphGeometry,
+  required webgpu.BufferView textStyle,
   webgpu.ShaderStage? visibility,
   String? label,
 }) => device.createBindGroup(.new(
@@ -2681,6 +2818,7 @@ webgpu.BindGroup createBindGroup1Raw(
     draw: draw,
     glyphInstance: glyphInstance,
     glyphGeometry: glyphGeometry,
+    textStyle: textStyle,
   ),
 ));
 
@@ -2692,6 +2830,7 @@ webgpu.BindGroup createBindGroup1(
   required wgsl.ArrayStorageBuffer<wgsl.U32> draw,
   required wgsl.ArrayStorageBuffer<GlyphInstanceInternal> glyphInstance,
   required wgsl.ArrayStorageBuffer<wgsl.U32> glyphGeometry,
+  required wgsl.ArrayStorageBuffer<TextStyleInternal> textStyle,
   webgpu.ShaderStage? visibility,
   String? label,
 }) => createBindGroup1Raw(
@@ -2703,6 +2842,7 @@ webgpu.BindGroup createBindGroup1(
   draw: draw.bufferView,
   glyphInstance: glyphInstance.bufferView,
   glyphGeometry: glyphGeometry.bufferView,
+  textStyle: textStyle.bufferView,
 );
 
 @meta.BindGroupLayoutDescriptor(2)
@@ -3015,6 +3155,13 @@ struct Quadratic2 {
   p2: vec2f,
 }
 
+fn quadratic2_pos_tan(q: Quadratic2, t: f32) -> vec4f {
+  let u = 1.0 - t;
+  let pos = u * u * q.p0 + 2.0 * u * t * q.p1 + t * t * q.p2;
+  let tan = 2.0 * u * (q.p1 - q.p0) + 2.0 * t * (q.p2 - q.p1);
+  return vec4f(pos, tan);
+}
+
 fn quadratic2_bbox(c: Quadratic2) -> vec4f {
   var lo = min(c.p0, min(c.p1, c.p2));
   var hi = max(c.p0, max(c.p1, c.p2));
@@ -3091,6 +3238,13 @@ fn bbox_inflate(bbox: vec4f, dx: f32, dy: f32) -> vec4f {
 fn bbox_size(bbox: vec4f) -> vec2f {
   return bbox.zw - bbox.xy;
 }
+
+fn bbox_transform(bbox: vec4f, m: mat4x4f) -> vec4f {
+  return vec4f(
+    vec2_transform(m, bbox.xy),
+    vec2_transform(m, bbox.zw)
+  );
+}
 // end import "vector.wgsl"
 
 // import "matrix.wgsl"
@@ -3119,6 +3273,15 @@ fn mat4_translate2_scale2(t: vec2f, s: vec2f) -> mat4x4f {
     vec4f(0.0, 0.0, 1.0, 0.0),
     vec4f(t, 0.0, 1.0)
   );
+}
+
+fn mat4_get_scale2(m: mat4x4f) -> vec2f {
+  return vec2f(m[0][0], m[1][1]);
+}
+
+fn mat4_get_max_scale_on_axis(m: mat4x4f) -> f32 {
+  let scale = mat4_get_scale2(m);
+  return max(scale.x, scale.y);
 }
 // end import "matrix.wgsl"
 // end import "math/math.wgsl"
@@ -3311,6 +3474,7 @@ struct DrawEntry {
   cell: u32,
   kind: u32,
   decoration_span: vec2u,
+  local_bbox: vec4f,
 }
 
 const DRAW_ENTRY_KIND_VERTEX = 1u;
@@ -3322,11 +3486,15 @@ const DRAW_ENTRY_KIND_GLYPH_FACE_FAN = 6u;
 const DRAW_ENTRY_KIND_GLYPH_FACE_COVER = 7u;
 
 fn read_draw_entry(index: u32) -> DrawEntry {
-  let offset = storage_offsets.draw_entry + index * 4u;
+  let offset = storage_offsets.draw_entry + index * 8u;
   return DrawEntry(
     bitcast<u32>(draw[offset + 0u]),
     bitcast<u32>(draw[offset + 1u]),
-    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u]))
+    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u])),
+    vec4f(
+      bitcast<f32>(draw[offset + 4u]), bitcast<f32>(draw[offset + 5u]),
+      bitcast<f32>(draw[offset + 6u]), bitcast<f32>(draw[offset + 7u]),
+    )
   );
 }
 
@@ -3453,6 +3621,13 @@ fn render_geometry_read_quad(geometry: RenderGeometry) -> RenderGeometryQuad {
 }
 // end import "storage/render_geometry.wgsl"
 
+// import "utils/limits.wgsl"
+const MAX_CUBIC_SEGMENT_COUNT: u32 = 128;
+const MAX_QUADRATIC_SEGMENT_COUNT: u32 = 64;
+const MAX_ARC_SEGMENTS: u32 = 128;
+const MAX_VERTEX_VALENCE = 8u;
+// end import "utils/limits.wgsl"
+
 
 @group(0) @binding(0) var<uniform> world: World;
 @group(0) @binding(1) var<uniform> storage_offsets: StorageOffsets;
@@ -3463,11 +3638,13 @@ fn render_geometry_read_quad(geometry: RenderGeometry) -> RenderGeometryQuad {
 @group(1) @binding(4) var<storage, read> draw: array<u32>;
 @group(1) @binding(5) var<storage, read> glyph_instance: array<GlyphInstance>;
 @group(1) @binding(6) var<storage, read> glyph_geometry: array<u32>;
+@group(1) @binding(7) var<storage, read> text_style: array<TextStyle>;
 
 @group(2) @binding(2) var<storage, read_write> render_geometry_offset: array<u32>;
 @group(2) @binding(3) var<storage, read_write> render_geometry: array<RenderGeometry>;
 
 var<private> instance_index: u32;
+var<private> local_bbox: vec4f;
 var<private> draw_kind: u32;
 var<private> decoration_span: vec2u;
 
@@ -3481,6 +3658,7 @@ fn prepare_draw_entry(invocation_index: u32) -> u32 {
 
   instance_index = entry.cell;
   draw_kind = entry.kind;
+  local_bbox = entry.local_bbox;
   decoration_span = entry.decoration_span;
   return 1u;
 }
@@ -3539,26 +3717,143 @@ fn generate(@builtin(global_invocation_id) global_id: vec3u) {
 // Edge
 // ---------------------------------------------------------------------------------------------------------------------
 
-fn count_glyph_edge() -> u32 {
-  return 0u;
+fn get_glyph_edge_join_arc(a: Quadratic2, b: Quadratic2) -> vec2f {
+  var dir_a = a.p1 - a.p2;
+  if (dot(dir_a, dir_a) < 1e-12) { dir_a = a.p0 - a.p2; }
 
+  var dir_b = b.p1 - b.p0;
+  if (dot(dir_b, dir_b) < 1e-12) { dir_b = b.p2 - b.p0; }
+  if (dot(dir_a, dir_a) < 1e-12 || dot(dir_b, dir_b) < 1e-12) { return vec2f(0.0); }
+  
+  let angle_a = atan2(dir_a.y, dir_a.x);
+  let angle_b = atan2(dir_b.y, dir_b.x);
+  var gap = angle_b - angle_a;
+  if (gap <= 0.0) { gap += 2.0 * PI; }
+
+  var start = angle_a;
+  if (gap < PI) {
+    start = angle_b;
+    gap = 2.0 * PI - gap;
+  }
+
+  let span = gap - PI;
+  if (span < 0.01) { return vec2f(0.0); }
+  return vec2f(start + PI * 0.5, span);
+}
+
+fn count_glyph_edge_join_segments(span: f32, radius: f32) -> u32 {
+  if (span == 0.0 || radius <= 0.0) { return 0u; }
+  return count_arc_segments(abs(span), radius, world.tolerance, MAX_ARC_SEGMENTS);
+}
+
+fn count_glyph_edge() -> u32 {
   var count = 0u;
   let instance = glyph_instance[instance_index];
   let glyph_data = read_glyph_data(instance.glyph_index);
+
+  let style = text_style[instance.style_index];
+  let half_width = style.edge_width / 2.0;
+
+  let glyph_local_transform = mat4_translate2_scale2(instance.offset, vec2f(instance.scale));
+  let frame_transform = read_frame_transform(instance.parent_index);
+  let world_transform = frame_transform * glyph_local_transform;
+
   for (var bi = 0u; bi < glyph_data.boundary_span.y; bi++) {
     let boundary = read_glyph_boundary(glyph_data.boundary_span.x + bi);
+    let quadratic_count = boundary.geometry_span.y;
+    if (quadratic_count == 0u) { continue; }
+
+    var prev = quadratic2_transform(read_glyph_geometry(boundary.geometry_span.x + quadratic_count - 1u), world_transform);
     
-    for (var i = 0u; i < boundary.geometry_span.y; i++) {
-      let quadratic = read_glyph_geometry(boundary.geometry_span.x + i);
-      count += 1u;
+    for (var i = 0u; i < quadratic_count; i++) {
+      let quadratic = quadratic2_transform(read_glyph_geometry(boundary.geometry_span.x + i), world_transform);
+      let segment_count = min(u32(ceil(quadratic2_wang(quadratic, world.tolerance))), MAX_QUADRATIC_SEGMENT_COUNT);
+      count += segment_count;
+
+      let join_arc = get_glyph_edge_join_arc(prev, quadratic);
+      count += count_glyph_edge_join_segments(join_arc.y, half_width);
+
+      prev = quadratic;
     }
   }
 
   return count;
 }
 
-fn generate_glyph_edge() {
+fn generate_arc(position: vec2f, r0: f32, r1: f32, a0: f32, span: f32, count: u32, decoration_span: vec2u, parent_index: u32) {
+  for (var i = 0u; i < count; i++) {
+    let t0 = a0 + span * f32(i) / f32(count);
+    let t1 = a0 + span * f32(i + 1u) / f32(count);
+    emit(render_geometry_create_tri(
+      position,
+      position + r0 * vec2f(cos(t0), sin(t0)),
+      position + r1 * vec2f(cos(t1), sin(t1)),
+      local_bbox,
+      instance_index,
+      parent_index,
+      decoration_span,
+    ));
+  }
+}
 
+fn generate_glyph_edge() {
+  let instance = glyph_instance[instance_index];
+  let glyph_data = read_glyph_data(instance.glyph_index);
+
+  let style = text_style[instance.style_index];
+  let half_width = style.edge_width / 2.0;
+
+  let glyph_local_transform = mat4_translate2_scale2(instance.offset, vec2f(instance.scale));
+  let frame_transform = read_frame_transform(instance.parent_index);
+  let world_transform = frame_transform * glyph_local_transform;
+
+  for (var bi = 0u; bi < glyph_data.boundary_span.y; bi++) {
+    let boundary = read_glyph_boundary(glyph_data.boundary_span.x + bi);
+    let quadratic_count = boundary.geometry_span.y;
+    if (quadratic_count == 0u) { continue; }
+
+    var prev = quadratic2_transform(read_glyph_geometry(boundary.geometry_span.x + quadratic_count - 1u), world_transform);
+    
+    for (var i = 0u; i < quadratic_count; i++) {
+      let quadratic = quadratic2_transform(read_glyph_geometry(boundary.geometry_span.x + i), world_transform);
+      let segment_count = min(u32(ceil(quadratic2_wang(quadratic, world.tolerance))), MAX_QUADRATIC_SEGMENT_COUNT);
+
+      let join_arc = get_glyph_edge_join_arc(prev, quadratic);
+      let join_count = count_glyph_edge_join_segments(join_arc.y, half_width);
+      generate_arc(
+        quadratic.p0, half_width, half_width, join_arc.x, join_arc.y,
+        join_count, decoration_span, instance.parent_index
+      );
+
+      var last = quadratic2_pos_tan(quadratic, 0.0);
+      let inv_count = 1.0 / f32(segment_count);
+      for (var si = 1u; si <= segment_count; si++) {
+        let p0 = last.xy;
+        let tan0 = last.zw;
+
+        let t = f32(si) * inv_count;
+        let current = quadratic2_pos_tan(quadratic, t);
+        let p1 = current.xy;
+        let tan1 = current.zw;
+
+        let n0 = normalize(vec2_orthogonal(tan0));
+        let n1 = normalize(vec2_orthogonal(tan1));
+
+        emit(render_geometry_create_quad(
+          p0 - n0 * half_width,
+          p0 + n0 * half_width,
+          p1 - n1 * half_width,
+          p1 + n1 * half_width,
+          local_bbox,
+          instance_index, instance.parent_index, decoration_span
+        ));
+
+        last = current;
+      }
+
+      prev = quadratic;
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -3629,24 +3924,9 @@ fn generate_glyph_face_cover() {
   let instance = glyph_instance[instance_index];
   let glyph_data = read_glyph_data(instance.glyph_index);
   if (glyph_data.boundary_span.y == 0u) { return; }
-  let glyph_local_transform = mat4_translate2_scale2(instance.offset, vec2f(instance.scale));
   let frame_transform = read_frame_transform(instance.parent_index);
 
-  var world_bbox = BBOX_INV_INF;
-  var local_bbox = BBOX_INV_INF;
-
-  for (var bi = 0u; bi < glyph_data.boundary_span.y; bi++) {
-    let boundary = read_glyph_boundary(glyph_data.boundary_span.x + bi);
-
-    for (var i = 0u; i < boundary.geometry_span.y; i++) {
-      let quadratic = quadratic2_transform(read_glyph_geometry(boundary.geometry_span.x + i), glyph_local_transform);
-      let quadratic_world = quadratic2_transform(quadratic, frame_transform);
-
-      world_bbox = bbox_hull_bbox(world_bbox, quadratic2_bbox(quadratic_world));
-      local_bbox = bbox_hull_bbox(local_bbox, quadratic2_bbox(quadratic));
-    }
-  }
-
+  let world_bbox = bbox_transform(local_bbox, frame_transform);
   emit(render_geometry_create_quad(
     world_bbox.xy, world_bbox.zy, world_bbox.xw, world_bbox.zw,
     local_bbox,

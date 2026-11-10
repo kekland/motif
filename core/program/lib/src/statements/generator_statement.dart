@@ -55,7 +55,7 @@ final class GeneratorStatement extends Statement with PlacedStatement, Generatin
     final generatedIds = output.map((s) => s.id).toSet();
 
     stopwatch.stop();
-    print('GeneratorStatement executed in ${stopwatch.elapsedMilliseconds} ms');
+    // print('GeneratorStatement executed in ${stopwatch.elapsedMilliseconds} ms');
 
     final result = <GeneratedStatement>[];
     for (final s in output) {

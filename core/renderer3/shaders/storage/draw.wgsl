@@ -4,6 +4,7 @@ struct DrawEntry {
   cell: u32,
   kind: u32,
   decoration_span: vec2u,
+  local_bbox: vec4f,
 }
 
 const DRAW_ENTRY_KIND_VERTEX = 1u;
@@ -15,11 +16,15 @@ const DRAW_ENTRY_KIND_GLYPH_FACE_FAN = 6u;
 const DRAW_ENTRY_KIND_GLYPH_FACE_COVER = 7u;
 
 fn read_draw_entry(index: u32) -> DrawEntry {
-  let offset = storage_offsets.draw_entry + index * 4u;
+  let offset = storage_offsets.draw_entry + index * 8u;
   return DrawEntry(
     bitcast<u32>(draw[offset + 0u]),
     bitcast<u32>(draw[offset + 1u]),
-    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u]))
+    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u])),
+    vec4f(
+      bitcast<f32>(draw[offset + 4u]), bitcast<f32>(draw[offset + 5u]),
+      bitcast<f32>(draw[offset + 6u]), bitcast<f32>(draw[offset + 7u]),
+    )
   );
 }
 

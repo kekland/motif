@@ -54,22 +54,25 @@ typedef RenderGeometryArrayInternal = List<RenderGeometryInternal>;
 typedef DrawIndirectArgsArray = List<DrawIndirectArgs>;
 typedef DrawIndirectArgsArrayInternal = List<DrawIndirectArgsInternal>;
 
-extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan) _) {
+extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan, wgsl.Vec4f localBbox) _) {
   const new({
     required int cell,
     required int kind,
     required wgsl.Vec2u decorationSpan,
+    required wgsl.Vec4f localBbox,
   }): this._((
     cell,
     kind,
     decorationSpan,
+    localBbox,
   ));
 
   int get cell => _.$1;
   int get kind => _.$2;
   wgsl.Vec2u get decorationSpan => _.$3;
+  wgsl.Vec4f get localBbox => _.$4;
 
-  static const int unpaddedSizeInBytes = 16;
+  static const int unpaddedSizeInBytes = 32;
 
   @pragma('vm:prefer-inline')
   static DrawEntry read(ByteData data, int offset) => DrawEntryInternal.read(data, offset).asDart;
@@ -82,18 +85,21 @@ extension type const DrawEntry._((int cell, int kind, wgsl.Vec2u decorationSpan)
     .new(cell),
     .new(kind),
     decorationSpan,
+    localBbox,
   );
 }
 
-extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec2u decorationSpan) _) {
+extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec2u decorationSpan, wgsl.Vec4f localBbox) _) {
   const new(
     wgsl.U32 cell,
     wgsl.U32 kind,
     wgsl.Vec2u decorationSpan,
+    wgsl.Vec4f localBbox,
   ): this._((
     cell,
     kind,
     decorationSpan,
+    localBbox,
   ));
 
   @pragma('vm:prefer-inline')
@@ -101,6 +107,7 @@ extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec
     wgsl.U32.read(data, offset + 0),
     wgsl.U32.read(data, offset + 4),
     wgsl.Vec2u.read(data, offset + 8),
+    wgsl.Vec4f.read(data, offset + 16),
   ));
 
   @pragma('vm:prefer-inline')
@@ -108,19 +115,22 @@ extension type const DrawEntryInternal._((wgsl.U32 cell, wgsl.U32 kind, wgsl.Vec
     wgsl.U32(_.$1).write(data, offset + 0);
     wgsl.U32(_.$2).write(data, offset + 4);
     _.$3.write(data, offset + 8);
+    _.$4.write(data, offset + 16);
   }
 
   wgsl.U32 get cell => _.$1;
   wgsl.U32 get kind => _.$2;
   wgsl.Vec2u get decorationSpan => _.$3;
+  wgsl.Vec4f get localBbox => _.$4;
 
-  static const int unpaddedSizeInBytes = 16;
+  static const int unpaddedSizeInBytes = 32;
 
   @pragma('vm:prefer-inline')
   DrawEntry get asDart => ._((
     _.$1,
     _.$2,
     _.$3,
+    _.$4,
   ));
 }
 
@@ -3936,6 +3946,7 @@ struct DrawEntry {
   cell: u32,
   kind: u32,
   decoration_span: vec2u,
+  local_bbox: vec4f,
 }
 
 const DRAW_ENTRY_KIND_VERTEX = 1u;
@@ -3947,11 +3958,15 @@ const DRAW_ENTRY_KIND_GLYPH_FACE_FAN = 6u;
 const DRAW_ENTRY_KIND_GLYPH_FACE_COVER = 7u;
 
 fn read_draw_entry(index: u32) -> DrawEntry {
-  let offset = storage_offsets.draw_entry + index * 4u;
+  let offset = storage_offsets.draw_entry + index * 8u;
   return DrawEntry(
     bitcast<u32>(draw[offset + 0u]),
     bitcast<u32>(draw[offset + 1u]),
-    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u]))
+    vec2u(bitcast<u32>(draw[offset + 2u]), bitcast<u32>(draw[offset + 3u])),
+    vec4f(
+      bitcast<f32>(draw[offset + 4u]), bitcast<f32>(draw[offset + 5u]),
+      bitcast<f32>(draw[offset + 6u]), bitcast<f32>(draw[offset + 7u]),
+    )
   );
 }
 
@@ -3995,6 +4010,13 @@ struct Quadratic2 {
   p0: vec2f,
   p1: vec2f,
   p2: vec2f,
+}
+
+fn quadratic2_pos_tan(q: Quadratic2, t: f32) -> vec4f {
+  let u = 1.0 - t;
+  let pos = u * u * q.p0 + 2.0 * u * t * q.p1 + t * t * q.p2;
+  let tan = 2.0 * u * (q.p1 - q.p0) + 2.0 * t * (q.p2 - q.p1);
+  return vec4f(pos, tan);
 }
 
 fn quadratic2_bbox(c: Quadratic2) -> vec4f {
@@ -4073,6 +4095,13 @@ fn bbox_inflate(bbox: vec4f, dx: f32, dy: f32) -> vec4f {
 fn bbox_size(bbox: vec4f) -> vec2f {
   return bbox.zw - bbox.xy;
 }
+
+fn bbox_transform(bbox: vec4f, m: mat4x4f) -> vec4f {
+  return vec4f(
+    vec2_transform(m, bbox.xy),
+    vec2_transform(m, bbox.zw)
+  );
+}
 // end import "vector.wgsl"
 
 // import "matrix.wgsl"
@@ -4101,6 +4130,15 @@ fn mat4_translate2_scale2(t: vec2f, s: vec2f) -> mat4x4f {
     vec4f(0.0, 0.0, 1.0, 0.0),
     vec4f(t, 0.0, 1.0)
   );
+}
+
+fn mat4_get_scale2(m: mat4x4f) -> vec2f {
+  return vec2f(m[0][0], m[1][1]);
+}
+
+fn mat4_get_max_scale_on_axis(m: mat4x4f) -> f32 {
+  let scale = mat4_get_scale2(m);
+  return max(scale.x, scale.y);
 }
 // end import "matrix.wgsl"
 // end import "math.wgsl"

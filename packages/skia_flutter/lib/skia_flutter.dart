@@ -10,7 +10,6 @@ extension ToUiPath on skia.Path {
     var _point = 0;
     double p() => points[_point++];
     for (var i = 0; i < verbs.length; i++) {
-      print(verbs[i]);
       final _ = switch (verbs[i]) {
         .move => path.moveTo(p(), p()),
         .line => path.lineTo(p(), p()),
