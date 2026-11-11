@@ -310,9 +310,11 @@ final class DrawEntryManager {
     }
 
     if (faceDecorationSpan.isNotEmpty) {
-      _flush(_state);
-      _decorationOffset = 0;
-      _hasState = false;
+      if (edgeDecorationSpan.isNotEmpty) {
+        _flush(_state);
+        _decorationOffset = 0;
+        _hasState = false;
+      }
 
       _decorationStart = faceDecorationSpan.x;
       _decorationCount = faceDecorationSpan.y;

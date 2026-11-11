@@ -114,7 +114,6 @@ final class Renderer with ChangeNotifier, ChangeNotifierDisposable, Renderable {
     rebind |= style.upload();
     rebind |= draw.upload();
     rebind |= text.upload();
-    rebind |= renderBuffers.clear();
 
     if (rebind) bindings.setup();
     return rebind;
@@ -138,6 +137,7 @@ final class Renderer with ChangeNotifier, ChangeNotifierDisposable, Renderable {
     );
 
     final encoder = device!.createCommandEncoder();
+    renderBuffers.clear(encoder);
     flattenStage.dispatch(encoder);
     geometryStage.dispatch(encoder);
     indirectStage.dispatch(encoder);

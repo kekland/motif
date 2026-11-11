@@ -58,7 +58,7 @@ final class TextManager {
     final span = instanceStorage.putRaw(data, span: _spans[statement.id]);
     _spans[statement.id] = span;
     _bboxes[statement.id] = bbox;
-    // print("[text] process text: ${metrics.length} ($span)");
+    print("[text] process text: ${metrics.length} ($span)");
   }
 
   void release(StatementId id) {
