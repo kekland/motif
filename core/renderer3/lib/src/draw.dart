@@ -251,6 +251,12 @@ final class DrawEntryManager {
     _cache[_key] = (span, _drawCounts, _pipelines);
   }
 
+  void _clear(CellIndex key) {
+    final prev = _cache.remove(key);
+    if (prev == null) return;
+    storage.release(prev.$1);
+  }
+
   void _processCell(CellHandle h) {
     final ref = bundle.ref(h);
     renderer.style.update(ref, h);
@@ -260,7 +266,7 @@ final class DrawEntryManager {
     if (i.kind == .vertex) {
       final style = renderer.style.storage.vertex[i.i]!;
       final decorations = renderer.style.decorationsOf(i);
-      if (decorations.isEmpty) return;
+      if (decorations.isEmpty) return _clear(i);
 
       _begin(i, i.value, .vertex, style.decorationSpan.x, style.decorationSpan.y);
       for (final d in decorations) _push(.direct, d);
@@ -268,7 +274,7 @@ final class DrawEntryManager {
     } else if (i.kind == .edge) {
       final style = renderer.style.storage.edge[i.i]!;
       final decorations = renderer.style.decorationsOf(i);
-      if (decorations.isEmpty) return;
+      if (decorations.isEmpty) return _clear(i);
 
       _begin(i, i.value, .edge, style.decorationSpan.x, style.decorationSpan.y);
       for (final d in decorations) _push(.direct, d);
@@ -276,7 +282,7 @@ final class DrawEntryManager {
     } else if (i.kind == .face) {
       final style = renderer.style.storage.face[i.i]!;
       final decorations = renderer.style.decorationsOf(i);
-      if (decorations.isEmpty) return;
+      if (decorations.isEmpty) return _clear(i);
 
       _begin(i, i.value, .face, style.decorationSpan.x, style.decorationSpan.y);
       _push(.stencil, null);
@@ -299,7 +305,7 @@ final class DrawEntryManager {
     final edgeDecorations = renderer.text.style.edgeDecorationsOf(ref);
     final faceDecorations = renderer.text.style.faceDecorationsOf(ref);
     final hasDecorations = edgeDecorationSpan.isNotEmpty || faceDecorationSpan.isNotEmpty;
-    if (!hasDecorations) return;
+    if (!hasDecorations) return _clear(i.cell);
 
     _beginText(i.cell, instanceSpan, bbox, 0, 0);
 

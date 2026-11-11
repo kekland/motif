@@ -38,10 +38,6 @@ final class StyleManager {
       final (decorations, span) = renderer.decoration.put(style.decorations, span: .maybeFrom(previousSpan), ref: ref);
       storage.edge[i] = .new(decorationSpan: span, width: style.width);
       _cache[handle.cellIndex] = (decorations, span);
-
-      // Update adjacent vertices
-      final vertexHandles = bundle.edgeVertices(handle.asEdge);
-      for (final h in vertexHandles) update(bundle.vertexRef(h), h);
     } else if (style is FaceStyle) {
       final previousSpan = storage.face[i]?.decorationSpan;
       final (decorations, span) = renderer.decoration.put(style.decorations, span: .maybeFrom(previousSpan), ref: ref);

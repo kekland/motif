@@ -170,10 +170,20 @@ final class RendererUpdater with ChangeNotifier, ChangeNotifierDisposable {
       if (statement is TextStatement) _text.add(statement);
     }
 
+    final _restyled = <(CellRef, CellHandle)>[];
     for (final ref in restyled) {
       final handle = bundle.handle(ref);
       if (handle == null) continue;
+      _restyled.add((ref, handle));
 
+      if (ref.kind == .edge) {
+        final vertexHandles = bundle.edgeVertices(handle.asEdge);
+        for (final h in vertexHandles) _restyled.add((bundle.vertexRef(h), h));
+      }
+    }
+
+    for (final (ref, handle) in _restyled) {
+      renderer.style.update(ref, handle);
       renderer.draw.updateCell(handle);
       if (ref.kind == .frame) {
         final statement = scene.statement(ref.statementId);
