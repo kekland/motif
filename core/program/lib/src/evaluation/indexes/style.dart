@@ -22,14 +22,22 @@ final class StyleIndex {
   Set<CellRef> attach(Commit c) {
     final restyled = <CellRef>{};
     for (final r in c.added) {
-      if (r.kind == .frame) continue;
-      final base = c.styles[r] ?? inherited(r) ?? .defaultOf(r.kind);
-      final resolved = evaluation.program.styles.of(r)?.apply(base) ?? base;
-      if (_map[r] == resolved) continue;
-      _map[r] = resolved;
-      restyled.add(r);
+      if (_process(c, r)) restyled.add(r);
+
+      for (final d in evaluation.lineage.descendantsOf(r)) {
+        if (_process(c, d, parent: _map[r])) restyled.add(d);
+      }
     }
     return restyled;
+  }
+
+  bool _process(Commit c, CellRef r, {CellStyle? parent}) {
+    if (r.kind == .frame) return false;
+    final base = c.styles[r] ?? parent ?? inherited(r) ?? .defaultOf(r.kind);
+    final resolved = evaluation.program.styles.of(r)?.apply(base) ?? base;
+    if (_map[r] == resolved) return false;
+    _map[r] = resolved;
+    return true;
   }
 
   CellStyle? inherited(CellRef ref) {

@@ -164,7 +164,6 @@ final class DrawEntryManager {
   }
 
   void _push(RenderPipelineKind kind, PreparedDecoration? d) {
-    // print('push: kind=${kind.name}, decorationOffset=$_decorationOffset');
     final state = _producePipelineState(kind, d);
     if (!_hasState) {
       _state = state;

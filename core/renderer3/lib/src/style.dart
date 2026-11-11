@@ -17,7 +17,6 @@ final class StyleManager {
     final i = handle.rawIndex;
 
     final style = scene.styleOf(ref);
-
     if (style is VertexStyle) {
       final incident = bundle.vertexEdges(handle.asVertex).map(bundle.edgeRef).firstOrNull;
       if (incident == null) return;

@@ -26,6 +26,7 @@ final class RendererUpdater with ChangeNotifier, ChangeNotifierDisposable {
   final _deleted = HashSet<CellRef>();
 
   void _onSceneUpdate(EvalPass pass) {
+    print(pass.restyled);
     _restyledCells.addAll(pass.restyled);
     _added.addAll(pass.added);
     _deleted.addAll(pass.deleted);
@@ -171,6 +172,7 @@ final class RendererUpdater with ChangeNotifier, ChangeNotifierDisposable {
     }
 
     final _restyled = <(CellRef, CellHandle)>[];
+    print(restyled);
     for (final ref in restyled) {
       final handle = bundle.handle(ref);
       if (handle == null) continue;
